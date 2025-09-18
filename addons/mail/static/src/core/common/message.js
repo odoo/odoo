@@ -1,3 +1,4 @@
+import { ActionList } from "@mail/core/common/action_list";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -8,9 +9,8 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { renderToElement } from "@web/core/utils/render";
-
+import { useLongPress } from "@mail/utils/common/hooks";
+import { loadCssFromBundle } from "@mail/utils/common/misc";
 import {
     Component,
     onMounted,
@@ -24,22 +24,21 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { ActionSwiper } from "@web/components/action_swiper/action_swiper";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { isEventHandled, markEventHandled } from "@web/core/utils/dom/events";
+import { createElementWithContent } from "@web/core/utils/dom/html";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent } from "@web/core/utils/html";
+import { renderToElement } from "@web/core/utils/render";
 import { getOrigin, url } from "@web/core/utils/urls";
-import { useMessageActions } from "./message_actions";
+import { usePopover } from "@web/ui/popover/popover_hook";
+
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { useMessageActions } from "./message_actions";
 import { NotificationMessage } from "./notification_message";
-import { useLongPress } from "@mail/utils/common/hooks";
-import { ActionList } from "@mail/core/common/action_list";
-import { loadCssFromBundle } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -98,7 +97,9 @@ export class Message extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
+        this.popover = usePopover(this.constructor.components.Popover, {
+            position: "top",
+        });
         this.state = useState({
             isHovered: false,
             isClicked: false,
@@ -193,8 +194,9 @@ export class Message extends Component {
                         "span",
                         this.message.showTranslation
                             ? this.message.richTranslationValue
-                            : this.props.messageSearch?.highlight(this.message.richBody) ??
-                                  this.message.richBody
+                            : (this.props.messageSearch?.highlight(
+                                  this.message.richBody,
+                              ) ?? this.message.richBody),
                     );
                     this.prepareMessageBody(bodyEl);
                     this.shadowRoot.appendChild(bodyEl);
@@ -209,7 +211,7 @@ export class Message extends Component {
                 this.props.messageSearch?.searchTerm,
                 this.message.richBody,
                 this.isEditing,
-            ]
+            ],
         );
         useEffect(
             () => {
@@ -217,7 +219,7 @@ export class Message extends Component {
                     this.prepareMessageBody(this.messageBody.el);
                 }
             },
-            () => [this.isEditing, this.message.richBody]
+            () => [this.isEditing, this.message.richBody],
         );
     }
 
@@ -227,7 +229,7 @@ export class Message extends Component {
             0,
             allActions.length > this.quickActionCount
                 ? this.quickActionCount - 1
-                : this.quickActionCount
+                : this.quickActionCount,
         );
         const moreActions =
             allActions.length > this.quickActionCount
@@ -242,8 +244,8 @@ export class Message extends Component {
                           ? "left-end"
                           : "left-start"
                       : this.message.threadAsNewest
-                      ? "right-end"
-                      : "right-start",
+                        ? "right-end"
+                        : "right-start",
                   name: this.expandText,
               })
             : undefined;
@@ -260,11 +262,14 @@ export class Message extends Component {
         return {
             "user-select-none o-isMobileOS": isMobileOS(),
             [this.props.className]: true,
-            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark rounded-2": this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark rounded-2":
+                this.props.asCard,
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
-            "o-selected": this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread),
+            "o-selected": this.props.message.composerAsReplyToMessage?.thread.eq(
+                this.props.thread,
+            ),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
@@ -373,11 +378,15 @@ export class Message extends Component {
     }
 
     get translatedFromText() {
-        return _t("(Translated from: %(language)s)", { language: this.message.translationSource });
+        return _t("(Translated from: %(language)s)", {
+            language: this.message.translationSource,
+        });
     }
 
     get translationFailureText() {
-        return _t("(Translation Failure: %(error)s)", { error: this.message.translationErrors });
+        return _t("(Translation Failure: %(error)s)", {
+            error: this.message.translationErrors,
+        });
     }
 
     onMouseenter() {
@@ -429,7 +438,7 @@ export class Message extends Component {
                     () => {
                         this.state.isClicked = false;
                     },
-                    { capture: true, once: true }
+                    { capture: true, once: true },
                 );
             }
         }
@@ -450,7 +459,9 @@ export class Message extends Component {
                 const message = this.store["mail.message"].get(el.dataset.oeId);
                 if (message?.thread?.displayName) {
                     el.classList.add("o_message_redirect_transformed");
-                    el.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
+                    el.replaceChildren(
+                        renderToElement("mail.Message.messageLink", { message }),
+                    );
                 }
             }
         }
@@ -493,7 +504,7 @@ export class Message extends Component {
         this.dialog.add(
             MessageReactionMenu,
             { message, initialReaction: reaction },
-            { context: this }
+            { context: this },
         );
     }
 

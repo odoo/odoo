@@ -1,9 +1,7 @@
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { Dialog } from "@web/core/dialog/dialog";
-import { today } from "@web/core/l10n/dates";
-
 import { Component, useState } from "@odoo/owl";
-
+import { DateTimeInput } from "@web/components/datetime/datetime_input";
+import { today } from "@web/core/l10n/dates";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class ScheduledDateDialog extends Component {
     static template = "mail.ScheduledDateDialog";
     static props = {
@@ -26,13 +24,18 @@ export class ScheduledDateDialog extends Component {
             .set({ hour: 8 });
 
         this.state = useState({
-            customDateTime: now
-                .plus({ hours: 1 })
-                .set({ minutes: Math.ceil(now.minute / 5) * 5, seconds: 0, milliseconds: 0 }),
+            customDateTime: now.plus({ hours: 1 }).set({
+                minutes: Math.ceil(now.minute / 5) * 5,
+                seconds: 0,
+                milliseconds: 0,
+            }),
             selectedOption: undefined,
         });
 
-        if (!this.props.scheduledDate || this.props.scheduledDate.equals(this.tomorrowMorning)) {
+        if (
+            !this.props.scheduledDate ||
+            this.props.scheduledDate.equals(this.tomorrowMorning)
+        ) {
             this.state.selectedOption = "morning";
         } else if (this.props.scheduledDate.equals(this.tomorrowAfternoon)) {
             this.state.selectedOption = "afternoon";

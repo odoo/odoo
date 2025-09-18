@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { fields } from "@mail/model/misc";
 import { ResUsers } from "@mail/core/common/res_users_model";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 patch(ResUsers.prototype, {
     setup() {

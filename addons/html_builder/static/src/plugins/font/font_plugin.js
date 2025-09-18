@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 import { loadCSS } from "@web/core/assets";
 import { BuilderFontSizeSelector } from "./font_size_selector";
 import { withSequence } from "@html_editor/utils/resource";

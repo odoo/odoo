@@ -10,7 +10,7 @@ Landed Costs Management
 =======================
 This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.
     """,
-    'depends': ['stock_account', 'purchase_stock'],
+    'depends': ['purchase_stock'],
     'category': 'Supply Chain/Inventory',
     'sequence': 16,
     'data': [

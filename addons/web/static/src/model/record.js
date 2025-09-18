@@ -1,12 +1,38 @@
+// @ts-check
+
+/** @module @web/model/record - Standalone OWL component for loading and displaying a single record */
+
+import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
+import { isObject, pick } from "@web/core/utils/collections/objects";
 import { useService } from "@web/core/utils/hooks";
-import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+
+/** @import { Field, FieldInfo } from "@web/search/search_model" */
+/** @import { RelationalModelConfig } from "@web/model/relational_model/relational_model" */
+/** @import { ServiceFactories } from "services" */
+
+/**
+ * @typedef {{
+ *   resModel: string;
+ *   resId?: number | false;
+ *   mode?: "edit" | "readonly";
+ *   context?: {[key: string]: any};
+ *   hooks?: {[key: string]: Function};
+ *   activeFields?: {[key: string]: Partial<FieldInfo>};
+ *   fieldNames?: string[];
+ * }} RecordInfo
+ */
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
 class StandaloneRelationalModel extends RelationalModel {
+    /**
+     * Override that supports loading from provided values instead of fetching.
+     *
+     * @param {Partial<import("@web/search/search_model").SearchParams> & { values?: {[key: string]: any} }} [params]
+     * @returns {Promise<void>}
+     */
     load(params = {}) {
         if (params.values) {
             const data = params.values;
@@ -24,6 +50,7 @@ class _Record extends Component {
     static template = xml`<t t-slot="default" record="model.root"/>`;
     static props = ["slots", "info", "fields", "values?"];
     setup() {
+        /** @type {ServiceFactories["orm"]} */
         this.orm = useService("orm");
         const resModel = this.props.info.resModel;
         const activeFields = this.getActiveFields();
@@ -40,17 +67,36 @@ class _Record extends Component {
             hooks: this.props.info.hooks,
         };
         const modelServices = Object.fromEntries(
-            StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
+            StandaloneRelationalModel.services.map((servName) => [
+                servName,
+                useService(/** @type {any} */ (servName)),
+            ]),
         );
         modelServices.orm = this.orm;
-        this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
+        this.model = useState(
+            new StandaloneRelationalModel(this.env, modelParams, modelServices),
+        );
 
+        /**
+         * Resolve relational field values (many2one, x2many) by fetching
+         * display names and nested records from the server.
+         *
+         * @param {{[key: string]: any}} values
+         * @returns {Promise<{[key: string]: any}>}
+         */
         const prepareLoadWithValues = async (values) => {
             values = pick(values, ...Object.keys(modelParams.config.activeFields));
             const proms = [];
             for (const fieldName in values) {
-                if (["one2many", "many2many"].includes(this.props.fields[fieldName].type)) {
-                    if (values[fieldName].length && typeof values[fieldName][0] === "number") {
+                if (
+                    ["one2many", "many2many"].includes(
+                        this.props.fields[fieldName].type,
+                    )
+                ) {
+                    if (
+                        values[fieldName].length &&
+                        typeof values[fieldName][0] === "number"
+                    ) {
                         const resModel = this.props.fields[fieldName].relation;
                         const resIds = values[fieldName];
                         const activeField = modelParams.config.activeFields[fieldName];
@@ -62,9 +108,11 @@ class _Record extends Component {
                                 specification: fieldSpec,
                             };
                             proms.push(
-                                this.orm.webRead(resModel, resIds, kwargs).then((records) => {
-                                    values[fieldName] = records;
-                                })
+                                this.orm
+                                    .webRead(resModel, resIds, kwargs)
+                                    .then((records) => {
+                                        values[fieldName] = records;
+                                    }),
                             );
                         }
                     }
@@ -77,7 +125,11 @@ class _Record extends Component {
                             context: activeField.context || {},
                             specification: { display_name: {} },
                         };
-                        const records = await this.orm.webRead(resModel, [resId], kwargs);
+                        const records = await this.orm.webRead(
+                            resModel,
+                            [resId],
+                            kwargs,
+                        );
                         return records[0].display_name;
                     };
                     if (typeof values[fieldName] === "number") {
@@ -148,6 +200,11 @@ class _Record extends Component {
         });
     }
 
+    /**
+     * Build the activeFields map from props, filling defaults.
+     *
+     * @returns {{[key: string]: any}}
+     */
     getActiveFields() {
         if (this.props.info.activeFields) {
             const activeFields = {};
@@ -157,11 +214,15 @@ class _Record extends Component {
             return activeFields;
         }
         return Object.fromEntries(
-            this.props.info.fieldNames.map((f) => [f, { ...defaultActiveField }])
+            this.props.info.fieldNames.map((f) => [f, { ...defaultActiveField }]),
         );
     }
 }
 
+/**
+ * Public Record component that resolves field definitions and delegates
+ * to _Record for model instantiation.
+ */
 export class Record extends Component {
     static template = xml`<_Record fields="fields" slots="props.slots" values="props.values" info="props" />`;
     static components = { _Record };
@@ -184,12 +245,12 @@ export class Record extends Component {
         const { activeFields, fieldNames, fields, resModel } = this.props;
         if (!activeFields && !fieldNames) {
             throw Error(
-                `Record props should have either a "activeFields" key or a "fieldNames" key`
+                `Record props should have either a "activeFields" key or a "fieldNames" key`,
             );
         }
         if (!fields && (!fieldNames || !resModel)) {
             throw Error(
-                `Record props should have either a "fields" key or a "fieldNames" and a "resModel" key`
+                `Record props should have either a "fields" key or a "fieldNames" and a "resModel" key`,
             );
         }
         if (fields) {
@@ -197,7 +258,9 @@ export class Record extends Component {
         } else {
             const fieldService = useService("field");
             onWillStart(async () => {
-                this.fields = await fieldService.loadFields(resModel, { fieldNames });
+                this.fields = await fieldService.loadFields(resModel, {
+                    fieldNames,
+                });
             });
         }
     }

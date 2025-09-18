@@ -1,9 +1,8 @@
-import { registry } from "@web/core/registry";
-import { Reactive } from "@web/core/utils/reactive";
 import { browser } from "@web/core/browser/browser";
-import { escapeRegExp } from "@web/core/utils/strings";
-import { zip } from "@web/core/utils/arrays";
-
+import { registry } from "@web/core/registry";
+import { zip } from "@web/core/utils/collections/arrays";
+import { escapeRegExp } from "@web/core/utils/format/strings";
+import { Reactive } from "@web/core/utils/reactive";
 const parseParams = (matches, paramSpecs) =>
     Object.fromEntries(
         zip(matches, paramSpecs).map(([match, paramSpec]) => {
@@ -16,7 +15,7 @@ const parseParams = (matches, paramSpecs) =>
                 default:
                     throw new Error(`Unknown type ${type}`);
             }
-        })
+        }),
     );
 
 export class PosRouter extends Reactive {
@@ -80,7 +79,7 @@ export class PosRouter extends Reactive {
                 `^${route
                     .split(/\{\w+:\w+\}/)
                     .map((part) => escapeRegExp(part))
-                    .join("([^/]+)")}$`
+                    .join("([^/]+)")}$`,
             );
 
             this.registeredRoutes[name] = { route, regex, paramSpecs };
@@ -107,7 +106,9 @@ export class PosRouter extends Reactive {
     matchURL(props = {}) {
         const path = this.path;
 
-        for (const [routeName, { regex, paramSpecs }] of Object.entries(this.registeredRoutes)) {
+        for (const [routeName, { regex, paramSpecs }] of Object.entries(
+            this.registeredRoutes,
+        )) {
             const match = path.match(regex);
             if (match) {
                 const parsedParams = parseParams(match.slice(1), paramSpecs);
@@ -137,7 +138,7 @@ export class PosRouter extends Reactive {
 
         url.pathname = route.replace(
             /\{\w+:(\w+)\}/g,
-            (match, paramName) => routeParams[paramName]
+            (match, paramName) => routeParams[paramName],
         );
 
         history.pushState({}, "", url);

@@ -1,6 +1,6 @@
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 
-import { OverlayContainer } from "@web/core/overlay/overlay_container";
+import { OverlayContainer } from "@web/ui/overlay/overlay_container";
 import { Component, xml, useSubEnv } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

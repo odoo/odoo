@@ -1,8 +1,8 @@
 /* global QRCode */
 
-import { session } from "@web/session";
-import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { session } from "@web/session";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -41,7 +41,8 @@ export function constructAttributeString(line) {
             if (value.is_custom) {
                 const customValue = line.custom_attribute_value_ids.find(
                     (cus) =>
-                        cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
+                        cus.custom_product_template_attribute_value_id?.id ==
+                        parseInt(value.id),
                 );
                 if (customValue) {
                     attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
@@ -215,7 +216,7 @@ export function orderUsageUTCtoLocalUtil(data) {
  */
 export function generateQRCodeDataUrl(
     url,
-    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {},
 ) {
     const tempDiv = document.createElement("div");
     const options = { width, height, correctLevel, ...rest };

@@ -22,6 +22,6 @@ def migrate(cr, version):
         cr.execute("""
             UPDATE mail_message_subtype
                SET "default" = false
-             WHERE id in %s
+             WHERE id = ANY(%s)
         """,
-        (tuple(subtype_ids),))
+        (list(subtype_ids),))

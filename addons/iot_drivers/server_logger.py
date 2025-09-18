@@ -6,7 +6,7 @@ import time
 
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.addons.iot_drivers.tools.system import IS_TEST
-from odoo.netsvc import ColoredFormatter
+from odoo.logutils import ColoredFormatter
 
 _logger = logging.getLogger(__name__)
 

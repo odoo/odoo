@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
 
 import { DependOnIdsListRenderer } from "./depend_on_ids_list_renderer";
 

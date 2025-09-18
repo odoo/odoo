@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
+from itertools import batched
 from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.sms.tools.sms_api import SmsApi
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 
@@ -168,7 +168,7 @@ class SmsSms(models.Model):
 
     def _split_batch(self):
         batch_size = self._get_send_batch_size()
-        yield from tools.split_every(batch_size, self.ids)
+        yield from batched(self.ids, batch_size)
 
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""

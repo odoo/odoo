@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
@@ -118,9 +118,6 @@ export class FormOptionPlugin extends Plugin {
             ) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't duplicate the submit button of the form."));
-            }
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
@@ -129,9 +126,6 @@ export class FormOptionPlugin extends Plugin {
                         "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
                     )
                 );
-            }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
         builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
@@ -193,6 +187,7 @@ export class FormOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_website_form"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
+        is_unremovable_selector: ".s_website_form_send, .s_website_form_submit",
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -731,6 +726,7 @@ export class FormOptionPlugin extends Plugin {
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,
                 newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
+                isInputDisabled: !isFieldCustom(fieldEl),
             });
         }
         return {

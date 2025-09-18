@@ -23,4 +23,4 @@ class TestCODPaymentTransaction(CashOnDeliveryCommon):
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._post_process()
 
-        self.assertEqual(order.state, 'sale')
+        self.assertEqual(order.state, 'done')

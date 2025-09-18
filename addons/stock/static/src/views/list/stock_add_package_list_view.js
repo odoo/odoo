@@ -38,7 +38,7 @@ export class AddPackageListRenderer extends ListRenderer {
             resModel: "stock.package",
             domain,
             context: {
-                list_view_ref: "stock.stock_package_view_add_list",
+                list_view_ref: "stock.view_stock_package_list_add",
             },
             onSelected: async (resIds) => {
                 if (resIds.length) {

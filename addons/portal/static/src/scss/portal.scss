@@ -157,10 +157,10 @@ li > p {
 // Images spacing
 img, .media_iframe_video, .o_image {
     &.float-end {
-        margin-left: $grid-gutter-width / 2;
+        margin-left: calc($grid-gutter-width / 2);
     }
     &.float-start {
-        margin-right: $grid-gutter-width / 2;
+        margin-right: calc($grid-gutter-width / 2);
     }
 }
 
@@ -306,7 +306,7 @@ img, .media_iframe_video, .o_image {
         #o_portal_navbar_content {
             @include media-breakpoint-down(lg) {
                 margin: $navbar-padding-y 0 0;
-                padding: $navbar-padding-y ($grid-gutter-width / 2);
+                padding: $navbar-padding-y calc($grid-gutter-width / 2);
                 border-top: $border-width solid $o-portal-mobile-toolbar-border;
                 background-color: $o-portal-mobile-toolbar-bg;
             }
@@ -473,7 +473,7 @@ img, .media_iframe_video, .o_image {
 
 // Address
 .o_portal .o_portal_addresses {
-    max-width: map-get($grid-breakpoints, xxl) / 2;
+    max-width: calc(map-get($grid-breakpoints, xxl) / 2);
 }
 
 .o_customer_address_fill {

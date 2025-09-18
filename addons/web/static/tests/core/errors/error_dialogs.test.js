@@ -1,13 +1,14 @@
-import { browser } from "@web/core/browser/browser";
-import { describe, test, expect } from "@odoo/hoot";
+// @ts-check
+
+import { describe, expect, test } from "@odoo/hoot";
+import { click, freezeTime, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
+    makeDialogMockEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
-    mockService,
-    makeDialogMockEnv,
 } from "@web/../tests/web_test_helpers";
-import { click, freezeTime, queryAllTexts } from "@odoo/hoot-dom";
 import {
     ClientErrorDialog,
     Error504Dialog,
@@ -15,7 +16,8 @@ import {
     RedirectWarningDialog,
     SessionExpiredDialog,
     WarningDialog,
-} from "@web/core/errors/error_dialogs";
+} from "@web/components/errors/error_dialogs";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 
@@ -38,7 +40,7 @@ test("ErrorDialog with traceback", async () => {
     expect("main button").toHaveText("See technical details");
     expect(queryAllTexts("footer button")).toEqual(["Close"]);
     expect("main p").toHaveText(
-        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+        "Something went wrong... If you really are stuck, share the report with your friendly support service",
     );
     expect("div.o_error_detail").toHaveCount(0);
     await click("main button");
@@ -71,7 +73,7 @@ test("Client ErrorDialog with traceback", async () => {
     expect("main button").toHaveText("See technical details");
     expect(queryAllTexts("footer button")).toEqual(["Close"]);
     expect("main p").toHaveText(
-        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+        "Something went wrong... If you really are stuck, share the report with your friendly support service",
     );
     expect("div.o_error_detail").toHaveCount(0);
     await click("main button");
@@ -96,7 +98,7 @@ test("button clipboard copy error traceback", async () => {
     patchWithCleanup(navigator.clipboard, {
         writeText(value) {
             expect(value).toBe(
-                `${error.name}\n\n${error.message}\n\nOccured on 2019-03-11 09:30:00 GMT\n\n${error.traceback}`
+                `${error.name}\n\n${error.message}\n\nOccured on 2019-03-11 09:30:00 GMT\n\n${error.traceback}`,
             );
         },
     });
@@ -185,7 +187,10 @@ test("RedirectWarningDialog", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Odoo Warning");
     expect("main").toHaveText("Some strange unreadable message");
-    expect(queryAllTexts("footer button")).toEqual(["Buy book on cryptography", "Close"]);
+    expect(queryAllTexts("footer button")).toEqual([
+        "Buy book on cryptography",
+        "Close",
+    ]);
 
     await click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
     await animationFrame();
@@ -203,7 +208,7 @@ test("Error504Dialog", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Request timeout");
     expect("main p").toHaveText(
-        "The operation was interrupted. This usually means that the current operation is taking too much time."
+        "The operation was interrupted. This usually means that the current operation is taking too much time.",
     );
     expect(".o_dialog footer button").toHaveText("Close");
 });
@@ -221,7 +226,7 @@ test("SessionExpiredDialog", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Odoo Session Expired");
     expect("main p").toHaveText(
-        "Your Odoo session expired. The current page is about to be refreshed."
+        "Your Odoo session expired. The current page is about to be refreshed.",
     );
     expect(".o_dialog footer button").toHaveText("Close");
     await click(".o_dialog footer button");

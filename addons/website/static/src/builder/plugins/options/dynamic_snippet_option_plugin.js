@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 import { DynamicSnippetOption } from "./dynamic_snippet_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 

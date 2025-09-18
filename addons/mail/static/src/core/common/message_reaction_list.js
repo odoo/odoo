@@ -1,12 +1,10 @@
 import { useHover } from "@mail/utils/common/hooks";
 import { Component } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { loadEmoji } from "@web/components/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
 export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
     static components = { Dropdown };
@@ -46,12 +44,15 @@ export class MessageReactionList extends Component {
                     person2: personNames[1],
                 });
             case 3:
-                return _t("%(emoji)s reacted by %(person1)s, %(person2)s, and %(person3)s", {
-                    emoji: shortcode,
-                    person1: personNames[0],
-                    person2: personNames[1],
-                    person3: personNames[2],
-                });
+                return _t(
+                    "%(emoji)s reacted by %(person1)s, %(person2)s, and %(person3)s",
+                    {
+                        emoji: shortcode,
+                        person1: personNames[0],
+                        person2: personNames[1],
+                        person3: personNames[2],
+                    },
+                );
             case 4:
                 return _t(
                     "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and 1 other",
@@ -60,7 +61,7 @@ export class MessageReactionList extends Component {
                         person1: personNames[0],
                         person2: personNames[1],
                         person3: personNames[2],
-                    }
+                    },
                 );
             default:
                 return _t(
@@ -71,7 +72,7 @@ export class MessageReactionList extends Component {
                         person1: personNames[0],
                         person2: personNames[1],
                         person3: personNames[2],
-                    }
+                    },
                 );
         }
     }

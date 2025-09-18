@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog, AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 
 patch(AttendeeCalendarController.prototype, {
     setup() {

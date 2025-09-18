@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { formatCurrency } from "@web/services/currency";
 
 export class BadgeExtraPrice extends Component {
     static template = "sale.BadgeExtraPrice";

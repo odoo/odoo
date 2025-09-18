@@ -1,4 +1,8 @@
-import { useEnv, useSubEnv, useState, onWillRender } from "@odoo/owl";
+// @ts-check
+
+/** @module @web/search/pager_hook - OWL hook that injects reactive pager props into the sub-environment */
+
+import { onWillRender, useEnv, useState, useSubEnv } from "@odoo/owl";
 
 /**
  * @typedef PagerUpdateParams

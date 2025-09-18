@@ -1,3 +1,5 @@
+// @ts-check
+
 import { ServerModel } from "../mock_model";
 
 export class IrAttachment extends ServerModel {

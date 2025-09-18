@@ -2,12 +2,9 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
-
 import { Component, useState } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
-import { FileUploader } from "@web/views/fields/file_handler";
-
+import { FileUploader } from "@web/fields/file_handler";
 /**
  * @typedef {Object} Props
  * @property {import("models").Activity} activity
@@ -34,7 +31,7 @@ export class ActivityListPopoverItem extends Component {
                 this.env.services["mail.store"].Thread.insert({
                     model: this.props.activity.res_model,
                     id: this.props.activity.res_id,
-                })
+                }),
             );
         }
         this.closeMarkAsDone = this.closeMarkAsDone.bind(this);
@@ -71,7 +68,9 @@ export class ActivityListPopoverItem extends Component {
 
     get hasFileUploader() {
         const activity = this.props.activity;
-        return activity.state !== "done" && activity.activity_category === "upload_file";
+        return (
+            activity.state !== "done" && activity.activity_category === "upload_file"
+        );
     }
 
     get hasMarkDoneButton() {

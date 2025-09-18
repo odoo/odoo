@@ -33,7 +33,17 @@
         border-width: var(--KanbanRecord-border-width, #{$border-width});
         border-style: solid;
         border-color: $border-color;
+        border-radius: $o-border-radius-lg;
         background-color: $o-view-background-color;
+        box-shadow: $o-shadow-xs;
+        transition: box-shadow $o-duration-fast $o-easing-standard, transform $o-duration-fast $o-easing-standard;
+
+        @media (hover: hover) {
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: $o-shadow-md;
+            }
+        }
 
         @include media-only(print) {
             .o_field_background_image {
@@ -183,14 +193,15 @@
 }
 
 .o_kanban_selection_available .o_kanban_record.o_record_selection_available {
-    background-color: rgba(0, 0, 0, 0.1);
-    > *:not(.o_record_selection_tooltip) {
-        filter: brightness(0.9);
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     &:hover {
-        background-color: rgba(0, 0, 0, 0.5);
-        > *:not(.o_record_selection_tooltip) {
-            filter: brightness(0.6);
+        &::after {
+            background-color: rgba(0, 0, 0, 0.5);
         }
         .o_record_selection_tooltip {
             display: block !important;

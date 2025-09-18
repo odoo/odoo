@@ -6,41 +6,16 @@ from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuation(TestStockValuationCommon):
+class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.account_income = cls.company.income_account_id
         cls.partner_b = cls.env['res.partner'].create({'name': 'Partner B'})
-
-    def _inv_adj_two_units(self, product):
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product.id,  # tracking serial
-            'inventory_quantity': 2,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
-
-    def _so_deliver(self, product, quantity=1, price=1, picking=True):
-        so_2 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'warehouse_id': self.warehouse.id,
-            'order_line': [Command.create({
-                'name': product.name,
-                'product_id': product.id,
-                'product_uom_qty': quantity,
-                'price_unit': price,
-                'tax_ids': False,
-            })],
-        })
-        so_2.action_confirm()
-        if picking:
-            so_2.picking_ids.move_ids.write({'quantity': quantity, 'picked': True})
-            so_2.picking_ids.button_validate()
-        return so_2
 
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
@@ -54,7 +29,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         """Standard price set to 10. Get 2 units in stock. Sale order 2@12. Standard price set
         to 14. Invoice 2 without delivering. The amount in Stock OUT and COGS should be 14*2.
         """
-        self.product_standard_auto.invoice_policy = 'order'
+        self.product_standard_auto.invoice_policy = 'ordered'
         self.product_standard_auto.standard_price = 10.0
 
         # Put two items in stock.
@@ -90,7 +65,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         """Standard price set to 10. Get 2 units in stock. Sale order 2@12. Deliver 1, invoice 1,
         change the standard price to 14, deliver one, change the standard price to 16, invoice 1.
         The amounts used in Stock OUT and COGS should be 10 then 14."""
-        self.product_standard_auto.invoice_policy = 'order'
+        self.product_standard_auto.invoice_policy = 'ordered'
         self.product_standard_auto.standard_price = 10.0
 
         # Create and confirm a sale order for 2@12
@@ -153,7 +128,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         """Standard price set to 10. Get 2 units in stock. Sale order 2@12. Deliver 1, change the
         standard price to 14, deliver one, invoice 2. The amounts used in Stock OUT and COGS should
         be 12*2."""
-        self.product_standard_auto.invoice_policy = 'order'
+        self.product_standard_auto.invoice_policy = 'ordered'
         self.product_standard_auto.standard_price = 10
         self._use_inventory_location_accounting()
 
@@ -210,7 +185,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     # -------------------------------------------------------------------------
     def test_standard_delivered_invoice_pre_delivery(self):
         """Not possible to invoice pre delivery."""
-        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.invoice_policy = 'transferred'
         self.product_standard_auto.standard_price = 10
 
         # Put two items in stock.
@@ -228,7 +203,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         """Standard price set to 10. Get 2 units in stock. Sale order 2@12. Deliver 1, change the
         standard price to 14, deliver one, invoice 2. The amounts used in Stock OUT and COGS should
         be 12*2."""
-        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.invoice_policy = 'transferred'
         self.product_standard_auto.standard_price = 10
         self._use_inventory_location_accounting()
 
@@ -285,7 +260,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     # -------------------------------------------------------------------------
     def test_avco_ordered_invoice_pre_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice without delivering."""
-        self.product_avco_auto.invoice_policy = 'order'
+        self.product_avco_auto.invoice_policy = 'ordered'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -316,7 +291,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_avco_ordered_invoice_post_partial_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after delivering 1."""
-        self.product_avco_auto.invoice_policy = 'order'
+        self.product_avco_auto.invoice_policy = 'ordered'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -351,7 +326,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_avco_ordered_invoice_post_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after full delivery."""
-        self.product_avco_auto.invoice_policy = 'order'
+        self.product_avco_auto.invoice_policy = 'ordered'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -383,7 +358,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_avco_ordered_return_and_receipt(self):
         """ Sell and deliver some products before the user encodes the products receipt """
         product = self.product_avco_auto
-        product.invoice_policy = 'order'
+        product.invoice_policy = 'ordered'
         product.is_storable = True
         product.categ_id.property_cost_method = 'average'
         product.categ_id.property_valuation = 'real_time'
@@ -426,7 +401,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     # -------------------------------------------------------------------------
     def test_avco_delivered_invoice_pre_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice without delivering. """
-        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.invoice_policy = 'transferred'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -442,7 +417,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_avco_delivered_invoice_post_partial_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after delivering 1."""
-        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.invoice_policy = 'transferred'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -477,7 +452,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_avco_delivered_invoice_post_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after full delivery."""
-        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.invoice_policy = 'transferred'
         self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
@@ -514,7 +489,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         Standard price set to 10. Sale order 2@12. One of the delivered
         products was owned by an external partner. Invoice after full delivery.
         """
-        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.invoice_policy = 'transferred'
         self.product_avco_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1, owner_id=self.partner_b)
@@ -555,7 +530,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         Standard price set to 10. Sale order 2@12. The products are owned by an
         external partner. Invoice after full delivery.
         """
-        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.invoice_policy = 'transferred'
         self.product_avco_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 2, owner_id=self.partner_b)
@@ -581,7 +556,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_ordered_invoice_pre_delivery(self):
         """Receive at 8 then at 10. Sale order 2@12. Invoice without delivering.
         As no standard price is set, the Stock OUT and COGS amounts are 0."""
-        self.product_fifo_auto.invoice_policy = 'order'
+        self.product_fifo_auto.invoice_policy = 'ordered'
 
         self._fifo_in_one_eight_one_ten()
 
@@ -611,7 +586,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_ordered_invoice_post_partial_delivery(self):
         """Receive 1@8, 1@10, so 2@12, standard price 12, deliver 1, invoice 2: the COGS amount
         should be 20: 1 really delivered at 10 and the other valued at the standard price 10."""
-        self.product_fifo_auto.invoice_policy = 'order'
+        self.product_fifo_auto.invoice_policy = 'ordered'
 
         self._fifo_in_one_eight_one_ten()
 
@@ -648,7 +623,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_fifo_ordered_invoice_post_delivery(self):
         """Receive at 8 then at 10. Sale order 2@12. Invoice after delivering everything."""
-        self.product_fifo_auto.invoice_policy = 'order'
+        self.product_fifo_auto.invoice_policy = 'ordered'
 
         self._fifo_in_one_eight_one_ten()
 
@@ -683,7 +658,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     # FIFO Delivered
     # -------------------------------------------------------------------------
     def test_fifo_delivered_invoice_pre_delivery(self):
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
         self.product_fifo_auto.standard_price = 10
 
         self._fifo_in_one_eight_one_ten()
@@ -699,7 +674,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_delivered_invoice_post_partial_delivery(self):
         """Receive 1@8, 1@10, so 2@12, standard price 12, deliver 1, invoice 2: the price used should be 10:
         one at 8 and one at 10."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
 
         self._fifo_in_one_eight_one_ten()
 
@@ -736,7 +711,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_fifo_delivered_invoice_post_delivery(self):
         """Receive at 8 then at 10. Sale order 2@12. Invoice after delivering everything."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
         self.product_fifo_auto.standard_price = 10
 
         self._fifo_in_one_eight_one_ten()
@@ -771,7 +746,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_delivered_invoice_post_delivery_2(self):
         """Receive at 8 then at 10. Sale order 10@12 and deliver without receiving the 2 missing.
         receive 2@12. Invoice."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
         self.product_fifo_auto.standard_price = 10
 
         self._make_in_move(self.product_fifo_auto, 8, 10)
@@ -806,7 +781,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_delivered_invoice_post_delivery_3(self):
         """Receive 5@8, receive 8@12, sale 1@20, deliver, sale 6@20, deliver. Make sure no rouding
         issues appear on the second invoice."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
 
         # +5@8
         self._make_in_move(self.product_fifo_auto, 5, 8)
@@ -834,7 +809,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         """Receive 8@10. Sale order 10@12. Deliver and also invoice it without receiving the 2 missing.
         Now, receive 2@12. Make sure price difference is correctly reflected in expense account at
         closing."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
         self.product_fifo_auto.standard_price = 10
 
         self._make_in_move(self.product_fifo_auto, 8, 10)
@@ -861,7 +836,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
         """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
         Re-deliver returned from SO1. Invoice after delivering everything."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
 
         # Receive 2@10.
         self._make_in_move(self.product_fifo_auto, 2, 10)
@@ -952,10 +927,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         # Create, confirm and deliver a sale order for 12@1.5 without reception with std_price = 2.0 (SO1)
         so_1 = self.env['sale.order'].sudo().create({
             'partner_id': self.owner.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'name': self.product_fifo_auto.name,
                 'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
                 'product_uom_id': unit_12.id,
                 'price_unit': 18,
                 'tax_ids': False,  # no love taxes amls
@@ -1000,10 +975,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         # Create, confirm and deliver a sale order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
         so_2 = self.env['sale.order'].sudo().create({
             'partner_id': self.owner.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'name': self.product_fifo_auto.name,
                 'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
                 'product_uom_id': unit_12.id,
                 'price_unit': 18,
                 'tax_ids': False,  # no love taxes amls
@@ -1109,7 +1084,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         When creating an invoice for a returned product, the value of the anglo-saxo lines
         should be based on the returned product's value
         """
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
 
         # Receive one @10, one @20 and one @60
         svl_values = [10, 20, 60]
@@ -1167,7 +1142,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         ])
 
     def test_fifo_several_invoices_reset_repost(self):
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
 
         svl_values = [10, 15, 65]
         total_value = sum(svl_values)
@@ -1198,21 +1173,21 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
         # Reset and repost each invoice
         for i, inv in enumerate(invoices):
-            inv.button_draft()
+            inv.action_draft()
             inv.action_post()
             cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
             self.assertEqual(cogs.mapped('credit'), svl_values, 'Incorrect values while posting again invoice %s' % (i + 1))
 
         # Reset and repost all invoices (we only check the total value as the
         # distribution changes but does not really matter)
-        invoices.button_draft()
+        invoices.action_draft()
         invoices.action_post()
         cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
         self.assertEqual(sum(cogs.mapped('credit')), total_value)
 
         # Reset and repost few invoices (we only check the total value as the
         # distribution changes but does not really matter)
-        (invoice01 | invoice03).button_draft()
+        (invoice01 | invoice03).action_draft()
         (invoice01 | invoice03).action_post()
         cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
         self.assertEqual(sum(cogs.mapped('credit')), total_value)
@@ -1265,7 +1240,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         Do a 100% down payment, deliver a part of it with a backorder
         then invoice the delivered part from the down payment.
         Deliver the remaining part and invoice it."""
-        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.invoice_policy = 'transferred'
         self.product_fifo_auto.standard_price = 10
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_fifo_auto.id,  # tracking serial
@@ -1343,13 +1318,13 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.owner.id,
             'warehouse_id': self.warehouse.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
                 'price_unit': 100,
             }), Command.create({
                 'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 2,
+                'product_qty': 2,
                 'price_unit': 100,
             })],
         })
@@ -1386,3 +1361,33 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
                 {'credit': 0, 'debit': 500},
             ]
         )
+
+    def test_cogs_valued_by_lots(self):
+        self.product_avco_auto.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product_avco_auto.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        self.lot1, self.lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': self.product_avco_auto.id},
+            {'name': 'lot2', 'product_id': self.product_avco_auto.id},
+        ])
+        self._make_in_move(self.product_avco_auto, 2, 10, lot_ids=[self.lot1])
+        self._make_in_move(self.product_avco_auto, 2, 16, lot_ids=[self.lot2])
+        self.assertEqual(self.product_avco_auto.standard_price, 13)
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        so = self._so_deliver(self.product_avco_auto, 1, 1)
+        invoice = so._create_invoices()
+        invoice.action_post()
+        invoice_cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(
+            invoice_cogs_lines,
+            [
+                {'credit': 10, 'debit': 0},
+                {'credit': 0, 'debit': 10},
+            ]
+        )
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        self.assertEqual(self.product_avco_auto.standard_price, 14)

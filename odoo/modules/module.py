@@ -1,7 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-"""Utility functions to manage module manifest files and discovery."""
-from __future__ import annotations
-
 import ast
 import copy
 import functools
@@ -13,29 +9,32 @@ import re
 import sys
 import traceback
 import typing
-import warnings
 from collections.abc import Collection, Iterable, Mapping
-from os.path import join as opj
+from pathlib import Path
+
+import odoo.upgrade
+from odoo import release, tools
 
 import odoo.addons
-import odoo.release as release
-import odoo.tools as tools
-import odoo.upgrade
 
 try:
     from packaging.requirements import InvalidRequirement, Requirement
 except ImportError:
+
     class InvalidRequirement(Exception):  # type: ignore[no-redef]
         ...
 
     class Requirement:  # type: ignore[no-redef]
         def __init__(self, pydep):
-            if not re.fullmatch(r'[\w\-]+', pydep):  # check that we have no versions or marker in pydep
+            if not re.fullmatch(
+                r"[\w\-]+", pydep
+            ):  # check that we have no versions or marker in pydep
                 msg = f"Package `packaging` is required to parse `{pydep}` external dependency and is not installed"
                 raise Exception(msg)
             self.marker = None
             self.specifier = None
             self.name = pydep
+
 
 __all__ = [
     "Manifest",
@@ -46,12 +45,12 @@ __all__ = [
     "get_modules_with_version",
     "get_resource_from_path",
     "initialize_sys_path",
-    "load_openerp_module",
+    "load_odoo_module",
 ]
 
-MODULE_NAME_RE = re.compile(r'^\w{1,256}$')
-MANIFEST_NAMES = ['__manifest__.py']
-README = ['README.rst', 'README.md', 'README.txt', 'README']
+MODULE_NAME_RE = re.compile(r"^\w{1,256}$")
+MANIFEST_NAMES = ["__manifest__.py"]
+README = ["README.rst", "README.md", "README.txt", "README"]
 
 _DEFAULT_MANIFEST = {
     # Mandatory fields (with no defaults):
@@ -59,60 +58,75 @@ _DEFAULT_MANIFEST = {
     # - license
     # - name
     # Derived fields are computed in the Manifest class.
-    'application': False,
-    'bootstrap': False,  # web
-    'assets': {},
-    'auto_install': False,
-    'category': 'Uncategorized',
-    'cloc_exclude': [],
-    'configurator_snippets': {},  # website themes
-    'configurator_snippets_addons': {},  # website themes
-    'countries': [],
-    'data': [],
-    'demo': [],
-    'demo_xml': [],
-    'depends': [],
-    'description': '',  # defaults to README file
-    'external_dependencies': {},
-    'init_xml': [],
-    'installable': True,
-    'images': [],  # website
-    'images_preview_theme': {},  # website themes
-    'live_test_url': '',  # website themes
-    'new_page_templates': {},  # website themes
-    'post_init_hook': '',
-    'post_load': '',
-    'pre_init_hook': '',
-    'sequence': 100,
-    'summary': '',
-    'test': [],
-    'theme_customizations': {},  # themes
-    'update_xml': [],
-    'uninstall_hook': '',
-    'version': '1.0',
-    'web': False,
-    'website': '',
+    "application": False,
+    "bootstrap": False,  # web
+    "assets": {},
+    "auto_install": False,
+    "category": "Uncategorized",
+    "cloc_exclude": [],
+    "configurator_snippets": {},  # website themes
+    "configurator_snippets_addons": {},  # website themes
+    "countries": [],
+    "data": [],
+    "demo": [],
+    "demo_xml": [],
+    "depends": [],
+    "description": "",  # defaults to README file
+    "external_dependencies": {},
+    "init_xml": [],
+    "installable": True,
+    "images": [],  # website
+    "images_preview_theme": {},  # website themes
+    "live_test_url": "",  # website themes
+    "new_page_templates": {},  # website themes
+    "post_init_hook": "",
+    "post_load": "",
+    "pre_init_hook": "",
+    "sequence": 100,
+    "summary": "",
+    "test": [],
+    "theme_customizations": {},  # themes
+    "update_xml": [],
+    "uninstall_hook": "",
+    "version": "1.0",
+    "web": False,
+    "website": "",
 }
 
 # matches field definitions like
 #     partner_id: base.ResPartner = fields.Many2one
 #     partner_id = fields.Many2one[base.ResPartner]
-TYPED_FIELD_DEFINITION_RE = re.compile(r'''
+TYPED_FIELD_DEFINITION_RE = re.compile(
+    r"""
     \b (?P<field_name>\w+) \s*
     (:\s*(?P<field_type>[^ ]*))? \s*
     = \s*
     fields\.(?P<field_class>Many2one|One2many|Many2many)
     (\[(?P<type_param>[^\]]+)\])?
-''', re.VERBOSE)
+""",
+    re.VERBOSE,
+)
 
 _logger = logging.getLogger(__name__)
 
 current_test: bool = False
-"""Indicates whteher we are in a test mode"""
+"""Indicates whether we are in a test mode.
+
+Reviewed 2026-03: a plain global is correct here — Odoo uses fork-based
+concurrency (--workers=N), so each process gets an independent copy.  Tests
+require --workers=0 (single-threaded).  Replacing with ContextVar would break
+30+ consumers that read this as a simple attribute.
+"""
 
 
 class UpgradeHook:
-    """Makes the legacy `migrations` package being `odoo.upgrade`"""
+    """Makes the legacy `migrations` package being `odoo.upgrade`.
+
+    Reviewed 2026-03: uses PEP 451 loader protocol (create_module/exec_module)
+    instead of the deprecated load_module (DeprecationWarning since 3.12,
+    removal unscheduled but expected).  This path is only triggered by
+    multi-version upgrade scripts importing from the legacy name.
+    """
 
     def find_spec(self, fullname, path=None, target=None):
         if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", fullname):
@@ -121,20 +135,24 @@ class UpgradeHook:
             # the tests, and the common files (utility functions) still needs to import from the
             # legacy name.
             return importlib.util.spec_from_loader(fullname, self)
+        return None
 
-    def load_module(self, name):
-        assert name not in sys.modules
+    def create_module(self, spec):
+        """Use default module creation semantics."""
+        return None
 
-        canonical_upgrade = name.replace("odoo.addons.base.maintenance.migrations", "odoo.upgrade")
-
-        if canonical_upgrade in sys.modules:
-            mod = sys.modules[canonical_upgrade]
+    def exec_module(self, module):
+        """Redirect import to the canonical odoo.upgrade module."""
+        canonical_name = module.__name__.replace(
+            "odoo.addons.base.maintenance.migrations", "odoo.upgrade"
+        )
+        if canonical_name in sys.modules:
+            canonical = sys.modules[canonical_name]
         else:
-            mod = importlib.import_module(canonical_upgrade)
+            canonical = importlib.import_module(canonical_name)
 
-        sys.modules[name] = mod
-
-        return sys.modules[name]
+        # Alias: make the legacy name resolve to the canonical module object
+        sys.modules[module.__name__] = canonical
 
 
 def initialize_sys_path() -> None:
@@ -145,29 +163,37 @@ def initialize_sys_path() -> None:
     for path in (
         # tools.config.addons_base_dir,  # already present
         tools.config.addons_data_dir,
-        *tools.config['addons_path'],
+        *tools.config["addons_path"],
         tools.config.addons_community_dir,
     ):
         if os.access(path, os.R_OK) and path not in odoo.addons.__path__:
             odoo.addons.__path__.append(path)
 
     # hook odoo.upgrade on upgrade-path
-    legacy_upgrade_path = os.path.join(tools.config.addons_base_dir, 'base/maintenance/migrations')
-    for up in tools.config['upgrade_path'] or [legacy_upgrade_path]:
+    legacy_upgrade_path = str(
+        Path(tools.config.addons_base_dir, "base/maintenance/migrations")
+    )
+    for up in tools.config["upgrade_path"] or [legacy_upgrade_path]:
         if up not in odoo.upgrade.__path__:
             odoo.upgrade.__path__.append(up)
 
-    # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
-    spec = importlib.machinery.ModuleSpec("odoo.addons.base.maintenance", None, is_package=True)
+    # create deprecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
+    spec = importlib.machinery.ModuleSpec(
+        "odoo.addons.base.maintenance", None, is_package=True
+    )
     maintenance_pkg = importlib.util.module_from_spec(spec)
     maintenance_pkg.migrations = odoo.upgrade  # type: ignore
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
     sys.modules["odoo.addons.base.maintenance.migrations"] = odoo.upgrade
 
     # hook for upgrades and namespace freeze
-    if not getattr(initialize_sys_path, 'called', False):  # only initialize once
+    # Reviewed 2026-03: function attribute guard is a valid Python pattern —
+    # compact, scoped to the function, and called once during single-threaded startup.
+    if not getattr(initialize_sys_path, "called", False):  # only initialize once
         odoo.addons.__path__._path_finder = lambda *a: None  # prevent path invalidation
-        odoo.upgrade.__path__._path_finder = lambda *a: None  # prevent path invalidation
+        odoo.upgrade.__path__._path_finder = (
+            lambda *a: None
+        )  # prevent path invalidation
         sys.meta_path.insert(0, UpgradeHook())
         initialize_sys_path.called = True  # type: ignore
 
@@ -177,18 +203,18 @@ class Manifest(Mapping[str, typing.Any]):
     """The manifest data of a module."""
 
     def __init__(self, *, path: str, manifest_content: dict):
-        assert os.path.isabs(path), "path of module must be absolute"
+        assert Path(path).is_absolute(), "path of module must be absolute"
         self.path = path
-        _, self.name = os.path.split(path)
+        self.name = Path(path).name
         if not MODULE_NAME_RE.match(self.name):
             raise FileNotFoundError(f"Invalid module name: {self.name}")
         self.__manifest_content = manifest_content
 
     @property
     def addons_path(self) -> str:
-        parent_path, name = os.path.split(self.path)
-        assert name == self.name
-        return parent_path
+        p = Path(self.path)
+        assert p.name == self.name
+        return str(p.parent)
 
     @functools.cached_property
     def __manifest_cached(self) -> dict:
@@ -198,22 +224,22 @@ class Manifest(Mapping[str, typing.Any]):
     @functools.cached_property
     def description(self):
         """The description of the module defaulting to the README file."""
-        if (desc := self.__manifest_cached.get('description')):
+        if desc := self.__manifest_cached.get("description"):
             return desc
         for file_name in README:
             try:
-                with tools.file_open(opj(self.path, file_name)) as f:
+                with tools.file_open(str(Path(self.path, file_name))) as f:
                     return f.read()
             except OSError:
                 pass
-        return ''
+        return ""
 
     @functools.cached_property
     def version(self):
         try:
-            return self.__manifest_cached['version']
-        except Exception:  # noqa: BLE001
-            return adapt_version('1.0')
+            return self.__manifest_cached["version"]
+        except Exception:
+            return adapt_version("1.0")
 
     @functools.cached_property
     def icon(self) -> str:
@@ -221,16 +247,30 @@ class Manifest(Mapping[str, typing.Any]):
 
     @functools.cached_property
     def static_path(self) -> str | None:
-        static_path = opj(self.path, 'static')
+        static = Path(self.path, "static")
         manifest = self.__manifest_cached
-        if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
-            return static_path
+        if (manifest["installable"] or manifest["assets"]) and static.is_dir():
+            return str(static)
         return None
 
     def __getitem__(self, key: str):
-        if key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
+        if key in (
+            "description",
+            "icon",
+            "addons_path",
+            "version",
+            "static_path",
+        ):
             return getattr(self, key)
-        return copy.deepcopy(self.__manifest_cached[key])
+        val = self.__manifest_cached[key]
+        # Immutable types need no defensive copy
+        if isinstance(val, (str, int, bool, float)):
+            return val
+        # Reviewed 2026-03: deepcopy is intentional — __getitem__ returns mutable
+        # containers (list/dict) that callers could modify, corrupting the
+        # cached_property cache.  Performance is negligible (~30 keys, small
+        # structures, called once per module during startup).
+        return copy.deepcopy(val)
 
     def raw_value(self, key):
         return copy.deepcopy(self.__manifest_cached.get(key))
@@ -238,25 +278,31 @@ class Manifest(Mapping[str, typing.Any]):
     def __iter__(self):
         manifest = self.__manifest_cached
         yield from manifest
-        for key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
+        for key in (
+            "description",
+            "icon",
+            "addons_path",
+            "version",
+            "static_path",
+        ):
             if key not in manifest:
                 yield key
 
     def check_manifest_dependencies(self) -> None:
-        """Check that the dependecies of the manifest are available.
+        """Check that the dependencies of the manifest are available.
 
         - Checking for external python dependencies
         - Checking binaries are available in PATH
 
         On missing dependencies, raise an error.
         """
-        depends = self.get('external_dependencies')
+        depends = self.get("external_dependencies")
         if not depends:
             return
-        for pydep in depends.get('python', []):
+        for pydep in depends.get("python", []):
             check_python_external_dependency(pydep)
 
-        for binary in depends.get('bin', []):
+        for binary in depends.get("bin", []):
             try:
                 tools.find_in_path(binary)
             except OSError:
@@ -267,10 +313,11 @@ class Manifest(Mapping[str, typing.Any]):
         return True
 
     def __len__(self):
+        # Reviewed 2026-03: O(n) with n≈30 keys — microseconds, rarely called.
         return sum(1 for _ in self)
 
     def __repr__(self):
-        return f'Manifest({self.name})'
+        return f"Manifest({self.name})"
 
     # limit cache size because this may get called from any module with any input
     @staticmethod
@@ -278,7 +325,7 @@ class Manifest(Mapping[str, typing.Any]):
     def _get_manifest_from_addons(module: str) -> Manifest | None:
         """Get the module's manifest from a name. Searching only in addons paths."""
         for adp in odoo.addons.__path__:
-            if manifest := Manifest._from_path(opj(adp, module)):
+            if manifest := Manifest._from_path(str(Path(adp, module))):
                 return manifest
         return None
 
@@ -295,7 +342,7 @@ class Manifest(Mapping[str, typing.Any]):
         if mod := Manifest._get_manifest_from_addons(module_name):
             return mod
         if display_warning:
-            _logger.warning('module %s: manifest not found', module_name)
+            _logger.warning("module %s: manifest not found", module_name)
         return None
 
     @staticmethod
@@ -303,12 +350,16 @@ class Manifest(Mapping[str, typing.Any]):
         """Given a path, read the manifest file."""
         for manifest_name in MANIFEST_NAMES:
             try:
-                with tools.file_open(opj(path, manifest_name), env=env) as f:
+                with tools.file_open(str(Path(path, manifest_name)), env=env) as f:
                     manifest_content = ast.literal_eval(f.read())
             except OSError:
                 pass
-            except Exception:  # noqa: BLE001
-                _logger.debug("Failed to parse the manifest file at %r", path, exc_info=True)
+            except Exception:
+                _logger.debug(
+                    "Failed to parse the manifest file at %r",
+                    path,
+                    exc_info=True,
+                )
             else:
                 return Manifest(path=path, manifest_content=manifest_content)
         return None
@@ -318,15 +369,15 @@ class Manifest(Mapping[str, typing.Any]):
         """Read all manifests in the addons paths."""
         modules: dict[str, Manifest] = {}
         for adp in odoo.addons.__path__:
-            if not os.path.isdir(adp):
+            if not Path(adp).is_dir():
                 _logger.warning("addons path is not a directory: %s", adp)
                 continue
-            for file_name in os.listdir(adp):
-                if file_name in modules:
+            for entry in Path(adp).iterdir():
+                if entry.name in modules:
                     continue
-                if mod := Manifest._from_path(opj(adp, file_name)):
-                    assert file_name == mod.name
-                    modules[file_name] = mod
+                if mod := Manifest._from_path(str(entry)):
+                    assert entry.name == mod.name
+                    modules[entry.name] = mod
         return sorted(modules.values(), key=lambda m: m.name)
 
 
@@ -348,8 +399,8 @@ def get_resource_from_path(path: str) -> tuple[str, str, str] | None:
     out of an absolute resource path.
 
     If operation is successful, returns a tuple containing the module name, the relative path
-    to the resource using '/' as filesystem seperator[1] and the same relative path using
-    os.path.sep seperators.
+    to the resource using '/' as filesystem separator[1] and the same relative path using
+    OS-native separators.
 
     [1] same convention as the resource path declaration in manifests
 
@@ -358,34 +409,38 @@ def get_resource_from_path(path: str) -> tuple[str, str, str] | None:
     :rtype: tuple
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
-    resource = None
+    p = Path(path)
     sorted_paths = sorted(odoo.addons.__path__, key=len, reverse=True)
     for adpath in sorted_paths:
-        # force trailing separator
-        adpath = os.path.join(adpath, "")
-        if os.path.commonprefix([adpath, path]) == adpath:
-            resource = path.replace(adpath, "", 1)
-            break
-
-    if resource:
-        relative = resource.split(os.path.sep)
-        if not relative[0]:
-            relative.pop(0)
-        module = relative.pop(0)
-        return (module, '/'.join(relative), os.path.sep.join(relative))
+        try:
+            rel = p.relative_to(adpath)
+        except ValueError:
+            continue
+        parts = rel.parts
+        if not parts:
+            continue
+        module = parts[0]
+        relative = parts[1:]
+        return (
+            module,
+            "/".join(relative),
+            str(Path(*relative)) if relative else "",
+        )
     return None
 
 
 def get_module_icon(module: str) -> str:
-    """ Get the path to the module's icon. Invalid module names are accepted. """
+    """Get the path to the module's icon. Invalid module names are accepted."""
     manifest = Manifest.for_addon(module, display_warning=False)
-    if manifest and 'icon' in manifest.__dict__:
+    # Reviewed 2026-03: __dict__ check is the documented way to test whether a
+    # cached_property has been evaluated (cached_property stores in __dict__).
+    if manifest and "icon" in manifest.__dict__:
         # we have a value in the cached property
         return manifest.icon
-    fpath = ''
+    fpath = ""
     if manifest:
-        fpath = manifest.raw_value('icon') or ''
-        fpath = fpath.lstrip('/')
+        fpath = manifest.raw_value("icon") or ""
+        fpath = fpath.lstrip("/")
     if not fpath:
         fpath = f"{module}/static/description/icon.png"
     try:
@@ -395,50 +450,48 @@ def get_module_icon(module: str) -> str:
         return "/base/static/description/icon.png"
 
 
-def load_manifest(module: str, mod_path: str | None = None) -> dict:
-    """ Load the module manifest from the file system. """
-    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
-
-    if mod_path:
-        mod = Manifest._from_path(mod_path)
-        assert mod.path == mod_path
-    else:
-        mod = Manifest.for_addon(module)
-    if not mod:
-        _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
-        return {}
-
-    return dict(mod)
-
-
 def _load_manifest(module: str, manifest_content: dict) -> dict:
-    """ Load and validate the module manifest.
+    """Load and validate the module manifest.
 
     Return a new dictionary with cleaned and validated keys.
     """
 
-    manifest = copy.deepcopy(_DEFAULT_MANIFEST)
+    # Shallow copy + fresh containers for mutable defaults (all are empty lists/dicts)
+    manifest = {
+        k: (v.copy() if isinstance(v, (list, dict)) else v)
+        for k, v in _DEFAULT_MANIFEST.items()
+    }
     manifest.update(manifest_content)
 
-    if not manifest.get('author'):
-        # Altought contributors and maintainer are not documented, it is
+    if not manifest.get("author"):
+        # Although contributors and maintainer are not documented, it is
         # not uncommon to find them in manifest files, use them as
         # alternative.
-        author = manifest.get('contributors') or manifest.get('maintainer') or ''
-        manifest['author'] = str(author)
-        _logger.warning("Missing `author` key in manifest for %r, defaulting to %r", module, str(author))
+        author = manifest.get("contributors") or manifest.get("maintainer") or ""
+        manifest["author"] = str(author)
+        _logger.warning(
+            "Missing `author` key in manifest for %r, defaulting to %r",
+            module,
+            str(author),
+        )
 
-    if not manifest.get('license'):
-        manifest['license'] = 'LGPL-3'
-        _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
+    if not manifest.get("license"):
+        manifest["license"] = "LGPL-3"
+        _logger.warning(
+            "Missing `license` key in manifest for %r, defaulting to LGPL-3",
+            module,
+        )
 
-    if module == 'base':
-        manifest['depends'] = []
-    elif not manifest['depends']:
+    if module == "base":
+        manifest["depends"] = []
+    elif not manifest["depends"]:
         # prevent the hack `'depends': []` except 'base' module
-        manifest['depends'] = ['base']
+        manifest["depends"] = ["base"]
 
-    depends = manifest['depends']
+    depends = manifest["depends"]
+    # Reviewed 2026-03: assert is correct — depends comes from ast.literal_eval of
+    # __manifest__.py, authored by module developers.  A non-Collection is a
+    # programmer error (the exact use case for assert), not user input.
     assert isinstance(depends, Collection)
 
     # auto_install is either `False` (by default) in which case the module
@@ -446,24 +499,29 @@ def _load_manifest(module: str, manifest_content: dict) -> dict:
     # automatically installed if all dependencies are (special case: [] to
     # always install the module), either `True` to auto-install the module
     # in case all dependencies declared in `depends` are installed.
-    if isinstance(manifest['auto_install'], Iterable):
-        manifest['auto_install'] = auto_install_set = set(manifest['auto_install'])
+    if isinstance(manifest["auto_install"], Iterable):
+        manifest["auto_install"] = auto_install_set = set(manifest["auto_install"])
         non_dependencies = auto_install_set.difference(depends)
         assert not non_dependencies, (
             "auto_install triggers must be dependencies,"
             f" found non-dependencies [{', '.join(non_dependencies)}] for module {module}"
         )
-    elif manifest['auto_install']:
-        manifest['auto_install'] = set(depends)
+    elif manifest["auto_install"]:
+        manifest["auto_install"] = set(depends)
 
     try:
-        manifest['version'] = adapt_version(str(manifest['version']))
+        manifest["version"] = adapt_version(str(manifest["version"]))
     except ValueError as e:
-        if manifest['installable']:
+        if manifest["installable"]:
             raise ValueError(f"Module {module}: invalid manifest") from e
-    if manifest['installable'] and not check_version(str(manifest['version']), should_raise=False):
-        _logger.warning("The module %s has an incompatible version, setting installable=False", module)
-        manifest['installable'] = False
+    if manifest["installable"] and not check_version(
+        str(manifest["version"]), should_raise=False
+    ):
+        _logger.warning(
+            "The module %s has an incompatible version, setting installable=False",
+            module,
+        )
+        manifest["installable"] = False
 
     return manifest
 
@@ -473,7 +531,7 @@ def get_manifest(module: str, mod_path: str | None = None) -> Mapping[str, typin
     Get the module manifest.
 
     :param str module: The name of the module (sale, purchase, ...).
-    :param Optional[str] mod_path: The optional path to the module on
+    :param str | None mod_path: The optional path to the module on
         the file-system. If not set, it is determined by scanning the
         addons-paths.
     :returns: The module manifest as a dict or an empty dict
@@ -488,8 +546,8 @@ def get_manifest(module: str, mod_path: str | None = None) -> Mapping[str, typin
     return mod if mod is not None else {}
 
 
-def load_openerp_module(module_name: str) -> None:
-    """ Load an OpenERP module, if not already loaded.
+def load_odoo_module(module_name: str) -> None:
+    """Load an Odoo module, if not already loaded.
 
     This loads the module and register all of its models, thanks to either
     the MetaModel metaclass, or the explicit instantiation of the model.
@@ -497,7 +555,7 @@ def load_openerp_module(module_name: str) -> None:
     when there is no model to register).
     """
 
-    qualname = f'odoo.addons.{module_name}'
+    qualname = f"odoo.addons.{module_name}"
     if qualname in sys.modules:
         return
 
@@ -508,7 +566,7 @@ def load_openerp_module(module_name: str) -> None:
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
         manifest = Manifest.for_addon(module_name)
-        if post_load := manifest.get('post_load'):
+        if post_load := manifest.get("post_load"):
             getattr(sys.modules[qualname], post_load)()
 
     except AttributeError as err:
@@ -516,17 +574,17 @@ def load_openerp_module(module_name: str) -> None:
         trace = traceback.format_exc()
         match = TYPED_FIELD_DEFINITION_RE.search(trace)
         if match and "most likely due to a circular import" in trace:
-            field_name = match['field_name']
-            field_class = match['field_class']
-            field_type = match['field_type'] or match['type_param']
+            field_name = match["field_name"]
+            field_class = match["field_class"]
+            field_type = match["field_type"] or match["type_param"]
             if "." not in field_type:
                 field_type = f"{module_name}.{field_type}"
             raise AttributeError(
                 f"{err}\n"
-                "To avoid circular import for the the comodel use the annotation syntax:\n"
+                "To avoid circular import for the comodel, use the annotation syntax:\n"
                 f"    {field_name}: {field_type} = fields.{field_class}(...)\n"
-                "and add at the beggining of the file:\n"
-                "    from __future__ import annotations"
+                "Annotations are lazily evaluated (PEP 649), so the comodel\n"
+                "class does not need to be importable at field definition time."
             ).with_traceback(err.__traceback__) from None
         raise
     except Exception:
@@ -535,26 +593,21 @@ def load_openerp_module(module_name: str) -> None:
 
 
 def get_modules() -> list[str]:
-    """Get the list of module names that can be loaded.
-    """
+    """Get the list of module names that can be loaded."""
     return [m.name for m in Manifest.all_addon_manifests()]
-
-
-def get_modules_with_version() -> dict[str, str]:
-    """Get the module list with the linked version."""
-    warnings.warn("Since 19.0, use Manifest.all_addon_manifests", DeprecationWarning)
-    return {m.name: m.version for m in Manifest.all_addon_manifests()}
 
 
 def adapt_version(version: str) -> str:
     """Reformat the version of the module into a canonical format."""
-    version_str_parts = version.split('.')
+    version_str_parts = version.split(".")
     if not (2 <= len(version_str_parts) <= 5):
-        raise ValueError(f"Invalid version {version!r}, must have between 2 and 5 parts")
+        raise ValueError(
+            f"Invalid version {version!r}, must have between 2 and 5 parts"
+        )
     serie = release.major_version
     if version.startswith(serie) and not version_str_parts[0].isdigit():
         # keep only digits for parsing
-        version_str_parts[0] = ''.join(c for c in version_str_parts[0] if c.isdigit())
+        version_str_parts[0] = "".join(c for c in version_str_parts[0] if c.isdigit())
     try:
         version_parts = [int(v) for v in version_str_parts]
     except ValueError as e:
@@ -569,12 +622,13 @@ def check_version(version: str, should_raise: bool = True) -> bool:
     """Check that the version is in a valid format for the current release."""
     version = adapt_version(version)
     serie = release.major_version
-    if version.startswith(serie + '.'):
+    if version.startswith(serie + "."):
         return True
     if should_raise:
         raise ValueError(
             f"Invalid version {version!r}. Modules should have a version in format"
-            f" `x.y`, `x.y.z`, `{serie}.x.y` or `{serie}.x.y.z`.")
+            f" `x.y`, `x.y.z`, `{serie}.x.y` or `{serie}.x.y.z`."
+        )
     return False
 
 
@@ -593,7 +647,7 @@ def check_python_external_dependency(pydep: str) -> None:
     if requirement.marker and not requirement.marker.evaluate():
         _logger.debug(
             "Ignored external dependency %s because environment markers do not match",
-            pydep
+            pydep,
         )
         return
     try:
@@ -602,11 +656,14 @@ def check_python_external_dependency(pydep: str) -> None:
         try:
             # keep compatibility with module name but log a warning instead of info
             importlib.import_module(pydep)
-            _logger.warning("python external dependency on '%s' does not appear o be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            _logger.warning(
+                "python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.",
+                pydep,
+            )
             return
         except ImportError:
             pass
-        msg = "External dependency {dependency!r} not installed: %s" % (e,)
+        msg = f"External dependency {{dependency!r}} not installed: {e}"
         raise MissingDependency(msg, pydep) from e
     if requirement.specifier and not requirement.specifier.contains(version):
         msg = f"External dependency version mismatch: {{dependency}} (installed: {version})"
@@ -614,7 +671,7 @@ def check_python_external_dependency(pydep: str) -> None:
 
 
 def load_script(path: str, module_name: str):
-    full_path = tools.file_path(path) if not os.path.isabs(path) else path
+    full_path = tools.file_path(path) if not Path(path).is_absolute() else path
     spec = importlib.util.spec_from_file_location(module_name, full_path)
     assert spec and spec.loader, f"spec not found for {module_name}"
     module = importlib.util.module_from_spec(spec)

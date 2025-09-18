@@ -103,7 +103,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         }])
 
         # Analytic lines are deleted when resetting to draft
-        out_invoice.button_draft()
+        out_invoice.action_draft()
         self.assertFalse(self.get_analytic_lines(out_invoice))
 
     def test_analytic_lines_multicurrency(self):
@@ -193,7 +193,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             },
         ])
 
-        out_invoice.button_draft()
+        out_invoice.action_draft()
         # in this scenario,
         # 25% of 182.25 = 45.5625 rounded to 45.56
         # 45.56 * 4 = 182.24
@@ -324,7 +324,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         self.assertEqual(invoice.state, 'posted')
 
         # reset and post without the validate_analytic context key
-        invoice.button_draft()
+        invoice.action_draft()
         invoice.invoice_line_ids.analytic_distribution = {self.analytic_account_4.id: 0.9}
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')

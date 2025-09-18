@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
-import { isCSSColor } from "@web/core/utils/colors";
+import { isCSSColor } from "@web/core/utils/format/colors";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class Countdown extends Interaction {

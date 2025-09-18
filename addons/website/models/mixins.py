@@ -10,7 +10,7 @@ from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.tools import escape_psql
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
 
 logger = logging.getLogger(__name__)

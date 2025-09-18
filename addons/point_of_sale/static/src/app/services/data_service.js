@@ -1,18 +1,17 @@
-import { Reactive } from "@web/core/utils/reactive";
-import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
-import { registry } from "@web/core/registry";
-import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
-import { debounce } from "@web/core/utils/timing";
-import IndexedDB from "../models/utils/indexed_db";
-import { DataServiceOptions } from "../models/data_service_options";
+import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
+import { Reactive } from "@web/core/utils/reactive";
+import { debounce } from "@web/core/utils/timing";
+import { DataServiceOptions } from "../models/data_service_options";
+import IndexedDB from "../models/utils/indexed_db";
 import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
-
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
 
@@ -37,7 +36,7 @@ export class PosData extends Reactive {
         this.channels = [];
         this.debouncedSynchronizeLocalDataInIndexedDB = debounce(
             this.synchronizeLocalDataInIndexedDB.bind(this),
-            300
+            300,
         );
 
         this.network = {
@@ -90,7 +89,7 @@ export class PosData extends Reactive {
                 if (navigator.onLine) {
                     this.checkConnectivityTimeout = setTimeout(
                         () => this.checkConnectivity(),
-                        2000
+                        2000,
                     );
                 }
             }
@@ -113,7 +112,7 @@ export class PosData extends Reactive {
                 "DataService",
                 "reconnectWebSocket",
                 `Reconnecting to channe ${channel.channel}`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
         }
     }
@@ -136,12 +135,19 @@ export class PosData extends Reactive {
         await this.indexedDB.reset();
     }
 
+    async deleteRecordsInIndexedDB(model, ids) {
+        return await this.indexedDB.delete(model, ids);
+    }
+
     async initIndexedDB(relations) {
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
         // generally those that can be created in the frontend.
         const allModelNames = Array.from(
-            new Set([...Object.keys(relations), ...Object.keys(this.opts.databaseTable)])
+            new Set([
+                ...Object.keys(relations),
+                ...Object.keys(this.opts.databaseTable),
+            ]),
         );
         const models = allModelNames.map((model) => {
             const key = this.opts.databaseTable[model]?.key || "id";
@@ -203,7 +209,7 @@ export class PosData extends Reactive {
                         "DataService",
                         "synchronizeServerDataInIndexedDB",
                         `Error while updating ${model} in indexedDB.`,
-                        CONSOLE_COLOR
+                        CONSOLE_COLOR,
                     );
                 }
             }
@@ -212,7 +218,7 @@ export class PosData extends Reactive {
                 "DataService",
                 "synchronizeServerDataInIndexedDB",
                 "Error while synchronizing server data in indexedDB.",
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
         }
     }
@@ -292,10 +298,11 @@ export class PosData extends Reactive {
                     [odoo.pos_session_id, PosData.modelToLoad],
                     {
                         context: {
-                            pos_last_server_date: serverDateTime > lastConfigChange && serverDate,
+                            pos_last_server_date:
+                                serverDateTime > lastConfigChange && serverDate,
                             pos_limited_loading: limitedLoading,
                         },
-                    }
+                    },
                 );
 
                 const local_records_to_filter = {};
@@ -306,10 +313,11 @@ export class PosData extends Reactive {
                     }
                 }
 
-                const data_to_remove = await this.orm.call("pos.session", "filter_local_data", [
-                    odoo.pos_session_id,
-                    local_records_to_filter,
-                ]);
+                const data_to_remove = await this.orm.call(
+                    "pos.session",
+                    "filter_local_data",
+                    [odoo.pos_session_id, local_records_to_filter],
+                );
 
                 for (const [model, values] of Object.entries(data)) {
                     let local = localData[model] || [];
@@ -317,7 +325,7 @@ export class PosData extends Reactive {
                     if (this.opts.uniqueModels.includes(model) && values.length > 0) {
                         this.indexedDB.delete(
                             model,
-                            local.map((r) => r.id)
+                            local.map((r) => r.id),
                         );
                         localData[model] = values;
                     } else {
@@ -332,7 +340,9 @@ export class PosData extends Reactive {
 
                 this.synchronizeServerDataInIndexedDB(localData);
             } catch (error) {
-                let message = _t("An error occurred while loading the Point of Sale: \n");
+                let message = _t(
+                    "An error occurred while loading the Point of Sale: \n",
+                );
                 if (error instanceof RPCError) {
                     message += error.data.message;
                 } else {
@@ -355,13 +365,18 @@ export class PosData extends Reactive {
         delete data["pos.order.line"];
 
         this.models.loadConnectedData(data, this.modelToLoad);
-        this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
+        this.models.loadConnectedData(
+            { "pos.order": order, "pos.order.line": orderlines },
+            [],
+        );
         this.sanitizeData();
     }
 
     async sanitizeData() {
         const order_to_delete = this.models["pos.order"].filter((order) =>
-            order.lines.some((line) => line.is_reward_line && !line.coupon_id && !line.reward_id)
+            order.lines.some(
+                (line) => line.is_reward_line && !line.coupon_id && !line.reward_id,
+            ),
         );
         for (const order of order_to_delete) {
             for (let i = order.lines.length - 1; i >= 0; i--) {
@@ -439,14 +454,14 @@ export class PosData extends Reactive {
         const measure = window.performance.measure(
             "pos_loading",
             "pos_data_service_init",
-            "pos_data_service_init_end"
+            "pos_data_service_init_end",
         );
 
         logPosMessage(
             "DataService",
             "debugInfos",
             `PosDataService initialized in ${measure.duration.toFixed(2)}ms`,
-            CONSOLE_COLOR
+            CONSOLE_COLOR,
         );
     }
 
@@ -458,7 +473,7 @@ export class PosData extends Reactive {
 
             this.models[dynamicModel].addEventListener(
                 "update",
-                this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
+                this.debouncedSynchronizeLocalDataInIndexedDB.bind(this),
             );
         }
 
@@ -571,14 +586,16 @@ export class PosData extends Reactive {
                                     "DataService",
                                     "execute",
                                     "Warning, attempt to load a non-existent field.",
-                                    CONSOLE_COLOR
+                                    CONSOLE_COLOR,
                                 );
                                 continue;
                             }
 
                             if (X2MANY_TYPES.has(fieldsParams.type)) {
                                 formattedForUpdate[field] = value
-                                    .filter((id) => this.models[fieldsParams.relation].get(id))
+                                    .filter((id) =>
+                                        this.models[fieldsParams.relation].get(id),
+                                    )
                                     .map((id) => [
                                         "link",
                                         this.models[fieldsParams.relation].get(id),
@@ -595,8 +612,12 @@ export class PosData extends Reactive {
                             }
                         }
 
-                        localRecord.update(formattedForUpdate, { omitUnknownField: true });
-                        this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
+                        localRecord.update(formattedForUpdate, {
+                            omitUnknownField: true,
+                        });
+                        this.synchronizeServerDataInIndexedDB({
+                            [model]: [localRecord.raw],
+                        });
                     } else {
                         nonExistentRecords.push(record);
                     }
@@ -607,7 +628,7 @@ export class PosData extends Reactive {
                         "DataService",
                         "execute",
                         "Warning, attempt to load a non-existent record with limited fields.",
-                        CONSOLE_COLOR
+                        CONSOLE_COLOR,
                     );
                     result = nonExistentRecords;
                 }
@@ -626,7 +647,9 @@ export class PosData extends Reactive {
                 const localRecord = this.models[model].get(ids[0]);
                 if (localRecord) {
                     localRecord.update(values, { omitUnknownField: true });
-                    this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
+                    this.synchronizeServerDataInIndexedDB({
+                        [model]: [localRecord.raw],
+                    });
                 }
             }
 
@@ -668,10 +691,13 @@ export class PosData extends Reactive {
         }
 
         const missingRecords = {};
-        const recordInMapByModelIds = Object.entries(recordMap).reduce((acc, [model, records]) => {
-            acc[model] = new Set(records.map((r) => r.id));
-            return acc;
-        }, {});
+        const recordInMapByModelIds = Object.entries(recordMap).reduce(
+            (acc, [model, records]) => {
+                acc[model] = new Set(records.map((r) => r.id));
+                return acc;
+            },
+            {},
+        );
 
         for (const [model, records] of Object.entries(recordMap)) {
             if (!acc[model]) {
@@ -685,7 +711,7 @@ export class PosData extends Reactive {
             }
 
             const relations = Object.entries(this.relations[model]).filter(
-                ([, rel]) => rel.relation && rel.type && this.models[rel.relation]
+                ([, rel]) => rel.relation && rel.type && this.models[rel.relation],
             );
 
             for (const [, rel] of relations) {
@@ -693,19 +719,26 @@ export class PosData extends Reactive {
                     continue;
                 }
 
-                if (this.opts.prohibitedAutoLoadedFields[rel.model]?.includes(rel.name)) {
+                if (
+                    this.opts.prohibitedAutoLoadedFields[rel.model]?.includes(rel.name)
+                ) {
                     continue;
                 }
 
                 const values = records.map((record) => record[rel.name]).flat();
                 const missing = values.filter((value) => {
-                    if (!value || typeof value !== "number" || idsMap[rel.relation]?.has(value)) {
+                    if (
+                        !value ||
+                        typeof value !== "number" ||
+                        idsMap[rel.relation]?.has(value)
+                    ) {
                         return false;
                     }
 
                     const record = this.models[rel.relation].get(value);
                     return (
-                        (!record || !record.id) && !recordInMapByModelIds[rel.relation]?.has(value)
+                        (!record || !record.id) &&
+                        !recordInMapByModelIds[rel.relation]?.has(value)
                     );
                 });
 
@@ -732,7 +765,8 @@ export class PosData extends Reactive {
 
             try {
                 if (["product.product", "product.template"].includes(model)) {
-                    const domain = model === "product.product" ? "product_variant_ids.id" : "id";
+                    const domain =
+                        model === "product.product" ? "product_variant_ids.id" : "id";
                     await this.callRelated(
                         "product.template",
                         "load_product_from_pos",
@@ -741,14 +775,19 @@ export class PosData extends Reactive {
                             context: {
                                 load_archived: true,
                             },
-                        }
+                        },
                     );
                     continue;
                 }
 
-                const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
-                    load: false,
-                });
+                const data = await this.orm.read(
+                    model,
+                    Array.from(ids),
+                    this.fields[model],
+                    {
+                        load: false,
+                    },
+                );
                 newRecordMap[model] = data;
             } catch {
                 newRecordMap[model] = [];
@@ -789,7 +828,7 @@ export class PosData extends Reactive {
             [domain],
             {},
             false,
-            true
+            true,
         );
         const config = this.models["pos.config"].get(odoo.pos_config_id);
         const session = this.models["pos.session"].get(odoo.pos_session_id);
@@ -805,7 +844,9 @@ export class PosData extends Reactive {
 
     async checkAndDeleteMissingOrders(results) {
         if (results && results["pos.order"]) {
-            const ids = new Set(results["pos.order"].filter((o) => o.isSynced).map((o) => o.id));
+            const ids = new Set(
+                results["pos.order"].filter((o) => o.isSynced).map((o) => o.id),
+            );
             if (ids.size) {
                 const orders = await this.loadServerOrders([["id", "in", [...ids]]]);
                 const serverIds = orders.map((r) => r.id);
@@ -876,9 +917,22 @@ export class PosData extends Reactive {
     // In a silent call we ignore the error and return false instead
     async silentCall(model, method, args = [], kwargs = {}, queue = false) {
         try {
-            return await this.execute({ type: "call", model, method, args, kwargs, queue });
+            return await this.execute({
+                type: "call",
+                model,
+                method,
+                args,
+                kwargs,
+                queue,
+            });
         } catch (e) {
-            logPosMessage("DataService", "silentCall", "Silent call failed", CONSOLE_COLOR, [e]);
+            logPosMessage(
+                "DataService",
+                "silentCall",
+                "Silent call failed",
+                CONSOLE_COLOR,
+                [e],
+            );
             return false;
         }
     }
@@ -889,9 +943,16 @@ export class PosData extends Reactive {
         args = [],
         kwargs = {},
         queue = true,
-        loadMessingRecords = false
+        loadMessingRecords = false,
     ) {
-        let data = await this.execute({ type: "call", model, method, args, kwargs, queue });
+        let data = await this.execute({
+            type: "call",
+            model,
+            method,
+            args,
+            kwargs,
+            queue,
+        });
 
         if (loadMessingRecords) {
             data = await this.missingRecursive(data);
@@ -922,17 +983,19 @@ export class PosData extends Reactive {
     }
 
     localDeleteCascade(record, removeFromServer = false) {
-        const recordModel = record.constructor.pythonModel;
+        const recordModel = record.model.name;
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
             .map((rel) => rel.name);
-        const recordsToDelete = relationsToDelete.flatMap((relation) => record[relation]);
+        const recordsToDelete = relationsToDelete.flatMap(
+            (relation) => record[relation] || [],
+        );
 
         // Delete all children records before main record
-        this.indexedDB.delete(recordModel, [record.uuid]);
+        this.deleteRecordsInIndexedDB(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.name, [item.uuid]);
+            this.deleteRecordsInIndexedDB(item.model.name, [item.uuid]);
             item.delete({ silent: !removeFromServer });
         }
 
@@ -947,7 +1010,8 @@ export class PosData extends Reactive {
 
     isLimitedLoading() {
         const url = new URL(window.location.href);
-        const limitedLoading = url.searchParams.get("limited_loading") === "0" ? false : true;
+        const limitedLoading =
+            url.searchParams.get("limited_loading") === "0" ? false : true;
 
         if (!limitedLoading) {
             url.searchParams.delete("limited_loading");

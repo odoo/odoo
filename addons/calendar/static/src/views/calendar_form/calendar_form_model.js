@@ -1,9 +1,9 @@
 import { onWillStart } from "@odoo/owl";
 
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { Record } from "@web/model/relational_model/record";
+import { RelationalRecord } from "@web/model/relational_model/record";
 
-class CalendarFormRecord extends Record {
+class CalendarFormRecord extends RelationalRecord {
 
     async setLocation() {
         const videoLocation = await this.model.discussVideocallLocation;

@@ -8,7 +8,7 @@
 Partners Geolocation
 ========================
     """,
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
         'views/geo_provider_view.xml',

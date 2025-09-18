@@ -1,14 +1,17 @@
-import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { PineLabs, PineLabsError } from "@pos_self_order_pine_labs/app/pine_labs";
-import { _t } from "@web/core/l10n/translation";
+import {
+    PineLabs,
+    PineLabsError,
+} from "@pos_self_order_pine_labs/app/pine_labs";
 
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 patch(SelfOrder.prototype, {
     async setup() {
         await super.setup(...arguments);
 
         const pineLabsPaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "pine_labs"
+            (p) => p.use_payment_terminal === "pine_labs",
         );
 
         if (pineLabsPaymentMethod) {
@@ -16,7 +19,7 @@ patch(SelfOrder.prototype, {
                 pineLabsPaymentMethod,
                 this.access_token,
                 this.config,
-                this.handlePineLabsError.bind(this)
+                this.handlePineLabsError.bind(this),
             );
         }
     },
@@ -24,9 +27,11 @@ patch(SelfOrder.prototype, {
     filterPaymentMethods(pms) {
         const filteredPaymentMethods = super.filterPaymentMethods(...arguments);
         const pineLabsPaymentMethods = pms.filter(
-            (rec) => rec.use_payment_terminal === "pine_labs"
+            (rec) => rec.use_payment_terminal === "pine_labs",
         );
-        return [...new Set([...filteredPaymentMethods, ...pineLabsPaymentMethods])];
+        return [
+            ...new Set([...filteredPaymentMethods, ...pineLabsPaymentMethods]),
+        ];
     },
 
     handlePineLabsError(error, type) {
@@ -37,10 +42,12 @@ patch(SelfOrder.prototype, {
     handleErrorNotification(error, type = "danger") {
         if (error instanceof PineLabsError) {
             this.notification.add(
-                _t(`Pine Labs Error: %(errorMessage)s`, { errorMessage: error.message || "" }),
+                _t(`Pine Labs Error: %(errorMessage)s`, {
+                    errorMessage: error.message || "",
+                }),
                 {
                     type: type,
-                }
+                },
             );
         } else {
             super.handleErrorNotification(...arguments);

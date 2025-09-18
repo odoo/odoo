@@ -3,7 +3,7 @@
 import pytz
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 from odoo import models, fields, api, exceptions, _
 
 

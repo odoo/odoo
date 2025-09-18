@@ -1,8 +1,10 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useBus, useService } from "@web/core/utils/hooks";
+// @ts-check
+
+/** @module @web/webclient/debug/profiling/profiling_item - Debug menu dropdown item for toggling SQL/trace profiling collectors */
 
 import { Component, EventBus } from "@odoo/owl";
-
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { useBus, useService } from "@web/core/utils/hooks";
 export class ProfilingItem extends Component {
     static components = { DropdownItem };
     static template = "web.DebugMenu.ProfilingItem";
@@ -11,7 +13,7 @@ export class ProfilingItem extends Component {
     };
     setup() {
         this.profiling = useService("profiling");
-        useBus(this.props.bus, "UPDATE", this.render);
+        useBus(this.props.bus, "UPDATE", /** @type {any} */ (this.render));
     }
 
     changeParam(param, ev) {
@@ -27,7 +29,8 @@ export class ProfilingItem extends Component {
             this.env.services.action.doAction("base.action_menu_ir_profile");
         } else {
             // No action service means we are in the frontend.
-            window.location = "/web/#action=base.action_menu_ir_profile";
+            /** @type {any} */ (window).location =
+                "/web/#action=base.action_menu_ir_profile";
         }
     }
 }

@@ -1,10 +1,9 @@
-import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useState } from "@odoo/owl";
+import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class SelectLotPopup extends Component {
     static template = "point_of_sale.SelectLotPopup";
     static components = { Dialog, AutoComplete };
@@ -49,7 +48,9 @@ export class SelectLotPopup extends Component {
                     const filteredOptions = this.props.options.filter(
                         (option) =>
                             option.name.includes(currentInput) &&
-                            !this.state.values.some((value) => value.text === option.name)
+                            !this.state.values.some(
+                                (value) => value.text === option.name,
+                            ),
                     );
                     if (filteredOptions.length) {
                         return filteredOptions.map((option) => ({
@@ -89,10 +90,13 @@ export class SelectLotPopup extends Component {
     }
     onSelect(lot) {
         if (this.state.values.some((item) => item.text == lot.currentInput)) {
-            return this.notification.add(_t("The Lot/Serial number is already added."), {
-                type: "warning",
-                sticky: false,
-            });
+            return this.notification.add(
+                _t("The Lot/Serial number is already added."),
+                {
+                    type: "warning",
+                    sticky: false,
+                },
+            );
         }
         if (!lot.create) {
             return this.notification.add(_t("The Lot/Serial number is not valid"), {
@@ -103,7 +107,9 @@ export class SelectLotPopup extends Component {
         const newItem = lot.currentInput
             ? { text: lot.currentInput, id: lot.id }
             : { text: lot.label, id: lot.id };
-        this.state.values = this.props.isSingleItem ? [newItem] : [...this.state.values, newItem];
+        this.state.values = this.props.isSingleItem
+            ? [newItem]
+            : [...this.state.values, newItem];
         this.state.value = this.props.isSingleItem ? newItem.text : "";
     }
     removeItem(id) {

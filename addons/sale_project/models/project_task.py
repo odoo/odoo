@@ -12,12 +12,12 @@ class ProjectTask(models.Model):
 
     def _domain_sale_line_id(self):
         domain = Domain.AND([
-            self.env['sale.order.line']._sellable_lines_domain(),
+            self.env['sale.order.line']._get_lines_sellable_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
                 '|',
-                ('order_partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
-                ('order_partner_id', '=?', unquote('partner_id')),
+                ('partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
+                ('partner_id', '=?', unquote('partner_id')),
             ],
         ])
         return domain
@@ -108,7 +108,7 @@ class ProjectTask(models.Model):
             if task.sale_order_id and task.partner_id.commercial_partner_id not in consistent_partners:
                 task.sale_order_id = task.sale_line_id = False
 
-    @api.depends('sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    @api.depends('sale_line_id.partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not (task.allow_billable or task.parent_id.allow_billable):
@@ -217,11 +217,11 @@ class ProjectTask(models.Model):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
         return partner or super()._rating_get_partner()
 
-    @api.depends('sale_order_id.invoice_status', 'sale_order_id.order_line')
+    @api.depends('sale_order_id.invoice_state', 'sale_order_id.line_ids')
     def _compute_task_to_invoice(self):
         for task in self:
             if task.sale_order_id:
-                task.task_to_invoice = bool(task.sale_order_id.invoice_status not in ('no', 'invoiced'))
+                task.task_to_invoice = bool(task.sale_order_id.invoice_state not in ('no', 'invoiced'))
             else:
                 task.task_to_invoice = False
 
@@ -232,15 +232,15 @@ class ProjectTask(models.Model):
         sql = SQL("""(
             SELECT so.id
             FROM sale_order so
-            WHERE so.invoice_status != 'invoiced'
-                AND so.invoice_status != 'no'
+            WHERE so.invoice_state != 'invoiced'
+                AND so.invoice_state != 'no'
         )""")
         return [('sale_order_id', 'in', sql)]
 
     @api.onchange('sale_line_id')
     def _onchange_partner_id(self):
         if not self.partner_id and self.sale_line_id:
-            self.partner_id = self.sale_line_id.order_partner_id
+            self.partner_id = self.sale_line_id.partner_id
 
     def _get_projects_to_make_billable_domain(self, additional_domain=None):
         return Domain.AND([

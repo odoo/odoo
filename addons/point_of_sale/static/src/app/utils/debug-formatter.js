@@ -1,7 +1,8 @@
+import { toRaw } from "@odoo/owl";
+
+import { WithLazyGetterTrap } from "../../lazy_getter";
 import { Base } from "../models/related_models";
 import { RAW_SYMBOL } from "../models/related_models/utils";
-import { WithLazyGetterTrap } from "../../lazy_getter";
-import { toRaw } from "@odoo/owl";
 
 // https://www.mattzeunert.com/2016/02/19/custom-chrome-devtools-object-formatters.html
 
@@ -32,7 +33,9 @@ function baseObjectFormatter() {
                 return null;
             }
             const name =
-                obj.constructor.name === "ModelRecord" ? obj.model.name : obj.constructor.name;
+                obj.constructor.name === "ModelRecord"
+                    ? obj.model.name
+                    : obj.constructor.name;
             return ["div", {}, name + " #" + obj.id];
         },
         hasBody: () => true,
@@ -58,7 +61,7 @@ function modelFormatter() {
                 ? createSubObjectBlock(
                       `Model(${obj.name})`,
                       { name: obj.name, fields: toRaw(obj.fields) },
-                      ""
+                      "",
                   )
                 : null;
         },
@@ -70,7 +73,11 @@ function immutableFormatter() {
     return {
         header(obj) {
             return obj.__deepImmutable
-                ? createSubObjectBlock("ImmutableObject", getDebugObject(toRaw(obj)), "")
+                ? createSubObjectBlock(
+                      "ImmutableObject",
+                      getDebugObject(toRaw(obj)),
+                      "",
+                  )
                 : null;
         },
         hasBody: () => false,
@@ -80,7 +87,9 @@ function immutableFormatter() {
 function reactiveArrayFormatter() {
     return {
         header(obj) {
-            return Array.isArray(obj) && toRaw(obj) !== obj ? ["div", {}, formatValue(obj)] : null;
+            return Array.isArray(obj) && toRaw(obj) !== obj
+                ? ["div", {}, formatValue(obj)]
+                : null;
         },
         hasBody: () => false,
     };
@@ -92,7 +101,11 @@ function lazyGetterFormatter() {
             if (!(obj instanceof WithLazyGetterTrap)) {
                 return null;
             }
-            return createSubObjectBlock(obj.constructor.name, getDebugObject(toRaw(obj)), "");
+            return createSubObjectBlock(
+                obj.constructor.name,
+                getDebugObject(toRaw(obj)),
+                "",
+            );
         },
         hasBody: () => false,
     };
@@ -136,7 +149,7 @@ function getRelations(obj) {
     return Object.fromEntries(
         Object.entries(obj.model.fields)
             .filter(([_, value]) => value.relation && !value.dummy)
-            .map(([field]) => [field, obj[field]])
+            .map(([field]) => [field, obj[field]]),
     );
 }
 
@@ -161,19 +174,21 @@ function getDebugObject(obj, dismissFields = new Set()) {
     let hasValue = false;
 
     while (obj && obj !== Object.prototype) {
-        Object.entries(Object.getOwnPropertyDescriptors(obj)).forEach(([key, descriptor]) => {
-            if (dismissFields.has(key) || key.startsWith("__lazy")) {
-                return;
-            }
+        Object.entries(Object.getOwnPropertyDescriptors(obj)).forEach(
+            ([key, descriptor]) => {
+                if (dismissFields.has(key) || key.startsWith("__lazy")) {
+                    return;
+                }
 
-            if ("value" in descriptor && typeof descriptor.value !== "function") {
-                debugObject[key] = descriptor.value;
-                hasValue = true;
-            } else if (typeof descriptor.get === "function") {
-                Object.defineProperty(debugObject, key, { get: () => obj[key] });
-                hasValue = true;
-            }
-        });
+                if ("value" in descriptor && typeof descriptor.value !== "function") {
+                    debugObject[key] = descriptor.value;
+                    hasValue = true;
+                } else if (typeof descriptor.get === "function") {
+                    Object.defineProperty(debugObject, key, { get: () => obj[key] });
+                    hasValue = true;
+                }
+            },
+        );
         obj = Object.getPrototypeOf(obj);
     }
     return hasValue ? debugObject : null;

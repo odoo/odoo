@@ -2,8 +2,8 @@ import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { floatField, FloatField } from "@web/views/fields/float/float_field";
-import { monetaryField, MonetaryField } from "@web/views/fields/monetary/monetary_field";
+import { floatField, FloatField } from "@web/fields/basic/float/float_field";
+import { monetaryField, MonetaryField } from "@web/fields/basic/monetary/monetary_field";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 

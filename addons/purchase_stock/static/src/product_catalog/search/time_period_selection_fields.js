@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
+import { selectionField, SelectionField } from "@web/fields/selection/selection/selection_field";
 
 const { DateTime } = luxon;
 

@@ -3,7 +3,7 @@ import { usePageManager } from "./page_manager_hook";
 import { PageSearchModel } from "./page_search_model";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { DeletePageDialog, DuplicatePageDialog } from "@website/components/dialog/page_properties";
 import { useService } from "@web/core/utils/hooks";
 

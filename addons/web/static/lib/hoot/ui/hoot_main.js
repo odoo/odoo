@@ -46,7 +46,7 @@ const HEADLESS_CONTAINER_STYLE = [
     "box-shadow: 2px 1px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
     "background-color: #e2e8f0",
 ].join(";");
-const HEADLESS_LINK_STYLE = ["color: #714b67", "text-decoration: underline"].join(";");
+const HEADLESS_LINK_STYLE = ["color: #a855f7", "text-decoration: underline"].join(";");
 
 //-----------------------------------------------------------------------------
 // Exports

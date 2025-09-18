@@ -1,5 +1,4 @@
 import { useService } from "@web/core/utils/hooks";
-
 export function useSingleDialog() {
     let close = null;
     const dialog = useService("dialog");

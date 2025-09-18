@@ -1,7 +1,5 @@
 import { closeStream } from "@mail/utils/common/misc";
-
 import { browser } from "@web/core/browser/browser";
-
 const FPS = 30; // Frames per second for the blurred background stream
 
 function drawAndBlurImageOnCanvas(image, blurAmount, canvas) {
@@ -28,9 +26,8 @@ export class BlurManager {
     rejectStreamPromise;
     resolveStreamPromise;
     selfieSegmentation = new window.SelfieSegmentation({
-        locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`;
-        },
+        locateFile: (file) =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`,
     });
     /**
      * Promise or undefined, based on the input stream, resolved when selfieSegmentation has started painting on the canvas,
@@ -42,7 +39,12 @@ export class BlurManager {
 
     constructor(
         stream,
-        { backgroundBlur = 10, edgeBlur = 10, modelSelection = 1, selfieMode = false } = {}
+        {
+            backgroundBlur = 10,
+            edgeBlur = 10,
+            modelSelection = 1,
+            selfieMode = false,
+        } = {},
     ) {
         this.edgeBlur = edgeBlur;
         this.backgroundBlur = backgroundBlur;
@@ -61,7 +63,9 @@ export class BlurManager {
             resolveStreamPromise,
         });
         try {
-            this.worker = new Worker("/mail/static/src/discuss/call/common/tick_worker.js");
+            this.worker = new Worker(
+                "/mail/static/src/discuss/call/common/tick_worker.js",
+            );
             this.worker.onmessage = (e) => this._handleWorkerMessage(e);
             this.worker.onerror = () => {
                 this._terminateWorker();
@@ -91,7 +95,9 @@ export class BlurManager {
         this._terminateWorker();
         if (this.rejectStreamPromise) {
             this.rejectStreamPromise(
-                new Error("The source stream was removed before the beginning of the blur process")
+                new Error(
+                    "The source stream was removed before the beginning of the blur process",
+                ),
             );
         }
     }
@@ -158,7 +164,11 @@ export class BlurManager {
         drawAndBlurImageOnCanvas(results.image, this.backgroundBlur, this.canvasBlur);
         this.canvas.width = this.canvasBlur.width;
         this.canvas.height = this.canvasBlur.height;
-        drawAndBlurImageOnCanvas(results.segmentationMask, this.edgeBlur, this.canvasMask);
+        drawAndBlurImageOnCanvas(
+            results.segmentationMask,
+            this.edgeBlur,
+            this.canvasMask,
+        );
         this.canvas.getContext("2d").save();
         this.canvas
             .getContext("2d")

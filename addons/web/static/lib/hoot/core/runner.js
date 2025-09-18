@@ -1076,7 +1076,18 @@ export class Runner {
                     const s = lastResults.currentErrors.length === 1 ? "" : "s";
                     failReasons.push(
                         `\nError${s} during test:`,
-                        ...lastResults.currentErrors.map((error) => `\n${error.message}`)
+                        ...lastResults.currentErrors.map((error) => {
+                            let msg = `\n${error.message}`;
+                            let cause = error.cause;
+                            while (cause) {
+                                msg += `\nCaused by: ${cause}`;
+                                if (cause.stack) {
+                                    msg += `\n${cause.stack}`;
+                                }
+                                cause = cause.cause;
+                            }
+                            return msg;
+                        })
                     );
                 }
                 logger.global.error(

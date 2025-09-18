@@ -1,5 +1,13 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { hover, queryAllTexts, queryAllValues, queryFirst, runAllTimers } from "@odoo/hoot-dom";
+import {
+    hover,
+    queryAllTexts,
+    queryAllValues,
+    queryFirst,
+    runAllTimers,
+} from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -247,33 +255,62 @@ test("simple rendering", async () => {
 
     // first group has one privilege
     expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_horizontal_separator"
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_horizontal_separator",
     ).toHaveText("ADMINISTRATION (CATEGORY)");
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label").toHaveCount(1);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label").toHaveText(
-        "Administration"
-    );
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label",
+    ).toHaveCount(1);
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label",
+    ).toHaveText("Administration");
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) input").toHaveCount(1);
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) input").toHaveValue(
-        "Access Rights"
+        "Access Rights",
     );
 
     // second group has 2 privileges
     expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_horizontal_separator"
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_horizontal_separator",
     ).toHaveText("PROJECT (CATEGORY)");
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_form_label").toHaveCount(2);
     expect(
-        queryAllTexts(".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_form_label")
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_form_label",
+    ).toHaveCount(2);
+    expect(
+        queryAllTexts(
+            ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_form_label",
+        ),
     ).toEqual(["Project?", "Helpdesk"]);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:nth-child(2) input").toHaveCount(2);
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:nth-child(2) input",
+    ).toHaveCount(2);
     expect(
         queryAllValues(
-            ".o_field_widget[name=group_ids] .o_inner_group:nth-child(2) .o_wrap_input input"
-        )
+            ".o_field_widget[name=group_ids] .o_inner_group:nth-child(2) .o_wrap_input input",
+        ),
     ).toEqual(["Project User", ""]);
 
     expect(".o_group_info_button").toHaveCount(0); // not displayed in non debug mode
+});
+
+test("simple rendering in readonly", async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form edit="0">
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] input").toHaveCount(0);
+    expect(queryAllTexts(".o_field_res_user_group_ids_privilege span")).toEqual([
+        "Access Rights",
+        "Project User",
+        "",
+    ]);
 });
 
 test("simple rendering (debug)", async () => {
@@ -296,9 +333,13 @@ test("simple rendering (debug)", async () => {
     expect(".o_group:eq(1) .o_horizontal_separator").toHaveText("EXTRA RIGHTS");
     expect(".o_group:eq(1) .o_inner_group").toHaveCount(2);
     expect(".o_group:eq(1) .o_inner_group:eq(0) input[type=checkbox]").toHaveCount(2);
-    expect(".o_group:eq(1) .o_inner_group:eq(0) input[type=checkbox]:checked").toHaveCount(1);
+    expect(
+        ".o_group:eq(1) .o_inner_group:eq(0) input[type=checkbox]:checked",
+    ).toHaveCount(1);
     expect(".o_group:eq(1) .o_inner_group:eq(1) input[type=checkbox]").toHaveCount(2);
-    expect(".o_group:eq(1) .o_inner_group:eq(1) input[type=checkbox]:checked").toHaveCount(0);
+    expect(
+        ".o_group:eq(1) .o_inner_group:eq(1) input[type=checkbox]:checked",
+    ).toHaveCount(0);
 
     expect(".o_group_info_button:not(.invisible)").toHaveCount(3);
 });
@@ -321,12 +362,15 @@ test("add and remove groups", async () => {
         resId: 1,
     });
 
-    await editSelectMenu(".o_field_widget[name='group_ids'] .o_inner_group:eq(1) input", {
-        value: "",
-    });
+    await editSelectMenu(
+        ".o_field_widget[name='group_ids'] .o_inner_group:eq(1) input",
+        {
+            value: "",
+        },
+    );
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
-        { value: "Helpdesk Administrator" }
+        { value: "Helpdesk Administrator" },
     );
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
@@ -351,12 +395,15 @@ test("editing groups doesn't remove groups (debug)", async () => {
         resId: 1,
     });
 
-    await editSelectMenu(".o_field_widget[name='group_ids'] .o_inner_group:eq(1) input", {
-        value: "",
-    });
+    await editSelectMenu(
+        ".o_field_widget[name='group_ids'] .o_inner_group:eq(1) input",
+        {
+            value: "",
+        },
+    );
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
-        { value: "Helpdesk Administrator" }
+        { value: "Helpdesk Administrator" },
     );
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
@@ -407,7 +454,7 @@ test(`privilege tooltips`, async () => {
     await hover(`.o_form_label sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText(
-        "Project access rights description\n- Project User: Can access Project as a user\n- Project Manager: Can access Project as a manager\n- Project Administrator: Can access Project as an admistrator"
+        "Project access rights description\n- Project User: Can access Project as a user\n- Project Manager: Can access Project as a manager\n- Project Administrator: Can access Project as an admistrator",
     );
 });
 
@@ -427,14 +474,12 @@ test("implied groups rendering", async () => {
 
     expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(2);
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").toHaveCount(2);
-    expect(queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input")).toEqual([
-        "",
-        "Helpdesk Administrator",
-    ]);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)").toHaveAttribute(
-        "placeholder",
-        "Project Manager"
-    );
+    expect(
+        queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input"),
+    ).toEqual(["", "Helpdesk Administrator"]);
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)",
+    ).toHaveAttribute("placeholder", "Project Manager");
 });
 
 test("implied groups rendering (debug)", async () => {
@@ -454,14 +499,12 @@ test("implied groups rendering (debug)", async () => {
 
     expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(4);
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").toHaveCount(2);
-    expect(queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input")).toEqual([
-        "",
-        "Helpdesk Administrator",
-    ]);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)").toHaveAttribute(
-        "placeholder",
-        "Project Manager"
-    );
+    expect(
+        queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input"),
+    ).toEqual(["", "Helpdesk Administrator"]);
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)",
+    ).toHaveAttribute("placeholder", "Project Manager");
 
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
     expect(".o_popover").toHaveCount(1);
@@ -510,14 +553,12 @@ test("implied groups rendering: exclusive (debug)", async () => {
 
     expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(4);
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").toHaveCount(2);
-    expect(queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input")).toEqual([
-        "",
-        "Helpdesk Administrator",
-    ]);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)").toHaveAttribute(
-        "placeholder",
-        "Project Manager"
-    );
+    expect(
+        queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input"),
+    ).toEqual(["", "Helpdesk Administrator"]);
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(0)",
+    ).toHaveAttribute("placeholder", "Project Manager");
 
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
     expect(".o_popover").toHaveCount(1);
@@ -552,27 +593,31 @@ test("implied groups: lower level groups no longer available", async () => {
 
     expect(".o_inner_group:eq(1) .o_select_menu").toHaveCount(2);
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
-    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
+    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue(
+        "Project User",
+    );
     expect(".o_select_menu_item").toHaveCount(4);
     expect(".o_inner_group:eq(1) .o_wrap_input:last-child input").toHaveValue("");
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
-        { value: "Helpdesk Administrator" }
+        { value: "Helpdesk Administrator" },
     );
 
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("");
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
         "placeholder",
-        "Project Manager"
+        "Project Manager",
     );
     expect(".o_select_menu_item").toHaveCount(2);
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
-        { value: "Helpdesk User" }
+        { value: "Helpdesk User" },
     );
 
-    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
+    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue(
+        "Project User",
+    );
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
     expect(".o_select_menu_item").toHaveCount(4);
 });
@@ -618,16 +663,18 @@ test("do not lose shadowed groups when editing", async () => {
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("");
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
         "placeholder",
-        "Project Manager"
+        "Project Manager",
     );
     expect(".o_select_menu_item").toHaveCount(2);
 
-    await editSelectMenu(".o_inner_group:eq(0) .o_wrap_input input", { value: "Settings " });
+    await editSelectMenu(".o_inner_group:eq(0) .o_wrap_input input", {
+        value: "Settings ",
+    });
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("");
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
         "placeholder",
-        "Project Manager"
+        "Project Manager",
     );
     expect(".o_select_menu_item").toHaveCount(2);
 
@@ -659,7 +706,7 @@ test("do not keep shadowed group if higher level group is set", async () => {
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("");
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
         "placeholder",
-        "Project Manager"
+        "Project Manager",
     );
     expect(".o_select_menu_item").toHaveCount(2);
     await editSelectMenu(".o_inner_group:eq(1) .o_wrap_input input", {
@@ -684,12 +731,16 @@ test("disjoint groups", async () => {
     });
 
     expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(3);
-    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(0);
+    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(
+        0,
+    );
     expect(".o_is_disjoint").toHaveCount(0);
 
     await contains(".o_inner_group:eq(3) input[type=checkbox]").click();
     expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(2);
-    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(2);
+    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(
+        2,
+    );
     expect(".o_is_disjoint").toHaveCount(2);
 
     await contains(".o_inner_group:eq(3) .o_group_info_button").click();
@@ -756,16 +807,21 @@ test("privileges without category", async () => {
     expect(".o_field_widget[name=group_ids] .o_group").toHaveCount(1);
     expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(3);
     expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_horizontal_separator"
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_horizontal_separator",
     ).toHaveText("OTHER");
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_form_label").toHaveText(
-        "Other privilege"
-    );
-    await contains(".o_field_widget[name='group_ids'] .o_inner_group:eq(2) input").click();
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_form_label",
+    ).toHaveText("Other privilege");
+    await contains(
+        ".o_field_widget[name='group_ids'] .o_inner_group:eq(2) input",
+    ).click();
     expect(`.o_select_menu_item`).toHaveCount(2);
-    await editSelectMenu(".o_field_widget[name='group_ids'] .o_inner_group:eq(2) input", {
-        value: "Group 2 in Other Privilege",
-    });
+    await editSelectMenu(
+        ".o_field_widget[name='group_ids'] .o_inner_group:eq(2) input",
+        {
+            value: "Group 2 in Other Privilege",
+        },
+    );
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
 });
@@ -786,7 +842,9 @@ test("privileges with placeholder", async () => {
 
     expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "View", ""]);
 
-    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    await contains(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input",
+    ).click();
     expect(queryAllTexts(".o_select_menu_item")).toEqual([
         "View",
         "Project User",
@@ -794,19 +852,30 @@ test("privileges with placeholder", async () => {
         "Project Administrator",
     ]);
 
-    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)").click();
+    await contains(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)",
+    ).click();
     expect(`.o_select_menu_item`).toHaveCount(2);
 
-    await editSelectMenu(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)", {
-        value: "Helpdesk Administrator",
-    });
-    expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "", "Helpdesk Administrator"]);
+    await editSelectMenu(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)",
+        {
+            value: "Helpdesk Administrator",
+        },
+    );
+    expect(queryAllValues(".o_select_menu_input")).toEqual([
+        "No",
+        "",
+        "Helpdesk Administrator",
+    ]);
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
         "placeholder",
-        "Project Manager"
+        "Project Manager",
     );
 
-    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    await contains(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) input",
+    ).click();
     expect(queryAllTexts(".o_select_menu_item")).toEqual([
         "Project Manager",
         "Project Administrator",

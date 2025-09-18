@@ -182,11 +182,11 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         """ Test the purchase order behovior when changing the ordered quantity on the sale order line.
             Increase of qty on the SO
             - If PO is draft ['draft', 'sent', 'to approve'] : increase the quantity on the PO
-            - If PO is confirmed ['purchase', 'cancel'] : create a new PO
+            - If PO is confirmed ['done', 'cancel'] : create a new PO
 
             Decrease of qty on the SO
             - If PO is draft  ['draft', 'sent', 'to approve'] : next activity on the PO
-            - If PO is confirmed ['purchase', 'cancel'] : next activity on the PO
+            - If PO is confirmed ['done', 'cancel'] : next activity on the PO
         """
         self.sale_order_1.action_confirm()
 
@@ -388,7 +388,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'name': "Branch Out-sourced Service",
             'standard_price': 200.0,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'taxes_id': self.company_data['default_tax_sale'],
             'supplier_taxes_id': self.company_data['default_tax_purchase'],
             'service_to_purchase': True,

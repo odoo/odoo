@@ -1,7 +1,9 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, OwlError, onError, onWillStart, xml } from "@odoo/owl";
+import { advanceTime, animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, onError, onWillStart, OwlError, xml } from "@odoo/owl";
 import {
     makeMockEnv,
     mockService,
@@ -10,16 +12,16 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 import {
     ClientErrorDialog,
     RPCErrorDialog,
     standardErrorDialogProps,
-} from "@web/core/errors/error_dialogs";
-import { UncaughtPromiseError } from "@web/core/errors/error_service";
+} from "@web/components/errors/error_dialogs";
+import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/collections/objects";
+import { UncaughtPromiseError } from "@web/services/error_service";
 
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
@@ -33,7 +35,7 @@ test("can handle rejected promise errors with a string as reason", async () => {
         (env, err, originalError) => {
             expect(originalError).toBe("-- something went wrong --");
         },
-        { sequence: 0 }
+        { sequence: 0 },
     );
     Promise.reject("-- something went wrong --");
     await animationFrame();
@@ -323,7 +325,9 @@ test("handle uncaught client errors", async () => {
         add(dialogClass, props) {
             expect(dialogClass).toBe(ClientErrorDialog);
             expect(props.name).toBe("UncaughtClientError > TestError");
-            expect(props.message).toBe("Uncaught Javascript Error > This is an error test");
+            expect(props.message).toBe(
+                "Uncaught Javascript Error > This is an error test",
+            );
         },
     });
     await makeMockEnv();
@@ -423,7 +427,9 @@ describe("Error Service Logs", () => {
             /Caused by:.*This is a second wrapper error/,
             /Caused by:.*This is the original error/,
         ];
-        const errorRegex = new RegExp(regexParts.map((re) => re.source).join(/[\s\S]*/.source));
+        const errorRegex = new RegExp(
+            regexParts.map((re) => re.source).join(/[\s\S]*/.source),
+        );
         patchWithCleanup(console, {
             error(errorMessage) {
                 expect(errorMessage).toMatch(errorRegex);
@@ -451,7 +457,9 @@ describe("Error Service Logs", () => {
             /Caused by:.*This is a second wrapper error/,
             /Caused by:.*This is the original error/,
         ];
-        const errorRegex = new RegExp(regexParts.map((re) => re.source).join(/[\s\S]*/.source));
+        const errorRegex = new RegExp(
+            regexParts.map((re) => re.source).join(/[\s\S]*/.source),
+        );
         patchWithCleanup(console, {
             error(errorMessage) {
                 expect(errorMessage).toMatch(errorRegex);
@@ -484,15 +492,15 @@ describe("Error Service Logs", () => {
             (env, err, originalError) => {
                 throw new Error("Boom in handler");
             },
-            { sequence: 0 }
+            { sequence: 0 },
         );
         // We want to assert that the error_service code does the preventDefault.
         patchWithCleanup(console, {
             error(errorMessage) {
                 expect(errorMessage).toMatch(
                     new RegExp(
-                        `^@web/core/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom.*`
-                    )
+                        `^@web/core/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom.*`,
+                    ),
                 );
                 expect.step("error logged");
             },

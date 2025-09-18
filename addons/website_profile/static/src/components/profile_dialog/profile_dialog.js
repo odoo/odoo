@@ -1,14 +1,14 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, markup, onMounted, onWillStart, reactive, useRef, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { isHtmlEmpty } from "@web/core/utils/html";
-import { isEmail } from "@web/core/utils/strings";
-import { FileUploader } from "@web/views/fields/file_handler";
+import { isHtmlEmpty } from "@web/core/utils/dom/html";
+import { isEmail } from "@web/core/utils/format/strings";
+import { FileUploader } from "@web/fields/file_handler";
 import { endPos } from "@html_editor/utils/position";
 
 export class ProfileDialog extends Component {

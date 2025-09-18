@@ -1,8 +1,8 @@
-import { tourState } from "@web_tour/js/tour_state";
-import { TourSelectorPopup } from "../components/tour_selector_popup/tour_selector_popup";
 import { useService } from "@web/core/utils/hooks";
-import { makeAwaitable } from "../utils/make_awaitable_dialog";
+import { tourState } from "@web_tour/js/tour_state";
 
+import { TourSelectorPopup } from "../components/tour_selector_popup/tour_selector_popup";
+import { makeAwaitable } from "../utils/make_awaitable_dialog";
 export default function useTours() {
     const tour = useService("tour_service");
     const dialog = useService("dialog");

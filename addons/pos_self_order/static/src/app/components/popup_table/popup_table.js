@@ -1,7 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-
 export class PopupTable extends Component {
     static template = "pos_self_order.PopupTable";
     static props = { selectTable: Function };

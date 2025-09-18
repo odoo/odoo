@@ -1,10 +1,9 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import {
-    many2ManyBinaryField,
     Many2ManyBinaryField,
-} from "@web/views/fields/many2many_binary/many2many_binary_field";
-
+    many2ManyBinaryField,
+} from "@web/fields/relational/many2many_binary/many2many_binary_field";
 export class MailComposerAttachmentList extends Many2ManyBinaryField {
     static template = "mail.MailComposerAttachmentList";
     /** @override */
@@ -32,4 +31,6 @@ export const mailComposerAttachmentList = {
     component: MailComposerAttachmentList,
 };
 
-registry.category("fields").add("mail_composer_attachment_list", mailComposerAttachmentList);
+registry
+    .category("fields")
+    .add("mail_composer_attachment_list", mailComposerAttachmentList);

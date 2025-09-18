@@ -1,6 +1,6 @@
 import { Component, onMounted, useRef, useSubEnv, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/components/dropdown/dropdown";
 import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
@@ -8,8 +8,8 @@ import {
     useSelectableComponent,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { setElementContent } from "@web/core/utils/html";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { setElementContent } from "@web/core/utils/dom/html";
 
 export class WithIgnoreItem extends Component {
     static template = xml`<t t-slot="default"/>`;

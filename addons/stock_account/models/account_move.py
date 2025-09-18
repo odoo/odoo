@@ -43,20 +43,20 @@ class AccountMove(models.Model):
 
         return res
 
-    def button_draft(self):
-        res = super().button_draft()
+    def action_draft(self):
+        res = super().action_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
         with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
             self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
-    def button_cancel(self):
+    def action_cancel(self):
         # OVERRIDE
-        res = super().button_cancel()
+        res = super().action_cancel()
 
         # Unlink the COGS lines generated during the 'post' method.
-        # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
+        # In most cases it shouldn't be necessary since they should be unlinked with 'action_draft'.
         # However, since it can be called in RPC, better be safe.
         self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res

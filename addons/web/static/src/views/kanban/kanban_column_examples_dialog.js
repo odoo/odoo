@@ -1,10 +1,19 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { Notebook } from "@web/core/notebook/notebook";
+// @ts-check
+
+/** @module @web/views/kanban/kanban_column_examples_dialog - Dialog showcasing example column layouts for kanban board setup */
 
 import { Component, useRef } from "@odoo/owl";
+import { Notebook } from "@web/components/notebook/notebook";
+import { Dialog } from "@web/ui/dialog/dialog";
 
+/**
+ * @param {number} min - Inclusive lower bound.
+ * @param {number} max - Exclusive upper bound.
+ * @returns {number} Random integer in [min, max).
+ */
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
+/** Renders a single example tab with randomized placeholder records. */
 class KanbanExamplesNotebookTemplate extends Component {
     static template = "web.KanbanExamplesNotebookTemplate";
     static props = ["*"];
@@ -22,7 +31,9 @@ class KanbanExamplesNotebookTemplate extends Component {
             for (let i = 0; i < random(1, 5); i++) {
                 const rec = { id: i };
                 if (hasBullet && Math.random() > 0.3) {
-                    const sampleId = Math.floor(Math.random() * this.props.bullets.length);
+                    const sampleId = Math.floor(
+                        Math.random() * this.props.bullets.length,
+                    );
                     rec.bullet = this.props.bullets[sampleId];
                 }
                 col.records.push(rec);
@@ -31,6 +42,12 @@ class KanbanExamplesNotebookTemplate extends Component {
     }
 }
 
+/**
+ * Dialog that presents predefined column layout examples for kanban views.
+ *
+ * Users pick an example tab and click "Apply" to auto-create columns
+ * matching the selected layout. Used when a grouped kanban has no columns yet.
+ */
 export class KanbanColumnExamplesDialog extends Component {
     static template = "web.KanbanColumnExamplesDialog";
     static components = { Dialog, Notebook };
@@ -50,10 +67,15 @@ export class KanbanColumnExamplesDialog extends Component {
         });
     }
 
+    /**
+     * Track the currently selected notebook tab.
+     * @param {string} page - Tab identifier (example name).
+     */
     onPageUpdate(page) {
         this.activePage = page;
     }
 
+    /** Apply the selected example layout and close the dialog. */
     applyExamples() {
         const index = this.props.examples.findIndex((e) => e.name === this.activePage);
         this.props.applyExamples(index);

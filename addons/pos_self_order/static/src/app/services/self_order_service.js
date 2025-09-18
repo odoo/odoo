@@ -1,28 +1,27 @@
-import { Reactive } from "@web/core/utils/reactive";
-import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { formatCurrency as webFormatCurrency } from "@web/core/currency";
 import { markup } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
-import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
+import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
-import { renderToElement } from "@web/core/utils/render";
-import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
-import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
 import {
     constructFullProductName,
     deduceUrl,
-    random5Chars,
     orderUsageUTCtoLocalUtil,
+    random5Chars,
 } from "@point_of_sale/utils";
+import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
+import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
+import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
+import { cookie } from "@web/core/browser/cookie";
+import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { Reactive } from "@web/core/utils/reactive";
+import { renderToElement } from "@web/core/utils/render";
+import { formatCurrency as webFormatCurrency } from "@web/services/currency";
 import { getOrderLineValues } from "./card_utils";
-import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
-import { initLNA } from "@point_of_sale/app/utils/init_lna";
-
 export class SelfOrder extends Reactive {
     constructor(...args) {
         super();
@@ -31,7 +30,16 @@ export class SelfOrder extends Reactive {
 
     async setup(
         env,
-        { notification, router, printer, renderer, barcode, bus_service, dialog, pos_data }
+        {
+            notification,
+            router,
+            printer,
+            renderer,
+            barcode,
+            bus_service,
+            dialog,
+            pos_data,
+        },
     ) {
         // services
         this.notification = notification;
@@ -75,13 +83,18 @@ export class SelfOrder extends Reactive {
             await this.initMobileData();
         }
 
-        this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
+        this.data.connectWebSocket("ORDER_STATE_CHANGED", () =>
+            this.getUserDataFromServer(),
+        );
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
-            const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
-            const existingProductIds = this.models["product.template"].filter((tmpl) =>
-                productTemplateIds.includes(tmpl.id)
+            const productTemplateIds = payload["product.template"].map(
+                (tmpl) => tmpl.id,
             );
-            const hasNewProducts = productTemplateIds.length !== existingProductIds.length;
+            const existingProductIds = this.models["product.template"].filter((tmpl) =>
+                productTemplateIds.includes(tmpl.id),
+            );
+            const hasNewProducts =
+                productTemplateIds.length !== existingProductIds.length;
             this.models.connectNewData(payload);
             if (hasNewProducts) {
                 this.initProducts();
@@ -102,7 +115,7 @@ export class SelfOrder extends Reactive {
                 if (payment_result === "Success") {
                     this.models.connectNewData(data);
                     const order = this.models["pos.order"].find(
-                        (o) => o.access_token === data["pos.order"][0].access_token
+                        (o) => o.access_token === data["pos.order"][0].access_token,
                     );
                     if (["paid", "done"].includes(order?.state)) {
                         this.notification.add(_t("Your order has been paid"), {
@@ -111,7 +124,7 @@ export class SelfOrder extends Reactive {
                         this.confirmationPage(
                             "order",
                             this.config.self_ordering_mode,
-                            order.access_token
+                            order.access_token,
                         );
                     }
                 } else {
@@ -119,6 +132,9 @@ export class SelfOrder extends Reactive {
                 }
             });
         }
+        this.data.connectWebSocket("REMOVE_ORDERS", (data) => {
+            this.removeOrdersByAccessTokens(data.deleted_order_tokens);
+        });
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
             if (!this.ordering) {
                 this.notification.add(_t("We're currently closed"), {
@@ -127,7 +143,7 @@ export class SelfOrder extends Reactive {
                 return;
             }
             const product = this.models["product.product"].filter(
-                (p) => p.barcode === ev.detail.barcode
+                (p) => p.barcode === ev.detail.barcode,
             )?.[0];
             if (!product) {
                 this.notification.add(_t("Product not found"), {
@@ -151,7 +167,9 @@ export class SelfOrder extends Reactive {
         });
 
         if (this.config.epson_printer_ip && this.config.other_devices) {
-            this.printer.setPrinter(new EpsonPrinter({ ip: this.config.epson_printer_ip }));
+            this.printer.setPrinter(
+                new EpsonPrinter({ ip: this.config.epson_printer_ip }),
+            );
         }
 
         if (this.config.self_ordering_mode === "kiosk") {
@@ -169,7 +187,9 @@ export class SelfOrder extends Reactive {
      */
     get currentTable() {
         const tableIdentifier = this.router.getTableIdentifier();
-        const table = this.models["restaurant.table"].find((t) => t.identifier === tableIdentifier);
+        const table = this.models["restaurant.table"].find(
+            (t) => t.identifier === tableIdentifier,
+        );
         return table || null;
     }
 
@@ -185,7 +205,9 @@ export class SelfOrder extends Reactive {
         now = now.hour + now.minute / 60;
         const availableCategories = this.productCategories
             .filter(
-                (c) => this.productByCategIds[c.id]?.length > 0 || c.associatedProducts?.length > 0
+                (c) =>
+                    this.productByCategIds[c.id]?.length > 0 ||
+                    c.associatedProducts?.length > 0,
             )
             .sort((a, b) => a.sequence - b.sequence);
         return availableCategories.filter((c) => {
@@ -241,7 +263,9 @@ export class SelfOrder extends Reactive {
                 return { show: true, selectedCombos: [] };
             }
             selectedCombos.push({
-                combo_item_id: this.models["product.combo.item"].get(combo_item_ids[0].id),
+                combo_item_id: this.models["product.combo.item"].get(
+                    combo_item_ids[0].id,
+                ),
                 configuration: {
                     attribute_custom_values: [],
                     attribute_value_ids: [],
@@ -258,7 +282,7 @@ export class SelfOrder extends Reactive {
         customer_note,
         selectedValues = {},
         customValues = {},
-        comboValues = {}
+        comboValues = {},
     ) {
         const product = productTemplate.product_variant_ids[0];
         const values = getOrderLineValues(
@@ -268,16 +292,16 @@ export class SelfOrder extends Reactive {
             customer_note,
             selectedValues,
             customValues,
-            comboValues
+            comboValues,
         );
         const newLine = this.models["pos.order.line"].create(values);
         newLine.full_product_name = constructFullProductName(
             newLine,
             this.models["product.template.attribute.value"].getAllBy("id"),
-            product.name
+            product.name,
         );
         const lineToMerge = this.currentOrder.lines.find(
-            (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
+            (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id,
         );
 
         if (lineToMerge) {
@@ -295,16 +319,30 @@ export class SelfOrder extends Reactive {
             screenMode: screen_mode,
         });
         this.printKioskChanges(access_token);
+        this.resetCategorySelection();
     }
+
+    resetCategorySelection() {
+        if (!this.kioskMode) {
+            return;
+        }
+        this.currentCategory = this.availableCategories[0];
+    }
+
     hasPaymentMethod() {
-        return this.filterPaymentMethods(this.models["pos.payment.method"].getAll()).length > 0;
+        return (
+            this.filterPaymentMethods(this.models["pos.payment.method"].getAll())
+                .length > 0
+        );
     }
 
     // TODO: Remove in master. This method is redundant as the same logic exists in _load_pos_self_data_domain.
     filterPaymentMethods(pms) {
         //based on _load_pos_self_data_domain from pos_payment_method.py
         return this.config.self_ordering_mode === "kiosk"
-            ? pms.filter((rec) => ["adyen", "stripe"].includes(rec.use_payment_terminal))
+            ? pms.filter((rec) =>
+                  ["adyen", "stripe"].includes(rec.use_payment_terminal),
+              )
             : [];
     }
 
@@ -313,7 +351,7 @@ export class SelfOrder extends Reactive {
         const device = this.config.self_ordering_mode; // kiosk, mobile
         const service = this.selfService; // table, counter, delivery
         const paymentMethods = this.filterPaymentMethods(
-            this.models["pos.payment.method"].getAll()
+            this.models["pos.payment.method"].getAll(),
         ); // Stripe, Adyen, Online
 
         let order = this.currentOrder;
@@ -424,21 +462,25 @@ export class SelfOrder extends Reactive {
 
     initProducts() {
         this.productCategories = this.models["pos.category"].getAll();
-        this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
+        this.productByCategIds =
+            this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(
             this.config._pos_special_products_ids
-                .map((id) => this.models["product.product"].get(id)?.product_tmpl_id?.id)
-                .filter(Boolean)
+                .map(
+                    (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id,
+                )
+                .filter(Boolean),
         );
 
         for (const category_id in this.productByCategIds) {
-            this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
-                (p) => !excludedProductTemplateIds.has(p.id)
-            );
+            this.productByCategIds[category_id] = this.productByCategIds[
+                category_id
+            ].filter((p) => !excludedProductTemplateIds.has(p.id));
         }
         const productWoCat = this.models["product.template"].filter(
-            (p) => p.pos_categ_ids.length === 0 && !excludedProductTemplateIds.has(p.id)
+            (p) =>
+                p.pos_categ_ids.length === 0 && !excludedProductTemplateIds.has(p.id),
         );
 
         if (productWoCat.length && !this.config.iface_available_categ_ids.length) {
@@ -467,7 +509,9 @@ export class SelfOrder extends Reactive {
 
     _initLanguages() {
         const languages = this.config.self_ordering_available_language_ids;
-        this.currentLanguage = languages.find((l) => l.code === cookie.get("frontend_lang"));
+        this.currentLanguage = languages.find(
+            (l) => l.code === cookie.get("frontend_lang"),
+        );
         if (languages && !this.currentLanguage) {
             this.currentLanguage = this.config.self_ordering_default_language_id;
         }
@@ -495,7 +539,7 @@ export class SelfOrder extends Reactive {
                 this.models["product.product"]
                     .get(baseProductId)
                     .pos_categ_ids.map((categ) => categ.id)
-                    .includes(category.id)
+                    .includes(category.id),
             );
         });
     }
@@ -513,7 +557,7 @@ export class SelfOrder extends Reactive {
         for (const printer of this.kitchenPrinters) {
             const orderlines = this._getKioskPrintingCategoriesChanges(
                 order,
-                Object.values(printer.config.product_categories_ids)
+                Object.values(printer.config.product_categories_ids),
             );
             if (orderlines.length > 0) {
                 const printingChanges = {
@@ -530,6 +574,23 @@ export class SelfOrder extends Reactive {
                     config_name: this.config.name,
                     table_number: this.currentTable?.table_number,
                     floating_order_name: order.floating_order_name,
+                    getLineAttributeNames: (line) => {
+                        const result = (line.attribute_value_ids ?? []).map(
+                            (a) => a.name,
+                        );
+                        if (!line.combo_parent_id) {
+                            return result;
+                        }
+                        return [
+                            ...new Set([
+                                ...(
+                                    line.product_id
+                                        .product_template_variant_value_ids ?? []
+                                ).map((a) => a.name),
+                                ...result,
+                            ]),
+                        ];
+                    },
                 };
                 const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
                     changes: printingChanges,
@@ -549,7 +610,10 @@ export class SelfOrder extends Reactive {
             clearTimeout(this.idleTimout);
             this.timeoutPopup?.();
             this.idleTimout = setTimeout(() => {
-                if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
+                if (
+                    this.router.activeSlot !== "payment" &&
+                    this.router.activeSlot !== "default"
+                ) {
                     this.timeoutPopup = this.dialog.add(TimeoutPopup, {
                         onTimeout: () => {
                             this.dialog.closeAll();
@@ -578,6 +642,13 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    removeOrdersByAccessTokens(orderAccessTokens = []) {
+        // Remove orders and their dependent records locally and from IndexedDB
+        this.models["pos.order"]
+            .filter((o) => orderAccessTokens.includes(o.access_token))
+            .forEach((o) => this.data.localDeleteCascade(o));
+    }
+
     cancelOrder() {
         if (
             this.config.self_ordering_mode === "kiosk" &&
@@ -601,14 +672,22 @@ export class SelfOrder extends Reactive {
                         attribute_value_ids: changes["attribute_value_ids"]
                             ? JSON.parse(changes["attribute_value_ids"]).map((a) => [
                                   "link",
-                                  this.models["product.template.attribute.value"].get(a),
+                                  this.models["product.template.attribute.value"].get(
+                                      a,
+                                  ),
                               ])
                             : [],
-                        custom_attribute_value_ids: changes["custom_attribute_value_ids"]
-                            ? JSON.parse(changes["custom_attribute_value_ids"]).map((a) => [
-                                  "link",
-                                  this.models["product.attribute.custom.value"].get(a),
-                              ])
+                        custom_attribute_value_ids: changes[
+                            "custom_attribute_value_ids"
+                        ]
+                            ? JSON.parse(changes["custom_attribute_value_ids"]).map(
+                                  (a) => [
+                                      "link",
+                                      this.models["product.attribute.custom.value"].get(
+                                          a,
+                                      ),
+                                  ],
+                              )
                             : [],
                     });
                 }
@@ -641,6 +720,10 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    shouldUpdateLastOrderChange() {
+        return true;
+    }
+
     async sendDraftOrderToServer() {
         if (
             Object.keys(this.currentOrder.changes).length === 0 ||
@@ -653,13 +736,16 @@ export class SelfOrder extends Reactive {
             this.currentOrder.setOrderPrices();
             const tableIdentifier = this.router.getTableIdentifier();
             let uuid = this.selectedOrderUuid;
+            if (this.shouldUpdateLastOrderChange()) {
+                this.currentOrder.updateLastOrderChange();
+            }
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
-                }
+                },
             );
             const result = this.models.connectNewData(data);
             if (result["pos.order"][0].uuid !== this.selectedOrderUuid) {
@@ -678,7 +764,10 @@ export class SelfOrder extends Reactive {
             this.currentOrder.recomputeChanges();
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
-            const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+            const order = this.models["pos.order"].getBy(
+                "uuid",
+                this.selectedOrderUuid,
+            );
             this.handleErrorNotification(error, [order.access_token]);
             return false;
         }
@@ -687,13 +776,12 @@ export class SelfOrder extends Reactive {
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
         const dbAccessToken = this.models["pos.order"]
-            .filter((o) => o.state === "draft" && o.isSynced)
+            .filter((o) => o.state === "draft" && o.isSynced && o.access_token)
             .map((order) => ({
                 access_token: order.access_token,
                 state: order.state,
                 write_date: serializeDateTime(order.write_date.plus({ seconds: 1 })),
-            }))
-            .filter((order) => order.access_token);
+            }));
 
         // Token given in argument are probably not in the local database
         // so write_date is set to 1970-01-01 00:00:00
@@ -720,7 +808,9 @@ export class SelfOrder extends Reactive {
 
                 // Remove all other open orders in draft and add orderline in the current order
                 const lineCmd = [];
-                for (const order of this.models["pos.order"].filter((o) => o.state === "draft")) {
+                for (const order of this.models["pos.order"].filter(
+                    (o) => o.state === "draft",
+                )) {
                     if (order.uuid !== openOrder.uuid) {
                         lineCmd.push(...order.lines);
                         order.delete();
@@ -736,7 +826,7 @@ export class SelfOrder extends Reactive {
         } catch (error) {
             this.handleErrorNotification(
                 error,
-                this.models["pos.order"].map((order) => order.access_token)
+                this.models["pos.order"].map((order) => order.access_token),
             );
         }
     }
@@ -801,10 +891,14 @@ export class SelfOrder extends Reactive {
 
             const lineChanges = this.currentOrder.uiState.lineChanges[line.uuid];
             const alreadySent = lineChanges
-                ? Object.values(this.currentOrder.uiState.lineChanges[line.uuid]).every((v) => !v)
+                ? Object.values(this.currentOrder.uiState.lineChanges[line.uuid]).every(
+                      (v) => !v,
+                  )
                 : false;
 
-            const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
+            const wrongChild = line.combo_line_ids.find(
+                (l) => !l.product_id.self_order_available,
+            );
             if (wrongChild || !line.product_id?.self_order_available) {
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
@@ -844,7 +938,8 @@ export class SelfOrder extends Reactive {
     }
 
     getProductPriceInfo(productTemplate, product) {
-        const pricelist = this.currentOrder.preset_id?.pricelist_id || this.config.pricelist_id;
+        const pricelist =
+            this.currentOrder.preset_id?.pricelist_id || this.config.pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         if (!product) {
@@ -888,7 +983,7 @@ export class SelfOrder extends Reactive {
             {
                 order: order,
             },
-            {}
+            {},
         );
         link.href = png.toDataURL().replace("data:image/jpeg;base64,", "");
         link.click();
@@ -913,7 +1008,7 @@ export class SelfOrder extends Reactive {
                 }
                 return acc;
             },
-            { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 }
+            { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 },
         );
     }
 

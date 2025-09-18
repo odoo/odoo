@@ -1,9 +1,7 @@
 import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
 import { registry } from "@web/core/registry";
-
 export class DiscussCorePublicWeb {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -17,7 +15,7 @@ export class DiscussCorePublicWeb {
         this.rtcService = services["discuss.rtc"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
-                "discuss_core_public_web.sidebar_categories"
+                "discuss_core_public_web.sidebar_categories",
             );
             this.sidebarCategoriesBroadcast.addEventListener(
                 "message",
@@ -26,7 +24,7 @@ export class DiscussCorePublicWeb {
                     if (category) {
                         category.open = open;
                     }
-                }
+                },
             );
         } catch {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
@@ -40,7 +38,10 @@ export class DiscussCorePublicWeb {
             } = payload;
             this.store.insert(data);
             await this.store.fetchChannel(channel_id);
-            const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
+            const thread = this.store.Thread.get({
+                id: channel_id,
+                model: "discuss.channel",
+            });
             if (
                 thread &&
                 invitedByUserId &&
@@ -49,7 +50,7 @@ export class DiscussCorePublicWeb {
             ) {
                 this.notificationService.add(
                     _t("You have been invited to #%s", thread.displayName),
-                    { type: "info" }
+                    { type: "info" },
                 );
             }
         });
@@ -62,7 +63,11 @@ export class DiscussCorePublicWeb {
                         id: data.id,
                     });
                     channel?.open({ focus: true });
-                    if (!data.joinCall || !channel || this.rtcService.state.channel?.eq(channel)) {
+                    if (
+                        !data.joinCall ||
+                        !channel ||
+                        this.rtcService.state.channel?.eq(channel)
+                    ) {
                         return;
                     }
                     if (this.rtcService.state.channel) {
@@ -82,7 +87,7 @@ export class DiscussCorePublicWeb {
                     downloadLink.click();
                     URL.revokeObjectURL(url);
                 }
-            }
+            },
         );
     }
 
@@ -92,7 +97,10 @@ export class DiscussCorePublicWeb {
      * @param {import("models").DiscussAppCategory} category
      */
     broadcastCategoryState(category) {
-        this.sidebarCategoriesBroadcast?.postMessage({ id: category.id, open: category.open });
+        this.sidebarCategoriesBroadcast?.postMessage({
+            id: category.id,
+            open: category.open,
+        });
     }
 }
 

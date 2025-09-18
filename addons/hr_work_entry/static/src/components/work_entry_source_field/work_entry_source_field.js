@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { RadioField, radioField } from "@web/views/fields/radio/radio_field";
+import { RadioField, radioField } from "@web/fields/selection/radio/radio_field";
 import { _t } from "@web/core/l10n/translation";
 
 export class WorkEntrySourceField extends RadioField {

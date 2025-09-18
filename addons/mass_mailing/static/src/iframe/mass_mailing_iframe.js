@@ -18,7 +18,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Editor } from "@html_editor/editor";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { closestScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY } from "@web/core/utils/dom/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -293,6 +293,10 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
+        this.editor.config.localOverlayContainers = {
+            key: this.env.localOverlayContainerKey,
+            ref: this.overlayRef,
+        };
         this.editor.attachTo(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );

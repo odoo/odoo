@@ -1,6 +1,6 @@
 // = Onboarding Panel
 // ============================================================================
-$o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
+$o-onboarding-step-width: calc(map-get($container-max-widths, 'lg') / 4) !default;
 
 .o_onboarding_container {
     transition: height 0.4s;
@@ -44,19 +44,19 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
 
         &:first-child, &:last-child {
             .o_onboarding_line {
-                width: $o-onboarding-line-width / 2 ;
+                width: calc($o-onboarding-line-width / 2) ;
             }
         }
 
         &:first-child {
             .o_onboarding_line {
-                margin-left: $o-onboarding-line-width / 2;
+                margin-left: calc($o-onboarding-line-width / 2);
             }
         }
 
         &:last-child {
             .o_onboarding_line {
-                margin-right: $o-onboarding-line-width / 2;
+                margin-right: calc($o-onboarding-line-width / 2);
             }
         }
 
@@ -64,7 +64,7 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
             background: linear-gradient(to right, $o-onboarding-color-orange 0%, $o-onboarding-color-blue 100%);
             height: $o-onboarding-line-height;
             width: $o-onboarding-line-width;
-            top: $o-onboarding-image-size / 2;
+            top: calc($o-onboarding-image-size / 2);
             background-attachment: fixed;
         }
 

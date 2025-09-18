@@ -1,13 +1,10 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-
-import { Component, onWillStart, useState } from "@odoo/owl";
-
 import { useSequential } from "@mail/utils/common/hooks";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
     static defaultProps = { hasSizeConstraints: false };
@@ -40,7 +37,7 @@ export class ChannelInvitation extends Component {
         });
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
-            250
+            250,
         );
         this.inputRef = useAutofocus({ refName: "input" });
         onWillStart(() => {
@@ -92,7 +89,7 @@ export class ChannelInvitation extends Component {
             {
                 result_count: this.selectablePartners.length,
                 total_count: this.state.searchResultCount,
-            }
+            },
         );
     }
 
@@ -108,23 +105,23 @@ export class ChannelInvitation extends Component {
             this.orm.call("res.partner", "search_for_channel_invite", [
                 this.searchStr,
                 this.props.thread?.id ?? false,
-            ])
+            ]),
         );
         if (!results) {
             return;
         }
         this.store.insert(results.store_data);
         const selectablePartners = results.partner_ids.map((id) =>
-            this.store["res.partner"].get(id)
+            this.store["res.partner"].get(id),
         );
         this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
-            this.props.thread
+            this.props.thread,
         );
         this.state.searchResultCount = results["count"];
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
-            addr.includes(this.searchStr)
+            addr.includes(this.searchStr),
         );
         if (results.selectable_email) {
             selectableEmails.push(results.selectable_email);
@@ -202,17 +199,29 @@ export class ChannelInvitation extends Component {
         const invitePromises = [];
         if (this.selectedPartners.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
-                    partner_ids: this.selectedPartners.map((partner) => partner.id),
-                    invite_to_rtc_call: this.rtc.state.channel?.eq(this.props.thread),
-                })
+                this.orm.call(
+                    "discuss.channel",
+                    "add_members",
+                    [[this.props.thread.id]],
+                    {
+                        partner_ids: this.selectedPartners.map((partner) => partner.id),
+                        invite_to_rtc_call: this.rtc.state.channel?.eq(
+                            this.props.thread,
+                        ),
+                    },
+                ),
             );
         }
         if (this.state.selectedEmails.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "invite_by_email", [this.props.thread.id], {
-                    emails: this.state.selectedEmails,
-                })
+                this.orm.call(
+                    "discuss.channel",
+                    "invite_by_email",
+                    [this.props.thread.id],
+                    {
+                        emails: this.state.selectedEmails,
+                    },
+                ),
             );
         }
         await Promise.all(invitePromises);
@@ -238,7 +247,9 @@ export class ChannelInvitation extends Component {
                     const alreadyChat = Object.values(this.store.Thread.records).some(
                         (thread) =>
                             thread.channel_type === "chat" &&
-                            thread.correspondent?.partner_id?.eq(this.selectedPartners[0])
+                            thread.correspondent?.partner_id?.eq(
+                                this.selectedPartners[0],
+                            ),
                     );
                     if (alreadyChat) {
                         return _t("Go to conversation");

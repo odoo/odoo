@@ -1,6 +1,6 @@
 import { useState, onRendered } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { BooleanToggleField, booleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
+import { BooleanToggleField, booleanToggleField } from "@web/fields/basic/boolean_toggle/boolean_toggle_field";
 
 export class TaskCheckMark extends BooleanToggleField {
     static template = "project.TaskCheckMark";

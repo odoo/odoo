@@ -5,7 +5,7 @@ import time
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 
 from odoo import Command
 from odoo.tools import date_utils, mute_logger, test_reports
@@ -257,7 +257,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'request_date_to': date.today() + relativedelta(day=10),
             'employee_id': self.ref('hr.employee_admin'),
         }
-        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+        with mute_logger('odoo.db'), self.assertRaises(IntegrityError):
             self.env['hr.leave'].create(leave_vals)
 
         leave_vals = {
@@ -269,7 +269,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         }
         leave = self.env['hr.leave'].create(leave_vals)
 
-        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+        with mute_logger('odoo.db'), self.assertRaises(IntegrityError):
             leave.write({
                 'request_date_from': date.today() + relativedelta(day=11),
                 'request_date_to': date.today() + relativedelta(day=10),

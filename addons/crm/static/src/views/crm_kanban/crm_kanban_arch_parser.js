@@ -1,5 +1,5 @@
 import { KanbanArchParser } from "@web/views/kanban/kanban_arch_parser";
-import { extractAttributes } from "@web/core/utils/xml";
+import { extractAttributes } from "@web/core/utils/dom/xml";
 
 export class CrmKanbanArchParser extends KanbanArchParser {
     /**

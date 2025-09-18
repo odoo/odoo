@@ -1,9 +1,9 @@
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { FloatFactorField } from "@web/views/fields/float_factor/float_factor_field";
-import { FloatToggleField } from "@web/views/fields/float_toggle/float_toggle_field";
-import { FloatTimeField } from "@web/views/fields/float_time/float_time_field";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { FloatFactorField } from "@web/fields/basic/float_factor/float_factor_field";
+import { FloatToggleField } from "@web/fields/basic/float_toggle/float_toggle_field";
+import { FloatTimeField } from "@web/fields/basic/float_time/float_time_field";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 import { Component } from "@odoo/owl";
 

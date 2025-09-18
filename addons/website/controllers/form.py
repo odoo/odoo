@@ -2,15 +2,15 @@
 
 import base64
 import json
-import psycopg2
+import psycopg
 
 from markupsafe import Markup
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 import re
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID
-from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from odoo.libs.text.html import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
@@ -51,7 +51,7 @@ class WebsiteForm(http.Controller):
                 # ignore savepoint closing error if the transaction was committed
                 try:
                     sp.close(rollback=False)
-                except psycopg2.errors.InvalidSavepointSpecification:
+                except psycopg.errors.InvalidSavepointSpecification:
                     sp.closed = True
                 return res
         except (ValidationError, UserError) as e:

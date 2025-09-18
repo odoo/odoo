@@ -1,6 +1,12 @@
+// @ts-check
+
+/** @module @web/core/context - Builds an evaluation context by merging and evaluating Python expressions */
+
 import { evaluateExpr, parseExpr } from "./py_js/py";
 import { BUILTINS } from "./py_js/py_builtin";
 import { evaluate } from "./py_js/py_interpreter";
+
+/** @typedef {any} AST */
 
 /**
  * @typedef {{
@@ -21,7 +27,7 @@ import { evaluate } from "./py_js/py_interpreter";
  * @returns {Context}
  */
 export function makeContext(contexts, initialEvaluationContext) {
-    const evaluationContext = Object.assign({}, initialEvaluationContext);
+    const evaluationContext = { ...initialEvaluationContext };
     const context = {};
     for (let ctx of contexts) {
         if (ctx !== "") {
@@ -49,7 +55,7 @@ function getPartialNames(ast) {
         return getPartialNames(ast.right);
     }
     if (ast.type === 14 || ast.type === 7) {
-        return getPartialNames(ast.left).concat(getPartialNames(ast.right));
+        return [...getPartialNames(ast.left), ...getPartialNames(ast.right)];
     }
     if (ast.type === 15) {
         return getPartialNames(ast.obj);
@@ -61,17 +67,20 @@ function getPartialNames(ast) {
  * Allow to evaluate a context with an incomplete evaluation context. The evaluated context only
  * contains keys whose values are static or can be evaluated with the given evaluation context.
  *
- * @param {string} context
+ * @param {string} _context
  * @param {Context} [evaluationContext={}]
  * @returns {Context}
  */
 export function evalPartialContext(_context, evaluationContext = {}) {
+    /** @type {any} */
     const ast = parseExpr(_context);
     const context = {};
     for (const key in ast.value) {
         const value = ast.value[key];
         if (
-            getPartialNames(value).some((name) => !(name in evaluationContext || name in BUILTINS))
+            getPartialNames(value).some(
+                (name) => !(name in evaluationContext || name in BUILTINS),
+            )
         ) {
             continue;
         }

@@ -1,8 +1,10 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { FAKE_FIELDS } from "./calendar_test_helpers";
+// @ts-check
 
-import { parseXML } from "@web/core/utils/xml";
+import { describe, expect, test } from "@odoo/hoot";
+import { parseXML } from "@web/core/utils/dom/xml";
 import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
+
+import { FAKE_FIELDS } from "./calendar_test_helpers";
 
 describe.current.tags("headless");
 
@@ -46,12 +48,14 @@ function parseWith(attrs) {
 
 test(`throw if date_start is not set`, () => {
     expect(() => parseArch(`<calendar/>`)).toThrow(
-        `Calendar view must define "date_start" attribute.`
+        `Calendar view must define "date_start" attribute.`,
     );
 });
 
 test(`defaults`, () => {
-    expect(parseArch(`<calendar date_start="start_date"/>`)).toEqual(DEFAULT_ARCH_RESULTS);
+    expect(parseArch(`<calendar date_start="start_date"/>`)).toEqual(
+        DEFAULT_ARCH_RESULTS,
+    );
 });
 
 test("canCreate", () => {
@@ -172,15 +176,23 @@ test("scale", () => {
     expect(parseWith({ mode: "month" }).scale).toBe("month");
     expect(parseWith({ mode: "year" }).scale).toBe("year");
 
-    expect(() => parseWith({ mode: "" })).toThrow(`Calendar view cannot display mode: `);
-    expect(() => parseWith({ mode: "other" })).toThrow(`Calendar view cannot display mode: other`);
+    expect(() => parseWith({ mode: "" })).toThrow(
+        `Calendar view cannot display mode: `,
+    );
+    expect(() => parseWith({ mode: "other" })).toThrow(
+        `Calendar view cannot display mode: other`,
+    );
 });
 
 test("scales", () => {
     expect(parseWith({ scales: "" }).scales).toEqual(["day", "week", "month", "year"]);
     expect(parseWith({ scales: "day" }).scales).toEqual(["day"]);
     expect(parseWith({ scales: "day,week" }).scales).toEqual(["day", "week"]);
-    expect(parseWith({ scales: "day,week,month" }).scales).toEqual(["day", "week", "month"]);
+    expect(parseWith({ scales: "day,week,month" }).scales).toEqual([
+        "day",
+        "week",
+        "month",
+    ]);
     expect(parseWith({ scales: "day,week,month,year" }).scales).toEqual([
         "day",
         "week",
@@ -189,7 +201,11 @@ test("scales", () => {
     ]);
     expect(parseWith({ scales: "week" }).scales).toEqual(["week"]);
     expect(parseWith({ scales: "week,month" }).scales).toEqual(["week", "month"]);
-    expect(parseWith({ scales: "week,month,year" }).scales).toEqual(["week", "month", "year"]);
+    expect(parseWith({ scales: "week,month,year" }).scales).toEqual([
+        "week",
+        "month",
+        "year",
+    ]);
     expect(parseWith({ scales: "month" }).scales).toEqual(["month"]);
     expect(parseWith({ scales: "month,year" }).scales).toEqual(["month", "year"]);
     expect(parseWith({ scales: "year" }).scales).toEqual(["year"]);
@@ -201,7 +217,7 @@ test("scales", () => {
     ]);
 
     expect(() =>
-        parseArch(`<calendar date_start="start_date" scales="month" mode="day"/>`)
+        parseArch(`<calendar date_start="start_date" scales="month" mode="day"/>`),
     ).toThrow();
 });
 

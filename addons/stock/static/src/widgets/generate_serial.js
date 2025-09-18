@@ -1,13 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
-import { Dialog } from '@web/core/dialog/dialog';
+import { x2ManyCommands } from "@web/services/orm_service";
+import { Dialog } from '@web/ui/dialog/dialog';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { parseInteger  } from "@web/views/fields/parsers";
+import { parseInteger  } from "@web/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
 import { Component, useRef, onMounted, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export class GenerateDialog extends Component {
     static template = "stock.generate_serial_dialog";
@@ -104,9 +104,6 @@ export class GenerateDialog extends Component {
         ]));
         lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
-        if (this.sequence && this.nextSerial.el.value === this.nextCustomSerialNumber) {
-            await this.orm.write("ir.sequence", [this.sequence.id], {number_next_actual: this.sequence.number_next_actual + newlines.length});
-        }
         this.props.close();
     }
 }

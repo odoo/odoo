@@ -1,13 +1,13 @@
 import { Component, useState, xml } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/format/strings";
 import { redirect } from "@web/core/utils/urls";
 import { InstallModuleDialog } from "./install_module_dialog";
 

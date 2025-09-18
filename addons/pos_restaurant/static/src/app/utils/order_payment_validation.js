@@ -1,6 +1,5 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
-
 patch(OrderPaymentValidation.prototype, {
     get nextPage() {
         if (!this.pos.config.set_tip_after_payment || this.order.is_tipped) {

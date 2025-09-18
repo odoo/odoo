@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { rpc } from "@web/core/network/rpc";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils } from "@web/ui/block/ui_service";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
 import { verifyHttpsUrl } from "@website/utils/misc";

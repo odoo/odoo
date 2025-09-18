@@ -8,7 +8,7 @@
     """,
     'category': 'Services/Project',
     'version': '1.0',
-    'depends': ['project', 'hr_skills'],
+    'depends': ['project_hr', 'hr_skills'],
     'auto_install': True,
     'data': [
         'views/project_task_views.xml',

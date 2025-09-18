@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryText } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
@@ -16,8 +18,7 @@ import {
     stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
-import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
+import { ClientErrorDialog } from "@web/components/errors/error_dialogs";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
@@ -189,7 +190,7 @@ describe("new", () => {
                     views: [[17, "form"]],
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
 
         onRpc("/web/dataset/call_button/*", async (request) => {
@@ -204,7 +205,10 @@ describe("new", () => {
         stepAllNetworkCalls();
 
         await mountWithCleanup(WebClient);
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
         await contains(`button[name="5"]`).click();
@@ -247,7 +251,7 @@ describe("new", () => {
                     views: [[17, "form"]],
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
 
         onRpc("/web/dataset/call_button/*", async (request) => {
@@ -262,7 +266,10 @@ describe("new", () => {
         stepAllNetworkCalls();
 
         await mountWithCleanup(WebClient);
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
@@ -310,7 +317,9 @@ describe("new", () => {
         expect(".o_technical_modal .modal-body button.infooter").toHaveCount(0);
         expect(".o_technical_modal .modal-footer button.infooter").toHaveCount(0);
         expect('.o_technical_modal .modal-body button[special="save"]').toHaveCount(0);
-        expect('.o_technical_modal .modal-footer button[special="save"]').toHaveCount(1);
+        expect('.o_technical_modal .modal-footer button[special="save"]').toHaveCount(
+            1,
+        );
         expect(".o_technical_modal .modal-footer button:visible").toHaveCount(1);
     });
 
@@ -408,7 +417,7 @@ describe("new", () => {
                 try {
                     await this.action.doAction(
                         { type: "ir.actions.client", tag: "failing", target: "new" },
-                        { onClose: () => expect.step("failing dialog closed") }
+                        { onClose: () => expect.step("failing dialog closed") },
                     );
                 } catch (e) {
                     expect(e.cause.message).toBe("my error");
@@ -427,7 +436,10 @@ describe("new", () => {
         });
 
         await mountWithCleanup(WebClient);
-        await getService("action").doAction({ type: "ir.actions.client", tag: "clientAction" });
+        await getService("action").doAction({
+            type: "ir.actions.client",
+            tag: "clientAction",
+        });
         await contains(".my_action").click();
         await errorDialogOpened;
         expect(".modal").toHaveCount(1);
@@ -507,16 +519,28 @@ describe("new", () => {
         await getService("action").doAction(action);
         expect(".o_dialog .modal-dialog").toHaveClass("modal-lg");
 
-        await getService("action").doAction({ ...action, context: { dialog_size: "small" } });
+        await getService("action").doAction({
+            ...action,
+            context: { dialog_size: "small" },
+        });
         expect(".o_dialog .modal-dialog").toHaveClass("modal-sm");
 
-        await getService("action").doAction({ ...action, context: { dialog_size: "medium" } });
+        await getService("action").doAction({
+            ...action,
+            context: { dialog_size: "medium" },
+        });
         expect(".o_dialog .modal-dialog").toHaveClass("modal-md");
 
-        await getService("action").doAction({ ...action, context: { dialog_size: "large" } });
+        await getService("action").doAction({
+            ...action,
+            context: { dialog_size: "large" },
+        });
         expect(".o_dialog .modal-dialog").toHaveClass("modal-lg");
 
-        await getService("action").doAction({ ...action, context: { dialog_size: "extra-large" } });
+        await getService("action").doAction({
+            ...action,
+            context: { dialog_size: "extra-large" },
+        });
         expect(".o_dialog .modal-dialog").toHaveClass("modal-xl");
     });
 
@@ -551,7 +575,9 @@ describe("fullscreen", () => {
         expect(".o_control_panel").toHaveCount(1, {
             message: "should have rendered a control panel",
         });
-        expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
+        expect(".o_kanban_view").toHaveCount(1, {
+            message: "should have rendered a kanban view",
+        });
         expect(".o_main_navbar").toHaveCount(0);
     });
 
@@ -728,7 +754,9 @@ describe("main", () => {
         expect(".o_form_view").toHaveCount(1);
         expect("ol.breadcrumb").toHaveCount(1);
         expect(".o_breadcrumb span").toHaveCount(1);
-        expect(".o_control_panel .o_breadcrumb").toHaveText("Partner Action\nFirst record");
+        expect(".o_control_panel .o_breadcrumb").toHaveText(
+            "Partner Action\nFirst record",
+        );
     });
 
     test.tags("desktop");
@@ -753,7 +781,9 @@ describe("main", () => {
         expect(".o_form_view").toHaveCount(1);
         expect("ol.breadcrumb").toHaveCount(1);
         expect(".o_breadcrumb span").toHaveCount(1);
-        expect(".o_control_panel .o_breadcrumb").toHaveText("Partner Action\nFirst record");
+        expect(".o_control_panel .o_breadcrumb").toHaveText(
+            "Partner Action\nFirst record",
+        );
 
         await getService("action").doAction(1);
         expect(".o_kanban_view").toHaveCount(1);
@@ -765,6 +795,8 @@ describe("main", () => {
         expect(".o_form_view").toHaveCount(1);
         expect("ol.breadcrumb").toHaveCount(1);
         expect(".o_breadcrumb span").toHaveCount(1);
-        expect(".o_control_panel .o_breadcrumb").toHaveText("Partner Action\nFirst record");
+        expect(".o_control_panel .o_breadcrumb").toHaveText(
+            "Partner Action\nFirst record",
+        );
     });
 });

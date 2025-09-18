@@ -1,7 +1,11 @@
-import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+// @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import {
+    setupInteractionWhiteList,
+    startInteractions,
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("public.login");
 

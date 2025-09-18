@@ -5,8 +5,8 @@ import { registry } from "@web/core/registry";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { post } from "@web/core/network/http_service";
-import { user } from "@web/core/user";
+import { post } from "@web/services/http_service";
+import { user } from "@web/services/user";
 import { delay } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import {

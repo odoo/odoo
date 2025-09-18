@@ -14,10 +14,10 @@ import {
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { ResizablePanel } from "@web/components/resizable_panel/resizable_panel";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
@@ -32,7 +32,7 @@ import { WebsiteSystrayItem } from "./website_systray_item";
 import { renderToElement } from "@web/core/utils/render";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
-import { getScrollingElement } from "@web/core/utils/scrolling";
+import { getScrollingElement } from "@web/core/utils/dom/scrolling";
 import { CreatePageMessage } from "./create_page_message";
 
 const websiteSystrayRegistry = registry.category("website_systray");

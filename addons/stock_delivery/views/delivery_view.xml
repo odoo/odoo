@@ -14,7 +14,7 @@
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.form.view</field>
             <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="inherit_id" ref="stock.view_stock_picking_form"/>
             <field name="arch" type="xml">
               <data>
                 <xpath expr="//group[@name='other_infos']" position="before">
@@ -63,7 +63,7 @@
         <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
             <field name="name">stock.picking_withweight.internal.move.form.view</field>
             <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="inherit_id" ref="stock.view_stock_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='location_dest_id']" position="after">
                     <field name="weight"/>
@@ -71,10 +71,10 @@
             </field>
         </record>
 
-        <record id="view_move_line_tree_detailed_delivery" model="ir.ui.view">
+        <record id="view_stock_move_line_list_detailed_delivery" model="ir.ui.view">
             <field name="name">stock.move.line.list.detailed</field>
             <field name="model">stock.move.line</field>
-            <field name="inherit_id" ref="stock.view_move_line_tree_detailed"/>
+            <field name="inherit_id" ref="stock.view_stock_move_line_list_detailed"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='picking_partner_id']" position="after">
                     <field name="destination_country_code" optional="hide"/>
@@ -83,10 +83,10 @@
             </field>
         </record>
 
-        <record id="stock_package_view_form" model="ir.ui.view">
+        <record id="view_stock_package_form" model="ir.ui.view">
             <field name="name">stock.package.weight.form</field>
             <field name="model">stock.package</field>
-            <field name="inherit_id" ref="stock.stock_package_view_form"/>
+            <field name="inherit_id" ref="stock.view_stock_package_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <label for="shipping_weight"/>
@@ -122,10 +122,10 @@
             <field name="target">new</field>
         </record>
 
-        <record id="vpicktree_view_tree" model="ir.ui.view">
+        <record id="view_stock_picking_list_vpicktree_view_tree" model="ir.ui.view">
             <field name="name">stock.picking.delivery.list.inherit.delivery</field>
             <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="inherit_id" ref="stock.view_stock_picking_list_vpicktree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='backorder_id']" position="after">
                     <field name="carrier_tracking_ref" optional="hide"/>

@@ -44,7 +44,7 @@ export function useMatrixConfigurator() {
 
         if (!edit) {
             // remove new line used to open the matrix
-            rootRecord.data.order_line.delete(record);
+            rootRecord.data.line_ids.delete(record);
         }
     };
 

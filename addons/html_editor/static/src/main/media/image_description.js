@@ -1,7 +1,7 @@
 import { Component, useEffect, useRef } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
 
 export class ImageDescription extends Component {
     static components = { Dialog };

@@ -1,6 +1,13 @@
 import { useExternalListener } from "@odoo/owl";
 
-const UserPresenceEvents = ["mousemove", "mousedown", "touchmove", "click", "scroll", "keypress"];
+const UserPresenceEvents = [
+    "mousemove",
+    "mousedown",
+    "touchmove",
+    "click",
+    "scroll",
+    "keypress",
+];
 
 export function useIdleTimer(steps, onAlive) {
     const state = {

@@ -1,11 +1,11 @@
 import { Component, onWillUpdateProps, useState, useRef } from "@odoo/owl";
-import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { CustomColorPicker as ColorPicker } from "@web/components/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,
     standardizeGradient,
     rgbaToHex,
     convertCSSColorToRgba,
-} from "@web/core/utils/colors";
+} from "@web/core/utils/format/colors";
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };

@@ -1,19 +1,18 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
-import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
-import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
-
+import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
+import { parseFloat } from "@web/fields/parsers";
+import { AlertDialog, ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 const { DateTime } = luxon;
 
 export class ClosePosPopup extends Component {
@@ -45,11 +44,13 @@ export class ClosePosPopup extends Component {
         this.setManualCashInput(count);
     }
     autoFillPMCount(paymentId) {
-        const pm = this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId);
+        const pm = this.props.non_cash_payment_methods.find(
+            (pm) => pm.id === paymentId,
+        );
         if (pm) {
             this.state.payments[paymentId].counted = this.env.utils.formatCurrency(
                 pm.amount,
-                false
+                false,
             );
         }
     }
@@ -64,14 +65,14 @@ export class ClosePosPopup extends Component {
                 });
                 return acc;
             },
-            { total: 0, moves: [] }
+            { total: 0, moves: [] },
         );
         return { total, moves };
     }
     get orderForNextDays() {
         const today = DateTime.now();
         return this.pos.models["pos.order"].filter(
-            (o) => o.lines.length > 0 && o.preset_time > today && o.state === "draft"
+            (o) => o.lines.length > 0 && o.preset_time > today && o.state === "draft",
         ).length;
     }
     async cashMove() {
@@ -96,7 +97,10 @@ export class ClosePosPopup extends Component {
         return initialState;
     }
     async confirm() {
-        if (!this.pos.config.cash_control || this.pos.currency.isZero(this.getMaxDifference())) {
+        if (
+            !this.pos.config.cash_control ||
+            this.pos.currency.isZero(this.getMaxDifference())
+        ) {
             await this.closeSession();
             return;
         }
@@ -104,7 +108,7 @@ export class ClosePosPopup extends Component {
             const response = await ask(this.dialog, {
                 title: _t("Payments Difference"),
                 body: _t(
-                    "The money counted doesn't match what we expected. Want to log the difference for the books?"
+                    "The money counted doesn't match what we expected. Want to log the difference for the books?",
                 ),
                 confirmLabel: _t("Proceed Anyway"),
                 cancelLabel: _t("Discard"),
@@ -118,7 +122,7 @@ export class ClosePosPopup extends Component {
             title: _t("Payments Difference"),
             body: _t(
                 "The maximum difference allowed is %s.\nPlease contact your manager to accept the closing difference.",
-                this.env.utils.formatCurrency(this.props.amount_authorized_diff)
+                this.env.utils.formatCurrency(this.props.amount_authorized_diff),
             ),
         });
     }
@@ -151,7 +155,9 @@ export class ClosePosPopup extends Component {
         });
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.session.id]);
+        return this.report.doAction("point_of_sale.sale_details_report", [
+            this.pos.session.id,
+        ]);
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {
@@ -167,7 +173,8 @@ export class ClosePosPopup extends Component {
         const expectedAmount =
             paymentId === this.props.default_cash_details?.id
                 ? this.props.default_cash_details.amount
-                : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId).amount;
+                : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId)
+                      .amount;
 
         return parseFloat(counted) - expectedAmount;
     }
@@ -175,8 +182,8 @@ export class ClosePosPopup extends Component {
     getMaxDifference() {
         return Math.max(
             ...Object.keys(this.state.payments).map((id) =>
-                Math.abs(this.getDifference(parseInt(id)))
-            )
+                Math.abs(this.getDifference(parseInt(id))),
+            ),
         );
     }
     hasUserAuthority() {
@@ -205,9 +212,9 @@ export class ClosePosPopup extends Component {
                 [this.pos.session.id],
                 {
                     counted_cash: parseFloat(
-                        this.state.payments[this.props.default_cash_details.id].counted
+                        this.state.payments[this.props.default_cash_details.id].counted,
                     ),
-                }
+                },
             );
 
             if (!response.successful) {
@@ -216,15 +223,19 @@ export class ClosePosPopup extends Component {
         }
 
         try {
-            await this.pos.data.call("pos.session", "update_closing_control_state_session", [
-                this.pos.session.id,
-                this.state.notes,
-            ]);
+            await this.pos.data.call(
+                "pos.session",
+                "update_closing_control_state_session",
+                [this.pos.session.id, this.state.notes],
+            );
         } catch (error) {
             // We have to handle the error manually otherwise the validation check stops the script.
             // In case of "rescue session", we want to display the next popup with "handleClosingError".
             // FIXME
-            if (!error.data && error.data.message !== "This session is already closed.") {
+            if (
+                !error.data &&
+                error.data.message !== "This session is already closed."
+            ) {
                 throw error;
             }
         }
@@ -241,7 +252,7 @@ export class ClosePosPopup extends Component {
                     context: {
                         device_identifier: this.pos.device.identifier,
                     },
-                }
+                },
             );
             if (!response.successful) {
                 return this.handleClosingError(response);
@@ -265,7 +276,7 @@ export class ClosePosPopup extends Component {
                 title: _t("Closing session error"),
                 body: _t(
                     "An error has occurred when trying to close the session.\n" +
-                        "You will be redirected to the back-end to manually close the session."
+                        "You will be redirected to the back-end to manually close the session.",
                 ),
             },
             {
@@ -278,19 +289,20 @@ export class ClosePosPopup extends Component {
                         },
                         {
                             onClose: async () => {
-                                const session = await this.pos.data.read("pos.session", [
-                                    this.pos.session.id,
-                                ]);
+                                const session = await this.pos.data.read(
+                                    "pos.session",
+                                    [this.pos.session.id],
+                                );
                                 if (session[0] && session[0].state === "closed") {
                                     this.pos.router.close();
                                 } else {
                                     this.pos.redirectToBackend();
                                 }
                             },
-                        }
+                        },
                     );
                 },
-            }
+            },
         );
     }
     async handleClosingError(response) {
@@ -307,7 +319,10 @@ export class ClosePosPopup extends Component {
             },
             cancel: async () => {
                 if (!response.redirect) {
-                    const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
+                    const now = DateTime.now();
+                    const ordersDraft = this.pos.models["pos.order"].filter(
+                        (o) => !o.finalized && !(o.preset_time && o.preset_time > now),
+                    );
                     await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
                     this.closeSession();
                 }
@@ -320,7 +335,9 @@ export class ClosePosPopup extends Component {
         }
     }
     getMovesTotalAmount() {
-        const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
+        const amounts = this.props.default_cash_details.moves.map(
+            (move) => move.amount,
+        );
         return amounts.reduce((acc, x) => acc + x, 0);
     }
 }

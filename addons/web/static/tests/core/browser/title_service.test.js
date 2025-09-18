@@ -1,3 +1,5 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
 
@@ -25,8 +27,8 @@ test("add title part", () => {
 test("modify title part", () => {
     titleService.setParts({ one: "MyOdoo" });
     expect(titleService.current).toBe("MyOdoo");
-    titleService.setParts({ one: "Zopenerp" });
-    expect(titleService.current).toBe("Zopenerp");
+    titleService.setParts({ one: "Zodoo" });
+    expect(titleService.current).toBe("Zodoo");
 });
 
 test("delete title part", () => {
@@ -39,8 +41,8 @@ test("delete title part", () => {
 test("all at once", () => {
     titleService.setParts({ one: "MyOdoo", two: "Import" });
     expect(titleService.current).toBe("MyOdoo - Import");
-    titleService.setParts({ one: "Zopenerp", two: null, three: "Sauron" });
-    expect(titleService.current).toBe("Zopenerp - Sauron");
+    titleService.setParts({ one: "Zodoo", two: null, three: "Sauron" });
+    expect(titleService.current).toBe("Zodoo - Sauron");
 });
 
 test("get title parts", () => {

@@ -1,8 +1,8 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from "@web/components/select_menu/select_menu";
 import { useService } from "@web/core/utils/hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 
 export class WebsiteLinksTagsWrapper extends Component {
     static template = "website_links.WebsiteLinksTagsWrapper";

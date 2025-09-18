@@ -1,5 +1,5 @@
 import { onWillStart, useEffect } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander'
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 
@@ -74,7 +74,7 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
                     ([fName, value]) => value !== this.featuresToObserve[fName]
                 )
             ) {
-                this.model.action.doAction("reload_context");
+                this.actionService.doAction("reload_context");
             }
         }
     }

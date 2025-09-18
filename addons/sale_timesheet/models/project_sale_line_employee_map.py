@@ -11,10 +11,10 @@ class ProjectSaleLineEmployeeMap(models.Model):
 
     def _domain_sale_line_id(self):
         domain = Domain.AND([
-            self.env['sale.order.line']._sellable_lines_domain(),
+            self.env['sale.order.line']._get_lines_sellable_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
-                ('order_partner_id', '=?', unquote('partner_id')),
+                ('partner_id', '=?', unquote('partner_id')),
             ],
         ])
         return domain
@@ -58,7 +58,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
             lambda map_entry:
                 map_entry.sale_line_id
                 and map_entry.partner_id
-                and map_entry.sale_line_id.order_partner_id.commercial_partner_id != map_entry.partner_id.commercial_partner_id
+                and map_entry.sale_line_id.partner_id.commercial_partner_id != map_entry.partner_id.commercial_partner_id
         ).update({'sale_line_id': False})
 
     @api.depends('sale_line_id.price_unit')

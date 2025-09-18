@@ -40,6 +40,48 @@
 }
 
 // ------------------------------------------------------------------
+// Collapsed chatter aside
+// ------------------------------------------------------------------
+
+.o-mail-Form-chatter.o-aside {
+    transition: width 200ms ease;
+    overflow: hidden; // Clip content during width transition
+
+    &:has(.o-chatter-collapsed) {
+        width: 48px;
+        flex-grow: 0;
+    }
+}
+
+// Let the form sheet expand when chatter is collapsed
+.o_form_sheet_bg:has(+ .o-mail-Form-chatter.o-aside) {
+    transition: max-width 200ms ease;
+}
+
+.o_form_sheet_bg:has(+ .o-mail-Form-chatter.o-aside .o-chatter-collapsed) {
+    max-width: none;
+}
+
+.o-mail-Chatter-collapsed {
+    cursor: pointer;
+    padding-top: map-get($spacers, 2);
+    gap: map-get($spacers, 3);
+}
+
+.o-mail-Chatter-collapsed-icon {
+    font-size: 1.1rem;
+    color: $text-muted;
+
+    .badge {
+        position: absolute;
+        top: -8px;
+        left: 12px;
+        font-size: 0.6rem;
+        padding: 2px 4px;
+    }
+}
+
+// ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
 

@@ -71,7 +71,10 @@ export function useTimedPress(ref, ranges = []) {
 
         for (const { delay = 0, maxDelay, type = "release", callback } of ranges) {
             if (type === "release" && typeof callback === "function") {
-                if (elapsed >= delay && (maxDelay === undefined || elapsed < maxDelay)) {
+                if (
+                    elapsed >= delay &&
+                    (maxDelay === undefined || elapsed < maxDelay)
+                ) {
                     callback(event, elapsed);
                 }
             }

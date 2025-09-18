@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class CashierSelectionPopup extends Component {
     static template = "pos_hr.CashierSelectionPopup";
     static components = { Dialog };

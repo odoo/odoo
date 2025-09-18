@@ -73,8 +73,8 @@
                             <span t-field="invoice.invoice_date_due"/>
                         </td>
                         <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
-                        <td name="invoice_status">
-                            <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
+                        <td name="invoice_state">
+                            <t t-if="invoice.state == 'posted'" name="invoice_state_posted">
                                 <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
                                       class="badge rounded-pill text-bg-success">
                                     <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"/>
@@ -90,7 +90,7 @@
                                     <i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"/>
                                     <span class="d-none d-md-inline"> Reversed</span>
                                 </span>
-                                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_status_waiting_for_payment">
+                                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_state_waiting_for_payment">
                                     <i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"/>
                                     <span class="d-none d-md-inline"> Waiting for Payment</span>
                                 </span>

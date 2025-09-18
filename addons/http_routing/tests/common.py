@@ -7,7 +7,7 @@ from werkzeug.test import EnvironBuilder
 import odoo.http
 from odoo.tests import HOST, HttpCase
 from odoo.tools import DotDict, config, frozendict
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 
 
 @contextlib.contextmanager
@@ -72,10 +72,11 @@ def MockRequest(
     if website:
         request.website_routing = website.id
     if country_code or city_name:
-        try:
-            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
-        except TypeError:
-            request.geoip._city_record = odoo.http.geoip2.models.City({'country': (country_code and {'iso_code': country_code}) or {}, 'city': (city_name and {'names': {'en': city_name}}) or {}})
+        request.geoip._city_record = odoo.http.geoip2.models.City(
+            ['en'],
+            country=(country_code and {'iso_code': country_code}) or {},
+            city=(city_name and {'names': {'en': city_name}}) or {},
+        )
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound

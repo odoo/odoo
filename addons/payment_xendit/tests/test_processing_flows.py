@@ -3,7 +3,7 @@
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode as url_encode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger

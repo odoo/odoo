@@ -35,16 +35,16 @@ import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
-import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
+import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
-import { isColorGradient } from "@web/core/utils/colors";
+import { isColorGradient } from "@web/core/utils/format/colors";
 
 const listSelectorItems = [
     {
@@ -1245,6 +1245,10 @@ export class ListPlugin extends Plugin {
             return;
         }
 
+        // Force reflow so that ::marker pseudo-elements are fully laid out
+        // before measuring their widths (avoids stale values after DOM changes).
+        void list.offsetWidth;
+
         const largestMarker = list.children[Symbol.iterator]()
             .map((li) => {
                 const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
@@ -1254,8 +1258,9 @@ export class ListPlugin extends Plugin {
         // For `UL` with large font size the marker width is so big that more padding is needed.
         const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
-        // bootstrap sets ul { padding-left: 2rem; }
-        const defaultPadding = parseFloat(getHtmlStyle(this.document).fontSize) * 2;
+        // Compare against the list's actual CSS padding (typically Bootstrap's 2rem)
+        // rather than estimating from root font-size, to handle any CSS overrides.
+        const defaultPadding = parseFloat(this.window.getComputedStyle(list).paddingInlineStart);
         // Align the whole list based on the item that requires the largest padding.
         // For smaller font sizes, doubling the width of the dot marker is still lower than the
         // default. The default is kept in that case.

@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
+import { FileUploader } from "@web/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 import { Component, markup } from "@odoo/owl";

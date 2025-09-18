@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/l10n/utils/locales - Bidirectional JS (BCP 47) to Python (XPG) locale conversion */
+
 /**
  * Converts a locale from JavaScript to Python format.
  *
@@ -25,8 +29,9 @@ export function jsToPyLocale(locale) {
     if (!locale) {
         return "";
     }
+    let language, script, region;
     try {
-        var { language, script, region } = new Intl.Locale(locale);
+        ({ language, script, region } = new Intl.Locale(locale));
         // new Intl.Locale("tl-PH") produces fil-PH, which one might not expect
         if (language === "fil") {
             language = "tl";

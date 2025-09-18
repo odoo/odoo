@@ -32,36 +32,36 @@ class IrModel(models.Model):
         ], order='id')
 
         if not (self & mail_models):
-            models = tuple(self.mapped('model'))
-            model_ids = tuple(self.ids)
+            models = list(self.mapped('model'))
+            model_ids = list(self.ids)
 
-            query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
+            query = "DELETE FROM mail_activity WHERE res_model_id = ANY(%s)"
             self.env.cr.execute(query, [model_ids])
 
-            query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
+            query = "DELETE FROM mail_activity_type WHERE res_model = ANY(%s)"
             self.env.cr.execute(query, [models])
 
-            query = "DELETE FROM mail_followers WHERE res_model IN %s"
+            query = "DELETE FROM mail_followers WHERE res_model = ANY(%s)"
             self.env.cr.execute(query, [models])
 
-            query = "DELETE FROM mail_message WHERE model in %s"
+            query = "DELETE FROM mail_message WHERE model = ANY(%s)"
             self.env.cr.execute(query, [models])
 
         # Get files attached solely to the models being deleted (and none other)
-        models = tuple(self.mapped('model'))
+        models = list(self.mapped('model'))
         query = """
             SELECT DISTINCT store_fname
             FROM ir_attachment
-            WHERE res_model IN %s
+            WHERE res_model = ANY(%s)
             EXCEPT
             SELECT store_fname
             FROM ir_attachment
-            WHERE res_model not IN %s;
+            WHERE res_model != ALL(%s);
         """
         self.env.cr.execute(query, [models, models])
         fnames = self.env.cr.fetchall()
 
-        query = """DELETE FROM ir_attachment WHERE res_model in %s"""
+        query = """DELETE FROM ir_attachment WHERE res_model = ANY(%s)"""
         self.env.cr.execute(query, [models])
 
         for (fname,) in fnames:
@@ -99,8 +99,8 @@ class IrModel(models.Model):
         return vals
 
     @api.model
-    def _instanciate_attrs(self, model_data):
-        attrs = super()._instanciate_attrs(model_data)
+    def _instantiate_attrs(self, model_data):
+        attrs = super()._instantiate_attrs(model_data)
         if model_data.get('is_mail_blacklist') and attrs['_name'] != 'mail.thread.blacklist':
             parents = attrs.get('_inherit') or []
             parents = [parents] if isinstance(parents, str) else parents

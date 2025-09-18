@@ -1,48 +1,52 @@
 // @odoo-module ignore
 /**
- * This is a minimal version of the PDFViewer widget.
- * It is NOT use in the website_slides module, but it is called when embedding
- * a slide/video/document. This code can depend on pdf.js, JQuery and Bootstrap
- * (see website_slides.slide_embed_assets bundle, in website_slides_embed.xml)
+ * Minimal PDFViewer widget for embedded slide/video/document viewing.
+ * Not used in the website_slides module directly — called when embedding
+ * a slide. Depends on pdf.js and Bootstrap (see website_slides.slide_embed_assets
+ * bundle in website_slides_embed.xml).
  */
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-    function debounce(func, timeout = 300){
+    function debounce(func, timeout = 300) {
         let timer;
         return (...args) => {
-          clearTimeout(timer);
-          timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
         };
     }
 
-    if ($('#PDFViewer') && $('#PDFViewerCanvas')) { // check if presentation only
-        var MIN_ZOOM=1, MAX_ZOOM=10, ZOOM_INCREMENT=.5;
+    var pdfViewer = document.getElementById('PDFViewer');
+    var pdfViewerCanvas = document.getElementById('PDFViewerCanvas');
+
+    if (pdfViewer && pdfViewerCanvas) { // check if presentation only
+        var MIN_ZOOM = 1, MAX_ZOOM = 10, ZOOM_INCREMENT = .5;
 
         // define embedded viewer (minimal object of the website.slide.PDFViewer widget)
-        var EmbeddedViewer = function ($viewer) {
+        var EmbeddedViewer = function (viewer) {
             var self = this;
-            this.viewer = $viewer;
-            this.slide_url = $viewer.find('#PDFSlideViewer').data('slideurl');
-            this.slide_id = $viewer.find('#PDFSlideViewer').data('slideid');
-            this.defaultpage = parseInt($viewer.find('#PDFSlideViewer').data('defaultpage'));
-            this.canvas = $viewer.find('canvas')[0];
+            this.viewer = viewer;
+            var slideViewerEl = viewer.querySelector('#PDFSlideViewer');
+            this.slide_url = slideViewerEl.dataset.slideurl;
+            this.slide_id = slideViewerEl.dataset.slideid;
+            this.defaultpage = parseInt(slideViewerEl.dataset.defaultpage);
+            this.canvas = viewer.querySelector('canvas');
 
             this.pdf_viewer = new globalThis.PDFSlidesViewer(this.slide_url, this.canvas);
-            this.hasSuggestions = !!this.$(".oe_slides_suggestion_media").length;
+            this.hasSuggestions = !!this.viewer.querySelector(".oe_slides_suggestion_media");
             this.pdf_viewer.loadDocument().then(function () {
                 self.on_loaded_file();
             });
         };
         EmbeddedViewer.prototype.__proto__ = {
-            // jquery inside the object (like Widget)
+            // querySelector inside the viewer element (like Widget.$)
             $: function (selector) {
-                return this.viewer.find($(selector));
+                return this.viewer.querySelector(selector);
             },
             // post process action (called in '.then()')
             on_loaded_file: function () {
-                this.$('canvas').show();
-                this.$('#page_count').text(this.pdf_viewer.pdf_page_total);
-                this.$('#PDFViewerLoader').hide();
+                this.$('canvas').style.display = '';
+                this.$('#page_count').textContent = this.pdf_viewer.pdf_page_total;
+                this.$('#PDFViewerLoader').style.display = 'none';
                 // init first page to display
                 var initpage = this.defaultpage;
                 var pageNum = (initpage > 0 && initpage <= this.pdf_viewer.pdf_page_total) ? initpage : 1;
@@ -50,11 +54,11 @@ $(function () {
             },
             on_rendered_page: function (pageNumber) {
                 if (pageNumber) {
-                    this.$('#page_number').val(pageNumber);
+                    this.$('#page_number').value = pageNumber;
                     this.navUpdate(pageNumber);
                 }
             },
-            on_resize: function() {
+            on_resize: function () {
                 this.render_page(this.pdf_viewer.pdf_page_current);
             },
             // page switching
@@ -63,13 +67,13 @@ $(function () {
                 this.navUpdate(pageNumber);
             },
             change_page: function () {
-                var pageAsked = parseInt(this.$('#page_number').val(), 10);
+                var pageAsked = parseInt(this.$('#page_number').value, 10);
                 if (1 <= pageAsked && pageAsked <= this.pdf_viewer.pdf_page_total) {
                     this.pdf_viewer.changePage(pageAsked).then(this.on_rendered_page.bind(this));
                     this.navUpdate(pageAsked);
                 } else {
                     // if page number out of range, reset the page_counter to the actual page
-                    this.$('#page_number').val(this.pdf_viewer.pdf_page_current);
+                    this.$('#page_number').value = this.pdf_viewer.pdf_page_current;
                 }
             },
             next: function () {
@@ -92,13 +96,14 @@ $(function () {
                 });
             },
             previous: function () {
-                const slideSuggestOverlay = this.$("#slide_suggest");
-                if (!slideSuggestOverlay.hasClass('d-none')) {
+                var slideSuggestOverlay = this.$("#slide_suggest");
+                if (slideSuggestOverlay && !slideSuggestOverlay.classList.contains('d-none')) {
                     // Hide suggested slide overlay before changing page nb.
-                    slideSuggestOverlay.addClass('d-none');
-                    this.$("#next").removeClass("disabled");
+                    slideSuggestOverlay.classList.add('d-none');
+                    this.$("#next").classList.remove("disabled");
                     if (this.pdf_viewer.pdf_page_total <= 1) {
-                        this.$("#previous, #first").addClass("disabled");
+                        this.$("#previous").classList.add("disabled");
+                        this.$("#first").classList.add("disabled");
                     }
                     return;
                 }
@@ -107,46 +112,54 @@ $(function () {
                     if (pageNum) {
                         self.on_rendered_page(pageNum);
                     }
-                    slideSuggestOverlay.addClass('d-none');
+                    if (slideSuggestOverlay) {
+                        slideSuggestOverlay.classList.add('d-none');
+                    }
                 });
             },
             first: function () {
                 var self = this;
                 this.pdf_viewer.firstPage().then(function (pageNum) {
                     self.on_rendered_page(pageNum);
-                    self.$("#slide_suggest").addClass('d-none');
+                    var el = self.$("#slide_suggest");
+                    if (el) {
+                        el.classList.add('d-none');
+                    }
                 });
             },
             last: function () {
                 var self = this;
                 this.pdf_viewer.lastPage().then(function (pageNum) {
                     self.on_rendered_page(pageNum);
-                    self.$("#slide_suggest").addClass('d-none');
+                    var el = self.$("#slide_suggest");
+                    if (el) {
+                        el.classList.add('d-none');
+                    }
                 });
             },
-            zoomIn: function() {
-                if(this.pdf_viewer.pdf_zoom < MAX_ZOOM) {
+            zoomIn: function () {
+                if (this.pdf_viewer.pdf_zoom < MAX_ZOOM) {
                     this.pdf_viewer.pdf_zoom += ZOOM_INCREMENT;
                     this.render_page(this.pdf_viewer.pdf_page_current);
                 }
             },
-            zoomOut: function() {
-                if(this.pdf_viewer.pdf_zoom > MIN_ZOOM) {
+            zoomOut: function () {
+                if (this.pdf_viewer.pdf_zoom > MIN_ZOOM) {
                     this.pdf_viewer.pdf_zoom -= ZOOM_INCREMENT;
                     this.render_page(this.pdf_viewer.pdf_page_current);
                 }
             },
             navUpdate: function (pageNum) {
-                const pagesCount = this.pdf_viewer.pdf_page_total + this.hasSuggestions;
-                this.$("#first").toggleClass("disabled", pagesCount < 2 || pageNum < 2);
-                this.$("#last").toggleClass(
+                var pagesCount = this.pdf_viewer.pdf_page_total + this.hasSuggestions;
+                this.$("#first").classList.toggle("disabled", pagesCount < 2 || pageNum < 2);
+                this.$("#last").classList.toggle(
                     "disabled",
                     pagesCount < 2 || pageNum >= this.pdf_viewer.pdf_page_total
                 );
-                this.$("#next").toggleClass("disabled", pageNum >= pagesCount);
-                this.$("#previous").toggleClass("disabled", pageNum <= 1);
-                this.$("#zoomout").toggleClass("disabled", this.pdf_viewer.pdf_zoom <= MIN_ZOOM);
-                this.$("#zoomin").toggleClass("disabled", this.pdf_viewer.pdf_zoom >= MAX_ZOOM);
+                this.$("#next").classList.toggle("disabled", pageNum >= pagesCount);
+                this.$("#previous").classList.toggle("disabled", pageNum <= 1);
+                this.$("#zoomout").classList.toggle("disabled", this.pdf_viewer.pdf_zoom <= MIN_ZOOM);
+                this.$("#zoomin").classList.toggle("disabled", this.pdf_viewer.pdf_zoom >= MAX_ZOOM);
             },
             // full screen mode
             fullscreen: function () {
@@ -159,59 +172,77 @@ $(function () {
             },
             // display suggestion displayed after last slide
             display_suggested_slides: function () {
-                this.$("#slide_suggest").removeClass("d-none");
-                this.$("#next, #last").addClass("disabled");
-                this.$("#previous, #first").removeClass("disabled");
+                var suggestEl = this.$("#slide_suggest");
+                if (suggestEl) {
+                    suggestEl.classList.remove("d-none");
+                }
+                var nextEl = this.$("#next");
+                if (nextEl) {
+                    nextEl.classList.add("disabled");
+                }
+                var lastEl = this.$("#last");
+                if (lastEl) {
+                    lastEl.classList.add("disabled");
+                }
+                var prevEl = this.$("#previous");
+                if (prevEl) {
+                    prevEl.classList.remove("disabled");
+                }
+                var firstEl = this.$("#first");
+                if (firstEl) {
+                    firstEl.classList.remove("disabled");
+                }
             },
         };
 
         // embedded pdf viewer
-        var embeddedViewer = new EmbeddedViewer($('#PDFViewer'));
+        var embeddedViewer = new EmbeddedViewer(pdfViewer);
 
         // bind the actions
-        $('#previous').on('click', function () {
+        document.getElementById('previous').addEventListener('click', function () {
             embeddedViewer.previous();
         });
-        $('#next').on('click', function () {
+        document.getElementById('next').addEventListener('click', function () {
             embeddedViewer.next();
         });
-        $('#first').on('click', function () {
+        document.getElementById('first').addEventListener('click', function () {
             embeddedViewer.first();
         });
-        $('#last').on('click', function () {
+        document.getElementById('last').addEventListener('click', function () {
             embeddedViewer.last();
         });
-        $('#zoomin').on('click', function () {
+        document.getElementById('zoomin').addEventListener('click', function () {
             embeddedViewer.zoomIn();
         });
-        $('#zoomout').on('click', function () {
+        document.getElementById('zoomout').addEventListener('click', function () {
             embeddedViewer.zoomOut();
         });
-        $('#page_number').on('change', function () {
+        document.getElementById('page_number').addEventListener('change', function () {
             embeddedViewer.change_page();
         });
-        $('#fullscreen').on('click', function () {
+        document.getElementById('fullscreen').addEventListener('click', function () {
             embeddedViewer.fullscreen();
         });
-        $('#PDFViewer').on('click', function (ev) {
+        pdfViewer.addEventListener('click', function (ev) {
             embeddedViewer.fullScreenFooter(ev);
         });
-        $('#PDFViewer').on('wheel', function (ev) {
+        pdfViewer.addEventListener('wheel', function (ev) {
             if (ev.metaKey || ev.ctrlKey) {
-                if (ev.originalEvent.deltaY > 0) {
+                if (ev.deltaY > 0) {
                     embeddedViewer.zoomOut();
-                } else if(ev.originalEvent.deltaY < 0) {
+                } else if (ev.deltaY < 0) {
                     embeddedViewer.zoomIn();
                 }
-                return false;
+                ev.preventDefault();
+                return;
             }
         });
-        $(window).on("resize", debounce(() => {
+        window.addEventListener('resize', debounce(function () {
             embeddedViewer.on_resize();
         }, 500));
 
         // switching slide with keyboard
-        $(document).keydown(function (ev) {
+        document.addEventListener('keydown', function (ev) {
             if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") {
                 embeddedViewer.previous();
             }
@@ -221,56 +252,98 @@ $(function () {
         });
 
         // display the option panels
-        $('.oe_slide_js_embed_option_link').on('click', function (ev) {
-            ev.preventDefault();
-            var toggleDiv = $(this).data('slide-option-id');
-            $('.oe_slide_embed_option').not(toggleDiv).each(function () {
-                $(this).hide();
+        for (var link of document.querySelectorAll('.oe_slide_js_embed_option_link')) {
+            link.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                var toggleId = this.dataset.slideOptionId;
+                var toggleEl = toggleId ? document.querySelector(toggleId) : null;
+                // Hide other option panels
+                for (var opt of document.querySelectorAll('.oe_slide_embed_option')) {
+                    if (opt !== toggleEl) {
+                        opt.style.display = 'none';
+                    }
+                }
+                // Toggle the target panel
+                if (toggleEl) {
+                    toggleEl.style.display = toggleEl.style.display === 'none' ? '' : 'none';
+                }
             });
-            $(toggleDiv).slideToggle();
-        });
+        }
 
         // animation for the suggested slides
-        $('.oe_slides_suggestion_media').hover(
-            function () {
-                $(this).find('.oe_slides_suggestion_caption').stop().slideDown(250);
-            },
-            function () {
-                $(this).find('.oe_slides_suggestion_caption').stop().slideUp(250);
+        for (var media of document.querySelectorAll('.oe_slides_suggestion_media')) {
+            var caption = media.querySelector('.oe_slides_suggestion_caption');
+            if (!caption) {
+                continue;
             }
-        );
+            // Set up transition styles for slide animation
+            caption.style.overflow = 'hidden';
+            caption.style.transition = 'max-height 250ms ease, opacity 250ms ease';
+            caption.style.maxHeight = '0';
+            caption.style.opacity = '0';
 
-        // To avoid create a dependancy to openerpframework.js, we use JQuery AJAX to post data instead of ajax.jsonRpc
-        $('.oe_slide_js_share_email button').on('click', function () {
-            var widget = $('.oe_slide_js_share_email');
-            var input = widget.find('input');
-            var slideID = widget.find('button').data('slide-id');
-            if (input.val()) {
-                widget.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
-                $.ajax({
-                    type: "POST",
-                    dataType: 'json',
-                    url: '/slides/slide/send_share_email',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'slide_id': slideID, 'emails': input.val()}}),
-                    success: function (action) {
+            media.addEventListener('mouseenter', function () {
+                var cap = this.querySelector('.oe_slides_suggestion_caption');
+                if (cap) {
+                    cap.style.maxHeight = cap.scrollHeight + 'px';
+                    cap.style.opacity = '1';
+                }
+            });
+            media.addEventListener('mouseleave', function () {
+                var cap = this.querySelector('.oe_slides_suggestion_caption');
+                if (cap) {
+                    cap.style.maxHeight = '0';
+                    cap.style.opacity = '0';
+                }
+            });
+        }
+
+        // Use fetch instead of jQuery AJAX to post data
+        var shareBtn = document.querySelector('.oe_slide_js_share_email button');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function () {
+                var widget = document.querySelector('.oe_slide_js_share_email');
+                var input = widget.querySelector('input');
+                var slideID = widget.querySelector('button').dataset.slideId;
+                if (input.value) {
+                    widget.classList.remove('o_has_error');
+                    for (var ctrl of widget.querySelectorAll('.form-control, .form-select')) {
+                        ctrl.classList.remove('is-invalid');
+                    }
+                    fetch('/slides/slide/send_share_email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'call',
+                            params: { slide_id: slideID, emails: input.value },
+                        }),
+                    })
+                    .then(function (response) { return response.json(); })
+                    .then(function (action) {
                         if (action.result) {
-                            widget.find('.alert-info').removeClass('d-none');
-                            widget.find('.input-group').addClass('d-none');
+                            widget.querySelector('.alert-info').classList.remove('d-none');
+                            widget.querySelector('.input-group').classList.add('d-none');
                         } else {
-                            widget.find('.alert-warning').removeClass('d-none');
-                            widget.find('.input-group').addClass('d-none');
-                            widget.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+                            widget.querySelector('.alert-warning').classList.remove('d-none');
+                            widget.querySelector('.input-group').classList.add('d-none');
+                            widget.classList.add('o_has_error');
+                            for (var ctrl of widget.querySelectorAll('.form-control, .form-select')) {
+                                ctrl.classList.add('is-invalid');
+                            }
                             input.focus();
                         }
-                    },
-                });
-            } else {
-                widget.find('.alert-warning').removeClass('d-none');
-                widget.find('.input-group').addClass('d-none');
-                widget.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
-                input.focus();
-            }
-        });
+                    });
+                } else {
+                    widget.querySelector('.alert-warning').classList.remove('d-none');
+                    widget.querySelector('.input-group').classList.add('d-none');
+                    widget.classList.add('o_has_error');
+                    for (var ctrl of widget.querySelectorAll('.form-control, .form-select')) {
+                        ctrl.classList.add('is-invalid');
+                    }
+                    input.focus();
+                }
+            });
+        }
     }
 });

@@ -8,11 +8,9 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-
+import { deepEqual } from "@web/core/utils/collections/objects";
 import { useService } from "@web/core/utils/hooks";
-import { deepEqual } from "@web/core/utils/objects";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
-
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
     static components = {};
@@ -33,27 +31,31 @@ class AbstractAttachmentView extends Component {
                     hidePDFJSButtons(this.iframeViewerPdfRef.el);
                 }
             },
-            () => [this.iframeViewerPdfRef.el]
+            () => [this.iframeViewerPdfRef.el],
         );
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
     }
 
     onClickNext() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.message_main_attachment_id)
+        const index = this.state.thread.attachmentsInWebClientView.findIndex(
+            (attachment) => attachment.eq(this.state.thread.message_main_attachment_id),
         );
         this.state.thread.setMainAttachmentFromIndex(
-            index >= this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+            index >= this.state.thread.attachmentsInWebClientView.length - 1
+                ? 0
+                : index + 1,
         );
     }
 
     onClickPrevious() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.message_main_attachment_id)
+        const index = this.state.thread.attachmentsInWebClientView.findIndex(
+            (attachment) => attachment.eq(this.state.thread.message_main_attachment_id),
         );
         this.state.thread.setMainAttachmentFromIndex(
-            index <= 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
+            index <= 0
+                ? this.state.thread.attachmentsInWebClientView.length - 1
+                : index - 1,
         );
     }
 
@@ -125,15 +127,21 @@ export function usePopoutAttachment() {
             () => {
                 showAttachmentView();
                 uiService.bus.trigger("resize");
-            }
+            },
         );
-        mailPopoutService.popout(PopoutAttachmentView, extractPopoutProps(component.props));
+        mailPopoutService.popout(
+            PopoutAttachmentView,
+            extractPopoutProps(component.props),
+        );
     }
 
     function updatePopout(newProps = component.props) {
         if (mailPopoutService.externalWindow) {
             hideAttachmentView();
-            mailPopoutService.popout(PopoutAttachmentView, extractPopoutProps(newProps));
+            mailPopoutService.popout(
+                PopoutAttachmentView,
+                extractPopoutProps(newProps),
+            );
         }
     }
 

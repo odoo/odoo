@@ -2,7 +2,6 @@ import { WORKER_STATE } from "@bus/workers/websocket_worker";
 import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-
 /**
  * Detect lost connections to the bus. A connection is considered as lost if it
  * couldn't be established after a reconnect attempt.
@@ -22,7 +21,7 @@ export class BusMonitoringService {
      */
     setup(env, { bus_service }) {
         bus_service.addEventListener("BUS:WORKER_STATE_UPDATED", ({ detail }) =>
-            this.workerStateOnChange(detail)
+            this.workerStateOnChange(detail),
         );
         browser.addEventListener("offline", () => (this.isReconnecting = false));
     }

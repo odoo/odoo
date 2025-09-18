@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from itertools import batched
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools
 from odoo.addons.base.models.ir_qweb import QWebError
-from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
 
@@ -165,7 +165,7 @@ class EventMail(models.Model):
             registrations = registrations[:cron_limit]
             self.env.ref('event.event_mail_scheduler')._trigger()
 
-        for registrations_chunk in tools.split_every(batch_size, registrations.ids, self.env["event.registration"].browse):
+        for registrations_chunk in (self.env["event.registration"].browse(b) for b in batched(registrations.ids, batch_size)):
             self._execute_event_based_for_registrations(registrations_chunk)
             scheduler_record.last_registration_id = registrations_chunk[-1]
 
@@ -270,7 +270,7 @@ class EventMail(models.Model):
             new_attendee_mails = new_attendee_mails[:cron_limit]
             self.env.ref('event.event_mail_scheduler')._trigger()
 
-        for chunk in tools.split_every(batch_size, new_attendee_mails.ids, self.env["event.mail.registration"].browse):
+        for chunk in (self.env["event.mail.registration"].browse(b) for b in batched(new_attendee_mails.ids, batch_size)):
             # filter out canceled / draft, and compare to seats_taken (same heuristic)
             valid_chunk = chunk.filtered(lambda m: m.registration_id.state not in ("draft", "cancel"))
             # scheduled mails for draft / cancel should be removed as they won't be sent
@@ -289,7 +289,7 @@ class EventMail(models.Model):
     def _create_missing_mail_registrations(self, registrations):
         new = self.env["event.mail.registration"]
         for scheduler in self:
-            for _chunk in tools.split_every(500, registrations.ids, self.env["event.registration"].browse):
+            for _chunk in (self.env["event.registration"].browse(b) for b in batched(registrations.ids, 500)):
                 new += self.env['event.mail.registration'].create([{
                     'registration_id': registration.id,
                     'scheduler_id': scheduler.id,
@@ -445,7 +445,7 @@ class EventMail(models.Model):
                 )
                 error_message = _(
                     "It failed with error %(error)s.",
-                    error=exception_to_unicode(exception),
+                    error=str(exception),
                 )
 
             body = Markup("<p>%s %s<br /><br />%s</p>") % (body_content, source_content, error_message)

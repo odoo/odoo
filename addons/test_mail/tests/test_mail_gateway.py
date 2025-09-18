@@ -17,7 +17,7 @@ from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLATE_EXTRA_HTML, THAI_EMAIL_WINDOWS_874
 from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups
-from odoo.sql_db import Cursor
+from odoo.db import Cursor
 from odoo.tests import Form, tagged, RecordCapturer
 from odoo.tools import mute_logger
 from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
@@ -133,7 +133,7 @@ class TestEmailParsing(MailCommon):
 
     def test_message_parse_eml_bounce_headers(self):
         # Test Text/RFC822-Headers MIME content-type
-        msg_id = '<861878175823148.1577183525.736005783081055-openerp-19177-account.invoice@mycompany.example.com>'
+        msg_id = '<861878175823148.1577183525.736005783081055-odoo-19177-account.invoice@mycompany.example.com>'
         mail = self.format(
             test_mail_data.MAIL_EML_ATTACHMENT_BOUNCE_HEADERS,
             email_from='MAILER-DAEMON@example.com (Mail Delivery System)',
@@ -154,7 +154,7 @@ class TestEmailParsing(MailCommon):
             'email':'rdesfrdgtfdrfesd@outlook.com'
         })
         message = self.env['mail.message'].create({
-            'message_id' : '<368396033905967.1673346177.695352554321289-openerp-11-sale.order@eupp00>'
+            'message_id' : '<368396033905967.1673346177.695352554321289-odoo-11-sale.order@eupp00>'
         })
         incoming_bounce = self.format(
             test_mail_data.MAIL_BOUNCE_QP_RFC822_HEADERS,
@@ -246,7 +246,7 @@ class MailGatewayCommon(MailCommon):
             'date': cls.env.cr.now(),
             'email_from': cls.partner_1.email_formatted,
             'body': '<p>Generic body</p>',
-            'message_id': f'<{msg_id_prefix}-openerp-{record.id}-{record._name}@{socket.gethostname()}>',
+            'message_id': f'<{msg_id_prefix}-odoo-{record.id}-{record._name}@{socket.gethostname()}>',
             'message_type': 'email',
             'model': record._name,
             'res_id': record.id,
@@ -612,7 +612,7 @@ class TestMailgateway(MailGatewayCommon):
                 subject='Should Bounce')
         self.assertIn(bounce_message_with_alias, self._mails[0].get('body'))
 
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models', 'odoo.sql_db')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models', 'odoo.db')
     def test_message_process_alias_config_invalid_defaults(self):
         """Sending a mail to a misconfigured alias must change its status to
         invalid and notify sender."""
@@ -1808,11 +1808,11 @@ class TestMailgateway(MailGatewayCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_extra_model_res_id(self):
-        """ Incoming email with ref holding model / res_id but that does not match any message in the thread: must raise since OpenERP saas-3 """
+        """ Incoming email with ref holding model / res_id but that does not match any message in the thread: must raise since Odoo saas-3 """
         self.assertRaises(ValueError,
                           self.format_and_process, MAIL_TEMPLATE,
                           self.partner_1.email_formatted, f'noone@{self.alias_domain}', subject='spam',
-                          extra=f'In-Reply-To: <12321321-openerp-{self.test_record.id}-{self.test_record._name}@{socket.gethostname()}>')
+                          extra=f'In-Reply-To: <12321321-odoo-{self.test_record.id}-{self.test_record._name}@{socket.gethostname()}>')
 
         # when 6.1 messages are present, compat mode is available
         # Odoo 10 update: compat mode has been removed and should not work anymore
@@ -1822,7 +1822,7 @@ class TestMailgateway(MailGatewayCommon):
             ValueError,
             self.format_and_process, MAIL_TEMPLATE,
             self.partner_1.email_formatted, f'noone@{self.alias_domain}>', subject='spam',
-            extra=f'In-Reply-To: <12321321-openerp-{self.test_record.id}-mail.test.gateway@{socket.gethostname()}>')
+            extra=f'In-Reply-To: <12321321-odoo-{self.test_record.id}-mail.test.gateway@{socket.gethostname()}>')
 
         # Test created messages
         self.assertEqual(len(self.test_record.message_ids), 1)

@@ -13,7 +13,7 @@ This addon provides an extensible, maintainable editor.
     'website': "https://www.odoo.com",
     'version': '1.0',
     'category': 'Hidden',
-    'depends': ['base', 'bus', 'web'],
+    'depends': ['bus'],
     'data': [
         'security/ir.model.access.csv',
     ],

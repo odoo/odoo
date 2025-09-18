@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { RELATIVE_PERIODS } from "@spreadsheet/global_filters/helpers";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 
 const DATE_OPTIONS = [

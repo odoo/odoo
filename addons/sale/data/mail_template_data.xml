@@ -98,7 +98,7 @@
         <br/><br/>
         <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
         Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span> amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
-        <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
+        <t t-if="object.state == 'done' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
             has been confirmed.<br/>
             Thank you for your trust!
         </t>
@@ -154,7 +154,7 @@
             </tr>
         </table>
         <t t-set="current_subtotal" t-value="0"/>
-        <t t-foreach="object.order_line" t-as="line">
+        <t t-foreach="object.line_ids" t-as="line">
             <t
                 t-set="line_subtotal"
                 t-value="
@@ -200,13 +200,13 @@
                             />
                         </td>
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
-                        <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
+                        <td width="15%" align="center" t-out="line.product_qty or ''">1</td>
                         <td width="20%" align="right"><span style="font-weight:bold; white-space: nowrap;">
                         <t t-if="hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
-                            <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
+                            <t t-out="format_amount(line.price_unit_discounted_taxexc, object.currency_id) or ''">$ 10.00</t>
                         </t>
                         <t t-else="">
-                            <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''">$ 10.00</t>
+                            <t t-out="format_amount(line.price_unit_discounted_taxinc, object.currency_id) or ''">$ 10.00</t>
                         </t>
                         </span></td>
                     </tr>
@@ -215,11 +215,11 @@
             <t
                 t-if="current_section and (
                     line_last
-                    or object.order_line[line_index+1].display_type in ('line_section', 'line_subsection')
-                    or object.order_line[line_index+1].product_type == 'combo'
+                    or object.line_ids[line_index+1].display_type in ('line_section', 'line_subsection')
+                    or object.line_ids[line_index+1].product_type == 'combo'
                     or (
                         line.combo_item_id
-                        and not object.order_line[line_index+1].combo_item_id
+                        and not object.line_ids[line_index+1].combo_item_id
                     )
                 ) and not line.is_downpayment"
             >

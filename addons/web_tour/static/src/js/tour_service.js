@@ -1,6 +1,6 @@
 import { Component, markup, whenReady, validate } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
@@ -282,7 +282,10 @@ export const tourService = {
         }
 
         odoo.startTour = startTour;
-        odoo.isTourReady = (tourName) => getTourFromRegistry(tourName).wait_for.then(() => true);
+        odoo.isTourReady = (tourName) => {
+            const tour = getTourFromRegistry(tourName);
+            return tour ? tour.wait_for.then(() => true) : false;
+        };
 
         return {
             startTour,

@@ -1,6 +1,5 @@
-import { useState, onMounted, onWillUnmount, onPatched } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, useState } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
-
 export function useScrollShadow(scrollContainerRef, options = {}) {
     if (!scrollContainerRef) {
         return;
@@ -27,7 +26,11 @@ export function useScrollShadow(scrollContainerRef, options = {}) {
     return shadows;
 }
 
-export function useHorizontalScrollShadow(scrollContainerRef, classContainerRef, options = {}) {
+export function useHorizontalScrollShadow(
+    scrollContainerRef,
+    classContainerRef,
+    options = {},
+) {
     if (!scrollContainerRef || !classContainerRef) {
         return;
     }
@@ -43,10 +46,14 @@ export function useHorizontalScrollShadow(scrollContainerRef, classContainerRef,
             }
             const hasLeft = scrollEl.scrollLeft > 0;
             const hasRight =
-                scrollEl.scrollLeft + scrollEl.clientWidth < scrollEl.scrollWidth - threshold;
+                scrollEl.scrollLeft + scrollEl.clientWidth <
+                scrollEl.scrollWidth - threshold;
             classEl.classList.toggle("left-shadow", hasLeft);
             classEl.classList.toggle("right-shadow", hasRight);
-            classEl.classList.toggle("has-scroll", scrollEl.clientWidth < scrollEl.scrollWidth);
+            classEl.classList.toggle(
+                "has-scroll",
+                scrollEl.clientWidth < scrollEl.scrollWidth,
+            );
         } catch {
             // Ignore error
         }

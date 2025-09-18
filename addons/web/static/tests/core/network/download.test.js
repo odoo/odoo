@@ -1,7 +1,8 @@
+// @ts-check
+
 import { after, describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
 import { allowTranslations } from "@web/../tests/web_test_helpers";
-
 import { download } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 

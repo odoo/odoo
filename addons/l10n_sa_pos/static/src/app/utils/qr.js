@@ -1,5 +1,4 @@
 import { formatDateTime } from "@web/core/l10n/dates";
-
 export function computeSAQRCode(name, vat, date_isostring, amount_total, amount_tax) {
     /* Generate the qr code for Saudi e-invoicing. Specs are available at the following link at page 23
     https://zatca.gov.sa/ar/E-Invoicing/SystemsDevelopers/Documents/20210528_ZATCA_Electronic_Invoice_Security_Features_Implementation_Standards_vShared.pdf
@@ -19,7 +18,7 @@ export function computeSAQRCode(name, vat, date_isostring, amount_total, amount_
         company_vat_enc,
         timestamp_enc,
         invoice_total_enc,
-        total_vat_enc
+        total_vat_enc,
     );
 
     let binary = "";

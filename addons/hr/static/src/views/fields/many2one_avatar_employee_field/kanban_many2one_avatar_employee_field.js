@@ -2,14 +2,14 @@ import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
 import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
+import { user } from "@web/services/user";
+import { computeM2OProps, KanbanMany2One } from "@web/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
     Many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/fields/relational/many2one/many2one_field";
 
 export class KanbanMany2OneAvatarEmployeeField extends Component {
     static template = "hr.KanbanMany2OneAvatarEmployeeField";

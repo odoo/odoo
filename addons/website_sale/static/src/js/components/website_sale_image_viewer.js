@@ -1,6 +1,6 @@
 import { onMounted, onRendered, useEffect, useRef, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
 
 const ZOOM_STEP = 0.1;
 const TOUCHMOVE_STEP = 96;

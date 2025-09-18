@@ -25,7 +25,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             'name': 'Product A',
             'is_storable': True,
             'purchase_method': 'purchase',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'standard_price': 5.0,
             'list_price': 10.0,
             'route_ids': [Command.link(cls.buy_route.id)],
@@ -36,7 +36,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             'name': 'Product B',
             'is_storable': True,
             'purchase_method': 'purchase',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'standard_price': 6.0,
             'list_price': 12.0,
             'route_ids': [Command.link(cls.buy_route.id)],
@@ -113,7 +113,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
         cls.po_A.button_confirm()
 
         cls.picking_A = cls.po_A.picking_ids[0]
-        cls.picking_A.scheduled_date = (datetime.today() + timedelta(days=10))
+        cls.picking_A.date_planned = (datetime.today() + timedelta(days=10))
 
     def test_01_pre_updateA_post(self):
         """

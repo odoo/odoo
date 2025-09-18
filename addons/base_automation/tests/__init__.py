@@ -3,3 +3,5 @@
 
 from . import test_automation
 from . import test_mail_composer
+from . import test_workflow_dag
+from . import test_triggers

@@ -3,7 +3,6 @@ from typing import List
 
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.ec import (
     SECP256R1,
     EllipticCurvePublicKey,
@@ -73,7 +72,7 @@ def verify_fido_u2f(
 
     # Get the public key from the leaf certificate
     leaf_cert_bytes = attestation_statement.x5c[0]
-    leaf_cert = x509.load_der_x509_certificate(leaf_cert_bytes, default_backend())
+    leaf_cert = x509.load_der_x509_certificate(leaf_cert_bytes)
     leaf_cert_pub_key = leaf_cert.public_key()
 
     # We need the cert's x and y points so make sure they exist

@@ -102,7 +102,7 @@ import { waitUntil } from "./time";
 
 /**
  * @template [T=Node]
- * @typedef {MaybeIterable<T> | string | null | undefined | false} Target
+ * @typedef {MaybeIterable<T> | string | TemplateStringsArray | null | undefined | false} Target
  */
 
 //-----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ function elementsMatch(elements, selector) {
 }
 
 /**
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  */
 function ensureCount(options) {
     options = { ...options };
@@ -910,7 +910,7 @@ function registerQueryMessage(filteredNodes, expectedCount) {
  * up on any thrown error.
  *
  * @param {Target} target
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  */
 function _guardedQueryAll(target, options) {
     try {
@@ -926,7 +926,7 @@ function _guardedQueryAll(target, options) {
 
 /**
  * @param {Target} target
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  */
 function _queryAll(target, options) {
     queryAllLevel++;
@@ -993,7 +993,7 @@ function _queryAll(target, options) {
 
 /**
  * @param {Target} target
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  */
 function _queryOne(target, options) {
     return _guardedQueryAll(target, { ...options, count: 1 })[0];
@@ -1001,7 +1001,7 @@ function _queryOne(target, options) {
 
 /**
  * @param {Target} target
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  * @param {boolean} isLast
  */
 function _waitForFirst(target, options, isLast) {
@@ -1013,7 +1013,7 @@ function _waitForFirst(target, options, isLast) {
 
 /**
  * @param {Target} target
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  * @param {boolean} isLast
  */
 function _waitForNone(target, options, isLast) {
@@ -1202,24 +1202,27 @@ export function getNodeAttribute(node, attribute) {
 
 /**
  * @param {Node} node
+ * @param {boolean} [raw]
  * @returns {NodeValue}
  */
-export function getNodeValue(node) {
-    switch (node.type) {
-        case "checkbox":
-        case "radio":
-            return node.checked;
-        case "file":
-            return [...node.files];
-        case "number":
-        case "range":
-            return node.valueAsNumber;
-        case "date":
-        case "datetime-local":
-        case "month":
-        case "time":
-        case "week":
-            return node.valueAsDate.toISOString();
+export function getNodeValue(node, raw) {
+    if (!raw) {
+        switch (node.type) {
+            case "checkbox":
+            case "radio":
+                return node.checked;
+            case "file":
+                return [...node.files];
+            case "number":
+            case "range":
+                return node.valueAsNumber;
+            case "date":
+            case "datetime-local":
+            case "month":
+            case "time":
+            case "week":
+                return node.valueAsDate.toISOString();
+        }
     }
     return node.value;
 }
@@ -1936,7 +1939,7 @@ export function observe(target, callback) {
  *
  * @param {Target} target
  * @param {QueryOptions} [options]
- * @returns {Element[]}
+ * @returns {HTMLElement[]}
  * @example
  *  // regular selectors
  *  queryAll`window`; // -> []
@@ -2066,8 +2069,8 @@ export function queryAttribute(target, attribute, options) {
  * or `null`.
  *
  * @param {Target} target
- * @param {QueryOptions} options
- * @returns {Element | null}
+ * @param {QueryOptions} [options]
+ * @returns {HTMLElement | null}
  */
 export function queryFirst(target, options) {
     [target, options] = parseRawArgs(arguments);
@@ -2082,7 +2085,7 @@ export function queryFirst(target, options) {
  *
  * @param {Target} target
  * @param {Omit<QueryOptions, "count">} [options]
- * @returns {Element}
+ * @returns {HTMLElement}
  */
 export function queryOne(target, options) {
     [target, options] = parseRawArgs(arguments);

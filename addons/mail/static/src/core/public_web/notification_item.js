@@ -1,11 +1,8 @@
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
-
 import { Component, useRef, useSubEnv } from "@odoo/owl";
-
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { ActionSwiper } from "@web/components/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
-
 const { DateTime } = luxon;
 
 export class NotificationItem extends Component {
@@ -49,7 +46,10 @@ export class NotificationItem extends Component {
             return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
         if (this.props.datetime?.year === DateTime.now().year) {
-            return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
+            return this.props.datetime?.toLocaleString({
+                month: "short",
+                day: "numeric",
+            });
         }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }

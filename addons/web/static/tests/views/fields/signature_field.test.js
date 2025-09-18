@@ -1,8 +1,8 @@
-import { NameAndSignature } from "@web/core/signature/name_and_signature";
+// @ts-check
 
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, drag, edit, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -12,6 +12,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { NameAndSignature } from "@web/components/signature/name_and_signature";
 
 function getUnique(target) {
     const src = target.dataset.src;
@@ -303,7 +304,9 @@ test("save record with signature field modified by onchange", async () => {
     await edit("grrr", { confirm: "Enter" });
     await runAllTimers();
     await animationFrame();
-    expect(queryFirst("div[name=sign] img").dataset.src).toBe(`data:image/png;base64,${MYB64}`);
+    expect(queryFirst("div[name=sign] img").dataset.src).toBe(
+        `data:image/png;base64,${MYB64}`,
+    );
 
     await clickSave();
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659692220000");

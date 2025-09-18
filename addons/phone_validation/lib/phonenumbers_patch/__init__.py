@@ -15,7 +15,7 @@
 
 # https://github.com/google/libphonenumber
 
-from odoo.tools.parse_version import parse_version
+from odoo.libs.parse_version import parse_version
 
 
 def _local_load_region(code):

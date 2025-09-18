@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_access_rights
 from . import test_accrued_sale_orders
@@ -8,6 +7,7 @@ from . import test_credit_limit
 from . import test_ir_config_parameter
 from . import test_onchange
 from . import test_payment_flow
+from . import test_performance_price_computation
 from . import test_product_attribute_value
 from . import test_product_catalog
 from . import test_product_configurator_data
@@ -17,6 +17,7 @@ from . import test_sale_order
 from . import test_sale_order_product_catalog
 from . import test_sale_order_ui
 from . import test_sale_prices
+from . import test_sale_price_shadow
 from . import test_sale_product_attribute_value_config
 from . import test_sale_product_template
 from . import test_sale_refund

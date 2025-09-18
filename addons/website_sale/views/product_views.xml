@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="product_template_search_view_website" model="ir.ui.view">
+    <record id="view_product_template_search_website" model="ir.ui.view">
         <field name="name">product.template.search.published</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="inherit_id" ref="product.view_product_template_search"/>
         <field name="arch" type="xml">
             <filter name="favorites" position="after">
                 <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
@@ -22,7 +22,7 @@
     <record id="product_product_website_tree_view" model="ir.ui.view">
         <field name="name">product.product.website.list</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="inherit_id" ref="product.view_product_product_list"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="show"/>
@@ -46,7 +46,7 @@
     <record id="product_template_view_tree" model="ir.ui.view">
         <field name="name">product.template.view.list.inherit.website_sale</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="inherit_id" ref="product.view_product_template_list"/>
         <field name="arch" type="xml">
             <field name="default_code" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="hide"/>
@@ -81,7 +81,7 @@
         <field name="name">product.template.view.kanban.website_sale</field>
         <field name="mode">primary</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="inherit_id" ref="product.view_product_template_kanban"/>
         <field name="arch" type="xml">
             <kanban position="attributes">
                 <attribute name="default_order">website_sequence</attribute>
@@ -95,7 +95,7 @@
         <field name="path">ecommerce-products</field>
         <field name="view_mode">kanban,list,form,activity</field>
         <field name="view_id"/>
-        <field name="search_view_id" ref="product_template_search_view_website"/>
+        <field name="search_view_id" ref="view_product_template_search_website"/>
         <field name="context">{
             'search_default_published': 1,
             'list_view_ref': 'website_sale.product_template_view_tree_website_sale',
@@ -113,7 +113,7 @@
     <record id="product_template_only_website_form_view" model="ir.ui.view">
         <field name="name">product.template.product.only.website.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="inherit_id" ref="product.view_product_template_form_only"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
                 <label for="compare_list_price" groups="website_sale.group_product_price_comparison"/>
@@ -139,7 +139,7 @@
     <record id="product_product_normal_website_form_view" model="ir.ui.view">
         <field name="name">product.product.normal.view.website</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="inherit_id" ref="product.view_product_product_form_normal"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
@@ -157,7 +157,7 @@
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="inherit_id" ref="product.view_product_template_form"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
             <span id="button_website" position="before">
@@ -230,7 +230,7 @@
     <record id="product_product_view_form_easy_inherit_website_sale" model="ir.ui.view">
         <field name="name">product.product.view.form.easy.inherit.website_sale</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="inherit_id" ref="product.view_product_product_form_easy_edit"/>
         <field name="arch" type="xml">
             <group name="pricing" position="inside">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>

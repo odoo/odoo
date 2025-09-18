@@ -6,7 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools.urls import urljoin
+from odoo.libs.web.urls import urljoin
 
 from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
 

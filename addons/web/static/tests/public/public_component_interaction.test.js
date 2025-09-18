@@ -1,9 +1,12 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { setupInteractionWhiteList, startInteractions } from "./helpers";
 import { registry } from "@web/core/registry";
+
+import { setupInteractionWhiteList, startInteractions } from "./helpers";
 
 setupInteractionWhiteList("public_components");
 

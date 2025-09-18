@@ -700,7 +700,7 @@ describe("with selection collapsed", () => {
             contentAfter: unformat(`
                 <ol style="padding-inline-start: 58px;">
                     <li style="font-size: 56px;"><p>abc</p>
-                        <ol style="padding-inline-start: 59px;">
+                        <ol style="padding-inline-start: 62px;">
                             <li style="font-size: 56px;">def[]</li>
                         </ol>
                     </li>

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
 import { browser } from "@web/core/browser/browser";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { _t } from "@web/core/l10n/translation";
 
 import { markup } from "@odoo/owl";
@@ -51,10 +51,17 @@ function fromField(f, record) {
             copyButton.setAttribute("class", "btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2");
             copyButton.onclick = async function (event) {
                 event.preventDefault();
-                $(copyButton).tooltip({ title: _t("Copied!"), trigger: "manual", placement: "bottom" });
-                await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);
-                $(copyButton).tooltip("show");
-                setTimeout(() => $(copyButton).tooltip("hide"), 800);
+                const tooltip = new window.Tooltip(copyButton, {
+                    title: _t("Copied!"),
+                    trigger: "manual",
+                    placement: "bottom",
+                });
+                await browser.navigator.clipboard.writeText(secretSpan.innerText);
+                tooltip.show();
+                setTimeout(() => {
+                    tooltip.hide();
+                    tooltip.dispose();
+                }, 800);
             };
 
             copyButton.appendChild(copySpanIcon);

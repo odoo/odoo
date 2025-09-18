@@ -1,10 +1,10 @@
 import {
     many2ManyTagsFieldColorEditable,
     Many2ManyTagsFieldColorEditable,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/fields/relational/many2many_tags/many2many_tags_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { TagsList } from "@web/components/tags_list/tags_list";
 import { _t } from "@web/core/l10n/translation";
 import { onMounted } from "@odoo/owl";
 

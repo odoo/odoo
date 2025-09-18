@@ -3,8 +3,8 @@ declare module "registries" {
 
     export interface ServicesRegistryItemShape<T = any> {
         async?: boolean | string[];
-        dependencies?: (keyof Services)[];
-        start(env: object, dependencies: Services): T;
+        dependencies?: string[];
+        start(env: any, dependencies: any): T;
     }
 
     interface GlobalRegistryCategories {

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
-import { ORM } from "@web/core/orm_service";
-import { unique } from "@web/core/utils/arrays";
+import { ORM } from "@web/services/orm_service";
+import { unique } from "@web/core/utils/collections/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
 
 class RequestBatcherORM extends ORM {

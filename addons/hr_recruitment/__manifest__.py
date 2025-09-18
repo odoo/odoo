@@ -13,8 +13,6 @@
         'calendar',
         'utm',
         'attachment_indexation',
-        'web_tour',
-        'digest',
     ],
     'data': [
         'security/hr_recruitment_security.xml',

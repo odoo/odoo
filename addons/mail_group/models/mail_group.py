@@ -4,12 +4,13 @@
 import json
 import logging
 import lxml
+from itertools import batched
 
 from ast import literal_eval
 from datetime import datetime
 from dateutil import relativedelta
 from markupsafe import Markup
-from werkzeug import urls
+from urllib.parse import quote, urlencode
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.mail.tools.alias_error import AliasError
@@ -427,7 +428,7 @@ class MailGroup(models.Model):
         }
 
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size', GROUP_SEND_BATCH_SIZE))
-        for batch_email_member in tools.split_every(batch_size, member_emails.items()):
+        for batch_email_member in batched(member_emails.items(), batch_size):
             mail_values = []
             for email_member_normalized, email_member in batch_email_member:
                 if email_member_normalized == message.email_from_normalized:
@@ -435,7 +436,7 @@ class MailGroup(models.Model):
                     continue
 
                 # SMTP headers related to the subscription
-                email_url_encoded = urls.url_quote(email_member)
+                email_url_encoded = quote(email_member, safe='/:')
                 unsubscribe_url = self._get_email_unsubscribe_url(email_member_normalized)
 
                 headers = {
@@ -666,7 +667,7 @@ class MailGroup(models.Model):
 
         confirm_action_url = '/group/%s-confirm?%s' % (
             action,
-            urls.url_encode({
+            urlencode({
                 'group_id': self.id,
                 'email': email,
                 'token': self._generate_action_token(email, action),
@@ -703,7 +704,7 @@ class MailGroup(models.Model):
         return hmac(self.env(su=True), 'mail_group-access-token-portal', self.id)
 
     def _get_email_unsubscribe_url(self, email_to):
-        params = urls.url_encode({
+        params = urlencode({
             'email': email_to,
             'token': self._generate_email_access_token(email_to),
         })

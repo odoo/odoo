@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
     <record id="event_product.product_product_event_standard" model="product.product">
-        <field name="invoice_policy">order</field>
+        <field name="invoice_policy">ordered</field>
     </record>
     <record id="event_product.product_product_event_vip" model="product.product">
-        <field name="invoice_policy">order</field>
+        <field name="invoice_policy">ordered</field>
     </record>
     <!-- ****** Registrations ****** -->
     <!-- Design fair -->
@@ -12,7 +12,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_1"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=2)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_0_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_0_sale_order_0"/>
@@ -38,7 +38,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_2"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=0.5)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_2_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_2_sale_order_0"/>
@@ -63,7 +63,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=1)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_2_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_2_sale_order_1"/>
@@ -80,7 +80,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_7"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=8)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_4_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_0"/>
@@ -96,7 +96,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_13"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=7)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_4_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_1"/>
@@ -112,7 +112,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_14"/>
         <field name="date_order" eval="DateTime.now() - relativedelta(days=7)"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_4_sale_order_2_line_0" model="sale.order.line">
         <field name="order_id" ref="event_4_sale_order_2"/>
@@ -128,7 +128,7 @@
     <record id="event_7_sale_order_0" model="sale.order">
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_5"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_7_sale_order_0_line_0" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_0"/>
@@ -152,7 +152,7 @@
     <record id="event_7_sale_order_1" model="sale.order">
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_25"/>
-        <field name="state">sale</field>
+        <field name="state">done</field>
     </record>
     <record id="event_7_sale_order_1_line_0" model="sale.order.line">
         <field name="order_id" ref="event_7_sale_order_1"/>

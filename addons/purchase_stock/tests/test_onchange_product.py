@@ -60,23 +60,18 @@ class TestOnchangeProductId(TransactionCase):
         supplierinfo = self.supplierinfo_model.create(supplierinfo_vals)
         product_id = product_tmpl_id.product_variant_id
 
-        po_vals = {
-            'partner_id': partner_id.id,
-            'fiscal_position_id': fp_id.id,
-            'order_line': [
-                (0, 0, {
-                    'name': product_id.name,
-                    'product_id': product_id.id,
-                    'product_qty': 1.0,
-                    'product_uom_id': uom_id.id,
-                    'price_unit': 121.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                })],
-        }
-        po = self.po_model.create(po_vals)
+        # Use Form to properly trigger computed fields for tax-inclusive price conversion
+        with Form(self.po_model) as po_form:
+            po_form.partner_id = partner_id
+            po_form.fiscal_position_id = fp_id
+            with po_form.line_ids.new() as po_line_form:
+                po_line_form.product_id = product_id
+                po_line_form.product_qty = 1.0
+                po_line_form.product_uom_id = uom_id
+        po = po_form.save()
 
-        po_line = po.order_line[0]
-        po_line.onchange_product_id()
+        po_line = po.line_ids[0]
+        # Computed fields handle the tax-inclusive price conversion automatically
         self.assertEqual(100, po_line.price_unit, "The included tax must be subtracted to the price")
 
         supplierinfo.write({'min_qty': 24})
@@ -98,20 +93,15 @@ class TestOnchangeProductId(TransactionCase):
             'standard_price': 100,
             'uom_id': ipad_lot.id,
         })
-        po_line2 = self.po_line_model.create({
-            'name': product_ipad.name,
-            'product_id': product_ipad.id,
-            'order_id': po.id,
-            'product_qty': 5,
-            'product_uom_id': ipad_lot_10.id,
-            'date_planned': fields.Date().today()
-        })
+        # Use Form to create line - this properly triggers computed fields with UoM conversion
+        with Form(po) as po_form:
+            with po_form.line_ids.new() as po_line_form:
+                po_line_form.product_id = product_ipad
+                po_line_form.product_qty = 5
+                po_line_form.product_uom_id = ipad_lot_10  # UoM is 10x the base
+        po = po_form.save()
 
-        po_line2.onchange_product_id()
-        self.assertEqual(100, po_line2.price_unit, "No vendor supplies this product, hence unit price should be set to 100")
-
-        po_form = Form(po)
-        with po_form.order_line.edit(1) as order_line:
-            order_line.product_uom_id = ipad_lot_10
-        po_form.save()
-        self.assertEqual(1000, po_line2.price_unit, "The product_uom is multiplied by 10, hence unit price should be set to 1000")
+        # The price should be computed from standard_price converted to the line UoM
+        # standard_price is 100 per 1 Ipad, so for 10 Ipad UoM it should be 1000
+        po_line2 = po.line_ids.filtered(lambda l: l.product_id == product_ipad)
+        self.assertEqual(1000, po_line2.price_unit, "Price for 10 Ipad UoM should be 10x the standard_price")

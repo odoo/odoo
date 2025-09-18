@@ -111,14 +111,14 @@ class HrJob(models.Model):
              JOIN hr_recruitment_stage sta ON app.stage_id = sta.id
             WHERE act.user_id = %(user_id)s AND act.res_model = 'hr.applicant'
               AND app.active
-              AND app.job_id IN %(job_ids)s
+              AND app.job_id = ANY(%(job_ids)s)
               AND sta.hired_stage IS NOT TRUE
               AND COALESCE(act.active, TRUE) = TRUE
             GROUP BY app.job_id
         """, {
             'today': fields.Date.context_today(self),
             'user_id': self.env.uid,
-            'job_ids': tuple(self.ids or [0]),
+            'job_ids': list(self.ids or [0]),
             # or [0] is used in case we only have newIds (web studio)
         })
         job_activities = defaultdict(dict)
@@ -205,6 +205,7 @@ class HrJob(models.Model):
             for job, count in self.env['hr.employee'].sudo()._read_group(
                 domain=[
                     ('job_id', 'in', self.ids),
+                    ('company_id', 'in', self.env.companies.ids),
                 ],
                 groupby=['job_id'],
                 aggregates=['__count'],
@@ -235,7 +236,7 @@ class HrJob(models.Model):
                                           FROM "hr_job_hr_recruitment_stage_rel"
                                          WHERE "hr_recruitment_stage_id" IS NOT NULL
                                         )
-                     WHERE j.id in %s
+                     WHERE j.id = ANY(%s)
                   ORDER BY 1, 3 asc
                 )
                 SELECT s.job_id, COUNT(a.id) AS new_applicant
@@ -244,10 +245,10 @@ class HrJob(models.Model):
                     ON s.job_id = a.job_id
                    AND a.stage_id = s.stage_id
                    AND a.active IS TRUE
-                 WHERE a.company_id in %s
+                 WHERE a.company_id = ANY(%s)
                     OR a.company_id is NULL
               GROUP BY s.job_id
-            """, [tuple(self.ids or [0]), tuple(self.env.companies.ids)]
+            """, [list(self.ids or [0]), list(self.env.companies.ids)]
             # or [0] is used in case we only have newIds (web studio)
         )
 
@@ -409,6 +410,7 @@ class HrJob(models.Model):
             'res_model': res_model,
             'view_mode': 'list,kanban,form',
             'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'domain': [('company_id', 'in', self.env.companies.ids)],
             'context': {
                 'default_job_id': self.id,
                 'search_default_group_job': 1,

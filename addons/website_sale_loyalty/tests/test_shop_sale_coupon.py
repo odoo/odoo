@@ -63,7 +63,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'supplier_taxes_id': False,
             'sale_ok': False,
             'purchase_ok': False,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'default_code': 'FREELARGECABINET',
             'taxes_id': False,
         })
@@ -74,7 +74,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'supplier_taxes_id': False,
             'sale_ok': False,
             'purchase_ok': False,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'default_code': '10PERCENTDISC',
             'taxes_id': False,
         })

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ImageField, imageField } from "@web/views/fields/image/image_field";
+import { ImageField, imageField } from "@web/fields/media/image/image_field";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getVideoUrl } from "@html_editor/utils/url";
 

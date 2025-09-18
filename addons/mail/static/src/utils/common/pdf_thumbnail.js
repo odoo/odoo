@@ -1,6 +1,8 @@
 import { loadPDFJSAssets } from "@web/core/utils/pdfjs";
-
-export async function generatePdfThumbnail(pdfUrl, options = { height: 256, width: 256 }) {
+export async function generatePdfThumbnail(
+    pdfUrl,
+    options = { height: 256, width: 256 },
+) {
     let initialWorkerSrc = false,
         isPdfValid,
         pdf,
@@ -50,7 +52,9 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
             canvasContext: canvas.getContext("2d"),
             viewport: page.getViewport({ scale }),
         }).promise;
-        thumbnail = canvas.toDataURL("image/jpeg").replace("data:image/jpeg;base64,", "");
+        thumbnail = canvas
+            .toDataURL("image/jpeg")
+            .replace("data:image/jpeg;base64,", "");
     }
     return { isPdfValid, thumbnail, pdfEnabled: true };
 }

@@ -1,5 +1,3 @@
-from psycopg2.extras import execute_values
-
 # (rec_name_regex, name_en, desc_en, desc_ar, notes_en, tax_scope)
 TAX_VALUES_MAPPING = [
     (
@@ -31,7 +29,7 @@ TAX_VALUES_MAPPING = [
 
 def migrate(cr, version):
     # Update names, descriptions, legal notes and JSONB translations
-    execute_values(cr, """
+    cr.execute_values("""
         WITH data(rec_name, name_en, desc_en, desc_ar, notes_en, tax_scope) AS (
             VALUES %s
         )

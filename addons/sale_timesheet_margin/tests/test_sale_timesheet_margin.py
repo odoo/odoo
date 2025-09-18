@@ -17,7 +17,7 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'name': "Service Ordered, create no task, uom day",
             'list_price': 1.0,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_day_id,
             'default_code': 'SERV-ORDERED-DAY',
             'service_type': 'timesheet',
@@ -85,7 +85,7 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'name': "Simple service",
             'list_price': 1.0,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'service_type': 'timesheet',
             'standard_price': 5,
         })

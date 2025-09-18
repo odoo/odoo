@@ -1,5 +1,5 @@
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { Record } from "@web/model/relational_model/record";
+import { RelationalRecord } from "@web/model/relational_model/record";
 import { makeActiveField } from "@web/model/relational_model/utils";
 import { ProjectTaskRelationalModel } from "../project_task_relational_model";
 
@@ -9,7 +9,7 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
     }
 }
 
-export class ProjectTaskRecord extends Record {
+export class ProjectTaskRecord extends RelationalRecord {
     setup() {
         super.setup(...arguments);
         this.displaySubtasks = false;

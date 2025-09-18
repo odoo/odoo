@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2.errors import UniqueViolation
+from psycopg.errors import UniqueViolation
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
@@ -336,7 +336,7 @@ class TestDiscussChannelAccess(MailCommon):
                     ) from e
             else:
                 try:
-                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
+                    with self.assertRaises(AccessError), mute_logger("odoo.db"), mute_logger(
                         "odoo.addons.base.models.ir_model"
                     ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
                         "odoo.models.unlink"
@@ -416,7 +416,7 @@ class TestDiscussChannelAccess(MailCommon):
                     ) from e
             else:
                 try:
-                    with self.assertRaises(AccessError), mute_logger("odoo.sql_db"), mute_logger(
+                    with self.assertRaises(AccessError), mute_logger("odoo.db"), mute_logger(
                         "odoo.addons.base.models.ir_model"
                     ), mute_logger("odoo.addons.base.models.ir_rule"), mute_logger(
                         "odoo.models.unlink"

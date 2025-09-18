@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { Component } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 /**
  * Extend this to add functionality to Popover (custom methods etc.)

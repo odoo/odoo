@@ -5,7 +5,7 @@ import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
+import { isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/format/colors";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";

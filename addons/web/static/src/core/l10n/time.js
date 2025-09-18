@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/l10n/time - Time class for 24h time representation with locale-aware parsing */
+
 import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
@@ -6,7 +10,7 @@ const NUMERAL_MAPS = [
     "٠١٢٣٤٥٦٧٨٩", // Arabic
     "۰۱۲۳۴۵۶۷۸۹",
     "०१२३४५६७८९", // Devanagari (Hindi)
-    "๑๒๓๔๕๖๗๘๙๐", // Thai
+    "๐๑๒๓๔๕๖๗๘๙", // Thai
     "零一二三四五六七八九", // Chinese/Japanese/Korean
 ];
 
@@ -42,11 +46,7 @@ export class Time {
     }
 
     /**
-     * @param {{
-     *  hour: 0,
-     *  minute: 0,
-     *  second: 0,
-     * }?} params
+     * @param {{ hour?: number, minute?: number, second?: number }} [params]
      */
     constructor({ hour = 0, minute = 0, second = 0 } = {}) {
         /**@type {number} */
@@ -73,7 +73,13 @@ export class Time {
      * @param {number} rounding
      */
     roundMinutes(rounding) {
-        this.minute = Math.round(this.minute / rounding) * rounding;
+        const rounded = Math.round(this.minute / rounding) * rounding;
+        if (rounded >= 60) {
+            this.hour = (this.hour + 1) % 24;
+            this.minute = 0;
+        } else {
+            this.minute = rounded;
+        }
     }
 
     /**
@@ -114,9 +120,6 @@ export class Time {
             .toLowerCase();
     }
 
-    /**
-     * @returns {DateTime}
-     */
     toDateTime() {
         return DateTime.fromObject(this.toObject());
     }
@@ -138,7 +141,7 @@ export class Time {
  * Returns whether the given format is a 24-hour format.
  * Falls back to localization time format if none is given.
  *
- * @param {string} format
+ * @param {string} [format]
  */
 export function is24HourFormat(format) {
     return /H/.test(format || localization.timeFormat);
@@ -148,9 +151,9 @@ export function is24HourFormat(format) {
  * Returns whether the given format uses a meridiem suffix (AM/PM).
  * Falls back to localization time format if none is given.
  *
- * @param {string} format
+ * @param {string} [format]
  */
-export function isMeridiemFormat(format) {
+function isMeridiemFormat(format) {
     return /a/.test(format || localization.timeFormat);
 }
 
@@ -172,11 +175,12 @@ export function isMeridiemFormat(format) {
  */
 export function parseTime(value, parseSeconds) {
     const { isPm, isAm } = meridiemCheck(value);
-    value = normalizeTimeStr(value);
+    const normalized = normalizeTimeStr(value);
 
-    if (!value) {
+    if (!normalized) {
         return null;
     }
+    value = normalized;
 
     let hour = 0;
     let minute = 0;
@@ -221,9 +225,9 @@ export function parseTime(value, parseSeconds) {
             }
         };
 
-        if (raw.length == 1) {
+        if (raw.length === 1) {
             hour = parse(raw);
-        } else if (raw.length == 2) {
+        } else if (raw.length === 2) {
             pickSolution([raw], [raw[0], raw[1]]);
         } else if (raw.length === 3) {
             pickSolution([raw.slice(0, 2), raw[2]], [raw[0], raw.slice(1)]);
@@ -248,7 +252,14 @@ export function parseTime(value, parseSeconds) {
         hour = 0;
     }
 
-    if (hour >= 0 && hour <= 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60) {
+    if (
+        hour >= 0 &&
+        hour <= 24 &&
+        minute >= 0 &&
+        minute < 60 &&
+        second >= 0 &&
+        second < 60
+    ) {
         if (hour === 24) {
             hour = 0;
         }
@@ -275,7 +286,7 @@ function normalizeTimeStr(timeStr) {
 
     for (const map of NUMERAL_MAPS) {
         for (let i = 0; i < map.length; i++) {
-            timeStr = timeStr.replaceAll(map[i], i);
+            timeStr = timeStr.replaceAll(map[i], String(i));
         }
     }
 
@@ -287,7 +298,8 @@ function normalizeTimeStr(timeStr) {
  * @returns {{ isPm: boolean, isAm: boolean }}
  */
 function meridiemCheck(timeStr) {
-    const amPmMatch = typeof timeStr === "string" ? timeStr.toLowerCase().match(/(am|pm)/g) : false;
+    const amPmMatch =
+        typeof timeStr === "string" ? timeStr.toLowerCase().match(/(am|pm)/g) : false;
     return {
         isPm: amPmMatch && amPmMatch[0] === "pm",
         isAm: amPmMatch && amPmMatch[0] === "am",

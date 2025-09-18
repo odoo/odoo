@@ -1,18 +1,22 @@
+// @ts-check
+
+/** @module @web/views/graph/graph_model - Chart data fetching, groupBy processing, measure aggregation, and dataset preparation */
+
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/collections/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { user } from "@web/services/user";
+import { computeReportMeasures, processMeasure } from "@web/views/view_measurements";
 
 export const SEP = " / ";
 const DATA_LIMIT = 80;
 
-export const SEQUENTIAL_TYPES = ["date", "datetime"];
+const SEQUENTIAL_TYPES = ["date", "datetime"];
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -26,6 +30,7 @@ export class GraphModel extends Model {
         // concurrency management
         this.keepLast = new KeepLast();
         this.race = new Race();
+        /** @type {any} */
         const _fetchDataPoints = this._fetchDataPoints.bind(this);
         this._fetchDataPoints = (...args) => this.race.add(_fetchDataPoints(...args));
 
@@ -48,7 +53,8 @@ export class GraphModel extends Model {
     async load(searchParams) {
         this.searchParams = searchParams;
         if (!this.initialGroupBy) {
-            this.initialGroupBy = searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
+            this.initialGroupBy =
+                searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
         const metaData = this._buildMetaData();
         await addPropertyFieldDefs(
@@ -56,7 +62,7 @@ export class GraphModel extends Model {
             metaData.resModel,
             searchParams.context,
             metaData.fields,
-            metaData.groupBy.map((gb) => gb.fieldName)
+            metaData.groupBy.map((gb) => gb.fieldName),
         );
         await this._fetchDataPoints(metaData);
     }
@@ -71,7 +77,7 @@ export class GraphModel extends Model {
      * @override
      */
     hasData() {
-        return this.dataPoints?.length > 0;
+        return /** @type {any} */ (this).dataPoints?.length > 0;
     }
 
     /**
@@ -86,7 +92,7 @@ export class GraphModel extends Model {
             this.useSampleModel = false;
         } else {
             await this.race.getCurrentProm();
-            this.metaData = Object.assign({}, this.metaData, params);
+            this.metaData = { ...this.metaData, ...params };
             this._prepareData();
         }
         this.notify();
@@ -104,28 +110,32 @@ export class GraphModel extends Model {
     _buildMetaData(params) {
         const { domain, context, groupBy } = this.searchParams;
 
-        const metaData = Object.assign({}, this.metaData, { context });
+        const metaData = { ...this.metaData, context };
         metaData.domain = domain;
         metaData.measure = context.graph_measure || metaData.measure;
         metaData.mode = context.graph_mode || metaData.mode;
         metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
         if (metaData.mode !== "pie") {
-            metaData.order = "graph_order" in context ? context.graph_order : metaData.order;
+            metaData.order =
+                "graph_order" in context ? context.graph_order : metaData.order;
             if ("graph_stacked" in context) {
                 metaData.stacked = context.graph_stacked;
             }
             if (metaData.mode === "line") {
                 metaData.cumulated =
-                    "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
+                    "graph_cumulated" in context
+                        ? context.graph_cumulated
+                        : metaData.cumulated;
             }
         }
 
         this._normalize(metaData);
 
-        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
-            ...(metaData.viewMeasures || []),
-            metaData.measure,
-        ]);
+        metaData.measures = computeReportMeasures(
+            metaData.fields,
+            metaData.fieldAttrs,
+            [...(metaData.viewMeasures || []), metaData.measure],
+        );
 
         return Object.assign(metaData, params);
     }
@@ -138,7 +148,9 @@ export class GraphModel extends Model {
      * @param {boolean} [forceUseAllDataPoints=false]
      */
     async _fetchDataPoints(metaData, forceUseAllDataPoints = false) {
-        [this.dataPoints] = await this.keepLast.add(this._loadDataPoints(metaData));
+        [/** @type {any} */ (this).dataPoints] = await this.keepLast.add(
+            this._loadDataPoints(metaData),
+        );
         this.metaData = metaData;
         this._prepareData(forceUseAllDataPoints);
     }
@@ -165,7 +177,10 @@ export class GraphModel extends Model {
         for (const dataPt of dataPoints) {
             const datasetLabel = this._getDatasetLabel(dataPt);
             if (!(datasetLabel in datasetsTmp)) {
-                if (!forceUseAllDataPoints && Object.keys(datasetsTmp).length >= DATA_LIMIT) {
+                if (
+                    !forceUseAllDataPoints &&
+                    Object.keys(datasetsTmp).length >= DATA_LIMIT
+                ) {
                     exceeds = true;
                     continue;
                 }
@@ -191,8 +206,15 @@ export class GraphModel extends Model {
                 continue;
             }
 
-            const { domain, labelIndex, trueLabel, value, identifier, cumulatedStart, currencyId } =
-                dataPt;
+            const {
+                domain,
+                labelIndex,
+                trueLabel,
+                value,
+                identifier,
+                cumulatedStart,
+                currencyId,
+            } = dataPt;
             const dataset = dataPtMapping.get(dataPt);
             if (!dataset.data) {
                 const dataLength = labels.length;
@@ -271,33 +293,39 @@ export class GraphModel extends Model {
      */
     _getProcessedDataPoints() {
         const { groupBy, mode, order } = this.metaData;
-        let processedDataPoints = [];
+        let processedDataPoints;
+        /** @type {any[]} */
+        const dataPoints = /** @type {any} */ (this).dataPoints;
         if (mode === "line") {
-            processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0])
+            processedDataPoints = dataPoints.filter(
+                (dataPoint) =>
+                    dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0]),
             );
         } else if (mode === "pie") {
-            processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0
+            processedDataPoints = dataPoints.filter(
+                (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0,
             );
         } else {
-            processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+            processedDataPoints = dataPoints.filter(
+                (dataPoint) => dataPoint.count !== 0,
+            );
         }
 
         if (order !== null && mode !== "pie" && groupBy.length > 0) {
             // group data by their x-axis value, and then sort datapoints
             // based on the sum of values by group in ascending/descending order
-            const groupedDataPoints = Object.create(null);
-            for (const dataPt of processedDataPoints) {
-                const key = dataPt.labels[0]; // = x-axis value under the current assumptions
-                if (!groupedDataPoints[key]) {
-                    groupedDataPoints[key] = [];
-                }
-                groupedDataPoints[key].push(dataPt);
-            }
+            const groupedDataPoints = Object.groupBy(
+                processedDataPoints,
+                (dataPt) => dataPt.labels[0], // = x-axis value under the current assumptions
+            );
             const groups = Object.values(groupedDataPoints);
-            const groupTotal = (group) => group.reduce((sum, dataPt) => sum + dataPt.value, 0);
-            processedDataPoints = sortBy(groups, groupTotal, order.toLowerCase()).flat();
+            const groupTotal = (group) =>
+                group.reduce((sum, dataPt) => sum + dataPt.value, 0);
+            processedDataPoints = sortBy(
+                groups,
+                groupTotal,
+                order.toLowerCase(),
+            ).flat();
         }
 
         return processedDataPoints;
@@ -310,25 +338,28 @@ export class GraphModel extends Model {
      * with an aggregation function, such as my_date:week.
      * @protected
      * @param {Object} metaData
-     * @returns {Array}
+     * @returns {Promise<any[]>}
      */
     async _loadDataPoints(metaData) {
         const { measure, domain, fields, groupBy, resModel, cumulatedStart } = metaData;
         const fieldName = groupBy[0]?.fieldName;
         const sequentialField =
-            cumulatedStart && SEQUENTIAL_TYPES.includes(fields[fieldName]?.type) ? fieldName : null;
+            cumulatedStart && SEQUENTIAL_TYPES.includes(fields[fieldName]?.type)
+                ? fieldName
+                : null;
         const sequentialSpec = sequentialField && groupBy[0].spec;
         const measures = ["__count"];
         let fieldAggregate = "__count",
             monetaryAggregates;
         if (measure !== "__count") {
-            let { aggregator, currency_field, name, type } = fields[measure];
+            const { currency_field, name, type } = fields[measure];
+            let { aggregator } = fields[measure];
             if (type === "many2one") {
                 aggregator = "count_distinct";
             }
             if (aggregator === undefined) {
                 throw new Error(
-                    `No aggregate function has been provided for the measure '${measure}'`
+                    `No aggregate function has been provided for the measure '${measure}'`,
                 );
             }
             if (type === "monetary" && currency_field) {
@@ -352,14 +383,15 @@ export class GraphModel extends Model {
             measures,
             {
                 context: { fill_temporal: true, ...this.searchParams.context },
-            }
+            },
         );
+        /** @type {any} */
         let startGroups = false;
         if (
             cumulatedStart &&
             sequentialField &&
             groups.length &&
-            domain.some((leaf) => leaf.length === 3 && leaf[0] == sequentialField)
+            domain.some((leaf) => leaf.length === 3 && leaf[0] === sequentialField)
         ) {
             const firstDate = groups[0][sequentialSpec][0];
             const newDomain = Domain.combine(
@@ -367,27 +399,32 @@ export class GraphModel extends Model {
                     new Domain([[sequentialField, "<", firstDate]]),
                     Domain.removeDomainLeaves(domain, [sequentialField]),
                 ],
-                "AND"
+                "AND",
             ).toList();
             startGroups = await this.orm.formattedReadGroup(
                 resModel,
                 newDomain,
-                groupBy.filter((gb) => gb.fieldName != sequentialField).map((gb) => gb.spec),
+                groupBy
+                    .filter((gb) => gb.fieldName !== sequentialField)
+                    .map((gb) => gb.spec),
                 measures,
                 {
                     context: { ...this.searchParams.context },
-                }
+                },
             );
         }
         const dataPoints = [];
         const cumulatedStartValue = {};
         if (startGroups) {
-            for (const group of startGroups) {
+            for (const group of /** @type {any[]} */ (startGroups)) {
                 const rawValues = [];
-                for (const gb of groupBy.filter((gb) => gb.fieldName != sequentialField)) {
+                for (const gb of groupBy.filter(
+                    (gb) => gb.fieldName !== sequentialField,
+                )) {
                     rawValues.push({ [gb.spec]: group[gb.spec] });
                 }
-                cumulatedStartValue[JSON.stringify(rawValues)] = group[measures.slice(-1)];
+                cumulatedStartValue[JSON.stringify(rawValues)] =
+                    group[/** @type {any} */ (measures.slice(-1))];
             }
         }
         const graphCurrencies = new Set();
@@ -421,7 +458,9 @@ export class GraphModel extends Model {
                     const num = numbers[id];
                     label = num === 1 ? name : `${name} (${num})`;
                 } else if (type === "selection") {
-                    const selected = fields[fieldName].selection.find((s) => s[0] === val);
+                    const selected = fields[fieldName].selection.find(
+                        (s) => s[0] === val,
+                    );
                     label = selected[1];
                 } else if (["date", "datetime"].includes(type)) {
                     label = val[1];
@@ -501,7 +540,9 @@ export class GraphModel extends Model {
                     continue;
                 }
             }
-            const index = processedGroupBy.findIndex((gb) => gb.fieldName === fieldName);
+            const index = processedGroupBy.findIndex(
+                (gb) => gb.fieldName === fieldName,
+            );
             if (index === -1) {
                 processedGroupBy.push(gb);
             } else if (interval) {

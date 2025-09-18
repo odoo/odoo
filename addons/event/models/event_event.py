@@ -263,11 +263,11 @@ class EventEvent(models.Model):
         if self.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_id IN %s AND state IN ('open', 'done') AND active = true
+                        WHERE event_id = ANY(%s) AND state IN ('open', 'done') AND active = true
                         GROUP BY event_id, state
                     """
             self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
-            self.env.cr.execute(query, (tuple(self.ids),))
+            self.env.cr.execute(query, (list(self.ids),))
             res = self.env.cr.fetchall()
             for event_id, state, num in res:
                 results[event_id][state_field[state]] = num

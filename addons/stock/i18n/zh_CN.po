@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
 "PO-Revision-Date: 2026-01-23 07:35+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1322,7 +1322,6 @@ msgstr "所有调拨"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "所有仓库"
 
@@ -2035,6 +2034,11 @@ msgstr "选择标签布局"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
 msgstr "请选择要打印的标签类型"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -8442,6 +8446,11 @@ msgid "Sample data"
 msgstr "示例数据"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -8769,8 +8778,8 @@ msgstr ""
 "先进先出（FIFO）：先入库的产品/批次将先移出。\n"
 "后进先出（LIFO）：最后入库的产品/批次将先被移出。\n"
 "最接近位置：最接近目标位置的产品/批次将首先移出。\n"
-"临期先出（FEFO）：最接近移除日期的产品/批次将首先移除（此方法的可用性取决于 “"
-"有效期” 设置）。\n"
+"临期先出（FEFO）：最接近移除日期的产品/批次将首先移除（此方法的可用性取决于 "
+"“有效期” 设置）。\n"
 "最少包裹：先进先出，但在有多个包裹包含相同产品时，尽可能减少包裹数量。"
 
 #. module: stock
@@ -10664,6 +10673,7 @@ msgstr "供应商位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "视图"
 

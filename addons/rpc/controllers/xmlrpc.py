@@ -63,7 +63,7 @@ def xmlrpc_handle_exception_string(e):
     else:
         info = sys.exc_info()
         formatted_info = "".join(traceback.format_exception(*info))
-        fault = xmlrpc.client.Fault(odoo.tools.exception_to_unicode(e), formatted_info)
+        fault = xmlrpc.client.Fault(str(e), formatted_info)
 
     return dumps(fault)
 

@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/ui/block/ui_service";
 
 export class CookiesApproval extends Interaction {
     static selector = "[data-need-cookies-approval]";

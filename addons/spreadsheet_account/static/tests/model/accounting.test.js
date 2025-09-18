@@ -9,7 +9,7 @@ import {
 } from "@spreadsheet_account/../tests/accounting_test_data";
 import { parseAccountingDate } from "@spreadsheet_account/accounting_functions";
 import { makeServerError } from "@web/../tests/web_test_helpers";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/format/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";

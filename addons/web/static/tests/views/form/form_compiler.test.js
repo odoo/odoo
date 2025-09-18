@@ -1,7 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-
-import { createElement } from "@web/core/utils/xml";
+import { createElement } from "@web/core/utils/dom/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 describe.current.tags("headless");

@@ -1,10 +1,9 @@
+import { Component, useState } from "@odoo/owl";
+import { buttonsType, Numpad } from "@point_of_sale/app/components/numpad/numpad";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Numpad, buttonsType } from "@point_of_sale/app/components/numpad/numpad";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };

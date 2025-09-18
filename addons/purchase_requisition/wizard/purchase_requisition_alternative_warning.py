@@ -16,8 +16,8 @@ class PurchaseRequisitionAlternativeWarning(models.TransientModel):
 
     def action_cancel_alternatives(self):
         # in theory alternative_po_ids shouldn't have any po_ids in it, but it's possible by accident/forcing it, so avoid cancelling them to be safe
-        self.alternative_po_ids.filtered(lambda po: po.state in ['draft', 'sent', 'to approve'] and po.id not in self.po_ids.ids).button_cancel()
+        self.alternative_po_ids.filtered(lambda po: po.state in ['draft', 'sent', 'to approve'] and po.id not in self.po_ids.ids).action_cancel()
         return self._action_done()
 
     def _action_done(self):
-        return self.po_ids.with_context({'skip_alternative_check': True}).button_confirm()
+        return self.po_ids.with_context({'skip_alternative_check': True}).action_confirm()

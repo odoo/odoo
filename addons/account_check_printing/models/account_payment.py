@@ -76,13 +76,13 @@ class AccountPayment(models.Model):
              WHERE payment.check_number::BIGINT = other_payment.check_number::BIGINT
                AND move.journal_id = other_move.journal_id
                AND payment.id != other_payment.id
-               AND payment.id IN %(ids)s
+               AND payment.id = ANY(%(ids)s)
                AND move.state = 'posted'
                AND other_move.state = 'posted'
                AND payment.check_number IS NOT NULL
                AND other_payment.check_number IS NOT NULL
         """, {
-            'ids': tuple(payment_checks.ids),
+            'ids': list(payment_checks.ids),
         })
         res = self.env.cr.dictfetchall()
         if res:

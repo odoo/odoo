@@ -8,6 +8,7 @@ import json
 import logging
 import math
 import werkzeug
+from urllib.parse import urlencode
 
 from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
@@ -1022,10 +1023,10 @@ class WebsiteSlides(WebsiteProfile):
 
         if status == 'authorized':
             return request.redirect(
-                '%s?%s' % (user_slide_authorization['slide'].website_absolute_url, werkzeug.urls.url_encode(kwargs)))
+                '%s?%s' % (user_slide_authorization['slide'].website_absolute_url, urlencode(kwargs)))
 
         channel_id = user_slide_authorization['channel_id']
-        return request.redirect('/slides/%s?%s' % (channel_id, werkzeug.urls.url_encode({
+        return request.redirect('/slides/%s?%s' % (channel_id, urlencode({
             'access_error': 'course_content',
             'access_error_slide_id': slide_id,
             'access_error_slide_name': user_slide_authorization['slide'].name,

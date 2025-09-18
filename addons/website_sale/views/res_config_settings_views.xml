@@ -93,7 +93,7 @@
                 <setting
                     id="automatic_invoice_generation_setting"
                     help="Invoice automatically on payment."
-                    invisible="default_invoice_policy == 'delivery'"
+                    invisible="default_invoice_policy == 'transferred'"
                 >
                     <field name="automatic_invoice"/>
                     <div invisible="not automatic_invoice">
@@ -126,7 +126,7 @@
                     <button
                         string="Attributes"
                         type="action"
-                        name="%(product.attribute_action)d"
+                        name="%(product.action_product_attribute)d"
                         invisible="not group_product_variant"
                         class="btn-link"
                         icon="oi-arrow-right"
@@ -153,7 +153,7 @@
                     <button
                         string="Pricelists"
                         type="action"
-                        name="%(product.product_pricelist_action2)d"
+                        name="%(product.action_product_pricelist_2)d"
                         groups="product.group_product_pricelist"
                         invisible="not group_product_pricelist"
                         class="btn-link"

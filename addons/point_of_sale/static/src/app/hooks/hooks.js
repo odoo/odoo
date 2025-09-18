@@ -1,17 +1,16 @@
-import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import {
-    useEnv,
     onMounted,
     onPatched,
     useComponent,
+    useEnv,
+    useExternalListener,
     useRef,
     useState,
-    useExternalListener,
 } from "@odoo/owl";
+import { ErrorDialog } from "@web/components/errors/error_dialogs";
+import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
-
+import { AlertDialog, ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 /**
  * Introduce error handlers in the component.
  *
@@ -30,7 +29,7 @@ export function useErrorHandlers() {
                 title: _t("Please print the invoice from the backend"),
                 body:
                     _t(
-                        "The order has been synchronized earlier. Please make the invoice from the backend for the order: "
+                        "The order has been synchronized earlier. Please make the invoice from the backend for the order: ",
                     ) + error.data.order.name,
             });
         } else if (error.code < 0) {
@@ -38,11 +37,11 @@ export function useErrorHandlers() {
             dialog.add(ConfirmationDialog, {
                 title: _t("Unable to sync order"),
                 body: _t(
-                    "Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen)."
+                    "Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen).",
                 ),
             });
         } else if (error.data) {
-            // OpenERP Server Errors
+            // Odoo Server Errors
             dialog.add(ErrorDialog, {
                 traceback:
                     error.data.debug.status.message_body ||
@@ -52,7 +51,9 @@ export function useErrorHandlers() {
             // ???
             await dialog.add(AlertDialog, {
                 title: _t("Unknown Error"),
-                body: _t("The order could not be sent to the server due to an unknown error"),
+                body: _t(
+                    "The order could not be sent to the server due to an unknown error",
+                ),
                 showReloadButton: true,
             });
         }

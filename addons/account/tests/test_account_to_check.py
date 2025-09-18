@@ -23,14 +23,14 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         invoice = self._create_invoice(checked=True)
         invoice.action_post()
         with self.assertRaisesRegex(ValidationError, 'Validated entries can only be changed by your accountant.'):
-            invoice.with_user(self.simple_accountman).button_draft()
+            invoice.with_user(self.simple_accountman).action_draft()
 
-        invoice.button_draft()
+        invoice.action_draft()
         self.assertEqual(invoice.state, 'draft')
 
         invoice.action_post()
         invoice.checked = False
-        invoice.with_user(self.simple_accountman).button_draft()
+        invoice.with_user(self.simple_accountman).action_draft()
         self.assertEqual(invoice.state, 'draft')
 
     def test_post_move_auto_check(self):

@@ -139,7 +139,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
             'website_sequence': 1,
             'is_published': True,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': attribute.id,
@@ -152,7 +152,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
             'website_sequence': 1,
             'is_published': True,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': attribute.id,
@@ -165,7 +165,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
             'website_sequence': 1,
             'is_published': True,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': attribute.id,

@@ -8,8 +8,9 @@
     import { unhideConditionalElements } from '@website/js/content/inject_dom';
     import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
-    import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+    import { SIZES, utils as uiUtils } from "@web/ui/block/ui_service";
     import { rpc } from "@web/core/network/rpc";
+    import { loadJS } from "@web/core/assets";
 
     import { markup } from "@odoo/owl";
 
@@ -48,22 +49,19 @@
             });
         },
         _loadYoutubeAPI: function () {
-            var self = this;
-            var prom = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
-                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
-                    $(document.head).append($youtubeElement);
+            return new Promise((resolve) => {
+                if (!document.querySelector('script[src="' + this.youtubeUrl + '"]')) {
+                    const script = document.createElement('script');
+                    script.src = this.youtubeUrl;
+                    document.head.appendChild(script);
 
                     // function called when the Youtube asset is loaded
                     // see https://developers.google.com/youtube/iframe_api_reference#Requirements
-                    window.onYouTubeIframeAPIReady = function () {
-                        resolve();
-                    };
+                    window.onYouTubeIframeAPIReady = () => resolve();
                 } else {
                     resolve();
                 }
             });
-            return prom;
         },
         /**
          * Links the youtube api to the iframe present in the template
@@ -157,20 +155,13 @@
          * @returns {Promise}
          */
         willStart: function () {
-            var self = this;
-            var vimeoAPIPromise = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
-                    $.ajax({
-                        url: self.vimeoScriptUrl,
-                        dataType: 'script',
-                        success: function () {resolve();}
-                    });
-                } else {
-                    resolve();
-                }
-            });
-
-            return Promise.all([this._super.apply(this, arguments), vimeoAPIPromise]);
+            var vimeoPromise;
+            if (!document.querySelector('script[src="' + this.vimeoScriptUrl + '"]')) {
+                vimeoPromise = loadJS(this.vimeoScriptUrl);
+            } else {
+                vimeoPromise = Promise.resolve();
+            }
+            return Promise.all([this._super.apply(this, arguments), vimeoPromise]);
         },
 
         start: function () {
@@ -185,7 +176,7 @@
          * Instantiate the Vimeo player and register the various events.
          */
         _setupVideoPlayer: async function () {
-            this.player = new Vimeo.Player(this.$('iframe')[0]);
+            this.player = new Vimeo.Player(this.el.querySelector('iframe'));
             this.videoDuration = await this.player.getDuration();
             this.player.on('timeupdate', this._onVideoTimeUpdate.bind(this));
             this.player.on('ended', this._onVideoEnded.bind(this));
@@ -245,13 +236,13 @@
             return result;
         },
         start: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                $(document).keydown(self._onKeyDown.bind(self));
+            this._boundKeyDown = this._onKeyDown.bind(this);
+            return this._super.apply(this, arguments).then(() => {
+                document.addEventListener('keydown', this._boundKeyDown);
             });
         },
         destroy: function () {
-            $(document).unbind('keydown', this._onKeyDown.bind(this));
+            document.removeEventListener('keydown', this._boundKeyDown);
             return this._super.apply(this, arguments);
         },
         //--------------------------------------------------------------------------
@@ -306,7 +297,7 @@
          * @param {*} ev
          */
         _onClickMiniQuiz: function (ev) {
-            var slideID = parseInt($(ev.currentTarget).data().slide_id);
+            var slideID = parseInt(ev.currentTarget.dataset.slide_id);
             this._updateSlideEntry({
                 slideID: slideID,
                 isMiniQuiz: true
@@ -321,10 +312,10 @@
          */
         _onClickTab: function (ev) {
             ev.stopPropagation();
-            const $elem = $(ev.currentTarget).closest('.o_wslides_fs_sidebar_list_item');
-            if ($elem.data('canAccess') === 'True') {
-                var isQuiz = $elem.data('isQuiz');
-                var slideID = parseInt($elem.data('id'));
+            const elem = ev.currentTarget.closest('.o_wslides_fs_sidebar_list_item');
+            if (elem.dataset.canAccess === 'True') {
+                var isQuiz = elem.dataset.isQuiz === '1' || elem.dataset.isQuiz === 'true';
+                var slideID = parseInt(elem.dataset.id);
                 var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
                 this._updateSlideEntry(slide);
             }
@@ -341,10 +332,15 @@
                 return;
             }
             this._slideEntry = slide;
-            this.$('.o_wslides_fs_sidebar_list_item.active').removeClass('active');
-            var selector = '.o_wslides_fs_sidebar_list_item[data-id='+slide.id+'][data-is-quiz!="1"]';
-
-            this.$(selector).addClass('active');
+            const active = this.el.querySelector('.o_wslides_fs_sidebar_list_item.active');
+            if (active) {
+                active.classList.remove('active');
+            }
+            var selector = '.o_wslides_fs_sidebar_list_item[data-id="' + slide.id + '"][data-is-quiz!="1"]';
+            const newActive = this.el.querySelector(selector);
+            if (newActive) {
+                newActive.classList.add('active');
+            }
             this.trigger_up('change_slide', this._slideEntry);
         },
 
@@ -427,8 +423,8 @@
          */
         attachTo: function (){
             var defs = [this._super.apply(this, arguments)];
-            defs.push(this.sidebar.attachTo(this.$('.o_wslides_fs_sidebar')));
-            return $.when.apply($, defs);
+            defs.push(this.sidebar.attachTo(this.el.querySelector('.o_wslides_fs_sidebar')));
+            return Promise.all(defs);
         },
         //--------------------------------------------------------------------------
         // Private
@@ -476,20 +472,27 @@
                 slideData.hasNext = index < slidesDataList.length-1;
                 // compute embed url
                 if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
-                    slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    const tmp = document.createElement('div');
+                    tmp.innerHTML = slideData.embedCode;
+                    const iframe = tmp.querySelector('iframe');
+                    slideData.embedCode = iframe?.getAttribute('src') || "";
                     var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
                     var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
                     var params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
                     if (slideData.embedCode.indexOf("//drive.google.com") === -1) {
                         params.autoplay = 1;
                     }
-                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
+                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + new URLSearchParams(params).toString() : "";
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
                     slideData.embedCode = markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {
-                    slideData.embedUrl = $(slideData.embedCode).attr('src');
+                    const tmp = document.createElement('div');
+                    tmp.innerHTML = slideData.embedCode;
+                    const iframe = tmp.querySelector('iframe');
+                    slideData.embedUrl = iframe?.getAttribute('src');
                 }
                 // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
@@ -516,13 +519,16 @@
         _pushUrlState: function () {
             var urlParts = window.location.pathname.split('/');
             urlParts[urlParts.length - 1] = this._slideValue.slug;
-            var url =  urlParts.join('/');
-            this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
+            var url = urlParts.join('/');
+            const exitLink = this.el.querySelector('.o_wslides_fs_exit_fullscreen');
+            if (exitLink) {
+                exitLink.setAttribute('href', url);
+            }
             var params = {'fullscreen': 1 };
             if (this._slideValue.isQuiz) {
                 params.quiz = 1;
             }
-            var fullscreenUrl = `${url}?${$.param(params)}`;
+            var fullscreenUrl = `${url}?${new URLSearchParams(params).toString()}`;
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -540,33 +546,34 @@
             this._renderSlideRunning = true;
             try {
                 const slide = this._slideValue;
-                var $content = this.$('.o_wslides_fs_content');
-                $content.empty();
+                var content = this.el.querySelector('.o_wslides_fs_content');
+                content.replaceChildren();
 
                 // display quiz slide, or quiz attached to a slide
                 if (slide.category === 'quiz' || slide.isQuiz) {
-                    $content.addClass('bg-white');
+                    content.classList.add('bg-white');
                     var QuizWidget = new Quiz(this, slide, this.channel);
-                    return await QuizWidget.appendTo($content);
+                    return await QuizWidget.appendTo(content);
                 }
 
                 // render slide content
                 if (['document', 'infographic'].includes(slide.category)) {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.content', {widget: this}));
+                    content.replaceChildren(renderToElement('website.slides.fullscreen.content', {widget: this}));
                 } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                     this.videoPlayer = new VideoPlayerYouTube(this, slide);
-                    return await this.videoPlayer.appendTo($content);
+                    return await this.videoPlayer.appendTo(content);
                 } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
                     this.videoPlayer = new VideoPlayerVimeo(this, slide);
-                    return await this.videoPlayer.appendTo($content);
+                    return await this.videoPlayer.appendTo(content);
                 } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
+                    content.replaceChildren(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
                 } else if (slide.category === 'article'){
-                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
-                    $wpContainer.html(slide.htmlContent);
-                    $content.append($wpContainer);
+                    var wpContainer = document.createElement('div');
+                    wpContainer.className = 'o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3';
+                    wpContainer.innerHTML = slide.htmlContent;
+                    content.appendChild(wpContainer);
                     this.trigger_up('widgets_start_request', {
-                        $target: $content,
+                        $target: content,
                     });
                 }
                 unhideConditionalElements();
@@ -703,8 +710,8 @@
          * @private
          */
         _toggleSidebar: function () {
-            this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
-            this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
+            this.el.querySelector('.o_wslides_fs_sidebar').classList.toggle('o_wslides_fs_sidebar_hidden');
+            this.el.querySelector('.o_wslides_fs_toggle_sidebar').classList.toggle('active');
         },
     });
 
@@ -719,22 +726,21 @@
             return proms;
         },
         _extractChannelData: function (){
-            return this.$el.data();
+            return this.el.dataset;
         },
         _getCurrentSlideID: function (){
-            return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));
+            const activeItem = this.el.querySelector('.o_wslides_fs_sidebar_list_item.active');
+            return parseInt(activeItem?.dataset.id);
         },
         /**
          * @private
          * Creates slides objects from every slide-list-cells attributes
          */
         _getSlides: function (){
-            var $slides = this.$('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
             var slideList = [];
-            $slides.each(function () {
-                var slideData = $(this).data();
-                slideList.push(slideData);
-            });
+            for (const el of this.el.querySelectorAll('.o_wslides_fs_sidebar_list_item[data-can-access="True"]')) {
+                slideList.push(el.dataset);
+            }
             return slideList;
         },
     });

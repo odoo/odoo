@@ -30,13 +30,13 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             'partner_id': self.partner_a.id,
             'picking_policy': 'direct',
             'warehouse_id': self.company_data['default_warehouse'].id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': self.test_product_order.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
             })]
         })
 
-        self.assertEqual(order.order_line.customer_lead, self.test_product_order.sale_delay)
+        self.assertEqual(order.line_ids.customer_lead, self.test_product_order.sale_delay)
 
         # Confirm our standard sale order
         order.action_confirm()
@@ -46,7 +46,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         # Check schedule date of picking
         out_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
-        min_date = order.picking_ids[0].scheduled_date
+        min_date = order.picking_ids[0].date_planned
         self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')
 
     def test_01_product_route_level_delays(self):
@@ -66,9 +66,9 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             'partner_shipping_id': self.partner_a.id,
             'picking_policy': 'direct',
             'warehouse_id': warehouse.id,
-            'order_line': [(0, 0, {'name': self.test_product_order.name,
+            'line_ids': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
-                                   'product_uom_qty': 5,
+                                   'product_qty': 5,
                                    'customer_lead': self.test_product_order.sale_delay})]})
 
         # Confirm our standard sale order
@@ -79,19 +79,19 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         # Check schedule date of ship type picking
         out = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.out_type_id)
-        out_min_date = fields.Datetime.from_string(out.scheduled_date)
+        out_min_date = fields.Datetime.from_string(out.date_planned)
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=out.move_ids[0].rule_id.delay)
         self.assertTrue(abs(out_min_date - out_date) <= timedelta(seconds=1), 'Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
 
         # Check schedule date of pack type picking
         pack = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pack_type_id)
-        pack_min_date = fields.Datetime.from_string(pack.scheduled_date)
+        pack_min_date = fields.Datetime.from_string(pack.date_planned)
         pack_date = out_date - timedelta(days=pack.move_ids[0].rule_id.delay)
         self.assertTrue(abs(pack_min_date - pack_date) <= timedelta(seconds=1), 'Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
 
         # Check schedule date of pick type picking
         pick = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pick_type_id)
-        pick_min_date = fields.Datetime.from_string(pick.scheduled_date)
+        pick_min_date = fields.Datetime.from_string(pick.date_planned)
         pick_date = pack_date - timedelta(days=pick.move_ids[0].rule_id.delay)
         self.assertTrue(abs(pick_min_date - pick_date) <= timedelta(seconds=1), 'Schedule date of pick type picking should be equal to: Schedule date of pack type picking - pull rule delay.')
 
@@ -135,9 +135,9 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             'partner_shipping_id': self.partner_a.id,
             'picking_policy': 'direct',
             'warehouse_id': warehouse.id,
-            'order_line': [(0, 0, {'name': self.test_product_order.name,
+            'line_ids': [(0, 0, {'name': self.test_product_order.name,
                                    'product_id': self.test_product_order.id,
-                                   'product_uom_qty': 5,
+                                   'product_qty': 5,
                                    'customer_lead': self.test_product_order.sale_delay})]})
 
         # Confirm our standard sale order
@@ -152,16 +152,16 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         self.assertAlmostEqual(
             out.date_deadline, deadline_date, delta=timedelta(seconds=1),
             msg='Deadline date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
-        out_scheduled_date = deadline_date - timedelta(days=self.env.company.security_lead)
+        out_date_planned = deadline_date - timedelta(days=self.env.company.security_lead)
         self.assertAlmostEqual(
-            out.scheduled_date, out_scheduled_date, delta=timedelta(seconds=1),
+            out.date_planned, out_date_planned, delta=timedelta(seconds=1),
             msg='Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay - security_lead')
 
         # Check schedule/deadline date of pack type picking
         pack = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pack_type_id)
-        pack_scheduled_date = out_scheduled_date - timedelta(days=pack.move_ids[0].rule_id.delay)
+        pack_date_planned = out_date_planned - timedelta(days=pack.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
-            pack.scheduled_date, pack_scheduled_date, delta=timedelta(seconds=1),
+            pack.date_planned, pack_date_planned, delta=timedelta(seconds=1),
             msg='Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
         deadline_date -= timedelta(days=pack.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
@@ -170,9 +170,9 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         # Check schedule/deadline date of pick type picking
         pick = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pick_type_id)
-        pick_scheduled_date = pack_scheduled_date - timedelta(days=pick.move_ids[0].rule_id.delay)
+        pick_date_planned = pack_date_planned - timedelta(days=pick.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
-            pick.scheduled_date, pick_scheduled_date, delta=timedelta(seconds=1),
+            pick.date_planned, pick_date_planned, delta=timedelta(seconds=1),
             msg='Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
         deadline_date -= timedelta(days=pick.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
@@ -181,7 +181,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         # Now change the commitment date (Delivery Date) of the sale order
         new_deadline = deadline_date + timedelta(days=5)
-        order.write({'commitment_date': new_deadline})
+        order.write({'date_commitment': new_deadline})
 
         # Now check date_deadline of pick, pack and out are forced
         # TODO : add note in case of change of deadline and check
@@ -192,8 +192,8 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         self.assertEqual(pick.date_deadline, new_deadline)
 
         # Removes the SO deadline and checks the delivery deadline is updated accordingly.
-        order.commitment_date = False
-        new_deadline = order.expected_date
+        order.date_commitment = False
+        new_deadline = order.date_planned
         self.assertEqual(out.date_deadline, new_deadline)
         new_deadline -= timedelta(days=pack.move_ids.rule_id.delay)
         self.assertEqual(pack.date_deadline, new_deadline)
@@ -212,7 +212,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         order_line = self.env['sale.order.line'].create({
             'product_id': self.test_product_order.id,
-            'product_uom_qty': 10,
+            'product_qty': 10,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'order_id': order.id,
         })
@@ -227,5 +227,5 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
         # Check schedule date of picking
         out_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
-        min_date = order.picking_ids[0].scheduled_date
+        min_date = order.picking_ids[0].date_planned
         self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')

@@ -1,13 +1,34 @@
-import { exprToBoolean } from "@web/core/utils/strings";
-import { visitXML } from "@web/core/utils/xml";
+// @ts-check
+
+/** @module @web/views/list/list_arch_parser - Parses list view XML arch into column definitions, groupby configs, buttons, and decorations */
+
+import { getDecoration } from "@web/core/utils/decorations";
+import { visitXML } from "@web/core/utils/dom/xml";
+import { exprToBoolean } from "@web/core/utils/format/strings";
+import { stringToOrderBy } from "@web/core/utils/order_by";
+import { Field } from "@web/fields/field";
 import { combineModifiers } from "@web/model/relational_model/utils";
-import { stringToOrderBy } from "@web/search/utils/order_by";
-import { Field } from "@web/views/fields/field";
-import { getActiveActions, getDecoration, processButton } from "@web/views/utils";
+import { processButton } from "@web/views/view_buttons";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
+import { getActiveActions } from "@web/views/view_utils";
 import { Widget } from "@web/views/widgets/widget";
 
-export class GroupListArchParser {
+/**
+ * Arch parser for `<groupby>` sub-trees inside a list view.
+ *
+ * Extracts field nodes and buttons declared inside a `<groupby name="...">` element
+ * so they can be rendered when the list is grouped by that field.
+ */
+class GroupListArchParser {
+    /**
+     * Parse a `<groupby>` XML node.
+     *
+     * @param {Element} arch - the `<groupby>` DOM element
+     * @param {Record<string, any>} models - model metadata keyed by model name
+     * @param {string} modelName - the co-model of the groupby field
+     * @param {string} [jsClass] - optional js_class override
+     * @returns {{ fieldNodes: Record<string, any>, buttons: any[] }}
+     */
     parse(arch, models, modelName, jsClass) {
         const fieldNodes = {};
         const fieldNextIds = {};
@@ -21,7 +42,13 @@ export class GroupListArchParser {
                 });
                 return false;
             } else if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, models, modelName, "list", jsClass);
+                const fieldInfo = Field.parseFieldNode(
+                    node,
+                    models,
+                    modelName,
+                    "list",
+                    jsClass,
+                );
                 if (!(fieldInfo.name in fieldNextIds)) {
                     fieldNextIds[fieldInfo.name] = 0;
                 }
@@ -35,19 +62,70 @@ export class GroupListArchParser {
     }
 }
 
+/**
+ * Arch parser for the `<list>` (tree) view.
+ *
+ * Walks the XML arch and extracts columns (fields, buttons, widgets),
+ * header buttons, `<control>` elements, `<groupby>` sub-parsers, decorations,
+ * active actions, and all view-level attributes (editable, limit, etc.).
+ */
 export class ListArchParser {
+    /**
+     * Parse a `<field>` node into a field descriptor.
+     *
+     * @param {Element} node - the `<field>` element
+     * @param {Record<string, any>} models - model metadata
+     * @param {string} modelName - current model name
+     * @returns {any} parsed field info
+     */
     parseFieldNode(node, models, modelName) {
         return Field.parseFieldNode(node, models, modelName, "list");
     }
 
+    /**
+     * Parse a `<widget>` node into a widget descriptor.
+     *
+     * @param {Element} node - the `<widget>` element
+     * @param {Record<string, any>} models - model metadata (unused, kept for API symmetry)
+     * @param {string} modelName - current model name (unused)
+     * @returns {any} parsed widget info
+     */
     parseWidgetNode(node, models, modelName) {
         return Widget.parseWidgetNode(node);
     }
 
+    /**
+     * Extract button metadata from a `<button>` element.
+     *
+     * @param {Element} node - the `<button>` element
+     * @returns {any} button descriptor
+     */
     processButton(node) {
         return processButton(node);
     }
 
+    /**
+     * Parse a complete `<list>` arch into a structured descriptor.
+     *
+     * The returned object contains columns (fields, buttons, widgets), header
+     * buttons, controls, groupBy info, decorations, active actions, and all
+     * view-level settings (editable, limit, defaultOrder, etc.).
+     *
+     * @param {Element} xmlDoc - the root `<list>` element
+     * @param {Record<string, any>} models - model metadata keyed by model name
+     * @param {string} modelName - the primary model name
+     * @returns {{
+     *   controls: any[],
+     *   headerButtons: any[],
+     *   fieldNodes: Record<string, any>,
+     *   widgetNodes: Record<string, any>,
+     *   columns: any[],
+     *   groupBy: { buttons: Record<string, any[]>, fields: Record<string, any> },
+     *   xmlDoc: Element,
+     *   activeActions: Record<string, boolean>,
+     *   [key: string]: any,
+     * }}
+     */
     parse(xmlDoc, models, modelName) {
         const fieldNodes = {};
         const widgetNodes = {};
@@ -84,16 +162,16 @@ export class ListArchParser {
                     buttonGroup.column_invisible = combineModifiers(
                         buttonGroup.column_invisible,
                         node.getAttribute("column_invisible"),
-                        "AND"
+                        "AND",
                     );
                 } else {
-                    buttonGroup = {
+                    buttonGroup = /** @type {any} */ ({
                         id: `column_${nextId++}`,
                         type: "button_group",
                         buttons: [button],
                         hasLabel: false,
                         column_invisible: node.getAttribute("column_invisible"),
-                    };
+                    });
                     columns.push(buttonGroup);
                     if (width) {
                         buttonGroup.attrs = { width };
@@ -123,7 +201,9 @@ export class ListArchParser {
                         fieldInfo.field.label === false ||
                         exprToBoolean(fieldInfo.attrs.nolabel) === true
                     ),
-                    label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
+                    label:
+                        (fieldInfo.widget && label && label.toString()) ||
+                        fieldInfo.string,
                 });
                 return false;
             } else if (node.tagName === "widget") {
@@ -136,7 +216,9 @@ export class ListArchParser {
                     name: widgetInfo.name,
                     // FIXME: this is dumb, we encode it into a weird object so that the widget
                     // can decode it later...
-                    node: encodeObjectForTemplate({ attrs: widgetInfo.attrs }).slice(1, -1),
+                    node: encodeObjectForTemplate({
+                        attrs: widgetInfo.attrs,
+                    }).slice(1, -1),
                     className: node.getAttribute("class") || "",
                     widgetInfo,
                 };
@@ -149,7 +231,11 @@ export class ListArchParser {
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
                 const coModelName = fields[fieldName].relation;
-                const groupByArchInfo = groupListArchParser.parse(node, models, coModelName);
+                const groupByArchInfo = groupListArchParser.parse(
+                    node,
+                    models,
+                    coModelName,
+                );
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
                     fieldNodes: groupByArchInfo.fieldNodes,
@@ -189,9 +275,15 @@ export class ListArchParser {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
                     exportXlsx: exprToBoolean(xmlDoc.getAttribute("export_xlsx"), true),
-                    createGroup: exprToBoolean(xmlDoc.getAttribute("group_create"), true),
+                    createGroup: exprToBoolean(
+                        xmlDoc.getAttribute("group_create"),
+                        true,
+                    ),
                     editGroup: exprToBoolean(xmlDoc.getAttribute("group_edit"), true),
-                    deleteGroup: exprToBoolean(xmlDoc.getAttribute("group_delete"), true),
+                    deleteGroup: exprToBoolean(
+                        xmlDoc.getAttribute("group_delete"),
+                        true,
+                    ),
                 };
                 treeAttr.activeActions = activeActions;
 
@@ -222,7 +314,7 @@ export class ListArchParser {
                 treeAttr.decorations = getDecoration(xmlDoc);
 
                 treeAttr.defaultOrder = stringToOrderBy(
-                    xmlDoc.getAttribute("default_order") || null
+                    xmlDoc.getAttribute("default_order") || null,
                 );
 
                 // custom open action when clicking on record row

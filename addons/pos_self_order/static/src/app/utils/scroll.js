@@ -12,7 +12,12 @@
 export function scrollItemIntoViewX(
     scrollEl,
     querySelector,
-    { align = "start", edgePadding = 5, minRightGap = 100, scrollBehavior = "smooth" } = {}
+    {
+        align = "start",
+        edgePadding = 5,
+        minRightGap = 100,
+        scrollBehavior = "smooth",
+    } = {},
 ) {
     if (!scrollEl || !querySelector) {
         return;

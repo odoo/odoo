@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_hr_task_form_view" model="ir.ui.view">
+        <field name="name">project.task.form.project_hr</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <!--
+                Replace the user_ids assignee field with:
+                1. user_ids kept invisible — preserves ACL rules, portal_user_names
+                   and any downstream module that reads the field.
+                2. employee_ids as the new visible primary assignee input.
+            -->
+            <xpath expr="//field[@name='user_ids'][@class='o_task_user_field']" position="replace">
+                <field name="user_ids"
+                    class="o_task_user_field"
+                    options="{'no_open': True}"
+                    widget="many2many_avatar_user"
+                    invisible="1" />
+                <field name="employee_ids"
+                    widget="many2many_tags"
+                    options="{'no_open': True}"
+                    domain="[('company_id', '=', company_id)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_hr_task_list_view" model="ir.ui.view">
+        <field name="name">project.task.list.project_hr</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_tree_main_base" />
+        <field name="arch" type="xml">
+            <!--
+                Replace user_ids list column with employee_ids.
+                user_ids kept as column_invisible so the ORM still fetches it.
+            -->
+            <xpath expr="//field[@name='user_ids']" position="replace">
+                <field name="user_ids" column_invisible="True" />
+                <field name="employee_ids"
+                    optional="show"
+                    widget="many2many_tags" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_hr_task_search_view" model="ir.ui.view">
+        <field name="name">project.task.search.project_hr</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base" />
+        <field name="arch" type="xml">
+            <!-- Add employee search field alongside the existing user search. -->
+            <xpath expr="//field[@name='user_ids']" position="after">
+                <field name="employee_ids" string="Assignee (Employee)" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -7,13 +7,15 @@ class TestStockLocationSearch(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.location = cls.env['stock.location']
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.sublocation = cls.env['stock.location'].create({
-            'name': 'Shelf 2',
-            'barcode': 1201985,
-            'location_id': cls.stock_location.id
-        })
+        cls.location = cls.env["stock.location"]
+        cls.stock_location = cls.env.ref("stock.stock_location_stock")
+        cls.sublocation = cls.env["stock.location"].create(
+            {
+                "name": "Shelf 2",
+                "barcode": 1201985,
+                "location_id": cls.stock_location.id,
+            }
+        )
         cls.location_barcode_id = cls.sublocation.id
         cls.barcode = cls.sublocation.barcode
         cls.name = cls.sublocation.name
@@ -33,5 +35,5 @@ class TestStockLocationSearch(common.TransactionCase):
 
     def test_30_location_search_wo_results(self):
         """Search stock location without results"""
-        location_names = self.location.name_search(name='nonexistent')
+        location_names = self.location.name_search(name="nonexistent")
         self.assertFalse(location_names)

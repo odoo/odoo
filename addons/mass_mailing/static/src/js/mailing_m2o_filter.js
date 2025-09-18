@@ -1,15 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from '@web/core/domain';
 import { registry } from '@web/core/registry';
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/components/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
     Many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/fields/relational/many2one/many2one_field";
 import { Component, useState, useEffect } from "@odoo/owl";
 
 export class MailingFilterDropdown extends Dropdown {

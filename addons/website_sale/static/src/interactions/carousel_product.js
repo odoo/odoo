@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { SIZES, utils as uiUtils } from "@web/ui/block/ui_service";
 
 export class CarouselProduct extends Interaction {
     static selector = "#o-carousel-product";

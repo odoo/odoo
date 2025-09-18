@@ -64,7 +64,7 @@ class NotifyTests(TransactionCase):
         def single_listen():
             nonlocal channels
             with (
-                odoo.sql_db.db_connect("postgres").cursor() as cr,
+                odoo.db.db_connect("postgres").cursor() as cr,
                 selectors.DefaultSelector() as sel,
             ):
                 cr.execute("listen imbus")
@@ -75,11 +75,10 @@ class NotifyTests(TransactionCase):
                 found = False
                 while not stop_event.is_set() and not found:
                     if sel.select(timeout=5):
-                        conn.poll()
-                        while conn.notifies:
+                        for notif in conn.notifies(timeout=0):
                             if notify_channels := [
                                 c
-                                for c in json.loads(conn.notifies.pop().payload)
+                                for c in json.loads(notif.payload)
                                 if c[0] == self.env.cr.dbname
                             ]:
                                 channels = notify_channels

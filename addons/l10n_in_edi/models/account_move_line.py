@@ -42,7 +42,7 @@ class AccountMoveLine(models.Model):
                 'level': 'danger' if error_code == 'invalid_hsn' else 'warning',
                 'message': error_messages[error_code],
                 'action_text': _("View Invoice Line(s)"),
-                # The context are set in view_move_line_tree_hsn_l10n_in
+                # The context are set in view_stock_move_line_list_hsn_l10n_in
                 # Please make sure to change, if any change in error codes
                 'action': lines.with_context(**{
                     error_code: True,
@@ -51,7 +51,7 @@ class AccountMoveLine(models.Model):
                     name=_("Check Invoice Line(s)"),
                     domain=[('id', 'in', lines.ids)],
                     views=[(
-                        self.env.ref('l10n_in.view_move_line_tree_hsn_l10n_in').id,
+                        self.env.ref('l10n_in.view_stock_move_line_list_hsn_l10n_in').id,
                         'list'
                     )],
                 ),

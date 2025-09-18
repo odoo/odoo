@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import {
     defineModels,
@@ -34,7 +36,7 @@ test("stores calls in cache in success", async () => {
             views: [[99, "list"]],
             context: { default_field_value: 1 },
         },
-        {}
+        {},
     );
     await getService("view").loadViews(
         {
@@ -42,7 +44,7 @@ test("stores calls in cache in success", async () => {
             views: [[99, "list"]],
             context: { default_field_value: 2 },
         },
-        {}
+        {},
     );
     expect.verifySteps(["get_views"]);
 });
@@ -60,8 +62,8 @@ test("stores calls in cache when failed", async () => {
                 resModel: "take.five",
                 views: [[99, "list"]],
             },
-            {}
-        )
+            {},
+        ),
     ).rejects.toThrow(/my little error/);
     await expect(
         getService("view").loadViews(
@@ -69,8 +71,8 @@ test("stores calls in cache when failed", async () => {
                 resModel: "take.five",
                 views: [[99, "list"]],
             },
-            {}
-        )
+            {},
+        ),
     ).rejects.toThrow(/my little error/);
     expect.verifySteps(["get_views", "get_views"]);
 });
@@ -88,7 +90,7 @@ test("clear cache when updating ir.ui.view", async () => {
                 views: [[99, "list"]],
                 context: { default_field_value: 1 },
             },
-            {}
+            {},
         );
     await loadView();
     expect.verifySteps(["get_views"]);

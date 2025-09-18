@@ -1,5 +1,21 @@
-import { whenReady } from "@odoo/owl";
-import { selfOrderIndex as Index } from "./self_order_index";
+import { mount, reactive, whenReady } from "@odoo/owl";
+import { Loader } from "@point_of_sale/app/components/loader/loader";
+import { getTemplate } from "@web/core/templates";
 import { mountComponent } from "@web/env";
 
-whenReady(() => mountComponent(Index, document.body));
+import { selfOrderIndex as Index } from "./self_order_index";
+
+whenReady(async () => {
+    try {
+        await mountComponent(Index, document.body);
+    } catch (err) {
+        const loader = reactive({ isShown: true, error: err });
+        mount(Loader, document.body, {
+            getTemplate,
+            props: { loader },
+            translatableAttributes: ["data-tooltip"],
+            trsnalteFn: (s) => s,
+        });
+        console.log(err);
+    }
+});

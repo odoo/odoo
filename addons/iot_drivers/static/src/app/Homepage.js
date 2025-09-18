@@ -1,15 +1,15 @@
 /* global owl */
 
-import { SingleData } from "./components/SingleData.js";
-import { FooterButtons } from "./components/FooterButtons.js";
-import { ServerDialog } from "./components/dialog/ServerDialog.js";
-import { WifiDialog } from "./components/dialog/WifiDialog.js";
-import useStore from "./hooks/useStore.js";
-import { UpdateDialog } from "./components/dialog/UpdateDialog.js";
 import { DeviceDialog } from "./components/dialog/DeviceDialog.js";
+import { ServerDialog } from "./components/dialog/ServerDialog.js";
 import { SixDialog } from "./components/dialog/SixDialog.js";
-import { LoadingFullScreen } from "./components/LoadingFullScreen.js";
+import { UpdateDialog } from "./components/dialog/UpdateDialog.js";
+import { WifiDialog } from "./components/dialog/WifiDialog.js";
+import { FooterButtons } from "./components/FooterButtons.js";
 import { IconButton } from "./components/IconButton.js";
+import { LoadingFullScreen } from "./components/LoadingFullScreen.js";
+import { SingleData } from "./components/SingleData.js";
+import useStore from "./hooks/useStore.js";
 
 const { Component, xml, useState, onWillStart } = owl;
 
@@ -48,12 +48,14 @@ export class Homepage extends Component {
     get networkStatus() {
         if (
             !this.store.isLinux ||
-            this.state.data.network_interfaces.some((netInterface) => !netInterface.is_wifi)
+            this.state.data.network_interfaces.some(
+                (netInterface) => !netInterface.is_wifi,
+            )
         ) {
             return "Ethernet";
         }
         const wifiInterface = this.state.data.network_interfaces.find(
-            (netInterface) => netInterface.ssid
+            (netInterface) => netInterface.ssid,
         );
         if (wifiInterface) {
             return this.state.data.is_access_point_up
@@ -81,9 +83,12 @@ export class Homepage extends Component {
             console.warn("Error while fetching data");
         }
         this.loadDataDelay *= 1.25;
-        setTimeout(async () => {
-            await this.loadInitialData();
-        }, Math.min(this.loadDataDelay, 30 * 60 * 1000));
+        setTimeout(
+            async () => {
+                await this.loadInitialData();
+            },
+            Math.min(this.loadDataDelay, 30 * 60 * 1000),
+        );
     }
 
     async restartOdooService() {

@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/utils/reactive - Reactive base class and side-effect helper for OWL reactivity system */
+
 import { reactive } from "@odoo/owl";
 
 /**
@@ -29,7 +33,7 @@ export class Reactive {
  * Creates a side-effect that runs based on the content of reactive objects.
  *
  * @template {object[]} T
- * @param {(...args: [...T]) => X} cb callback for the effect
+ * @param {(...args: [...T]) => any} cb callback for the effect
  * @param {[...T]} deps the reactive objects that the effect depends on
  */
 export function effect(cb, deps) {
@@ -51,7 +55,7 @@ export function effect(cb, deps) {
  * the properties
  * @param {V} descriptor the object containing methods to compute the
  * properties
- * @returns {T & {[key in keyof V]: ReturnType<V[key]>}}
+ * @returns {any}
  */
 export function withComputedProperties(obj, sources, descriptor) {
     for (const [key, compute] of Object.entries(descriptor)) {
@@ -59,7 +63,7 @@ export function withComputedProperties(obj, sources, descriptor) {
             (obj, sources) => {
                 obj[key] = compute.call(obj, ...sources);
             },
-            [obj, sources]
+            [obj, sources],
         );
     }
     return obj;

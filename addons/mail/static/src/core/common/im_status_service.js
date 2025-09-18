@@ -1,6 +1,5 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-
 export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
 
 /**
@@ -27,20 +26,33 @@ export const imStatusService = {
         const updateBusPresence = () => {
             lastSentInactivity = presence.getInactivityPeriod();
             startAwayTimeout();
-            bus_service.send("update_presence", { inactivity_period: lastSentInactivity });
+            bus_service.send("update_presence", {
+                inactivity_period: lastSentInactivity,
+            });
         };
 
         const startAwayTimeout = () => {
             clearTimeout(becomeAwayTimeout);
             const awayTime = AWAY_DELAY - presence.getInactivityPeriod();
             if (awayTime > 0) {
-                becomeAwayTimeout = browser.setTimeout(() => updateBusPresence(), awayTime);
+                becomeAwayTimeout = browser.setTimeout(
+                    () => updateBusPresence(),
+                    awayTime,
+                );
             }
         };
-        bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), { once: true });
+        bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), {
+            once: true,
+        });
         bus_service.subscribe(
             "bus.bus/im_status_updated",
-            async ({ presence_status, im_status, partner_id, guest_id, debounce = true }) => {
+            async ({
+                presence_status,
+                im_status,
+                partner_id,
+                guest_id,
+                debounce = true,
+            }) => {
                 const store = env.services["mail.store"];
                 const partner = store["res.partner"].get(partner_id);
                 const guest = store["mail.guest"].get(guest_id);
@@ -56,11 +68,14 @@ export const imStatusService = {
                 }
                 if (partner?.eq(store.self_partner) || guest?.eq(store.self_guest)) {
                     const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-                    if ((presence_status === "away" && isOnline) || presence_status === "offline") {
+                    if (
+                        (presence_status === "away" && isOnline) ||
+                        presence_status === "offline"
+                    ) {
                         updateBusPresence();
                     }
                 }
-            }
+            },
         );
         presence.bus.addEventListener("presence", () => {
             if (!lastSentInactivity || lastSentInactivity >= AWAY_DELAY) {

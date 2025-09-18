@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import fields, models, api, _
 from odoo.exceptions import AccessError
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.libs.numbers.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import OrderedSet
 
 
@@ -84,7 +84,7 @@ class StockMove(models.Model):
         if self.is_subcontract:
             action = super(StockMove, self.with_context(force_lot_m2o=True)).action_show_details()
             if self.env.user._is_portal():
-                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_operations').id, 'form')]
+                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_form_operations').id, 'form')]
             return action
         return super().action_show_details()
 
@@ -185,12 +185,12 @@ class StockMove(models.Model):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
 
     def _prepare_move_split_vals(self, qty):
-        vals = super(StockMove, self)._prepare_move_split_vals(qty)
+        vals = super()._prepare_move_split_vals(qty)
         vals['location_id'] = self.location_id.id
         return vals
 
-    def _prepare_procurement_values(self):
-        res = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        res = super()._prepare_procurement_vals()
         if self.raw_material_production_id.subcontractor_id:
             res['warehouse_id'] = self.picking_type_id.warehouse_id
         return res

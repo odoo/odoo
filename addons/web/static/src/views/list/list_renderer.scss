@@ -78,12 +78,17 @@
         }
 
         thead {
-            background-color: var(--ListRenderer-thead-bg-color);
+            background-color: transparent;
+            border-bottom: 2px solid $o-gray-200;
 
             th {
                 padding-top: var(--ListRenderer-thead-padding-y);
-                background-color: transparent;
-                color: $headings-color;
+                background-color: var(--ListRenderer-thead-bg-color);
+                color: $o-gray-500;
+                text-transform: uppercase;
+                font-size: $o-font-size-base-smaller;
+                letter-spacing: 0.05em;
+                font-weight: $o-font-weight-semibold;
 
                 @include media-only(print) {
                     font-weight: $font-weight-bold;
@@ -503,6 +508,10 @@
         .o_data_row {
             border-bottom-width: var(--ListRenderer-data-row-border-bottom-width, 1px);
 
+            &:hover:not(.o_selected_row):not(.o_data_row_selected) > * {
+                --#{$variable-prefix}table-accent-bg: #{rgba($o-brand-primary, 0.03)};
+            }
+
             &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
                 $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
@@ -556,6 +565,18 @@
                 padding-left: var(--ListRenderer-table-padding-x);
             }
         }
+    }
+}
+
+// ------- Row virtualization spacers -------
+.o_list_renderer tr.o_virtual_spacer > td {
+    padding: 0 !important;
+    border: none !important;
+}
+
+@include media-only(print) {
+    .o_list_renderer tr.o_virtual_spacer {
+        display: none;
     }
 }
 

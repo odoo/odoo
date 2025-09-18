@@ -1,18 +1,35 @@
-import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { Deferred } from "@web/core/utils/concurrency";
-import { DebugMenu } from "@web/core/debug/debug_menu";
+// @ts-check
+
+/** @module @web/webclient/webclient - Root OWL component bootstrapping the action manager, navbar, and main components container */
+
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    useExternalListener,
+    useState,
+} from "@odoo/owl";
+import { MainComponentsContainer } from "@web/components/main_components_container";
+import { browser } from "@web/core/browser/browser";
+import { router, routerBus } from "@web/core/browser/router";
 import { localization } from "@web/core/l10n/localization";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useOwnDebugContext } from "@web/services/debug/debug_context";
+import { DebugMenu } from "@web/services/debug/debug_menu";
+
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
-import { router, routerBus } from "@web/core/browser/router";
-import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc";
-
+/**
+ * Root OWL component of the Odoo web client.
+ *
+ * Bootstraps the action manager, navbar, and main components container.
+ * Handles route changes, menu resolution, service worker registration,
+ * and the global ctrl-click passthrough for anchor elements.
+ */
 export class WebClient extends Component {
     static template = "web.WebClient";
     static props = {};
@@ -31,9 +48,9 @@ export class WebClient extends Component {
             registry.category("systray").add(
                 "web.debug_mode_menu",
                 {
-                    Component: DebugMenu,
+                    Component: /** @type {any} */ (DebugMenu),
                 },
-                { sequence: 100 }
+                { sequence: 100 },
             );
         }
         this.localization = localization;
@@ -48,11 +65,17 @@ export class WebClient extends Component {
                 document.body.style.pointerEvents = "auto";
             }
         });
-        useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
-            if (mode !== "new") {
-                this.state.fullscreen = mode === "fullscreen";
-            }
-        });
+        useBus(
+            this.env.bus,
+            "ACTION_MANAGER:UI-UPDATED",
+            /** @type {any} */ (
+                ({ detail: mode }) => {
+                    if (mode !== "new") {
+                        this.state.fullscreen = mode === "fullscreen";
+                    }
+                }
+            ),
+        );
         useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp);
         onMounted(() => {
             this.loadRouterState();
@@ -60,11 +83,14 @@ export class WebClient extends Component {
             // order to initialize themselves:
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
-        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        useExternalListener(window, "click", /** @type {any} */ (this.onGlobalClick), {
+            capture: true,
+        });
         this.serviceWorkerActivatedDeferred = new Deferred();
         onWillStart(this.registerServiceWorker);
     }
 
+    /** Resolve the current URL state to an action + menu, then load it. */
     async loadRouterState() {
         // ** url-retrocompatibility **
         // the menu_id in the url is only possible if we came from an old url
@@ -75,13 +101,13 @@ export class WebClient extends Component {
             // Find all menus that match this action
             const matchingMenus = this.menuService
                 .getAll()
-                .filter((m) => m.actionID === firstAction || m.actionPath === firstAction);
+                .filter(
+                    (m) => m.actionID === firstAction || m.actionPath === firstAction,
+                );
 
             if (matchingMenus.length > 0) {
                 // Use sessionStorage context to determine the correct menu
-                menuId = matchingMenus.find(m => 
-                    m.appID === storedMenuId
-                )?.appID;
+                menuId = matchingMenus.find((m) => m.appID === storedMenuId)?.appID;
                 if (!menuId) {
                     menuId = matchingMenus[0]?.appID;
                 }
@@ -97,9 +123,11 @@ export class WebClient extends Component {
         if (!stateLoaded && menuId) {
             // Determines the current actionId based on the current menu
             const menu = this.menuService.getAll().find((m) => menuId === m.id);
-            const actionId = menu && menu.actionID;
+            const actionId = menu?.actionID;
             if (actionId) {
-                await this.actionService.doAction(actionId, { clearBreadcrumbs: true });
+                await this.actionService.doAction(actionId, {
+                    clearBreadcrumbs: true,
+                });
                 stateLoaded = true;
             }
         }
@@ -108,8 +136,10 @@ export class WebClient extends Component {
         if (stateLoaded && !menuId) {
             // Determines the current menu based on the current action
             const currentController = this.actionService.currentController;
-            const actionId = currentController && currentController.action.id;
-            menuId = this.menuService.getAll().find((m) => m.actionID === actionId)?.appID;
+            const actionId = currentController?.action.id;
+            menuId = this.menuService
+                .getAll()
+                .find((m) => m.actionID === actionId)?.appID;
             if (!menuId) {
                 // Setting the menu based on the session storage if no other menu was found
                 menuId = storedMenuId;
@@ -140,6 +170,7 @@ export class WebClient extends Component {
         }
     }
 
+    /** Navigate to the first root menu app as a fallback. */
     _loadDefaultApp() {
         // Selects the first root menu if any
         const root = this.menuService.getMenu("root");
@@ -158,27 +189,34 @@ export class WebClient extends Component {
         // we do not want any other listener to execute.
         if (
             (ev.ctrlKey || ev.metaKey) &&
-            !ev.target.isContentEditable &&
+            !(/** @type {any} */ (ev.target).isContentEditable) &&
             ((ev.target instanceof HTMLAnchorElement && ev.target.href) ||
-                (ev.target instanceof HTMLElement && ev.target.closest("a[href]:not([href=''])")))
+                (ev.target instanceof HTMLElement &&
+                    ev.target.closest("a[href]:not([href=''])")))
         ) {
             ev.stopImmediatePropagation();
             return;
         }
     }
 
+    /** Register the Odoo service worker for /odoo scope and resolve when activated. */
     registerServiceWorker() {
         if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
                 .then((registration) => {
-                    if (registration.active && registration.active.state === "activated") {
+                    if (
+                        registration.active &&
+                        registration.active.state === "activated"
+                    ) {
                         this.serviceWorkerActivatedDeferred.resolve();
                     } else {
                         const sw =
-                            registration.installing || registration.waiting || registration.active;
+                            registration.installing ||
+                            registration.waiting ||
+                            registration.active;
                         sw.addEventListener("statechange", (e) => {
-                            if (e.target.state === "activated") {
+                            if (/** @type {any} */ (e.target).state === "activated") {
                                 this.serviceWorkerActivatedDeferred.resolve();
                             }
                         });

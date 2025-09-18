@@ -1,3 +1,5 @@
+// @ts-check
+
 // @odoo-module ignore
 
 // This module has for sole purpose to mark all odoo modules defined between it

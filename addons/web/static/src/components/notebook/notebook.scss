@@ -1,0 +1,114 @@
+.o_notebook {
+    --Notebook-margin-x: 0;
+    --Notebook-padding-x: 0;
+    // Kept for backward compat (consumed by kanban_examples_dialog.scss)
+    --Notebook__link-border-color--active: #{$border-color};
+
+    .o_notebook_headers {
+        margin: 0 var(--Notebook-margin-x, 0);
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        @include media-breakpoint-down(md) {
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .nav {
+        padding: 2px;
+        background-color: $o-gray-100;
+        border-radius: $o-border-radius;
+        border-bottom: none;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+        margin: 0;
+
+        &.disabled {
+            .nav-link {
+                cursor: not-allowed;
+                opacity: .3;
+            }
+        }
+    }
+
+    .nav-link {
+        border: none;
+        border-radius: $o-border-radius-sm;
+        transition: all $o-duration-fast $o-easing-standard;
+
+        &.active {
+            &, &:hover, &:focus, &:active {
+                background: $o-white;
+                box-shadow: $o-shadow-xs;
+                font-weight: $o-font-weight-medium;
+                border: none;
+            }
+        }
+
+        &:hover, &:focus, &:active {
+            outline: none;
+        }
+
+        &:focus-visible, &.active:focus-visible {
+            box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+        }
+
+        &:hover:not(.active) {
+            background: rgba($o-white, 0.6);
+        }
+
+        &.o_page_invalid {
+            color: o-text-color('danger') !important;
+            background-color: #{$o-input-invalid-bg} !important;
+        }
+    }
+
+    .tab-pane:not(.show) {
+        transition: none;
+    }
+
+    &.vertical {
+        .o_notebook_headers {
+            overflow-x: visible;
+        }
+
+        .nav {
+            width: max-content;
+            border-bottom: none;
+        }
+
+        .nav-item {
+            margin: 0;
+
+            &:first-child .nav-link {
+                border-top-width: 0;
+            }
+        }
+
+        .nav-link {
+            margin-bottom: 0;
+
+            &.active {
+                &, &:hover, &:focus, &:active {
+                    background: $o-white;
+                    box-shadow: $o-shadow-xs;
+                    font-weight: $o-font-weight-medium;
+                    border: none;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        .o_notebook_content .oe-toolbar {
+            @include o-position-sticky($top: 0px);
+            margin-left: var(--Notebook-margin-x, $o-horizontal-padding);
+            margin-right: var(--Notebook-margin-x, $o-horizontal-padding);
+            width: auto;
+        }
+    }
+}

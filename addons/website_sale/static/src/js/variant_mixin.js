@@ -3,7 +3,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { KeepLast } from '@web/core/utils/concurrency';
 import { memoize } from '@web/core/utils/functions';
-import { insertThousandsSep } from '@web/core/utils/numbers';
+import { insertThousandsSep } from '@web/core/utils/format/numbers';
 import { throttleForAnimation } from '@web/core/utils/timing';
 import { markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';

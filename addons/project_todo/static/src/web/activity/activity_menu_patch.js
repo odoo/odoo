@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { useCommand } from "@web/core/commands/command_hook";
+import { useCommand } from "@web/services/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 

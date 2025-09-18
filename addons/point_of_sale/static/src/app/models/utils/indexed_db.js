@@ -17,14 +17,17 @@ export default class IndexedDB {
 
     databaseEventListener(whenReady) {
         const indexedDB =
-            window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+            window.indexedDB ||
+            window.mozIndexedDB ||
+            window.webkitIndexedDB ||
+            window.msIndexedDB;
 
         if (!indexedDB) {
             logPosMessage(
                 "IndexedDB",
                 "databaseEventListener",
                 "Your browser does not support IndexedDB. Data will not be saved.",
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
         }
 
@@ -40,7 +43,7 @@ export default class IndexedDB {
                 "IndexedDB",
                 "databaseEventListener",
                 `Error opening IndexedDB: ${event.target.errorCode}`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
         };
         dbInstance.onsuccess = (event) => {
@@ -55,7 +58,7 @@ export default class IndexedDB {
                         "IndexedDB",
                         "onsuccess",
                         `Schema mismatch: Store '${storeName}' is missing. Triggering upgrade.`,
-                        CONSOLE_COLOR
+                        CONSOLE_COLOR,
                     );
                     needsUpgrade = true;
                     break;
@@ -71,7 +74,7 @@ export default class IndexedDB {
                     "IndexedDB",
                     "onsuccess",
                     `Upgrading from v${newVersion - 1} to v${newVersion}...`,
-                    CONSOLE_COLOR
+                    CONSOLE_COLOR,
                 );
 
                 this.databaseEventListener(whenReady);
@@ -82,7 +85,7 @@ export default class IndexedDB {
                 "IndexedDB",
                 "databaseEventListener",
                 `IndexedDB ${this.dbVersion} Ready`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
             whenReady();
         };
@@ -142,7 +145,7 @@ export default class IndexedDB {
                                 "IndexedDB",
                                 method,
                                 `Error aborting transaction: ${e.message}`,
-                                CONSOLE_COLOR
+                                CONSOLE_COLOR,
                             );
                         }
                     }
@@ -152,7 +155,7 @@ export default class IndexedDB {
                     "IndexedDB",
                     method,
                     `Processing ${batch.length} items in store ${storeName}`,
-                    CONSOLE_COLOR
+                    CONSOLE_COLOR,
                 );
 
                 for (const data of batch) {
@@ -175,7 +178,7 @@ export default class IndexedDB {
                                 "IndexedDB",
                                 method,
                                 `Error processing ${method} for ${storeName}: ${event.target?.error}`,
-                                CONSOLE_COLOR
+                                CONSOLE_COLOR,
                             );
                             reject(event.target?.error || "Unknown error");
                         };
@@ -184,7 +187,7 @@ export default class IndexedDB {
                             "IndexedDB",
                             method,
                             `Error processing ${method} for ${storeName}: Invalid data format`,
-                            CONSOLE_COLOR
+                            CONSOLE_COLOR,
                         );
                     }
                 }
@@ -213,7 +216,7 @@ export default class IndexedDB {
                 "IndexedDB",
                 "getNewTransaction",
                 `Error creating transaction: ${e.message}`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
             return false;
         }
@@ -235,7 +238,8 @@ export default class IndexedDB {
     }
 
     readAll(store = [], retry = 0) {
-        const storeNames = store.length > 0 ? store : this.dbStores.map((store) => store[1]);
+        const storeNames =
+            store.length > 0 ? store : this.dbStores.map((store) => store[1]);
         const transaction = this.getNewTransaction(storeNames, "readonly");
 
         if (!transaction && retry < 5) {
@@ -264,7 +268,7 @@ export default class IndexedDB {
                             "IndexedDB",
                             "readAll",
                             `Error reading data from store ${store}: ${event.target.error}`,
-                            CONSOLE_COLOR
+                            CONSOLE_COLOR,
                         );
                         reject(event.target.error || "Unknown error");
                     };
@@ -277,7 +281,7 @@ export default class IndexedDB {
                     request.onerror = errorMethod;
                     request.onabort = errorMethod;
                     request.onsuccess = successMethod;
-                })
+                }),
         );
 
         return Promise.allSettled(promises).then((results) =>
@@ -287,7 +291,7 @@ export default class IndexedDB {
                 } else {
                     return acc;
                 }
-            }, {})
+            }, {}),
         );
     }
 

@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { booleanField, BooleanField } from "@web/views/fields/boolean/boolean_field";
+import { booleanField, BooleanField } from "@web/fields/basic/boolean/boolean_field";
 
 
 /**

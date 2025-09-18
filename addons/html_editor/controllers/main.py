@@ -4,17 +4,16 @@ import uuid
 from base64 import b64decode, b64encode
 from datetime import datetime
 import werkzeug.exceptions
-import werkzeug.urls
 import requests
 from os.path import join as opj
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import request
 from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
@@ -525,7 +524,7 @@ class HTML_Editor(http.Controller):
             if not attachment:
                 attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
             if media[id]['is_dynamic_svg']:
-                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                colorParams = urlencode(media[id]['dynamic_colors'])
                 attachment['url'] = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 

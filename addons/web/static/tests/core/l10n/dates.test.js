@@ -1,12 +1,13 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
+    allowTranslations,
     defineParams,
     makeMockEnv,
-    allowTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
 import {
     deserializeDate,
     deserializeDateTime,
@@ -84,30 +85,40 @@ test("formatDateTime in different timezone", async () => {
     });
     mockDate("2009-05-04 00:00:00", 0);
     expect(formatDateTime(DateTime.utc())).toBe("05/04/2009 00:00:00");
-    expect(formatDateTime(DateTime.utc(), { tz: "Asia/Kolkata" })).toBe("05/04/2009 05:30:00");
+    expect(formatDateTime(DateTime.utc(), { tz: "Asia/Kolkata" })).toBe(
+        "05/04/2009 05:30:00",
+    );
 });
 
 test("parseDate(Time) outputs DateTime objects in local TZ", async () => {
     await makeMockEnv();
     mockTimeZone(+1);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000+01:00");
-    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+01:00");
+    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe(
+        "2019-01-13T10:05:45.000+01:00",
+    );
 
     mockTimeZone(+5.5);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000+05:30");
-    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+05:30");
+    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe(
+        "2019-01-13T10:05:45.000+05:30",
+    );
 
     mockTimeZone(-11);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000-11:00");
-    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000-11:00");
+    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe(
+        "2019-01-13T10:05:45.000-11:00",
+    );
 });
 
 test("parseDateTime in different timezone", async () => {
     await makeMockEnv();
     mockTimeZone(+1);
-    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+01:00");
+    expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe(
+        "2019-01-13T10:05:45.000+01:00",
+    );
     expect(parseDateTime("01/13/2019 10:05:45", { tz: "Asia/Kolkata" }).toISO()).toBe(
-        "2019-01-13T10:05:45.000+05:30"
+        "2019-01-13T10:05:45.000+05:30",
     );
 });
 
@@ -154,9 +165,12 @@ test("parseDateTime (norwegian locale)", async () => {
     });
     await makeMockEnv();
 
-    expect(parseDateTime("16. des 2019 10:05:45").toISO()).toBe("2019-12-16T10:05:45.000+01:00", {
-        message: "Day/month inverted + month i18n",
-    });
+    expect(parseDateTime("16. des 2019 10:05:45").toISO()).toBe(
+        "2019-12-16T10:05:45.000+01:00",
+        {
+            message: "Day/month inverted + month i18n",
+        },
+    );
 });
 
 test("parseDate", async () => {
@@ -188,9 +202,15 @@ test("parseDate without separator", async () => {
     expect(() => parseDate("970131")).toThrow(/is not a correct/, {
         message: "Wrongly formated dates should be invalid",
     });
-    expect(parseDate("2001").toFormat(testDateFormat)).toBe("20.01/" + DateTime.utc().year);
-    expect(parseDate("3101").toFormat(testDateFormat)).toBe("31.01/" + DateTime.utc().year);
-    expect(parseDate("31.01").toFormat(testDateFormat)).toBe("31.01/" + DateTime.utc().year);
+    expect(parseDate("2001").toFormat(testDateFormat)).toBe(
+        "20.01/" + DateTime.utc().year,
+    );
+    expect(parseDate("3101").toFormat(testDateFormat)).toBe(
+        "31.01/" + DateTime.utc().year,
+    );
+    expect(parseDate("31.01").toFormat(testDateFormat)).toBe(
+        "31.01/" + DateTime.utc().year,
+    );
     expect(parseDate("310197").toFormat(testDateFormat)).toBe("31.01/1997");
     expect(parseDate("310117").toFormat(testDateFormat)).toBe("31.01/2017");
     expect(parseDate("31011985").toFormat(testDateFormat)).toBe("31.01/1985");
@@ -206,9 +226,15 @@ test("parseDateTime without separator", async () => {
     });
 
     const dateTimeFormat = "dd.MM/yyyy HH:mm/ss";
-    expect(parseDateTime("3101198508").toFormat(dateTimeFormat)).toBe("31.01/1985 08:00/00");
-    expect(parseDateTime("310119850833").toFormat(dateTimeFormat)).toBe("31.01/1985 08:33/00");
-    expect(parseDateTime("31/01/1985 08").toFormat(dateTimeFormat)).toBe("31.01/1985 08:00/00");
+    expect(parseDateTime("3101198508").toFormat(dateTimeFormat)).toBe(
+        "31.01/1985 08:00/00",
+    );
+    expect(parseDateTime("310119850833").toFormat(dateTimeFormat)).toBe(
+        "31.01/1985 08:33/00",
+    );
+    expect(parseDateTime("31/01/1985 08").toFormat(dateTimeFormat)).toBe(
+        "31.01/1985 08:00/00",
+    );
 });
 
 test("parseDateTime with escaped characters (eg. Basque locale)", async () => {
@@ -223,7 +249,7 @@ test("parseDateTime with escaped characters (eg. Basque locale)", async () => {
     const dateTimeFormat = `${dateFormat} ${timeFormat}`;
     expect(dateTimeFormat).toBe("ccc, yyyy.'e''k''o' MMM'r''e''n' dd'a' HH:mm:ss");
     expect(parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat)).toBe(
-        "Thu, 1985.eko Janren 31a 08:30:00"
+        "Thu, 1985.eko Janren 31a 08:30:00",
     );
 });
 
@@ -269,7 +295,9 @@ test("parse smart date input", async () => {
     expect(parseDateTime("=3d").toFormat(format)).toBe("2020-01-03 00:00");
     expect(parseDateTime("+3d +1m").toFormat(format)).toBe("2020-02-04 00:01");
     expect(parseDateTime("=11d +2H +15M").toFormat(format)).toBe("2020-01-11 02:15");
-    expect(parseDateTime("=11d =3H +2H +15M").toFormat(format)).toBe("2020-01-11 05:15");
+    expect(parseDateTime("=11d =3H +2H +15M").toFormat(format)).toBe(
+        "2020-01-11 05:15",
+    );
 
     expect(parseDateTime("now").toFormat(format)).toBe("2020-01-01 00:01");
     expect(parseDateTime("today").toFormat(format)).toBe("2020-01-01 00:00");
@@ -304,17 +332,21 @@ test("parse smart date input", async () => {
 test("parseDateTime ISO8601 Format", async () => {
     mockTimeZone(+1);
     expect(parseDateTime("2017-05-15T12:00:00.000+06:00").toISO()).toBe(
-        "2017-05-15T07:00:00.000+01:00"
+        "2017-05-15T07:00:00.000+01:00",
     );
     // without the 'T' separator is not really ISO8601 compliant, but we still support it
     expect(parseDateTime("2017-05-15 12:00:00.000+06:00").toISO()).toBe(
-        "2017-05-15T07:00:00.000+01:00"
+        "2017-05-15T07:00:00.000+01:00",
     );
 });
 
 test("parseDateTime SQL Format", async () => {
-    expect(parseDateTime("2017-05-15 09:12:34").toISO()).toBe("2017-05-15T09:12:34.000+01:00");
-    expect(parseDateTime("2017-05-08 09:12:34").toISO()).toBe("2017-05-08T09:12:34.000+01:00");
+    expect(parseDateTime("2017-05-15 09:12:34").toISO()).toBe(
+        "2017-05-15T09:12:34.000+01:00",
+    );
+    expect(parseDateTime("2017-05-08 09:12:34").toISO()).toBe(
+        "2017-05-08T09:12:34.000+01:00",
+    );
 });
 
 test("serializeDate", async () => {
@@ -373,14 +405,18 @@ test("serializeDateTime with different numbering system", async () => {
 
 test("deserializeDate", async () => {
     const date = DateTime.local(2022, 2, 21);
-    expect(DateTime.fromFormat("2022-02-21", "yyyy-MM-dd").toMillis()).toBe(date.toMillis());
+    expect(DateTime.fromFormat("2022-02-21", "yyyy-MM-dd").toMillis()).toBe(
+        date.toMillis(),
+    );
     expect(deserializeDate("2022-02-21").toMillis()).toBe(date.toMillis());
 });
 
 test("deserializeDate with different numbering system", async () => {
     patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
     const date = DateTime.local(2022, 2, 21);
-    expect(DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd").toMillis()).toBe(date.toMillis());
+    expect(DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd").toMillis()).toBe(
+        date.toMillis(),
+    );
     expect(deserializeDate("2022-02-21").toMillis()).toBe(date.toMillis());
 });
 
@@ -389,7 +425,7 @@ test("deserializeDateTime", async () => {
     expect(
         DateTime.fromFormat("2022-02-21 16:11:42", "yyyy-MM-dd HH:mm:ss", {
             zone: "utc",
-        }).toMillis()
+        }).toMillis(),
     ).toBe(date.toMillis());
     expect(deserializeDateTime("2022-02-21 16:11:42").toMillis()).toBe(date.toMillis());
 });
@@ -400,41 +436,43 @@ test("deserializeDateTime with different numbering system", async () => {
     expect(
         DateTime.fromFormat("٢٠٢٢-٠٢-٢١ ١٦:١١:٤٢", "yyyy-MM-dd HH:mm:ss", {
             zone: "utc",
-        }).toMillis()
+        }).toMillis(),
     ).toBe(date.toMillis());
     expect(deserializeDateTime("2022-02-21 16:11:42").toMillis()).toBe(date.toMillis());
 });
 
 test("deserializeDateTime with different timezone", async () => {
     const date = DateTime.utc(2022, 2, 21, 16, 11, 42).setZone("Europe/Brussels");
-    expect(deserializeDateTime("2022-02-21 16:11:42", { tz: "Europe/Brussels" }).c).toEqual(date.c);
+    expect(
+        deserializeDateTime("2022-02-21 16:11:42", { tz: "Europe/Brussels" }).c,
+    ).toEqual(date.c);
 });
 
 test("parseDate with short notations", async () => {
     expect(parseDate("20-10-20", { format: "yyyy-MM-dd" }).toISO()).toBe(
-        "2020-10-20T00:00:00.000+01:00"
+        "2020-10-20T00:00:00.000+01:00",
     );
     expect(parseDate("20/10/20", { format: "yyyy/MM/dd" }).toISO()).toBe(
-        "2020-10-20T00:00:00.000+01:00"
+        "2020-10-20T00:00:00.000+01:00",
     );
     expect(parseDate("10-20-20", { format: "MM-dd-yyyy" }).toISO()).toBe(
-        "2020-10-20T00:00:00.000+01:00"
+        "2020-10-20T00:00:00.000+01:00",
     );
     expect(parseDate("10-20-20", { format: "MM-yyyy-dd" }).toISO()).toBe(
-        "2020-10-20T00:00:00.000+01:00"
+        "2020-10-20T00:00:00.000+01:00",
     );
     expect(parseDate("1-20-2", { format: "MM-yyyy-dd" }).toISO()).toBe(
-        "2020-01-02T00:00:00.000+01:00"
+        "2020-01-02T00:00:00.000+01:00",
     );
     expect(parseDate("20/1/2", { format: "yyyy/MM/dd" }).toISO()).toBe(
-        "2020-01-02T00:00:00.000+01:00"
+        "2020-01-02T00:00:00.000+01:00",
     );
 });
 
 test("parseDateTime with short notations", async () => {
-    expect(parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO()).toBe(
-        "2020-10-20T08:05:03.000+01:00"
-    );
+    expect(
+        parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO(),
+    ).toBe("2020-10-20T08:05:03.000+01:00");
 });
 
 test("parseDate with textual month notation", async () => {
@@ -443,10 +481,10 @@ test("parseDate with textual month notation", async () => {
     });
     expect(parseDate("Jan/05/1997").toISO()).toBe("1997-01-05T00:00:00.000+01:00");
     expect(parseDate("Jan/05/1997", { format: undefined }).toISO()).toBe(
-        "1997-01-05T00:00:00.000+01:00"
+        "1997-01-05T00:00:00.000+01:00",
     );
     expect(parseDate("Jan/05/1997", { format: "MMM/dd/yyyy" }).toISO()).toBe(
-        "1997-01-05T00:00:00.000+01:00"
+        "1997-01-05T00:00:00.000+01:00",
     );
 });
 
@@ -683,11 +721,17 @@ test("parseDateTime: arab locale, latin numbering system as input", async () => 
 
     // Check it works with arab
     expect(parseDateTime("١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣").toISO().split(".")[0]).toBe(
-        "2020-07-15T12:30:43"
+        "2020-07-15T12:30:43",
     );
 
     // Check it also works with latin numbers
-    expect(parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0]).toBe("2020-07-15T12:30:43");
-    expect(parseDateTime("22/01/2023").toISO().split(".")[0]).toBe("2023-01-22T00:00:00");
-    expect(parseDateTime("2023-01-22").toISO().split(".")[0]).toBe("2023-01-22T00:00:00");
+    expect(parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0]).toBe(
+        "2020-07-15T12:30:43",
+    );
+    expect(parseDateTime("22/01/2023").toISO().split(".")[0]).toBe(
+        "2023-01-22T00:00:00",
+    );
+    expect(parseDateTime("2023-01-22").toISO().split(".")[0]).toBe(
+        "2023-01-22T00:00:00",
+    );
 });

@@ -1,9 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
+import { _t } from "@web/core/l10n/translation";
+import { formatFloat } from "@web/core/utils/format/numbers";
 import { patch } from "@web/core/utils/patch";
-import { formatFloat } from "@web/core/utils/numbers";
-
 patch(PartnerLine.prototype, {
     setup() {
         super.setup(...arguments);

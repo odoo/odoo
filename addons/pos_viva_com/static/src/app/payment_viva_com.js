@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { roundPrecision } from "@web/core/utils/numbers";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { roundPrecision } from "@web/core/utils/format/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 
@@ -30,7 +30,10 @@ export class PaymentVivaCom extends PaymentInterface {
 
     _call_viva_com(data, action, paymentLine) {
         return this.env.services.orm.silent
-            .call("pos.payment.method", action, [[this.payment_method_id.id], data])
+            .call("pos.payment.method", action, [
+                [this.payment_method_id.id],
+                data,
+            ])
             .catch(this._handleOdooConnectionFailure.bind(this, paymentLine));
     }
 
@@ -41,8 +44,8 @@ export class PaymentVivaCom extends PaymentInterface {
         }
         this._show_error(
             _t(
-                "Could not connect to the Odoo server, please check your internet connection and try again."
-            )
+                "Could not connect to the Odoo server, please check your internet connection and try again.",
+            ),
         );
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
@@ -77,7 +80,8 @@ export class PaymentVivaCom extends PaymentInterface {
             cashRegisterId: this.pos.getCashier().name,
             amount: roundPrecision(Math.abs(line.amount * 100)),
             currencyCode: this.pos.currency.iso_numeric.toString(),
-            merchantReference: line.uiState.vivaSessionId + "/" + this.pos.session.id,
+            merchantReference:
+                line.uiState.vivaSessionId + "/" + this.pos.session.id,
             customerTrns: customerTrns,
             preauth: false,
             maxInstalments: 0,
@@ -85,10 +89,12 @@ export class PaymentVivaCom extends PaymentInterface {
         };
 
         const action =
-            line.amount < 0 ? "viva_com_send_refund_request" : "viva_com_send_payment_request";
+            line.amount < 0
+                ? "viva_com_send_refund_request"
+                : "viva_com_send_payment_request";
 
         return this._call_viva_com(data, action, line).then((data) =>
-            this._viva_com_handle_response(data, line)
+            this._viva_com_handle_response(data, line),
         );
     }
 
@@ -99,7 +105,11 @@ export class PaymentVivaCom extends PaymentInterface {
             sessionId: line.uiState.vivaSessionId,
             cashRegisterId: this.pos.getCashier().name,
         };
-        return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
+        return this._call_viva_com(
+            data,
+            "viva_com_send_payment_cancel",
+            line,
+        ).then((data) => {
             if (data.error) {
                 this._show_error(data.error);
             }
@@ -121,7 +131,9 @@ export class PaymentVivaCom extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(paymentLine, notification);
         } else {
-            this._show_error(_t("Message from Viva.com: %s", notification.error));
+            this._show_error(
+                _t("Message from Viva.com: %s", notification.error),
+            );
         }
 
         // when starting to wait for the payment response we create a promise
@@ -158,7 +170,7 @@ export class PaymentVivaCom extends PaymentInterface {
                 const result = await this._call_viva_com(
                     sessionId,
                     "viva_com_get_payment_status",
-                    paymentLine
+                    paymentLine,
                 );
                 if ("success" in result && isPaymentStillValid()) {
                     clearInterval(intervalId);
@@ -166,7 +178,9 @@ export class PaymentVivaCom extends PaymentInterface {
                         this.handleSuccessResponse(paymentLine, result);
                         resolve(true);
                     } else {
-                        this._show_error(_t("Message from Viva.com: %s", result.message));
+                        this._show_error(
+                            _t("Message from Viva.com: %s", result.message),
+                        );
                         resolve(false);
                     }
                     this.paymentLineResolvers[paymentLine.uuid] = null;

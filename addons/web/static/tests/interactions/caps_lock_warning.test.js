@@ -1,6 +1,11 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
-import { keyDown, queryOne, pointerDown } from "@odoo/hoot-dom";
+import { keyDown, pointerDown, queryOne } from "@odoo/hoot-dom";
+import {
+    setupInteractionWhiteList,
+    startInteractions,
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("web.caps_lock_warning");
 

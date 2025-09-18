@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import { tokenize } from "@web/core/py_js/py";
 
 describe.current.tags("headless");

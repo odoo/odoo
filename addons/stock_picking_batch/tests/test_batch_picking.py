@@ -591,6 +591,38 @@ class TestBatchPicking(TransactionCase):
         ]).picking_id.batch_id
         self.assertEqual(pAbatch, pBbatch)
 
+    def test_auto_batch_3(self):
+        """ Test a simple auto-batch scenario with a manually assigned picking.
+        """
+        # Create picking type to avoid conflicts with existing pickings with auto-batch enabled grouping by partner.
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.out_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_partner': True,
+        })
+        partner = self.env['res.partner'].create({'name': 'Lovely product'})
+        delivery = self.env['stock.picking'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'partner_id': partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+
+        self.assertRecordValues(delivery, [
+            {'state': 'confirmed', 'batch_id': False},
+        ])
+        delivery.move_ids.quantity = 1
+        self.assertEqual(delivery.state, 'assigned')
+        self.assertTrue(delivery.batch_id)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted

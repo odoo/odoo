@@ -1,6 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { drag, queryAll, queryAllTexts, queryFirst, scroll } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     contains,
@@ -17,7 +19,6 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { WebClient } from "@web/webclient/webclient";
@@ -33,19 +34,27 @@ function parseCounter(text) {
 }
 
 function getCategoriesContent() {
-    return queryAllTexts`.o_search_panel_category_value header`.map(parseContent).filter(Boolean);
+    return queryAllTexts`.o_search_panel_category_value header`
+        .map(parseContent)
+        .filter(Boolean);
 }
 
 function getCategoriesCounter() {
-    return queryAllTexts`.o_search_panel_category_value header`.map(parseCounter).filter(Boolean);
+    return queryAllTexts`.o_search_panel_category_value header`
+        .map(parseCounter)
+        .filter(Boolean);
 }
 
 function getFiltersContent() {
-    return queryAllTexts`.o_search_panel_filter_value`.map(parseContent).filter(Boolean);
+    return queryAllTexts`.o_search_panel_filter_value`
+        .map(parseContent)
+        .filter(Boolean);
 }
 
 function getFiltersCounter() {
-    return queryAllTexts`.o_search_panel_filter_value`.map(parseCounter).filter(Boolean);
+    return queryAllTexts`.o_search_panel_filter_value`
+        .map(parseCounter)
+        .filter(Boolean);
 }
 
 class TestComponent extends Component {
@@ -257,7 +266,9 @@ test("basic rendering of a component with search panel", async () => {
     expect(`${firstSection} .o_search_panel_section_header i`).toHaveClass("fa-folder");
     expect(`${firstSection} .o_search_panel_section_header`).toHaveText(/company/i);
     expect(`${firstSection} .o_search_panel_category_value`).toHaveCount(3);
-    expect(`${firstSection} .o_search_panel_category_value:first .active`).toHaveCount(1);
+    expect(`${firstSection} .o_search_panel_category_value:first .active`).toHaveCount(
+        1,
+    );
     expect(queryAllTexts`${firstSection} .o_search_panel_category_value`).toEqual([
         "All",
         "asustek\n2",
@@ -265,7 +276,9 @@ test("basic rendering of a component with search panel", async () => {
     ]);
 
     const secondSection = `.o_search_panel_section:eq(1)`;
-    expect(`${secondSection} .o_search_panel_section_header i`).toHaveClass("fa-filter");
+    expect(`${secondSection} .o_search_panel_section_header i`).toHaveClass(
+        "fa-filter",
+    );
     expect(`${secondSection} .o_search_panel_section_header`).toHaveText(/category/i);
     expect(`${secondSection} .o_search_panel_filter_value`).toHaveCount(2);
     expect(queryAllTexts`${secondSection} .o_search_panel_filter_value`).toEqual([
@@ -273,7 +286,10 @@ test("basic rendering of a component with search panel", async () => {
         "silver\n3",
     ]);
 
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
     expect(component.domain).toEqual([]); // initial domain (does not need the sections to be loaded)
 });
 
@@ -291,17 +307,17 @@ test("when category is empty fallback to All", async () => {
 
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(1);
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n2",
-        "agrolait\n2",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n2", "agrolait\n2"]);
     expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(4);
 
     MockServer.env["partner"].unlink([2, 4]);
 
     await contains(queryAll`.o_search_panel_category_value header`[2]).click();
-    expect(queryAllTexts`.o_search_panel_category_value header.active`).toEqual(["All"]);
+    expect(queryAllTexts`.o_search_panel_category_value header.active`).toEqual([
+        "All",
+    ]);
     expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(2);
 });
 
@@ -316,15 +332,12 @@ test("cache search panel", async () => {
 
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n2",
-        "agrolait\n2",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n1",
-        "silver\n3",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n2", "agrolait\n2"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n1", "silver\n3"]);
 
     spSelectRangeDef = new Deferred();
     spSelectMultiRangeDef = new Deferred();
@@ -338,15 +351,12 @@ test("cache search panel", async () => {
     // Search Panel is rendered with cached data !
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n2",
-        "agrolait\n2",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n1",
-        "silver\n3",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n2", "agrolait\n2"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n1", "silver\n3"]);
 
     spSelectRangeDef.resolve({
         parent_field: "parent_id",
@@ -376,16 +386,12 @@ test("cache search panel", async () => {
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
 
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n1",
-        "agrolait\n2",
-        "plop\n4",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n1",
-        "silver\n3",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n1", "agrolait\n2", "plop\n4"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n1", "silver\n3"]);
 
     spSelectMultiRangeDef.resolve({
         values: [
@@ -411,17 +417,12 @@ test("cache search panel", async () => {
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
 
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n1",
-        "agrolait\n2",
-        "plop\n4",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n5",
-        "silver\n3",
-        "plop\n2",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n1", "agrolait\n2", "plop\n4"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n5", "silver\n3", "plop\n2"]);
 });
 
 test("cache search panel (onFinish called after anoter load - Category)", async () => {
@@ -434,15 +435,12 @@ test("cache search panel (onFinish called after anoter load - Category)", async 
 
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n2",
-        "agrolait\n2",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n1",
-        "silver\n3",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n2", "agrolait\n2"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n1", "silver\n3"]);
 
     // Go to a form view
     await getService("action").doAction(2);
@@ -469,10 +467,9 @@ test("cache search panel (onFinish called after anoter load - Category)", async 
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "plop22\n8",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "plop22\n8"]);
 
     // resolve RPCs (2nd call) from the came back => must be ignored
     spSelectRangeDef[1].resolve({
@@ -499,10 +496,9 @@ test("cache search panel (onFinish called after anoter load - Category)", async 
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "plop22\n8",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "plop22\n8"]);
 });
 
 test("cache search panel (onFinish called after anoter load - Filters)", async () => {
@@ -510,7 +506,7 @@ test("cache search panel (onFinish called after anoter load - Filters)", async (
     let spSelectMultiRangeCount = 0;
     onRpc(
         "search_panel_select_multi_range",
-        () => spSelectMultiRangeDef[spSelectMultiRangeCount++]
+        () => spSelectMultiRangeDef[spSelectMultiRangeCount++],
     );
 
     await mountWithCleanup(WebClient);
@@ -518,15 +514,12 @@ test("cache search panel (onFinish called after anoter load - Filters)", async (
 
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "asustek\n2",
-        "agrolait\n2",
-    ]);
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "gold\n1",
-        "silver\n3",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`,
+    ).toEqual(["All", "asustek\n2", "agrolait\n2"]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["gold\n1", "silver\n3"]);
 
     // Go to a form view
     await getService("action").doAction(2);
@@ -551,9 +544,9 @@ test("cache search panel (onFinish called after anoter load - Filters)", async (
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "plop22\n99",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["plop22\n99"]);
 
     // resolve RPCs (2nd call) from the came back => must be ignored
     spSelectMultiRangeDef[1].resolve({
@@ -576,9 +569,9 @@ test("cache search panel (onFinish called after anoter load - Filters)", async (
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
-        "plop22\n99",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["plop22\n99"]);
 });
 
 test("sections with custom icon and color", async () => {
@@ -598,9 +591,13 @@ test("sections with custom icon and color", async () => {
     });
 
     expect(`.o_search_panel_section_header:eq(0) i`).toHaveClass("fa-car");
-    expect(`.o_search_panel_section_header:eq(0) i`).toHaveStyle({ color: "rgb(0, 0, 255)" });
+    expect(`.o_search_panel_section_header:eq(0) i`).toHaveStyle({
+        color: "rgb(0, 0, 255)",
+    });
     expect(`.o_search_panel_section_header:eq(1) i`).toHaveClass("fa-star");
-    expect(`.o_search_panel_section_header:eq(1) i`).toHaveStyle({ color: "rgb(0, 0, 0)" });
+    expect(`.o_search_panel_section_header:eq(1) i`).toHaveStyle({
+        color: "rgb(0, 0, 0)",
+    });
     expect(component.domain).toEqual([]);
 });
 
@@ -673,14 +670,14 @@ test("specify active category value in context and manually change category", as
         },
     });
     expect(
-        queryAllTexts`.o_search_panel_category_value header.active .o_search_panel_label`
+        queryAllTexts`.o_search_panel_category_value header.active .o_search_panel_label`,
     ).toEqual(["All", "GHI"]);
     expect(component.domain).toEqual([["state", "=", "ghi"]]);
 
     // select 'ABC' in the category 'state'
     await contains(queryAll`.o_search_panel_category_value header`[4]).click();
     expect(
-        queryAllTexts`.o_search_panel_category_value header.active .o_search_panel_label`
+        queryAllTexts`.o_search_panel_category_value header.active .o_search_panel_label`,
     ).toEqual(["All", "ABC"]);
     expect(component.domain).toEqual([["state", "=", "abc"]]);
 });
@@ -711,13 +708,21 @@ test("use category (on many2one) to refine search", async () => {
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:eq(1) .active`).toHaveCount(1);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "child_of", 3]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "child_of", 3],
+    ]);
 
     // select "agrolait"
     await contains(queryAll`.o_search_panel_category_value header`[2]).click();
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:eq(2) .active`).toHaveCount(1);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "child_of", 5]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "child_of", 5],
+    ]);
 
     // select "All"
     await contains(queryAll`.o_search_panel_category_value header`[0]).click();
@@ -828,13 +833,17 @@ test("use two categories to refine search", async () => {
 
     // select 'asustek'
     await contains(
-        `.o_search_panel_category_value header .o_search_panel_label_title:contains(asustek)`
+        `.o_search_panel_category_value header .o_search_panel_label_title:contains(asustek)`,
     ).click();
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "child_of", 3]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "child_of", 3],
+    ]);
 
     // select 'abc'
     await contains(
-        `.o_search_panel_category_value header .o_search_panel_label_title:contains(abc)`
+        `.o_search_panel_category_value header .o_search_panel_label_title:contains(abc)`,
     ).click();
     expect(component.domain).toEqual([
         "&",
@@ -846,7 +855,7 @@ test("use two categories to refine search", async () => {
 
     // select 'ghi'
     await contains(
-        `.o_search_panel_category_value header .o_search_panel_label_title:contains(ghi)`
+        `.o_search_panel_category_value header .o_search_panel_label_title:contains(ghi)`,
     ).click();
     expect(component.domain).toEqual([
         "&",
@@ -857,18 +866,22 @@ test("use two categories to refine search", async () => {
     ]);
 
     // select 'All' in first category (company_id)
-    await contains(`.o_search_panel_section:eq(0) .o_search_panel_category_value header`).click();
+    await contains(
+        `.o_search_panel_section:eq(0) .o_search_panel_category_value header`,
+    ).click();
     expect(component.domain).toEqual(["&", ["bar", "=", true], ["state", "=", "ghi"]]);
 
     // select 'All' in second category (state)
-    await contains(`.o_search_panel_section:eq(1) .o_search_panel_category_value header`).click();
+    await contains(
+        `.o_search_panel_section:eq(1) .o_search_panel_category_value header`,
+    ).click();
     expect(component.domain).toEqual([["bar", "=", true]]);
 });
 
 test("category with parent_field", async () => {
     Company._records.push(
         { id: 40, name: "child company 1", parent_id: 5 },
-        { id: 41, name: "child company 2", parent_id: 5 }
+        { id: 41, name: "child company 2", parent_id: 5 },
     );
     Partner._records[1].company_id = 40;
     Partner._views = {
@@ -898,14 +911,16 @@ test("category with parent_field", async () => {
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:first .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value`).toHaveCount(5);
-    expect(`.o_search_panel_category_value .o_search_panel_category_value`).toHaveCount(2);
+    expect(`.o_search_panel_category_value .o_search_panel_category_value`).toHaveCount(
+        2,
+    );
     expect(component.domain).toEqual([]);
 
     // click on first child company
     await contains(`.o_search_panel_category_value header:eq(3)`).click();
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(
-        `.o_search_panel_category_value .o_search_panel_category_value:first .active`
+        `.o_search_panel_category_value .o_search_panel_category_value:first .active`,
     ).toHaveCount(1);
     expect(component.domain).toEqual([["company_id", "child_of", 40]]);
 
@@ -967,7 +982,7 @@ test("category with no parent_field", async () => {
 test("can (un)fold parent category values", async () => {
     Company._records.push(
         { id: 40, name: "child company 1", parent_id: 5 },
-        { id: 41, name: "child company 2", parent_id: 5 }
+        { id: 41, name: "child company 2", parent_id: 5 },
     );
     Partner._records[1].company_id = 40;
     Partner._views = {
@@ -984,27 +999,29 @@ test("can (un)fold parent category values", async () => {
         resModel: "partner",
         searchViewId: false,
     });
-    expect(`.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i`).toHaveCount(1);
     expect(
-        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
+        `.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i`,
+    ).toHaveCount(1);
+    expect(
+        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`,
     ).toHaveClass("fa-caret-right");
     expect(`.o_search_panel_category_value`).toHaveCount(3);
 
     // unfold agrolait
     await contains(
-        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
+        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`,
     ).click();
     expect(
-        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
+        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`,
     ).toHaveClass("fa-caret-down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 
     // fold agrolait
     await contains(
-        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
+        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`,
     ).click();
     expect(
-        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
+        `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`,
     ).toHaveClass("fa-caret-right");
     expect(`.o_search_panel_category_value`).toHaveCount(3);
 });
@@ -1012,7 +1029,7 @@ test("can (un)fold parent category values", async () => {
 test("fold status is kept at reload", async () => {
     Company._records.push(
         { id: 40, name: "child company 1", parent_id: 5 },
-        { id: 41, name: "child company 2", parent_id: 5 }
+        { id: 41, name: "child company 2", parent_id: 5 },
     );
     Partner._records[1].company_id = 40;
     Partner._views = {
@@ -1032,16 +1049,18 @@ test("fold status is kept at reload", async () => {
     });
 
     // unfold agrolait
-    await contains(queryFirst`.o_search_panel_category_value > header:contains(agrolait)`).click();
+    await contains(
+        queryFirst`.o_search_panel_category_value > header:contains(agrolait)`,
+    ).click();
     expect(
-        queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`
+        queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`,
     ).toHaveClass("fa-caret-down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("True Domain");
     expect(
-        queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`
+        queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`,
     ).toHaveClass("fa-caret-down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 });
@@ -1099,14 +1118,22 @@ test("concurrency: delayed component update", async () => {
     await animationFrame();
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:first .active`).toHaveCount(1);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "child_of", 3]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "child_of", 3],
+    ]);
 
     // unlock agrolait search, there should now be 1 record
     agrolaitPromise.resolve();
     await animationFrame();
     expect(`.o_search_panel_category_value .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:eq(2) .active`).toHaveCount(1);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "child_of", 5]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "child_of", 5],
+    ]);
 });
 
 test("concurrency: single category", async () => {
@@ -1346,19 +1373,31 @@ test("use filter (on many2one) to refine search", async () => {
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
     expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "in", [3]],
+    ]);
 
     // check 'agrolait'
     await contains(queryAll`.o_search_panel_filter_value:eq(1) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(2);
     expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3, 5]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "in", [3, 5]],
+    ]);
 
     // uncheck 'asustek'
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
     expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [5]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "in", [5]],
+    ]);
 
     // uncheck 'agrolait'
     await contains(queryAll`.o_search_panel_filter_value:eq(1) input`).click();
@@ -1393,19 +1432,31 @@ test("use filter (on selection) to refine search", async () => {
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
     expect(getFiltersContent()).toEqual(["ABC: 1", "DEF: 1", "GHI: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["state", "in", ["abc"]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["state", "in", ["abc"]],
+    ]);
 
     // check 'def'
     await contains(queryAll`.o_search_panel_filter_value:eq(1) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(2);
     expect(getFiltersContent()).toEqual(["ABC: 1", "DEF: 1", "GHI: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["state", "in", ["abc", "def"]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["state", "in", ["abc", "def"]],
+    ]);
 
     // uncheck 'abc'
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
     expect(getFiltersContent()).toEqual(["ABC: 1", "DEF: 1", "GHI: 1"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["state", "in", ["def"]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["state", "in", ["def"]],
+    ]);
 
     // uncheck 'def'
     await contains(queryAll`.o_search_panel_filter_value:eq(1) input`).click();
@@ -1433,7 +1484,10 @@ test("only reload categories and filters when domains change (counters disabled,
         searchViewId: false,
     });
 
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
 
     // reload with another domain, so the filters should be reloaded
     await toggleSearchBarMenu();
@@ -1463,7 +1517,10 @@ test("only reload categories and filters when domains change (counters disabled,
         resModel: "partner",
         searchViewId: false,
     });
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
 
     // reload with another domain, so the filters should be reloaded
     await toggleSearchBarMenu();
@@ -1597,32 +1654,45 @@ test("filter with groupby", async () => {
         domain: [["bar", "=", true]],
     });
     expect(`.o_search_panel_filter_group`).toHaveCount(2);
-    expect(`.o_search_panel_filter_group:first .o_search_panel_filter_value`).toHaveCount(1);
+    expect(
+        `.o_search_panel_filter_group:first .o_search_panel_filter_value`,
+    ).toHaveCount(1);
     expect(`.o_search_panel_filter_group:eq(0) header`).toHaveText("gold");
-    expect(queryAllTexts`.o_search_panel_filter_group:eq(0) .o_search_panel_filter_value`).toEqual([
-        "asustek\n2",
-    ]);
-    expect(`.o_search_panel_filter_group:eq(1) .o_search_panel_filter_value`).toHaveCount(2);
+    expect(
+        queryAllTexts`.o_search_panel_filter_group:eq(0) .o_search_panel_filter_value`,
+    ).toEqual(["asustek\n2"]);
+    expect(
+        `.o_search_panel_filter_group:eq(1) .o_search_panel_filter_value`,
+    ).toHaveCount(2);
     expect(`.o_search_panel_filter_group:eq(1) header`).toHaveText("silver");
-    expect(queryAllTexts`.o_search_panel_filter_group:eq(1) .o_search_panel_filter_value`).toEqual([
-        "agrolait\n1",
-        "camptocamp",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_filter_group:eq(1) .o_search_panel_filter_value`,
+    ).toEqual(["agrolait\n1", "camptocamp"]);
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(0);
     expect(component.domain).toEqual([["bar", "=", true]]);
 
     // check 'asustek'
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
-    expect(queryFirst(`.o_search_panel_filter_group:eq(0) header > div > input`)).toBeChecked();
+    expect(
+        queryFirst(`.o_search_panel_filter_group:eq(0) header > div > input`),
+    ).toBeChecked();
     expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait", "camptocamp"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "in", [3]],
+    ]);
 
     // check 'agrolait'
     await contains(queryAll`.o_search_panel_filter_value:eq(1) input`).click();
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(2);
-    expect(queryFirst(`.o_search_panel_filter_group:eq(1) header > div > input`)).not.toBeChecked();
-    expect(queryFirst(`.o_search_panel_filter_group:eq(1) header > div > input`)).toBeChecked({
+    expect(
+        queryFirst(`.o_search_panel_filter_group:eq(1) header > div > input`),
+    ).not.toBeChecked();
+    expect(
+        queryFirst(`.o_search_panel_filter_group:eq(1) header > div > input`),
+    ).toBeChecked({
         indeterminate: true,
     });
     expect(getFiltersContent()).toEqual(["asustek", "agrolait", "camptocamp"]);
@@ -1658,7 +1728,11 @@ test("filter with groupby", async () => {
         indeterminate: true,
     });
     expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait", "camptocamp"]);
-    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3]]]);
+    expect(component.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_id", "in", [3]],
+    ]);
 });
 
 test("filter with domain", async () => {
@@ -1827,7 +1901,9 @@ test("filter with groupby and default values in context", async () => {
             searchpanel_default_company_id: [5],
         },
     });
-    expect(queryFirst`.o_search_panel_filter_group:eq(1) header > div > input`).toBeChecked({
+    expect(
+        queryFirst`.o_search_panel_filter_group:eq(1) header > div > input`,
+    ).toBeChecked({
         indeterminate: true,
     });
     expect(component.domain).toEqual([["company_id", "in", [5]]]);
@@ -1861,9 +1937,9 @@ test('Does not confuse false and "false" groupby values', async () => {
     // There should be a group 'false' displayed with only value B inside it.
     expect(`.o_search_panel_filter_group`).toHaveCount(1);
     expect(`.o_search_panel_filter_group header`).toHaveText("false");
-    expect(queryAllTexts`.o_search_panel_filter_group:eq(0) .o_search_panel_filter_value`).toEqual([
-        "B",
-    ]);
+    expect(
+        queryAllTexts`.o_search_panel_filter_group:eq(0) .o_search_panel_filter_value`,
+    ).toEqual(["B"]);
     expect(`.o_search_panel_filter_group .o_search_panel_filter_value`).toHaveCount(1);
 
     // Globally, there should be two values, one displayed in the group 'false', and one at the end of the section
@@ -1875,7 +1951,7 @@ test('Does not confuse false and "false" groupby values', async () => {
 test("tests conservation of category record order", async () => {
     Company._records.push(
         { id: 56, name: "highID", category_id: 6 },
-        { id: 2, name: "lowID", category_id: 6 }
+        { id: 2, name: "lowID", category_id: 6 },
     );
     Partner._views = {
         search: /* xml */ `
@@ -1892,7 +1968,13 @@ test("tests conservation of category record order", async () => {
         resModel: "partner",
         searchViewId: false,
     });
-    expect(getCategoriesContent()).toEqual(["All", "lowID", "asustek: 2", "agrolait: 2", "highID"]);
+    expect(getCategoriesContent()).toEqual([
+        "All",
+        "lowID",
+        "asustek: 2",
+        "agrolait: 2",
+        "highID",
+    ]);
 });
 
 test("search panel is available on list and kanban by default", async () => {
@@ -2099,7 +2181,7 @@ test("categories and filters are loaded when switching from a view without the s
                 ],
             },
         ],
-        { mode: "replace" }
+        { mode: "replace" },
     );
 
     onRpc(/search_panel_/, ({ method }) => expect.step(method));
@@ -2109,7 +2191,10 @@ test("categories and filters are loaded when switching from a view without the s
     expect.verifySteps([]);
 
     await getService("action").switchView("list");
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
 
     await getService("action").switchView("kanban");
     expect.verifySteps([]);
@@ -2202,7 +2287,9 @@ test("search panel is not instantiated in dialogs", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1, { viewType: "form" });
     await contains(`.o_field_widget[name="company_id"] .dropdown input`).click();
-    await contains(`.o_field_widget[name="company_id"] .o_m2o_dropdown_option_search_more`).click();
+    await contains(
+        `.o_field_widget[name="company_id"] .o_m2o_dropdown_option_search_more`,
+    ).click();
     expect(`.modal .o_list_view`).toHaveCount(1);
     expect(`.modal .o_search_panel`).toHaveCount(0);
 });
@@ -2224,20 +2311,26 @@ test("Reload categories with counters when filter values are selected", async ()
         resModel: "partner",
         searchViewId: false,
     });
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
     expect(getCategoriesCounter()).toEqual([1, 3]);
     expect(getFiltersCounter()).toEqual([1, 1, 2]);
 
     await contains(queryAll`.o_search_panel_filter_value:eq(0) input`).click();
     expect(getCategoriesCounter()).toEqual([1]);
     expect(getFiltersCounter()).toEqual([1, 1, 2]);
-    expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+    expect.verifySteps([
+        "search_panel_select_range",
+        "search_panel_select_multi_range",
+    ]);
 });
 
 test("many2one: select one, expand, hierarchize, counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2266,7 +2359,7 @@ test("many2one: select one, expand, hierarchize, counters", async () => {
 test("many2one: select one, no expand, hierarchize, counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2295,7 +2388,7 @@ test("many2one: select one, no expand, hierarchize, counters", async () => {
 test("many2one: select one, expand, no hierarchize, counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2320,7 +2413,7 @@ test("many2one: select one, expand, no hierarchize, counters", async () => {
 test("many2one: select one, no expand, no hierarchize, counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2345,7 +2438,7 @@ test("many2one: select one, no expand, no hierarchize, counters", async () => {
 test("many2one: select one, expand, hierarchize, no counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2374,7 +2467,7 @@ test("many2one: select one, expand, hierarchize, no counters", async () => {
 test("many2one: select one, no expand, hierarchize, no counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2403,7 +2496,7 @@ test("many2one: select one, no expand, hierarchize, no counters", async () => {
 test("many2one: select one, expand, no hierarchize, no counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -2428,7 +2521,7 @@ test("many2one: select one, expand, no hierarchize, no counters", async () => {
 test("many2one: select one, no expand, no hierarchize, no counters", async () => {
     Company._records.push(
         { id: 50, name: "agrobeurre", parent_id: 5 },
-        { id: 51, name: "agrocrèmefraiche", parent_id: 5 }
+        { id: 51, name: "agrocrèmefraiche", parent_id: 5 },
     );
     Partner._records[1].company_id = 50;
     Partner._views = {
@@ -3128,9 +3221,11 @@ test("Category with counters and filter with domain and context", async () => {
         `,
     };
 
-    onRpc("search_panel_select_range", ({ kwargs }) => expect.step(kwargs.context.special_key));
+    onRpc("search_panel_select_range", ({ kwargs }) =>
+        expect.step(kwargs.context.special_key),
+    );
     onRpc("search_panel_select_multi_range", ({ kwargs }) =>
-        expect.step(kwargs.context.special_key)
+        expect.step(kwargs.context.special_key),
     );
     await mountWithSearch(TestComponent, {
         resModel: "partner",
@@ -3395,8 +3490,12 @@ test("search panel with sample data", async () => {
     await getService("action").doAction(1);
 
     await getService("action").switchView("kanban");
-    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({ "pointer-events": "auto" });
+    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({
+        "pointer-events": "auto",
+    });
 
     await getService("action").switchView("list");
-    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({ "pointer-events": "auto" });
+    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({
+        "pointer-events": "auto",
+    });
 });

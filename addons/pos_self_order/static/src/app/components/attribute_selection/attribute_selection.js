@@ -1,5 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+
 import { AttributeSelectionHelper } from "./attribute_selection_helper";
 
 export class AttributeSelection extends Component {
@@ -26,7 +27,8 @@ export class AttributeSelection extends Component {
 
     availableAttributeValue(attribute) {
         const isKiosk = this.selfOrder.kioskMode;
-        const isNoVariantCreation = attribute.attribute_id.create_variant === "no_variant";
+        const isNoVariantCreation =
+            attribute.attribute_id.create_variant === "no_variant";
         return attribute.product_template_value_ids.filter((a) => {
             if (isKiosk && a.is_custom) {
                 return false;
@@ -47,7 +49,8 @@ export class AttributeSelection extends Component {
             return null;
         }
 
-        const value = this.selfOrder.models["product.template.attribute.value"].get(valueId);
+        const value =
+            this.selfOrder.models["product.template.attribute.value"].get(valueId);
         if (value?.is_custom) {
             return value;
         }

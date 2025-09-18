@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
@@ -7,10 +9,9 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
+import { scanBarcode } from "@web/components/barcode/barcode_dialog";
+import { BarcodeVideoScanner } from "@web/components/barcode/barcode_video_scanner";
 import { browser } from "@web/core/browser/browser";
-import { scanBarcode } from "@web/core/barcode/barcode_dialog";
-import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { WebClient } from "@web/webclient/webclient";
 
 /* global ZXing */
@@ -36,7 +37,7 @@ test("Barcode scanner crop overlay", async () => {
             ZXing.BarcodeFormat.QR_CODE,
             250,
             250,
-            null
+            null,
         );
         canvas.width = bitMatrix.width;
         canvas.height = bitMatrix.height;
@@ -75,6 +76,7 @@ test("Barcode scanner crop overlay", async () => {
 
     const firstBarcodeFound = scanBarcode(env);
     await videoReady;
+    await animationFrame();
     await contains(".o_crop_icon").dragAndDrop(".o_crop_container", {
         relative: true,
         position: {
@@ -95,6 +97,7 @@ test("Barcode scanner crop overlay", async () => {
 
     const secondBarcodeFound = scanBarcode(env);
     await videoReady;
+    await animationFrame();
     const secondValueScanned = await secondBarcodeFound;
     expect(secondValueScanned).toBe(secondBarcodeValue, {
         message: `The detected barcode (${secondValueScanned}) should be the same as generated (${secondBarcodeValue})`,
@@ -156,17 +159,17 @@ test("Closing barcode scanner before camera loads should not throw an error", as
     scanBarcode(env);
 
     await animationFrame();
-    expect(".o-barcode-modal").toHaveCount(1)
+    expect(".o-barcode-modal").toHaveCount(1);
 
     await press("escape");
 
     await animationFrame();
-    expect(".o-barcode-modal").toHaveCount(0)
+    expect(".o-barcode-modal").toHaveCount(0);
 
     cameraReady.resolve();
 
-    await animationFrame()
-    expect(".o_error_dialog").toHaveCount(0)
+    await animationFrame();
+    expect(".o_error_dialog").toHaveCount(0);
 });
 
 test("Closing barcode scanner while video is loading should not cause errors", async () => {
@@ -185,13 +188,13 @@ test("Closing barcode scanner while video is loading should not cause errors", a
     scanBarcode(env);
 
     await animationFrame();
-    expect(".o-barcode-modal").toHaveCount(1)
+    expect(".o-barcode-modal").toHaveCount(1);
 
     await press("escape");
 
     await animationFrame();
-    expect(".o-barcode-modal").toHaveCount(0)
+    expect(".o-barcode-modal").toHaveCount(0);
 
-    await animationFrame()
-    expect(".o_error_dialog").toHaveCount(0)
+    await animationFrame();
+    expect(".o_error_dialog").toHaveCount(0);
 });

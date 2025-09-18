@@ -46,7 +46,7 @@ def preserve_existing_tags_on_taxes(env, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
     if xml_records:
-        env.cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
+        env.cr.execute("update ir_model_data set noupdate = 't' where id = ANY(%s)", [list(xml_records.ids)])
 
 
 def template(template=None, model='template_data'):
@@ -1397,7 +1397,7 @@ class AccountChartTemplate(models.AbstractModel):
 
             translatable_field_column_args = []
             for field in translatable_fields:
-                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier(query.table, field)))
+                translatable_field_column_args.extend((SQL("%s::text", field), SQL.identifier(query.table, field)))
 
             queries.append(SQL(
                 """
@@ -1411,7 +1411,7 @@ class AccountChartTemplate(models.AbstractModel):
                   WHERE %(where_clause)s
                         AND (%(missing_translation_clauses)s)
                 """,
-                model=model,
+                model=SQL("%s::text", model),
                 translatable_field_column_args=SQL(", ").join(translatable_field_column_args),
                 from_clause=query.from_clause,
                 model_id=SQL.identifier(query.table, 'id'),
@@ -1469,6 +1469,7 @@ class AccountChartTemplate(models.AbstractModel):
             chart_template_data = template_data or self.env['account.chart.template'] \
                 .with_context(ignore_missing_tags=True) \
                 .with_company(company) \
+                .sudo() \
                 ._get_chart_template_data(company.chart_template)
             chart_template_data.pop('template_data', None)
             for mname, data in chart_template_data.items():

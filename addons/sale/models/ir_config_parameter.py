@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, models
 from odoo.tools.misc import str2bool
 
@@ -7,7 +5,7 @@ from odoo.addons.sale import const
 
 
 class IrConfigParameter(models.Model):
-    _inherit = 'ir.config_parameter'
+    _inherit = "ir.config_parameter"
 
     @api.model_create_multi
     def create(self, vals_list):

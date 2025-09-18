@@ -1,8 +1,11 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+// @ts-check
+
+/** @module @web/views/form/status_bar_buttons/status_bar_buttons - Renders action buttons in the form status bar with overflow dropdown */
 
 import { Component } from "@odoo/owl";
-
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+/** Renders action buttons inside the form status bar, with overflow dropdown for excess items. */
 export class StatusBarButtons extends Component {
     static template = "web.StatusBarButtons";
     static components = {
@@ -13,6 +16,7 @@ export class StatusBarButtons extends Component {
         slots: { type: Object, optional: 1 },
     };
 
+    /** @returns {string[]} names of slots whose `isVisible` flag is true */
     get visibleSlotNames() {
         if (!this.props.slots) {
             return [];

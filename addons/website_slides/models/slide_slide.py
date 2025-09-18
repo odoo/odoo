@@ -9,7 +9,7 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug import urls
+from urllib.parse import urlencode, urlsplit
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
@@ -400,7 +400,7 @@ class SlideSlide(models.Model):
             embed_code_external = False
             if slide.slide_category == 'video':
                 if slide.video_source_type == 'youtube':
-                    query_params = urls.url_parse(slide.video_url).query
+                    query_params = urlsplit(slide.video_url).query
                     query_params = query_params + '&theme=light' if query_params else 'theme=light'
                     embed_code = Markup('<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>') % (slide.youtube_id, query_params, _('YouTube'))
                 elif slide.video_source_type == 'google_drive':
@@ -707,7 +707,7 @@ class SlideSlide(models.Model):
         self.ensure_one()
 
         url_entry = url
-        if not urls.url_parse(url).netloc:
+        if not urlsplit(url).netloc:
             url_entry = False
 
         embed_entry = self.env['slide.embed'].search([
@@ -1190,7 +1190,7 @@ class SlideSlide(models.Model):
         error_message = False
         try:
             response = requests.get(
-                'https://vimeo.com/api/oembed.json?%s' % urls.url_encode({'url': self.video_url}),
+                'https://vimeo.com/api/oembed.json?%s' % urlencode({'url': self.video_url}),
                 timeout=3
             )
             response.raise_for_status()
@@ -1255,7 +1255,7 @@ class SlideSlide(models.Model):
 
         if data_bytes.startswith(b'%PDF-'):
             try:
-                pdf = PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
+                pdf = PdfFileReader(io.BytesIO(data_bytes))
                 return (5 * len(pdf.pages)) / 60
             except Exception:
                 pass  # as this is a nice to have, fail silently

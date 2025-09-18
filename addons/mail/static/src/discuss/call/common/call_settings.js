@@ -1,15 +1,13 @@
-import { Component, onWillStart, useExternalListener, useState, xml } from "@odoo/owl";
-
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { debounce } from "@web/core/utils/timing";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { useService } from "@web/core/utils/hooks";
-import { useMicrophoneVolume } from "@mail/utils/common/hooks";
-import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
-import { Dialog } from "@web/core/dialog/dialog";
-
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { useMicrophoneVolume } from "@mail/utils/common/hooks";
+import { Component, onWillStart, useExternalListener, useState, xml } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
     static props = ["withActionPanel?", "*"];
@@ -31,13 +29,13 @@ export class CallSettings extends Component {
         this.saveBackgroundBlurAmount = debounce(() => {
             browser.localStorage.setItem(
                 "mail_user_setting_background_blur_amount",
-                this.store.settings.backgroundBlurAmount.toString()
+                this.store.settings.backgroundBlurAmount.toString(),
             );
         }, 2000);
         this.saveEdgeBlurAmount = debounce(() => {
             browser.localStorage.setItem(
                 "mail_user_setting_edge_blur_amount",
-                this.store.settings.edgeBlurAmount.toString()
+                this.store.settings.edgeBlurAmount.toString(),
             );
         }, 2000);
         useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
@@ -47,12 +45,15 @@ export class CallSettings extends Component {
                 // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
                 this.notification.add(
                     _t("Media devices unobtainable. SSL might not be set up properly."),
-                    { type: "warning" }
+                    { type: "warning" },
                 );
-                console.warn("Media devices unobtainable. SSL might not be set up properly.");
+                console.warn(
+                    "Media devices unobtainable. SSL might not be set up properly.",
+                );
                 return;
             }
-            this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
+            this.state.userDevices =
+                await browser.navigator.mediaDevices.enumerateDevices();
         });
     }
 
@@ -65,11 +66,15 @@ export class CallSettings extends Component {
     }
 
     get pushToTalkKeyText() {
-        const { shiftKey, ctrlKey, altKey, key } = this.store.settings.pushToTalkKeyFormat();
+        const { shiftKey, ctrlKey, altKey, key } =
+            this.store.settings.pushToTalkKeyFormat();
         const f = (k, name) => (k ? name : "");
-        const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
-            Boolean
-        );
+        const keys = [
+            f(ctrlKey, "Ctrl"),
+            f(altKey, "Alt"),
+            f(shiftKey, "Shift"),
+            key,
+        ].filter(Boolean);
         return keys.join(" + ");
     }
 
@@ -116,7 +121,7 @@ export class CallSettings extends Component {
     }
 
     onChangeBlur(ev) {
-        this.store.settings.useBlur = ev.target.checked;
+        this.store.settings.setUseBlur(ev.target.checked);
     }
 
     onChangeShowOnlyVideo(ev) {
@@ -124,7 +129,7 @@ export class CallSettings extends Component {
         this.store.settings.showOnlyVideo = showOnlyVideo;
         browser.localStorage.setItem(
             "mail_user_setting_show_only_video",
-            this.store.settings.showOnlyVideo
+            this.store.settings.showOnlyVideo,
         );
         const activeRtcSessions = this.store.allActiveRtcSessions;
         if (showOnlyVideo && activeRtcSessions) {

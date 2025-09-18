@@ -174,7 +174,7 @@ class TestMrpMulticompany(common.TransactionCase):
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = lot_b
             ml.quantity = 1

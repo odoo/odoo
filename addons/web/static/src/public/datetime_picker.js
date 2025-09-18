@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/public/datetime_picker - Public interaction that attaches a datetime picker to data-widget elements */
+
 import {
     deserializeDate,
     deserializeDateTime,
@@ -18,7 +22,8 @@ export class DatetimePicker extends Interaction {
 
     start() {
         const parseFunction = this.type === "date" ? parseDate : parseDateTime;
-        const deserializeFunction = this.type === "date" ? deserializeDate : deserializeDateTime;
+        const deserializeFunction =
+            this.type === "date" ? deserializeDate : deserializeDateTime;
         this.registerCleanup(
             this.services.datetime_picker
                 .create({
@@ -27,10 +32,12 @@ export class DatetimePicker extends Interaction {
                         type: this.type,
                         minDate: this.minDate && deserializeFunction(this.minDate),
                         maxDate: this.maxDate && deserializeFunction(this.maxDate),
-                        value: parseFunction(this.el.value),
+                        value: parseFunction(
+                            /** @type {HTMLInputElement} */ (this.el).value,
+                        ),
                     },
                 })
-                .enable()
+                .enable(),
         );
     }
 }

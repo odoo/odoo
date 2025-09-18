@@ -1,7 +1,7 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as CustomerDisplay from "@point_of_sale/../tests/customer_display/customer_display_utils";
 import { registry } from "@web/core/registry";
-import { isVisible } from "@web/core/utils/ui";
+import { isVisible } from "@web/core/utils/dom/ui";
 
 registry.category("web_tour.tours").add("CustomerDisplayTour", {
     steps: () =>

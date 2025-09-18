@@ -1,6 +1,9 @@
+// @ts-check
+
 /* eslint no-restricted-syntax: 0 */
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
     makeMockEnv,
@@ -10,11 +13,13 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import {
+    _t as basic_t,
+    translatedTerms,
+    translationLoaded,
+} from "@web/core/l10n/translation";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { session } from "@web/session";
-
-import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
 function _t() {
@@ -188,7 +193,9 @@ test("[cache] update the cache if hash are different - template", async () => {
                     thousands_sep: ",",
                     week_start: 7,
                 },
-                modules: { web: { messages: [{ id: "Hello", string: "Different Bonjour" }] } },
+                modules: {
+                    web: { messages: [{ id: "Hello", string: "Different Bonjour" }] },
+                },
                 multi_lang: false,
                 hash: "30b",
             };
@@ -348,55 +355,73 @@ test("luxon is configured in the correct lang", async () => {
 test.tags("headless");
 test("arabic has the correct numbering system (generic)", async () => {
     await mockLang("ar_001");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠",
+    );
 });
 
 test.tags("headless");
 test("arabic has the correct numbering system (Algeria)", async () => {
     await mockLang("ar_DZ");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "10/12/2021 12:00:00",
+    );
 });
 
 test.tags("headless");
 test("arabic has the correct numbering system (Lybia)", async () => {
     await mockLang("ar_LY");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "10/12/2021 12:00:00",
+    );
 });
 
 test.tags("headless");
 test("arabic has the correct numbering system (Morocco)", async () => {
     await mockLang("ar_MA");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "10/12/2021 12:00:00",
+    );
 });
 
 test.tags("headless");
 test("arabic has the correct numbering system (Saudi Arabia)", async () => {
     await mockLang("ar_SA");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠",
+    );
 });
 
 test.tags("headless");
 test("arabic has the correct numbering system (Tunisia)", async () => {
     await mockLang("ar_TN");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "10/12/2021 12:00:00",
+    );
 });
 
 test.tags("headless");
 test("bengalese has the correct numbering system", async () => {
     await mockLang("bn");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("১০/১২/২০২১ ১২:০০:০০");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "১০/১২/২০২১ ১২:০০:০০",
+    );
 });
 
 test.tags("headless");
 test("punjabi (gurmukhi) has the correct numbering system", async () => {
     await mockLang("pa_IN");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦",
+    );
 });
 
 test.tags("headless");
 test("tamil has the correct numbering system", async () => {
     await mockLang("ta");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("௧௦/௧௨/௨௦௨௧ ௧௨:௦௦:௦௦");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe(
+        "௧௦/௧௨/௨௦௨௧ ௧௨:௦௦:௦௦",
+    );
 });
 
 test.tags("headless");
@@ -445,23 +470,25 @@ describe.tags("headless");
 describe("_t with markups", () => {
     test("non-markup values are escaped", () => {
         translatedTerms[translationLoaded] = true;
-        const maliciousUserInput = "<script>alert('This should've been escaped')</script>";
+        const maliciousUserInput =
+            "<script>alert('This should've been escaped')</script>";
         const translatedStr = _t(
             "FREE %(blink_start)sROBUX%(blink_end)s, please contact %(email)s",
             {
                 blink_start: markup`<blink>`,
                 blink_end: markup`</blink>`,
                 email: maliciousUserInput,
-            }
+            },
         );
         expect(translatedStr).toBeInstanceOf(markup().constructor);
         expect(translatedStr.valueOf()).toBe(
-            "FREE <blink>ROBUX</blink>, please contact &lt;script&gt;alert(&#x27;This should&#x27;ve been escaped&#x27;)&lt;/script&gt;"
+            "FREE <blink>ROBUX</blink>, please contact &lt;script&gt;alert(&#x27;This should&#x27;ve been escaped&#x27;)&lt;/script&gt;",
         );
     });
     test("translations are escaped", () => {
         translatedTerms[translationLoaded] = true;
-        const maliciousTranslation = "<script>document.write('pizza hawai')</script> %s";
+        const maliciousTranslation =
+            "<script>document.write('pizza hawai')</script> %s";
         patchTranslations({
             web: {
                 "I love %s": maliciousTranslation,
@@ -469,7 +496,7 @@ describe("_t with markups", () => {
         });
         const translatedStr = _t("I love %s", markup`<blink>Mario Kart</blink>`);
         expect(translatedStr.valueOf()).toBe(
-            "&lt;script&gt;document.write(&#x27;pizza hawai&#x27;)&lt;/script&gt; <blink>Mario Kart</blink>"
+            "&lt;script&gt;document.write(&#x27;pizza hawai&#x27;)&lt;/script&gt; <blink>Mario Kart</blink>",
         );
     });
 });

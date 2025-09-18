@@ -3,7 +3,7 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
-import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
+import { groupBy, sortBy, unique } from "@web/core/utils/collections/arrays";
 
 const { DateTime } = luxon;
 

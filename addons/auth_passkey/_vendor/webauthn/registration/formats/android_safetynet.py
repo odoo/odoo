@@ -6,7 +6,6 @@ from typing import List
 
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.backends import default_backend
 from cryptography.x509.oid import NameOID
 
 from ....webauthn.helpers.cose import COSEAlgorithmIdentifier
@@ -149,7 +148,7 @@ def verify_android_safetynet(
             raise InvalidRegistrationResponse(f"{err} (SafetyNet)")
 
     # Verify that the leaf certificate was issued to the hostname attest.android.com
-    attestation_cert = x509.load_der_x509_certificate(x5c[0], default_backend())
+    attestation_cert = x509.load_der_x509_certificate(x5c[0])
     cert_common_name = attestation_cert.subject.get_attributes_for_oid(
         NameOID.COMMON_NAME,
     )[0]

@@ -5,7 +5,7 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.libs.numbers.float_utils import float_compare, float_round
 
 
 class RatingMixin(models.AbstractModel):
@@ -40,9 +40,9 @@ class RatingMixin(models.AbstractModel):
             FROM "rating_rating"
             WHERE
                 res_model = %s
-            AND res_id in %s
+            AND res_id = ANY(%s)
             AND consumed = true
-            GROUP BY res_id""", [self._name, tuple(self.ids)])
+            GROUP BY res_id""", [self._name, list(self.ids)])
         read_group_raw = self.env.cr.dictfetchall()
         rating_by_res_id = {e['res_id']: e['ratings'][0] for e in read_group_raw}
         for record in self:

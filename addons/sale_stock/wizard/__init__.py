@@ -1,5 +1,1 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from . import accrued_orders
-from . import stock_rules_report
-from . import stock_return_picking
+from . import accrued_orders, stock_rules_report, stock_return_picking, res_config_settings

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, edit, pointerDown, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -49,7 +51,9 @@ test("html field with required attribute", async () => {
         arch: /* xml */ `<form><field name="txt" required="1"/></form>`,
     });
 
-    expect(".o_field_html textarea").toHaveCount(1, { message: "should have a text area" });
+    expect(".o_field_html textarea").toHaveCount(1, {
+        message: "should have a text area",
+    });
     await click(".o_field_html textarea");
     await edit("");
     await animationFrame();
@@ -68,7 +72,9 @@ test("html fields are correctly rendered (edit)", async () => {
         arch: /* xml */ `<form><field name="txt" /></form>`,
     });
 
-    expect(".o_field_html textarea").toHaveCount(1, { message: "should have a text area" });
+    expect(".o_field_html textarea").toHaveCount(1, {
+        message: "should have a text area",
+    });
     expect(".o_field_html textarea").toHaveValue(RED_TEXT);
     await click(".o_field_html textarea");
     await edit(GREEN_TEXT);
@@ -94,7 +100,7 @@ test("html fields are correctly rendered in list view", async () => {
     await click(".o_data_row [name='txt']");
     await animationFrame();
     expect(".o_data_row [name='txt'] textarea").toHaveValue(
-        '<div class="kek" style="color:red">some text</div>'
+        '<div class="kek" style="color:red">some text</div>',
     );
 });
 
@@ -185,7 +191,7 @@ test("field html translatable", async () => {
                     },
                 },
             ],
-            { message: "the new translation value should be written" }
+            { message: "the new translation value should be written" },
         );
         return [];
     });

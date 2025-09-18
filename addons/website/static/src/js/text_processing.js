@@ -1,4 +1,4 @@
-import { isVisible } from "@web/core/utils/ui";
+import { isVisible } from "@web/core/utils/dom/ui";
 
 //TODO: Delete higlight function (duplicate whith highlight_utils) when deleting snippets options
 // SVG generator: contains all information needed to draw highlight SVGs

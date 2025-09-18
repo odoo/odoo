@@ -70,7 +70,10 @@ export class Logger {
                     transaction.onerror = (e) => rej(e.target.error);
                 });
             } catch (error) {
-                console.error(`Failed to clear logs for logger "${logger._name}":`, error);
+                console.error(
+                    `Failed to clear logs for logger "${logger._name}":`,
+                    error,
+                );
             }
         }
     }
@@ -123,7 +126,8 @@ export class Logger {
         const store = transaction.objectStore("logs");
         const request = store.getAll();
         return new Promise((res, rej) => {
-            request.onsuccess = (ev) => res(ev.target.result.map(({ message }) => message));
+            request.onsuccess = (ev) =>
+                res(ev.target.result.map(({ message }) => message));
             request.onerror = rej;
         });
     }

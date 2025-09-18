@@ -29,10 +29,10 @@ class MailThread(models.AbstractModel):
                        AND notif.notification_status = 'exception'
                        AND notif.author_id = %(author_id)s
                        AND msg.model = %(model_name)s
-                       AND msg.res_id in %(res_ids)s
+                       AND msg.res_id = ANY(%(res_ids)s)
                        AND msg.message_type != 'user_notification'
                   GROUP BY msg.res_id
-            """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': tuple(self.ids)})
+            """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': list(self.ids)})
             res.update(self.env.cr.fetchall())
 
         for record in self:

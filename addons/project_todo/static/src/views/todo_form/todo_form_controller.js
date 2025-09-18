@@ -1,9 +1,9 @@
 import { markup, onWillStart } from "@odoo/owl";
 
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { FormControllerWithHTMLExpander } from "@resource/views/form_with_html_expander/form_controller_with_html_expander";
 import { TodoFormCogMenu } from "./todo_form_cog_menu";
@@ -52,7 +52,7 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
             filteredActions.push({
                 description: _t("Convert to Task"),
                 callback: () => {
-                    this.model.action.doAction(
+                    this.actionService.doAction(
                         "project_todo.project_task_action_convert_todo_to_task",
                         {
                             props: {

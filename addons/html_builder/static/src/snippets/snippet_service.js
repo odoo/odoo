@@ -1,10 +1,10 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { markup, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -197,7 +197,7 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: snippetEl.dataset.oeThumbnail,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
-                    label: this.getSnippetLabel(snippetEl),
+                    label: "",
                     isDisabled: false,
                     forbidSanitize: false,
                     gridColumnSpan: 0,
@@ -229,6 +229,7 @@ export class SnippetModel extends Reactive {
                         snippet.isCustom = true;
                         break;
                 }
+                snippet.label = this.getSnippetLabel(snippetEl, snippet.isCustom);
                 if (["snippet_structure", "snippet_content"].includes(snippetCategory.id)) {
                     this.originalSnippets[snippet.name] ??= snippet;
                 }
@@ -438,9 +439,10 @@ export class SnippetModel extends Reactive {
      * Gets the label of the snippet.
      *
      * @param {HTMLElement} snippetEl
+     * @param {boolean} [isCustom = false]
      * @returns {String}
      */
-    getSnippetLabel(snippetEl) {
+    getSnippetLabel(snippetEl, isCustom = false) {
         return snippetEl.dataset.oLabel;
     }
 }

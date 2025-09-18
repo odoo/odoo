@@ -2,19 +2,17 @@
 #
 # Runme From the repo toplevel directory
 #
-from __future__ import print_function
-import subprocess
 import glob
+import pathlib
 import re
-import pprint
-
+import subprocess
 
 cla_glob = "doc/cla/*/*.md"
-cla = ''.join(open(f).read() for f in glob.glob(cla_glob))
+cla = ''.join(pathlib.Path(f).open().read() for f in glob.glob(cla_glob))
 cla = cla.lower()
 
 def cla_signed(email):
-    if re.match('.*(odoo|openerp|tinyerp).com$',email):
+    if re.match(r'.*(odoo|openerp|tinyerp).com$',email):
         return True
     if cla.find(email) != -1:
         return True

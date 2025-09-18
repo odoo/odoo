@@ -4,7 +4,7 @@
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-import psycopg2.errors
+import psycopg.errors
 
 from odoo import api
 from odoo.modules.registry import Registry
@@ -40,7 +40,7 @@ class TestOnboardingConcurrency(BaseCase):
                 ('onboarding_id', '=', cls.onboarding_id)
             ]).unlink()
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_concurrent_create_progress(self):
         barrier = threading.Barrier(2)
 
@@ -57,7 +57,7 @@ class TestOnboardingConcurrency(BaseCase):
                 barrier.wait(timeout=2)
                 try:
                     onboarding._create_progress()
-                except psycopg2.errors.UniqueViolation:
+                except psycopg.errors.UniqueViolation:
                     return True
 
             return False

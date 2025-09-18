@@ -1,7 +1,7 @@
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { patch } from "@web/core/utils/patch";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { onMounted } from "@odoo/owl";
 
 patch(PaymentScreen.prototype, {
@@ -18,7 +18,7 @@ patch(PaymentScreen.prototype, {
             this.dialog.add(AlertDialog, {
                 title: _t("This order needs to be invoiced"),
                 body: _t(
-                    "If you do not invoice imported orders containing intra-community taxes you will encounter issues in your accounting. Especially in the EC Sales List report"
+                    "If you do not invoice imported orders containing intra-community taxes you will encounter issues in your accounting. Especially in the EC Sales List report",
                 ),
             });
         } else {
@@ -27,9 +27,13 @@ patch(PaymentScreen.prototype, {
     },
     checkIsToInvoice() {
         const orderLines = this.currentOrder.getOrderlines();
-        const has_origin_order = orderLines.some((line) => line.sale_order_origin_id);
+        const has_origin_order = orderLines.some(
+            (line) => line.sale_order_origin_id,
+        );
         const has_intracom_taxes = orderLines.some((line) =>
-            line.tax_ids?.some((tax) => this.pos.config._intracom_tax_ids?.includes(tax.id))
+            line.tax_ids?.some((tax) =>
+                this.pos.config._intracom_tax_ids?.includes(tax.id),
+            ),
         );
         if (
             this.pos.company.country_id &&

@@ -1,6 +1,6 @@
 import { loadJS } from "@web/core/assets";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { SIZES, utils as uiUtils } from "@web/ui/block/ui_service";
 
 /**
  * Takes care of any necessary setup for autoplaying video. In practice,

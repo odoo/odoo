@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-
 export const busParametersService = {
     start() {
         return {

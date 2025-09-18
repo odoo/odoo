@@ -2,8 +2,8 @@ import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { SelectMenu } from "@web/components/select_menu/select_menu";
 import { _t } from "@web/core/l10n/translation";
 import { SlideUploadSourceTypes } from "./slide_upload_source_types";
 

@@ -1,5 +1,7 @@
+// @ts-check
+
+import { describe, expect, test } from "@odoo/hoot";
 import { evalPartialContext, makeContext } from "@web/core/context";
-import { expect, test, describe } from "@odoo/hoot";
 
 describe.current.tags("headless");
 
@@ -34,7 +36,10 @@ describe("makeContext", () => {
             b: 2,
             c: 3,
         });
-        expect(makeContext([{ a: 1 }, "{'b': a + 1}", "{'a': b + 1}"])).toEqual({ a: 3, b: 2 });
+        expect(makeContext([{ a: 1 }, "{'b': a + 1}", "{'a': b + 1}"])).toEqual({
+            a: 3,
+            b: 2,
+        });
     });
 
     test("initial evaluation context", () => {
@@ -53,7 +58,10 @@ describe("evalPartialContext", () => {
     });
 
     test("complete dynamic contexts", () => {
-        expect(evalPartialContext("{'a': a, 'b': 1}", { a: 2 })).toEqual({ a: 2, b: 1 });
+        expect(evalPartialContext("{'a': a, 'b': 1}", { a: 2 })).toEqual({
+            a: 2,
+            b: 1,
+        });
     });
 
     test("partial dynamic contexts", () => {
@@ -65,7 +73,9 @@ describe("evalPartialContext", () => {
     test("value of type obj (15)", () => {
         expect(evalPartialContext("{'a': a.b.c}", {})).toEqual({});
         expect(evalPartialContext("{'a': a.b.c}", { a: {} })).toEqual({});
-        expect(evalPartialContext("{'a': a.b.c}", { a: { b: { c: 2 } } })).toEqual({ a: 2 });
+        expect(evalPartialContext("{'a': a.b.c}", { a: { b: { c: 2 } } })).toEqual({
+            a: 2,
+        });
     });
 
     test("value of type op (14)", () => {

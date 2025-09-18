@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { Field } from "@web/views/fields/field";
+import { Field } from "@web/fields/field";
 import { Record } from "@web/model/record";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";

@@ -1,5 +1,7 @@
 // @odoo-module ignore
 
+/** @module @web/module_loader - Bootstrap module loader that resolves dependency graphs and defines odoo.loader */
+
 //-----------------------------------------------------------------------------
 // Odoo Web Boostrap Code
 //-----------------------------------------------------------------------------
@@ -50,11 +52,13 @@
             }
             if (!Array.isArray(deps)) {
                 throw new Error(
-                    `Module dependencies should be a list of strings, got: ${String(deps)}`
+                    `Module dependencies should be a list of strings, got: ${String(deps)}`,
                 );
             }
             if (typeof factory !== "function") {
-                throw new Error(`Module factory should be a function, got: ${String(factory)}`);
+                throw new Error(
+                    `Module factory should be a function, got: ${String(factory)}`,
+                );
             }
             if (this.factories.has(name)) {
                 return; // Ignore duplicate modules
@@ -89,7 +93,10 @@
                             .map((j) => `"${j}"`)
                             .join(" => ");
                     }
-                    const cycle = findCycle(dependencyGraph[name], new Set(visited).add(name));
+                    const cycle = findCycle(
+                        dependencyGraph[name],
+                        new Set(visited).add(name),
+                    );
                     if (cycle) {
                         return cycle;
                     }
@@ -143,7 +150,9 @@
         /** @type {OdooModuleLoader["findJob"]} */
         findJob() {
             for (const job of this.jobs) {
-                if (this.factories.get(job).deps.every((dep) => this.modules.has(dep))) {
+                if (
+                    this.factories.get(job).deps.every((dep) => this.modules.has(dep))
+                ) {
                     return job;
                 }
             }
@@ -157,33 +166,34 @@
             }
 
             if (errors.failed) {
-                console.error("The following modules failed to load because of an error:", [
-                    ...errors.failed,
-                ]);
+                console.error(
+                    "The following modules failed to load because of an error:",
+                    [...errors.failed],
+                );
             }
             if (errors.missing) {
                 console.error(
                     "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
-                    [...errors.missing]
+                    [...errors.missing],
                 );
             }
             if (errors.cycle) {
                 console.error(
                     "The following modules could not be loaded because they form a dependency cycle:",
-                    errors.cycle
+                    errors.cycle,
                 );
             }
             if (errors.unloaded) {
                 console.error(
                     "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
-                    [...errors.unloaded]
+                    [...errors.unloaded],
                 );
             }
 
             const document = this.root?.ownerDocument || globalThis.document;
             if (document.readyState === "loading") {
                 await new Promise((resolve) =>
-                    document.addEventListener("DOMContentLoaded", resolve)
+                    document.addEventListener("DOMContentLoaded", resolve),
                 );
             }
 
@@ -221,18 +231,18 @@
             this.jobs.delete(name);
             const factory = this.factories.get(name);
             /** @type {OdooModule | null} */
-            let module = null;
+            let module;
             try {
                 module = factory.fn(require);
             } catch (error) {
                 this.failed.add(name);
-                throw new Error(`Error while loading "${name}":\n${error}`);
+                throw new Error(`Error while loading "${name}"`, { cause: error });
             }
             this.modules.set(name, module);
             this.bus.dispatchEvent(
                 new CustomEvent("module-started", {
                     detail: { moduleName: name, module },
-                })
+                }),
             );
             return module;
         }
@@ -246,4 +256,4 @@
         // remove debug mode if not explicitely set in url
         odoo.debug = "";
     }
-})((globalThis.odoo ||= {}));
+})(/** @type {any} */ (globalThis.odoo ||= {}));

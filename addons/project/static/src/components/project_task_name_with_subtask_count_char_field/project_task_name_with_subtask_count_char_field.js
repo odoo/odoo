@@ -1,5 +1,5 @@
 import { registry } from '@web/core/registry';
-import { CharField, charField } from '@web/views/fields/char/char_field';
+import { CharField, charField } from '@web/fields/basic/char/char_field';
 
 export class ProjectTaskNameWithSubtaskCountCharField extends CharField {
     static template = "project.ProjectTaskNameWithSubtaskCountCharField";

@@ -12,7 +12,7 @@
         'views/action_menus.xml',
         'views/res_config_settings_view.xml',
     ],
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'author': 'Odoo S.A.',
     'license': 'OEEL-1',
 }

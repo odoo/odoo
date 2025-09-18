@@ -123,6 +123,10 @@ class AccountAccountTag(models.Model):
         """Translate tax tags having the same name as report lines."""
         langs = langs or (code for code, _name in self.env['res.lang'].get_installed() if code != 'en_US')
         for lang in langs:
+            # lang must be a SQL literal (not a bound parameter) because
+            # psycopg3 can't infer the type for jsonb_build_object($N, ...)
+            # and jsonb->>$N operators (IndeterminateDatatype error).
+            lang_sql = SQL("'%s'" % lang)
             self.env.cr.execute(SQL(
                 """
                 UPDATE account_account_tag tag
@@ -135,6 +139,6 @@ class AccountAccountTag(models.Model):
                    AND tag.name->>%(lang)s != substring(tag.name->>'en_US' FOR 1) || (report_line.name->>%(lang)s)
                    %(and_tag_ids)s
                 """,
-                lang=lang,
-                and_tag_ids=SQL('AND tag.id IN %s', tuple(tag_ids)) if tag_ids else SQL(''),
+                lang=lang_sql,
+                and_tag_ids=SQL('AND tag.id = ANY(%s)', list(tag_ids)) if tag_ids else SQL(''),
             ))

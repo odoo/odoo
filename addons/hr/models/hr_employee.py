@@ -15,10 +15,10 @@ from odoo import api, fields, models, _, tools
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError, AccessError, RedirectWarning, UserError
 from odoo.tools import convert, format_time, email_normalize, SQL, Query
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools.float_utils import float_is_zero
+from odoo.libs.numbers.float_utils import float_is_zero
 
 # This sentinel object, when in the context, provides read access to the
 # model 'hr.employee' in certain situations, like when setting a many2many
@@ -688,10 +688,10 @@ class HrEmployee(models.Model):
         contracts_by_employee = defaultdict(lambda: self.env["hr.version"])
         for employee_id in contract_versions_by_employee:
             for contract_versions in contract_versions_by_employee[employee_id].values():
-                effective_date = date_end if use_latest_version else date_start
+                date_effective = date_end if use_latest_version else date_start
                 if use_latest_version:
-                    if effective_date:
-                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
+                    if date_effective:
+                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= date_effective)
                         contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
                     else:
                         contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
@@ -1360,13 +1360,13 @@ We can redirect you to the public employee list."""
         employees = employees.sorted(key=lambda employee: index_per_employee[employee])
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
+        if self.env.context.get('salary_simulation'):
+            return employees
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
                 employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
-        if self.env.context.get('salary_simulation'):
-            return employees
         employee_departments = employees.department_id
         if employee_departments:
             self.env['discuss.channel'].sudo().search([

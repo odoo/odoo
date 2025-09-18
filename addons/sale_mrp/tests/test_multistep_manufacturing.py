@@ -59,10 +59,10 @@ class TestMultistepManufacturing(TestMrpCommon):
         sale_form.partner_id = cls.env['res.partner'].create({'name': 'My Test Partner'})
         sale_form.picking_policy = 'direct'
         sale_form.warehouse_id = cls.warehouse
-        with sale_form.order_line.new() as line:
+        with sale_form.line_ids.new() as line:
             line.name = cls.product_manu.name
             line.product_id = cls.product_manu
-            line.product_uom_qty = 1.0
+            line.product_qty = 1.0
             line.price_unit = 10.0
         cls.sale_order = sale_form.save()
 
@@ -177,8 +177,8 @@ class TestMultistepManufacturing(TestMrpCommon):
         partner = self.env['res.partner'].create({'name': 'Steve Buscemi'})
         so = self.env['sale.order'].create({
             'partner_id': partner.id,
-            'order_line': [(0, 0, {'product_id': prod1.id, 'product_uom_qty': 1}),
-                           (0, 0, {'product_id': prod2.id, 'product_uom_qty': 1})],
+            'line_ids': [(0, 0, {'product_id': prod1.id, 'product_qty': 1}),
+                           (0, 0, {'product_id': prod2.id, 'product_qty': 1})],
             'client_order_ref': 'Test Reference'
         })
         so.action_confirm()
@@ -189,9 +189,9 @@ class TestMultistepManufacturing(TestMrpCommon):
         delivery (to the client) can be made from stock.
         '''
         self.warehouse.manufacture_steps = 'pbm_sam'
-        self.sale_order.order_line.product_id.is_storable = True
+        self.sale_order.line_ids.product_id.is_storable = True
         self.env['stock.quant']._update_available_quantity(
-            self.sale_order.order_line.product_id,
+            self.sale_order.line_ids.product_id,
             self.sale_order.warehouse_id.lot_stock_id,
             10
         )

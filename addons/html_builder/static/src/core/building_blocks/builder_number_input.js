@@ -12,7 +12,7 @@ import {
     textInputBasePassthroughProps,
 } from "@html_builder/core/building_blocks/builder_text_input_base";
 import { useChildRef } from "@web/core/utils/hooks";
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";

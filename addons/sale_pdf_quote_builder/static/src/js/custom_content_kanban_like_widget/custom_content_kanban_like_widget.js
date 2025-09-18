@@ -2,7 +2,7 @@ import { Component, useEffect, useState } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/services/orm_service";
 import { registry } from '@web/core/registry';
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -91,7 +91,7 @@ export class CustomContentKanbanLikeWidget extends Component {
         if (this.props.readonly) {
             return;
         }
-        const sol = this.props.record.data.order_line.records.find(
+        const sol = this.props.record.data.line_ids.records.find(
             sol => sol.resId === lineId
         );
         sol._noUpdateParent = true; // Ensure that no rpc will be made to save the changes
@@ -102,7 +102,7 @@ export class CustomContentKanbanLikeWidget extends Component {
             // save is needed to ensure that no onChange call will be made
             await sol.update({product_document_ids: [x2ManyCommands.unlink(docId)]}, { save: true });
         }
-        await this.props.record.data.order_line._onUpdate({withoutOnchange: true});
+        await this.props.record.data.line_ids._onUpdate({withoutOnchange: true});
         this.updateJson();
     };
 

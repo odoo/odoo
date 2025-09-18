@@ -1,15 +1,14 @@
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
-import { kanbanView } from "@web/views/kanban/kanban_view";
-import { onWillStart, useState, onWillRender } from "@odoo/owl";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
+import { onWillRender, onWillStart, useState } from "@odoo/owl";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/services/user";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
-
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { kanbanView } from "@web/views/kanban/kanban_view";
 async function updatePosKanbanViewState(orm, stateObj) {
     const result = await orm.call("pos.config", "get_pos_kanban_view_state");
     Object.assign(stateObj, result);
@@ -46,7 +45,10 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 await this.callWithViewUpdate(async () => {
                     let isInstalledWithDemo = false;
                     if (isRestaurant && !this.posState.is_restaurant_installed) {
-                        const result = await this.orm.call("pos.config", "install_pos_restaurant");
+                        const result = await this.orm.call(
+                            "pos.config",
+                            "install_pos_restaurant",
+                        );
                         isInstalledWithDemo = result.installed_with_demo;
                     }
                     if (
@@ -54,10 +56,12 @@ export class PosKanbanRenderer extends KanbanRenderer {
                         (isInstalledWithDemo && !this.posState.is_main_company)
                     ) {
                         // load onboarding scenario without demo data
-                        const result = await this.orm.call("pos.config", functionName, [false]);
+                        const result = await this.orm.call("pos.config", functionName, [
+                            false,
+                        ]);
                         return result;
                     }
-                })
+                }),
         );
 
         onWillRender(() => this.checkDisplayedResult());
@@ -89,7 +93,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 this.dialog.add(AlertDialog, {
                     title: _t("Access Denied"),
                     body: _t(
-                        "It seems like you don't have enough rights to create point of sale configurations."
+                        "It seems like you don't have enough rights to create point of sale configurations.",
                     ),
                 });
                 return;
@@ -108,13 +112,19 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 name: _t("Clothes"),
                 description: _t("Multi colors and sizes"),
                 functionName: "load_onboarding_clothes_scenario",
-                iconFile: this.isDarkTheme ? "clothes-icon-dark.png" : "clothes-icon.png",
+                iconFile: this.isDarkTheme
+                    ? "clothes-icon-dark.png"
+                    : "clothes-icon.png",
             },
             {
                 name: _t("Furniture"),
-                description: _t("Stock, product configurator, replenishment, discounts"),
+                description: _t(
+                    "Stock, product configurator, replenishment, discounts",
+                ),
                 functionName: "load_onboarding_furniture_scenario",
-                iconFile: this.isDarkTheme ? "furniture-icon-dark.png" : "furniture-icon.png",
+                iconFile: this.isDarkTheme
+                    ? "furniture-icon-dark.png"
+                    : "furniture-icon.png",
             },
             {
                 name: _t("Bakery"),
@@ -132,14 +142,18 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 isRestaurant: true,
                 description: _t("Tables, menus, kitchen display, etc."),
                 functionName: "load_onboarding_restaurant_scenario",
-                iconFile: this.isDarkTheme ? "restaurant-icon-dark.png" : "restaurant-icon.png",
+                iconFile: this.isDarkTheme
+                    ? "restaurant-icon-dark.png"
+                    : "restaurant-icon.png",
             },
             {
                 name: _t("Bar"),
                 isRestaurant: true,
                 description: _t("Floor plan, tips, self order, etc."),
                 functionName: "load_onboarding_bar_scenario",
-                iconFile: this.isDarkTheme ? "cocktail-icon-dark.png" : "cocktail-icon.png",
+                iconFile: this.isDarkTheme
+                    ? "cocktail-icon-dark.png"
+                    : "cocktail-icon.png",
             },
         ];
     }

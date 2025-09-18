@@ -1,6 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { patchTranslations } from "@web/../tests/web_test_helpers";
-
+import { _t as basic_t } from "@web/core/l10n/translation";
 import {
     capitalize,
     escape,
@@ -9,8 +11,7 @@ import {
     isEmail,
     isNumeric,
     sprintf,
-} from "@web/core/utils/strings";
-import { _t as basic_t } from "@web/core/l10n/translation";
+} from "@web/core/utils/format/strings";
 
 function _t() {
     odoo.translationContext = "web";
@@ -24,13 +25,13 @@ describe.current.tags("headless");
 test("escape", () => {
     expect(escape("<a>this is a link</a>")).toBe("&lt;a&gt;this is a link&lt;/a&gt;");
     expect(escape(`<a href="https://www.odoo.com">odoo<a>`)).toBe(
-        `&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;`
+        `&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;`,
     );
     expect(escape(`<a href='https://www.odoo.com'>odoo<a>`)).toBe(
-        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;odoo&lt;a&gt;`
+        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;odoo&lt;a&gt;`,
     );
     expect(escape("<a href='https://www.odoo.com'>Odoo`s website<a>")).toBe(
-        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;Odoo&#x60;s website&lt;a&gt;`
+        `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;Odoo&#x60;s website&lt;a&gt;`,
     );
 });
 
@@ -39,8 +40,12 @@ test("escapeRegExp", () => {
     expect(escapeRegExp("wowl")).toBe("wowl");
     expect(escapeRegExp("[wowl]")).toBe("\\[wowl\\]");
     expect(escapeRegExp("[wowl.odoo]")).toBe("\\[wowl\\.odoo\\]");
-    expect(escapeRegExp("^odoo.define([.]*)$")).toBe("\\^odoo\\.define\\(\\[\\.\\]\\*\\)\\$");
-    expect(escapeRegExp("[.*+?^${}()|[]\\")).toBe("\\[\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\");
+    expect(escapeRegExp("^odoo.define([.]*)$")).toBe(
+        "\\^odoo\\.define\\(\\[\\.\\]\\*\\)\\$",
+    );
+    expect(escapeRegExp("[.*+?^${}()|[]\\")).toBe(
+        "\\[\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\",
+    );
 });
 
 test("intersperse", () => {
@@ -79,7 +84,7 @@ describe("sprintf", () => {
         expect(sprintf("Hello %s and %s!", "ged", "lpe")).toBe("Hello ged and lpe!");
         expect(sprintf("Hello %(x)s!", { x: "ged" })).toBe("Hello ged!");
         expect(sprintf("Hello %(x)s and %(y)s!", { x: "ged", y: "lpe" })).toBe(
-            "Hello ged and lpe!"
+            "Hello ged and lpe!",
         );
         expect(sprintf("Hello!")).toBe("Hello!");
         expect(sprintf("Hello %s!")).toBe("Hello %s!");
@@ -91,14 +96,18 @@ describe("sprintf", () => {
         expect(sprintf("Hello %s!", 5)).toBe("Hello 5!");
         expect(sprintf("Hello %s and %s!", 9, 10)).toBe("Hello 9 and 10!");
         expect(sprintf("Hello %(x)s!", { x: 11 })).toBe("Hello 11!");
-        expect(sprintf("Hello %(x)s and %(y)s!", { x: 12, y: 13 })).toBe("Hello 12 and 13!");
+        expect(sprintf("Hello %(x)s and %(y)s!", { x: 12, y: 13 })).toBe(
+            "Hello 12 and 13!",
+        );
     });
 
     test("set behavior when value is an Array", () => {
         expect(sprintf("Hello %s!", ["inarray"])).toBe("Hello inarray!");
         expect(sprintf("Hello %s and %s!", [9, "10"], [11])).toBe("Hello 9,10 and 11!");
         expect(sprintf("Hello %(x)s!", { x: [11] })).toBe("Hello 11!");
-        expect(sprintf("Hello %(x)s and %(y)s!", { x: [12], y: ["13"] })).toBe("Hello 12 and 13!");
+        expect(sprintf("Hello %(x)s and %(y)s!", { x: [12], y: ["13"] })).toBe(
+            "Hello 12 and 13!",
+        );
     });
 
     test("supports lazy translated string", () => {

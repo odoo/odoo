@@ -11,7 +11,7 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { editSelectMenu, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { currencies } from "@web/core/currency";
+import { currencies } from "@web/services/currency";
 
 const archs = {
     "mail.test.track.all,false,form": `

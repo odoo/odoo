@@ -19,12 +19,12 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title t-esc="title or 'Odoo'"/>
+        <title t-out="title or 'Odoo'"/>
         <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
         <script id="web.layout.odooscript" type="text/javascript">
             var odoo = {
-                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
-                debug: "<t t-esc="debug"/>",
+                csrf_token: "<t t-out="request.csrf_token(None)"/>",
+                debug: "<t t-out="debug"/>",
             };
         </script>
         <t t-out="head or ''"/>
@@ -137,7 +137,7 @@
         <t t-call="web.login_layout">
             <div class="oe_structure" id="oe_structure_login_top"/>
             <owl-component t-if="not login" name="web.user_switch" />
-            <form t-attf-class="oe_login_form #{'' if login else 'd-none'}" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash" data-captcha="login">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash" data-captcha="login">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="mb-3" t-if="databases and len(databases) &gt; 1">
@@ -166,10 +166,10 @@
                 </div>
 
                 <p class="alert alert-danger" t-if="error" role="alert">
-                    <t t-esc="error"/>
+                    <t t-out="error"/>
                 </p>
                 <p class="alert alert-success" t-if="message" role="status">
-                    <t t-esc="message"/>
+                    <t t-out="message"/>
                 </p>
 
                 <div class="oe_login_buttons text-center d-grid mb-1 pt-3">
@@ -306,7 +306,7 @@
                 <t t-call="web.conditional_assets_tests" media="screen"/>
             </t>
             <t t-set="head" t-value="head_web + (head or '')" media="screen"/>
-            <t t-set="body_classname" t-value="'o_web_client'"/>
+            <t t-set="body_classname" t-value="'o_web_client' + (' o-density-' + content_density if content_density and content_density != 'default' else '')"/>
         </t>
     </template>
 

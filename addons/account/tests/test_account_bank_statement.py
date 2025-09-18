@@ -859,9 +859,9 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                 {'amount': 18, 'running_balance': 18, 'statement_id': False},
             ],
         )
-        line1.move_id.button_cancel()
-        line6.move_id.button_cancel()
-        line6.move_id.button_draft()
+        line1.move_id.action_cancel()
+        line6.move_id.action_cancel()
+        line6.move_id.action_draft()
         self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
         self.assertRecordValues(
             self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
@@ -1214,7 +1214,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'balance_end_real': 3,
         }])
         # test canceling a line
-        line2.move_id.button_cancel()
+        line2.move_id.action_cancel()
         self.assertRecordValues(statement1, [{
             'is_complete': False,
             'balance_end': 1,
@@ -1229,8 +1229,8 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         }])
         # test adding a draft line to a statement, nothing should be changed in statement
         line4 = self.create_bank_transaction(4, '2020-01-13', journal=self.bank_journal_2)
-        line4.move_id.button_cancel()
-        line4.move_id.button_draft()
+        line4.move_id.action_cancel()
+        line4.move_id.action_draft()
         statement1.line_ids |= line4
         self.assertRecordValues(statement1, [{
             'is_complete': True,
@@ -1253,7 +1253,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
         # test cancel/draft all statement lines
         # line 4 is draft, and we cancel line 3 so the statement should be empty
-        line3.move_id.button_cancel()
+        line3.move_id.action_cancel()
         self.assertRecordValues(statement1, [{
             'is_complete': False,
             'balance_start': 0,
@@ -1403,7 +1403,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         }])
 
         # create the third statement using multi edit with canceled line in between
-        lines[2].move_id.button_cancel()
+        lines[2].move_id.action_cancel()
         context = {
             'active_ids': [lines[1].id, lines[3].id],
             'st_line_id': lines[3].id,

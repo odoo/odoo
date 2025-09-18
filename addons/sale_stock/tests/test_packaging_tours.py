@@ -26,5 +26,5 @@ class TestPackagingTours(HttpCase):
         self.env['res.config.settings'].create({
             'group_uom': True,
         }).execute()
-        with mute_logger('odoo.sql_db', 'odoo.http'):
+        with mute_logger('odoo.db', 'odoo.http'):
             self.start_tour(url, 'test_barcode_duplication_error', login='admin', timeout=60)

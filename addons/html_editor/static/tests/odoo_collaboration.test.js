@@ -2,7 +2,7 @@ import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration
 import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
-import { htmlReplaceAll } from "@web/core/utils/html";
+import { htmlReplaceAll } from "@web/core/utils/dom/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick, waitUntil } from "@odoo/hoot-dom";

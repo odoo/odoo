@@ -1,7 +1,13 @@
+// @ts-check
+
 import { after, expect, test } from "@odoo/hoot";
 import { Component, useRef, xml } from "@odoo/owl";
 import { mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
-import { registerTemplate, registerTemplateExtension, setUrlFilters } from "@web/core/templates";
+import {
+    registerTemplate,
+    registerTemplateExtension,
+    setUrlFilters,
+} from "@web/core/templates";
 
 function makeTemplate({ name, content, inheritFrom }) {
     return `<t t-name="${name}" ${inheritFrom ? `t-inherit="${inheritFrom}"` : ``}>${content}</t>`;
@@ -49,7 +55,7 @@ function registerTemplates(...templates) {
         after(
             inheritMode === "extension"
                 ? registerTemplateExtension(inheritFrom, `/${addon}`, template)
-                : registerTemplate(name, `/${addon}`, template)
+                : registerTemplate(name, `/${addon}`, template),
         );
     }
     patchTranslations(translations);
@@ -86,7 +92,10 @@ test("translation-context: single template", async () => {
 
 test("translation-context: xpath position replace (outer)", async () => {
     registerTemplates(
-        { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
+        {
+            name: "A",
+            content: `<div class="o_test_component" title="title"> text </div>`,
+        },
         {
             name: "B",
             content: `
@@ -95,7 +104,7 @@ test("translation-context: xpath position replace (outer)", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -107,7 +116,10 @@ test("translation-context: xpath position replace (outer)", async () => {
 
 test("translation-context: xpath position replace (outer) with $0", async () => {
     registerTemplates(
-        { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
+        {
+            name: "A",
+            content: `<div class="o_test_component" title="title"> text </div>`,
+        },
         {
             name: "B",
             content: `
@@ -119,7 +131,7 @@ test("translation-context: xpath position replace (outer) with $0", async () => 
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -156,7 +168,7 @@ test("translation-context: xpath position replace (inner)", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -173,7 +185,10 @@ test("translation-context: xpath position replace (inner)", async () => {
 
 test("translation-context: xpath position attributes", async () => {
     registerTemplates(
-        { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
+        {
+            name: "A",
+            content: `<div class="o_test_component" title="title"> text </div>`,
+        },
         {
             name: "B",
             content: `
@@ -183,7 +198,7 @@ test("translation-context: xpath position attributes", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -195,7 +210,10 @@ test("translation-context: xpath position attributes", async () => {
 
 test("translation-context: xpath position inside", async () => {
     registerTemplates(
-        { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
+        {
+            name: "A",
+            content: `<div class="o_test_component" title="title"> text </div>`,
+        },
         {
             name: "B",
             content: `
@@ -206,7 +224,7 @@ test("translation-context: xpath position inside", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -238,7 +256,7 @@ test("translation-context: xpath position inside: moved element", async () => {
                     <xpath expr="div/span[2]" position="move"/>
                 </xpath>`,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -271,7 +289,7 @@ test("translation-context: xpath position after with some text", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -312,7 +330,7 @@ test("translation-context: xpath position before with some text", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -348,7 +366,7 @@ test("translation-context: wrappers texts in t tags", async () => {
                     World
                 </xpath>`,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("B");
     expect(el).toHaveInnerHTML(`
@@ -377,7 +395,7 @@ test("translation-context: wrappers texts in t tags (2)", async () => {
                 </xpath>`,
             inheritFrom: "A",
             inheritMode: "extension",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("A");
     expect(el).toHaveInnerHTML(`
@@ -418,7 +436,7 @@ test("translation-context: wrappers texts in t tags (3)", async () => {
                 </xpath>
             `,
             inheritFrom: "A",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("C");
     expect(el).toHaveInnerHTML(`
@@ -461,7 +479,7 @@ test("translation-context: wrappers around texts do not affect xpaths (1)", asyn
                     Jamie
                 </xpath>`,
             inheritFrom: "B",
-        }
+        },
     );
     const el = await mountTestComponentWithTemplate("C");
     expect(el).toHaveInnerHTML(`

@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
-from odoo.tools.mimetypes import get_extension
+from odoo.libs.filesystem.mimetypes import get_extension
 
 import json
 from markupsafe import Markup
@@ -438,6 +438,11 @@ class DiscussChannel(models.Model):
         fields = [
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], predicate=is_livechat_channel),
+            Store.One(
+                "livechat_lang_id",
+                ["name"],
+                predicate=is_livechat_channel,
+            ),
             Store.Attr("livechat_end_dt", predicate=is_livechat_channel),
             # sudo - res.partner: accessing livechat operator is allowed
             Store.One(
@@ -648,7 +653,12 @@ class DiscussChannel(models.Model):
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):
-        return []
+        return [
+            Store.One(
+                "livechat_lang_id", ["name"],
+                predicate=is_livechat_channel,
+            ),
+        ]
 
     # =======================
     # Chatbot

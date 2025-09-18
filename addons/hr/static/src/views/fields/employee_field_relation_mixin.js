@@ -1,7 +1,7 @@
 import { AvatarCardEmployeePopover } from "@hr/components/avatar_card_employee/avatar_card_employee_popover";
 import { onWillStart } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
+import { usePopover } from "@web/ui/popover/popover_hook";
+import { user } from "@web/services/user";
 
 /**
  * Mixin that handles public/private access of employee records in many2X fields

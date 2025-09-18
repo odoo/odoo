@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
-import { isVisible } from "@web/core/utils/ui";
+import { isVisible } from "@web/core/utils/dom/ui";
 import { cloneContentEls } from "@website/js/utils";
 import { setUtmsHtmlDataset } from "@website/utils/misc";
 

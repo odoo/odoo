@@ -56,13 +56,14 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     def test_cant_unlink_posted(self):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
-        self.move.button_draft()
+        self.move.action_draft()
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             self.move.unlink()
 
     def test_cant_unlink_message(self):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
+        self.env.cr.flush()
         audit_trail = self.get_trail(self.move)
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.unlink()
@@ -70,6 +71,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     def test_cant_unown_message(self):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
+        self.env.cr.flush()
         audit_trail = self.get_trail(self.move)
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.res_id = 0
@@ -93,7 +95,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         messages.append("Updated\nFalse ⇨ True (Reviewed)\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
-        self.move.button_draft()
+        self.move.action_draft()
         messages.append("Updated\nTrue ⇨ False (Reviewed)\nPosted ⇨ Draft (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 

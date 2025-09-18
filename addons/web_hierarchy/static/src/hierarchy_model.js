@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { orderByToString } from "@web/search/utils/order_by";
+import { orderByToString } from "@web/core/utils/order_by";
 
 let nodeId = 0;
 let forestId = 0;

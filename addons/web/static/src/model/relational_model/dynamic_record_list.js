@@ -1,14 +1,16 @@
+// @ts-check
+
+/** @module @web/model/relational_model/dynamic_record_list - Server-backed flat record list with pagination, CRUD, and domain-based selection */
+
 import { DynamicList } from "./dynamic_list";
 
-/**
- * @typedef {import("./record").Record} RelationalRecord
- */
+/** @import { RelationalRecord } from "./record" */
 
 export class DynamicRecordList extends DynamicList {
     static type = "DynamicRecordList";
 
     /**
-     * @param {import("./relational_model").Config} config
+     * @param {import("./relational_model").RelationalModelConfig} config
      * @param {Object} data
      */
     setup(config, data) {
@@ -18,7 +20,7 @@ export class DynamicRecordList extends DynamicList {
 
     _setData(data) {
         /** @type {RelationalRecord[]} */
-        this.records = data.records.map((r) => this._createRecordDatapoint(r));
+        this._records = data.records.map((r) => this._createRecordDatapoint(r));
         this._updateCount(data);
         this._selectDomain(this.isDomainSelected);
     }
@@ -26,6 +28,10 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
     // Getter
     // -------------------------------------------------------------------------
+
+    get records() {
+        return this._records;
+    }
 
     get hasData() {
         return this.count > 0;
@@ -38,7 +44,7 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @param {number} resId
      * @param {boolean} [atFirstPosition]
-     * @returns {Promise<Record>} the newly created record
+     * @returns {Promise<RelationalRecord>} the newly created record
      */
     addExistingRecord(resId, atFirstPosition) {
         return this.model.mutex.exec(async () => {
@@ -51,7 +57,7 @@ export class DynamicRecordList extends DynamicList {
 
     /**
      * @param {boolean} [atFirstPosition=false]
-     * @returns {Promise<Record>}
+     * @returns {Promise<RelationalRecord>}
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {
@@ -91,7 +97,12 @@ export class DynamicRecordList extends DynamicList {
     async resequence(movedRecordId, targetRecordId) {
         return this.model.mutex.exec(
             async () =>
-                await this._resequence(this.records, this.resModel, movedRecordId, targetRecordId)
+                await this._resequence(
+                    this.records,
+                    this.resModel,
+                    movedRecordId,
+                    targetRecordId,
+                ),
         );
     }
 
@@ -100,26 +111,36 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _addNewRecord(atFirstPosition) {
-        const values = await this.model._loadNewRecord({
-            resModel: this.resModel,
-            activeFields: this.activeFields,
-            fields: this.fields,
-            context: this.context,
-        });
+        const values = await this.model._loadNewRecord(
+            /** @type {any} */ ({
+                resModel: this.resModel,
+                activeFields: this.activeFields,
+                fields: this.fields,
+                context: this.context,
+            }),
+        );
         const record = this._createRecordDatapoint(values, "edit");
         this._addRecord(record, atFirstPosition ? 0 : this.records.length);
         return record;
     }
 
     _addRecord(record, index) {
-        this.records.splice(Number.isInteger(index) ? index : this.records.length, 0, record);
+        this.records.splice(
+            Number.isInteger(index) ? index : this.records.length,
+            0,
+            record,
+        );
         this.count++;
     }
 
+    /**
+     * @param {Record<string, any>} data
+     * @param {"edit" | "readonly"} [mode]
+     */
     _createRecordDatapoint(data, mode = "readonly") {
-        return new this.model.constructor.Record(
+        return new this.model.Class.Record(
             this.model,
-            {
+            /** @type {any} */ ({
                 context: this.context,
                 activeFields: this.activeFields,
                 resModel: this.resModel,
@@ -128,9 +149,9 @@ export class DynamicRecordList extends DynamicList {
                 resIds: data.id ? [data.id] : [],
                 isMonoRecord: true,
                 mode,
-            },
+            }),
             data,
-            { manuallyAdded: !data.id }
+            { manuallyAdded: !data.id },
         );
     }
 
@@ -146,14 +167,14 @@ export class DynamicRecordList extends DynamicList {
         await this.model._updateConfig(
             this.config,
             { offset, limit, orderBy, domain },
-            { commit: this._setData.bind(this) }
+            { commit: this._setData.bind(this) },
         );
     }
 
     _removeRecords(recordIds) {
         const keptRecords = this.records.filter((r) => !recordIds.includes(r.id));
         this.count -= this.records.length - keptRecords.length;
-        this.records = keptRecords;
+        this._records = keptRecords;
         if (this.offset && !this.records.length) {
             // we weren't on the first page, and we removed all records of the current page
             const offset = Math.max(this.offset - this.limit, 0);

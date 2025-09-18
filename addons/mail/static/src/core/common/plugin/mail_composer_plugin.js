@@ -12,7 +12,8 @@ export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
     static dependencies = ["clipboard", "hint", "input", "selection"];
     resources = {
-        before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
+        before_paste_handlers:
+            this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
         create_link_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
@@ -41,17 +42,17 @@ export class MailComposerPlugin extends Plugin {
         this.addDomListener(
             this.editable,
             "keydown",
-            this.config.composerPluginDependencies.onKeydown
+            this.config.composerPluginDependencies.onKeydown,
         );
         this.addDomListener(
             this.editable,
             "focusin",
-            this.config.composerPluginDependencies.onFocusin
+            this.config.composerPluginDependencies.onFocusin,
         );
         this.addDomListener(
             this.editable,
             "focusout",
-            this.config.composerPluginDependencies.onFocusout
+            this.config.composerPluginDependencies.onFocusout,
         );
     }
 }

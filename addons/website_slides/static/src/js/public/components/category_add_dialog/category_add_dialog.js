@@ -1,4 +1,4 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CategoryAddDialog extends ConfirmationDialog {

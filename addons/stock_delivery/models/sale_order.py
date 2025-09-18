@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
         for order in self:
-            if order.state != 'sale':
+            if order.state != 'done':
                 continue
             pending_deliveries = order.picking_ids.filtered(
                 lambda p: p.state not in ('done', 'cancel')
@@ -49,8 +49,8 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _prepare_procurement_values(self):
-        values = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        values = super()._prepare_procurement_vals()
         if not values.get("route_ids") and self.order_id.carrier_id.route_ids:
             values['route_ids'] = self.order_id.carrier_id.route_ids
         return values

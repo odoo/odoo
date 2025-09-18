@@ -1,3 +1,5 @@
+// @ts-check
+
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { mockLocation } from "@odoo/hoot";
@@ -34,7 +36,7 @@ const READONLY_PROPERTIES = [
  */
 export function mockBrowserFactory(name, { fn }) {
     return (...args) => {
-        const browserModule = fn(...args);
+        const browserModule = /** @type {Function} */ (fn)(...args);
         const properties = {
             location: {
                 get: () => mockLocation,

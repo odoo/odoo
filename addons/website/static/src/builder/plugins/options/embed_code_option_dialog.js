@@ -1,5 +1,5 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { CodeEditor } from "@web/components/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { Component, useState } from "@odoo/owl";

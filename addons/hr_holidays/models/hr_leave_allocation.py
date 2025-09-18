@@ -7,11 +7,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.tools import format_date
-
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
 
 

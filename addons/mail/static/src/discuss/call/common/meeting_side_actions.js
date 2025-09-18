@@ -1,9 +1,6 @@
 import { ActionList } from "@mail/core/common/action_list";
-
 import { Component, useSubEnv } from "@odoo/owl";
-
 import { useService } from "@web/core/utils/hooks";
-
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
 /**
@@ -29,11 +26,13 @@ export class MeetingSideActions extends Component {
             quick: quick.filter((action) => !quickThreadActionIds.includes(action.id)),
             other: other.filter((action) => !quickThreadActionIds.includes(action.id)),
             group: group
-                .map((group) => group.filter((action) => !quickThreadActionIds.includes(action.id)))
+                .map((group) =>
+                    group.filter((action) => !quickThreadActionIds.includes(action.id)),
+                )
                 .filter((g) => g.length > 0),
         };
         const actions = threadActions.actions.filter((action) =>
-            quickThreadActionIds.includes(action.id)
+            quickThreadActionIds.includes(action.id),
         );
         actions.push(
             threadActions.more({
@@ -42,7 +41,7 @@ export class MeetingSideActions extends Component {
                     partitionedActions.other,
                     ...partitionedActions.group,
                 ],
-            })
+            }),
         );
         this.actions = actions;
     }

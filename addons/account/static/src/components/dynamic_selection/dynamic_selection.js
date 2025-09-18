@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import { SelectionField, selectionField } from "@web/fields/selection/selection/selection_field";
 
 export class DynamicSelectionField extends SelectionField {
 

@@ -1,8 +1,8 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 
 export class FetchInvoicesCogMenu extends Component {

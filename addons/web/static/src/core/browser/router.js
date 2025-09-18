@@ -1,10 +1,15 @@
+// @ts-check
+
+/** @module @web/core/browser/router - URL routing: parse, serialize, and push browser history state */
+
 import { EventBus } from "@odoo/owl";
-import { omit, pick } from "../utils/objects";
-import { compareUrls, objectToUrlEncodedString } from "../utils/urls";
-import { browser } from "./browser";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
-import { slidingWindow } from "@web/core/utils/arrays";
-import { isNumeric } from "@web/core/utils/strings";
+import { slidingWindow } from "@web/core/utils/collections/arrays";
+import { omit, pick } from "@web/core/utils/collections/objects";
+import { isNumeric } from "@web/core/utils/format/strings";
+import { compareUrls, objectToUrlEncodedString } from "@web/core/utils/urls";
+
+import { browser } from "./browser";
 
 // Keys that are serialized in the URL as path segments instead of query string
 export const PATH_KEYS = ["resId", "action", "active_id", "model"];
@@ -22,7 +27,7 @@ function isScopedApp() {
  * @returns {string|number}
  */
 function cast(value) {
-    return !value || isNaN(value) ? value : Number(value);
+    return !value || isNaN(/** @type {any} */ (value)) ? value : Number(value);
 }
 
 /**
@@ -34,7 +39,9 @@ function parseString(str) {
     const parts = str.split("&");
     const result = {};
     for (const part of parts) {
-        const [key, value] = part.split("=");
+        const eqIdx = part.indexOf("=");
+        const key = eqIdx === -1 ? part : part.slice(0, eqIdx);
+        const value = eqIdx === -1 ? "" : part.slice(eqIdx + 1);
         const decoded = decodeURIComponent(value || "");
         result[key] = cast(decoded);
     }
@@ -60,7 +67,7 @@ function sanitize(obj, valueToRemove) {
     return Object.fromEntries(
         Object.entries(obj)
             .filter(([, v]) => v !== valueToRemove)
-            .map(([k, v]) => [k, cast(v)])
+            .map(([k, v]) => [k, cast(v)]),
     );
 }
 
@@ -129,14 +136,22 @@ function stateToUrl(state) {
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
     if (actionStack.at(-1)?.action !== "menu") {
         for (const [prevAct, currentAct] of slidingWindow(actionStack, 2).reverse()) {
-            const { action: prevAction, resId: prevResId, active_id: prevActiveId } = prevAct;
+            const {
+                action: prevAction,
+                resId: prevResId,
+                active_id: prevActiveId,
+            } = prevAct;
             const { action: currentAction, active_id: currentActiveId } = currentAct;
             // actions would typically map to a path like `active_id/action/res_id`
             if (currentActiveId === prevResId) {
                 // avoid doubling up when the active_id is the same as the previous action's res_id
                 delete currentAct.active_id;
             }
-            if (prevAction === currentAction && !prevResId && currentActiveId === prevActiveId) {
+            if (
+                prevAction === currentAction &&
+                !prevResId &&
+                currentActiveId === prevActiveId
+            ) {
                 //avoid doubling up the action and the active_id when a single-record action is preceded by a multi-record action
                 delete currentAct.action;
                 delete currentAct.active_id;
@@ -187,10 +202,11 @@ function urlToState(urlObj) {
 
     if (["odoo", "scoped_app"].includes(prefix)) {
         const actionParts = [...splitPath.entries()].filter(
-            ([_, part]) => !isNumeric(part) && part !== "new"
+            ([_, part]) => !isNumeric(part) && part !== "new",
         );
         const actions = [];
         for (const [i, part] of actionParts) {
+            /** @type {Record<string, any>} */
             const action = {};
             const [left, right] = [splitPath[i - 1], splitPath[i + 1]];
             if (isNumeric(left)) {
@@ -307,10 +323,11 @@ browser.addEventListener("pageshow", (ev) => {
  * This also alows the mobile app to not open an in-app browser for them.
  */
 browser.addEventListener("click", (ev) => {
-    if (ev.defaultPrevented || ev.target.closest("[contenteditable]")) {
+    const target = /** @type {Element} */ (ev.target);
+    if (ev.defaultPrevented || target.closest("[contenteditable]")) {
         return;
     }
-    const a = ev.target.closest("a");
+    const a = target.closest("a");
     const href = a?.getAttribute("href");
     if (href && !href.startsWith("#")) {
         let url;
@@ -323,7 +340,8 @@ browser.addEventListener("click", (ev) => {
         if (
             browser.location.host === url.host &&
             browser.location.pathname.startsWith("/odoo") &&
-            (["/web", "/odoo"].includes(url.pathname) || url.pathname.startsWith("/odoo/")) &&
+            (["/web", "/odoo"].includes(url.pathname) ||
+                url.pathname.startsWith("/odoo/")) &&
             a.target !== "_blank"
         ) {
             ev.preventDefault();
@@ -331,7 +349,9 @@ browser.addEventListener("click", (ev) => {
             if (url.pathname.startsWith("/odoo") && url.hash) {
                 browser.history.pushState({}, "", url.href);
             }
-            new Promise((res) => setTimeout(res, 0)).then(() => routerBus.trigger("ROUTE_CHANGE"));
+            new Promise((res) => setTimeout(res, 0)).then(() =>
+                routerBus.trigger("ROUTE_CHANGE"),
+            );
         }
     }
 });
@@ -413,11 +433,3 @@ export const router = {
 };
 
 startRouter();
-
-export function objectToQuery(obj) {
-    const query = {};
-    Object.entries(obj).forEach(([k, v]) => {
-        query[k] = v ? String(v) : v;
-    });
-    return query;
-}

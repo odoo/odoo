@@ -1,10 +1,11 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { advanceFrame, animationFrame, disableAnimations } from "@odoo/hoot-mock";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { useSortable } from "@web/core/utils/sortable_owl";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { useSortable } from "@web/core/utils/dnd/sortable_owl";
 
 beforeEach(disableAnimations);
 
@@ -29,23 +30,27 @@ test("Parameters error handling", async () => {
     // Incorrect params
     await mountListAndAssert(() => {
         expect(() => useSortable({})).toThrow(
-            `Error in hook useSortable: missing required property "ref" in parameter`
+            `Error in hook useSortable: missing required property "ref" in parameter`,
         );
     });
     await mountListAndAssert(() => {
         expect(() =>
             useSortable({
                 elements: ".item",
-            })
-        ).toThrow(`Error in hook useSortable: missing required property "ref" in parameter`);
+            }),
+        ).toThrow(
+            `Error in hook useSortable: missing required property "ref" in parameter`,
+        );
     });
     await mountListAndAssert(() => {
         expect(() =>
             useSortable({
                 elements: ".item",
                 groups: ".list",
-            })
-        ).toThrow(`Error in hook useSortable: missing required property "ref" in parameter`);
+            }),
+        ).toThrow(
+            `Error in hook useSortable: missing required property "ref" in parameter`,
+        );
     });
 
     // Correct params
@@ -585,10 +590,18 @@ test("applyChangeOnDrop option", async () => {
                 placeholderClasses: ["placeholder"],
                 applyChangeOnDrop: true,
                 onDragStart() {
-                    expect(queryAllTexts(".item:not(.placeholder)")).toEqual(["1", "2", "3"]);
+                    expect(queryAllTexts(".item:not(.placeholder)")).toEqual([
+                        "1",
+                        "2",
+                        "3",
+                    ]);
                 },
                 onDrop() {
-                    expect(queryAllTexts(".item:not(.placeholder)")).toEqual(["2", "1", "3"]);
+                    expect(queryAllTexts(".item:not(.placeholder)")).toEqual([
+                        "2",
+                        "1",
+                        "3",
+                    ]);
                 },
             });
         }

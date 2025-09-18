@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/components/dropdown/dropdown";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";

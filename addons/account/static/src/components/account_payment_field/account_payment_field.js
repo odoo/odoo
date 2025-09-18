@@ -1,12 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate, deserializeDate } from "@web/core/l10n/dates";
 
-import { formatMonetary } from "@web/views/fields/formatters";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { formatMonetary } from "@web/fields/formatters";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 
 class AccountPaymentPopOver extends Component {
@@ -71,7 +71,7 @@ export class AccountPaymentField extends Component {
     }
 
     async openMove(moveId) {
-        const action = await this.orm.call(this.props.record.resModel, 'action_open_business_doc', [moveId], {});
+        const action = await this.orm.call(this.props.record.resModel, 'action_view_business_doc', [moveId], {});
         this.action.doAction(action);
     }
 }

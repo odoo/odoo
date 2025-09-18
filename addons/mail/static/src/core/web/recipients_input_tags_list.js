@@ -1,8 +1,8 @@
-import { usePopover } from "@web/core/popover/popover_hook";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
-
 import { onWillUpdateProps, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { TagsList } from "@web/components/tags_list/tags_list";
+import { usePopover } from "@web/ui/popover/popover_hook";
+
+import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 
 /**
  * Override of the TagsList so that the email address of each recipients can be checked.
@@ -36,7 +36,7 @@ export class RecipientsInputTagsList extends TagsList {
                     this.popover.close();
                 }
             },
-            () => [this.state.tagToUpdate, this.tagToUpdateRef.el]
+            () => [this.state.tagToUpdate, this.tagToUpdateRef.el],
         );
     }
 

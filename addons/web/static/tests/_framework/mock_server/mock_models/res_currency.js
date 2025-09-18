@@ -1,3 +1,5 @@
+// @ts-check
+
 import { serverState } from "../../mock_server_state.hoot";
 import { ServerModel } from "../mock_model";
 
@@ -11,6 +13,6 @@ export class ResCurrency extends ServerModel {
             name,
             position,
             symbol,
-        })
+        }),
     );
 }

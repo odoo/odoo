@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -57,7 +59,9 @@ test("Show copy button even on empty field", async () => {
 
     await mountView({ type: "form", resModel: "res.partner", resId: 2 });
 
-    expect(".o_field_CopyClipboardChar[name='char_field'] .o_clipboard_button").toHaveCount(1);
+    expect(
+        ".o_field_CopyClipboardChar[name='char_field'] .o_clipboard_button",
+    ).toHaveCount(1);
 });
 
 test("Show copy button even on readonly empty field", async () => {
@@ -75,7 +79,9 @@ test("Show copy button even on readonly empty field", async () => {
         </form>`,
     });
 
-    expect(".o_field_CopyClipboardChar[name='char_field'] .o_clipboard_button").toHaveCount(1);
+    expect(
+        ".o_field_CopyClipboardChar[name='char_field'] .o_clipboard_button",
+    ).toHaveCount(1);
 });
 
 test("Display a tooltip on click", async () => {

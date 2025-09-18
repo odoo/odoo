@@ -1,6 +1,6 @@
-// Wkhtmltopdf doesn't support CSS custom properties (--name-stuff),
-// it also doesn't support CSS's rgba function. We re-define here the
-// .bg-[theme-colors] (and text) in order to define them as a css rgb function.
+// WeasyPrint supports CSS custom properties, but we keep explicit bg/text
+// utility overrides to guarantee consistent colors in PDF output regardless
+// of how custom properties are resolved in the paged media context.
 @each $color-name, $color-value in $utilities-bg {
     .bg-#{$color-name} {
         background-color: RGB($color-value) if($enable-important-utilities, !important, null);
@@ -38,21 +38,12 @@ $report-text-colors: null;
     page-break-inside: avoid;
 }
 
-// Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version)
+// Hide print-none elements in PDF context
 .d-print-none {
     display: none;
 }
 
-// Wkhtmltopdf doesn't handle flexbox properly, both the content
-// of columns and columns themselves does not wrap over new lines
-// when needed: the font of the pdf will reduce to make the content
-// fit the page format.
-// A (weak) solution is to force the content on one line and
-// impose the width, so to have evenly size columns.
-// This should work fine in most cases, but will yield ugly results
-// when 6+ columns are rendered
 .col {
-    -webkit-box-flex: 1;
     flex: 1 0 0%;
 }
 
@@ -69,10 +60,6 @@ $report-text-colors: null;
 // Even if the width is smaller than the media querry limit from bootstrap.
 // This need come from the footer being editable via the Odoo editor.
 .footer {
-    .row, .col-lg-3, .col-lg-4, .col-lg-6 {
-        -webkit-box-flex: 1 !important;
-    }
-
     .col-lg-3, .col-lg-4, .col-lg-6 {
         flex: 0 0 auto;
     }
@@ -90,9 +77,7 @@ $report-text-colors: null;
     }
 }
 
-// Boostrap 5 introduces variable paddings for container which wkhtmltopdf 12.6
-// doesn't process (custom properties and calc()), so we restore Boostrap 4's
-// paddings for PDFs
+// Explicit container padding for consistent PDF output
 .container {
     padding-right: $container-padding-x;
     padding-left: $container-padding-x;
@@ -111,52 +96,5 @@ $report-text-colors: null;
     }
     > :not(:first-child) {
         border-top-style: none;
-    }
-}
-
-// Fix flex utilites for compatibility with wkhtmltopdf 12.6
-.flex-column {
-    -webkit-box-orient: vertical;
-}
-
-.justify-content {
-    &-center {
-        -webkit-box-pack: center;
-    }
-    &-between {
-        -webkit-box-pack: justify;
-    }
-}
-
-.align-items {
-    &-start {
-        -webkit-box-align: start;
-    }
-    &-center {
-        -webkit-box-align: center;
-    }
-    &-between {
-        -webkit-box-align: justify;
-    }
-    &-end {
-        -webkit-box-align: end;
-    }
-}
-
-.flex-grow {
-    &-0{
-        -webkit-box-flex: 0;
-    }
-    &-1{
-        -webkit-box-flex: 1;
-    }
-}
-
-.flex-shrink {
-    &-0 {
-        -webkit-box-flex-group: 0;
-    }
-    &-1 {
-        -webkit-box-flex-group: 1;
     }
 }

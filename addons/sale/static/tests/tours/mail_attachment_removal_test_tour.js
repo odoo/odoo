@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("mail_attachment_removal_tour", {
 
     {
         content: "click on send by email",
-        trigger: ".o_statusbar_buttons > button[name='action_quotation_send']",
+        trigger: ".o_statusbar_buttons > button[name='action_send_quotation']",
         run: "click"
     },
     {

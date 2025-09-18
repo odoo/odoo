@@ -1,8 +1,9 @@
+// @ts-check
+
 import { before, expect } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, findComponent, preloadBundle } from "@web/../tests/web_test_helpers";
-
-import { ensureArray } from "@web/core/utils/arrays";
+import { ensureArray } from "@web/core/utils/collections/arrays";
 import { patch } from "@web/core/utils/patch";
 import { GraphController } from "@web/views/graph/graph_controller";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
@@ -85,7 +86,8 @@ export const checkTooltip = (view, { title, lines }, index, datasetIndex = null)
 /**
  * @param {"asc" | "desc"} direction
  */
-export const clickSort = (direction) => contains(`.fa-sort-amount-${direction}`).click();
+export const clickSort = (direction) =>
+    contains(`.fa-sort-amount-${direction}`).click();
 
 /**
  * @param {GraphView} view
@@ -110,7 +112,8 @@ export const getScaleY = (view) => getChart(view).config.options.scales.y;
 /**
  * @param {GraphView} view
  */
-export const getYAxisLabel = (view) => getChart(view).config.options.scales.y.title.text;
+export const getYAxisLabel = (view) =>
+    getChart(view).config.options.scales.y.title.text;
 
 /**
  * @param {GraphView} view
@@ -152,7 +155,11 @@ export function checkLegend(view, expectedLabels) {
 export async function clickOnDataset(view, options = {}) {
     const chart = getChart(view);
     const point = chart.getDatasetMeta(0).data[0].getCenterPoint();
-    return contains(chart.canvas).click({ position: point, relative: true, ...options });
+    return contains(chart.canvas).click({
+        position: point,
+        relative: true,
+        ...options,
+    });
 }
 
 /**

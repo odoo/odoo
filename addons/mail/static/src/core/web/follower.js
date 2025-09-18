@@ -1,8 +1,7 @@
-import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
+import { Component } from "@odoo/owl";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").Follower} follower
@@ -22,7 +21,7 @@ export class Follower extends Component {
     onClickDetails() {
         this.store.openDocument({
             id: this.props.follower.partner_id.id,
-            model: "res.partner"
+            model: "res.partner",
         });
         this.props.close?.();
     }

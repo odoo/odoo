@@ -1,6 +1,9 @@
+// @ts-check
+
 import { beforeEach, destroy, expect, test } from "@odoo/hoot";
 import { queryAll, queryAllAttributes, queryAllTexts, resize } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, onRendered, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -10,8 +13,6 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, onRendered, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 
@@ -55,7 +56,10 @@ test("href attribute on apps menu items", async () => {
     defineMenus([{ id: 1, actionID: 339 }]);
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
-    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute(
+        "href",
+        "/odoo/action-339",
+    );
 });
 
 test.tags("desktop");
@@ -88,7 +92,7 @@ test("many sublevels in app menu items", async () => {
             text: el.innerText,
             paddingLeft: el.style.paddingLeft,
             tagName: el.tagName,
-        }))
+        })),
     ).toEqual([
         { text: "My submenu 1", paddingLeft: "20px", tagName: "DIV" },
         { text: "My submenu 2", paddingLeft: "32px", tagName: "DIV" },
@@ -118,10 +122,13 @@ test("data-menu-xmlid attribute on AppsMenu items", async () => {
 
     // check apps
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
-    expect(queryAllAttributes(".o-dropdown--menu a", "data-menu-xmlid")).toEqual(["wowl", null], {
-        message:
-            "menu items should have the correct data-menu-xmlid attribute (only the first is set)",
-    });
+    expect(queryAllAttributes(".o-dropdown--menu a", "data-menu-xmlid")).toEqual(
+        ["wowl", null],
+        {
+            message:
+                "menu items should have the correct data-menu-xmlid attribute (only the first is set)",
+        },
+    );
 
     // check menus
     getService("menu").setCurrentMenu(1);
@@ -129,7 +136,9 @@ test("data-menu-xmlid attribute on AppsMenu items", async () => {
     expect(".o_menu_sections .dropdown-item[data-menu-xmlid=menu_3]").toHaveCount(1);
 
     // check sub menus toggler
-    expect(".o_menu_sections button.dropdown-toggle[data-menu-xmlid=menu_4]").toHaveCount(1);
+    expect(
+        ".o_menu_sections button.dropdown-toggle[data-menu-xmlid=menu_4]",
+    ).toHaveCount(1);
 
     // check sub menus
     await contains(".o_menu_sections .dropdown-toggle").click();
@@ -238,7 +247,9 @@ test("can adapt with 'more' menu sections behavior", async () => {
             await super.adapt();
             const sectionsCount = this.currentAppSections.length;
             const hiddenSectionsCount = this.currentAppSectionsExtra.length;
-            expect.step(`adapt -> hide ${hiddenSectionsCount}/${sectionsCount} sections`);
+            expect.step(
+                `adapt -> hide ${hiddenSectionsCount}/${sectionsCount} sections`,
+            );
         }
     }
     defineMenus([
@@ -284,10 +295,16 @@ test("can adapt with 'more' menu sections behavior", async () => {
     await resize({ width: 1366 });
     await waitNavbarAdaptation();
 
-    expect(".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)").toHaveCount(3, {
-        message: "should have 3 menu sections displayed (that are not the 'more' menu)",
+    expect(".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)").toHaveCount(
+        3,
+        {
+            message:
+                "should have 3 menu sections displayed (that are not the 'more' menu)",
+        },
+    );
+    expect(".o_menu_sections_more").toHaveCount(0, {
+        message: "the 'more' menu should not exist",
     });
-    expect(".o_menu_sections_more").toHaveCount(0, { message: "the 'more' menu should not exist" });
     expect.verifySteps([
         "adapt -> hide 0/3 sections",
         "adapt -> hide 3/3 sections",
@@ -340,7 +357,8 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     expect(".o_navbar").toHaveRect({ width: 600 });
     expect(adaptCount).toBe(1);
     expect(adaptRenderCount).toBe(0, {
-        message: "during adapt, render not triggered as the navbar has no app sub menus",
+        message:
+            "during adapt, render not triggered as the navbar has no app sub menus",
     });
 
     await resize({ width: 0 });
@@ -349,7 +367,8 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     expect(".o_navbar").toHaveRect({ width: 0 });
     expect(adaptCount).toBe(2);
     expect(adaptRenderCount).toBe(0, {
-        message: "during adapt, render not triggered as the navbar has no app sub menus",
+        message:
+            "during adapt, render not triggered as the navbar has no app sub menus",
     });
 
     // Set menu
@@ -375,20 +394,24 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     });
     expect(adaptCount).toBe(4);
     expect(adaptRenderCount).toBe(1, {
-        message: "during adapt, render not triggered as the more menu dropdown is STILL the same",
+        message:
+            "during adapt, render not triggered as the more menu dropdown is STILL the same",
     });
 
     // Reset to full width
     await resize({ width: 1366 });
     await waitNavbarAdaptation();
 
-    expect(navbar.currentAppSections).toHaveLength(3, { message: "still 3 app sub menus" });
+    expect(navbar.currentAppSections).toHaveLength(3, {
+        message: "still 3 app sub menus",
+    });
     expect(navbar.currentAppSectionsExtra).toHaveLength(0, {
         message: "all app sub menus are NO MORE inside the more menu",
     });
     expect(adaptCount).toBe(5);
     expect(adaptRenderCount).toBe(2, {
-        message: "during adapt, render triggered as the more menu dropdown is NO MORE the same",
+        message:
+            "during adapt, render triggered as the more menu dropdown is NO MORE the same",
     });
 });
 
@@ -456,8 +479,15 @@ test("'more' menu sections properly updated on app change", async () => {
     // Open the more menu
     await contains(".o_menu_sections_more .dropdown-toggle").click();
     expect(queryAllTexts(".dropdown-menu > *")).toEqual(
-        ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
-        { message: "'more' menu should contain first app sections" }
+        [
+            "Section 10",
+            "Section 11",
+            "Section 12",
+            "Section 120",
+            "Section 121",
+            "Section 122",
+        ],
+        { message: "'more' menu should contain first app sections" },
     );
     // Close the more menu
     await contains(".o_menu_sections_more .dropdown-toggle").click();
@@ -469,8 +499,15 @@ test("'more' menu sections properly updated on app change", async () => {
     // Open the more menu
     await contains(".o_menu_sections_more .dropdown-toggle").click();
     expect(queryAllTexts(".dropdown-menu > *")).toEqual(
-        ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
-        { message: "'more' menu should contain second app sections" }
+        [
+            "Section 20",
+            "Section 21",
+            "Section 22",
+            "Section 220",
+            "Section 221",
+            "Section 222",
+        ],
+        { message: "'more' menu should contain second app sections" },
     );
 });
 

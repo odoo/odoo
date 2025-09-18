@@ -31,8 +31,8 @@ class PurchaseOrder(models.Model):
                 'warning': {'title': _('Warning'), 'message': _('Please note this purchase order is for subcontracting purposes.')}
             }
 
-    def _get_destination_location(self):
+    def _get_location_destination(self):
         self.ensure_one()
         if self.default_location_dest_id_is_subcontracting_loc:
             return self.dest_address_id.property_stock_subcontractor.id
-        return super()._get_destination_location()
+        return super()._get_location_destination()

@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 import { BuilderTextInputBase, textInputBasePassthroughProps } from "./builder_text_input_base";
 import {
     basicContainerBuilderComponentProps,

@@ -12,7 +12,7 @@ from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
 from odoo.tools import email_normalize
-from odoo.sql_db import BaseCursor
+from odoo.db import BaseCursor
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService

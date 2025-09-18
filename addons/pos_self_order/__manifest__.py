@@ -42,7 +42,7 @@
 
             # Re-include debug and router files that were removed in point_of_sale.base_app
             # but are required for running unit tests
-            'web/static/src/core/debug/**/*',
+            'web/static/src/services/debug/**/*',
             'web/static/src/core/browser/router.js',
         ],
         'web.assets_unit_tests': [
@@ -60,7 +60,7 @@
             "pos_self_order/static/src/app/primary_variables.scss",
             "pos_self_order/static/src/app/bootstrap_overridden.scss",
             ("include", "point_of_sale.base_app"),
-            'web/static/src/core/currency.js',
+            'web/static/src/services/currency.js',
             'barcodes/static/src/barcode_service.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/proxy_trap.js',
@@ -79,6 +79,8 @@
             'html_editor/static/src/scss/base_style.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
             "point_of_sale/static/src/app/components/numpad/*",
+            "point_of_sale/static/src/app/components/loader/*",
+            "point_of_sale/static/src/app/components/loader/critical_pos_error/*",
             "point_of_sale/static/src/app/components/product_card/*",
             "point_of_sale/static/src/app/components/order_display/*",
             "point_of_sale/static/src/app/components/orderline/*",
@@ -97,7 +99,7 @@
             "pos_self_order/static/src/app/store/order_change_receipt_template.xml",
             "account/static/src/helpers/*.js",
             'web/static/src/model/relational_model/operation.js',
-            "web/static/src/views/fields/parsers.js",
+            "web/static/src/fields/parsers.js",
 
             # Related models from point_of_sale
             "point_of_sale/static/src/app/models/data_service_options.js",

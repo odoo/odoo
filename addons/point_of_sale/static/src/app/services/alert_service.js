@@ -1,6 +1,5 @@
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-
 class Alert extends Component {
     static template = xml`
         <div t-attf-class="alert pos-navbar-height fixed-top p-1 rounded-0 alert-{{props.type}} fade show d-flex align-items-center justify-content-center" role="alert">
@@ -33,7 +32,7 @@ export const alertService = {
                     message,
                     ...options,
                 },
-                overlayOptions
+                overlayOptions,
             );
         };
 

@@ -1,17 +1,17 @@
 import { browser } from "@web/core/browser/browser";
-const sessionStorage = browser.sessionStorage;
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { mixCssColors } from "@web/core/utils/colors";
+import { mixCssColors } from "@web/core/utils/format/colors";
 import { router } from "@web/core/browser/router";
 import {
     Component,
@@ -28,6 +28,8 @@ import {
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
+
+const sessionStorage = browser.sessionStorage;
 
 export const ROUTES = {
     descriptionScreen: 2,

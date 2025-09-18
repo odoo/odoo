@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
@@ -11,7 +13,6 @@ import {
     patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
 import { listView } from "@web/views/list/list_view";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -115,11 +116,17 @@ test('execute "on_close" only if there is no dialog to close', async () => {
     const options = { onClose };
     // execute an 'ir.actions.act_window_close' action
     // should not call 'on_close' as there is a dialog to close
-    await getService("action").doAction({ type: "ir.actions.act_window_close" }, options);
+    await getService("action").doAction(
+        { type: "ir.actions.act_window_close" },
+        options,
+    );
     expect.verifySteps([]);
     // execute again an 'ir.actions.act_window_close' action
     // should call 'on_close' as there is no dialog to close
-    await getService("action").doAction({ type: "ir.actions.act_window_close" }, options);
+    await getService("action").doAction(
+        { type: "ir.actions.act_window_close" },
+        options,
+    );
     expect.verifySteps(["on_close"]);
 });
 
@@ -139,7 +146,7 @@ test("close action with provided infos", async () => {
             type: "ir.actions.act_window_close",
             infos: "just for testing",
         },
-        options
+        options,
     );
 });
 
@@ -194,9 +201,15 @@ test("web client is not deadlocked when a view crashes", async () => {
     await animationFrame();
     expect.verifyErrors(["not working as intended"]);
 
-    expect(".o_list_view").toHaveCount(1, { message: "there should still be a list view in dom" });
+    expect(".o_list_view").toHaveCount(1, {
+        message: "there should still be a list view in dom",
+    });
     // open another record, the read will not crash
     await contains(".o_list_view .o_data_row:eq(1) .o_data_cell").click();
-    expect(".o_list_view").toHaveCount(0, { message: "there should not be a list view in dom" });
-    expect(".o_form_view").toHaveCount(1, { message: "there should be a form view in dom" });
+    expect(".o_list_view").toHaveCount(0, {
+        message: "there should not be a list view in dom",
+    });
+    expect(".o_form_view").toHaveCount(1, {
+        message: "there should be a form view in dom",
+    });
 });

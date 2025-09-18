@@ -2,9 +2,7 @@ import io
 import logging
 import time
 
-from math import floor
 from PIL import Image, ImageFont, ImageDraw
-from werkzeug.urls import url_encode
 from werkzeug.exceptions import NotFound
 from urllib.parse import parse_qsl, urlencode, urlparse
 
@@ -45,8 +43,8 @@ class MailController(http.Controller):
                 **kwargs,
             }
         )
-        mail_view_url = f'{url_base}?{url_encode(url_params, sort=True)}'
-        return request.redirect(f'/web/login?{url_encode({"redirect": mail_view_url})}')
+        mail_view_url = f'{url_base}?{urlencode(sorted(url_params.items()))}'
+        return request.redirect(f'/web/login?{urlencode({"redirect": mail_view_url})}')
 
     @classmethod
     def _check_token(cls, token):
@@ -179,7 +177,7 @@ class MailController(http.Controller):
         # @see router.js: heuristics to discrimate a model name from an action path
         # is the presence of dots, or the prefix m- for models
         model_in_url = model if "." in model else "m-" + model
-        url = f'/odoo/{model_in_url}/{res_id}?{url_encode(url_params, sort=True)}'
+        url = f'/odoo/{model_in_url}/{res_id}?{urlencode(sorted(url_params.items()))}'
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')
@@ -327,44 +325,21 @@ class MailController(http.Controller):
             bg = bg.replace('rgba', 'rgb')
             bg = ','.join(bg.split(',')[:-1]) + ')'
 
-        # Convert the opacity value compatible with PIL Image color (0 to 255)
-        # when color specifier is 'rgba'
+        # Strip alpha channel from color — icon opacity comes from glyph shape
         if color is not None and color.startswith('rgba'):
-            *rgb, a = color.strip(')').split(',')
-            opacity = str(floor(float(a) * 255))
-            color = ','.join([*rgb, opacity]) + ')'
-
-        # Determine the dimensions of the icon
-        image = Image.new("RGBA", (width, height), color)
-        draw = ImageDraw.Draw(image)
-
-        if hasattr(draw, 'textbbox'):
-            box = draw.textbbox((0, 0), icon, font=font_obj)
-            left = box[0]
-            top = box[1]
-            boxw = box[2] - box[0]
-            boxh = box[3] - box[1]
-        else:  # pillow < 8.00 (Focal)
-            left, top, _right, _bottom = image.getbbox()
-            boxw, boxh = draw.textsize(icon, font=font_obj)
-
-        draw.text((0, 0), icon, font=font_obj)
-
-        # Create an alpha mask
-        imagemask = Image.new("L", (boxw, boxh), 0)
-        drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
-
-        # Create a solid color image and apply the mask
-        if color.startswith('rgba'):
             color = color.replace('rgba', 'rgb')
             color = ','.join(color.split(',')[:-1]) + ')'
-        iconimage = Image.new("RGBA", (boxw, boxh), color)
-        iconimage.putalpha(imagemask)
 
-        # Create output image
+        # Measure the icon glyph dimensions
+        dummy = Image.new("RGBA", (1, 1))
+        draw = ImageDraw.Draw(dummy)
+        bbox = draw.textbbox((0, 0), icon, font=font_obj)
+        boxw = bbox[2] - bbox[0]
+
+        # Render icon directly on the output image
         outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
-        outimage.paste(iconimage, (left, top), iconimage)
+        draw = ImageDraw.Draw(outimage)
+        draw.text((0, 0), icon, font=font_obj, fill=color)
 
         # output image
         output = io.BytesIO()

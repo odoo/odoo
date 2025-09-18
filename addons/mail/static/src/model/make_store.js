@@ -1,10 +1,17 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
-import { Store } from "./store";
-import { STORE_SYM, isFieldDefinition, isMany, isRelation, modelRegistry } from "./misc";
-import { Record } from "./record";
-import { StoreInternal } from "./store_internal";
+
+import {
+    isFieldDefinition,
+    isMany,
+    isRelation,
+    modelRegistry,
+    STORE_SYM,
+} from "./misc";
 import { ModelInternal } from "./model_internal";
+import { Record } from "./record";
 import { RecordInternal } from "./record_internal";
+import { Store } from "./store";
+import { StoreInternal } from "./store_internal";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -28,7 +35,7 @@ export function makeStore(env, { localRegistry } = {}) {
         const OgClass = _OgClass;
         if (store[OgClass.getName()]) {
             throw new Error(
-                `There must be no duplicated Model Names (duplicate found: ${OgClass.getName()})`
+                `There must be no duplicated Model Names (duplicate found: ${OgClass.getName()})`,
             );
         }
         // classes cannot be made reactive because they are functions and they are not supported.
@@ -46,7 +53,7 @@ export function makeStore(env, { localRegistry } = {}) {
                     record._raw = record;
                     record.Model = Model;
                     record._ = markRaw(
-                        record[STORE_SYM] ? new StoreInternal() : new RecordInternal()
+                        record[STORE_SYM] ? new StoreInternal() : new RecordInternal(),
                     );
                     const recordProxyInternal = new Proxy(record, {
                         /**
@@ -55,7 +62,10 @@ export function makeStore(env, { localRegistry } = {}) {
                          * @param {Record} recordFullProxy
                          */
                         get(record, name, recordFullProxy) {
-                            recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
+                            recordFullProxy = record._.downgradeProxy(
+                                record,
+                                recordFullProxy,
+                            );
                             if (record._.gettingField || !Model._.fields.get(name)) {
                                 let res = Reflect.get(...arguments);
                                 if (typeof res === "function") {
@@ -63,13 +73,19 @@ export function makeStore(env, { localRegistry } = {}) {
                                 }
                                 return res;
                             }
-                            if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
+                            if (
+                                Model._.fieldsCompute.get(name) &&
+                                !Model._.fieldsEager.get(name)
+                            ) {
                                 record._.fieldsComputeInNeed.set(name, true);
                                 if (record._.fieldsComputeOnNeed.get(name)) {
                                     record._.compute(record, name);
                                 }
                             }
-                            if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
+                            if (
+                                Model._.fieldsSort.get(name) &&
+                                !Model._.fieldsEager.get(name)
+                            ) {
                                 record._.fieldsSortInNeed.set(name, true);
                                 if (record._.fieldsSortOnNeed.get(name)) {
                                     record._.sort(record, name);
@@ -175,14 +191,14 @@ export function makeStore(env, { localRegistry } = {}) {
                     throw new Error(
                         `Fields ${Models[
                             targetModel
-                        ].getName()}.${inverse} has wrong targetModel. Expected: "${Model.getName()}" Actual: "${rel2TargetModel}"`
+                        ].getName()}.${inverse} has wrong targetModel. Expected: "${Model.getName()}" Actual: "${rel2TargetModel}"`,
                     );
                 }
                 if (rel2Inverse && rel2Inverse !== name) {
                     throw new Error(
                         `Fields ${Models[
                             targetModel
-                        ].getName()}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2Inverse}"`
+                        ].getName()}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2Inverse}"`,
                     );
                 }
                 OtherModel._.fieldsTargetModel.set(inverse, Model.getName());

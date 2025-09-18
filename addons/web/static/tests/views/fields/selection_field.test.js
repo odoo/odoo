@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -83,7 +85,9 @@ test("SelectionField in a list view", async () => {
     expect(queryOne(".o_select_menu input", { root: td })).toHaveCount(1, {
         message: "td should have a child 'select'",
     });
-    expect(td.children).toHaveCount(1, { message: "select tag should be only child of td" });
+    expect(td.children).toHaveCount(1, {
+        message: "select tag should be only child of td",
+    });
 });
 
 test.tags("desktop");
@@ -135,7 +139,13 @@ test("SelectionField, edition and on many2one field", async () => {
     expect(".o_field_widget[name='trululu'] input").toHaveValue("");
     await editSelectMenu(".o_field_widget[name='product_id'] input", { value: "xpad" });
     expect(".o_field_widget[name='color'] input").toHaveValue("Red");
-    expect.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange"]);
+    expect.verifySteps([
+        "get_views",
+        "web_read",
+        "name_search",
+        "name_search",
+        "onchange",
+    ]);
 });
 
 test("unset selection field with 0 as key", async () => {
@@ -182,7 +192,9 @@ test("unset selection field with string keys", async () => {
         arch: /* xml */ '<form edit="0"><field name="selection" /></form>',
     });
 
-    expect(".o_field_widget").toHaveText("", { message: "there should be no displayed value" });
+    expect(".o_field_widget").toHaveText("", {
+        message: "there should be no displayed value",
+    });
     expect(".o_field_widget").toHaveClass("o_field_empty", {
         message: "should have class o_field_empty",
     });
@@ -248,7 +260,9 @@ test("required selection widget should not have blank option", async () => {
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["Good", "Bad"]);
 
     // change value to update widget modifier values
-    await editSelectMenu(".o_field_widget[name='feedback_value'] input", { value: "Bad" });
+    await editSelectMenu(".o_field_widget[name='feedback_value'] input", {
+        value: "Bad",
+    });
     await contains(".o_field_widget[name='color'] input").click();
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["Red", "Black"]);
 });
@@ -260,7 +274,10 @@ test("selection field with placeholder", async () => {
         arch: /* xml */ `<form><field name="trululu" widget="selection" placeholder="Placeholder"/></form>`,
     });
 
-    expect(`.o_field_widget[name='trululu'] input`).toHaveAttribute("placeholder", "Placeholder");
+    expect(`.o_field_widget[name='trululu'] input`).toHaveAttribute(
+        "placeholder",
+        "Placeholder",
+    );
 });
 
 test("placeholder_field shows as placeholder", async () => {
@@ -277,7 +294,7 @@ test("placeholder_field shows as placeholder", async () => {
     });
     expect(`.o_field_widget[name='trululu'] input`).toHaveAttribute(
         "placeholder",
-        "My Placeholder"
+        "My Placeholder",
     );
 });
 

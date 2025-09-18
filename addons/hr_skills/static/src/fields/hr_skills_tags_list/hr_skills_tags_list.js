@@ -1,4 +1,4 @@
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { TagsList } from "@web/components/tags_list/tags_list";
 
 
 export class SkillsTagList extends TagsList {

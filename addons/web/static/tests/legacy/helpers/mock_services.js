@@ -1,12 +1,14 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/helpers/mock_services default=false */
 
-import { effectService } from "@web/core/effects/effect_service";
+import { effectService } from "@web/ui/effects/effect_service";
 import { localization } from "@web/core/l10n/localization";
 import { ConnectionAbortedError, rpcBus, rpc } from "@web/core/network/rpc";
-import { ormService } from "@web/core/orm_service";
-import { overlayService } from "@web/core/overlay/overlay_service";
-import { uiService } from "@web/core/ui/ui_service";
-import { user } from "@web/core/user";
+import { ormService } from "@web/services/orm_service";
+import { overlayService } from "@web/ui/overlay/overlay_service";
+import { uiService } from "@web/ui/block/ui_service";
+import { user } from "@web/services/user";
 import { patchWithCleanup } from "./utils";
 
 // -----------------------------------------------------------------------------

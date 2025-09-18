@@ -1,7 +1,6 @@
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Reactive } from "@web/core/utils/reactive";
-import { browser } from "@web/core/browser/browser";
-
 export class SelfOrderRouter extends Reactive {
     static serviceDependencies = [];
 
@@ -56,7 +55,7 @@ export class SelfOrderRouter extends Reactive {
 
         url.pathname = route.replace(
             /\{\w+:(\w+)\}/g,
-            (match, paramName) => routeParams[paramName]
+            (match, paramName) => routeParams[paramName],
         );
 
         history.pushState({}, "", url);

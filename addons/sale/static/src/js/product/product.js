@@ -1,6 +1,6 @@
 
 import { Component } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { formatCurrency } from "@web/services/currency";
 import {
     ProductTemplateAttributeLine as PTAL
 } from "../product_template_attribute_line/product_template_attribute_line";

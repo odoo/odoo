@@ -1,7 +1,6 @@
 import { Attachment } from "@mail/core/common/attachment_model";
 import { fields } from "@mail/core/common/record";
 import { patch } from "@web/core/utils/patch";
-
 /** @type {import("models").Attachment} */
 const attachmentPatch = {
     setup() {

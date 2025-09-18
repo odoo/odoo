@@ -1,5 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isColorGradient } from "@web/core/utils/colors";
+import { isColorGradient } from "@web/core/utils/format/colors";
 import { isElement } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [

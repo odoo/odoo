@@ -1,6 +1,5 @@
 import { cleanTerm } from "@mail/utils/common/format";
 import { registry } from "@web/core/registry";
-
 /**
  * Registry of functions to sort partner suggestions.
  * The expected value is a function with the following
@@ -21,7 +20,7 @@ partnerCompareRegistry.add(
             return -1;
         }
     },
-    { sequence: 5 }
+    { sequence: 5 },
 );
 
 partnerCompareRegistry.add(
@@ -36,7 +35,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 35 }
+    { sequence: 35 },
 );
 
 partnerCompareRegistry.add(
@@ -47,8 +46,12 @@ partnerCompareRegistry.add(
             if (thread.selfFollower) {
                 followerList.push(thread.selfFollower);
             }
-            const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
-            const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
+            const isFollower1 = followerList.some((follower) =>
+                p1.eq(follower.partner_id),
+            );
+            const isFollower2 = followerList.some((follower) =>
+                p2.eq(follower.partner_id),
+            );
             if (isFollower1 && !isFollower2) {
                 return -1;
             }
@@ -57,7 +60,7 @@ partnerCompareRegistry.add(
             }
         }
     },
-    { sequence: 45 }
+    { sequence: 25 },
 );
 
 partnerCompareRegistry.add(
@@ -65,10 +68,16 @@ partnerCompareRegistry.add(
     (p1, p2, { searchTerm }) => {
         const cleanedName1 = cleanTerm(p1.name);
         const cleanedName2 = cleanTerm(p2.name);
-        if (cleanedName1.startsWith(searchTerm) && !cleanedName2.startsWith(searchTerm)) {
+        if (
+            cleanedName1.startsWith(searchTerm) &&
+            !cleanedName2.startsWith(searchTerm)
+        ) {
             return -1;
         }
-        if (!cleanedName1.startsWith(searchTerm) && cleanedName2.startsWith(searchTerm)) {
+        if (
+            !cleanedName1.startsWith(searchTerm) &&
+            cleanedName2.startsWith(searchTerm)
+        ) {
             return 1;
         }
         if (cleanedName1 < cleanedName2) {
@@ -78,7 +87,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 50 }
+    { sequence: 50 },
 );
 
 partnerCompareRegistry.add(
@@ -86,10 +95,16 @@ partnerCompareRegistry.add(
     (p1, p2, { searchTerm }) => {
         const cleanedEmail1 = cleanTerm(p1.email);
         const cleanedEmail2 = cleanTerm(p2.email);
-        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {
+        if (
+            cleanedEmail1.startsWith(searchTerm) &&
+            !cleanedEmail1.startsWith(searchTerm)
+        ) {
             return -1;
         }
-        if (!cleanedEmail2.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
+        if (
+            !cleanedEmail2.startsWith(searchTerm) &&
+            cleanedEmail2.startsWith(searchTerm)
+        ) {
             return 1;
         }
         if (cleanedEmail1 < cleanedEmail2) {
@@ -99,7 +114,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 55 }
+    { sequence: 55 },
 );
 
 partnerCompareRegistry.add("mail.id", (p1, p2) => p1.id - p2.id, { sequence: 75 });

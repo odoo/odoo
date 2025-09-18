@@ -278,7 +278,7 @@ class test_integer_field(ImporterCase):
             values(self.read()),
         )
 
-    @mute_logger('odoo.sql_db', 'odoo.models')
+    @mute_logger('odoo.db', 'odoo.models')
     def test_out_of_range(self):
         result = self.import_(['value'], [[str(2**31)]])
         self.assertIs(result['ids'], False)
@@ -468,7 +468,7 @@ class test_unbound_string_field(ImporterCase):
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
-    @mute_logger('odoo.sql_db', 'odoo.models')
+    @mute_logger('odoo.db', 'odoo.models')
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(len(result['messages']), 1)
@@ -478,7 +478,7 @@ class test_required_string_field(ImporterCase):
         self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
 
-    @mute_logger('odoo.sql_db', 'odoo.models')
+    @mute_logger('odoo.db', 'odoo.models')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(len(result['messages']), 1)
@@ -488,7 +488,7 @@ class test_required_string_field(ImporterCase):
         self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
 
-    @mute_logger('odoo.sql_db', 'odoo.models')
+    @mute_logger('odoo.db', 'odoo.models')
     def test_ignore_excess_messages(self):
         result = self.import_(['const'], [[str(n)] for n in range(100)])
         self.assertIs(result['ids'], False)
@@ -761,7 +761,7 @@ class test_m2o(ImporterCase):
         )
         self.assertIs(result['ids'], False)
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_fail_id_mistype(self):
         result = self.import_(['value/.id'], [["foo"]])
 
@@ -870,7 +870,7 @@ class test_m2o(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_name_create_enabled_m2o_required_field(self):
         self.model = self.env['export.many2one.required.subfield']
         self.env['export.with.required.field'].create({'name': 'ipsum', 'value': 10})
@@ -890,13 +890,13 @@ class test_m2o(ImporterCase):
 class TestInvalidStrings(ImporterCase):
     model_name = 'export.m2o.str'
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_fail_unpaired_surrogate(self):
         result = self.import_(['child_id'], [['\uddff']])
         self.assertTrue(result['messages'])
         self.assertIn('surrogates', result['messages'][0]['message'])
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_fail_nul(self):
         result = self.import_(['child_id'], [['\x00']])
         self.assertTrue(result['messages'])
@@ -1519,7 +1519,7 @@ class test_datetime(ImporterCase):
 class test_unique(ImporterCase):
     model_name = 'export.unique'
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_unique(self):
         result = self.import_(
             ['value'],
@@ -1547,7 +1547,7 @@ class test_unique(ImporterCase):
             self.assertIn(expect, actual)
         self.assertEqual(messages, expected)
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_unique_pair(self):
         result = self.import_(
             ['value2', 'value3'],
@@ -1566,7 +1566,7 @@ class test_unique(ImporterCase):
         self.assertEqual(message['rows'], {'from': 3, 'to': 3})
         self.assertIn("The value for 'value2, value3' (Value2 and Value3) already exists.", message['message'])
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_unique_update_record(self):
         existing_records = self.env[self.model_name].create([{'value': 1}, {'value': 2}])
         result = self.import_(
@@ -1779,9 +1779,9 @@ class test_inherits(ImporterCase):
 class CheckSavepoint(ImporterCase):
     model_name = 'export.unique'
 
-    @mute_logger("odoo.sql_db")
+    @mute_logger("odoo.db")
     def test_max_savepoint(self):
-        from odoo.sql_db import Cursor  # noqa: PLC0415
+        from odoo.db import Cursor  # noqa: PLC0415
         with (
             patch.object(Cursor, 'savepoint', autospec=True, side_effect=Cursor.savepoint) as sp_mock,
             patch.object(Cursor, 'flush', autospec=True, side_effect=Cursor.flush) as sp_flush,

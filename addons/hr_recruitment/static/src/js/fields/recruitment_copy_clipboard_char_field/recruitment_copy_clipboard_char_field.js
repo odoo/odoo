@@ -1,8 +1,8 @@
-import { CopyClipboardCharField, copyClipboardCharField } from "@web/views/fields/copy_clipboard/copy_clipboard_field";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CopyClipboardCharField, copyClipboardCharField } from "@web/fields/basic/copy_clipboard/copy_clipboard_field";
+import { CharField } from "@web/fields/basic/char/char_field";
 import { GenerateContentAndCopyButton } from "../../buttons/generate_content_and_copy_button";
 import { useService } from "@web/core/utils/hooks";
-import { omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/collections/objects";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 

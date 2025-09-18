@@ -1,6 +1,6 @@
 from odoo import api, models, fields, Command
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo.libs.numbers.float_utils import float_is_zero, float_round
 
 
 class BankAccountAllocationWizard(models.TransientModel):

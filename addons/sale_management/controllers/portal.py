@@ -45,7 +45,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         if order_line.product_type == 'combo':
             # for combo products, we update the quantities of the combo items too
-            combo_item_lines = order_line._get_linked_lines().filtered('combo_item_id')
+            combo_item_lines = order_line._get_lines_linked().filtered('combo_item_id')
             combo_item_lines.update({'product_uom_qty': quantity})
 
         order_line.product_uom_qty = quantity

@@ -3,7 +3,7 @@
     <record id="sale_order_view_form" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.event.sale</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="inherit_id" ref="sale.view_sale_order_form" />
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button name="action_view_attendee_list"
@@ -14,7 +14,7 @@
                     <field name="attendee_count" widget="statinfo" string="Attendees"/>
                 </button>
             </div>
-            <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='line_ids']//form//field[@name='product_id']" position="after">
                 <field
                     name="event_id"
                     domain="[
@@ -41,7 +41,7 @@
                     required="service_tracking == 'event' and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']" position="after">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='product_template_id']" position="after">
                 <field name="event_id"
                     column_invisible="True"
                     domain="[

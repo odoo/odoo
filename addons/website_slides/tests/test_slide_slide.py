@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
+import psycopg
 
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.tests.common import users
@@ -46,11 +46,11 @@ class TestSlideInternals(slides_common.SlidesCase):
         after_unlink = self.category2.completion_time
         self.assertEqual(after_unlink, self.slide_4.completion_time)
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     @users('user_manager')
     def test_slide_create_vote_constraint(self):
         # test vote value must be 1, 0 and -1.
-        with self.assertRaises(psycopg2.errors.CheckViolation):
+        with self.assertRaises(psycopg.errors.CheckViolation):
             self.env['slide.slide.partner'].create({
                 'slide_id': self.slide.id,
                 'channel_id': self.channel.id,

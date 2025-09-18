@@ -1,5 +1,15 @@
+// @ts-check
+
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryAllAttributes, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import {
+    click,
+    middleClick,
+    queryAllAttributes,
+    queryAllTexts,
+    queryFirst,
+} from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+
 import {
     contains,
     defineModels,
@@ -42,7 +52,10 @@ test("in form view (readonly)", async () => {
         arch: `<form><field name="url" widget="url" readonly="1"/></form>`,
     });
     expect("a.o_field_widget.o_form_uri").toHaveCount(1);
-    expect("a.o_field_widget.o_form_uri").toHaveAttribute("href", "https://www.example.com");
+    expect("a.o_field_widget.o_form_uri").toHaveAttribute(
+        "href",
+        "https://www.example.com",
+    );
     expect("a.o_field_widget.o_form_uri").toHaveAttribute("target", "_blank");
     expect("a.o_field_widget.o_form_uri").toHaveText("https://www.example.com");
 });
@@ -84,10 +97,19 @@ test("href attribute and website_path option", async () => {
                 <field name="url4" widget="url" readonly="1"/>
             </form>`,
     });
-    expect(`.o_field_widget[name="url1"] a`).toHaveAttribute("href", "http://www.url1.com");
+    expect(`.o_field_widget[name="url1"] a`).toHaveAttribute(
+        "href",
+        "http://www.url1.com",
+    );
     expect(`.o_field_widget[name="url2"] a`).toHaveAttribute("href", "www.url2.com");
-    expect(`.o_field_widget[name="url3"] a`).toHaveAttribute("href", "http://www.url3.com");
-    expect(`.o_field_widget[name="url4"] a`).toHaveAttribute("href", "https://url4.com");
+    expect(`.o_field_widget[name="url3"] a`).toHaveAttribute(
+        "href",
+        "http://www.url3.com",
+    );
+    expect(`.o_field_widget[name="url4"] a`).toHaveAttribute(
+        "href",
+        "https://url4.com",
+    );
 });
 
 test("in editable list view", async () => {
@@ -102,10 +124,9 @@ test("in editable list view", async () => {
     });
     expect("tbody td:not(.o_list_record_selector) a").toHaveCount(2);
     expect(".o_field_url.o_field_widget[name='url'] a").toHaveCount(2);
-    expect(queryAllAttributes(".o_field_url.o_field_widget[name='url'] a", "href")).toEqual([
-        "http://example.com",
-        "http://odoo.com",
-    ]);
+    expect(
+        queryAllAttributes(".o_field_url.o_field_widget[name='url'] a", "href"),
+    ).toEqual(["http://example.com", "http://odoo.com"]);
     expect(queryAllTexts(".o_field_url.o_field_widget[name='url'] a")).toEqual([
         "example.com",
         "odoo.com",
@@ -120,10 +141,9 @@ test("in editable list view", async () => {
     expect(cell.parentElement).not.toHaveClass("o_selected_row");
     expect("tbody td:not(.o_list_record_selector) a").toHaveCount(2);
     expect(".o_field_url.o_field_widget[name='url'] a").toHaveCount(2);
-    expect(queryAllAttributes(".o_field_url.o_field_widget[name='url'] a", "href")).toEqual([
-        "http://test",
-        "http://odoo.com",
-    ]);
+    expect(
+        queryAllAttributes(".o_field_url.o_field_widget[name='url'] a", "href"),
+    ).toEqual(["http://test", "http://odoo.com"]);
     expect(queryAllTexts(".o_field_url.o_field_widget[name='url'] a")).toEqual([
         "test",
         "odoo.com",
@@ -191,5 +211,34 @@ test("with non falsy, but non url value", async () => {
         resModel: "product",
         arch: `<form><field name="url" widget="url"/></form>`,
     });
-    expect(".o_field_widget[name=url] a").toHaveAttribute("href", "http://odoo://hello");
+    expect(".o_field_widget[name=url] a").toHaveAttribute(
+        "href",
+        "http://odoo://hello",
+    );
+});
+
+test.tags("desktop");
+test("in form x2many field, click/middleclick on the link should not open the record in modal", async () => {
+    Product._fields.p = fields.One2many({
+        string: "one2many_field",
+        relation: "product",
+    });
+    Product._records = [
+        { id: 1, url: "https://www.example.com/1", p: [2] },
+        { id: 2, url: "http://www.example.com/2", p: [] },
+    ];
+    Product._views.list = `<list><field name="url" widget="url"/></list>`;
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: `<form><field name="p" widget="one2many"/></form>`,
+    });
+    await click(".o_field_widget[name=url] a");
+    await animationFrame();
+    expect(".modal.o_technical_modal").toHaveCount(0);
+
+    await middleClick(".o_field_widget[name=url] a");
+    await animationFrame();
+    expect(".modal.o_technical_modal").toHaveCount(0);
 });

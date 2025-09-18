@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             isActive: ["auto", "mobile"],
-            trigger: ".o_statusbar_buttons button[name='action_quotation_send']",
+            trigger: ".o_statusbar_buttons button[name='action_send_quotation']",
         },
         ...stepUtils.statusbarButtonsSteps(
             "Send",

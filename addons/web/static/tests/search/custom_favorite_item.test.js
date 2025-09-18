@@ -1,3 +1,5 @@
+// @ts-check
+
 import { after, expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -10,17 +12,16 @@ import {
     models,
     mountWithSearch,
     onRpc,
-    saveFavorite,
     saveAndEditFavorite,
+    saveFavorite,
     toggleSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-
+import { rpcBus } from "@web/core/network/rpc";
 import { useSetupAction } from "@web/search/action_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
-import { rpcBus } from "@web/core/network/rpc";
 
 class Foo extends models.Model {
     bar = fields.Many2one({ relation: "partner" });
@@ -44,14 +45,20 @@ test("simple rendering", async () => {
         },
         {
             getDisplayName: () => "Action Name",
-        }
+        },
     );
 
     await toggleSearchBarMenu();
     await toggleSaveFavorite();
-    expect(`.o_add_favorite + .o_accordion_values input[type="text"]`).toHaveValue("Action Name");
-    expect(`.o_add_favorite + .o_accordion_values input[type="checkbox"]`).toHaveCount(1);
-    expect(`.o_add_favorite + .o_accordion_values .form-check label`).toHaveText("Default filter");
+    expect(`.o_add_favorite + .o_accordion_values input[type="text"]`).toHaveValue(
+        "Action Name",
+    );
+    expect(`.o_add_favorite + .o_accordion_values input[type="checkbox"]`).toHaveCount(
+        1,
+    );
+    expect(`.o_add_favorite + .o_accordion_values .form-check label`).toHaveText(
+        "Default filter",
+    );
 });
 
 test("save filter", async () => {
@@ -86,7 +93,10 @@ test("save filter", async () => {
     await toggleSaveFavorite();
     await editFavoriteName("aaa");
     await saveFavorite();
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter", "CLEAR-CACHES"]);
+    expect.verifySteps([
+        "/web/dataset/call_kw/ir.filters/create_filter",
+        "CLEAR-CACHES",
+    ]);
 });
 
 test("save and edit filter", async () => {
@@ -147,7 +157,7 @@ test("dynamic filters are saved dynamic", async () => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(
-            `[("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d"))]`
+            `[("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d"))]`,
         );
         return [7]; // fake serverSideId
     });

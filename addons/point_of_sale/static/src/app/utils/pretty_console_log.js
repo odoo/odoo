@@ -1,16 +1,21 @@
 import { Logger } from "@bus/workers/bus_worker_utils";
 import { downloadFile } from "@web/core/network/download";
-
 const posLogger = new Logger(`point_of_sale_config_${odoo.pos_config_id}_logger`);
 
-export function logPosMessage(type, functionName, message, color = "#A1A1A1", args = []) {
+export function logPosMessage(
+    type,
+    functionName,
+    message,
+    color = "#A1A1A1",
+    args = [],
+) {
     if (odoo.debug === "assets") {
         console.groupCollapsed(
             `[%c${type}%c]: %c${functionName}%c - ${message}`,
             `color:${color};`,
             "",
             `font-weight:bold;`,
-            ""
+            "",
         );
         if (args.length) {
             console.debug(...args);

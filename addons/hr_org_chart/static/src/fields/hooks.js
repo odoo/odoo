@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 

@@ -6,6 +6,6 @@ interface Element {
     ): E | null;
 
     querySelectorAll<E extends HTMLElement = HTMLElement>(
-        selectors: stringj
+        selectors: string
     ): NodeListOf<E>;
 }

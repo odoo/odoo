@@ -9,7 +9,7 @@
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery.delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=3)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=3)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {
@@ -28,7 +28,7 @@
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery.delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=3)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=3)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {
@@ -47,7 +47,7 @@
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery.delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=8)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=8)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {

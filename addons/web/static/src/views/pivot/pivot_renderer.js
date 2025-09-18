@@ -1,20 +1,24 @@
+// @ts-check
+
+/** @module @web/views/pivot/pivot_renderer - Renders the pivot table HTML with expandable row/column headers, measures dropdown, and XLSX export */
+
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CheckBox } from "@web/components/checkbox/checkbox";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/collections/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
+import { user } from "@web/services/user";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
@@ -68,7 +72,9 @@ export class PivotRenderer extends Component {
             position: "right",
         });
         const fields = [];
-        for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
+        for (const [fieldName, field] of Object.entries(
+            this.env.searchModel.searchViewFields,
+        )) {
             if (this.validateField(fieldName, field)) {
                 fields.push(Object.assign({ name: fieldName }, field));
             }
@@ -97,8 +103,11 @@ export class PivotRenderer extends Component {
         let formatType = this.model.metaData.widgets[cell.measure];
         if (!formatType) {
             const fieldType = field.type;
-            formatType = ["many2one", "reference"].includes(fieldType) ? "integer" : fieldType;
+            formatType = ["many2one", "reference"].includes(fieldType)
+                ? "integer"
+                : fieldType;
         }
+        /** @type {any} */
         const formatter = formatters.get(formatType);
         const formatOptions = { field };
         if (formatter.extractOptions) {
@@ -107,15 +116,17 @@ export class PivotRenderer extends Component {
         if (formatType === "monetary") {
             if (cell.currencyIds.length > 1) {
                 formatOptions.currencyId = user.activeCompany.currency_id;
-                return {
+                return /** @type {any} */ ({
                     rawValue: cell.value,
                     value: formatter(cell.value, formatOptions),
                     currencies: cell.currencyIds,
-                };
+                });
             }
             formatOptions.currencyId = cell.currencyIds[0];
         }
-        return { value: formatter(cell.value, formatOptions) };
+        return /** @type {any} */ ({
+            value: formatter(cell.value, formatOptions),
+        });
     }
 
     /**
@@ -124,7 +135,8 @@ export class PivotRenderer extends Component {
     get groupByItems() {
         let items = this.env.searchModel.getSearchItems(
             (searchItem) =>
-                ["groupBy", "dateGroupBy"].includes(searchItem.type) && !searchItem.custom
+                ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
+                !searchItem.custom,
         );
         if (items.length === 0) {
             items = this.fields;
@@ -132,8 +144,15 @@ export class PivotRenderer extends Component {
 
         // Add custom groupbys
         let groupNumber = 1 + Math.max(0, ...items.map(({ groupNumber: n }) => n || 0));
-        for (const [fieldName, customGroupBy] of this.model.metaData.customGroupBys.entries()) {
-            items.push({ ...customGroupBy, name: fieldName, groupNumber: groupNumber++ });
+        for (const [
+            fieldName,
+            customGroupBy,
+        ] of this.model.metaData.customGroupBys.entries()) {
+            items.push({
+                ...customGroupBy,
+                name: fieldName,
+                groupNumber: groupNumber++,
+            });
         }
 
         return items.map((item) => ({
@@ -143,7 +162,9 @@ export class PivotRenderer extends Component {
             description: item.description || item.string,
             options:
                 item.options ||
-                (["date", "datetime"].includes(item.type) ? getIntervalOptions() : undefined),
+                (["date", "datetime"].includes(item.type)
+                    ? getIntervalOptions()
+                    : undefined),
         }));
     }
 
@@ -174,7 +195,11 @@ export class PivotRenderer extends Component {
      * @param {string} fieldName
      */
     onAddCustomGroupBy(fieldName) {
-        this.model.addGroupBy({ ...this.dropdown.cellInfo, fieldName, custom: true });
+        this.model.addGroupBy({
+            ...this.dropdown.cellInfo,
+            fieldName,
+            custom: true,
+        });
         this.dropdown.state.close();
     }
 
@@ -187,7 +212,11 @@ export class PivotRenderer extends Component {
      */
     onGroupBySelected({ itemId, optionId }) {
         const { fieldName } = this.groupByItems.find(({ id }) => id === itemId);
-        this.model.addGroupBy({ ...this.dropdown.cellInfo, fieldName, interval: optionId });
+        this.model.addGroupBy({
+            ...this.dropdown.cellInfo,
+            fieldName,
+            interval: optionId,
+        });
     }
     /**
      * Handle a click on a header cell.
@@ -204,7 +233,9 @@ export class PivotRenderer extends Component {
             } else {
                 this.dropdown.cellInfo = { type, groupId: cell.groupId };
                 Object.assign(this.dropdown.state, {
-                    target: ev.target.closest(".o_pivot_header_cell_closed"),
+                    target: /** @type {HTMLElement} */ (ev.target).closest(
+                        ".o_pivot_header_cell_closed",
+                    ),
                     position: isXAxis ? "bottom-start" : "bottom-end",
                     isOpen: true,
                 });
@@ -233,12 +264,13 @@ export class PivotRenderer extends Component {
      * @param {MouseEvent} ev
      */
     onMouseEnter(ev) {
-        var index = [...ev.currentTarget.parentNode.children].indexOf(ev.currentTarget);
-        if (ev.currentTarget.tagName === "TH") {
+        const current = /** @type {HTMLElement} */ (ev.currentTarget);
+        let index = [...current.parentNode.children].indexOf(current);
+        if (current.tagName === "TH") {
             index += 1; // row groupbys column
         }
         this.tableRef.el
-            .querySelectorAll("td:nth-child(" + (index + 1) + ")")
+            .querySelectorAll(`td:nth-child(${index + 1})`)
             .forEach((elt) => elt.classList.add("o_cell_hover"));
     }
     /**
@@ -259,14 +291,18 @@ export class PivotRenderer extends Component {
         if (this.model.getTableWidth() > 16384) {
             throw new Error(
                 _t(
-                    "For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."
-                )
+                    "For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures.",
+                ),
             );
         }
         const table = this.model.exportData();
         download({
             url: "/web/pivot/export_xlsx",
-            data: { data: new Blob([JSON.stringify(table)], { type: "application/json" }) },
+            data: {
+                data: new Blob([JSON.stringify(table)], {
+                    type: "application/json",
+                }),
+            },
         });
     }
     /**
@@ -312,6 +348,7 @@ export class PivotRenderer extends Component {
                 type: "ir.actions.act_window",
                 name: this.model.metaData.title,
                 res_model: this.model.metaData.resModel,
+                search_view_id: this.env.config.views?.find((v) => v[1] === "search"),
                 views: views,
                 view_mode: "list",
                 target: "current",
@@ -320,23 +357,24 @@ export class PivotRenderer extends Component {
             },
             {
                 newWindow,
-            }
+            },
         );
     }
     /**
-     * @param {CustomEvent} ev
+     * @param {Object} cell
+     * @param {boolean} [newWindow]
      */
     onOpenView(cell, newWindow) {
         if (cell.value === undefined || this.model.metaData.disableLinking) {
             return;
         }
 
-        const context = Object.assign({}, this.model.searchParams.context);
-        Object.keys(context).forEach((x) => {
+        const context = { ...this.model.searchParams.context };
+        for (const x of Object.keys(context)) {
             if (x === "group_by" || x.startsWith("search_default_")) {
                 delete context[x];
             }
-        });
+        }
 
         // retrieve form and list view ids from the action
         const { views = [] } = this.env.config;
@@ -345,7 +383,10 @@ export class PivotRenderer extends Component {
             return [view ? view[0] : false, viewType];
         });
 
-        const group = { rowValues: cell.groupId[0], colValues: cell.groupId[1] };
+        const group = {
+            rowValues: cell.groupId[0],
+            colValues: cell.groupId[1],
+        };
         this.openView(this.model.getGroupDomain(group), this.views, context, newWindow);
     }
 }

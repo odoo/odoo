@@ -1,15 +1,12 @@
 import { MailColumnProgress } from "@mail/core/web/mail_column_progress";
 import { ActivityCell } from "@mail/views/web/activity/activity_cell";
 import { ActivityRecord } from "@mail/views/web/activity/activity_record";
-
 import { Component, useState } from "@odoo/owl";
-
+import { CheckBox } from "@web/components/checkbox/checkbox";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-
 export class ActivityRenderer extends Component {
     static components = {
         ActivityCell,
@@ -44,7 +41,11 @@ export class ActivityRenderer extends Component {
             resIds: new Set(Object.keys(this.props.groupedActivities)),
         });
 
-        this.storageKey = ["activity_columns", this.props.resModel, this.env.config.viewId];
+        this.storageKey = [
+            "activity_columns",
+            this.props.resModel,
+            this.env.config.viewId,
+        ];
         this.setupStorageActiveColumns();
     }
 
@@ -77,13 +78,15 @@ export class ActivityRenderer extends Component {
         }
         const typeId = activityType.id;
         const isColumnFiltered = this.activeFilter.activityTypeId === activityType.id;
-        const progressValue = isColumnFiltered ? this.activeFilter.progressValue : { active: null };
+        const progressValue = isColumnFiltered
+            ? this.activeFilter.progressValue
+            : { active: null };
 
         let totalCountWithoutDone = 0;
         for (const activities of Object.values(this.props.groupedActivities)) {
             if (typeId in activities) {
                 for (const [state, stateCount] of Object.entries(
-                    activities[typeId].count_by_state
+                    activities[typeId].count_by_state,
                 )) {
                     types[state].value += stateCount;
                     if (state !== "done") {
@@ -109,7 +112,8 @@ export class ActivityRenderer extends Component {
             }
         }
 
-        const ongoingActivityCount = types.overdue.value + types.today.value + types.planned.value;
+        const ongoingActivityCount =
+            types.overdue.value + types.today.value + types.planned.value;
         const ongoingAndDoneCount = ongoingActivityCount + types.done.value;
         const labelAggregate = `${types.overdue.label} + ${types.today.label} + ${types.planned.label}`;
         const aggregateOn = ongoingAndDoneCount
@@ -121,7 +125,9 @@ export class ActivityRenderer extends Component {
         return {
             aggregate: {
                 title: labelAggregate,
-                value: isColumnFiltered ? types[progressValue.active].value : ongoingActivityCount,
+                value: isColumnFiltered
+                    ? types[progressValue.active].value
+                    : ongoingActivityCount,
             },
             aggregateOn: aggregateOn,
             data: {
@@ -142,35 +148,39 @@ export class ActivityRenderer extends Component {
         if (this.activeFilter.progressValue.active === name) {
             this.activeFilter.progressValue.active = null;
             this.activeFilter.activityTypeId = null;
-            this.activeFilter.resIds = new Set(Object.keys(this.props.groupedActivities));
+            this.activeFilter.resIds = new Set(
+                Object.keys(this.props.groupedActivities),
+            );
         } else {
             this.activeFilter.progressValue.active = name;
             this.activeFilter.activityTypeId = typeId;
             this.activeFilter.resIds = new Set(
                 Object.entries(this.props.groupedActivities)
                     .filter(
-                        ([, resIds]) => typeId in resIds && name in resIds[typeId].count_by_state
+                        ([, resIds]) =>
+                            typeId in resIds && name in resIds[typeId].count_by_state,
                     )
-                    .map(([key]) => parseInt(key))
+                    .map(([key]) => parseInt(key)),
             );
         }
     }
 
     get activeColumns() {
         return this.props.activityTypes.filter(
-            (activityType) => this.storageActiveColumns[activityType.id]
+            (activityType) => this.storageActiveColumns[activityType.id],
         );
     }
 
     setupStorageActiveColumns() {
-        const storageActiveColumnsList = browser.localStorage.getItem(this.storageKey)?.split(",");
+        const storageActiveColumnsList = browser.localStorage
+            .getItem(this.storageKey)
+            ?.split(",");
 
         this.storageActiveColumns = useState({});
         for (const activityType of this.props.activityTypes) {
             if (storageActiveColumnsList) {
-                this.storageActiveColumns[activityType.id] = storageActiveColumnsList.includes(
-                    activityType.id.toString()
-                );
+                this.storageActiveColumns[activityType.id] =
+                    storageActiveColumnsList.includes(activityType.id.toString());
             } else {
                 this.storageActiveColumns[activityType.id] = true;
             }
@@ -182,8 +192,8 @@ export class ActivityRenderer extends Component {
         browser.localStorage.setItem(
             this.storageKey.join(","),
             Object.keys(this.storageActiveColumns).filter(
-                (activityType) => this.storageActiveColumns[activityType]
-            )
+                (activityType) => this.storageActiveColumns[activityType],
+            ),
         );
     }
 }

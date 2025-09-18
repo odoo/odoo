@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { mockPermission } from "@odoo/hoot-mock";
 import { defineModels, models, mountView } from "@web/../tests/web_test_helpers";

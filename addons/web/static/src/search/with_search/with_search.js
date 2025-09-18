@@ -1,10 +1,20 @@
+// @ts-check
+
+/** @module @web/search/with_search/with_search - Wrapper component that creates a SearchModel and injects it into the sub-environment */
+
 import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
-import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
-import { SearchModel } from "@web/search/search_model";
+import { CallbackRecorder, useSetupAction } from "@web/core/action_hook";
+import { SEARCH_KEYS } from "@web/core/constants";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { SearchModel } from "@web/search/search_model";
 
-export const SEARCH_KEYS = ["context", "domain", "groupBy", "orderBy"];
+// Re-export for backward compatibility — canonical location is @web/core/constants
+export { SEARCH_KEYS };
 
+/**
+ * Wrapper component that creates a SearchModel, injects it into the sub-environment,
+ * and re-renders its children whenever the search state changes.
+ */
 export class WithSearch extends Component {
     static template = "web.WithSearch";
     static props = {
@@ -60,7 +70,7 @@ export class WithSearch extends Component {
                 dialog: useService("dialog"),
                 treeProcessor: useService("tree_processor"),
             },
-            this.props.searchModelArgs
+            this.props.searchModelArgs,
         );
 
         const searchPanelState = this.props.globalState?.searchPanel
@@ -68,7 +78,7 @@ export class WithSearch extends Component {
             : null;
         useSubEnv({ searchModel: this.searchModel, searchPanelState });
 
-        useBus(this.searchModel, "update", this.render);
+        useBus(this.searchModel, "update", /** @type {any} */ (this.render));
         useSetupAction({
             getGlobalState: () => ({
                 searchModel: JSON.stringify(this.searchModel.exportState()),

@@ -12,7 +12,7 @@ import {
     clearGettersCache,
     createLazyGetter,
 } from "@point_of_sale/lazy_getter";
-import { zip } from "@web/core/utils/arrays";
+import { zip } from "@web/core/utils/collections/arrays";
 
 /**
  * @param {string} value

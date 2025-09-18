@@ -1,12 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+} from "@web/ui/dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];

@@ -4,7 +4,7 @@ import re
 
 from markupsafe import Markup
 import logging
-import werkzeug
+from urllib.parse import urlencode
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -64,6 +64,7 @@ class HrExpense(models.Model):
         string="Employee",
         compute='_compute_employee_id', precompute=True, store=True, readonly=False,
         required=True,
+        index=True,
         default=_default_employee_id,
         check_company=True,
         domain=[('filter_for_expense', '=', True)],
@@ -193,7 +194,7 @@ class HrExpense(models.Model):
         string="Unit Price",
         compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
         copy=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -224,6 +225,7 @@ class HrExpense(models.Model):
     selectable_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
         compute='_compute_selectable_payment_method_line_ids',
+        compute_sudo=True,
     )
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
@@ -669,6 +671,7 @@ class HrExpense(models.Model):
                     # The journal is the source of the payment method line company
                     *self.env['account.journal']._check_company_domain(expense.company_id),
                     ('payment_type', '=', 'outbound'),
+                    ('journal_id.active', '=', True),
                 ])
 
     @api.depends('product_id', 'company_id')
@@ -726,11 +729,11 @@ class HrExpense(models.Model):
                                      AND he.total_amount_currency = ex.total_amount_currency
                                      AND he.company_id = ex.company_id
                                      AND he.currency_id = ex.currency_id
-               WHERE ex.id in %(expense_ids)s
+               WHERE ex.id = ANY(%(expense_ids)s)
                GROUP BY he.employee_id, he.product_id, he.date, he.total_amount_currency, he.company_id, he.currency_id
               HAVING COUNT(he.id) > 1
             """
-            self.env.cr.execute(duplicates_query, {'expense_ids': tuple(expenses.ids)})
+            self.env.cr.execute(duplicates_query, {'expense_ids': list(expenses.ids)})
 
             for duplicates_ids in (x[0] for x in self.env.cr.fetchall()):
                 expenses_duplicates = expenses.filtered(lambda expense: expense.id in duplicates_ids)
@@ -962,7 +965,7 @@ class HrExpense(models.Model):
         expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
-            params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
+            params = urlencode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
             return Markup(
                 """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
             ) % {

@@ -10,11 +10,11 @@ class SaleOrder(models.Model):
     margin = fields.Monetary("Margin", compute='_compute_margin', store=True)
     margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True, aggregator="avg")
 
-    @api.depends('order_line.margin', 'amount_untaxed')
+    @api.depends('line_ids.margin', 'amount_untaxed')
     def _compute_margin(self):
         if not all(self._ids):
             for order in self:
-                order.margin = sum(order.order_line.mapped('margin'))
+                order.margin = sum(order.line_ids.mapped('margin'))
                 order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed
         else:
             # On batch records recomputation (e.g. at install), compute the margins

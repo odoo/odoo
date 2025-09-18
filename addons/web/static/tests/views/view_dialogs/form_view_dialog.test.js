@@ -1,5 +1,14 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, runAllTimers, waitFor } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    press,
+    queryAllTexts,
+    runAllTimers,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -15,7 +24,6 @@ import {
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -78,7 +86,9 @@ test("formviewdialog buttons in footer are positioned properly", async () => {
 
     await animationFrame();
 
-    expect(".modal-body button").toHaveCount(0, { message: "should not have any button in body" });
+    expect(".modal-body button").toHaveCount(0, {
+        message: "should not have any button in body",
+    });
     expect(".modal-footer button:visible").toHaveCount(1, {
         message: "should have only one button in footer",
     });
@@ -136,7 +146,9 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
-    expect(".modal button.my_button").toHaveCount(1, { message: "should have 1 buttons in modal" });
+    expect(".modal button.my_button").toHaveCount(1, {
+        message: "should have 1 buttons in modal",
+    });
 
     await click(".o_field_x2many_list_row_add a");
     await animationFrame();
@@ -183,7 +195,7 @@ test("Form dialog and subview with _view_ref contexts", async () => {
                 {
                     message:
                         "1 The correct _view_ref should have been sent to the server, first time",
-                }
+                },
             );
         }
         if (method === "get_views" && model === "badassery") {
@@ -198,7 +210,7 @@ test("Form dialog and subview with _view_ref contexts", async () => {
                 {
                     message:
                         "2 The correct _view_ref should have been sent to the server for the subview",
-                }
+                },
             );
         }
     });
@@ -332,7 +344,10 @@ test("Buttons are set as disabled on click", async () => {
 
     await clickSave();
 
-    expect(".o_dialog .modal-footer .o_form_button_save").toHaveAttribute("disabled", "1");
+    expect(".o_dialog .modal-footer .o_form_button_save").toHaveAttribute(
+        "disabled",
+        "1",
+    );
 
     def.resolve();
     await animationFrame();
@@ -413,7 +428,10 @@ test("new record has an expand button", async () => {
     await fieldInput("foo").edit("new");
     await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
-    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+    expect.verifySteps([
+        "save",
+        [1, "partner", "ir.actions.act_window", [[false, "form"]]],
+    ]);
 });
 
 test("existing record has an expand button", async () => {
@@ -534,7 +552,9 @@ test("close dialog with escape after modifying a field with onchange (no blur)",
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
 
-    await contains(".o_field_widget[name=foo] input").edit("new value", { confirm: false });
+    await contains(".o_field_widget[name=foo] input").edit("new value", {
+        confirm: false,
+    });
     await press("escape");
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
@@ -567,19 +587,25 @@ test("display a dialog if onchange result is a warning from within a dialog", as
         resId: 2,
     });
 
-    await contains(".o_field_widget[name=instrument] input").edit("tralala", { confirm: false });
+    await contains(".o_field_widget[name=instrument] input").edit("tralala", {
+        confirm: false,
+    });
     await runAllTimers();
-    await contains(".o_field_widget[name=instrument] .o_m2o_dropdown_option_create_edit").click();
+    await contains(
+        ".o_field_widget[name=instrument] .o_m2o_dropdown_option_create_edit",
+    ).click();
 
     await waitFor(".modal.o_inactive_modal");
     expect(".modal").toHaveCount(2);
     expect(".modal:not(.o_inactive_modal) .modal-body").toHaveText(
-        "You must first select a partner"
+        "You must first select a partner",
     );
 
     await contains(".modal:not(.o_inactive_modal) button").click();
     expect(".modal").toHaveCount(1);
-    expect(".modal:not(.o_inactive_modal) .modal-title").toHaveText("Create Instruments");
+    expect(".modal:not(.o_inactive_modal) .modal-title").toHaveText(
+        "Create Instruments",
+    );
 
     expect.verifySteps(["onchange warning"]);
 });

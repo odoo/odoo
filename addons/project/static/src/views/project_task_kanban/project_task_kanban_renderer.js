@@ -3,7 +3,7 @@ import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
 import { onWillStart } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     static template = "project.ProjectTaskKanbanRenderer";

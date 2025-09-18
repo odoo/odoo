@@ -1,13 +1,15 @@
-import { Component, useEffect, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
-import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
+import {
+    CALL_ICON_DEAFEN,
+    CALL_ICON_MUTED,
+} from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useHover } from "@mail/utils/common/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Component, useEffect, useState } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
-
+import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").Thread} thread
@@ -15,7 +17,10 @@ import { _t } from "@web/core/l10n/translation";
  */
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
-    static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
+    static props = {
+        thread: { type: Thread },
+        compact: { type: Boolean, optional: true },
+    };
     static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
 
     setup() {
@@ -39,7 +44,7 @@ export class DiscussSidebarCallParticipants extends Component {
                     this.state.expanded = false;
                 }
             },
-            () => [this.rtc.selfSession, this.compact]
+            () => [this.rtc.selfSession, this.compact],
         );
     }
 
@@ -106,7 +111,9 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get title() {
-        return this.state.expanded ? _t("Collapse participants") : _t("Expand participants");
+        return this.state.expanded
+            ? _t("Collapse participants")
+            : _t("Expand participants");
     }
 
     onClickParticipant(ev, session) {}

@@ -1,39 +1,66 @@
+// @ts-check
+
+/** @module @web/views/calendar/calendar_model - Calendar event data loading, date range computation, filter sections, and timezone handling */
+
+import { browser } from "@web/core/browser/browser";
+import { makeContext } from "@web/core/context";
 import {
+    deserializeDateTime,
     serializeDate,
     serializeDateTime,
-    deserializeDate,
-    deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { groupBy, intersection } from "@web/core/utils/collections/arrays";
+import { Cache } from "@web/core/utils/collections/cache";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { formatFloat } from "@web/core/utils/format/numbers";
+import { useDebounced } from "@web/core/utils/timing";
 import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { browser } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
-import { groupBy, intersection } from "@web/core/utils/arrays";
-import { Cache } from "@web/core/utils/cache";
-import { formatFloat } from "@web/core/utils/numbers";
-import { useDebounced } from "@web/core/utils/timing";
-import { computeAggregatedValue } from "@web/views/utils";
+import { user } from "@web/services/user";
+import { computeAggregatedValue } from "@web/views/view_measurements";
+
+import {
+    computeCalendarRange,
+    computeFiltersDomain,
+    computeRangeDomain,
+} from "./calendar_date_range";
+import { normalizeCalendarRecord } from "./calendar_record";
 
 const { DateTime } = luxon;
 
+/**
+ * Data model for the calendar view.
+ *
+ * Manages loading, normalization, and CRUD of calendar records. Computes date
+ * ranges per scale, handles filter sections (static and dynamic), unusual days,
+ * aggregated values, and domain construction. Stores view state (current date,
+ * scale) and persists scale preference in localStorage.
+ */
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
     static services = ["notification"];
 
+    /**
+     * @param {Object} params - arch info including field mapping, scales, and filter config
+     * @param {{ notification: Object }} services
+     */
     setup(params, { notification }) {
         /** @protected */
         this.keepLast = new KeepLast();
         this.notification = notification;
 
-        const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
+        const formViewFromConfig = (this.env.config.views || []).find(
+            (view) => view[1] === "form",
+        );
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
         const fieldNodes = params.popoverFieldNodes;
-        const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            /** @type {any} */ ({ fieldNodes }),
+            params.fields,
+        );
         this.meta = {
             ...params,
             activeFields,
@@ -53,14 +80,24 @@ export class CalendarModel extends Model {
             unusualDays: [],
         };
 
-        const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
-        this.debouncedLoad = useDebounced((params) => this.load(params), debouncedLoadDelay);
+        const debouncedLoadDelay = /** @type {any} */ (this.constructor)
+            .DEBOUNCED_LOAD_DELAY;
+        this.debouncedLoad = useDebounced(
+            (params) => this.load(params),
+            debouncedLoadDelay,
+        );
 
         this._unusualDaysCache = new Cache(
             (data) => this.fetchUnusualDays(data),
-            (data) => `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`
+            (data) =>
+                `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`,
         );
     }
+    /**
+     * Load or reload calendar data with optional parameter overrides.
+     *
+     * @param {Object} [params] - overrides for date, scale, context, etc.
+     */
     async load(params = {}) {
         Object.assign(this.meta, params);
         if (!this.meta.date) {
@@ -97,7 +134,10 @@ export class CalendarModel extends Model {
         return this.meta.canDelete;
     }
     get canEdit() {
-        return this.meta.canEdit && !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
+        return (
+            this.meta.canEdit &&
+            !this.meta.fields[this.meta.fieldMapping.date_start].readonly
+        );
     }
     get dateStartType() {
         return this.fields[this.fieldMapping.date_start].type;
@@ -139,7 +179,11 @@ export class CalendarModel extends Model {
         return this.meta.hasEditDialog;
     }
     get hasMultiCreate() {
-        return !!this.meta.multiCreateView && !this.env.isSmall && this.meta.scale === "month";
+        return (
+            !!this.meta.multiCreateView &&
+            !this.env.isSmall &&
+            this.meta.scale === "month"
+        );
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -204,7 +248,9 @@ export class CalendarModel extends Model {
             return;
         }
 
-        const normalizedFilterValue = Array.isArray(filterValue) ? filterValue : [filterValue];
+        const normalizedFilterValue = Array.isArray(filterValue)
+            ? filterValue
+            : [filterValue];
         const dataArray = normalizedFilterValue.map((value) => {
             const data = {
                 user_id: user.userId,
@@ -232,7 +278,7 @@ export class CalendarModel extends Model {
      * Also, if there is a filter section, the first filter section will be chosen as additional value for the record.
      *
      * @param {Object} multiCreateData
-     * @param {DateTime[]} dates array of Date
+     * @param {any[]} dates array of Date
      * @returns {Promise<*>}
      */
     async multiCreateRecords(multiCreateData, dates) {
@@ -315,13 +361,17 @@ export class CalendarModel extends Model {
             if (userFilter) {
                 userFilter.active = active;
             }
-            const filterIds = filters.filter((f) => f.type === "record").map((f) => f.recordId);
+            const filterIds = filters
+                .filter((f) => f.type === "record")
+                .map((f) => f.recordId);
             if (filterIds) {
                 const data = {
                     [info.filterFieldName]: active,
                 };
                 const context = this.meta.context;
-                await this.orm.write(info.writeResModel, filterIds, data, { context });
+                await this.orm.write(info.writeResModel, filterIds, data, {
+                    context,
+                });
             }
         }
         await this.debouncedLoad();
@@ -340,6 +390,13 @@ export class CalendarModel extends Model {
         return [start.set({ hours: 7 }), end.set({ hours: 19 })];
     }
 
+    /**
+     * Convert a UI record (with start/end DateTimes) into raw field values for ORM operations.
+     *
+     * @param {Object} partialRecord - record with start, end, isAllDay, title
+     * @param {Object} [options] - additional options like duration_hour, moved
+     * @returns {Object} raw field values keyed by field name
+     */
     buildRawRecord(partialRecord, options = {}) {
         const data = {};
         data[this.meta.fieldMapping.create_name_field || "name"] = partialRecord.title;
@@ -372,25 +429,37 @@ export class CalendarModel extends Model {
         }
 
         data[this.meta.fieldMapping.date_start] =
-            (partialRecord.isAllDay && this.hasAllDaySlot ? "date" : this.dateStartType) === "date"
+            (partialRecord.isAllDay && this.hasAllDaySlot
+                ? "date"
+                : this.dateStartType) === "date"
                 ? serializeDate(start)
                 : serializeDateTime(start);
 
         if (this.meta.fieldMapping.date_stop) {
             data[this.meta.fieldMapping.date_stop] =
-                (partialRecord.isAllDay && this.hasAllDaySlot ? "date" : this.dateStartType) ===
-                "date"
+                (partialRecord.isAllDay && this.hasAllDaySlot
+                    ? "date"
+                    : this.dateStartType) === "date"
                     ? serializeDate(end)
                     : serializeDateTime(end);
         }
 
         if (this.meta.fieldMapping.date_delay) {
             if (this.meta.scale !== "month" || !options.moved) {
-                data[this.meta.fieldMapping.date_delay] = end.diff(start, "hours").hours;
+                data[this.meta.fieldMapping.date_delay] = end.diff(
+                    start,
+                    "hours",
+                ).hours;
             }
         }
         return data;
     }
+    /**
+     * Build a context dict with default_* keys from a raw record for form view creation.
+     *
+     * @param {Object} rawRecord - raw field values from buildRawRecord
+     * @returns {Object} context with default values
+     */
     makeContextDefaults(rawRecord) {
         const { fieldMapping, scale } = this.meta;
 
@@ -453,13 +522,21 @@ export class CalendarModel extends Model {
             }
             for (const [recordId, record] of Object.entries(data.records)) {
                 const rawValue = record.rawRecord[fieldName];
-                let remove = false;
+                let remove;
                 if (["many2many", "one2many"].includes(field.type)) {
-                    const inactiveFilterVals = inactiveFilters.map((filter) => filter.value);
-                    remove = intersection(rawValue, inactiveFilterVals).length === rawValue.length;
+                    const inactiveFilterVals = inactiveFilters.map(
+                        (filter) => filter.value,
+                    );
+                    remove =
+                        intersection(rawValue, inactiveFilterVals).length ===
+                        rawValue.length;
                 } else {
-                    const recordValue = Array.isArray(rawValue) ? rawValue[0] : rawValue;
-                    remove = inactiveFilters.some((filter) => filter.value === recordValue);
+                    const recordValue = Array.isArray(rawValue)
+                        ? rawValue[0]
+                        : rawValue;
+                    remove = inactiveFilters.some(
+                        (filter) => filter.value === recordValue,
+                    );
                 }
                 if (remove) {
                     delete data.records[recordId];
@@ -471,7 +548,9 @@ export class CalendarModel extends Model {
 
         // Compute aggregate values
         if (this.aggregate) {
-            for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
+            for (const [fieldName, { filters }] of Object.entries(
+                data.filterSections,
+            )) {
                 const aggregates = this.computeAggregatedValues(fieldName, data);
                 for (const filter of filters) {
                     filter.aggregatedValue = aggregates[filter.value] || 0;
@@ -487,26 +566,7 @@ export class CalendarModel extends Model {
      */
     computeRange() {
         const { scale, date, firstDayOfWeek } = this.meta;
-        let start = date;
-        let end = date;
-
-        if (scale !== "week") {
-            // startOf("week") does not depend on locale and will always give the
-            // "Monday" of the week...
-            start = start.startOf(scale);
-            end = end.endOf(scale);
-        }
-
-        if (scale === "week" || (scale === "month" && this.monthOverflow)) {
-            const currentWeekOffset = (start.weekday - firstDayOfWeek + 7) % 7;
-            start = start.minus({ days: currentWeekOffset });
-            end = start.plus({ weeks: scale === "week" ? 1 : 6, days: -1 });
-        }
-
-        start = start.startOf("day");
-        end = end.endOf("day");
-
-        return { start, end };
+        return computeCalendarRange(scale, date, firstDayOfWeek, this.monthOverflow);
     }
 
     //--------------------------------------------------------------------------
@@ -527,10 +587,15 @@ export class CalendarModel extends Model {
         const aggregates = {};
         const [aggregateField, aggregator] = this.aggregate.split(":");
         for (const group in groups) {
-            const values = groups[group].map(({ rawRecord }) => rawRecord[aggregateField]);
-            aggregates[group] = formatFloat(computeAggregatedValue(values, aggregator), {
-                trailingZeros: false,
-            });
+            const values = groups[group].map(
+                ({ rawRecord }) => rawRecord[aggregateField],
+            );
+            aggregates[group] = formatFloat(
+                computeAggregatedValue(values, aggregator),
+                {
+                    trailingZeros: false,
+                },
+            );
         }
         return aggregates;
     }
@@ -548,61 +613,17 @@ export class CalendarModel extends Model {
      * @protected
      */
     computeFiltersDomain(data) {
-        // List authorized values for every field
-        // fields with an active "all" filter are skipped
-        const authorizedValues = {};
-        const avoidValues = {};
-
-        for (const [fieldName, filterSection] of Object.entries(data.filterSections)) {
-            const filterSectionInfo = this.meta.filtersInfo[fieldName];
-            // Loop over subfilters to complete authorizedValues
-            for (const filter of filterSection.filters) {
-                if (filterSectionInfo.writeResModel) {
-                    if (!authorizedValues[fieldName]) {
-                        authorizedValues[fieldName] = [];
-                    }
-                    if (filter.active) {
-                        authorizedValues[fieldName].push(filter.value);
-                    }
-                } else {
-                    if (!filter.active) {
-                        if (!avoidValues[fieldName]) {
-                            avoidValues[fieldName] = [];
-                        }
-                        avoidValues[fieldName].push(filter.value);
-                    }
-                }
-            }
-        }
-
-        // Compute the domain
-        const domain = [];
-        for (const field in authorizedValues) {
-            domain.push([field, "in", authorizedValues[field]]);
-        }
-        for (const field in avoidValues) {
-            if (avoidValues[field].length > 0) {
-                domain.push([field, "not in", avoidValues[field]]);
-            }
-        }
-        return domain;
+        return computeFiltersDomain(data.filterSections, this.meta.filtersInfo);
     }
     /**
      * @protected
      */
     computeRangeDomain(data) {
-        const { fieldMapping } = this.meta;
-        const serializeFn = this.dateStartType === "date" ? serializeDate : serializeDateTime;
-        const formattedEnd = serializeFn(data.range.end);
-        const formattedStart = serializeFn(data.range.start);
-
-        const domain = [[fieldMapping.date_start, "<=", formattedEnd]];
-        if (fieldMapping.date_stop) {
-            domain.push([fieldMapping.date_stop, ">=", formattedStart]);
-        } else if (!fieldMapping.date_delay) {
-            domain.push([fieldMapping.date_start, ">=", formattedStart]);
-        }
-        return domain;
+        return computeRangeDomain(
+            this.meta.fieldMapping,
+            this.dateStartType,
+            data.range,
+        );
     }
 
     //--------------------------------------------------------------------------
@@ -637,7 +658,7 @@ export class CalendarModel extends Model {
             resModel,
             this.computeDomain(data),
             [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
-            { context }
+            { context },
         );
     }
     /**
@@ -656,63 +677,13 @@ export class CalendarModel extends Model {
      * @param {Record<string, any>} rawRecord
      */
     normalizeRecord(rawRecord) {
-        const { fields, fieldMapping, isTimeHidden } = this.meta;
-
-        const startType = fields[fieldMapping.date_start].type;
-        const isAllDay =
-            startType === "date" ||
-            (fieldMapping.all_day && rawRecord[fieldMapping.all_day]) ||
-            false;
-        let start = isAllDay
-            ? deserializeDate(rawRecord[fieldMapping.date_start])
-            : deserializeDateTime(rawRecord[fieldMapping.date_start]);
-
-        let end = start;
-        let endType = startType;
-        if (fieldMapping.date_stop) {
-            endType = fields[fieldMapping.date_stop].type;
-            end = isAllDay
-                ? deserializeDate(rawRecord[fieldMapping.date_stop])
-                : deserializeDateTime(rawRecord[fieldMapping.date_stop]);
-        }
-
-        const duration = rawRecord[fieldMapping.date_delay] || 1;
-
-        if (isAllDay) {
-            start = start.startOf("day");
-            end = end.startOf("day");
-        }
-        if (!fieldMapping.date_stop && duration) {
-            end = start.plus({ hours: duration });
-        }
-
-        const showTime =
-            !(fieldMapping.all_day && rawRecord[fieldMapping.all_day]) &&
-            startType !== "date" &&
-            start.day === end.day;
-
-        const colorValue = rawRecord[fieldMapping.color];
-        const colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
-
-        const title = rawRecord[fieldMapping.create_name_field || "display_name"];
-
-        return {
-            id: rawRecord.id,
-            title,
-            isAllDay,
-            start,
-            startType,
-            end,
-            endType,
-            duration,
-            colorIndex,
-            isHatched: rawRecord["is_hatched"] || false,
-            isStriked: rawRecord["is_striked"] || false,
-            isTimeHidden: isTimeHidden || !showTime,
-            isMonth: this.meta.scale === "month",
+        return normalizeCalendarRecord(rawRecord, {
+            fields: this.meta.fields,
+            fieldMapping: this.meta.fieldMapping,
+            isTimeHidden: this.meta.isTimeHidden,
+            scale: this.meta.scale,
             isSmall: this.env.isSmall,
-            rawRecord,
-        };
+        });
     }
 
     /**
@@ -729,7 +700,11 @@ export class CalendarModel extends Model {
      * @protected
      */
     fetchFilters(resModel, fieldNames) {
-        return this.orm.searchRead(resModel, [["user_id", "=", user.userId]], fieldNames);
+        return this.orm.searchRead(
+            resModel,
+            [["user_id", "=", user.userId]],
+            fieldNames,
+        );
     }
 
     getLocalStorageScale() {
@@ -748,11 +723,13 @@ export class CalendarModel extends Model {
         for (const [fieldName, filterInfo] of Object.entries(this.meta.filtersInfo)) {
             const previousSection = previousSections[fieldName];
             if (filterInfo.writeResModel) {
-                const prom = this.loadFilterSection(fieldName, filterInfo, previousSection).then(
-                    (result) => {
-                        sections[fieldName] = result;
-                    }
-                );
+                const prom = this.loadFilterSection(
+                    fieldName,
+                    filterInfo,
+                    previousSection,
+                ).then((result) => {
+                    sections[fieldName] = result;
+                });
                 proms.push(prom);
             } else {
                 dynamicFiltersInfo[fieldName] = { filterInfo, previousSection };
@@ -772,7 +749,7 @@ export class CalendarModel extends Model {
 
         const filters = rawFilters.map((rawFilter) => {
             const previousRecordFilter = previousFilters.find(
-                (f) => f.type === "record" && f.recordId === rawFilter.id
+                (f) => f.type === "record" && f.recordId === rawFilter.id,
             );
             return this.makeFilterRecord(filterInfo, previousRecordFilter, rawFilter);
         });
@@ -782,7 +759,12 @@ export class CalendarModel extends Model {
         if (isUserOrPartner) {
             const previousUserFilter = previousFilters.find((f) => f.type === "user");
             filters.push(
-                this.makeFilterUser(filterInfo, previousUserFilter, fieldName, rawFilters)
+                this.makeFilterUser(
+                    filterInfo,
+                    previousUserFilter,
+                    fieldName,
+                    rawFilters,
+                ),
             );
         }
 
@@ -809,12 +791,14 @@ export class CalendarModel extends Model {
     async loadDynamicFilters(data, filtersInfo) {
         const sections = {};
         const proms = [];
-        for (const [fieldName, { filterInfo, previousSection }] of Object.entries(filtersInfo)) {
+        for (const [fieldName, { filterInfo, previousSection }] of Object.entries(
+            filtersInfo,
+        )) {
             const prom = this.loadDynamicFilterSection(
                 data,
                 fieldName,
                 filterInfo,
-                previousSection
+                previousSection,
             ).then((result) => {
                 sections[fieldName] = result;
             });
@@ -859,7 +843,8 @@ export class CalendarModel extends Model {
             const shouldFetchColor =
                 colorFieldName &&
                 (!fieldMapping.color ||
-                    `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related);
+                    `${fieldName}.${colorFieldName}` !==
+                        fields[fieldMapping.color].related);
             if (shouldFetchColor) {
                 fieldsToFetch.push(colorFieldName);
             }
@@ -871,10 +856,12 @@ export class CalendarModel extends Model {
                     field.relation,
                     [["id", "in", relatedIds]],
                     fieldsToFetch,
-                    { context: { active_test: false } }
+                    { context: { active_test: false } },
                 );
                 if (isX2Many) {
-                    const nameById = Object.fromEntries(records.map((r) => [r.id, r.display_name]));
+                    const nameById = Object.fromEntries(
+                        records.map((r) => [r.id, r.display_name]),
+                    );
                     for (const rawFilter of rawFilters) {
                         const id = rawFilter.id;
                         if (!id || !nameById[id]) {
@@ -891,14 +878,14 @@ export class CalendarModel extends Model {
 
         const filters = rawFilters.map((rawFilter) => {
             const previousDynamicFilter = previousFilters.find(
-                (f) => f.type === "dynamic" && f.value === rawFilter.id
+                (f) => f.type === "dynamic" && f.value === rawFilter.id,
             );
             return this.makeFilterDynamic(
                 filterInfo,
                 previousDynamicFilter,
                 fieldName,
                 rawFilter,
-                rawColors
+                rawColors,
             );
         });
 
@@ -927,7 +914,9 @@ export class CalendarModel extends Model {
         const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
         const field = fields[fieldName];
         const isX2Many = ["many2many", "one2many"].includes(field.type);
-        const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
+        const formatter = registry
+            .category("formatters")
+            .get(isX2Many ? "many2one" : field.type);
 
         const { colorFieldName } = filterInfo;
         const colorField = fields[fieldMapping.color];
@@ -966,7 +955,9 @@ export class CalendarModel extends Model {
         const value = Array.isArray(raw) ? raw[0] : raw;
         const field = fields[writeFieldName];
         const isX2Many = ["many2many", "one2many"].includes(field.type);
-        const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
+        const formatter = registry
+            .category("formatters")
+            .get(isX2Many ? "many2one" : field.type);
 
         const colorField = fields[fieldMapping.color];
         const colorValue =
@@ -1007,7 +998,9 @@ export class CalendarModel extends Model {
         const value = user[userFieldName];
 
         let colorIndex = value;
-        const rawRecord = rawRecords.find((r) => r[filterInfo.writeFieldName][0] === value);
+        const rawRecord = rawRecords.find(
+            (r) => r[filterInfo.writeFieldName][0] === value,
+        );
         if (filterInfo.colorFieldName && rawRecord) {
             const colorValue = rawRecord[filterInfo.colorFieldName];
             colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;

@@ -26,15 +26,24 @@ export class BootstrapDialog extends Component {
                 }
 
                 if (this.props.onClose) {
-                    this.dialog.el.addEventListener("hide.bs.modal", this.props.onClose);
+                    this.dialog.el.addEventListener(
+                        "hide.bs.modal",
+                        this.props.onClose,
+                    );
                 }
 
                 return () => {
-                    this.dialog.el.removeEventListener("show.bs.modal", this.props.onOpen);
-                    this.dialog.el.removeEventListener("hide.bs.modal", this.props.onClose);
+                    this.dialog.el.removeEventListener(
+                        "show.bs.modal",
+                        this.props.onOpen,
+                    );
+                    this.dialog.el.removeEventListener(
+                        "hide.bs.modal",
+                        this.props.onClose,
+                    );
                 };
             },
-            () => [this.dialog]
+            () => [this.dialog],
         );
     }
 

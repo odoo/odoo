@@ -1,14 +1,18 @@
-import { _t } from "@web/core/l10n/translation";
-import { Dialog } from "@web/core/dialog/dialog";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { is24HourFormat } from "@web/core/l10n/time";
-import { registry } from "@web/core/registry";
-import { Field } from "@web/views/fields/field";
-import { Record } from "@web/model/record";
-import { getFormattedDateSpan } from "@web/views/calendar/utils";
+// @ts-check
+
+/** @module @web/views/calendar/calendar_common/calendar_common_popover - Popover for calendar events in day/week/month scales */
 
 import { Component, useExternalListener } from "@odoo/owl";
+import { is24HourFormat } from "@web/core/l10n/time";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { Field } from "@web/fields/field";
+import { Record } from "@web/model/record";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { getFormattedDateSpan } from "@web/views/calendar/calendar_utils";
 
+/** Popover displayed when clicking a calendar event in day/week/month scales. */
 export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
     static subTemplates = {
@@ -36,7 +40,9 @@ export class CalendarCommonPopover extends Component {
         this.date = null;
         this.dateDuration = null;
 
-        useExternalListener(window, "pointerdown", (e) => e.preventDefault(), { capture: true });
+        useExternalListener(window, "pointerdown", (e) => e.preventDefault(), {
+            capture: true,
+        });
 
         this.computeDateTimeAndDuration();
     }
@@ -57,10 +63,25 @@ export class CalendarCommonPopover extends Component {
         return this.isEventEditable || this.isEventDeletable || this.isEventViewable;
     }
 
+    /**
+     * @param {Object} fieldNode - parsed field node with invisible expression
+     * @param {Object} record - current record for expression evaluation context
+     * @returns {boolean}
+     */
     isInvisible(fieldNode, record) {
-        return evaluateBooleanExpr(fieldNode.invisible, record.evalContextWithVirtualIds);
+        return evaluateBooleanExpr(
+            fieldNode.invisible,
+            record.evalContextWithVirtualIds,
+        );
     }
 
+    /**
+     * Format a record field value for display using the appropriate formatter.
+     *
+     * @param {string} fieldName
+     * @param {Object} record
+     * @returns {string} formatted value
+     */
     getFormattedValue(fieldName, record) {
         const fieldInfo = this.props.model.popoverFieldNodes[fieldName];
         const field = this.props.model.fields[fieldName];
@@ -74,6 +95,7 @@ export class CalendarCommonPopover extends Component {
         return format(record.data[fieldName]);
     }
 
+    /** Compute human-readable date, time, and duration strings for the popover header. */
     computeDateTimeAndDuration() {
         const record = this.props.record;
         const { start, end } = record;

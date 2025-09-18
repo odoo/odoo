@@ -1,9 +1,20 @@
-import { useService } from "@web/core/utils/hooks";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+// @ts-check
+
+/** @module @web/views/view_button/view_button_hook - Hook wiring view button click handling with confirmation dialogs and UI blocking */
 
 import { status, useComponent, useEnv, useSubEnv } from "@odoo/owl";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 
+/**
+ * Disable all buttons within `el` (and overlays) while executing `fct`, then re-enable them.
+ * Prevents double-clicks during async button actions.
+ * @param {HTMLElement | null} el - container whose buttons are disabled
+ * @param {() => Promise<any>} fct - async callback to execute
+ * @returns {Promise<any>}
+ */
 export async function executeButtonCallback(el, fct) {
     let btns = [];
     function disableButtons() {
@@ -34,19 +45,22 @@ export async function executeButtonCallback(el, fct) {
 }
 
 function undefinedAsTrue(val) {
-    return typeof val === "undefined" || val;
+    return val === undefined || val;
 }
 
 /**
- * @typedef {Object} Options
- * @property {Function} [afterExecuteAction]
- * @property {Function} [beforeExecuteAction]
- * @property {Function} [reload]
+ * @typedef {Object} ViewButtonsOptions
+ * @property {Function} [afterExecuteAction] - called after the button action completes
+ * @property {Function} [beforeExecuteAction] - called before the button action; return false to abort
+ * @property {Function} [reload] - called to reload the view after a non-dialog action
  */
 
 /**
- * @param {{ readonly el: HTMLElement | null; }} ref
- * @param {Options} [options={}]
+ * OWL hook that injects `onClickViewButton` into the sub-environment, wiring up
+ * confirmation dialogs, context evaluation, button disabling, and action execution
+ * for all ViewButton descendants.
+ * @param {{ readonly el: HTMLElement | null; }} ref - component root ref
+ * @param {ViewButtonsOptions} [options={}]
  */
 export function useViewButtons(ref, options = {}) {
     const action = useService("action");
@@ -54,7 +68,12 @@ export function useViewButtons(ref, options = {}) {
     const comp = useComponent();
     const env = useEnv();
     useSubEnv({
-        async onClickViewButton({ clickParams, getResParams, beforeExecute, newWindow }) {
+        async onClickViewButton({
+            clickParams,
+            getResParams,
+            beforeExecute,
+            newWindow,
+        }) {
             async function execute() {
                 let _continue = true;
                 if (beforeExecute) {
@@ -62,7 +81,8 @@ export function useViewButtons(ref, options = {}) {
                 }
 
                 _continue =
-                    _continue && undefinedAsTrue(await options.beforeExecuteAction?.(clickParams));
+                    _continue &&
+                    undefinedAsTrue(await options.beforeExecuteAction?.(clickParams));
                 if (!_continue) {
                     return;
                 }
@@ -72,7 +92,10 @@ export function useViewButtons(ref, options = {}) {
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
-                        buttonContext = evaluateExpr(clickParams.context, params.evalContext);
+                        buttonContext = evaluateExpr(
+                            clickParams.context,
+                            params.evalContext,
+                        );
                     } else {
                         buttonContext = clickParams.context;
                     }
@@ -80,7 +103,8 @@ export function useViewButtons(ref, options = {}) {
                 if (clickParams.buttonContext) {
                     Object.assign(buttonContext, clickParams.buttonContext);
                 }
-                const doActionParams = Object.assign({}, clickParams, {
+                const doActionParams = {
+                    ...clickParams,
                     resModel: params.resModel,
                     resId: params.resId,
                     resIds: params.resIds,
@@ -95,7 +119,7 @@ export function useViewButtons(ref, options = {}) {
                             await options.reload?.();
                         }
                     },
-                });
+                };
                 let error;
                 try {
                     await action.doActionButton(doActionParams, { newWindow });
@@ -112,7 +136,7 @@ export function useViewButtons(ref, options = {}) {
             }
 
             if (clickParams.confirm) {
-                executeButtonCallback(getEl(), async () => {
+                return executeButtonCallback(getEl(), async () => {
                     await new Promise((resolve) => {
                         const dialogProps = {
                             ...(clickParams["confirm-title"] && {
@@ -128,7 +152,9 @@ export function useViewButtons(ref, options = {}) {
                             confirm: () => execute(),
                             cancel: () => {},
                         };
-                        dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
+                        dialog.add(ConfirmationDialog, dialogProps, {
+                            onClose: /** @type {any} */ (resolve),
+                        });
                     });
                 });
             } else {
@@ -146,3 +172,7 @@ export function useViewButtons(ref, options = {}) {
         }
     }
 }
+
+const sharedComponents = registry.category("shared_components");
+sharedComponents.add("executeButtonCallback", executeButtonCallback);
+sharedComponents.add("useViewButtons", useViewButtons);

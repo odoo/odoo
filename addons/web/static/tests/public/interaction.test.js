@@ -1,21 +1,24 @@
+// @ts-check
+
 import { before, beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
     dblclick,
+    freezeTime,
     queryAll,
     queryFirst,
     queryOne,
-    freezeTime,
 } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
-import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patchDynamicContent } from "@web/public/utils";
+
 import { startInteraction, startInteractions } from "./helpers";
 
 describe.current.tags("interaction_dev");
@@ -120,7 +123,11 @@ describe("adding listeners", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                this.addListener(this.el.querySelectorAll("span"), "click", () => clicked++);
+                this.addListener(
+                    this.el.querySelectorAll("span"),
+                    "click",
+                    () => clicked++,
+                );
             }
         }
         await startInteraction(Test, TemplateTestDoubleSpan);
@@ -309,7 +316,7 @@ describe("using selectors", () => {
                 <span>span2</span>
                 <span>span3</span>
             </div>
-        `
+        `,
         );
         async function clickAll() {
             for (const el of queryAll(".me")) {
@@ -355,7 +362,7 @@ describe("using selectors", () => {
             <div class="test">
                 <span class="btn"></span>
                 <span class="btn off"></span>
-            </div>`
+            </div>`,
         );
         expect.verifySteps([]);
         await click(".btn:not(.off)");
@@ -379,7 +386,7 @@ describe("using selectors", () => {
             `
             <div class="test">
                 <span class="my-selector">coucou</span>
-            </div>`
+            </div>`,
         );
         expect("span").toHaveAttribute("animal", "colibri");
     });
@@ -401,7 +408,7 @@ describe("using selectors", () => {
                 <span class="my-selector">coucou</span>
                 <span class="my-selector">coucou</span>
                 <span class="my-selector">coucou</span>
-            </div>`
+            </div>`,
         );
         expect(queryAll("span")).toHaveAttribute("animal", "colibri");
     });
@@ -421,7 +428,7 @@ describe("using selectors", () => {
             <form class="test">
                 <input type="text">coucou</input>
                 <button type="button"/>Submit</button>
-            </form>`
+            </form>`,
         );
         expect(".test").toHaveAttribute("animal", "colibri");
         expect(".test input").not.toHaveAttribute("animal");
@@ -435,7 +442,11 @@ describe("removing listeners", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                this.addListener(this.el.querySelector("span"), "click", () => clicked++);
+                this.addListener(
+                    this.el.querySelector("span"),
+                    "click",
+                    () => clicked++,
+                );
             }
         }
         const { core } = await startInteraction(Test, TemplateTest);
@@ -455,7 +466,7 @@ describe("removing listeners", () => {
                 this.removeListener = this.addListener(
                     this.el.querySelector("span"),
                     "click",
-                    () => clicked++
+                    () => clicked++,
                 );
             }
         }
@@ -476,7 +487,7 @@ describe("removing listeners", () => {
                 this.removeListener = this.addListener(
                     this.el.querySelectorAll("span"),
                     "click",
-                    () => clicked++
+                    () => clicked++,
                 );
             }
         }
@@ -556,7 +567,7 @@ describe("handling crashes", () => {
             static selector = ".test";
             start() {
                 expect(() => this.addListener(this.el, "click", null)).toThrow(
-                    "Invalid listener for event 'click' (not a function)"
+                    "Invalid listener for event 'click' (not a function)",
                 );
             }
         }
@@ -570,11 +581,15 @@ describe("handling crashes", () => {
         class Test extends Interaction {
             static selector = ".test";
             setup() {
-                this.addListener(this.el.querySelector("span"), "click", () => clicked++);
+                this.addListener(
+                    this.el.querySelector("span"),
+                    "click",
+                    () => clicked++,
+                );
             }
         }
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
-            "this.addListener can only be called after the interaction is started"
+            "this.addListener can only be called after the interaction is started",
         );
     });
 
@@ -588,7 +603,7 @@ describe("handling crashes", () => {
                     "t-att-a": () => {
                         if (update) {
                             expect(() => interaction.updateContent()).toThrow(
-                                "Updatecontent should not be called while interaction is updating"
+                                "Updatecontent should not be called while interaction is updating",
                             );
                         }
                         return "a";
@@ -635,7 +650,7 @@ describe("handling crashes", () => {
             };
         }
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
-            "Invalid directive: 'click' (should start with t-)"
+            "Invalid directive: 'click' (should start with t-)",
         );
     });
 
@@ -645,7 +660,7 @@ describe("handling crashes", () => {
             static dynamicContent = {};
         }
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
-            "The dynamic content object should be defined on the instance, not on the class (Test)"
+            "The dynamic content object should be defined on the instance, not on the class (Test)",
         );
     });
 
@@ -654,7 +669,7 @@ describe("handling crashes", () => {
             selector = ".test";
         }
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
-            "The selector should be defined as a static property on the class Test, not on the instance"
+            "The selector should be defined as a static property on the class Test, not on the instance",
         );
     });
 
@@ -664,7 +679,7 @@ describe("handling crashes", () => {
             dynamicContent = { "t-on-click": () => {} };
         }
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
-            "Selector missing for key t-on-click in dynamicContent (interaction 'Test')"
+            "Selector missing for key t-on-click in dynamicContent (interaction 'Test')",
         );
     });
 });
@@ -723,7 +738,7 @@ describe("using qualifiers", () => {
                 <span>
                     <strong>coucou</strong>
                 </span>
-            </div>`
+            </div>`,
         );
         expect.verifySteps([]);
         await click("strong");
@@ -745,7 +760,7 @@ describe("using qualifiers", () => {
                 <span>
                     <strong>coucou</strong>
                 </span>
-            </div>`
+            </div>`,
         );
         expect.verifySteps([]);
         await click("strong");
@@ -888,7 +903,7 @@ describe("lifecycle", () => {
         core.stopInteractions();
         expect.verifySteps(["destroy"]);
         expect(() => interaction.updateContent()).toThrow(
-            "Cannot update content of an interaction that is not ready or is destroyed"
+            "Cannot update content of an interaction that is not ready or is destroyed",
         );
     });
 
@@ -910,7 +925,9 @@ describe("lifecycle", () => {
                 expect.step("destroy");
             }
         }
-        const { core } = await startInteraction(Test, TemplateTest, { waitForStart: false });
+        const { core } = await startInteraction(Test, TemplateTest, {
+            waitForStart: false,
+        });
         expect.verifySteps(["setup", "willStart"]);
         core.stopInteractions();
         expect.verifySteps(["destroy"]);
@@ -938,7 +955,7 @@ describe("lifecycle", () => {
         await startInteraction(Test, TemplateTest, { waitForStart: false });
         expect.verifySteps(["willStart"]);
         expect(() => interaction.updateContent()).toThrow(
-            "Cannot update content of an interaction that is not ready or is destroyed"
+            "Cannot update content of an interaction that is not ready or is destroyed",
         );
 
         await animationFrame();
@@ -1176,7 +1193,9 @@ describe("waitFor...", () => {
                 static selector = ".test";
 
                 async willStart() {
-                    await this.waitForAnimationFrame(() => expect.step("waitForAnimationFrame"));
+                    await this.waitForAnimationFrame(() =>
+                        expect.step("waitForAnimationFrame"),
+                    );
                     expect.step("willstart");
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -1289,7 +1308,10 @@ describe("t-att-class", () => {
                 _root: { "t-att-class": () => ({ b: true }) },
             };
         }
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        const { core } = await startInteraction(
+            Test,
+            getTemplateWithAttribute("class='a'"),
+        );
         expect("span").toHaveClass("a b");
         core.stopInteractions();
         expect("span").toHaveClass("a");
@@ -1329,7 +1351,10 @@ describe("t-att-class", () => {
                 _root: { "t-att-class": () => ({ b: undefined }) },
             };
         }
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a b'"));
+        const { core } = await startInteraction(
+            Test,
+            getTemplateWithAttribute("class='a b'"),
+        );
         expect("span").toHaveClass("a");
         expect("span").not.toHaveClass("b");
         core.interactions[0].interaction.updateContent();
@@ -1370,7 +1395,10 @@ describe("t-att-class", () => {
             };
         }
 
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        const { core } = await startInteraction(
+            Test,
+            getTemplateWithAttribute("class='a'"),
+        );
         const span = queryOne("span");
         expect(span).toHaveClass(["a", "b"]);
         span.classList.add("c");
@@ -1403,7 +1431,10 @@ describe("t-att-class", () => {
                 }, 1000);
             }
         }
-        await startInteraction(Test, `<div class="test"><span class="b d">Hi</span></div>`);
+        await startInteraction(
+            Test,
+            `<div class="test"><span class="b d">Hi</span></div>`,
+        );
         expect("span").toHaveClass("a");
         expect("span").not.toHaveClass("b");
         expect("span").toHaveClass("c");
@@ -1470,10 +1501,13 @@ describe("t-att-style", () => {
 
         const { core } = await startInteraction(
             Test,
-            getTemplateWithAttribute("style='background-color: blue'")
+            getTemplateWithAttribute("style='background-color: blue'"),
         );
         const span = queryOne("span");
-        expect(span).toHaveStyle({ "background-color": "rgb(0, 0, 0)", color: "rgb(255, 0, 0)" });
+        expect(span).toHaveStyle({
+            "background-color": "rgb(0, 0, 0)",
+            color: "rgb(255, 0, 0)",
+        });
         span.style.setProperty("width", "50%");
         expect(span).toHaveStyle({
             "background-color": "rgb(0, 0, 0)",
@@ -1481,7 +1515,10 @@ describe("t-att-style", () => {
             width: "50%",
         });
         core.stopInteractions();
-        expect(span).toHaveStyle({ "background-color": "rgb(0, 0, 255)", width: "50%" });
+        expect(span).toHaveStyle({
+            "background-color": "rgb(0, 0, 255)",
+            width: "50%",
+        });
         expect(span).not.toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
@@ -1500,19 +1537,19 @@ describe("t-att-style", () => {
 
         const { core } = await startInteraction(
             Test,
-            `<div><span style="background-color: blue !important">coucou</span></div>`
+            `<div><span style="background-color: blue !important">coucou</span></div>`,
         );
         const span = queryOne("span");
         expect(span).toHaveOuterHTML(
-            `<span style="background-color: black; color: red;">coucou</span>`
+            `<span style="background-color: black; color: red;">coucou</span>`,
         );
         span.style.setProperty("width", "50%", "important");
         expect(span).toHaveOuterHTML(
-            `<span style="background-color: black; color: red; width: 50% !important;">coucou</span>`
+            `<span style="background-color: black; color: red; width: 50% !important;">coucou</span>`,
         );
         core.stopInteractions();
         expect(span).toHaveOuterHTML(
-            `<span style="background-color: blue !important; width: 50% !important;">coucou</span>`
+            `<span style="background-color: blue !important; width: 50% !important;">coucou</span>`,
         );
     });
 
@@ -1525,9 +1562,12 @@ describe("t-att-style", () => {
         }
         const { core } = await startInteraction(
             Test,
-            getTemplateWithAttribute("style='background-color: blue;'")
+            getTemplateWithAttribute("style='background-color: blue;'"),
         );
-        expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)", color: "rgb(255, 0, 0)" });
+        expect("span").toHaveStyle({
+            backgroundColor: "rgb(0, 0, 255)",
+            color: "rgb(255, 0, 0)",
+        });
         core.stopInteractions();
         expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)" });
         expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
@@ -1576,7 +1616,10 @@ describe("t-att-style", () => {
             dynamicContent = {
                 _root: {
                     "t-on-click": this.toggle,
-                    "t-att-style": () => ({ "background-color": this.b, color: this.c }),
+                    "t-att-style": () => ({
+                        "background-color": this.b,
+                        color: this.c,
+                    }),
                 },
             };
             setup() {
@@ -1589,10 +1632,16 @@ describe("t-att-style", () => {
             }
         }
         await startInteraction(Test, TemplateBase);
-        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)", backgroundColor: "rgb(0, 0, 255)" });
+        expect("span").toHaveStyle({
+            color: "rgb(255, 0, 0)",
+            backgroundColor: "rgb(0, 0, 255)",
+        });
         await click("span");
         await animationFrame();
-        expect("span").toHaveStyle({ color: "rgb(0, 0, 255)", backgroundColor: "rgb(255, 0, 0)" });
+        expect("span").toHaveStyle({
+            color: "rgb(0, 0, 255)",
+            backgroundColor: "rgb(255, 0, 0)",
+        });
     });
 
     test("t-att-style, apply important", async () => {
@@ -1603,7 +1652,9 @@ describe("t-att-style", () => {
             };
         }
         await startInteraction(Test, TemplateBase);
-        expect("span").toHaveOuterHTML(`<span style="color: red !important;">coucou</span>`);
+        expect("span").toHaveOuterHTML(
+            `<span style="color: red !important;">coucou</span>`,
+        );
     });
 
     test("reset t-att-style to initial content", async () => {
@@ -1630,14 +1681,17 @@ describe("t-att-style", () => {
         }
         await startInteraction(
             Test,
-            `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`
+            `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`,
         );
         expect("span").toHaveStyle({
             "background-color": "rgb(0, 255, 0)",
             color: "rgb(255, 0, 0)",
         });
         await advanceTime(1000);
-        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", color: "rgb(0, 0, 0)" });
+        expect("span").toHaveStyle({
+            "background-color": "rgb(0, 0, 255)",
+            color: "rgb(0, 0, 0)",
+        });
     });
 });
 
@@ -1768,7 +1822,7 @@ describe("t-att and t-out", () => {
                 <span data-animal="colibri">1</span>
                 <span data-animal="owlet">2</span>
             </div>
-        `
+        `,
         );
         expect("span:first").not.toHaveAttribute("data-animal");
         expect("span:last").not.toHaveAttribute("data-animal");
@@ -1791,7 +1845,7 @@ describe("t-att and t-out", () => {
                 <span data-animal="colibri">1</span>
                 <span data-animal="owlet">2</span>
             </div>
-        `
+        `,
         );
         expect("span:first").not.toHaveAttribute("data-animal");
         expect("span:last").not.toHaveAttribute("data-animal");
@@ -1864,7 +1918,9 @@ describe("t-att and t-out", () => {
         const oldInner = queryOne(".old-inner");
         expect("span").toHaveClass("old-inner");
         expect("span").toHaveAttribute("animal", "unicorn");
-        expect(core.activeInteractions.map.get(oldInner).has(oldInnerInteraction)).toBe(true);
+        expect(core.activeInteractions.map.get(oldInner).has(oldInnerInteraction)).toBe(
+            true,
+        );
         await advanceTime(1000);
         expect.verifySteps(["t-out"]);
         const inner = queryOne(".inner");
@@ -1872,7 +1928,9 @@ describe("t-att and t-out", () => {
         expect("span").toHaveAttribute("animal", "colibri");
         expect("span").toHaveClass("inner");
         expect(core.activeInteractions.map.get(oldInner)).toBe(undefined);
-        expect(core.activeInteractions.map.get(inner).has(newInnerInteraction)).toBe(true);
+        expect(core.activeInteractions.map.get(inner).has(newInnerInteraction)).toBe(
+            true,
+        );
         // Listeners refreshed
         await click("span");
         expect.verifySteps(["clicked"]);
@@ -1919,7 +1977,10 @@ describe("t-att and t-out", () => {
                 }, 1000);
             }
         }
-        await startInteraction(Test, `<div class="test"><span egg="mysterious"></span></div>`);
+        await startInteraction(
+            Test,
+            `<div class="test"><span egg="mysterious"></span></div>`,
+        );
         expect("span").toHaveAttribute("animal", "colibri");
         expect("span").toHaveAttribute("egg", "easter");
         await advanceTime(1000);
@@ -1954,7 +2015,7 @@ describe("t-att and t-out", () => {
                 <span>penguin</span>
                 <span>ostrich</span>
             </div>
-        `
+        `,
         );
         expect("span").toHaveText("colibri");
         core.stopInteractions();
@@ -1983,11 +2044,11 @@ describe("components", () => {
         }
         const { core } = await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`,
         );
         await animationFrame();
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">component</owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">component</owl-root></div>`,
         );
         expect(isCDestroyed).toBe(false);
         core.stopInteractions();
@@ -2016,11 +2077,11 @@ describe("components", () => {
         }
         const { core } = await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`,
         );
         await animationFrame();
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>hello</span></p></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>hello</span></p></owl-root></div>`,
         );
         expect(isCDestroyed).toBe(false);
         core.stopInteractions();
@@ -2049,11 +2110,11 @@ describe("components", () => {
         }
         const { core } = await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`,
         );
         await animationFrame();
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>test</span></p></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>test</span></p></owl-root></div>`,
         );
         expect(isCDestroyed).toBe(false);
         core.stopInteractions();
@@ -2076,7 +2137,7 @@ describe("components", () => {
         }
         await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root><span></span></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root><span></span></div>`,
         );
     });
 
@@ -2096,11 +2157,11 @@ describe("components", () => {
         }
         await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`,
         );
         await animationFrame();
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">component</owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">component</owl-root></div>`,
         );
         destroy();
         expect(".test").toHaveOuterHTML(`<div class="test"></div>`);
@@ -2123,11 +2184,11 @@ describe("components", () => {
         }
         await startInteraction(Test, `<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`,
         );
         await animationFrame();
         expect(".test").toHaveOuterHTML(
-            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>with prop</span></p></owl-root></div>`
+            `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"><p>component<span>with prop</span></p></owl-root></div>`,
         );
     });
 });
@@ -2347,7 +2408,7 @@ describe("renderAt", () => {
                         first: "one",
                         second: "two",
                     },
-                    this.el
+                    this.el,
                 );
             }
         }
@@ -2376,7 +2437,14 @@ describe("renderAt", () => {
         class Test extends Interaction {
             static selector = ".test";
             setup() {
-                this.renderAt("web.testRenderAt", {}, this.el, "beforeend", undefined, false);
+                this.renderAt(
+                    "web.testRenderAt",
+                    {},
+                    this.el,
+                    "beforeend",
+                    undefined,
+                    false,
+                );
             }
         }
 
@@ -2410,7 +2478,7 @@ describe("renderAt", () => {
                             for (const el of els) {
                                 expect.step(`callback on ${el.dataset.which}`);
                             }
-                        }
+                        },
                     );
                     expect(els).toHaveLength(2);
                     for (const el of els) {
@@ -2679,7 +2747,9 @@ describe("debounced (2)", () => {
                 expect.step("destroy");
             }
         }
-        const { core } = await startInteraction(Test, TemplateTest, { waitForStart: false });
+        const { core } = await startInteraction(Test, TemplateTest, {
+            waitForStart: false,
+        });
         expect.verifySteps(["willstart"]);
         const now = Date.now();
         if (now > debounceTimer) {
@@ -2699,7 +2769,9 @@ describe("debounced (2)", () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
-                _root: { "t-on-click": this.debounced((ev) => expect.step(ev.type), 500) },
+                _root: {
+                    "t-on-click": this.debounced((ev) => expect.step(ev.type), 500),
+                },
             };
         }
         await startInteraction(Test, TemplateTest);
@@ -2805,7 +2877,7 @@ describe("debounced (2)", () => {
 describe("throttled_for_animation (1)", () => {
     let core;
     let testEl;
-    beforeEach(async () => {
+    (beforeEach(async () => {
         patchWithCleanup(Colibri.prototype, {
             updateContent() {
                 expect.step("updateContent");
@@ -2860,7 +2932,7 @@ describe("throttled_for_animation (1)", () => {
             expect.verifySteps([]);
             await animationFrame();
             expect.verifySteps([]);
-        });
+        }));
 
     test("can cancel throttled event handler", async () => {
         await click(testEl);

@@ -1,7 +1,7 @@
 /*!
-FullCalendar Day Grid Plugin v6.1.11
+FullCalendar Day Grid Plugin v6.1.20
 Docs & License: https://fullcalendar.io/docs/month-view
-(c) 2023 Adam Shaw
+(c) 2024 Adam Shaw
 */
 FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
     'use strict';
@@ -722,7 +722,7 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
         constructor() {
             super(...arguments);
             this.splitBusinessHourSegs = internal$1.memoize(splitSegsByRow);
-            this.splitBgEventSegs = internal$1.memoize(splitSegsByRow);
+            this.splitBgEventSegs = internal$1.memoize(splitAllDaySegsByRow);
             this.splitFgEventSegs = internal$1.memoize(splitSegsByRow);
             this.splitDateSelectionSegs = internal$1.memoize(splitSegsByRow);
             this.splitEventDrag = internal$1.memoize(splitInteractionByRow);
@@ -746,7 +746,7 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
             return (preact.createElement(internal$1.NowTimer, { unit: "day" }, (nowDate, todayRange) => (preact.createElement(preact.Fragment, null, props.cells.map((cells, row) => (preact.createElement(TableRow, { ref: this.rowRefs.createRef(row), key: cells.length
                     ? cells[0].date.toISOString() /* best? or put key on cell? or use diff formatter? */
                     : row // in case there are no cells (like when resource view is loading)
-                , showDayNumbers: rowCnt > 1, showWeekNumbers: props.showWeekNumbers, todayRange: todayRange, dateProfile: props.dateProfile, cells: cells, renderIntro: props.renderRowIntro, businessHourSegs: businessHourSegsByRow[row], eventSelection: props.eventSelection, bgEventSegs: bgEventSegsByRow[row].filter(isSegAllDay) /* hack */, fgEventSegs: fgEventSegsByRow[row], dateSelectionSegs: dateSelectionSegsByRow[row], eventDrag: eventDragByRow[row], eventResize: eventResizeByRow[row], dayMaxEvents: props.dayMaxEvents, dayMaxEventRows: props.dayMaxEventRows, clientWidth: props.clientWidth, clientHeight: props.clientHeight, cellMinHeight: cellMinHeight, forPrint: props.forPrint })))))));
+                , showDayNumbers: rowCnt > 1, showWeekNumbers: props.showWeekNumbers, todayRange: todayRange, dateProfile: props.dateProfile, cells: cells, renderIntro: props.renderRowIntro, businessHourSegs: businessHourSegsByRow[row], eventSelection: props.eventSelection, bgEventSegs: bgEventSegsByRow[row], fgEventSegs: fgEventSegsByRow[row], dateSelectionSegs: dateSelectionSegsByRow[row], eventDrag: eventDragByRow[row], eventResize: eventResizeByRow[row], dayMaxEvents: props.dayMaxEvents, dayMaxEventRows: props.dayMaxEventRows, clientWidth: props.clientWidth, clientHeight: props.clientHeight, cellMinHeight: cellMinHeight, forPrint: props.forPrint })))))));
         }
         componentDidMount() {
             this.registerInteractiveComponent();
@@ -814,6 +814,9 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
             let end = internal$1.addDays(start, 1);
             return { start, end };
         }
+    }
+    function splitAllDaySegsByRow(segs, rowCnt) {
+        return splitSegsByRow(segs.filter(isSegAllDay), rowCnt);
     }
     function isSegAllDay(seg) {
         return seg.eventRange.def.allDay;

@@ -4,6 +4,7 @@ import logging
 import requests
 from threading import Thread
 import time
+import urllib3
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
 from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
@@ -24,7 +25,7 @@ class ConnectionManager(Thread):
         self.iot_box_registered = False
         self.n_times_polled = -1
 
-        requests.packages.urllib3.disable_warnings()
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     def _register_iot_box(self):
         """ This method is called to register the IoT Box on odoo.com and get a pairing code"""

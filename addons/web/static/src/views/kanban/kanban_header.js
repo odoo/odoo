@@ -1,16 +1,22 @@
+// @ts-check
+
+/** @module @web/views/kanban/kanban_header - Column header with group title, record count, progress bar, and fold/edit/delete cog menu */
+
 import { Component, useRef } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
-import { utils } from "@web/core/ui/ui_service";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { ColumnProgress } from "@web/views/view_components/column_progress";
+import { utils } from "@web/ui/block/ui_service";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 
+import { ColumnProgress } from "./column_progress";
+
+/** Popover component displaying field-based tooltip info for a kanban group header. */
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
     static props = {
@@ -19,9 +25,21 @@ class KanbanHeaderTooltip extends Component {
     };
 }
 
+/**
+ * Header component for a kanban column (group).
+ *
+ * Renders the group title, record count, optional progress bar, cog menu
+ * (fold/edit/delete/archive), tooltip on hover for many2one groups, and
+ * quick-create trigger button.
+ */
 export class KanbanHeader extends Component {
     static template = "web.KanbanHeader";
-    static components = { ColumnProgress, Dropdown, DropdownItem, GroupConfigMenu };
+    static components = {
+        ColumnProgress,
+        Dropdown,
+        DropdownItem,
+        GroupConfigMenu,
+    };
     static props = {
         activeActions: { type: Object },
         canQuickCreate: { type: Boolean },
@@ -43,6 +61,11 @@ export class KanbanHeader extends Component {
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
     }
 
+    /**
+     * Show a tooltip popover on group title hover (debounced).
+     * Only fires for many2one group-by fields that have tooltip info.
+     * @param {MouseEvent} ev
+     */
     async onTitleMouseEnter(ev) {
         if (!this.hasTooltip) {
             return;
@@ -53,8 +76,9 @@ export class KanbanHeader extends Component {
         }
     }
 
+    /** Cancel pending tooltip load and close any open popover. */
     onTitleMouseLeave() {
-        this.onTitleMouseEnter.cancel();
+        /** @type {any} */ (this.onTitleMouseEnter).cancel();
         this.popover.close();
     }
 
@@ -62,6 +86,7 @@ export class KanbanHeader extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
+    /** @returns {Object} Props for the GroupConfigMenu dropdown (fold, edit, delete, archive). */
     get configMenuProps() {
         return {
             activeActions: this.props.activeActions,
@@ -88,6 +113,7 @@ export class KanbanHeader extends Component {
         };
     }
 
+    /** @returns {Object | undefined} Progress bar info for this column, if enabled. */
     get progressBar() {
         return this.props.progressBarState?.getGroupInfo(this.group);
     }
@@ -96,6 +122,7 @@ export class KanbanHeader extends Component {
         return this.props.group;
     }
 
+    /** @returns {{ title: string, value: number }} Aggregate value for the progress bar sum field. */
     get groupAggregate() {
         const { group, progressBarState } = this.props;
         const { sumField } = progressBarState.progressAttributes;
@@ -106,11 +133,18 @@ export class KanbanHeader extends Component {
     // Tooltip methods
     // ------------------------------------------------------------------------
 
+    /** @returns {boolean} Whether this group header should show a tooltip on hover. */
     get hasTooltip() {
         const { name, type } = this.group.groupByField;
-        return type === "many2one" && this.group.value && name in this.props.tooltipInfo;
+        return (
+            type === "many2one" && this.group.value && name in this.props.tooltipInfo
+        );
     }
 
+    /**
+     * Fetch tooltip field values from the server (memoized).
+     * @returns {Promise<Array<{ title: string, value: any }>>}
+     */
     loadTooltip = memoize(async () => {
         const { name, relation: resModel } = this.group.groupByField;
         const tooltipInfo = this.props.tooltipInfo[name];
@@ -118,18 +152,23 @@ export class KanbanHeader extends Component {
         const [values] = await this.orm.silent.read(
             resModel,
             [this.group.value],
-            ["display_name", ...fieldNames]
+            ["display_name", ...fieldNames],
         );
 
         return fieldNames
             .filter((fieldName) => values[fieldName])
-            .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
+            .map((fieldName) => ({
+                title: tooltipInfo[fieldName],
+                value: values[fieldName],
+            }));
     });
 
+    /** Activate quick-create mode for this column. */
     quickCreate(group) {
         this.props.quickCreateState.groupId = this.group.id;
     }
 
+    /** Fold or unfold this column. */
     toggleGroup() {
         return this.group.toggle();
     }
@@ -138,6 +177,10 @@ export class KanbanHeader extends Component {
         return this.props.canQuickCreate;
     }
 
+    /**
+     * Handle a progress bar segment click to filter the column.
+     * @param {*} value - The bar value that was clicked.
+     */
     async onBarClicked(value) {
         await this.props.progressBarState.selectBar(this.props.group.id, value);
         this.props.scrollTop();

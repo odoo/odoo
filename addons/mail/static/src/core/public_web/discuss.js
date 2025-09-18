@@ -1,13 +1,16 @@
-import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
-
-import { Component, useRef, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-
-import { useService } from "@web/core/utils/hooks";
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
+import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-
+import { useMessageScrolling } from "@mail/utils/common/hooks";
+import {
+    Component,
+    useEffect,
+    useExternalListener,
+    useRef,
+    useSubEnv,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 export class Discuss extends Component {
     static components = {
         DiscussContent,
@@ -37,18 +40,23 @@ export class Discuss extends Component {
             window,
             "keydown",
             (ev) => {
-                if (getActiveHotkey(ev) === "escape" && !this.thread?.composer?.isFocused) {
+                if (
+                    getActiveHotkey(ev) === "escape" &&
+                    !this.thread?.composer?.isFocused
+                ) {
                     if (this.thread?.composer) {
                         this.thread.composer.autofocus++;
                     }
                 }
                 if (getActiveHotkey(ev) === "control+k") {
-                    this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                    this.store.env.services.command.openMainPalette({
+                        searchValue: "@",
+                    });
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
             },
-            { capture: true }
+            { capture: true },
         );
         if (this.store.inPublicPage) {
             useEffect(
@@ -64,7 +72,7 @@ export class Discuss extends Component {
                         this.chatWindow?.close();
                     }
                 },
-                () => [this.thread, this.ui.isSmall]
+                () => [this.thread, this.ui.isSmall],
             );
         }
     }

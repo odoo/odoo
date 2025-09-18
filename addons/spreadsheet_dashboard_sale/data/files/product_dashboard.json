@@ -129,9 +129,9 @@
             },
             "chartId": "e35856cf-9090-489b-b055-2d441380d954",
             "fieldMatching": {
-              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date_order", "type": "datetime", "offset": 0 },
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "product_category_id", "type": "many2one" }
             }
           },
           "offset": { "x": 0, "y": 178 },
@@ -185,9 +185,9 @@
             },
             "chartId": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
             "fieldMatching": {
-              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date_order", "type": "datetime", "offset": 0 },
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "product_category_id", "type": "many2one" }
             }
           },
           "offset": { "x": 0, "y": 655 },
@@ -253,7 +253,7 @@
                 "background": "#FFFFFF",
                 "legendPosition": "top",
                 "metaData": {
-                  "groupBy": ["categ_id"],
+                  "groupBy": ["product_category_id"],
                   "measure": "price_subtotal",
                   "order": null,
                   "resModel": "sale.report",
@@ -264,11 +264,11 @@
                     "group_by": []
                   },
                   "domain": "[\"&\", (\"state\", \"!=\", \"cancel\"), (\"state\", \"not in\", (\"draft\", \"cancel\", \"sent\"))]",
-                  "groupBy": ["categ_id"],
+                  "groupBy": ["product_category_id"],
                   "orderBy": []
                 },
                 "type": "odoo_treemap",
-                "actionXmlId": "sale.action_order_report_all",
+                "actionXmlId": "sale.action_sale_report_all",
                 "dataSets": [
                   {}
                 ]
@@ -286,9 +286,9 @@
             },
             "fieldMatching": {
               "779aed3e-b442": {
-                "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime" },
+                "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date_order", "type": "datetime" },
                 "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-                "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+                "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "product_category_id", "type": "many2one" }
               }
             }
           }
@@ -421,9 +421,9 @@
     "1": {
       "type": "ODOO",
       "fieldMatching": {
-        "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+        "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-        "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+        "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "product_category_id", "type": "many2one" }
       },
       "context": {
         "group_by": []
@@ -464,9 +464,9 @@
     "2": {
       "type": "ODOO",
       "fieldMatching": {
-        "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+        "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-        "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+        "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "product_category_id", "type": "many2one" }
       },
       "context": {
         "group_by": []
@@ -501,7 +501,7 @@
       "formulaId": "2",
       "columns": [],
       "rows": [
-        { "fieldName": "categ_id" }
+        { "fieldName": "product_category_id" }
       ]
     }
   },

@@ -65,4 +65,13 @@ declare const odoo: {
     debug: string;
     define: OdooModuleLoader["define"];
     loader: OdooModuleLoader;
+    translationContext?: string;
+    /** Server info, available after session initialization. */
+    info?: {
+        isEnterprise: boolean;
+        serverVersion: string;
+        serverVersionInfo: [number, number, number, string, number];
+        [key: string]: any;
+    };
 };
+

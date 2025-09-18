@@ -4,8 +4,8 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupWysiwyg } from "./_helpers/editor";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { range } from "@web/core/utils/numbers";
-import { htmlJoin } from "@web/core/utils/html";
+import { range } from "@web/core/utils/format/numbers";
+import { htmlJoin } from "@web/core/utils/dom/html";
 import { markup } from "@odoo/owl";
 
 describe("Wysiwyg Component", () => {

@@ -1,6 +1,7 @@
-import { Record } from "./record";
-import { STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
+
+import { modelRegistry, STORE_SYM } from "./misc";
+import { Record } from "./record";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -149,9 +150,9 @@ export class Store extends Record {
                     RD_QUEUE.delete(record);
                     for (const [localId, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const existingRecordProxyInternal = toRaw(this.recordByLocalId).get(
-                                localId
-                            );
+                            const existingRecordProxyInternal = toRaw(
+                                this.recordByLocalId,
+                            ).get(localId);
                             const usingRecord =
                                 (existingRecordProxyInternal &&
                                     toRaw(existingRecordProxyInternal)?._raw) ||
@@ -205,16 +206,22 @@ export class Store extends Record {
         Record.MAKE_UPDATE(function storeInsert() {
             const recordsDataToDelete = [];
             for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
-                const modelName = storeInsertFns.getActualModelName(store, ctx, pyOrJsModelName);
+                const modelName = storeInsertFns.getActualModelName(
+                    store,
+                    ctx,
+                    pyOrJsModelName,
+                );
                 if (!store[modelName]) {
-                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
+                    console.warn(
+                        `store.insert() received data for unknown model “${modelName}”.`,
+                    );
                     continue;
                 }
                 const insertData = [];
                 for (const vals of Array.isArray(data) ? data : [data]) {
                     const extraFields = storeInsertFns.getExtraFieldsFromModel(
                         store,
-                        pyOrJsModelName
+                        pyOrJsModelName,
                     );
                     if (extraFields) {
                         Object.assign(vals, extraFields);

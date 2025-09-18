@@ -1,9 +1,9 @@
 import { onWillStart, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
-import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
+import { FloatTimeField, floatTimeField } from "@web/fields/basic/float_time/float_time_field";
 const { DateTime } = luxon;
 
 function floatToHoursMinutes(floatValue) {

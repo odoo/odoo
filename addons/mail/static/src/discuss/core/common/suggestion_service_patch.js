@@ -1,13 +1,32 @@
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
-
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-
 const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
+    getChannelCommands(thread) {
+        if (!thread || thread.model !== "discuss.channel") {
+            return [];
+        }
+        return commandRegistry
+            .getEntries()
+            .map(([name, command]) => ({
+                channel_types: command.channel_types,
+                condition: command.condition,
+                help: command.help,
+                id: command.id,
+                name,
+            }))
+            .filter(({ condition, channel_types }) => {
+                const passesCondition =
+                    !condition || condition({ store: this.store, thread });
+                const passesChannelType =
+                    !channel_types || channel_types.includes(thread.channel_type);
+                return passesCondition && passesChannelType;
+            });
+    },
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
         return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
@@ -43,11 +62,13 @@ const suggestionServicePatch = {
                     ...(thread.parent_channel_id?.channel_member_ids ?? []),
                 ]
                     .filter((m) => m.partner_id)
-                    .map((m) => [m.partner_id.id, m.partner_id])
+                    .map((m) => [m.partner_id.id, m.partner_id]),
             );
             if (thread.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
-                group.partners.forEach((partner) => partnersById.set(partner.id, partner));
+                group.partners.forEach((partner) =>
+                    partnersById.set(partner.id, partner),
+                );
             }
             return Array.from(partnersById.values());
         } else {
@@ -68,23 +89,9 @@ const suggestionServicePatch = {
             // channel commands are channel specific
             return;
         }
-        const commands = commandRegistry
-            .getEntries()
-            .filter(([name, command]) => {
-                if (!cleanTerm(name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel_type);
-                }
-                return true;
-            })
-            .map(([name, command]) => ({
-                channel_types: command.channel_types,
-                help: command.help,
-                id: command.id,
-                name,
-            }));
+        const commands = this.getChannelCommands(thread).filter(({ name }) =>
+            cleanTerm(name).includes(cleanedSearchTerm),
+        );
         const sortFunc = (c1, c2) => {
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
@@ -126,7 +133,7 @@ const suggestionServicePatch = {
             memberPartnerIds: new Set(
                 thread?.channel_member_ids
                     .filter((member) => member.partner_id)
-                    .map((member) => member.partner_id.id)
+                    .map((member) => member.partner_id.id),
             ),
         });
     },

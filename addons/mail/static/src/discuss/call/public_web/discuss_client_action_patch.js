@@ -1,9 +1,7 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
-
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
@@ -14,7 +12,9 @@ patch(DiscussClientAction.prototype, {
      * if so, the call is joined on the current discuss thread.
      */
     async restoreDiscussThread() {
-        const hasFullScreenUrl = new URL(browser.location.href).searchParams.has("fullscreen");
+        const hasFullScreenUrl = new URL(browser.location.href).searchParams.has(
+            "fullscreen",
+        );
         await super.restoreDiscussThread(...arguments);
         const action = this.props.action;
         if (!action) {
@@ -34,8 +34,10 @@ patch(DiscussClientAction.prototype, {
         }
     },
     async joinCallWithDefaultSettings() {
-        const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
-        const camera = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
+        const mute =
+            browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
+        const camera =
+            browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
         await this.rtc.toggleCall(this.store.discuss.thread, { audio: !mute, camera });
         await this.rtc.enterFullscreen();
     },

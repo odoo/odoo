@@ -1,7 +1,7 @@
 import VariantMixin from '@website_sale/js/variant_mixin';
 import { renderToFragment } from '@web/core/utils/render';
-import { formatFloat } from '@web/core/utils/numbers';
-import { setElementContent } from '@web/core/utils/html';
+import { formatFloat } from '@web/core/utils/format/numbers';
+import { setElementContent } from '@web/core/utils/dom/html';
 
 
 import { markup } from "@odoo/owl";

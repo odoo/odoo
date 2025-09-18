@@ -1,4 +1,5 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
+
 import { isRecord } from "./misc";
 
 /** @param {RecordList} reclist */
@@ -96,7 +97,7 @@ export class RecordListInternal {
                         record._.uses.add(recordList);
                     }
                 },
-                { inv: false }
+                { inv: false },
             );
             store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
             return;
@@ -115,7 +116,7 @@ export class RecordListInternal {
                         record._.uses.add(recordList);
                     }
                 },
-                { inv: false }
+                { inv: false },
             );
             store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
         }
@@ -139,7 +140,7 @@ export class RecordListInternal {
                         record._.uses.add(recordList);
                         store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
                     }
-                })
+                }),
             );
             const inverse = getInverse(recordList);
             for (const oldRecord of oldRecords) {
@@ -179,7 +180,7 @@ export class RecordListInternal {
                         old._.uses.delete(recordList);
                     }
                 },
-                { inv: false }
+                { inv: false },
             );
             store._.ADD_QUEUE("onDelete", self.owner, self.name, record);
         }
@@ -217,7 +218,7 @@ export class RecordListInternal {
                 throw new Error(
                     `Cannot insert "${val}" on relational field "${recordList._.owner.Model.getName()}/${
                         recordList._.name
-                    }": target model "${targetModel}" doesn't support single-id data!`
+                    }": target model "${targetModel}" doesn't support single-id data!`,
                 );
             }
             // single-id data
@@ -226,7 +227,9 @@ export class RecordListInternal {
         if (inverse && inv) {
             // special command to call addNoinv/deleteNoInv, to prevent infinite loop
             const target = isRecord(val) && val._raw === val ? val._proxy : val;
-            target[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", recordList._.owner]];
+            target[inverse] = [
+                [mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", recordList._.owner],
+            ];
         }
         /** @type {R} */
         let newRecordProxy;
@@ -274,11 +277,17 @@ export class RecordList extends Array {
         const recordListProxyInternal = new Proxy(recordList, {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
-                recordListFullProxy = recordList._.downgradeProxy(recordList, recordListFullProxy);
+                recordListFullProxy = recordList._.downgradeProxy(
+                    recordList,
+                    recordListFullProxy,
+                );
                 if (
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
-                    Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
+                    Object.prototype.hasOwnProperty.call(
+                        recordList.constructor.prototype,
+                        name,
+                    )
                 ) {
                     let res = Reflect.get(...arguments);
                     if (typeof res === "function") {
@@ -305,11 +314,13 @@ export class RecordList extends Array {
                     // support for "array[index]" syntax
                     const index = parseInt(name);
                     return recordListFullProxy._store.recordByLocalId.get(
-                        recordListFullProxy.data[index]
+                        recordListFullProxy.data[index],
                     );
                 }
                 // Attempt an unimplemented array method call
-                const array = [...recordList[Symbol.iterator].call(recordListFullProxy)];
+                const array = [
+                    ...recordList[Symbol.iterator].call(recordListFullProxy),
+                ];
                 return array[name]?.bind(array);
             },
             /** @param {RecordList<R>} recordListProxy */
@@ -325,8 +336,8 @@ export class RecordList extends Array {
                             function recordListSet_Insert(newRecord) {
                                 const oldRecord = toRaw(
                                     toRaw(recordList._store.recordByLocalId).get(
-                                        recordList.data[index]
-                                    )
+                                        recordList.data[index],
+                                    ),
                                 )._raw;
                                 recordListProxy.data[index] = newRecord?.localId;
                                 if (oldRecord && oldRecord.notEq(newRecord)) {
@@ -336,7 +347,7 @@ export class RecordList extends Array {
                                     "onDelete",
                                     recordList._.owner,
                                     recordList._.name,
-                                    oldRecord
+                                    oldRecord,
                                 );
                                 const inverse = getInverse(recordList);
                                 if (inverse) {
@@ -348,13 +359,13 @@ export class RecordList extends Array {
                                         "onAdd",
                                         recordList._.owner,
                                         recordList._.name,
-                                        newRecord
+                                        newRecord,
                                     );
                                     if (inverse) {
                                         newRecord[inverse].add?.(recordList._.owner);
                                     }
                                 }
-                            }
+                            },
                         );
                     } else if (name === "length") {
                         const newLength = parseInt(val);
@@ -363,7 +374,7 @@ export class RecordList extends Array {
                                 recordList.splice.call(
                                     recordListProxy,
                                     newLength,
-                                    recordList.length - newLength
+                                    recordList.length - newLength,
                                 );
                             }
                             recordListProxy.data.length = newLength;
@@ -394,9 +405,14 @@ export class RecordList extends Array {
                         recordList._proxy.data.push(record.localId);
                         recordList._.syncLength(recordList);
                         record._.uses.add(recordList);
-                    }
+                    },
                 );
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
+                store._.ADD_QUEUE(
+                    "onAdd",
+                    recordList._.owner,
+                    recordList._.name,
+                    record,
+                );
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     record[inverse].add(recordList._.owner);
@@ -414,7 +430,11 @@ export class RecordList extends Array {
             /** @type {R} */
             const oldRecordProxy = recordListFullProxy.at(-1);
             if (oldRecordProxy) {
-                recordList.splice.call(recordListFullProxy, recordListFullProxy.length - 1, 1);
+                recordList.splice.call(
+                    recordListFullProxy,
+                    recordListFullProxy.length - 1,
+                    1,
+                );
             }
             return oldRecordProxy;
         });
@@ -426,7 +446,7 @@ export class RecordList extends Array {
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListShift() {
             const recordProxy = recordListFullProxy._store.recordByLocalId.get(
-                recordListFullProxy.data.shift()
+                recordListFullProxy.data.shift(),
             );
             recordList._.syncLength(recordList);
             if (!recordProxy) {
@@ -434,7 +454,12 @@ export class RecordList extends Array {
             }
             const record = toRaw(recordProxy)._raw;
             record._.uses.delete(recordList);
-            store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
+            store._.ADD_QUEUE(
+                "onDelete",
+                recordList._.owner,
+                recordList._.name,
+                record,
+            );
             const inverse = getInverse(recordList);
             if (inverse) {
                 record[inverse].delete(recordList._.owner);
@@ -454,7 +479,12 @@ export class RecordList extends Array {
                     recordList._.syncLength(recordList);
                     record._.uses.add(recordList);
                 });
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
+                store._.ADD_QUEUE(
+                    "onAdd",
+                    recordList._.owner,
+                    recordList._.name,
+                    record,
+                );
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     record[inverse].add(recordList._.owner);
@@ -482,13 +512,15 @@ export class RecordList extends Array {
             const oldRecordsProxy = recordList._proxyInternal.slice.call(
                 recordListFullProxy,
                 start,
-                start + deleteCount
+                start + deleteCount,
             );
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
             list.splice(
                 start,
                 deleteCount,
-                ...newRecordsProxy.map((newRecordProxy) => toRaw(newRecordProxy)._raw.localId)
+                ...newRecordsProxy.map(
+                    (newRecordProxy) => toRaw(newRecordProxy)._raw.localId,
+                ),
             );
             if (isOne(recordList) && start === 0 && deleteCount === 1) {
                 // avoid replacing whole list, to avoid triggering observers too much
@@ -504,7 +536,12 @@ export class RecordList extends Array {
             for (const oldRecordProxy of oldRecordsProxy) {
                 const oldRecord = toRaw(oldRecordProxy)._raw;
                 oldRecord._.uses.delete(recordList);
-                store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, oldRecord);
+                store._.ADD_QUEUE(
+                    "onDelete",
+                    recordList._.owner,
+                    recordList._.name,
+                    oldRecord,
+                );
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     oldRecord[inverse].delete(recordList._.owner);
@@ -513,7 +550,12 @@ export class RecordList extends Array {
             for (const newRecordProxy of newRecordsProxy) {
                 const newRecord = toRaw(newRecordProxy)._raw;
                 newRecord._.uses.add(recordList);
-                store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
+                store._.ADD_QUEUE(
+                    "onAdd",
+                    recordList._.owner,
+                    recordList._.name,
+                    newRecord,
+                );
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     newRecord[inverse].add(recordList._.owner);
@@ -549,7 +591,10 @@ export class RecordList extends Array {
         return store.MAKE_UPDATE(function recordListAdd() {
             if (isOne(recordList)) {
                 const last = records.at(-1);
-                if (isRecord(last) && recordList.data.includes(toRaw(last)._raw.localId)) {
+                if (
+                    isRecord(last) &&
+                    recordList.data.includes(toRaw(last)._raw.localId)
+                ) {
                     return last;
                 }
                 return recordList._.insert(
@@ -559,7 +604,7 @@ export class RecordList extends Array {
                         if (record.localId !== recordList.data[0]) {
                             recordList.splice.call(recordList._proxy, 0, 1, record);
                         }
-                    }
+                    },
                 );
             }
             const res = [];
@@ -574,7 +619,7 @@ export class RecordList extends Array {
                         if (recordList.data.indexOf(record.localId) === -1) {
                             recordList.push.call(recordList._proxy, record);
                         }
-                    }
+                    },
                 );
                 res.push(rec);
             }
@@ -596,7 +641,7 @@ export class RecordList extends Array {
                             recordList.splice.call(recordList._proxy, index, 1);
                         }
                     },
-                    { mode: "DELETE" }
+                    { mode: "DELETE" },
                 );
             }
         });
@@ -623,6 +668,8 @@ export class RecordList extends Array {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
         const recordList = toRaw(this)._raw;
         const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
-        return recordListFullProxy._store.recordByLocalId.get(recordListFullProxy.data.at(index));
+        return recordListFullProxy._store.recordByLocalId.get(
+            recordListFullProxy.data.at(index),
+        );
     }
 }

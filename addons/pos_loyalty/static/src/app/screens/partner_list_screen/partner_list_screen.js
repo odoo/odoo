@@ -1,6 +1,5 @@
 import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_list";
 import { patch } from "@web/core/utils/patch";
-
 patch(PartnerList.prototype, {
     /**
      * Needs to be set to true to show the loyalty points in the partner list.
@@ -20,7 +19,7 @@ patch(PartnerList.prototype, {
                 ["program_id", "in", programIds],
                 ["points", ">", 0],
             ],
-            null
+            null,
         );
         this.pos.computePartnerCouponIds(coupons);
         return res;

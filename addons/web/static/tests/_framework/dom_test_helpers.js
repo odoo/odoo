@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
     advanceFrame,
     advanceTime,
@@ -40,7 +42,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  *
  * @typedef {DragOptions & {
  *  initialPointerMoveDistance?: number;
- *  pointerDownDuration: number;
+ *  pointerDownDuration?: number;
  * }} DragAndDropOptions
  *
  * @typedef {{
@@ -57,7 +59,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  */
 
 /**
- * @template T
+ * @template {(...args: any) => any} T
  * @typedef {(...args: Parameters<T>) => MaybePromise<ReturnType<T>>} Promisify
  */
 
@@ -138,7 +140,7 @@ afterEach(async () => {
         const targets = unconsumedContains.map(String).join(", ");
         unconsumedContains.length = 0;
         throw new Error(
-            `called 'contains' on "${targets}" without any action: use 'waitFor' if no interaction is intended`
+            `called 'contains' on "${targets}" without any action: use 'waitFor' if no interaction is intended`,
         );
     }
 });
@@ -209,14 +211,14 @@ export function contains(target, options) {
          * @returns {Promise<DragHelpers>}
          */
         drag: async (options) => {
-            /** @type {typeof cancel} */
+            /** @type {any} */
             const cancelWithDelay = async (options) => {
                 await cancel(options);
                 await advanceFrame();
                 cancelCurrentDragSequence = null;
             };
 
-            /** @type {typeof drop} */
+            /** @type {any} */
             const dropWithDelay = async (to, options) => {
                 if (to) {
                     await moveToWithDelay(to, options);
@@ -248,7 +250,10 @@ export function contains(target, options) {
 
             await waitForTouchDelay(options?.pointerDownDuration);
 
-            await dragForTolerance(nodePromise, options?.initialPointerMoveDistance);
+            await dragForTolerance(
+                /** @type {any} */ (nodePromise),
+                options?.initialPointerMoveDistance,
+            );
 
             return helpersWithDelay;
         },
@@ -341,7 +346,10 @@ export function contains(target, options) {
         scroll: async (position) => {
             consumeContains();
             // disable "scrollable" check
-            await scroll(nodePromise, position, { scrollable: false, ...options });
+            await scroll(nodePromise, position, {
+                scrollable: /** @type {any} */ (false),
+                ...options,
+            });
             await animationFrame();
         },
         /**
@@ -349,7 +357,7 @@ export function contains(target, options) {
          */
         select: async (value) => {
             consumeContains();
-            await select(value, { target: nodePromise });
+            await select(/** @type {any} */ (value), { target: nodePromise });
             await animationFrame();
         },
         /**
@@ -357,9 +365,16 @@ export function contains(target, options) {
          */
         selectDropdownItem: async (value) => {
             consumeContains();
-            await callClick(click, queryOne(".dropdown-toggle", { root: await nodePromise }));
+            await callClick(
+                click,
+                /** @type {any} */ (
+                    queryOne(".dropdown-toggle", {
+                        root: /** @type {HTMLElement} */ (await nodePromise),
+                    })
+                ),
+            );
             const item = await waitFor(`.dropdown-item:contains(${value})`);
-            await callClick(click, item);
+            await callClick(click, /** @type {any} */ (item));
             await animationFrame();
         },
         /**
@@ -392,11 +407,17 @@ export async function editAce(value) {
     // mobile. To support both environments, a single "mouedown" event is triggered
     // in this specific case. This should not be reproduced and is only accepted
     // because the tested behaviour comes from a lib on which we have no control.
-    await manuallyDispatchProgrammaticEvent(queryOne(".ace_editor .ace_content"), "mousedown");
+    await manuallyDispatchProgrammaticEvent(
+        queryOne(".ace_editor .ace_content"),
+        "mousedown",
+    );
 
-    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value, {
-        instantly: true,
-    });
+    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(
+        value,
+        {
+            instantly: true,
+        },
+    );
 }
 
 /**

@@ -1,17 +1,20 @@
-import { useState } from "@odoo/owl";
-import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
-import { _t } from "@web/core/l10n/translation";
+import { onWillRender, useState } from "@odoo/owl";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
+import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
         this.state = useState({
-            nbrRewards: [],
+            nbrRewards: 0,
+        });
+
+        onWillRender(() => {
+            this.state.nbrRewards = this.getPotentialRewards().length;
         });
     },
     _getEWalletRewards(order) {
@@ -26,7 +29,9 @@ patch(ControlButtons.prototype, {
         });
     },
     _getEWalletPrograms() {
-        return this.pos.models["loyalty.program"].filter((p) => p.program_type == "ewallet");
+        return this.pos.models["loyalty.program"].filter(
+            (p) => p.program_type == "ewallet",
+        );
     },
     async onClickWallet() {
         const order = this.pos.getOrder();
@@ -58,11 +63,12 @@ patch(ControlButtons.prototype, {
                 this.pos.addLineToCurrentOrder(
                     {
                         product_id: selectedProgram.trigger_product_ids[0],
-                        product_tmpl_id: selectedProgram.trigger_product_ids[0].product_tmpl_id,
+                        product_tmpl_id:
+                            selectedProgram.trigger_product_ids[0].product_tmpl_id,
                         _e_wallet_program_id: selectedProgram,
                         price_unit: -orderTotal,
                     },
-                    {}
+                    {},
                 );
             }
         } else if (eWalletRewards.length >= 1) {
@@ -83,7 +89,7 @@ patch(ControlButtons.prototype, {
                 const result = order._applyReward(
                     eWalletReward.reward,
                     eWalletReward.coupon_id,
-                    {}
+                    {},
                 );
                 if (result !== true) {
                     // Returned an error
@@ -120,12 +126,16 @@ patch(ControlButtons.prototype, {
         if (order) {
             const claimableRewards = order.getClaimableRewards();
             rewards = claimableRewards.filter(
-                ({ reward }) => reward.program_id.program_type !== "ewallet"
+                ({ reward }) => reward.program_id.program_type !== "ewallet",
             );
         }
         const result = {};
-        const discountRewards = rewards.filter(({ reward }) => reward.reward_type == "discount");
-        const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == "product");
+        const discountRewards = rewards.filter(
+            ({ reward }) => reward.reward_type == "discount",
+        );
+        const freeProductRewards = rewards.filter(
+            ({ reward }) => reward.reward_type == "product",
+        );
         const potentialFreeProductRewards = this.pos.getPotentialFreeProductRewards();
         const avaiRewards = [
             ...potentialFreeProductRewards,
@@ -167,7 +177,8 @@ patch(ControlButtons.prototype, {
             args["product"] = selectedProduct;
         }
         if (
-            (reward.reward_type == "product" && reward.program_id.applies_on !== "both") ||
+            (reward.reward_type == "product" &&
+                reward.program_id.applies_on !== "both") ||
             (reward.program_id.applies_on == "both" && potentialQty)
         ) {
             const product = args["product"] || reward.reward_product_ids[0];
@@ -177,7 +188,7 @@ patch(ControlButtons.prototype, {
                     product_tmpl_id: product.product_tmpl_id,
                     qty: potentialQty || 1,
                 },
-                {}
+                {},
             );
             return true;
         } else {
@@ -206,7 +217,7 @@ patch(ControlButtons.prototype, {
                     this._applyReward(
                         selectedReward.reward,
                         selectedReward.coupon_id,
-                        selectedReward.potentialQty
+                        selectedReward.potentialQty,
                     );
                 },
             });

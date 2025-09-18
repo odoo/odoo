@@ -21,7 +21,7 @@
         .s_process_step_connector {
             height: $process-step-number-size;
             width: calc(100% - #{$process-step-number-size});
-            left: calc(50% + #{$process-step-number-size / 2} + 16px);
+            left: calc(50% + #{calc($process-step-number-size / 2)} + 16px);
 
             transform: unset;
             // `o_up_curve` uses to indicate the up side curves arrows, as a

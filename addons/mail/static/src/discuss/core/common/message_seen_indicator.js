@@ -1,9 +1,8 @@
 import { Component, useExternalListener, useRef } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 class MessageSeenIndicatorDialog extends Component {
     static components = { Dialog };
     static template = "mail.MessageSeenIndicatorDialog";
@@ -20,7 +19,7 @@ class MessageSeenIndicatorDialog extends Component {
                     this.props.close();
                 }
             },
-            true
+            true,
         );
     }
 }
@@ -46,7 +45,9 @@ export class MessageSeenIndicator extends Component {
                 this.props.thread.correspondent &&
                 this.props.thread.channel_member_ids.length === 2
             ) {
-                return _t("Seen by %(user)s", { user: this.props.thread.correspondent.name });
+                return _t("Seen by %(user)s", {
+                    user: this.props.thread.correspondent.name,
+                });
             }
             return _t("Seen by everyone");
         }
@@ -60,7 +61,11 @@ export class MessageSeenIndicator extends Component {
             case 2:
                 return _t("Seen by %(user1)s and %(user2)s", { user1, user2 });
             case 3:
-                return _t("Seen by %(user1)s, %(user2)s and %(user3)s", { user1, user2, user3 });
+                return _t("Seen by %(user1)s, %(user2)s and %(user3)s", {
+                    user1,
+                    user2,
+                    user3,
+                });
             case 4:
                 return _t("Seen by %(user1)s, %(user2)s, %(user3)s and 1 other", {
                     user1,
@@ -68,12 +73,15 @@ export class MessageSeenIndicator extends Component {
                     user3,
                 });
             default:
-                return _t("Seen by %(user1)s, %(user2)s, %(user3)s and %(count)s others", {
-                    user1,
-                    user2,
-                    user3,
-                    count: seenMembers.length - 3,
-                });
+                return _t(
+                    "Seen by %(user1)s, %(user2)s, %(user3)s and %(count)s others",
+                    {
+                        user1,
+                        user2,
+                        user3,
+                        count: seenMembers.length - 3,
+                    },
+                );
         }
     }
 

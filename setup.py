@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # ruff: noqa: F821
 # (ruff don't see read variables from release.py)
 
+import pathlib
+from os.path import dirname, join
+
 from setuptools import find_namespace_packages, setup
-from os.path import join, dirname
 
-
-exec(open(join(dirname(__file__), 'odoo', 'release.py'), 'rb').read())  # Load release variables
+exec(pathlib.Path(join(pathlib.Path(__file__).parent, 'odoo', 'release.py')).open('rb').read())  # Load release variables
 lib_name = 'odoo'
 
 setup(
@@ -32,24 +32,21 @@ setup(
         'cryptography',
         'docutils',
         'geoip2',
-        'gevent',
-        'greenlet',
         'idna',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'lxml_html_clean',
-        'libsass',
         'MarkupSafe',
         'num2words',
         'ofxparse',
         'openpyxl',
-        'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'polib',
+        'protobuf',
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
-        'psycopg2 >= 2.2',
+        'psycopg[binary] >= 3.3.2',
         'pyopenssl',
-        'PyPDF2',
+        'pypdf',
         'pyserial',
         'python-dateutil',
         'python-stdnum',
@@ -62,9 +59,7 @@ setup(
         'urllib3',
         'vobject',
         'werkzeug',
-        'xlrd',
         'xlsxwriter',
-        'xlwt',
         'zeep',
     ],
     python_requires='>=' + ".".join(map(str, MIN_PY_VERSION)),

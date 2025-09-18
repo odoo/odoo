@@ -28,13 +28,12 @@ import { click, contains } from "./mail_test_helpers_contains";
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { loadEmoji } from "@web/components/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
-import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
+import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/ui/block/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-export { SIZES } from "@web/core/ui/ui_service";
 
 import {
     DISCUSS_ACTION_ID,
@@ -79,6 +78,8 @@ import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_set
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
+export { SIZES } from "@web/ui/block/ui_service";
+
 export * from "./mail_test_helpers_contains";
 
 before(prepareRegistriesWithCleanup);
@@ -104,6 +105,13 @@ addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
 export function defineMailModels() {
     defineParams({ suite: "mail" }, "replace");
     return defineModels(mailModels);
+}
+
+export function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store.Thread.get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread);
 }
 
 export const mailModels = {

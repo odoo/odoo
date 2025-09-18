@@ -1019,7 +1019,7 @@ class ResCompany(models.Model):
             })
             last_move = self.env['account.move']
             self.env.execute_query(SQL("DECLARE hashed_moves CURSOR FOR %s", query.select()))
-            while move_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_moves", INTEGRITY_HASH_BATCH_SIZE)):
+            while move_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_moves" % INTEGRITY_HASH_BATCH_SIZE)):
                 self.env.invalidate_all()
                 moves = self.env['account.move'].browse(move_id[0] for move_id in move_ids)
                 if not moves and not last_move:

@@ -1,4 +1,4 @@
-import { startWebClient } from "@web/start";
+import { startWebClient } from "@web/boot/start";
 import { SubcontractingPortalWebClient } from "./subcontracting_portal";
 import { registry } from "@web/core/registry";
 

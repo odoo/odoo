@@ -1,15 +1,22 @@
-import { _t } from "@web/core/l10n/translation";
-import { Dialog } from "@web/core/dialog/dialog";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { editModelDebug } from "@web/core/debug/debug_utils";
-import { formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { formatMany2one } from "@web/views/fields/formatters";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+// @ts-check
+
+/** @module @web/views/debug_items - Debug menu entries: view arch inspection, field metadata, asset management, and technical info */
 
 import { Component, onWillStart, useState, xml } from "@odoo/owl";
-import { serializeDate, serializeDateTime } from "../core/l10n/dates";
+import {
+    deserializeDateTime,
+    formatDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { formatMany2one } from "@web/fields/formatters";
+import { editModelDebug } from "@web/services/debug/debug_utils";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const debugRegistry = registry.category("debug");
 
@@ -17,6 +24,7 @@ const debugRegistry = registry.category("debug");
 // Get view
 //------------------------------------------------------------------------------
 
+/** Dialog that displays the computed (post-inheritance) arch XML of the current view. */
 class GetViewDialog extends Component {
     static template = "web.DebugMenu.GetViewDialog";
     static components = { Dialog };
@@ -26,24 +34,38 @@ class GetViewDialog extends Component {
     };
 }
 
+/**
+ * Debug menu item: show the computed (post-inheritance) arch of the current view.
+ *
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object} debug menu item descriptor
+ */
 export function getView({ component, env }) {
     return {
         type: "item",
         description: _t("Computed Arch"),
         callback: () => {
-            env.services.dialog.add(GetViewDialog, { arch: component.env.config.rawArch });
+            env.services.dialog.add(GetViewDialog, {
+                arch: component.env.config.rawArch,
+            });
         },
         sequence: 270,
         section: "ui",
     };
 }
 
-debugRegistry.category("view").add("getView", getView);
+debugRegistry.category("view").add("getView", /** @type {any} */ (getView));
 
 //------------------------------------------------------------------------------
 // Edit View
 //------------------------------------------------------------------------------
 
+/**
+ * Debug menu item: open the current view's ir.ui.view record in the form view.
+ *
+ * @param {{ accessRights: Object, component: Object, env: Object }} params
+ * @returns {Object | null | undefined} debug menu item descriptor, or null if no access
+ */
 export function editView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
@@ -65,12 +87,18 @@ export function editView({ accessRights, component, env }) {
     };
 }
 
-debugRegistry.category("view").add("editView", editView);
+debugRegistry.category("view").add("editView", /** @type {any} */ (editView));
 
 //------------------------------------------------------------------------------
 // Edit SearchView
 //------------------------------------------------------------------------------
 
+/**
+ * Debug menu item: open the search view's ir.ui.view record in the form view.
+ *
+ * @param {{ accessRights: Object, component: Object, env: Object }} params
+ * @returns {Object | null} debug menu item descriptor, or null if no access/search view
+ */
 export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
@@ -91,12 +119,15 @@ export function editSearchView({ accessRights, component, env }) {
     };
 }
 
-debugRegistry.category("view").add("editSearchView", editSearchView);
+debugRegistry
+    .category("view")
+    .add("editSearchView", /** @type {any} */ (editSearchView));
 
 // -----------------------------------------------------------------------------
 // View Metadata
 // -----------------------------------------------------------------------------
 
+/** Dialog displaying record metadata (XML ID, creator, timestamps, noupdate flag). */
 class GetMetadataDialog extends Component {
     static template = "web.DebugMenu.GetMetadataDialog";
     static components = { Dialog };
@@ -109,16 +140,18 @@ class GetMetadataDialog extends Component {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
         this.title = _t("View Metadata");
+        /** @type {any} */
         this.state = useState({});
         onWillStart(() => this.loadMetadata());
     }
 
     onClickCreateXmlid() {
-        const context = Object.assign({}, this.context, {
+        const context = {
+            .../** @type {any} */ (this).context,
             default_module: "__custom__",
             default_res_id: this.state.id,
             default_model: this.props.resModel,
-        });
+        };
         this.dialogService.add(FormViewDialog, {
             context,
             onRecordSaved: () => this.loadMetadata(),
@@ -127,7 +160,7 @@ class GetMetadataDialog extends Component {
     }
 
     async toggleNoupdate() {
-        await this.env.services.orm.call("ir.model.data", "toggle_noupdate", [
+        await this.orm.call("ir.model.data", "toggle_noupdate", [
             this.props.resModel,
             this.state.id,
         ]);
@@ -142,13 +175,25 @@ class GetMetadataDialog extends Component {
         this.state.xmlid = metadata.xmlid;
         this.state.xmlids = metadata.xmlids;
         this.state.noupdate = metadata.noupdate;
-        this.state.creator = formatMany2one(metadata.create_uid && { display_name: metadata.create_uid[1] });
-        this.state.lastModifiedBy = formatMany2one(metadata.write_uid && { display_name: metadata.write_uid[1] });
-        this.state.createDate = formatDateTime(deserializeDateTime(metadata.create_date));
+        this.state.creator = formatMany2one(
+            metadata.create_uid && { display_name: metadata.create_uid[1] },
+        );
+        this.state.lastModifiedBy = formatMany2one(
+            metadata.write_uid && { display_name: metadata.write_uid[1] },
+        );
+        this.state.createDate = formatDateTime(
+            deserializeDateTime(metadata.create_date),
+        );
         this.state.writeDate = formatDateTime(deserializeDateTime(metadata.write_date));
     }
 }
 
+/**
+ * Debug menu item: show record metadata (XML ID, creator, write date).
+ *
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object | null} debug menu item descriptor, or null if no record
+ */
 export function viewMetadata({ component, env }) {
     const resId = component.model.root.resId;
     if (!resId) {
@@ -168,7 +213,7 @@ export function viewMetadata({ component, env }) {
     };
 }
 
-debugRegistry.category("form").add("viewMetadata", viewMetadata);
+debugRegistry.category("form").add("viewMetadata", /** @type {any} */ (viewMetadata));
 
 function sortKeysDeep(obj) {
     if (Array.isArray(obj)) {
@@ -188,6 +233,7 @@ function sortKeysDeep(obj) {
 // View Raw Record Data
 // -----------------------------------------------------------------------------
 
+/** Dialog that displays a record's raw field data as pretty-printed JSON. */
 class RawRecordDialog extends Component {
     static template = xml`
         <Dialog title="props.title">
@@ -206,6 +252,12 @@ class RawRecordDialog extends Component {
     }
 }
 
+/**
+ * Debug menu item: show all field data for the current record as JSON.
+ *
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object | null} debug menu item descriptor, or null if no record
+ */
 export function viewRawRecord({ component, env }) {
     const { resId, resModel, fields } = component.model.config;
     if (!resId) {
@@ -216,13 +268,19 @@ export function viewRawRecord({ component, env }) {
         type: "item",
         description,
         callback: async () => {
-            const serializableFields = Object.entries(fields).reduce(
-                (acc, [k, v]) => (v.type !== "binary" && !v.propertyName ? acc.concat(k) : acc),
-                []
+            const serializableFields = Object.keys(fields).filter(
+                (k) => fields[k].type !== "binary" && !fields[k].propertyName,
             );
-            const records = await component.model.orm.read(resModel, [resId], serializableFields);
+            const records = await component.model.orm.read(
+                resModel,
+                [resId],
+                serializableFields,
+            );
             env.services.dialog.add(RawRecordDialog, {
-                title: _t("Data: %(model)s(%(id)s)", { model: resModel, id: resId }),
+                title: _t("Data: %(model)s(%(id)s)", {
+                    model: resModel,
+                    id: resId,
+                }),
                 record: records[0],
             });
         },
@@ -231,12 +289,13 @@ export function viewRawRecord({ component, env }) {
     };
 }
 
-debugRegistry.category("form").add("viewRawRecord", viewRawRecord);
+debugRegistry.category("form").add("viewRawRecord", /** @type {any} */ (viewRawRecord));
 
 // -----------------------------------------------------------------------------
 // Set Defaults
 // -----------------------------------------------------------------------------
 
+/** Dialog for setting default field values (ir.default) from the current record. */
 class SetDefaultDialog extends Component {
     static template = "web.DebugMenu.SetDefaultDialog";
     static components = { Dialog };
@@ -268,15 +327,24 @@ class SetDefaultDialog extends Component {
             .filter((fieldName) => !this.fieldNamesBlackList.includes(fieldName))
             .map((fieldName) => {
                 const fieldInfo = this.fields[fieldName];
-                const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
+                const valueDisplayed = this.display(
+                    fieldInfo,
+                    this.fieldsValues[fieldName],
+                );
                 const value = valueDisplayed[0];
                 const displayed = valueDisplayed[1];
                 const evalContext = this.props.record.evalContextWithVirtualIds;
                 // ignore fields which are empty, invisible, readonly, o2m or m2m
                 if (
                     !value ||
-                    evaluateBooleanExpr(this.activeFields[fieldName].invisible, evalContext) ||
-                    evaluateBooleanExpr(this.activeFields[fieldName].readonly, evalContext) ||
+                    evaluateBooleanExpr(
+                        this.activeFields[fieldName].invisible,
+                        evalContext,
+                    ) ||
+                    evaluateBooleanExpr(
+                        this.activeFields[fieldName].readonly,
+                        evalContext,
+                    ) ||
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
@@ -305,7 +373,10 @@ class SetDefaultDialog extends Component {
             })
             .map((fieldName) => {
                 const fieldInfo = this.fields[fieldName];
-                const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
+                const valueDisplayed = this.display(
+                    fieldInfo,
+                    this.fieldsValues[fieldName],
+                );
                 const value = valueDisplayed[0];
                 const displayed = valueDisplayed[1];
                 return {
@@ -323,15 +394,13 @@ class SetDefaultDialog extends Component {
             displayed = value.display_name;
             value = value.id;
         } else if (value && fieldInfo.type === "selection") {
-            displayed = fieldInfo.selection.find((option) => {
-                return option[0] === value;
-            })[1];
+            displayed = fieldInfo.selection.find((option) => option[0] === value)[1];
         }
         if (
             (typeof displayed === "string" || displayed instanceof String) &&
             displayed.length > 60
         ) {
-            displayed = displayed.slice(0, 57) + "...";
+            displayed = `${displayed.slice(0, 57)}...`;
         }
         return [value, displayed];
     }
@@ -340,9 +409,9 @@ class SetDefaultDialog extends Component {
         if (!this.state.fieldToSet) {
             return;
         }
-        let fieldToSet = this.defaultFields.find((field) => {
-            return field.name === this.state.fieldToSet;
-        }).value;
+        let fieldToSet = this.defaultFields.find(
+            (field) => field.name === this.state.fieldToSet,
+        ).value;
 
         if (fieldToSet.constructor.name.toLowerCase() === "date") {
             fieldToSet = serializeDate(fieldToSet);
@@ -361,6 +430,12 @@ class SetDefaultDialog extends Component {
     }
 }
 
+/**
+ * Debug menu item: set default values for the current record's fields.
+ *
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object} debug menu item descriptor
+ */
 export function setDefaults({ component, env }) {
     return {
         type: "item",
@@ -375,12 +450,18 @@ export function setDefaults({ component, env }) {
         section: "record",
     };
 }
-debugRegistry.category("form").add("setDefaults", setDefaults);
+debugRegistry.category("form").add("setDefaults", /** @type {any} */ (setDefaults));
 
 //------------------------------------------------------------------------------
 // Manage Attachments
 //------------------------------------------------------------------------------
 
+/**
+ * Debug menu item: manage ir.attachment records linked to the current record.
+ *
+ * @param {{ component: Object, env: Object }} params
+ * @returns {Object | null} debug menu item descriptor, or null if no record
+ */
 export function manageAttachments({ component, env }) {
     const resId = component.model.root.resId;
     if (!resId) {
@@ -415,4 +496,6 @@ export function manageAttachments({ component, env }) {
     };
 }
 
-debugRegistry.category("form").add("manageAttachments", manageAttachments);
+debugRegistry
+    .category("form")
+    .add("manageAttachments", /** @type {any} */ (manageAttachments));

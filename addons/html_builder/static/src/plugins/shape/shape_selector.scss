@@ -1,6 +1,6 @@
 .o_pager_nav_angle {
     @include button-variant($o-we-bg-light, $o-we-bg-light);
-    padding: $o-we-item-spacing / 2;
+    padding: calc($o-we-item-spacing / 2);
     font-size: $o-we-sidebar-font-size * 1.4;
 }
 
@@ -40,7 +40,7 @@
 .builder_select_page {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: $o-we-item-spacing / 2;
+    gap: calc($o-we-item-spacing / 2);
     padding: $o-we-item-spacing;
     background-color: $o-we-bg-lighter;
 
@@ -122,11 +122,11 @@
 }
 div:hover>.o_we_shape_animated_label {
     i {
-        padding-right: $o-we-item-spacing / 2;
+        padding-right: calc($o-we-item-spacing / 2);
     }
 
     > span {
-        max-width: $o-we-sidebar-width / 2;
+        max-width: calc($o-we-sidebar-width / 2);
         transition: max-width 0.5s ease 0s;
     }
 }

@@ -1,8 +1,7 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
-import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
+import { patch } from "@web/core/utils/patch";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 patch(OrderPaymentValidation.prototype, {
     async validateOrder(isForceValidate) {
         const pointChanges = {};
@@ -34,12 +33,14 @@ patch(OrderPaymentValidation.prototype, {
                 const { successful, payload } = await this.pos.data.call(
                     "pos.order",
                     "validate_coupon_programs",
-                    [[], pointChanges, newCodes]
+                    [[], pointChanges, newCodes],
                 );
                 // Payload may contain the points of the concerned coupons to be updated in case of error. (So that rewards can be corrected)
                 if (payload && payload.updated_points) {
                     for (const pointChange of Object.entries(payload.updated_points)) {
-                        const coupon = this.pos.models["loyalty.card"].get(pointChange[0]);
+                        const coupon = this.pos.models["loyalty.card"].get(
+                            pointChange[0],
+                        );
                         if (coupon) {
                             coupon.points = pointChange[1];
                         }

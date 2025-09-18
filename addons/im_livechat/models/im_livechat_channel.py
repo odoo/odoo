@@ -478,13 +478,13 @@ class Im_LivechatChannel(models.Model):
       LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = h.partner_id
                 WHERE c.livechat_end_dt IS NULL
                   AND c.last_interest_dt > ((now() at time zone 'UTC') - interval '30 minutes')
-                  AND h.partner_id in %s
+                  AND h.partner_id = ANY(%s)
              GROUP BY h.partner_id, rtc.nbr
              ORDER BY COUNT(DISTINCT h.channel_id) < 2 OR rtc.nbr IS NULL DESC,
                       COUNT(DISTINCT h.channel_id) ASC,
                       rtc.nbr IS NULL DESC
             """,
-            (tuple(users.partner_id.ids),),
+            (list(users.partner_id.ids),),
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator

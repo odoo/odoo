@@ -1,6 +1,7 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { htmlEscape, markup } from "@odoo/owl";
-
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
@@ -14,7 +15,7 @@ import {
     isHtmlEmpty,
     odoomark,
     setElementContent,
-} from "@web/core/utils/html";
+} from "@web/core/utils/dom/html";
 
 const Markup = markup().constructor;
 
@@ -43,32 +44,36 @@ test("createElementWithContent keeps html markup", () => {
 test("highlightText", () => {
     expect(highlightText("b", "", "hl").toString()).toBe("");
     expect(highlightText("", "b", "hl").toString()).toBe("b");
-    expect(highlightText("b", "abc", "hl").toString()).toBe('a<span class="hl">b</span>c');
+    expect(highlightText("b", "abc", "hl").toString()).toBe(
+        'a<span class="hl">b</span>c',
+    );
     expect(highlightText("b", "abcb", "hl").toString()).toBe(
-        'a<span class="hl">b</span>c<span class="hl">b</span>'
+        'a<span class="hl">b</span>c<span class="hl">b</span>',
     );
     expect(highlightText("b", "abbc", "hl").toString()).toBe(
-        'a<span class="hl">b</span><span class="hl">b</span>c'
+        'a<span class="hl">b</span><span class="hl">b</span>c',
     );
     expect(highlightText("b", "<p>ab</p>", "hl").toString()).toBe(
-        '&lt;p&gt;a<span class="hl">b</span>&lt;/p&gt;'
+        '&lt;p&gt;a<span class="hl">b</span>&lt;/p&gt;',
     );
     expect(highlightText("b", markup`<p>ab</p>`, "hl").toString()).toBe(
-        '<p>a<span class="hl">b</span></p>'
+        '<p>a<span class="hl">b</span></p>',
     );
     expect(highlightText("<", "<p>ab</p>", "hl").toString()).toBe(
-        '<span class="hl">&lt;</span>p&gt;ab<span class="hl">&lt;</span>/p&gt;'
+        '<span class="hl">&lt;</span>p&gt;ab<span class="hl">&lt;</span>/p&gt;',
     );
     expect(highlightText("<", markup`<p>ab</p>`, "hl").toString()).toBe("<p>ab</p>");
-    expect(highlightText(markup`<`, "<p>ab</p>", "hl").toString()).toBe("&lt;p&gt;ab&lt;/p&gt;");
+    expect(highlightText(markup`<`, "<p>ab</p>", "hl").toString()).toBe(
+        "&lt;p&gt;ab&lt;/p&gt;",
+    );
     expect(highlightText(markup`<p>ab</p>`, markup`<p>ab</p>`, "hl").toString()).toBe(
-        '<span class="hl"><p>ab</p></span>'
+        '<span class="hl"><p>ab</p></span>',
     );
     expect(highlightText("cè", "Cédric ce cèdre", "hl").toString()).toBe(
         '<span class="hl">Cé</span>dric <span class="hl">ce</span> <span class="hl">cè</span>dre',
         {
             message: "highlightText should be accent insensitive",
-        }
+        },
     );
 });
 
@@ -112,9 +117,11 @@ test("htmlSprintf escapes list params", () => {
     const res = htmlSprintf(
         markup`<p>%s</p>%s`,
         markup`<span>test 1</span>`,
-        `<span>test 2</span>`
+        `<span>test 2</span>`,
     );
-    expect(res.toString()).toBe("<p><span>test 1</span></p>&lt;span&gt;test 2&lt;/span&gt;");
+    expect(res.toString()).toBe(
+        "<p><span>test 1</span></p>&lt;span&gt;test 2&lt;/span&gt;",
+    );
     expect(res).toBeInstanceOf(Markup);
 });
 
@@ -129,7 +136,9 @@ test("htmlSprintf escapes object param", () => {
         t1: `<span>test 1</span>`,
         t2: markup`<span>test 2</span>`,
     });
-    expect(res.toString()).toBe("<p>&lt;span&gt;test 1&lt;/span&gt;</p><span>test 2</span>");
+    expect(res.toString()).toBe(
+        "<p>&lt;span&gt;test 1&lt;/span&gt;</p><span>test 2</span>",
+    );
     expect(res).toBeInstanceOf(Markup);
 });
 
@@ -157,7 +166,7 @@ test("htmlFormatList", () => {
     const list = ["<p>test 1</p>", markup`<p>test 2</p>`, "&lt;p&gt;test 3&lt;/p&gt;"];
     const res = htmlFormatList(list, { localeCode: "fr-FR" });
     expect(res.toString()).toBe(
-        "&lt;p&gt;test 1&lt;/p&gt;, <p>test 2</p> et &amp;lt;p&amp;gt;test 3&amp;lt;/p&amp;gt;"
+        "&lt;p&gt;test 1&lt;/p&gt;, <p>test 2</p> et &amp;lt;p&amp;gt;test 3&amp;lt;/p&amp;gt;",
     );
     expect(res).toBeInstanceOf(Markup);
 });
@@ -193,21 +202,37 @@ test("htmlReplace with text/html does not find", () => {
 });
 
 test("htmlReplace with html/html/html replaces with html markup", () => {
-    let res = htmlReplace(markup`<p>test</p>`, markup`<p>test</p>`, markup`<span>test</span>`);
+    let res = htmlReplace(
+        markup`<p>test</p>`,
+        markup`<p>test</p>`,
+        markup`<span>test</span>`,
+    );
     expect(res.toString()).toBe("<span>test</span>");
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplace(markup`<p>test</p>`, markup`<p>test</p>`, () => markup`<span>test</span>`);
+    res = htmlReplace(
+        markup`<p>test</p>`,
+        markup`<p>test</p>`,
+        () => markup`<span>test</span>`,
+    );
     expect(res.toString()).toBe("<span>test</span>");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with html/html/text replaces with escaped text", () => {
-    let res = htmlReplace(markup`<p>test</p>`, markup`<p>test</p>`, "<span>test</span>");
+    let res = htmlReplace(
+        markup`<p>test</p>`,
+        markup`<p>test</p>`,
+        "<span>test</span>",
+    );
     expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplace(markup`<p>test</p>`, markup`<p>test</p>`, () => "<span>test</span>");
+    res = htmlReplace(
+        markup`<p>test</p>`,
+        markup`<p>test</p>`,
+        () => "<span>test</span>",
+    );
     expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
@@ -223,31 +248,59 @@ test("htmlReplace with html/text does not find", () => {
 });
 
 test("htmlReplaceAll with text/text/text replaces all with escaped text", () => {
-    let res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", "<span>test</span>");
-    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    let res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        "<p>test</p>",
+        "<span>test</span>",
+    );
+    expect(res.toString()).toBe(
+        "&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;",
+    );
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", () => "<span>test</span>");
-    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        "<p>test</p>",
+        () => "<span>test</span>",
+    );
+    expect(res.toString()).toBe(
+        "&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;",
+    );
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplaceAll with text/text/html replaces all with html markup", () => {
-    let res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", markup`<span>test</span>`);
+    let res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        "<p>test</p>",
+        markup`<span>test</span>`,
+    );
     expect(res.toString()).toBe("<span>test</span> <span>test</span>");
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", () => markup`<span>test</span>`);
+    res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        "<p>test</p>",
+        () => markup`<span>test</span>`,
+    );
     expect(res.toString()).toBe("<span>test</span> <span>test</span>");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplaceAll with text/html does not find, escapes all", () => {
-    let res = htmlReplaceAll("<p>test</p> <p>test</p>", markup`<p>test</p>`, "never found");
+    let res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        markup`<p>test</p>`,
+        "never found",
+    );
     expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt; &lt;p&gt;test&lt;/p&gt;");
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplaceAll("<p>test</p> <p>test</p>", markup`<p>test</p>`, () => "never found");
+    res = htmlReplaceAll(
+        "<p>test</p> <p>test</p>",
+        markup`<p>test</p>`,
+        () => "never found",
+    );
     expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt; &lt;p&gt;test&lt;/p&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
@@ -256,7 +309,7 @@ test("htmlReplaceAll with html/html/html replaces all with html markup", () => {
     let res = htmlReplaceAll(
         markup`<p>test</p> <p>test</p>`,
         markup`<p>test</p>`,
-        markup`<span>test</span>`
+        markup`<span>test</span>`,
     );
     expect(res.toString()).toBe("<span>test</span> <span>test</span>");
     expect(res).toBeInstanceOf(Markup);
@@ -264,7 +317,7 @@ test("htmlReplaceAll with html/html/html replaces all with html markup", () => {
     res = htmlReplaceAll(
         markup`<p>test</p> <p>test</p>`,
         markup`<p>test</p>`,
-        () => markup`<span>test</span>`
+        () => markup`<span>test</span>`,
     );
     expect(res.toString()).toBe("<span>test</span> <span>test</span>");
     expect(res).toBeInstanceOf(Markup);
@@ -274,36 +327,48 @@ test("htmlReplaceAll with html/html/text replaces all with escaped text", () => 
     let res = htmlReplaceAll(
         markup`<p>test</p> <p>test</p>`,
         markup`<p>test</p>`,
-        "<span>test</span>"
+        "<span>test</span>",
     );
-    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res.toString()).toBe(
+        "&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;",
+    );
     expect(res).toBeInstanceOf(Markup);
 
     res = htmlReplaceAll(
         markup`<p>test</p> <p>test</p>`,
         markup`<p>test</p>`,
-        () => "<span>test</span>"
+        () => "<span>test</span>",
     );
-    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res.toString()).toBe(
+        "&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;",
+    );
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplaceAll with html/text does not find, keeps all", () => {
-    let res = htmlReplaceAll(markup`<p>test</p> <p>test</p>`, "<p>test</p>", "never found");
+    let res = htmlReplaceAll(
+        markup`<p>test</p> <p>test</p>`,
+        "<p>test</p>",
+        "never found",
+    );
     expect(res.toString()).toBe("<p>test</p> <p>test</p>");
     expect(res).toBeInstanceOf(Markup);
 
-    res = htmlReplaceAll(markup`<p>test</p> <p>test</p>`, "<p>test</p>", () => "never found");
+    res = htmlReplaceAll(
+        markup`<p>test</p> <p>test</p>`,
+        "<p>test</p>",
+        () => "never found",
+    );
     expect(res.toString()).toBe("<p>test</p> <p>test</p>");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace/htmlReplaceAll only accept functions replacement when search is a RegExp", () => {
     expect(() => htmlReplace("test", /test/, "$1")).toThrow(
-        "htmlReplace: replacer must be a function when search is a RegExp."
+        "htmlReplace: replacer must be a function when search is a RegExp.",
     );
     expect(() => htmlReplaceAll("test", /test/, "$1")).toThrow(
-        "htmlReplaceAll: replacer must be a function when search is a RegExp."
+        "htmlReplaceAll: replacer must be a function when search is a RegExp.",
     );
 });
 
@@ -323,22 +388,26 @@ test("odoomark", () => {
     expect(odoomark("").toString()).toBe("");
     expect(odoomark("**test**").toString()).toBe("<b>test</b>");
     expect(odoomark("**test** something else **test**").toString()).toBe(
-        "<b>test</b> something else <b>test</b>"
+        "<b>test</b> something else <b>test</b>",
     );
-    expect(odoomark("--test--").toString()).toBe(`<span class="text-muted">test</span>`);
+    expect(odoomark("--test--").toString()).toBe(
+        `<span class="text-muted">test</span>`,
+    );
     expect(odoomark("--test-- something else --test--").toString()).toBe(
-        `<span class="text-muted">test</span> something else <span class="text-muted">test</span>`
+        `<span class="text-muted">test</span> something else <span class="text-muted">test</span>`,
     );
     expect(odoomark("`test`").toString()).toBe(
-        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
+        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`,
     );
     expect(odoomark("`test` something else `test`").toString()).toBe(
-        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span> something else <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
+        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span> something else <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`,
     );
     expect(odoomark("test\ttest2").toString()).toBe(
-        `test<span style="margin-left: 2em"></span>test2`
+        `test<span style="margin-left: 2em"></span>test2`,
     );
     expect(odoomark("test\ntest2").toString()).toBe("test<br>test2");
-    expect(odoomark("<p>**test**</p>").toString()).toBe("&lt;p&gt;<b>test</b>&lt;/p&gt;");
+    expect(odoomark("<p>**test**</p>").toString()).toBe(
+        "&lt;p&gt;<b>test</b>&lt;/p&gt;",
+    );
     expect(odoomark(markup`<p>**test**</p>`).toString()).toBe("<p><b>test</b></p>");
 });

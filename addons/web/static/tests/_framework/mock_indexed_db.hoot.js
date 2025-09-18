@@ -1,3 +1,5 @@
+// @ts-check
+
 export function mockIndexedDB(_name, { fn }) {
     return (requireModule, ...args) => {
         const indexedDBModule = fn(requireModule, ...args);
@@ -17,6 +19,10 @@ export function mockIndexedDB(_name, { fn }) {
 
             async read(table, key) {
                 return this.mockIndexedDB[table]?.[key];
+            }
+
+            async deleteDatabase() {
+                this.mockIndexedDB = {};
             }
 
             async invalidate(tables = null) {

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -14,11 +16,10 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-
 import { registry } from "@web/core/registry";
-import { pick } from "@web/core/utils/objects";
-import { View } from "@web/views/view";
+import { pick } from "@web/core/utils/collections/objects";
 import { CallbackRecorder } from "@web/search/action_hook";
+import { View } from "@web/views/view";
 
 const viewRegistry = registry.category("views");
 
@@ -140,7 +141,9 @@ test("rendering with given viewId", async function () {
             toolbar: false,
         });
     });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 1 },
+    });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
@@ -231,7 +234,9 @@ test("viewId defined as prop and in 'views' prop", async function () {
             ],
         },
     });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 1 },
+    });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
     expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
@@ -357,7 +362,8 @@ test("rendering with given searchViewId", async function () {
     patchWithCleanup(ToyController.prototype, {
         setup() {
             super.setup();
-            const { irFilters, searchViewArch, searchViewFields, searchViewId } = this.props.info;
+            const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                this.props.info;
             expect(searchViewArch).toBe(`<search/>`);
             expect(searchViewFields).toEqual({
                 id: {
@@ -461,7 +467,8 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, and searc
     patchWithCleanup(ToyController.prototype, {
         setup() {
             super.setup();
-            const { irFilters, searchViewArch, searchViewFields, searchViewId } = this.props.info;
+            const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                this.props.info;
             expect(searchViewArch).toBe(`<search/>`);
             expect(searchViewFields).toEqual({});
             expect(searchViewId).toBe(false);
@@ -491,7 +498,8 @@ test("rendering with given arch, fields, searchViewArch, and searchViewFields", 
     patchWithCleanup(ToyController.prototype, {
         setup() {
             super.setup();
-            const { irFilters, searchViewArch, searchViewFields, searchViewId } = this.props.info;
+            const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                this.props.info;
             expect(searchViewArch).toBe(`<search/>`);
             expect(searchViewFields).toEqual({});
             expect(searchViewId).toBe(undefined);
@@ -520,7 +528,8 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
     patchWithCleanup(ToyController.prototype, {
         setup() {
             super.setup();
-            const { irFilters, searchViewArch, searchViewFields, searchViewId } = this.props.info;
+            const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                this.props.info;
             expect(searchViewArch).toBe(`<search/>`);
             expect(searchViewFields).toEqual({});
             expect(searchViewId).toBe(false);
@@ -631,7 +640,9 @@ test("can click on action-bound links -- 1", async () => {
         expect.step("root called");
         return { type: "ir.actions.client", tag: "someAction" };
     });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 1 },
+    });
     expect("a").toHaveCount(1);
     await click("a");
     await animationFrame();
@@ -657,7 +668,9 @@ test("can click on action-bound links -- 2", async () => {
             </a>
         </toy>
     `;
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 1 },
+    });
     expect("a").toHaveCount(1);
     await click("a");
     await animationFrame();
@@ -690,7 +703,9 @@ test("can click on action-bound links -- 3", async () => {
             </a>
         </toy>
     `;
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 1 },
+    });
     expect("a").toHaveCount(1);
     await click("a");
     await animationFrame();
@@ -728,7 +743,9 @@ test("rendering with loaded arch attribute 'js_class'", async function () {
             toolbar: false,
         });
     });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 2 } });
+    await mountWithCleanup(View, {
+        props: { resModel: "animal", type: "toy", viewId: 2 },
+    });
     expect(".o_toy_view.toy_imp").toHaveCount(1);
     expect(".o_toy_view.toy_imp").toHaveText("Arch content (id=2)");
 });
@@ -747,7 +764,9 @@ test("rendering with given arch attribute 'js_class'", async function () {
         },
     });
     expect(".o_toy_view.toy_imp").toHaveCount(1);
-    expect(".o_toy_view.toy_imp").toHaveText("Specific arch content for specific class");
+    expect(".o_toy_view.toy_imp").toHaveText(
+        "Specific arch content for specific class",
+    );
 });
 
 test("rendering with loaded arch attribute 'js_class' and given jsClass", async function () {
@@ -791,7 +810,7 @@ test("rendering with given arch attribute 'js_class' and given jsClass", async f
                 static type = "toy";
             },
         },
-        { force: true }
+        { force: true },
     );
     onRpc("get_views", () => {
         throw new Error("no get_views expected");
@@ -859,7 +878,9 @@ test("'searchViewArch' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect.verifySteps([`"searchViewArch" and "searchViewFields" props must be given together`]);
+    expect.verifySteps([
+        `"searchViewArch" and "searchViewFields" props must be given together`,
+    ]);
 });
 
 test("'searchViewFields' cannot be passed as prop alone", async function () {
@@ -869,7 +890,9 @@ test("'searchViewFields' cannot be passed as prop alone", async function () {
     } catch (error) {
         expect.step(error.message);
     }
-    expect.verifySteps([`"searchViewArch" and "searchViewFields" props must be given together`]);
+    expect.verifySteps([
+        `"searchViewArch" and "searchViewFields" props must be given together`,
+    ]);
 });
 
 ////////////////////////////////////////////////////////////////////////////
@@ -895,7 +918,11 @@ test("search query props are passed as props to concrete view (default search ar
             expect(orderBy).toEqual([{ name: "bar", asc: true }]);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         resModel: "animal",
         type: "toy",
@@ -916,7 +943,11 @@ test("non empty prop 'noContentHelp'", async function () {
             expect(this.props.info.noContentHelp).toBe("<div>Help</div>");
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         resModel: "animal",
         type: "toy",
@@ -934,7 +965,11 @@ test("useSampleModel false by default", async function () {
             expect(this.props.useSampleModel).toBe(false);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = { resModel: "animal", type: "toy" };
     await mountWithCleanup(View, { props });
 });
@@ -948,7 +983,11 @@ test("sample='1' on arch", async function () {
             expect(this.props.useSampleModel).toBe(true);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         resModel: "animal",
         type: "toy",
@@ -967,7 +1006,11 @@ test("sample='0' on arch and useSampleModel=true", async function () {
             expect(this.props.useSampleModel).toBe(true);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         resModel: "animal",
         type: "toy",
@@ -987,7 +1030,11 @@ test("sample='1' on arch and useSampleModel=false", async function () {
             expect(this.props.useSampleModel).toBe(false);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         resModel: "animal",
         type: "toy",
@@ -1007,7 +1054,11 @@ test("useSampleModel=true", async function () {
             expect(this.props.useSampleModel).toBe(true);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = { resModel: "animal", type: "toy", useSampleModel: true };
     await mountWithCleanup(View, { props });
 });
@@ -1021,7 +1072,11 @@ test("rendering with given prop", async function () {
             expect(this.props.specificProp).toBe("specificProp");
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = { resModel: "animal", type: "toy", specificProp: "specificProp" };
     await mountWithCleanup(View, { props });
 });
@@ -1044,7 +1099,11 @@ test("search query props are passed as props to concrete view (specific search a
             expect(orderBy).toEqual([{ name: "bar", asc: true }]);
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         type: "toy",
         resModel: "animal",
@@ -1102,7 +1161,11 @@ test("callback recorders are moved from props to subenv", async () => {
             expect(this.env.__getOrderBy__).toBeInstanceOf(CallbackRecorder); // put in env by WithSearch
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     const props = {
         type: "toy",
         resModel: "animal",
@@ -1130,7 +1193,11 @@ test("react to prop 'domain' changes", async function () {
             });
         }
     }
-    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    viewRegistry.add(
+        "toy",
+        { type: "toy", Controller: ToyController },
+        { force: true },
+    );
     class Parent extends Component {
         static props = ["*"];
         static template = xml`<View t-props="state"/>`;

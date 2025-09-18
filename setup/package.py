@@ -21,14 +21,14 @@ import pexpect
 # Utils
 #----------------------------------------------------------
 
-ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+ROOTDIR = Path(Path(os.path.realpath(__file__)).parent).parent
 TSTAMP = time.strftime("%Y%m%d", time.gmtime())
 TSEC = time.strftime("%H%M%S", time.gmtime())
 # Get some variables from release.py
 version = ...
 version_info = ...
 nt_service_name = ...
-exec(open(os.path.join(ROOTDIR, 'odoo', 'release.py'), 'rb').read())
+exec(Path(os.path.join(ROOTDIR, 'odoo', 'release.py')).open('rb').read())
 VERSION = version.split('-')[0].replace('saas~', '')
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
@@ -72,8 +72,7 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
             raise OdooTestError("Installation of package failed")
-        else:
-            logging.info("Package test: successfuly installed %s modules" % len(modules))
+        logging.info("Package test: successfuly installed %s modules" % len(modules))
     else:
         logging.error("Package test: FAILED. Not able to install base.")
         raise OdooTestError("Package test: FAILED. Not able to install base.")
@@ -94,12 +93,12 @@ def publish(args, pub_type, extensions):
         os.renames(build_path, release_path)
 
         # Latest/symlink handler
-        release_abspath = os.path.abspath(release_path)
+        release_abspath = Path(release_path).resolve()
         latest_abspath = release_abspath.replace(TSTAMP, 'latest')
 
-        if os.path.islink(latest_abspath):
-            os.unlink(latest_abspath)
-        os.symlink(release_abspath, latest_abspath)
+        if Path(latest_abspath).is_symlink():
+            Path(latest_abspath).unlink()
+        Path(latest_abspath).symlink_to(release_abspath)
 
         return release_path
 
@@ -118,7 +117,7 @@ def gen_deb_package(args, published_files):
     # Executes command to produce file_name in path, and moves it to args.pub/deb
     def _gen_file(args, command, file_name, path):
         cur_tmp_file_path = os.path.join(path, file_name)
-        with open(cur_tmp_file_path, 'w') as out:
+        with Path(cur_tmp_file_path).open('w') as out:
             subprocess.call(command, stdout=out, cwd=path)
         shutil.copy(cur_tmp_file_path, os.path.join(args.pub, 'deb', file_name))
 
@@ -168,21 +167,21 @@ def _prepare_build_dir(args, win32=False, move_addons=True):
     if not move_addons:
         return
     for addon_path in glob(os.path.join(args.build_dir, 'addons/*')):
-        if args.blacklist is None or os.path.basename(addon_path) not in args.blacklist:
+        if args.blacklist is None or Path(addon_path).name not in args.blacklist:
             try:
                 shutil.move(addon_path, os.path.join(args.build_dir, 'odoo/addons'))
             except shutil.Error as e:
                 logging.warning("Warning '%s' while moving addon '%s", e, addon_path)
-                if addon_path.startswith(args.build_dir) and os.path.isdir(addon_path):
-                    logging.info("Removing '{}'".format(addon_path))
+                if addon_path.startswith(args.build_dir) and Path(addon_path).is_dir():
+                    logging.info("Removing '%s'", addon_path)
                     try:
                         shutil.rmtree(addon_path)
                     except shutil.Error as rm_error:
-                        logging.warning("Cannot remove '{}': {}".format(addon_path, rm_error))
+                        logging.warning("Cannot remove '%s': %s", addon_path, rm_error)
 
 
 #  Docker stuffs
-class Docker():
+class Docker:
     """Base Docker class. Must be inherited by specific Docker builder class"""
     arch = None
 
@@ -244,7 +243,7 @@ class Docker():
 
     def is_running(self):
         dinspect = subprocess.run(['docker', 'container', 'inspect', self.container_name], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        return True if dinspect.returncode == 0 else False
+        return dinspect.returncode == 0
 
     def stop(self):
         run_cmd(["docker", "stop", self.container_name]).check_returncode()
@@ -254,7 +253,7 @@ class Docker():
         start_time = time.time()
         while self.is_running() and (time.time() - start_time) < INSTALL_TIMEOUT:
             time.sleep(5)  # give some time for odoo to install and start
-            if os.path.exists(os.path.join(args.build_dir, 'odoo.pid')):
+            if Path(os.path.join(args.build_dir, 'odoo.pid')).exists():
                 try:
                     _rpc_count_modules(port=self.exposed_port)
                     return
@@ -282,8 +281,8 @@ class DockerTgz(Docker):
     def build(self):
         logging.info('Start building python tgz package')
         self.run('python3 setup.py sdist --quiet --formats=gztar,zip', self.args.build_dir, 'odoo-src-build-%s' % TSTAMP)
-        os.rename(glob('%s/dist/odoo-*.tar.gz' % self.args.build_dir)[0], '%s/odoo_%s.%s.tar.gz' % (self.args.build_dir, VERSION, TSTAMP))
-        os.rename(glob('%s/dist/odoo-*.zip' % self.args.build_dir)[0], '%s/odoo_%s.%s.zip' % (self.args.build_dir, VERSION, TSTAMP))
+        Path(glob('%s/dist/odoo-*.tar.gz' % self.args.build_dir)[0]).rename('%s/odoo_%s.%s.tar.gz' % (self.args.build_dir, VERSION, TSTAMP))
+        Path(glob('%s/dist/odoo-*.zip' % self.args.build_dir)[0]).rename('%s/odoo_%s.%s.zip' % (self.args.build_dir, VERSION, TSTAMP))
         logging.info('Finished building python tgz package')
 
     def start_test(self):
@@ -355,7 +354,7 @@ class DockerRpm(Docker):
             f'mv {rpmbuild_dir}/RPMS/noarch/odoo*.rpm /data/src/dist/'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, f'odoo-rpm-build-{TSTAMP}')
-        os.rename(glob('%s/dist/odoo-*.noarch.rpm' % self.args.build_dir)[0], '%s/odoo_%s.%s.rpm' % (self.args.build_dir, VERSION, TSTAMP))
+        Path(glob('%s/dist/odoo-*.noarch.rpm' % self.args.build_dir)[0]).rename('%s/odoo_%s.%s.rpm' % (self.args.build_dir, VERSION, TSTAMP))
         logging.info('Finished building fedora rpm package')
 
     def start_test(self):
@@ -378,7 +377,7 @@ class DockerRpm(Docker):
     def gen_rpm_repo(self, args, rpm_filepath):
         pub_repodata_path = os.path.join(args.pub, 'rpm', 'repodata')
         # Removes the old repodata
-        if os.path.isdir(pub_repodata_path):
+        if Path(pub_repodata_path).is_dir():
             shutil.rmtree(pub_repodata_path)
 
         # Copy files to a temp directory (required because the working directory must contain only the
@@ -436,7 +435,7 @@ class DockerIot(DockerWine):
 def parse_args():
     ap = argparse.ArgumentParser()
     build_dir = "%s-%s-%s" % (ROOTDIR, TSEC, TSTAMP)
-    log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARN, "error": logging.ERROR, "critical": logging.CRITICAL}
+    log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING, "error": logging.ERROR, "critical": logging.CRITICAL}
 
     ap.add_argument("-b", "--build-dir", default=build_dir, help="build directory (%(default)s)", metavar="DIR")
     ap.add_argument("-p", "--pub", default=None, help="pub directory %(default)s", metavar="DIR")
@@ -510,20 +509,19 @@ def main(args):
             except Exception as e:
                 logging.error("Won't publish the iot release.\n Exception: %s" % str(e))
     except Exception as e:
-        logging.error('Something bad happened ! : {}'.format(e))
+        logging.error('Something bad happened ! : %s', e)
         traceback.print_exc()
     finally:
         if args.no_remove:
-            logging.info('Build dir "{}" not removed'.format(args.build_dir))
-        else:
-            if os.path.exists(args.build_dir):
-                shutil.rmtree(args.build_dir)
-                logging.info('Build dir %s removed' % args.build_dir)
+            logging.info(f'Build dir "{args.build_dir}" not removed')
+        elif Path(args.build_dir).exists():
+            shutil.rmtree(args.build_dir)
+            logging.info('Build dir %s removed' % args.build_dir)
 
 
 if __name__ == '__main__':
     args = parse_args()
-    if os.path.exists(args.build_dir):
+    if Path(args.build_dir).exists():
         logging.error('Build dir "%s" already exists.', args.build_dir)
         sys.exit(1)
     main(args)

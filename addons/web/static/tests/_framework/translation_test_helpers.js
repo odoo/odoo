@@ -1,13 +1,15 @@
-import { after } from "@odoo/hoot";
-import { serverState } from "./mock_server_state.hoot";
-import { patchWithCleanup } from "./patch_test_helpers";
+// @ts-check
 
+import { after } from "@odoo/hoot";
 import {
     loadLanguages,
     translatedTerms,
     translatedTermsGlobal,
     translationLoaded,
 } from "@web/core/l10n/translation";
+
+import { serverState } from "./mock_server_state.hoot";
+import { patchWithCleanup } from "./patch_test_helpers";
 
 /**
  * @param {Record<string, string>} languages

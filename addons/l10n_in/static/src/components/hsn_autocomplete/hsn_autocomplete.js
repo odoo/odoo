@@ -1,9 +1,9 @@
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { useChildRef } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField, charField } from "@web/views/fields/char/char_field";
-import { useInputField } from "@web/views/fields/input_field_hook";
+import { CharField, charField } from "@web/fields/basic/char/char_field";
+import { useInputField } from "@web/fields/input_field_hook";
 
 const l10N_IN_HSN_SERVICE_URL = "https://services.gst.gov.in/commonservices/hsn/search/qsearch";
 

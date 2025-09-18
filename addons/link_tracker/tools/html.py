@@ -36,7 +36,7 @@ def find_links_with_urls_and_labels(root_node, base_url, skip_regex=None, skip_p
         if link_node.text and (stripped_text := link_node.text.strip()):
             label = stripped_text[:MAX_LABEL_LENGTH]
         else:
-            children = link_node.getchildren()
+            children = list(link_node)
             label = _get_label_from_elements(children)[:MAX_LABEL_LENGTH]
 
         link_nodes.append(link_node)
@@ -58,7 +58,7 @@ def _get_label_from_elements(elements: Iterable[lxml.etree._Element], image_pref
         if isinstance(element, lxml.html.HtmlComment):  # A known "hack"
             continue
         if element.tag == "p" and element.get("class") == "o_outlook_hack":
-            children = element.getchildren()
+            children = list(element)
             if label := _get_label_from_elements(children):
                 return label
     return ""

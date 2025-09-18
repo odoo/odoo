@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
+import { FileUploader } from "@web/fields/file_handler";
 import { Component } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { useX2ManyCrud } from "@web/fields/relational/x2many_crud";
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
 
 export class MailAttachments extends Component {

@@ -1,6 +1,5 @@
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class TextInputPopup extends Component {
     static template = "point_of_sale.TextInputPopup";
     static components = { Dialog };
@@ -43,7 +42,9 @@ export class TextInputPopup extends Component {
     buttonClick(button) {
         const lines = this.state.inputValue.split("\n").filter((line) => line !== "");
         if (lines.includes(button.label)) {
-            this.state.inputValue = lines.filter((line) => line !== button.label).join("\n");
+            this.state.inputValue = lines
+                .filter((line) => line !== button.label)
+                .join("\n");
             button.isSelected = false;
         } else {
             this.state.inputValue = lines.join("\n");

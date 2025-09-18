@@ -3,18 +3,22 @@
     <record id="view_move_form_expiry" model="ir.ui.view">
         <field name="name">stock.production.lot.inherit.form</field>
         <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="inherit_id" ref="stock.view_stock_lot_form" />
         <field name="arch" type="xml">
-        <xpath expr="//group[@name='description']" position="before">
-            <group string="Dates" name="expiration_dates" invisible="not use_expiration_date">
+        <xpath expr="//page[@name='description']" position="after">
+            <page string="Dates" name="expiration_dates" invisible="not use_expiration_date">
                 <field name="use_expiration_date" invisible="1"/>
                 <group>
-                    <field string="Expiration" name="expiration_date"/>
-                    <field string="Alert from" name="alert_date"/>
-                    <field string="Best before" name="use_date"/>
-                    <field string="Removal Date" name="removal_date"/>
+                    <group>
+                        <field name="expiration_date" string="Expiration" />
+                        <field name="removal_date" string="Removal Date" />
+                    </group>
+                    <group>
+                        <field name="use_date" string="Best before" />
+                        <field name="alert_date" string="Alert from" />
+                    </group>
                 </group>
-            </group>
+            </page>
         </xpath>
         <xpath expr="//div[hasclass('oe_title')]" position="before">
             <field name="product_expiry_alert" invisible="1"/>
@@ -29,10 +33,10 @@
         </field>
     </record>
 
-    <record id="search_product_lot_filter_inherit_product_expiry" model="ir.ui.view">
+    <record id="view_stock_lot_search_inherit_product_expiry" model="ir.ui.view">
         <field name="name">stock.production.lot.search.inherit</field>
         <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="inherit_id" ref="stock.view_stock_lot_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <filter string="Expiration Alerts" name="expiration_alerts" domain="[('alert_date', '&lt;=', 'now')]"/>
@@ -43,7 +47,7 @@
     <record id="view_production_lot_view_tree" model="ir.ui.view">
         <field name="name">stock.production.lot.list.inherit.product.expiry</field>
         <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="inherit_id" ref="stock.view_stock_lot_list"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
                 <field name="product_qty" column_invisible="True"/>
@@ -58,7 +62,7 @@
     <record id="view_production_lot_view_kanban" model="ir.ui.view">
         <field name="name">stock.production.lot.kanban.inherit.product.expiry</field>
         <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_kanban"/>
+        <field name="inherit_id" ref="stock.view_stock_lot_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="product_qty"/>

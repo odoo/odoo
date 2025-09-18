@@ -87,7 +87,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
                         <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -217,7 +217,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
                         <t t-if="object.event_id.videocall_source == 'discuss'">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -328,7 +328,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
                         <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -424,7 +424,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-attf-href="object.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object.videocall_location" target="_blank" style="color: #008f8c;">
                         <t t-if="object.videocall_source == 'discuss'">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>

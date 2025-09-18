@@ -1,13 +1,15 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/helpers/utils default=false */
 
 import { getTemplate } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
-import { getPopoverForTarget } from "@web/core/popover/popover";
+import { getPopoverForTarget } from "@web/ui/popover/popover";
 import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
-import { isVisible } from "@web/core/utils/ui";
+import { isVisible } from "@web/core/utils/dom/ui";
 import { _t } from "@web/core/l10n/translation";
 import { registerCleanup } from "./cleanup";
 import { customDirectives, globalValues } from "@web/env";
@@ -540,8 +542,12 @@ export async function clickDiscard(htmlElement) {
     }
     if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
         return click(htmlElement, ".o_form_button_cancel");
-    } else if ($(htmlElement).find(".o_list_button_discard:visible").length) {
-        return click($(htmlElement).find(".o_list_button_discard:visible").get(0));
+    } else if ([...htmlElement.querySelectorAll(".o_list_button_discard")].find(
+        (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+    )) {
+        return click([...htmlElement.querySelectorAll(".o_list_button_discard")].find(
+            (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+        ));
     } else {
         throw new Error("No discard button found to be clicked.");
     }

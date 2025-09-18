@@ -33,24 +33,24 @@ class TestSaleStockReports(TestReportsCommon):
         # Create a first SO for the next week.
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.partner
-        # so_form.validity_date = today + timedelta(days=7)
-        with so_form.order_line.new() as so_line:
+        # so_form.date_validity = today + timedelta(days=7)
+        with so_form.line_ids.new() as so_line:
             so_line.product_id = self.product
-            so_line.product_uom_qty = 5
+            so_line.product_qty = 5
         so_1 = so_form.save()
         so_1.action_confirm()
-        so_1.picking_ids.scheduled_date = today + timedelta(days=7)
+        so_1.picking_ids.date_planned = today + timedelta(days=7)
 
         # Create a second SO for tomorrow.
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.partner
-        # so_form.validity_date = today + timedelta(days=1)
-        with so_form.order_line.new() as so_line:
+        # so_form.date_validity = today + timedelta(days=1)
+        with so_form.line_ids.new() as so_line:
             so_line.product_id = self.product
-            so_line.product_uom_qty = 5
+            so_line.product_qty = 5
         so_2 = so_form.save()
         so_2.action_confirm()
-        so_2.picking_ids.scheduled_date = today + timedelta(days=1)
+        so_2.picking_ids.date_planned = today + timedelta(days=1)
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 2)
@@ -69,9 +69,9 @@ class TestSaleStockReports(TestReportsCommon):
         # We create 2 identical SO
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.partner
-        with so_form.order_line.new() as line:
+        with so_form.line_ids.new() as line:
             line.product_id = self.product
-            line.product_uom_qty = 5
+            line.product_qty = 5
         so1 = so_form.save()
         so1.action_confirm()
         so2 = so1.copy()
@@ -79,7 +79,7 @@ class TestSaleStockReports(TestReportsCommon):
 
         # Check for both SO if the highlight (is_matched) corresponds to the correct SO
         for so in [so1, so2]:
-            context = {"move_to_match_ids": so.order_line.move_ids.ids}
+            context = {"move_to_match_ids": so.line_ids.move_ids.ids}
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
                 if line['document_out']['id'] == so.id:
@@ -100,11 +100,11 @@ class TestSaleStockReports(TestReportsCommon):
         # Create and confirm an SO for 3 units
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'name': product.name,
                     'product_id': product.id,
-                    'product_uom_qty': 3,
+                    'product_qty': 3,
                 }),
             ],
         })
@@ -145,18 +145,18 @@ class TestSaleStockReports(TestReportsCommon):
         # Create the SO & confirm it with first user
         with Form(self.env['sale.order']) as so_form:
             so_form.partner_id = self.partner
-            with so_form.order_line.new() as line:
+            with so_form.line_ids.new() as line:
                 line.product_id = self.product
-                line.product_uom_qty = 3
+                line.product_qty = 3
             sale_order = so_form.save()
         sale_order.action_confirm()
 
         # Create a draft SO with the same user for the same product
         with Form(self.env['sale.order']) as so_form:
             so_form.partner_id = self.partner
-            with so_form.order_line.new() as line:
+            with so_form.line_ids.new() as line:
                 line.product_id = self.product
-                line.product_uom_qty = 2
+                line.product_qty = 2
             draft = so_form.save()
 
         # Create second user which only has access to its own documents
@@ -186,9 +186,9 @@ class TestSaleStockReports(TestReportsCommon):
     def test_add_reference_remove_reference_works_with_multiple_records(self):
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': self.product.id,
-                'product_uom_qty': 5,
+                'product_qty': 5,
             })],
         })
         so.action_confirm()
@@ -265,8 +265,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 5}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_qty': 5}),
             ],
         })
         so.action_confirm()
@@ -297,12 +297,12 @@ class TestSaleStockInvoices(TestSaleCommon):
         display_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
-        self.product_by_lot.invoice_policy = "order"
+        self.product_by_lot.invoice_policy = "ordered"
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 4}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_qty': 4}),
             ],
         })
         so.action_confirm()
@@ -319,6 +319,40 @@ class TestSaleStockInvoices(TestSaleCommon):
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By Lot\n4.00Units\nLOT0001', "There should be a line that specifies 4 x LOT0001")
 
+    def test_picking_description(self):
+        """
+        Verify that for a no-variant product, the product name is not included as the first element in the picking description,
+        as this avoids repeating the name on the delivery slip.
+        """
+
+        product_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'no_variant'})
+        product_attrv1, product_attrv2 = self.env['product.attribute.value'].create([
+            {'name': 'Value1', 'attribute_id': product_attr.id},
+            {'name': 'Value2', 'attribute_id': product_attr.id},
+        ])
+        product_template_no_variant = self.env['product.template'].create({
+            'name': 'product name',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attr.id,
+                    'value_ids': [Command.set([product_attrv1.id, product_attrv2.id])],
+                })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'line_ids': [
+                Command.create({'name': product_template_no_variant.name,
+                'product_id': product_template_no_variant.product_variant_id.id,
+                'product_qty': 4,
+                'product_no_variant_attribute_value_ids': product_template_no_variant.product_variant_id.attribute_line_ids.product_template_value_ids
+                }),
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking_description = picking.move_ids._get_report_description_picking()
+        self.assertEqual(picking_description, 'Color: Value1\nColor: Value2')
+
     def test_backorder_and_several_invoices(self):
         """
         Suppose the lots are printed on the invoices.
@@ -332,8 +366,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_qty': 2}),
             ],
         })
         so.action_confirm()
@@ -372,7 +406,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         self.assertNotIn('USN0002', text)
 
         # Resetting and posting again the first invoice shouldn't change the results
-        invoice01.button_draft()
+        invoice01.action_draft()
         invoice01.action_post()
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
         text = html2plaintext(html)
@@ -409,8 +443,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 10}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_qty': 10}),
             ],
         })
         so.action_confirm()
@@ -428,7 +462,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         action = return_wizard.action_create_returns()
         pick_return = self.env['stock.picking'].browse(action['res_id'])
 
-        move_form = Form(pick_return.move_ids, view='stock.view_stock_move_operations')
+        move_form = Form(pick_return.move_ids, view='stock.view_stock_move_form_operations')
         with move_form.move_line_ids.edit(0) as line:
             line.lot_id = lot01
             line.quantity = 10
@@ -445,7 +479,7 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         # Deliver 3 x LOT0002
         delivery02.do_unreserve()
-        move_form = Form(delivery02.move_ids, view='stock.view_stock_move_operations')
+        move_form = Form(delivery02.move_ids, view='stock.view_stock_move_form_operations')
         with move_form.move_line_ids.new() as line:
             line.lot_id = lot02
             line.quantity = 3
@@ -469,7 +503,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         # Deliver 5 x LOT0002 + 2 x LOT0003
         delivery03 = delivery02.backorder_ids
         delivery03.do_unreserve()
-        move_form = Form(delivery03.move_ids, view='stock.view_stock_move_operations')
+        move_form = Form(delivery03.move_ids, view='stock.view_stock_move_form_operations')
         with move_form.move_line_ids.new() as line:
             line.lot_id = lot02
             line.quantity = 5
@@ -504,8 +538,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_qty': 2}),
             ],
         })
         so.action_confirm()
@@ -539,7 +573,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         res = return_wiz.action_create_returns()
         pick_return = self.env['stock.picking'].browse(res['res_id'])
 
-        move_form = Form(pick_return.move_ids, view='stock.view_stock_move_operations')
+        move_form = Form(pick_return.move_ids, view='stock.view_stock_move_form_operations')
         with move_form.move_line_ids.edit(0) as line:
             line.lot_id = self.usn01
             line.quantity = 1
@@ -569,8 +603,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),
+            'line_ids': [
+                (0, 0, {'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_qty': 1}),
             ],
         })
         so.action_confirm()

@@ -1,6 +1,6 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
-import { deepCopy } from "@web/core/utils/objects";
+import { deepCopy } from "@web/core/utils/collections/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 /**

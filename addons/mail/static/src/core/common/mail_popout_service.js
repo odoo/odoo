@@ -1,10 +1,8 @@
 import { App } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
-
 const DEFAULT_ID = Symbol("default");
 
 export const mailPopoutService = {
@@ -85,8 +83,13 @@ export const mailPopoutService = {
             component,
             {
                 props,
-                options: { width, height, aspectRatio = 16 / 9, useAlternativeAssets = false } = {},
-            } = {}
+                options: {
+                    width,
+                    height,
+                    aspectRatio = 16 / 9,
+                    useAlternativeAssets = false,
+                } = {},
+            } = {},
         ) {
             const popout = popouts.get(id);
             let externalWindow = popout.externalWindow;
@@ -94,18 +97,20 @@ export const mailPopoutService = {
                 const hooks = popout.hooks;
                 hooks?.beforePopout?.();
                 height =
-                    height || (width ? width / aspectRatio : Math.min(240, window.innerHeight));
+                    height ||
+                    (width ? width / aspectRatio : Math.min(240, window.innerHeight));
                 width = width || height * aspectRatio;
                 if (window.documentPictureInPicture) {
-                    externalWindow = await window.documentPictureInPicture.requestWindow({
-                        width,
-                        height,
-                    });
+                    externalWindow =
+                        await window.documentPictureInPicture.requestWindow({
+                            width,
+                            height,
+                        });
                 } else {
                     externalWindow = browser.open(
                         "about:blank",
                         "_blank",
-                        `popup=yes,width=${width},height=${height}`
+                        `popup=yes,width=${width},height=${height}`,
                     );
                 }
                 popout.externalWindow = externalWindow;

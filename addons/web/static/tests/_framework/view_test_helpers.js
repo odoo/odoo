@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
     after,
     animationFrame,
@@ -13,16 +15,17 @@ import {
     tick,
 } from "@odoo/hoot";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { MainComponentsContainer } from "@web/components/main_components_container";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { View } from "@web/views/view";
+
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv, getService } from "./env_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
 
 /**
- * @typedef {import("@web/views/view").Config} Config
+ * @typedef {any} Config
  *
  * @typedef {{
  *  value?: string;
@@ -153,14 +156,16 @@ export async function clickFieldDropdownItem(fieldName, itemContent, options) {
         return;
     }
     const dropdowns = queryAll(
-        buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
+        buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options),
     );
     if (dropdowns.length === 0) {
         throw new Error(`No dropdown found for field ${fieldName}`);
     } else if (dropdowns.length > 1) {
         throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
     }
-    const dropdownItems = queryAll(buildSelector("li", options), { root: dropdowns[0] });
+    const dropdownItems = queryAll(buildSelector("li", options), {
+        root: dropdowns[0],
+    });
     const indexToClick = queryAllTexts(dropdownItems).indexOf(itemContent);
     if (indexToClick === -1) {
         throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
@@ -250,7 +255,7 @@ export async function mountView(params, target = null) {
 }
 
 /**
- * @param {ViewProps & { archs?: Record<string, string> }} props
+ * @param {MountViewParams} props
  * @returns {ViewProps}
  */
 export function parseViewProps(props) {
@@ -272,8 +277,9 @@ export function parseViewProps(props) {
         viewProps.searchViewId ??= -1;
         registerInlineViewArchs(viewProps.resModel, {
             ...props.archs,
-            [[viewProps.type, viewProps.viewId]]: viewProps.arch,
-            [["search", viewProps.searchViewId]]: viewProps.searchViewArch,
+            [/** @type {any} */ ([viewProps.type, viewProps.viewId])]: viewProps.arch,
+            [/** @type {any} */ (["search", viewProps.searchViewId])]:
+                viewProps.searchViewArch,
         });
     } else {
         // Force `get_views` call
@@ -324,7 +330,10 @@ export async function hideTab() {
  * @param {string} selector
  * @param {EditSelectMenuParams} [params]
  */
-export async function editSelectMenu(selector, { value, index }) {
+export async function editSelectMenu(
+    selector,
+    { value, index } = /** @type {EditSelectMenuParams} */ ({}),
+) {
     async function selectItem(value) {
         const elementToSelect = queryFirst(`.o_select_menu_item:contains(${value})`);
         if (elementToSelect) {
@@ -337,7 +346,9 @@ export async function editSelectMenu(selector, { value, index }) {
         }
     }
     let inputSelector = buildSelector(selector);
-    const selectMenuId = queryFirst(inputSelector).closest(".o_select_menu").dataset.id;
+    const selectMenuId = /** @type {HTMLElement} */ (
+        queryFirst(inputSelector).closest(".o_select_menu")
+    ).dataset.id;
     if (!queryFirst(`.o_select_menu_menu [data-id='${selectMenuId}']`)) {
         await contains(inputSelector).click();
     }
@@ -352,7 +363,7 @@ export async function editSelectMenu(selector, { value, index }) {
         // Because this helper must work even when no input is editable (searchable=false),
         // we unselect the currently selected value with the 'X' button
         const clearButton = queryFirst(
-            `.o_select_menu[data-id='${selectMenuId}'] .o_select_menu_toggler_clear, .o_select_menu_menu .o_clear_button`
+            `.o_select_menu[data-id='${selectMenuId}'] .o_select_menu_toggler_clear, .o_select_menu_menu .o_clear_button`,
         );
         if (clearButton) {
             await click(clearButton);

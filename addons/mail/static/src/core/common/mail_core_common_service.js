@@ -1,7 +1,5 @@
 import { reactive } from "@odoo/owl";
-
 import { registry } from "@web/core/registry";
-
 export class MailCoreCommon {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -33,7 +31,7 @@ export class MailCoreCommon {
             }
         });
         this.busService.subscribe("mail.message/toggle_star", (payload, metadata) =>
-            this._handleNotificationToggleStar(payload, metadata)
+            this._handleNotificationToggleStar(payload, metadata),
         );
         this.busService.subscribe("res.users.settings", (payload) => {
             if (payload) {

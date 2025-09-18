@@ -6,7 +6,7 @@ from odoo.tests import Form
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
-from psycopg2.errors import NotNullViolation
+from psycopg.errors import NotNullViolation
 
 
 @tagged('post_install', '-at_install')
@@ -25,7 +25,7 @@ class TestSoLineMilestones(TestSaleCommon):
             'standard_price': 15,
             'list_price': 30,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'uom_id': uom_hour.id,
             'default_code': 'MILE-DELI4',
             'service_type': 'milestones',
@@ -36,7 +36,7 @@ class TestSoLineMilestones(TestSaleCommon):
             'standard_price':20,
             'list_price': 35,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'uom_id': uom_hour.id,
             'default_code': 'MILE-DELI4',
             'service_type': 'milestones',
@@ -47,7 +47,7 @@ class TestSoLineMilestones(TestSaleCommon):
             'standard_price': 20,
             'list_price': 35,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'uom_id': uom_hour.id,
             'default_code': 'MILE-DELI4',
             'service_type': 'milestones',
@@ -61,12 +61,12 @@ class TestSoLineMilestones(TestSaleCommon):
         })
         cls.sol1 = cls.env['sale.order.line'].create({
             'product_id': cls.product_delivery_milestones1.id,
-            'product_uom_qty': 20,
+            'product_qty': 20,
             'order_id': cls.sale_order.id,
         })
         cls.sol2 = cls.env['sale.order.line'].create({
             'product_id': cls.product_delivery_milestones2.id,
-            'product_uom_qty': 30,
+            'product_qty': 30,
             'order_id': cls.sale_order.id,
         })
         cls.sale_order.action_confirm()
@@ -97,31 +97,31 @@ class TestSoLineMilestones(TestSaleCommon):
             'quantity_percentage': 0.4,
         })
 
-        self.assertEqual(self.sol1.qty_delivered, 0.0, "Delivered quantity should start at 0")
-        self.assertEqual(self.sol2.qty_delivered, 0.0, "Delivered quantity should start at 0")
+        self.assertEqual(self.sol1.qty_transferred, 0.0, "Delivered quantity should start at 0")
+        self.assertEqual(self.sol2.qty_transferred, 0.0, "Delivered quantity should start at 0")
 
         self.milestone1.is_reached = True
-        self.assertEqual(self.sol1.qty_delivered, 10.0, "Delivered quantity should update after a milestone is reached")
+        self.assertEqual(self.sol1.qty_transferred, 10.0, "Delivered quantity should update after a milestone is reached")
 
         self.milestone2.is_reached = True
-        self.assertEqual(self.sol2.qty_delivered, 6.0, "Delivered quantity should update after a milestone is reached")
+        self.assertEqual(self.sol2.qty_transferred, 6.0, "Delivered quantity should update after a milestone is reached")
 
         self.milestone3.is_reached = True
-        self.assertEqual(self.sol2.qty_delivered, 18.0, "Delivered quantity should update after a milestone is reached")
+        self.assertEqual(self.sol2.qty_transferred, 18.0, "Delivered quantity should update after a milestone is reached")
 
     def test_update_reached_milestone_quantity(self):
         self.milestone1.is_reached = True
-        self.assertEqual(self.sol1.qty_delivered, 10.0, "Delivered quantity should start at 10")
+        self.assertEqual(self.sol1.qty_transferred, 10.0, "Delivered quantity should start at 10")
 
         self.milestone1.quantity_percentage = 0.75
-        self.assertEqual(self.sol1.qty_delivered, 15.0, "Delivered quantity should update after a milestone's quantity is updated")
+        self.assertEqual(self.sol1.qty_transferred, 15.0, "Delivered quantity should update after a milestone's quantity is updated")
 
     def test_remove_reached_milestone(self):
         self.milestone1.is_reached = True
-        self.assertEqual(self.sol1.qty_delivered, 10.0, "Delivered quantity should start at 10")
+        self.assertEqual(self.sol1.qty_transferred, 10.0, "Delivered quantity should start at 10")
 
         self.milestone1.unlink()
-        self.assertEqual(self.sol1.qty_delivered, 0.0, "Delivered quantity should update when a milestone is removed")
+        self.assertEqual(self.sol1.qty_transferred, 0.0, "Delivered quantity should update when a milestone is removed")
 
     def test_compute_sale_line_in_task(self):
         task = self.env['project.task'].create({
@@ -178,7 +178,7 @@ class TestSoLineMilestones(TestSaleCommon):
         })
         self.env['sale.order.line'].create({
             'product_id': self.product_delivery_milestones3.id,
-            'product_uom_qty': 20,
+            'product_qty': 20,
             'order_id': sale_order.id,
         })
         try:
@@ -201,7 +201,7 @@ class TestSoLineMilestones(TestSaleCommon):
 
         self.env['sale.order.line'].create([{
             'product_id': product.id,
-            'product_uom_qty': 20,
+            'product_qty': 20,
             'order_id': sale_order.id,
         } for product in products])
         sale_order.action_confirm()
@@ -229,7 +229,7 @@ class TestSoLineMilestones(TestSaleCommon):
         })
         self.env['sale.order.line'].create({
             'product_id': self.product_delivery_milestones1.id,
-            'product_uom_qty': 20,
+            'product_qty': 20,
             'order_id': sale_order.id,
         })
         sale_order.action_confirm()
@@ -262,7 +262,7 @@ class TestSoLineMilestones(TestSaleCommon):
         })
         self.env['sale.order.line'].create([{
             'product_id': product.id,
-            'product_uom_qty': 20,
+            'product_qty': 20,
             'order_id': sale_order.id,
         } for product in products])
         sale_order.action_confirm()
@@ -276,10 +276,10 @@ class TestSoLineMilestones(TestSaleCommon):
         # Create a sale order with two milestone lines
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_delivery_milestones3.id,
-                    'product_uom_qty': 1,
+                    'product_qty': 1,
                     'name': name,
                 }) for name in ["m1", "m2"]
             ]

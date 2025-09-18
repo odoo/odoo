@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { GraphModel } from "@web/views/graph/graph_model";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/collections/arrays";
 
 export class BurndownChartModel extends GraphModel {
     /**

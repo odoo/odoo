@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export const companyAutocompleteService = {
     dependencies: ["orm"],

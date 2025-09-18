@@ -1,16 +1,15 @@
 import {
     Component,
-    useState,
     onMounted,
     onWillUnmount,
+    status,
     useEffect,
     useRef,
-    status,
+    useState,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-
 const WAVE_COLOR = "#7775";
 
 /**
@@ -74,7 +73,7 @@ export class VoicePlayer extends Component {
                     this.addOnAudioProcess();
                 }
             },
-            () => [this.state.playing]
+            () => [this.state.playing],
         );
         useEffect(
             (uploading) => {
@@ -86,7 +85,7 @@ export class VoicePlayer extends Component {
                 }
                 this.wasUploading = uploading;
             },
-            () => [this.props.attachment.uploading]
+            () => [this.props.attachment.uploading],
         );
         onMounted(() => {
             this.initElements();
@@ -99,7 +98,7 @@ export class VoicePlayer extends Component {
                 const progressPixels = clientX - bcr.left;
                 const progress = Math.min(
                     Math.max(0, progressPixels / this.wrapper.scrollWidth),
-                    1
+                    1,
                 );
                 this.seekTo(progress);
             });
@@ -125,7 +124,7 @@ export class VoicePlayer extends Component {
         this.fetchFile(
             url(this.props.attachment.urlRoute, {
                 ...this.props.attachment.urlQueryParams,
-            })
+            }),
         ).then((arrayBuffer) => this.drawBuffer(arrayBuffer));
     }
 
@@ -312,14 +311,18 @@ export class VoicePlayer extends Component {
         const second = timeInSecond % 60;
         const minute = Math.floor(timeInSecond / 60);
         return (
-            (minute < 10 ? "0" + minute : minute) + " : " + (second < 10 ? "0" + second : second)
+            (minute < 10 ? "0" + minute : minute) +
+            " : " +
+            (second < 10 ? "0" + second : second)
         );
     }
 
     initElements() {
         this.wrapper = this.wrapperRef.el;
         this.progressWave = this.drawerRef.el;
-        this.progressColor = getComputedStyle(this.wrapper).getPropertyValue("--primary");
+        this.progressColor = getComputedStyle(this.wrapper).getPropertyValue(
+            "--primary",
+        );
         this.width = this.wrapper.clientWidth;
         this.height = this.wrapper.clientHeight;
 
@@ -355,7 +358,7 @@ export class VoicePlayer extends Component {
                 intersection.x1,
                 intersection.y1,
                 intersection.x2 - intersection.x1,
-                intersection.y2 - intersection.y1
+                intersection.y2 - intersection.y1,
             );
         }
     }

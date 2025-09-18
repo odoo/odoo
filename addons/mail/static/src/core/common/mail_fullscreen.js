@@ -1,7 +1,6 @@
 import { Component, reactive } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-
+import { useService } from "@web/core/utils/hooks";
 const DEFAULT_ID = Symbol("default");
 
 export class MailFullscreen extends Component {
@@ -48,14 +47,14 @@ export const fullscreenService = {
          */
         async function enter(
             component,
-            { keepBrowserHeader = false, props, rootId, id = DEFAULT_ID } = {}
+            { keepBrowserHeader = false, props, rootId, id = DEFAULT_ID } = {},
         ) {
             state.closeOverlay?.();
             state.id = id;
             state.closeOverlay = env.services.overlay.add(
                 MailFullscreen,
                 { component, props },
-                { rootId }
+                { rootId },
             );
             const el = document.body;
             if (keepBrowserHeader) {
@@ -75,7 +74,7 @@ export const fullscreenService = {
         }
         window.addEventListener("fullscreenchange", () => {
             const isFullscreen = Boolean(
-                document.webkitFullscreenElement || document.fullscreenElement
+                document.webkitFullscreenElement || document.fullscreenElement,
             );
             if (!isFullscreen) {
                 state.exit();

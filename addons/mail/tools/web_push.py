@@ -7,7 +7,6 @@ import os
 import struct
 import textwrap
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -81,21 +80,18 @@ def _derive_key(salt, private_key, device):
         length=32,
         salt=auth,
         info=context,
-        backend=default_backend(),
     )
     hkdf_key = HKDF(
         algorithm=hashes.SHA256(),
         length=16,
         salt=salt,
         info=key_info,
-        backend=default_backend(),
     )
     hkdf_nonce = HKDF(
         algorithm=hashes.SHA256(),
         length=12,
         salt=salt,
         info=nonce_info,
-        backend=default_backend(),
     )
     secret = hkdf_auth.derive(private_key.exchange(ec.ECDH(), pub_key))
     return hkdf_key.derive(secret), hkdf_nonce.derive(secret)
@@ -112,7 +108,7 @@ def _encrypt_payload(content, device, record_size=MAX_PAYLOAD_SIZE):
     :return: the encrypted payload
     """
     # The private_key is an ephemeral ECDH key used only for a transaction
-    private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+    private_key = ec.generate_private_key(ec.SECP256R1())
     salt = os.urandom(16)
     # generate key
     (key, nonce) = _derive_key(salt=salt, private_key=private_key, device=device)

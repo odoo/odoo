@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
-import os
 import logging
 import re
+from pathlib import PurePosixPath
 import requests
 import urllib.parse
-import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 import zipfile
@@ -157,9 +156,10 @@ class Website(Home):
             domain_to = get_base_domain(website.domain)
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
+                query_params = urllib.parse.urlencode({'isredir': 1, 'path': path})
                 url_to = tools.urls.urljoin(
                     website.domain,
-                    '/website/force/%s?isredir=1&path=%s' % (website.id, path),
+                    f'/website/force/{website.id}?{query_params}',
                 )
                 return request.redirect(url_to)
         website._force()
@@ -176,7 +176,7 @@ class Website(Home):
         mode_edit = bool(kw.pop('enable_editor', False))
         mode_debug = kw.get('debug', 0)
         if kw:
-            path += '?' + werkzeug.urls.url_encode(kw)
+            path += '?' + urllib.parse.urlencode(kw)
 
         if request.env.user._is_internal():
             path = request.website.get_client_action_url(path, mode_edit, mode_debug)
@@ -460,7 +460,7 @@ class Website(Home):
         templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
 
         for t in templates:
-            children = etree.fromstring(t.pop('arch_db')).getchildren()
+            children = list(etree.fromstring(t.pop('arch_db')))
             attribs = children and children[0].attrib or {}
             t['numOfEl'] = attribs.get('data-number-of-elements')
             t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
@@ -671,7 +671,7 @@ class Website(Home):
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
     def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
-        _, ext = os.path.splitext(path)
+        ext = PurePosixPath(path).suffix
         ext_special_case = ext != '.html' and ext in EXTENSION_TO_WEB_MIMETYPES
 
         if not template and ext_special_case:
@@ -716,7 +716,7 @@ class Website(Home):
         result = []
         groups_html = View._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
-        for group_el in groups_el.getchildren():
+        for group_el in groups_el:
             group = {
                 'id': group_el.attrib['id'],
                 'title': group_el.text,

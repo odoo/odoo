@@ -5,7 +5,7 @@ import { Checkout } from '@website_sale/interactions/checkout';
 
 // temporary for OnNoResultReturned bug
 import { registry } from '@web/core/registry';
-import { ThirdPartyScriptError } from '@web/core/errors/error_service';
+import { ThirdPartyScriptError } from '@web/services/error_service';
 const errorHandlerRegistry = registry.category('error_handlers');
 
 function corsIgnoredErrorHandler(env, error) {
@@ -113,10 +113,19 @@ patch(Checkout.prototype, {
             'click', this.onClickBtnConfirmRelay.bind(this)
         );
 
-        // load mondial relay script
-        const script = document.createElement('script');
-        script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
-        script.onload = () => {
+        // load jQuery (required by MR plugin) then mondial relay script
+        const loadScript = (url) => new Promise((resolve) => {
+            const s = document.createElement('script');
+            s.src = url;
+            s.onload = resolve;
+            document.body.appendChild(s);
+        });
+        const jqueryPromise = window.jQuery
+            ? Promise.resolve()
+            : loadScript("/delivery_mondialrelay/static/lib/jquery.slim.min.js");
+        jqueryPromise.then(() => loadScript(
+            "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"
+        )).then(() => {
             // instanciate MondialRelay widget
             const params = {
                 Target: "", // required but handled by OnParcelShopSelected
@@ -148,11 +157,10 @@ patch(Checkout.prototype, {
                 },
             };
             const zoneWidget = this.mondialRelayModal.querySelector('#o_zone_widget');
-            $(zoneWidget).MR_ParcelShopPicker(params);
+            window.jQuery(zoneWidget).MR_ParcelShopPicker(params);
             window.Modal.getOrCreateInstance(this.mondialRelayModal).show();
-            zoneWidget.dispatchEvent(new Event('MR_RebindMap'));
-        };
-        document.body.appendChild(script);
+            window.jQuery(zoneWidget).trigger("MR_RebindMap");
+        });
     },
 
     /**

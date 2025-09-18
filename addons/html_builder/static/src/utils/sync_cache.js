@@ -1,4 +1,4 @@
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 
 export class SyncCache {
     constructor(fn) {

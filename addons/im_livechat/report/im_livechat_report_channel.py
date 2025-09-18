@@ -231,9 +231,11 @@ class Im_LivechatReportChannel(models.Model):
                  WHERE M.res_id = C.id and M.model = 'discuss.channel'
             ) AS message_vals ON TRUE
             """,
-            self.env.lang,
+            # lang must be a SQL literal (not a bound parameter) because
+            # psycopg3 can't infer the type for jsonb->>$N operators.
+            SQL("'%s'" % self.env.lang),
             self._unknown_chatbot_answer_name,
-            self.env.lang,
+            SQL("'%s'" % self.env.lang),
         )
 
     def _where(self) -> SQL:

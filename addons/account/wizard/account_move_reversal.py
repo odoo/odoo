@@ -112,21 +112,10 @@ class AccountMoveReversal(models.TransientModel):
         moves = self.move_ids
 
         # Create default values.
-        partners = moves.company_id.partner_id + moves.commercial_partner_id
-
-        bank_ids = self.env['res.partner.bank'].search([
-            ('partner_id', 'in', partners.ids),
-            ('company_id', 'in', moves.company_id.ids + [False]),
-        ], order='sequence DESC')
-        partner_to_bank = {bank.partner_id: bank for bank in bank_ids}
         default_values_list = []
         for move in moves:
-            if move.is_outbound():
-                partner = move.company_id.partner_id
-            else:
-                partner = move.commercial_partner_id
             default_values_list.append({
-                'partner_bank_id': partner_to_bank.get(partner, self.env['res.partner.bank']).id,
+                'partner_bank_id': False,  # Resets the partner_bank_id as we'll force its recomputation
                 **self._prepare_default_reversal(move),
             })
 
@@ -145,6 +134,7 @@ class AccountMoveReversal(models.TransientModel):
         moves_to_redirect = self.env['account.move']
         for moves, default_values_list, is_cancel_needed in batches:
             new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
+            new_moves._compute_partner_bank_id()
             moves._message_log_batch(
                 bodies={move.id: move.env._('This entry has been %s', reverse._get_html_link(title=move.env._("reversed"))) for move, reverse in zip(moves, new_moves)}
             )
@@ -156,6 +146,7 @@ class AccountMoveReversal(models.TransientModel):
                     data['line_ids'] = [line for line in data['line_ids'] if line[2]['display_type'] in ('product', 'line_section', 'line_subsection', 'line_note')]
                     moves_vals_list.append(data)
                 new_moves = self.env['account.move'].create(moves_vals_list)
+                new_moves._compute_partner_bank_id()
 
             moves_to_redirect |= new_moves
 

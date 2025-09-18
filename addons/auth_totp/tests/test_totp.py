@@ -1,9 +1,10 @@
+import base64
+import hmac
 import logging
 import json
+import struct
 import time
 from xmlrpc.client import Fault
-
-from passlib.totp import TOTP
 
 from odoo import http
 from odoo.tests import tagged, get_db_name, new_test_user, HttpCase
@@ -31,21 +32,24 @@ class TestTOTPMixin:
     def install_totphook(self):
         baseline_time = time.time()
         last_offset = 0
-        totp = None
+        totp_key = None
 
-        # might be possible to do client-side using `crypto.subtle` instead of
-        # this horror show, but requires working on 64b integers, & BigInt is
-        # significantly less well supported than crypto
+        def _generate_totp(secret_b32, timestamp):
+            """Generate a 6-digit TOTP token using HMAC-SHA1 (RFC 6238)."""
+            key = base64.b32decode(secret_b32)
+            counter = int(timestamp / 30)
+            mac = hmac.new(key, struct.pack('>Q', counter), 'sha1').digest()
+            offset = mac[-1] & 0xF
+            code = struct.unpack_from('>I', mac, offset)[0] & 0x7FFFFFFF
+            return str(code % 10**6).zfill(6)
+
         def totp_hook(self, secret=None, offset=0):
-            nonlocal totp, last_offset
+            nonlocal totp_key, last_offset
             last_offset = offset * 30
-            if totp is None:
-                totp = TOTP(secret)
+            if totp_key is None:
+                totp_key = secret
 
-            # generate the token for the given time offset
-            # we can't generate the same token twice, but tour is so fast
-            # we're pretty certainly within the same 30s
-            token = totp.generate(baseline_time + last_offset).token
+            token = _generate_totp(totp_key, baseline_time + last_offset)
             _logger.info("TOTP secret:%s offset:%s token:%s", secret, offset, token)
             return token
         # because not preprocessed by ControllerType metaclass

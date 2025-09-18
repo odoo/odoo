@@ -1,11 +1,8 @@
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
-
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
@@ -31,7 +28,10 @@ export class CallContextMenu extends Component {
                 return;
             }
             this.updateStats();
-            this.updateStatsTimeout = browser.setInterval(() => this.updateStats(), 3000);
+            this.updateStatsTimeout = browser.setInterval(
+                () => this.updateStats(),
+                3000,
+            );
         });
         onWillUnmount(() => browser.clearInterval(this.updateStatsTimeout));
     }
@@ -88,7 +88,8 @@ export class CallContextMenu extends Component {
                         case "candidate-pair":
                             if (value.state === "succeeded" && value.localCandidateId) {
                                 formattedUploadStats.localCandidateType =
-                                    uploadStats.get(value.localCandidateId)?.candidateType || "";
+                                    uploadStats.get(value.localCandidateId)
+                                        ?.candidateType || "";
                                 formattedUploadStats.availableOutgoingBitrate =
                                     value.availableOutgoingBitrate;
                             }
@@ -106,13 +107,15 @@ export class CallContextMenu extends Component {
                         case "candidate-pair":
                             if (value.state === "succeeded" && value.localCandidateId) {
                                 formattedDownloadStats.remoteCandidateType =
-                                    downloadStats.get(value.remoteCandidateId)?.candidateType || "";
+                                    downloadStats.get(value.remoteCandidateId)
+                                        ?.candidateType || "";
                             }
                             break;
                         case "transport":
                             formattedDownloadStats.dtlsState = value.dtlsState;
                             formattedDownloadStats.iceState = value.iceState;
-                            formattedDownloadStats.packetsReceived = value.packetsReceived;
+                            formattedDownloadStats.packetsReceived =
+                                value.packetsReceived;
                             break;
                     }
                 }
@@ -136,7 +139,7 @@ export class CallContextMenu extends Component {
             return;
         }
         this.state.peerStats = await this.rtc.p2pService.getFormattedStats(
-            this.props.rtcSession.id
+            this.props.rtcSession.id,
         );
     }
 

@@ -25,10 +25,10 @@ class PaymentTransaction(models.Model):
                 '''
                 SELECT transaction_id, count(invoice_id)
                 FROM account_invoice_transaction_rel
-                WHERE transaction_id IN %s
+                WHERE transaction_id = ANY(%s)
                 GROUP BY transaction_id
                 ''',
-                [tuple(self.ids)]
+                [list(self.ids)]
             )
             tx_data = dict(self.env.cr.fetchall())  # {id: count}
         for tx in self:

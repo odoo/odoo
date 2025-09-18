@@ -1,3 +1,5 @@
+// @ts-check
+
 import { after, before, expect, test } from "@odoo/hoot";
 import {
     clear,
@@ -58,21 +60,20 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-
+import { config as transitionConfig } from "@web/components/transition";
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { config as transitionConfig } from "@web/core/transition";
-import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
-import { CharField } from "@web/views/fields/char/char_field";
-import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
-import { Field } from "@web/views/fields/field";
-import { IntegerField } from "@web/views/fields/integer/integer_field";
-import { useSpecialData } from "@web/views/fields/relational_utils";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { CharField } from "@web/fields/basic/char/char_field";
+import { IntegerField } from "@web/fields/basic/integer/integer_field";
+import { Field } from "@web/fields/field";
+import { useSpecialData } from "@web/fields/relational/special_data";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { DateTimeField } from "@web/fields/temporal/datetime/datetime_field";
+import { SIZES } from "@web/ui/block/ui_service";
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";
@@ -246,12 +247,16 @@ test(`simple form rendering`, async () => {
     expect(`label:contains(Foo)`).toHaveCount(1);
     expect(`.o_field_char input`).toHaveCount(1);
     expect(`.o_field_char input`).toHaveValue("blip");
-    expect(`.o_group .o_inner_group:eq(0)`).toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    expect(`.o_group .o_inner_group:eq(0)`).toHaveStyle({
+        backgroundColor: "rgb(255, 0, 0)",
+    });
     expect(`.o_field_widget[name=foo]`).toHaveStyle({ color: "rgb(0, 0, 255)" });
     expect(`label:contains(something_id)`).toHaveCount(0);
     expect(`label:contains(f3_description)`).toHaveCount(1);
     expect(`div.o_field_one2many table`).toHaveCount(1);
-    expect(`div.o_cell:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(1);
+    expect(
+        `div.o_cell:not(.o_list_record_selector) .o-checkbox input:checked`,
+    ).toHaveCount(1);
     expect(`label.o_form_label_empty:contains(type_ids)`).toHaveCount(0);
 });
 
@@ -263,7 +268,7 @@ test(`form rendering with class and style attributes`, async () => {
         resId: 2,
     });
     expect(
-        `.o_view_controller[style*='border: 1px solid red;'], .o_view_controller [style*='border: 1px solid red;']`
+        `.o_view_controller[style*='border: 1px solid red;'], .o_view_controller [style*='border: 1px solid red;']`,
     ).toHaveCount(0);
     expect(`.o_view_controller.o_form_view.myCustomClass`).toHaveCount(1);
     expect(`.myCustomClass`).toHaveCount(1);
@@ -427,14 +432,22 @@ test(`duplicate fields rendered properly`, async () => {
 
     await contains(`.o_field_widget[name=foo].foo_3 input`).edit("hello");
     expect(`.o_field_widget[name=foo].foo_2 input`).toHaveValue("hello");
-    expect(`.o_field_widget[name=int_field].int_field_1`).not.toHaveClass("o_readonly_modifier");
-    expect(`.o_field_widget[name=int_field].int_field_2`).toHaveClass("o_readonly_modifier");
+    expect(`.o_field_widget[name=int_field].int_field_1`).not.toHaveClass(
+        "o_readonly_modifier",
+    );
+    expect(`.o_field_widget[name=int_field].int_field_2`).toHaveClass(
+        "o_readonly_modifier",
+    );
     expect(`.int_field_1 input`).toHaveCount(1);
     expect(`.int_field_2 span`).toHaveCount(1);
 
     await contains(`.o_field_widget[name=bar] input`).check();
-    expect(`.o_field_widget[name=int_field].int_field_1`).toHaveClass("o_readonly_modifier");
-    expect(`.o_field_widget[name=int_field].int_field_2`).not.toHaveClass("o_readonly_modifier");
+    expect(`.o_field_widget[name=int_field].int_field_1`).toHaveClass(
+        "o_readonly_modifier",
+    );
+    expect(`.o_field_widget[name=int_field].int_field_2`).not.toHaveClass(
+        "o_readonly_modifier",
+    );
     expect(`.int_field_1 span`).toHaveCount(1);
     expect(`.int_field_2 input`).toHaveCount(1);
 });
@@ -468,15 +481,16 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
 
     await contains(`.o_field_one2many:eq(0) .o_data_cell`).click();
     expect(`.o_field_one2many`).toHaveCount(2);
-    expect(`.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name=foo] input`).toHaveValue(
-        "yop"
-    );
-    expect(`.o_field_one2many:eq(1) .o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveText("yop");
+    expect(
+        `.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name=foo] input`,
+    ).toHaveValue("yop");
+    expect(
+        `.o_field_one2many:eq(1) .o_data_row:eq(0) .o_data_cell[name=foo]`,
+    ).toHaveText("yop");
 
-    await contains(`.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name=foo] input`).edit(
-        "hello",
-        { confirm: false }
-    );
+    await contains(
+        `.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name=foo] input`,
+    ).edit("hello", { confirm: false });
     await click(`.o_content`); // confirm change by focusing out the input.
     await animationFrame();
     await animationFrame();
@@ -484,15 +498,17 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
     await animationFrame();
     await animationFrame();
     await animationFrame();
-    expect(`.o_field_one2many:eq(1) .o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveText("hello");
+    expect(
+        `.o_field_one2many:eq(1) .o_data_row:eq(0) .o_data_cell[name=foo]`,
+    ).toHaveText("hello");
 
     await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add a`).click();
-    expect(`.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name="foo"] input`).toHaveValue(
-        "My little Foo Value"
-    );
-    expect(`.o_field_one2many:eq(1) .o_data_row:eq(1) .o_data_cell[name=foo]`).toHaveText(
-        "My little Foo Value"
-    );
+    expect(
+        `.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name="foo"] input`,
+    ).toHaveValue("My little Foo Value");
+    expect(
+        `.o_field_one2many:eq(1) .o_data_row:eq(1) .o_data_cell[name=foo]`,
+    ).toHaveText("My little Foo Value");
 });
 
 test(`attributes are transferred on async widgets`, async () => {
@@ -621,7 +637,9 @@ test(`form with o2m having a field with fieldDependencies`, async () => {
     });
     expect(`.o_field_widget[name="child_ids"] .o_data_row`).toHaveCount(1);
 
-    await contains(`.o_field_widget[name="child_ids"] .o_data_row .o_data_cell`).click();
+    await contains(
+        `.o_field_widget[name="child_ids"] .o_data_row .o_data_cell`,
+    ).click();
     expect(`.modal .o_form_view .o_field_widget[name="child_ids"]`).toHaveCount(1);
 });
 
@@ -724,7 +742,7 @@ test(`fieldDependencies are readonly by default`, async () => {
                 foo: "My little Foo Value",
                 float_field: 0,
             },
-            { message: "'int_field' and 'bar' shouldn't be present" }
+            { message: "'int_field' and 'bar' shouldn't be present" },
         );
         expect.step("web_save");
     });
@@ -812,7 +830,7 @@ test(`only necessary fields are fetched with correct context`, async () => {
         expect.step("web_read");
         expect(kwargs.specification).toEqual(
             { foo: {}, display_name: {} },
-            { message: "should only fetch requested fields" }
+            { message: "should only fetch requested fields" },
         );
         expect(kwargs.context.bin_size).toBe(true, {
             message: "bin_size should always be in the context",
@@ -1008,7 +1026,11 @@ test(`Form and subview with _view_ref contexts`, async () => {
     await contains(`.o_field_widget[name="product_id"] .o_external_button`, {
         visible: false,
     }).click();
-    expect.verifySteps(["get_formview_action", "product get_views", "partner.type get_views"]);
+    expect.verifySteps([
+        "get_formview_action",
+        "product get_views",
+        "partner.type get_views",
+    ]);
 });
 
 test(`Form and subsubview with only _view_ref contexts`, async () => {
@@ -1104,7 +1126,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     });
 
     await contains(
-        `[name=type_ids] .o_field_x2many_list_row_add a, [name=type_ids] .o-kanban-button-new`
+        `[name=type_ids] .o_field_x2many_list_row_add a, [name=type_ids] .o-kanban-button-new`,
     ).click();
     expect.verifySteps(["get_views (partner.type)"]);
 
@@ -1404,7 +1426,10 @@ test(`notebook page name and class transferred to DOM`, async () => {
         `,
         resId: 1,
     });
-    expect(`.o_notebook .nav .nav-link[name='choucroute']`).toHaveClass(["active", "sauerKraut"]);
+    expect(`.o_notebook .nav .nav-link[name='choucroute']`).toHaveClass([
+        "active",
+        "sauerKraut",
+    ]);
 });
 
 test(`no visible page`, async () => {
@@ -1944,7 +1969,8 @@ test(`readonly stat buttons stays disabled on desktop`, async () => {
             if (params.name == "action_to_perform") {
                 expect.step("action_to_perform");
                 expect(`button.oe_stat_button[disabled]`).toHaveCount(2, {
-                    message: "While performing the action, both buttons should be disabled.",
+                    message:
+                        "While performing the action, both buttons should be disabled.",
                 });
             }
         },
@@ -2216,8 +2242,14 @@ test(`input ids for multiple occurrences of fields in sub form view (inline)`, a
         `,
     });
     await contains(`.o_field_x2many_list_row_add a`).click();
-    const fieldIdAttrs = queryAllAttributes(`.modal .o_form_view .o_field_widget input`, "id");
-    const labelForAttrs = queryAllAttributes(`.modal .o_form_view .o_form_label`, "for");
+    const fieldIdAttrs = queryAllAttributes(
+        `.modal .o_form_view .o_field_widget input`,
+        "id",
+    );
+    const labelForAttrs = queryAllAttributes(
+        `.modal .o_form_view .o_form_label`,
+        "for",
+    );
     expect(new Set(fieldIdAttrs)).toHaveLength(4);
     expect(fieldIdAttrs).toEqual(labelForAttrs);
 });
@@ -2252,14 +2284,23 @@ test(`input ids for multiple occurrences of fields in sub form view (not inline)
         arch: `<form><field name="child_ids" widget="one2many"/></form>`,
     });
     await contains(`.o_field_x2many_list_row_add a`).click();
-    const fieldIdAttrs = queryAllAttributes(`.modal .o_form_view .o_field_widget input`, "id");
-    const labelForAttrs = queryAllAttributes(`.modal .o_form_view .o_form_label`, "for");
+    const fieldIdAttrs = queryAllAttributes(
+        `.modal .o_form_view .o_field_widget input`,
+        "id",
+    );
+    const labelForAttrs = queryAllAttributes(
+        `.modal .o_form_view .o_form_label`,
+        "for",
+    );
     expect(new Set(fieldIdAttrs)).toHaveLength(4);
     expect(fieldIdAttrs).toEqual(labelForAttrs);
 });
 
 test(`two occurrences of invalid field in form view`, async () => {
-    Partner._fields.parent_id = fields.Many2one({ relation: "partner", required: true });
+    Partner._fields.parent_id = fields.Many2one({
+        relation: "partner",
+        required: true,
+    });
 
     await mountView({
         resModel: "partner",
@@ -2279,7 +2320,10 @@ test(`two occurrences of invalid field in form view`, async () => {
 });
 
 test(`two occurrences of invalid integer fields in form view`, async () => {
-    Partner._fields.parent_id = fields.Many2one({ relation: "partner", required: true });
+    Partner._fields.parent_id = fields.Many2one({
+        relation: "partner",
+        required: true,
+    });
 
     await mountView({
         resModel: "partner",
@@ -2633,7 +2677,9 @@ test(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
     });
     await contains(`.o_field_many2one[name="parent_id"] input`).click();
     await contains(`.dropdown .dropdown-item:contains(first record)`).click();
-    expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
+    expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass(
+        "o_readonly_modifier",
+    );
 
     await clear();
     await click(`.o_content`); // blur input to trigger change
@@ -2642,7 +2688,9 @@ test(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
 
     await contains(`.o_field_many2one[name="parent_id"] input`).click();
     await contains(`.dropdown .dropdown-item:contains(second record)`).click();
-    expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
+    expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass(
+        "o_readonly_modifier",
+    );
 
     await clear();
     await click(`.o_content`); // blur input to trigger change
@@ -2720,7 +2768,10 @@ test(`empty fields' labels still get the empty class after widget rerender`, asy
 });
 
 test(`empty inner readonly fields don't have o_form_empty class in "create" mode`, async () => {
-    Partner._fields.product_id = fields.Many2one({ relation: "product", readonly: true });
+    Partner._fields.product_id = fields.Many2one({
+        relation: "product",
+        readonly: true,
+    });
     await mountView({
         resModel: "partner",
         type: "form",
@@ -3387,7 +3438,13 @@ test(`buttons in form view, new record, with field id in view`, async () => {
         `,
     });
     await contains(`.o_form_statusbar button.child_ids`).click();
-    expect.verifySteps(["get_views", "onchange", "web_save", "execute_action", "web_read"]);
+    expect.verifySteps([
+        "get_views",
+        "onchange",
+        "web_save",
+        "execute_action",
+        "web_read",
+    ]);
 });
 
 test(`buttons with data-hotkey attribute`, async () => {
@@ -3581,7 +3638,9 @@ test(`onchange only send present fields value`, async () => {
         expect.step("onchange");
         expect(args[1]).toEqual({
             foo: "tralala",
-            child_ids: [[0, args[1].child_ids[0][1], { name: "valid line", float_field: 12.4 }]],
+            child_ids: [
+                [0, args[1].child_ids[0][1], { name: "valid line", float_field: 12.4 }],
+            ],
         });
     });
     await mountView({
@@ -3604,12 +3663,18 @@ test(`onchange only send present fields value`, async () => {
 
     // add a o2m row
     await contains(`.o_field_x2many_list_row_add a`).click();
-    await contains(`.o_field_one2many .o_field_widget[name=name] input`).edit("valid line", {
-        confirm: false,
-    });
-    await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit("12.4", {
-        confirm: false,
-    });
+    await contains(`.o_field_one2many .o_field_widget[name=name] input`).edit(
+        "valid line",
+        {
+            confirm: false,
+        },
+    );
+    await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit(
+        "12.4",
+        {
+            confirm: false,
+        },
+    );
     expect.verifySteps([]);
 
     // trigger an onchange by modifying foo
@@ -3641,7 +3706,9 @@ test(`onchange send relation parent field values (including readonly)`, async ()
                 id: 17,
                 name: "Test",
                 login: "test@example.org",
-                partner_ids: [[0, args[1].user_id.partner_ids[0][1], { float_field: 0 }]],
+                partner_ids: [
+                    [0, args[1].user_id.partner_ids[0][1], { float_field: 0 }],
+                ],
             },
         });
         expect.step("onchange");
@@ -3675,9 +3742,12 @@ test(`onchange send relation parent field values (including readonly)`, async ()
     // confirm with blur s.t. it doesn't create a new line which would call another onchange and
     // pollute our assertions
     checkOnchange = true;
-    await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit("12.4", {
-        confirm: "blur",
-    });
+    await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit(
+        "12.4",
+        {
+            confirm: "blur",
+        },
+    );
     expect.verifySteps(["onchange"]);
 });
 
@@ -3792,7 +3862,10 @@ test(`remove default value in subviews`, async () => {
     });
     onRpc("product", "onchange", ({ kwargs }) => {
         expect.step(`onchange:product`);
-        expect(kwargs.context).toEqual({ ...defaultContext, default_product_uom_qty: 68 });
+        expect(kwargs.context).toEqual({
+            ...defaultContext,
+            default_product_uom_qty: 68,
+        });
     });
     await mountView({
         resModel: "partner",
@@ -3886,10 +3959,12 @@ test(`reference field in one2many list`, async () => {
     });
     await contains(`table td[data-tooltip="first record"]`).click();
     await contains(`table td button.o_external_button`, { visible: false }).click();
-    await contains(`.o_dialog:not(.o_inactive_modal) .o_field_widget[name="name"] input`).edit(
-        "New name"
-    );
-    await contains(`.o_dialog:not(.o_inactive_modal) footer .o_form_button_save`).click();
+    await contains(
+        `.o_dialog:not(.o_inactive_modal) .o_field_widget[name="name"] input`,
+    ).edit("New name");
+    await contains(
+        `.o_dialog:not(.o_inactive_modal) footer .o_form_button_save`,
+    ).click();
     expect(`.o_field_cell[data-tooltip="New name"]`).toHaveCount(1);
 });
 
@@ -4182,7 +4257,7 @@ test(`archive a record with intermediary action`, async () => {
         readPartner++;
     });
     onRpc(({ model, method, route }) =>
-        expect.step(`${method || route}${method ? ": " + model : ""}`)
+        expect.step(`${method || route}${method ? ": " + model : ""}`),
     );
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -4202,10 +4277,18 @@ test(`archive a record with intermediary action`, async () => {
     expect.verifySteps([]);
 
     await contains(`.modal-footer .btn-primary`).click();
-    expect.verifySteps(["action_archive: partner", "get_views: product", "onchange: product"]);
+    expect.verifySteps([
+        "action_archive: partner",
+        "get_views: product",
+        "onchange: product",
+    ]);
 
     await contains(`.modal footer .myButton`).click();
-    expect.verifySteps(["web_save: product", "do_archive: product", "web_read: partner"]);
+    expect.verifySteps([
+        "web_save: product",
+        "do_archive: product",
+        "web_read: partner",
+    ]);
     expect(`.modal`).toHaveCount(0);
     expect(`[name='archived'] input`).toHaveValue("true");
 });
@@ -5022,7 +5105,7 @@ test(`discard has to wait for changes in each field`, async () => {
         setup() {
             this.input = useRef("input");
             useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
-                detail.proms.push(this.updateValue())
+                detail.proms.push(this.updateValue()),
             );
         }
 
@@ -5033,7 +5116,9 @@ test(`discard has to wait for changes in each field`, async () => {
         async updateValue() {
             const value = this.input.el.value;
             await def;
-            await this.props.record.update({ [this.props.name]: `update value: ${value}` });
+            await this.props.record.update({
+                [this.props.name]: `update value: ${value}`,
+            });
         }
 
         onBlur() {
@@ -5374,7 +5459,7 @@ test(`switching to another record from an invalid one`, async () => {
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
         "data-tooltip",
-        "Unable to save. Correct the issue or discard all changes"
+        "Unable to save. Correct the issue or discard all changes",
     );
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_notification_manager .o_notification`).toHaveCount(1);
@@ -5418,7 +5503,7 @@ test(`keynav: switching to another record from an invalid one`, async () => {
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
         "data-tooltip",
-        "Unable to save. Correct the issue or discard all changes"
+        "Unable to save. Correct the issue or discard all changes",
     );
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_notification_manager .o_notification`).toHaveCount(1);
@@ -5520,7 +5605,9 @@ test(`keynav: switching to another record from a dirty one`, async () => {
     });
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
-    await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
+    await contains(`.o_field_widget[name=foo] input`).edit("new value", {
+        confirm: false,
+    });
     await press(["alt", "n"]);
     await tick();
     await animationFrame();
@@ -5546,7 +5633,9 @@ test(`keynav: switching to another record from a dirty one on desktop`, async ()
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
-    await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
+    await contains(`.o_field_widget[name=foo] input`).edit("new value", {
+        confirm: false,
+    });
     await press(["alt", "n"]);
     await tick();
     await animationFrame();
@@ -6142,18 +6231,24 @@ test("empty required fields in an existing record are highlighted", async () => 
 
     expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
     expect(".o_form_status_indicator_buttons").toHaveClass("invisible");
-    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name"]);
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["NAME"]);
 
-    await contains(".o_field_widget[name=int_field] input").edit("25", { confirm: false });
+    await contains(".o_field_widget[name=int_field] input").edit("25", {
+        confirm: false,
+    });
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
-    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute("disabled");
+    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute(
+        "disabled",
+    );
     expect(".o_form_status_indicator span.text-danger").toHaveCount(1);
 
     await contains(".o_control_panel").click(); // blur the input
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
-    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute("disabled");
+    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute(
+        "disabled",
+    );
     expect(".o_form_status_indicator span.text-danger").toHaveCount(1);
-    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name", "Foo"]);
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["NAME", "FOO"]);
 
     await contains(".o_form_button_cancel").click();
     expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
@@ -6162,7 +6257,7 @@ test("empty required fields in an existing record are highlighted", async () => 
     await contains(".o_form_button_create").click();
     expect(".o_field_widget[name=foo]").not.toHaveClass("o_field_invalid");
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
-    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name"]);
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["NAME"]);
 });
 
 test(`display a dialog if onchange result is a warning`, async () => {
@@ -6335,7 +6430,9 @@ test(`properly apply onchange on one2many fields`, async () => {
     expect(`.o_field_one2many .o_data_row`).toHaveCount(1);
     expect(`.o_field_one2many .o_data_row .o_data_cell`).toHaveText("aaa");
 
-    await contains(`.o_field_widget[name=foo] input`).edit("let us trigger an onchange");
+    await contains(`.o_field_widget[name=foo] input`).edit(
+        "let us trigger an onchange",
+    );
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("updated record");
     expect(`.o_data_row:eq(1) .o_data_cell`).toHaveText("created record");
@@ -6476,7 +6573,9 @@ test(`properly apply onchange on many2many fields`, async () => {
     expect.verifySteps(["get_views", "web_read"]);
     expect(`.o_field_many2many .o_data_row`).toHaveCount(0);
 
-    await contains(`.o_field_widget[name=foo] input`).edit("let us trigger an onchange");
+    await contains(`.o_field_widget[name=foo] input`).edit(
+        "let us trigger an onchange",
+    );
     expect.verifySteps(["onchange"]);
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("gold");
@@ -6889,7 +6988,9 @@ test(`args of onchanges in o2m fields are correct (inline edition)`, async () =>
     expect(`.o_data_row td[name=foo]`).toHaveText("My little Foo Value");
 
     await contains(`.o_data_row td:eq(1)`).click();
-    await contains(`.o_field_widget[name=int_field] input`).edit("77", { confirm: false });
+    await contains(`.o_field_widget[name=int_field] input`).edit("77", {
+        confirm: false,
+    });
     await contains(`.o_content`).click();
     expect(`.o_data_row td[name=foo]`).toHaveText("[blip] 77");
 
@@ -7224,7 +7325,9 @@ test(`display something else than a button in a buttonbox on mobile`, async () =
     });
     await contains(".o-form-buttonbox .o_button_more").click();
     expect(`.o-form-buttonbox-small > .o-dropdown-item`).toHaveCount(2);
-    expect(`.o-form-buttonbox-small > .o-dropdown-item > .oe_stat_button`).toHaveCount(1);
+    expect(`.o-form-buttonbox-small > .o-dropdown-item > .oe_stat_button`).toHaveCount(
+        1,
+    );
     expect(`.o-form-buttonbox-small > .o-dropdown-item > label`).toHaveCount(1);
 });
 
@@ -7419,7 +7522,9 @@ test(`*_view_ref in context are passed correctly`, async () => {
         "list,module.list_view_ref": `<list/>`,
     };
 
-    onRpc("partner.type", "get_views", ({ kwargs }) => expect.step(kwargs.context.list_view_ref));
+    onRpc("partner.type", "get_views", ({ kwargs }) =>
+        expect.step(kwargs.context.list_view_ref),
+    );
     onRpc(({ kwargs }) => expect.step(`${kwargs.context.some_context}`));
     await mountView({
         resModel: "partner",
@@ -7511,13 +7616,17 @@ test(`readonly sub fields fields with force_save attribute`, async () => {
         // int_field should not be saved as it is readonly
         expect.step("web_save");
         const commands = args[1].child_ids;
-        expect(commands).toEqual([[0, commands[0][1], { foo: "some value", float_field: 6.5 }]]);
+        expect(commands).toEqual([
+            [0, commands[0][1], { foo: "some value", float_field: 6.5 }],
+        ]);
     });
     onRpc("onchange", () => {
         expect.step("onchange");
         return {
             value: {
-                child_ids: [[0, false, { foo: "some value", int_field: 44, float_field: 6.5 }]],
+                child_ids: [
+                    [0, false, { foo: "some value", int_field: 44, float_field: 6.5 }],
+                ],
             },
         };
     });
@@ -7698,7 +7807,9 @@ test(`render stat button with string inline on desktop`, async () => {
             </form>
         `,
     });
-    expect(`.o_form_view .o-form-buttonbox button.oe_stat_button`).toHaveText("Inventory Moves");
+    expect(`.o_form_view .o-form-buttonbox button.oe_stat_button`).toHaveText(
+        "Inventory Moves",
+    );
 });
 
 test.tags("mobile");
@@ -7718,7 +7829,9 @@ test(`render stat button with string inline on mobile`, async () => {
         `,
     });
     await contains(".o-form-buttonbox .o_button_more").click();
-    expect(`.o-form-buttonbox-small button.oe_stat_button`).toHaveText("Inventory Moves");
+    expect(`.o-form-buttonbox-small button.oe_stat_button`).toHaveText(
+        "Inventory Moves",
+    );
 });
 
 test(`open one2many form containing one2many`, async () => {
@@ -7914,7 +8027,10 @@ test(`check scroll on small height screens`, async () => {
     });
 
     // we make the content height very small so we can test scrolling.
-    Object.assign(queryFirst(`.o_content`).style, { overflow: "auto", "max-height": "300px" });
+    Object.assign(queryFirst(`.o_content`).style, {
+        overflow: "auto",
+        "max-height": "300px",
+    });
     expect(`.modal-dialog`).toHaveCount(1);
 
     expect(queryFirst(`.o_content`).scrollTop).toBe(0);
@@ -7923,7 +8039,9 @@ test(`check scroll on small height screens`, async () => {
     expect(queryFirst(`.o_content`).scrollTop).not.toBe(0);
 
     await contains(`.o_external_button`).click();
-    await contains(`.o_dialog:not(.o_inactive_modal) button[class="btn-close"]`).click();
+    await contains(
+        `.o_dialog:not(.o_inactive_modal) button[class="btn-close"]`,
+    ).click();
     expect(queryFirst(`.o_content`).scrollTop).not.toBe(0);
     expect(`.modal-dialog`).toHaveCount(1);
 });
@@ -8556,13 +8674,16 @@ test(`form rendering with groups with col/colspan`, async () => {
     expect(`.group_4 > div.o_cell`).toHaveCount(4);
     expect(`.group_4 > div.o_cell:first-child`).toHaveAttribute(
         "style",
-        "--o-grid-column-span: 3;"
+        "--o-grid-column-span: 3;",
     );
     expect(`.group_4 > div.o_cell:nth-child(2)`).toHaveAttribute(
         "style",
-        "--o-grid-column-span: 2;"
+        "--o-grid-column-span: 2;",
     );
-    expect(`.group_4 > div.o_cell:last-child`).toHaveAttribute("style", "--o-grid-column-span: 4;");
+    expect(`.group_4 > div.o_cell:last-child`).toHaveAttribute(
+        "style",
+        "--o-grid-column-span: 4;",
+    );
 
     // Verify .group_3 content
     expect(`.group_3 > *`).toHaveCount(3);
@@ -8574,7 +8695,10 @@ test(`form rendering with groups with col/colspan`, async () => {
     // Verify .field_group content
     expect(`.field_group > .o_cell`).toHaveCount(10);
     expect(`.field_group > .o_cell:first-child`).toHaveClass("o_wrap_label");
-    expect(`.field_group > .o_cell:nth-child(2)`).toHaveAttribute("style", "grid-column: span 2;");
+    expect(`.field_group > .o_cell:nth-child(2)`).toHaveAttribute(
+        "style",
+        "grid-column: span 2;",
+    );
 
     expect(`.field_group > .o_cell:nth-child(5)`).toHaveClass("o_wrap_label");
 
@@ -8603,8 +8727,12 @@ test(`form rendering innergroup: separator should take one line`, async () => {
         resId: 1,
     });
     expect(`.o_inner_group > .o_cell`).toHaveCount(3);
-    expect(`.o_inner_group > .o_cell:first-child .o_horizontal_separator`).toHaveCount(1);
-    expect(`.o_inner_group > .o_cell:nth-child(2) label[for=display_name_0]`).toHaveCount(1);
+    expect(`.o_inner_group > .o_cell:first-child .o_horizontal_separator`).toHaveCount(
+        1,
+    );
+    expect(
+        `.o_inner_group > .o_cell:nth-child(2) label[for=display_name_0]`,
+    ).toHaveCount(1);
     expect(`.o_inner_group > .o_cell:last-child div[name=display_name]`).toHaveCount(1);
 });
 
@@ -8632,7 +8760,9 @@ test(`outer and inner groups string attribute`, async () => {
     expect(`.group_1 .o_horizontal_separator`).toHaveCount(1);
     expect(`.group_1 .o_horizontal_separator:contains(child group 1)`).toHaveCount(1);
     expect(`.group_2 .o_horizontal_separator:contains(child group 2)`).toHaveCount(1);
-    expect(`.parent_group > div.o_horizontal_separator:contains(parent group)`).toHaveCount(1);
+    expect(
+        `.parent_group > div.o_horizontal_separator:contains(parent group)`,
+    ).toHaveCount(1);
 });
 
 test(`inner group with invisible cells`, async () => {
@@ -8704,8 +8834,12 @@ test(`form group with newline tag inside`, async () => {
     expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
     expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(
+        `.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`,
+    ).toHaveCount(1);
+    expect(
+        `.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`,
+    ).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
 
@@ -8869,7 +9003,9 @@ test(`translate event correctly handled with multiple controllers`, async () => 
     });
     expect(`.o_dialog`).toHaveCount(1);
 
-    await contains(`[name="product_id"] .o_external_button`, { visible: false }).click();
+    await contains(`[name="product_id"] .o_external_button`, {
+        visible: false,
+    }).click();
     await contains(`.o_field_translate`).click();
     expect(`.o_dialog:eq(1) button.o_field_translate`).toHaveCount(1);
 
@@ -8910,7 +9046,9 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
         resId: 1,
     });
     // Contains invisible buttons that are only displayed under xl screens
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(
+        3,
+    );
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 
@@ -8924,7 +9062,9 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
 
     deferred.resolve();
     await animationFrame();
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(
+        3,
+    );
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 });
@@ -9122,6 +9262,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
 test.tags("desktop");
 test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    expect.errors(1);
     defineActions([
         {
             id: 1,
@@ -9245,7 +9386,11 @@ test(`readonly fields are not sent when saving`, async () => {
             } else {
                 // onchange on field p
                 expect(args[1].child_ids).toEqual([
-                    [0, args[1].child_ids[0][1], { name: "readonly", foo: "foo value" }],
+                    [
+                        0,
+                        args[1].child_ids[0][1],
+                        { name: "readonly", foo: "foo value" },
+                    ],
                 ]);
             }
         }
@@ -9389,19 +9534,19 @@ test(`display tooltips for buttons (debug = true)`, async () => {
     await hover(`button[name='empty_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
-        "Button : Empty Button\nObject:partner\nButton Type:object\nMethod:empty_method"
+        "Button : Empty Button\nObject:partner\nButton Type:object\nMethod:empty_method",
     );
 
     await hover(`button[name='some_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
-        `Button : Button\n\nThis is title\n\nObject:partner\nReadonly:display_name == 'readonly'\nButton Type:object\nMethod:some_method`
+        `Button : Button\n\nThis is title\n\nObject:partner\nReadonly:display_name == 'readonly'\nButton Type:object\nMethod:some_method`,
     );
 
     await hover(`button[name='other_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
-        `Button : Button2\n\nhelp Button2\n\nObject:partner\nButton Type:object\nMethod:other_method`
+        `Button : Button2\n\nhelp Button2\n\nObject:partner\nButton Type:object\nMethod:other_method`,
     );
 });
 
@@ -9448,7 +9593,9 @@ test(`reload event is handled only once`, async () => {
         "web_save",
         "read", // reload the name (first dialog)
     ]);
-    expect(`.o_dialog:eq(1) .o_field_widget[name="parent_id"] input`).toHaveValue("new name");
+    expect(`.o_dialog:eq(1) .o_field_widget[name="parent_id"] input`).toHaveValue(
+        "new name",
+    );
 });
 
 test(`process the context for inline subview`, async () => {
@@ -9592,10 +9739,16 @@ test(`can toggle column in x2many in sub form view`, async () => {
         resId: 1,
     });
     await contains(`.o_external_button`, { visible: false }).click();
-    expect(queryAllTexts`.o_dialog:not(.o_inactive_modal) .o_data_cell`).toEqual(["yop", "blip"]);
+    expect(queryAllTexts`.o_dialog:not(.o_inactive_modal) .o_data_cell`).toEqual([
+        "yop",
+        "blip",
+    ]);
 
     await contains(`.o_dialog:not(.o_inactive_modal) th.o_column_sortable`).click();
-    expect(queryAllTexts`.o_dialog:not(.o_inactive_modal) .o_data_cell`).toEqual(["blip", "yop"]);
+    expect(queryAllTexts`.o_dialog:not(.o_inactive_modal) .o_data_cell`).toEqual([
+        "blip",
+        "yop",
+    ]);
 });
 
 test(`rainbowman attributes correctly passed on button click`, async () => {
@@ -9642,7 +9795,9 @@ test(`basic support for widgets`, async () => {
             </form>
         `,
     });
-    expect(`.o_widget`).toHaveText(`{"foo":"My little Foo Value","bar":false,"display_name":""}`);
+    expect(`.o_widget`).toHaveText(
+        `{"foo":"My little Foo Value","bar":false,"display_name":""}`,
+    );
 });
 
 test(`widget with class attribute`, async () => {
@@ -9758,14 +9913,18 @@ test(`proper stringification in debug mode tooltip`, async () => {
     await hover(`[name='product_id']`);
     await runAllTimers();
     expect(`.o-tooltip--technical > li[data-item="context"]`).toHaveCount(1);
-    expect(`.o-tooltip--technical > li[data-item="context"]`).toHaveText(/{'lang': 'en_US'}/);
+    expect(`.o-tooltip--technical > li[data-item="context"]`).toHaveText(
+        /{'lang': 'en_US'}/,
+    );
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveText(/\[\]/);
     expect(`.o-tooltip--technical > li[data-item="invisible"]`).toHaveCount(1);
-    expect(`.o-tooltip--technical > li[data-item="invisible"]`).toHaveText(/product_id == 33/);
+    expect(`.o-tooltip--technical > li[data-item="invisible"]`).toHaveText(
+        /product_id == 33/,
+    );
     expect(`.o-tooltip--technical > li[data-item="widget"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="widget"]`).toHaveText(
-        /Widget:Many2one \(many2one\)/
+        /Widget:Many2one \(many2one\)/,
     );
 });
 
@@ -9788,7 +9947,9 @@ test(`field tooltip in debug mode, on field with domain attr`, async () => {
     await hover(`[name='product_id']`);
     await runAllTimers();
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveCount(1);
-    expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveText(/\[\['id', '>', 3\]\]/);
+    expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveText(
+        /\[\['id', '>', 3\]\]/,
+    );
 });
 
 test.tags("desktop");
@@ -9849,7 +10010,10 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
         },
     ]);
 
-    Partner._fields.foo = fields.Char({ default: "My little Foo Value", sortable: true });
+    Partner._fields.foo = fields.Char({
+        default: "My little Foo Value",
+        sortable: true,
+    });
     Partner._records[0].type_ids = [12, 14];
     Partner._views = {
         list: `<list><field name="foo"/></list>`,
@@ -9882,13 +10046,27 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect.verifySteps(["partner:get_views", "partner:web_search_read", "res.users:has_group"]);
+    expect.verifySteps([
+        "partner:get_views",
+        "partner:web_search_read",
+        "res.users:has_group",
+    ]);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
-    expect(queryAllTexts`.o_data_cell`).toEqual(["yop", "blip", "My little Foo Value", ""]);
+    expect(queryAllTexts`.o_data_cell`).toEqual([
+        "yop",
+        "blip",
+        "My little Foo Value",
+        "",
+    ]);
 
     await contains(`th.o_column_sortable`).click();
-    expect(queryAllTexts`.o_data_cell`).toEqual(["", "My little Foo Value", "blip", "yop"]);
+    expect(queryAllTexts`.o_data_cell`).toEqual([
+        "",
+        "My little Foo Value",
+        "blip",
+        "yop",
+    ]);
     expect.verifySteps(["partner:web_search_read"]);
 
     await toggleSearchBarMenu();
@@ -9950,7 +10128,9 @@ test(`keep editing after call_button fail`, async () => {
     expect.verifySteps(["web_save"]);
     expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
 
-    await contains(`.o_form_view .o_field_one2many .o_data_row .o_data_cell:eq(1)`).click();
+    await contains(
+        `.o_form_view .o_field_one2many .o_data_row .o_data_cell:eq(1)`,
+    ).click();
     await contains(`.o_field_many2one[name="product_id"] input`).click();
     await contains(`.dropdown .dropdown-item:contains(xphone)`).click();
     expect(`.o_field_many2one input`).toHaveValue("xphone");
@@ -9997,7 +10177,9 @@ test(`saving with invalid uncommitted changes`, async () => {
     });
     expect.verifySteps(["get_views", "onchange"]);
 
-    await contains(`.o_field_widget[name=float_field] input`).edit("some float_field value");
+    await contains(`.o_field_widget[name=float_field] input`).edit(
+        "some float_field value",
+    );
     await contains(`.o_form_button_save`).click();
     expect(`.o_form_editable`).toHaveCount(1);
     expect(`.o_form_view .o_form_editable input`).toHaveValue("some float_field value");
@@ -10291,13 +10473,21 @@ test(`"bare" buttons in template should not trigger button click`, async () => {
 test(`form view with inline list view with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+            if (
+                ["optional_fields", "debug_open_view"].some((word) =>
+                    key.startsWith(word),
+                )
+            ) {
                 expect.step(`getItem ${key}`);
             }
             return super.getItem(key);
         },
         setItem(key, value) {
-            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+            if (
+                ["optional_fields", "debug_open_view"].some((word) =>
+                    key.startsWith(word),
+                )
+            ) {
                 expect.step(`setItem ${key} to ${value}`);
             }
             return super.setItem(key, value);
@@ -10351,13 +10541,21 @@ test.tags("desktop");
 test(`form view with list_view_ref with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+            if (
+                ["optional_fields", "debug_open_view"].some((word) =>
+                    key.startsWith(word),
+                )
+            ) {
                 expect.step(`getItem ${key}`);
             }
             return super.getItem(key);
         },
         setItem(key, value) {
-            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+            if (
+                ["optional_fields", "debug_open_view"].some((word) =>
+                    key.startsWith(word),
+                )
+            ) {
                 expect.step(`setItem ${key} to ${value}`);
             }
             return super.setItem(key, value);
@@ -10451,7 +10649,7 @@ test(`resequence list lines when discardable lines are present`, async () => {
     // Drag and drop second line before first one (with 1 draft and invalid line)
     // TODO JUM: PRHOOT the events
     const { drop, moveTo } = await contains(
-        `tbody.ui-sortable tr:nth-child(1) .o_handle_cell`
+        `tbody.ui-sortable tr:nth-child(1) .o_handle_cell`,
     ).drag();
     await moveTo(`tbody.ui-sortable tr:nth-child(2)`);
     await drop(document.body);
@@ -10521,14 +10719,14 @@ test("resequence list lines when previous resequencing crashed", async () => {
 
     expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
-        "tbody.ui-sortable tr:nth-child(2)"
+        "tbody.ui-sortable tr:nth-child(2)",
     );
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
     expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
-        "tbody.ui-sortable tr:nth-child(2)"
+        "tbody.ui-sortable tr:nth-child(2)",
     );
     await animationFrame();
     expect(queryAllTexts(".o_list_char")).toEqual(["second line", "first line"]);
@@ -10612,12 +10810,14 @@ test(`company_dependent field in form view, in multi company group`, async () =>
     await hover(`.o_form_label[for=product_id_0] sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText(
-        "this is a tooltip\n\nValues set here are company-specific."
+        "this is a tooltip\n\nValues set here are company-specific.",
     );
 
     await hover(`.o_form_label[for=foo_0] sup`);
     await runAllTimers();
-    expect(`.o-tooltip .o-tooltip--help`).toHaveText("Values set here are company-specific.");
+    expect(`.o-tooltip .o-tooltip--help`).toHaveText(
+        "Values set here are company-specific.",
+    );
 });
 
 test.tags("desktop");
@@ -10830,7 +11030,9 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
             static props = ["*"];
             static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
         },
-        fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
+        fieldDependencies: [
+            { name: "product_id", type: "many2one", relation: "product" },
+        ],
     });
 
     onRpc(({ method }) => expect.step(method));
@@ -11227,7 +11429,9 @@ test(`status indicator: field dirty state (datetime)`, async () => {
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 
     await contains(".o_field_widget button").click();
-    await contains(`.o_field_widget input`).edit("12/12/2012 11:55:05", { confirm: false });
+    await contains(`.o_field_widget input`).edit("12/12/2012 11:55:05", {
+        confirm: false,
+    });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(0);
 });
 
@@ -11285,7 +11489,7 @@ test(`status indicator: invalid state`, async () => {
     expect.verifySteps([]);
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
         "data-tooltip",
-        "Unable to save. Correct the issue or discard all changes"
+        "Unable to save. Correct the issue or discard all changes",
     );
 });
 
@@ -11432,7 +11636,7 @@ test(`setting : boolean field`, async () => {
     expect(`.o_doc_link`).toHaveCount(1);
     expect(`.o_doc_link`).toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html",
     );
     expect(`.btn-link[name='buttonName']`).toHaveCount(1);
 });
@@ -11707,7 +11911,9 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
 
-    await contains(`.o_field_one2many[name="child_ids"] .o_field_x2many_list_row_add a`).click();
+    await contains(
+        `.o_field_one2many[name="child_ids"] .o_field_x2many_list_row_add a`,
+    ).click();
     await contains(`[name="child_ids"] input`).edit("new");
     expect.verifySteps(["web_read"]);
 
@@ -11849,7 +12055,10 @@ test(`only re-render necessary fields after change`, async () => {
     expect.verifySteps(["[Field foo] onPatched", "[CharField foo] onPatched"]);
 
     await contains(`.o_field_widget[name=int_field] input`).edit("5846");
-    expect.verifySteps(["[Field int_field] onPatched", "[IntegerField int_field] onPatched"]);
+    expect.verifySteps([
+        "[Field int_field] onPatched",
+        "[IntegerField int_field] onPatched",
+    ]);
 });
 
 test(`only re-render necessary fields after change (with onchange)`, async () => {
@@ -11912,7 +12121,10 @@ test(`only re-render necessary fields after change (with onchange)`, async () =>
     ]);
 
     await contains(`.o_field_widget[name=int_field] input`).edit("5846");
-    expect.verifySteps(["[Field int_field] onPatched", "[IntegerField int_field] onPatched"]);
+    expect.verifySteps([
+        "[Field int_field] onPatched",
+        "[IntegerField int_field] onPatched",
+    ]);
 });
 
 test(`widget update several fields including an x2m`, async () => {
@@ -11999,7 +12211,9 @@ test(`commitChanges with a field input removed during an update`, async () => {
     });
 
     await contains(`.o_data_cell[name="foo"]`).click();
-    await contains(`.o_data_cell[name="foo"] input`).edit("new foo", { confirm: "tab" });
+    await contains(`.o_data_cell[name="foo"] input`).edit("new foo", {
+        confirm: "tab",
+    });
     onchangeDeferred.resolve();
     await contains(`.o_form_button_save`).click();
 });
@@ -12271,7 +12485,7 @@ test(`custom many2one with relatedFields`, async () => {
         },
     ]);
     expect(`.o_field_widget[name="parent_id"] .content`).toHaveText(
-        "4\naaa\nMy little Foo Value\n0"
+        "4\naaa\nMy little Foo Value\n0",
     );
 
     await contains(`#update-m2o`).click();
@@ -12283,7 +12497,9 @@ test(`custom many2one with relatedFields`, async () => {
             int_field: {},
         },
     ]);
-    expect(`.o_field_widget[name="parent_id"] .content`).toHaveText("2\nsecond record\nblip\n9");
+    expect(`.o_field_widget[name="parent_id"] .content`).toHaveText(
+        "2\nsecond record\nblip\n9",
+    );
 });
 
 test(`existing record with falsy display_name`, async () => {
@@ -12304,7 +12520,9 @@ test(`field with special data`, async () => {
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;
-                return orm.call("my.model", "get_special_data", [record.data.int_field]);
+                return orm.call("my.model", "get_special_data", [
+                    record.data.int_field,
+                ]);
             });
         }
     }
@@ -12338,7 +12556,9 @@ test(`field with special data (with persistent Cache)`, async () => {
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;
-                return orm.call("my.model", "get_special_data", [record.data.int_field]);
+                return orm.call("my.model", "get_special_data", [
+                    record.data.int_field,
+                ]);
             });
         }
     }
@@ -12500,9 +12720,9 @@ test(`nested form view doesn't parasite the main one`, async () => {
     expect(`.modal .modal-footer button[name='someothername']`).toHaveCount(0);
 
     await contains(`.modal .o_field_x2many_list_row_add a`).click();
-    expect(`.modal:not(.o_inactive_modal) .modal-footer button[name='someothername']`).toHaveCount(
-        1
-    );
+    expect(
+        `.modal:not(.o_inactive_modal) .modal-footer button[name='someothername']`,
+    ).toHaveCount(1);
 });
 
 test(`an empty json object does not pass the required check`, async () => {
@@ -12514,7 +12734,9 @@ test(`an empty json object does not pass the required check`, async () => {
         static template = xml`<span><input t-on-change="onChange"/></span>`;
 
         onChange(ev) {
-            this.props.record.update({ [this.props.name]: JSON.parse(ev.target.value) });
+            this.props.record.update({
+                [this.props.name]: JSON.parse(ev.target.value),
+            });
         }
     }
     fieldsRegistry.add("my_json", { component: JsonField });
@@ -12652,7 +12874,9 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
     // open the dropdown
     await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
     await animationFrame();
-    expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
+    expect(".o-dropdown--menu:visible").toHaveCount(1, {
+        message: "dropdown should be visible",
+    });
     expect(".o-dropdown--menu button").toHaveCount(1, {
         message: "should have 1 button in the dropdown",
     });
@@ -12800,13 +13024,21 @@ test("CogMenu receives the model in env", async () => {
         static props = ["*"];
         static template = xml`<button class="test-cog" t-on-click="onClick">Test</button>`;
         onClick() {
-            expect.step([`cog clicked`, this.env.model.root.resModel, this.env.model.root.resId]);
+            expect.step([
+                `cog clicked`,
+                this.env.model.root.resModel,
+                this.env.model.root.resId,
+            ]);
         }
     }
     registry.category("cogMenu").add("test-cog", {
         Component: CogItem,
         isDisplayed: (env) => {
-            expect.step([`cog displayed`, env.model.root.resModel, env.model.root.resId]);
+            expect.step([
+                `cog displayed`,
+                env.model.root.resModel,
+                env.model.root.resId,
+            ]);
             return true;
         },
     });
@@ -12857,7 +13089,9 @@ test(`preserve current scroll position on form view while closing dialog`, async
     });
 
     window.scrollTo({ top: 265, left: 0 });
-    expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+    expect(window.scrollY).toBe(265, {
+        message: "Should have scrolled 265 px vertically",
+    });
     expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
 
     // click on m2o field
@@ -12870,7 +13104,9 @@ test(`preserve current scroll position on form view while closing dialog`, async
     // click on back button
     await contains(".modal .modal-header .oi-arrow-left").click();
 
-    expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+    expect(window.scrollY).toBe(265, {
+        message: "Should have scrolled 265 px vertically",
+    });
     expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
 });
 

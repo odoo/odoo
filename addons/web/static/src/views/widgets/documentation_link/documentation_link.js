@@ -1,10 +1,15 @@
-import { session } from "@web/session";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+// @ts-check
+
+/** @module @web/views/widgets/documentation_link/documentation_link - Widget rendering a hyperlink to versioned Odoo documentation */
+
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-const LINK_REGEX = new RegExp("^https?://");
+const LINK_REGEX = /^https?:\/\//;
 
+/** Widget that renders a hyperlink to the Odoo documentation, auto-prefixing the server version. */
 export class DocumentationLink extends Component {
     static template = "web.DocumentationLink";
     static props = {
@@ -16,6 +21,7 @@ export class DocumentationLink extends Component {
         alertLink: { type: Boolean, optional: 1 },
     };
 
+    /** @returns {string} full documentation URL (absolute if path is a full URL, otherwise versioned) */
     get url() {
         if (LINK_REGEX.test(this.props.path)) {
             return this.props.path;
@@ -23,16 +29,18 @@ export class DocumentationLink extends Component {
             const serverVersion = session.server_version_info.includes("final")
                 ? `${session.server_version_info[0]}.${session.server_version_info[1]}`.replace(
                       "~",
-                      "-"
+                      "-",
                   )
                 : "master";
-            return "https://www.odoo.com/documentation/" + serverVersion + this.props.path;
+            return (
+                "https://www.odoo.com/documentation/" + serverVersion + this.props.path
+            );
         }
     }
 
     get classes() {
         let classes = "o_doc_link me-2";
-        if (this.props.alertLink){
+        if (this.props.alertLink) {
             classes += " alert-link";
         }
         return classes;

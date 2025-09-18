@@ -1,12 +1,20 @@
+// @ts-check
+
+/** @module @web/public/database_manager - DOM event handlers for the database manager page (eye toggle, modals, master password) */
+
 document.addEventListener("DOMContentLoaded", function () {
     // Little eye
     document.body.addEventListener("mousedown", function (ev) {
-        if (ev.target.classList.contains("o_little_eye")) {
-            const closestInputGroup = ev.target.closest(".input-group");
+        const target = /** @type {HTMLElement} */ (ev.target);
+        if (target.classList.contains("o_little_eye")) {
+            const closestInputGroup = target.closest(".input-group");
             if (closestInputGroup) {
-                const formControl = closestInputGroup.querySelector(".form-control");
+                const formControl = /** @type {HTMLInputElement | null} */ (
+                    closestInputGroup.querySelector(".form-control")
+                );
                 if (formControl) {
-                    formControl.type = formControl.type === "text" ? "password" : "text";
+                    formControl.type =
+                        formControl.type === "text" ? "password" : "text";
                 }
             }
         }
@@ -14,11 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // db modal
     document.body.addEventListener("click", function (ev) {
-        if (ev.target.classList.contains("o_database_action")) {
+        const target = /** @type {HTMLElement} */ (ev.target);
+        if (target.classList.contains("o_database_action")) {
             ev.preventDefault();
-            const db = ev.target.getAttribute("data-db");
-            const target = ev.target.getAttribute("data-bs-target");
-            const modal = Modal.getOrCreateInstance(document.querySelector(target));
+            const db = target.getAttribute("data-db");
+            const bsTarget = target.getAttribute("data-bs-target");
+            const modal = Modal.getOrCreateInstance(document.querySelector(bsTarget));
             const inputName = modal._element.querySelector("input[name=name]");
             if (inputName) {
                 inputName.value = db;
@@ -27,23 +36,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-   document.getElementById('backup_format').addEventListener("change", function (ev) {
-            ev.preventDefault();
-            const no_filestore_flag = document.getElementById("filestore_div");
-            if (no_filestore_flag) {
-                if (ev.target.value != "zip") {
-                    no_filestore_flag.classList.add("d-none");
-                } else {
-                    no_filestore_flag.classList.remove("d-none");
-                }
+    document.getElementById("backup_format").addEventListener("change", function (ev) {
+        ev.preventDefault();
+        const no_filestore_flag = document.getElementById("filestore_div");
+        if (no_filestore_flag) {
+            if (/** @type {HTMLInputElement} */ (ev.target).value !== "zip") {
+                no_filestore_flag.classList.add("d-none");
+            } else {
+                no_filestore_flag.classList.remove("d-none");
             }
+        }
     });
 
     // close modal on submit
     const modals = document.querySelectorAll(".modal");
     for (const modalEl of modals) {
         modalEl.addEventListener("submit", function (ev) {
-            const form = ev.target.closest("form");
+            const form = /** @type {Element} */ (ev.target).closest("form");
             if (form && !form.checkValidity?.()) {
                 return;
             }
@@ -75,11 +84,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const masterPwds = document.getElementsByClassName("generated_master_pwd");
     for (const pwdElement of masterPwds) {
-        pwdElement.innerText = password;
+        /** @type {HTMLElement} */ (pwdElement).innerText = password;
     }
     const masterPwdInputs = document.querySelectorAll(".generated_master_pwd_input");
     for (const pwdInput of masterPwdInputs) {
-        pwdInput.value = password;
+        /** @type {HTMLInputElement} */ (pwdInput).value = password;
         pwdInput.setAttribute("autocomplete", "new-password");
     }
 });

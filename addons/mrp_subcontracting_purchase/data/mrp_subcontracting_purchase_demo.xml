@@ -4,8 +4,8 @@
         <record id="purchase_order_subcontracting" model="purchase.order">
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="user_id" ref="base.user_admin"/>
-            <field name="state">purchase</field>
-            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            <field name="state">done</field>
+            <field name="line_ids" model="purchase.order.line" eval="[(5, 0, 0),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_02'),
                     'price_unit': 10.0,

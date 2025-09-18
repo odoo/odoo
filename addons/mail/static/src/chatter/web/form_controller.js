@@ -1,11 +1,9 @@
 import { EventBus, useSubEnv } from "@odoo/owl";
-
-import { x2ManyCommands } from "@web/core/orm_service";
+import { createDocumentFragmentFromContent } from "@web/core/utils/dom/html";
 import { useService } from "@web/core/utils/hooks";
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
+import { x2ManyCommands } from "@web/services/orm_service";
 import { FormController } from "@web/views/form/form_controller";
-
 FormController.props = {
     ...FormController.props,
     fullComposerBus: { type: EventBus, optional: true },
@@ -41,15 +39,22 @@ patch(FormController.prototype, {
     async onWillSaveRecord(record, changes) {
         if (record.resModel === "mail.compose.message") {
             const doc = createDocumentFragmentFromContent(changes.body);
-            const partnerElements = doc.querySelectorAll('[data-oe-model="res.partner"]');
+            const partnerElements = doc.querySelectorAll(
+                '[data-oe-model="res.partner"]',
+            );
             const partnerIds = Array.from(partnerElements).map((element) =>
-                parseInt(element.dataset.oeId)
+                parseInt(element.dataset.oeId),
             );
             if (partnerIds.length) {
-                if (changes.partner_ids[0] && changes.partner_ids[0][0] === x2ManyCommands.SET) {
+                if (
+                    changes.partner_ids[0] &&
+                    changes.partner_ids[0][0] === x2ManyCommands.SET
+                ) {
                     partnerIds.push(...changes.partner_ids[0][2]);
                 }
-                changes.partner_ids.push(...partnerIds.map((pid) => x2ManyCommands.link(pid)));
+                changes.partner_ids.push(
+                    ...partnerIds.map((pid) => x2ManyCommands.link(pid)),
+                );
             }
         }
     },

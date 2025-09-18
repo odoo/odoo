@@ -1,0 +1,17 @@
+[package]
+name = "odoo_rust"
+version = "0.1.0"
+edition = "2024"
+description = "Rust-accelerated hot paths for the Odoo ORM"
+
+[lib]
+name = "odoo_rust"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.28.2", features = ["extension-module"] }
+
+# File scanning (used by test_lint for parallel pattern matching)
+memchr = "2"     # SIMD-accelerated byte search
+regex = "1"      # Compiled regex patterns
+ignore = "0.4"   # Parallel directory walking

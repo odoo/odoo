@@ -171,6 +171,11 @@ class TestMrpAccount(TestBomPriceCommon):
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 677.08)
 
+    def test_mrp_user_without_account_permissions_can_create_bom(self):
+        mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user')
+        mo_1 = self._create_mo(self.bom_1, 1)
+        mo_1.with_user(mrp_user).button_mark_done()
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
@@ -210,7 +215,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(self.scrap_wood.standard_price, 30, "Initial price of the By-Product should be 30")
         # bom price is 871.25. Byproduct cost share is 12%+1% = 13% -> 113.26 for 8+12 units -> 5.66
         self.scrap_wood.button_bom_cost()
-        self.assertEqual(self.scrap_wood.standard_price, 5.66, "After computing price from BoM price should be 20.63")
+        self.assertAlmostEqual(self.scrap_wood.standard_price, 5.663125, "After computing price from BoM price should be 20.63")
 
     def test_wip_accounting_00(self):
         """ Test that posting a WIP accounting entry works as expected.

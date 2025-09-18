@@ -163,9 +163,9 @@ class DiscussChannelMember(models.Model):
                       WHERE mail_message.model = 'discuss.channel'
                         AND mail_message.message_type NOT IN ('notification', 'user_notification')
                         AND mail_message.id >= discuss_channel_member.new_message_separator
-                        AND discuss_channel_member.id IN %(ids)s
+                        AND discuss_channel_member.id = ANY(%(ids)s)
                    GROUP BY discuss_channel_member.id
-            """, {'ids': tuple(self.ids)})
+            """, {'ids': list(self.ids)})
             unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
             for member in self:
                 member.message_unread_counter = unread_counter_by_member.get(member.id)

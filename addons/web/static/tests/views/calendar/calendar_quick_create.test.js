@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import {
@@ -6,10 +8,10 @@ import {
     mountWithCleanup,
     preloadBundle,
 } from "@web/../tests/web_test_helpers";
-import { FAKE_MODEL } from "./calendar_test_helpers";
-
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { MainComponentsContainer } from "@web/components/main_components_container";
 import { CalendarQuickCreate } from "@web/views/calendar/quick_create/calendar_quick_create";
+
+import { FAKE_MODEL } from "./calendar_test_helpers";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
@@ -20,7 +22,7 @@ const FAKE_PROPS = {
 /**
  * @param {{
  *   props?: object;
- *   dialogOptions?: import("@web/core/dialog/dialog_service").DialogServiceInterfaceAddOptions;
+ *   dialogOptions?: import("@web/ui/dialog/dialog_service").DialogServiceInterfaceAddOptions;
  * }} [params]
  */
 async function start(params = {}) {
@@ -28,7 +30,7 @@ async function start(params = {}) {
     getService("dialog").add(
         CalendarQuickCreate,
         { ...FAKE_PROPS, ...params.props },
-        params.dialogOptions
+        params.dialogOptions,
     );
     await waitFor(`.o_dialog`);
 }

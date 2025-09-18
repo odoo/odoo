@@ -4,6 +4,7 @@
 import base64
 import logging
 from ast import literal_eval
+from itertools import batched
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
@@ -713,7 +714,7 @@ class MailTemplate(models.Model):
         RecordModel = self.env[self.model].with_prefetch(res_ids)
         record_ir_model = self.env['ir.model']._get(self.model)
 
-        for res_ids_chunk in tools.split_every(batch_size, res_ids):
+        for res_ids_chunk in batched(res_ids, batch_size):
             res_ids_values = self._generate_template(
                 res_ids_chunk,
                 ('attachment_ids',

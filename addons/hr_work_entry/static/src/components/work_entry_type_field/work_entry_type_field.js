@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/fields/relational/many2one/many2one_field";
 import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
-import { Many2One } from "@web/views/fields/many2one/many2one";
+import { Many2One } from "@web/fields/relational/many2one/many2one";
 
 export class WorkEntryType extends Component {
     static template = "hr_work_entry.WorkEntryType";

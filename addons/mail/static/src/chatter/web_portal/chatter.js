@@ -1,6 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-
 import {
     Component,
     onMounted,
@@ -9,11 +8,9 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-
 /**
  * @typedef {Object} Props
  * @extends {Component<Props, Env>}
@@ -72,7 +69,10 @@ export class Chatter extends Component {
     }
 
     changeThread(threadModel, threadId) {
-        this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
+        this.state.thread = this.store.Thread.insert({
+            model: threadModel,
+            id: threadId,
+        });
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({

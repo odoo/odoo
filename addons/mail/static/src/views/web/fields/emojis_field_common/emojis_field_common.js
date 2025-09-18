@@ -1,7 +1,5 @@
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-
 import { useRef } from "@odoo/owl";
-
+import { useEmojiPicker } from "@web/components/emoji_picker/emoji_picker";
 /*
  * Common code for EmojisTextField and EmojisCharField
  */
@@ -19,15 +17,25 @@ export const EmojisFieldCommon = (T) =>
                         const start = this.targetEditElement.el.selectionStart;
                         const end = this.targetEditElement.el.selectionEnd;
                         const left = originalContent.slice(0, start);
-                        const right = originalContent.slice(end, originalContent.length);
+                        const right = originalContent.slice(
+                            end,
+                            originalContent.length,
+                        );
                         this.targetEditElement.el.value = left + codepoints + right;
                         // trigger onInput from input_field hook to set field as dirty
-                        this.targetEditElement.el.dispatchEvent(new InputEvent("input"));
+                        this.targetEditElement.el.dispatchEvent(
+                            new InputEvent("input"),
+                        );
                         // keydown serves to both commit the changes in input_field and trigger onchange for some fields
-                        this.targetEditElement.el.dispatchEvent(new KeyboardEvent("keydown"));
+                        this.targetEditElement.el.dispatchEvent(
+                            new KeyboardEvent("keydown"),
+                        );
                         this.targetEditElement.el.focus();
                         const newCursorPos = start + codepoints.length;
-                        this.targetEditElement.el.setSelectionRange(newCursorPos, newCursorPos);
+                        this.targetEditElement.el.setSelectionRange(
+                            newCursorPos,
+                            newCursorPos,
+                        );
                         if (this._emojiAdded) {
                             this._emojiAdded();
                         }
@@ -35,7 +43,7 @@ export const EmojisFieldCommon = (T) =>
                 },
                 {
                     position: "bottom",
-                }
+                },
             );
         }
     };

@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/views/kanban/progress_bar_hook - Progress bar state computation, active bar filtering, and per-group aggregate tracking for kanban columns */
+
 import { reactive } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
@@ -6,22 +10,31 @@ import {
     getAggregateSpecifications,
 } from "@web/model/relational_model/utils";
 
+/** @import { Group } from "@web/model/relational_model/group" */
+/** @*/
+
 const FALSE = Symbol("False");
 
 /**
- *
- * @param {*} groups: returned by formatted_read_group
- * @param {*} groupByField
- * @param {*} value
- * @returns
+ * Find a group entry matching a specific group-by field value.
+ * @param {Object[]} groups - Aggregate group data from formatted_read_group.
+ * @param {Object} groupByField - Field descriptor with a `name` property.
+ * @param {*} value - The group value to match.
+ * @returns {Object} The matching group entry, or an empty object.
  */
-
 function _findGroup(groups, groupByField, value) {
     return groups.find((g) => g[groupByField.name] === value) || {};
 }
 
+/**
+ * Build a domain filter for a selected progress bar segment.
+ * @param {string} fieldName - The progress bar field name.
+ * @param {Object[]} bars - All bar segments (including the "Other" sentinel).
+ * @param {*} value - The selected bar value, or FALSE symbol for "Other".
+ * @returns {Array} An Odoo domain expression.
+ */
 function _createFilterDomain(fieldName, bars, value) {
-    let filterDomain = undefined;
+    let filterDomain;
     if (value === FALSE) {
         const keys = bars.filter((x) => x.value !== FALSE).map((x) => x.value);
         filterDomain = ["!", [fieldName, "in", keys]];
@@ -31,15 +44,38 @@ function _createFilterDomain(fieldName, bars, value) {
     return filterDomain;
 }
 
+/**
+ * Convert raw formatted_read_group results into aggregate value maps.
+ * @param {Object[]} groups - Raw group data from formatted_read_group.
+ * @param {string[]} groupBy - The group-by specification.
+ * @param {Object} fields - Field definitions.
+ * @param {Array} [domain] - Optional domain used for the read.
+ * @returns {Object[]} Array of aggregate value objects keyed by field name.
+ */
 function _groupsToAggregateValues(groups, groupBy, fields, domain) {
     const groupByFieldName = groupBy[0].split(":")[0];
     return groups.map((g) => {
         const groupInfo = extractInfoFromGroupData(g, groupBy, fields, domain);
-        return Object.assign(groupInfo.aggregates, { [groupByFieldName]: groupInfo.serverValue });
+        return Object.assign(groupInfo.aggregates, {
+            [groupByFieldName]: groupInfo.serverValue,
+        });
     });
 }
 
+/**
+ * Reactive state manager for kanban column progress bars.
+ *
+ * Tracks per-group bar segment counts, active bar selection (filtering),
+ * and aggregate values. Coordinates with the model to load progress bar
+ * data via `read_progress_bar` RPC and refresh counts after record changes.
+ */
 class ProgressBarState {
+    /**
+     * @param {Object} progressAttributes - Parsed `<progressbar>` arch config.
+     * @param {Object} model - The kanban RelationalModel instance.
+     * @param {Object[]} aggregateFields - Fields to compute aggregates for.
+     * @param {Object} [activeBars={}] - Restored active bar selections keyed by group serverValue.
+     */
     constructor(progressAttributes, model, aggregateFields, activeBars = {}) {
         this.progressAttributes = progressAttributes;
         this.model = model;
@@ -50,6 +86,11 @@ class ProgressBarState {
         this._pbCounts = null;
     }
 
+    /**
+     * Get or compute progress bar info for a group (bars, active selection, readiness).
+     * @param {Group} group - The kanban group datapoint.
+     * @returns {{ activeBar: string | null, bars: Object[], isReady: boolean }}
+     */
     getGroupInfo(group) {
         if (this._pbCounts === null) {
             // progressbar isn't loaded yet
@@ -63,7 +104,7 @@ class ProgressBarState {
             const aggValues = _findGroup(
                 this._aggregateValues,
                 group.groupByField,
-                group.serverValue
+                group.serverValue,
             );
             const index = this._aggregateValues.indexOf(aggValues);
             if (index > -1) {
@@ -93,8 +134,9 @@ class ProgressBarState {
                 };
             });
             bars.push({
-                count: group.count - bars.map((r) => r.count).reduce((a, b) => a + b, 0),
-                value: FALSE,
+                count:
+                    group.count - bars.map((r) => r.count).reduce((a, b) => a + b, 0),
+                value: /** @type {any} */ (FALSE),
                 string: _t("Other"),
                 color: "200",
             });
@@ -102,7 +144,7 @@ class ProgressBarState {
             // Update activeBars count and aggreagates
             if (this.activeBars[group.serverValue]) {
                 this.activeBars[group.serverValue].count = bars.find(
-                    (x) => x.value === this.activeBars[group.serverValue].value
+                    (x) => x.value === this.activeBars[group.serverValue].value,
                 ).count;
 
                 if (this.activeBars[group.serverValue].count === 0) {
@@ -118,7 +160,7 @@ class ProgressBarState {
                     this.activeBars[group.serverValue].aggregates = _findGroup(
                         this._aggregateValues,
                         group.groupByField,
-                        group.serverValue
+                        group.serverValue,
                     );
                 }
             }
@@ -137,10 +179,16 @@ class ProgressBarState {
         return this._groupsInfo[group.id];
     }
 
+    /**
+     * Compute the displayed aggregate value for a group's progress bar header.
+     * @param {Group} group - The kanban group datapoint.
+     * @param {Object} aggregateField - The sum field definition.
+     * @returns {{ title: string, value: number, currencies?: Array }}
+     */
     getAggregateValue(group, aggregateField) {
         const { groupByField, serverValue } = group;
         const title = aggregateField ? aggregateField.string : _t("Count");
-        let value = 0;
+        let value;
         if (!this.activeBars[serverValue]) {
             value = group.count;
             if (value && aggregateField) {
@@ -158,7 +206,11 @@ class ProgressBarState {
         }
         value ||= 0;
         if (aggregateField.type === "monetary" && aggregateField.currency_field) {
-            const aggValues = _findGroup(this._aggregateValues, groupByField, serverValue);
+            const aggValues = _findGroup(
+                this._aggregateValues,
+                groupByField,
+                serverValue,
+            );
             const currencies = aggValues?.[aggregateField.currency_field];
             if (currencies?.length > 1) {
                 return {
@@ -177,6 +229,11 @@ class ProgressBarState {
         return { title, value };
     }
 
+    /**
+     * Toggle a progress bar segment selection, filtering the group's records.
+     * @param {string} groupId - The group datapoint ID.
+     * @param {{ value: * }} bar - The bar segment that was clicked.
+     */
     async selectBar(groupId, bar) {
         const group = this.model.root.groups.find((group) => group.id === groupId);
         const progressBar = this.getGroupInfo(group);
@@ -194,16 +251,16 @@ class ProgressBarState {
         const filterDomain = _createFilterDomain(
             this.progressAttributes.fieldName,
             bars,
-            nextActiveBar.value
+            nextActiveBar.value,
         );
         const proms = [];
         proms.push(
             group.applyFilter(filterDomain).then((res) => {
                 const groupInfo = this.getGroupInfo(group);
                 nextActiveBar.count = groupInfo.bars.find(
-                    (x) => x.value === nextActiveBar.value
+                    (x) => x.value === nextActiveBar.value,
                 ).count;
-            })
+            }),
         );
         if (this._aggregateFields.length) {
             proms.push(this._updateAggregateGroup(group, bars, nextActiveBar));
@@ -213,11 +270,18 @@ class ProgressBarState {
         this.updateCounts(group);
     }
 
+    /**
+     * Re-fetch aggregate values for a single group after bar selection changes.
+     * @param {Group} group - The group to update.
+     * @param {Object[]} bars - Current bar segments.
+     * @param {Object} activeBar - The active bar selection with `value` and `aggregates`.
+     * @returns {Promise<void>}
+     */
     _updateAggregateGroup(group, bars, activeBar) {
         const filterDomain = _createFilterDomain(
             this.progressAttributes.fieldName,
             bars,
-            activeBar.value
+            activeBar.value,
         );
         const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
@@ -230,12 +294,25 @@ class ProgressBarState {
             .then((groups) => {
                 if (groups.length) {
                     const groupByField = group.groupByField;
-                    const aggrValues = _groupsToAggregateValues(groups, groupBy, fields, domain);
-                    activeBar.aggregates = _findGroup(aggrValues, groupByField, group.serverValue);
+                    const aggrValues = _groupsToAggregateValues(
+                        groups,
+                        groupBy,
+                        fields,
+                        domain,
+                    );
+                    activeBar.aggregates = _findGroup(
+                        aggrValues,
+                        groupByField,
+                        group.serverValue,
+                    );
                 }
             });
     }
 
+    /**
+     * Refresh all progress bar counts and aggregates after a record change.
+     * @param {Group} group - The group where the change occurred.
+     */
     updateCounts(group) {
         this._updateProgressBar();
         if (this._aggregateFields.length) {
@@ -251,6 +328,10 @@ class ProgressBarState {
         }
     }
 
+    /**
+     * Re-fetch aggregates for a group if it has an active bar selection.
+     * @param {Group} group - The group to update.
+     */
     updateAggregateGroup(group) {
         if (group && this.activeBars[group.serverValue]) {
             const { bars } = this.getGroupInfo(group);
@@ -258,6 +339,7 @@ class ProgressBarState {
         }
     }
 
+    /** Re-fetch aggregate values for all groups from the server. */
     async _updateAggregates() {
         const { context, fields, groupBy, domain, resModel } = this.model.root;
         const kwargs = { context };
@@ -266,11 +348,12 @@ class ProgressBarState {
             domain,
             groupBy,
             getAggregateSpecifications(this._aggregateFields),
-            kwargs
+            kwargs,
         );
         this._aggregateValues = _groupsToAggregateValues(groups, groupBy, fields);
     }
 
+    /** Re-fetch progress bar segment counts for all groups via `read_progress_bar`. */
     async _updateProgressBar() {
         const groupBy = this.model.root.groupBy;
         if (groupBy.length) {
@@ -303,7 +386,7 @@ class ProgressBarState {
 
                     if (this.activeBars[group.serverValue]) {
                         this.activeBars[group.serverValue].count = groupInfo.bars.find(
-                            (x) => x.value === this.activeBars[group.serverValue].value
+                            (x) => x.value === this.activeBars[group.serverValue].value,
                         ).count;
                     }
                 }
@@ -311,6 +394,10 @@ class ProgressBarState {
         }
     }
 
+    /**
+     * Initial load of progress bar data. Called during model root loading.
+     * @param {{ context: Object, domain: Array, groupBy: string[], resModel: string }} params
+     */
     async loadProgressBar({ context, domain, groupBy, resModel }) {
         if (groupBy.length) {
             const { colors, fieldName: field, help } = this.progressAttributes;
@@ -324,11 +411,16 @@ class ProgressBarState {
         }
     }
 
+    /**
+     * Get the filtered record count for a group with an active bar.
+     * @param {Group} group
+     * @returns {number | undefined} Count if a bar is active, undefined otherwise.
+     */
     getGroupCount(group) {
         const progressBarInfo = this.getGroupInfo(group);
         if (progressBarInfo.activeBar) {
             const progressBar = progressBarInfo.bars.find(
-                (b) => b.value === progressBarInfo.activeBar
+                (b) => b.value === progressBarInfo.activeBar,
             );
             return progressBar.count;
         }
@@ -354,9 +446,23 @@ class ProgressBarState {
     }
 }
 
+/**
+ * OWL composition hook that creates and wires a reactive ProgressBarState.
+ *
+ * Intercepts the model's `onWillLoadRoot` and `onRootLoaded` hooks to
+ * trigger parallel progress bar data loading alongside the main data fetch.
+ * On first load, the progress bar loads asynchronously (non-blocking) so
+ * the kanban view appears as fast as possible.
+ *
+ * @param {Object} progressAttributes - Parsed `<progressbar>` arch config.
+ * @param {Object} model - The kanban RelationalModel instance.
+ * @param {Object[]} aggregateFields - Fields to compute aggregates for.
+ * @param {Object} [activeBars] - Restored active bar state from a previous session.
+ * @returns {ProgressBarState} Reactive progress bar state.
+ */
 export function useProgressBar(progressAttributes, model, aggregateFields, activeBars) {
     const progressBarState = reactive(
-        new ProgressBarState(progressAttributes, model, aggregateFields, activeBars)
+        new ProgressBarState(progressAttributes, model, aggregateFields, activeBars),
     );
 
     const onWillLoadRoot = model.hooks.onWillLoadRoot;

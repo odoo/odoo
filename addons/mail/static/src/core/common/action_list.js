@@ -1,11 +1,9 @@
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, onWillUnmount } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
-
 const actionListProps = [
     "inline?",
     "dropdown?",
@@ -82,7 +80,7 @@ export class ActionList extends Component {
                         ? propName.substring(0, propName.length - 1)
                         : propName;
                     return [actualPropName, this.props[actualPropName]];
-                })
+                }),
             ),
             style: `z-index: ${group.length - index}`,
         };

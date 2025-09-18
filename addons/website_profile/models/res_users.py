@@ -5,7 +5,7 @@ import hashlib
 import uuid
 
 from datetime import datetime
-from werkzeug import urls
+from urllib.parse import urlencode
 from odoo import api, models
 
 VALIDATION_KARMA_GAIN = 3
@@ -52,7 +52,7 @@ class ResUsers(models.Model):
                 'email': self.email
             }
             params.update(kwargs)
-            token_url = self.get_base_url() + '/profile/validate_email?%s' % urls.url_encode(params)
+            token_url = self.get_base_url() + '/profile/validate_email?%s' % urlencode(params)
             activation_template.sudo().with_context(token_url=token_url).send_mail(
                 self.id, force_send=True, raise_exception=True)
         return True

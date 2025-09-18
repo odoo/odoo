@@ -1,11 +1,15 @@
-import { registry } from "@web/core/registry";
-import { Transition } from "@web/core/transition";
-import { user } from "@web/core/user";
-import { useBus } from "@web/core/utils/hooks";
-import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
-import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
+// @ts-check
+
+/** @module @web/webclient/burger_menu/burger_menu - Fullscreen mobile menu displaying user menu, company switcher, and current app sub-menus */
 
 import { Component, useState } from "@odoo/owl";
+import { Transition } from "@web/components/transition";
+import { registry } from "@web/core/registry";
+import { useBus } from "@web/core/utils/hooks";
+import { user } from "@web/services/user";
+
+import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
+import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which
@@ -32,11 +36,17 @@ export class BurgerMenu extends Component {
         useBus(this.env.bus, "HOME-MENU:TOGGLED", () => {
             this._closeBurger();
         });
-        useBus(this.env.bus, "ACTION_MANAGER:UPDATE", ({ detail: req }) => {
-            if (req.id) {
-                this._closeBurger();
-            }
-        });
+        useBus(
+            this.env.bus,
+            "ACTION_MANAGER:UPDATE",
+            /** @type {any} */ (
+                ({ detail: req }) => {
+                    if (req.id) {
+                        this._closeBurger();
+                    }
+                }
+            ),
+        );
     }
     _closeBurger() {
         this.state.isBurgerOpened = false;

@@ -3,14 +3,16 @@ import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_pop
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
-const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
-const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
 import { delay } from "@web/core/utils/concurrency";
+
+const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+const Chrome = { ...ChromePos, ...ChromeRestaurant };
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     steps: () =>

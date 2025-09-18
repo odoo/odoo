@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/legacy_tests/helpers/test_utils_dom default=false */
 
 import { delay } from "@web/core/utils/concurrency";
@@ -112,6 +114,31 @@ import { delay } from "@web/core/utils/concurrency";
         return contextWindow && node instanceof contextWindow.EventTarget;
     }
 
+    /**
+     * Check whether an element is visible (has layout dimensions).
+     *
+     * @param {Element} el
+     * @returns {boolean}
+     */
+    function _isVisible(el) {
+        return el.offsetWidth > 0 && el.offsetHeight > 0;
+    }
+
+    /**
+     * Return the page offset (top/left relative to the document) for an element,
+     * equivalent to the former jQuery .offset() method.
+     *
+     * @param {Element} el
+     * @returns {{top: number, left: number}}
+     */
+    function _offset(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
+        };
+    }
+
     //-------------------------------------------------------------------------
     // Public functions
     //-------------------------------------------------------------------------
@@ -120,7 +147,7 @@ import { delay } from "@web/core/utils/concurrency";
      * Click on a specified element. If the option first or last is not specified,
      * this method also check the unicity and the visibility of the target.
      *
-     * @param {string|EventTarget|EventTarget[]} el (if string: it is a (jquery) selector)
+     * @param {string|EventTarget|EventTarget[]} el (if string: it is a CSS selector)
      * @param {Object} [options={}] click options
      * @param {boolean} [options.allowInvisible=false] if true, clicks on the
      *   element event if it is invisible
@@ -132,21 +159,20 @@ import { delay } from "@web/core/utils/concurrency";
         let matches, target;
         let selectorMsg = "";
         if (typeof el === 'string') {
-            el = $(el);
-        }
-        if (el.disabled || (el instanceof jQuery && el.get(0).disabled)) {
-            throw new Error("Can't click on a disabled button");
-        }
-        if (_isEventTarget(el)) {
-            // EventTarget
+            matches = [...document.querySelectorAll(el)];
+            selectorMsg = `(selector: "${el}")`;
+        } else if (_isEventTarget(el)) {
             matches = [el];
         } else {
-            // Any other iterable object containing EventTarget objects (jQuery, HTMLCollection, etc.)
+            // Any other iterable object containing EventTarget objects (NodeList, HTMLCollection, etc.)
             matches = [...el];
+        }
+        if (matches.length > 0 && matches[0].disabled) {
+            throw new Error("Can't click on a disabled button");
         }
 
         const validMatches = options.allowInvisible ?
-            matches : matches.filter(t => $(t).is(':visible'));
+            matches : matches.filter(t => _isVisible(t));
 
         if (options.first) {
             if (validMatches.length === 1) {
@@ -182,7 +208,7 @@ import { delay } from "@web/core/utils/concurrency";
      * only one visible element, we trigger an error. In that case, it is better to
      * use the click helper instead.
      *
-     * @param {string|EventTarget|EventTarget[]} el (if string: it is a (jquery) selector)
+     * @param {string|EventTarget|EventTarget[]} el (if string: it is a CSS selector)
      * @param {boolean} [options={}] click options
      * @param {boolean} [options.allowInvisible=false] if true, clicks on the
      *   element event if it is invisible
@@ -193,17 +219,13 @@ import { delay } from "@web/core/utils/concurrency";
     }
 
     /**
-     * Simulate a drag and drop operation between 2 jquery nodes: $el and $to.
+     * Simulate a drag and drop operation between 2 DOM elements.
      * This is a crude simulation, with only the mousedown, mousemove and mouseup
-     * events, but it is enough to help test drag and drop operations with jqueryUI
+     * events, but it is enough to help test drag and drop operations with native
      * sortable.
      *
-     * @todo: remove the withTrailingClick option when the jquery update branch is
-     *   merged.  This is not the default as of now, because handlers are triggered
-     *   synchronously, which is not the same as the 'reality'.
-     *
-     * @param {jQuery|EventTarget} $el
-     * @param {jQuery|EventTarget} $to
+     * @param {Element} el the element to drag
+     * @param {Element} to the drop target element
      * @param {Object} [options]
      * @param {string|Object} [options.position='center'] target position:
      *   can either be one of {'top', 'bottom', 'left', 'right'} or
@@ -215,86 +237,87 @@ import { delay } from "@web/core/utils/concurrency";
      * @param {boolean} [options.withTrailingClick=false] if true, this utility
      *   function will also trigger a click on the target after the mouseup event
      *   (this is actually what happens when a drag and drop operation is done)
-     * @param {jQuery|EventTarget} [options.mouseenterTarget=undefined] target of the mouseenter event
-     * @param {jQuery|EventTarget} [options.mousedownTarget=undefined] target of the mousedown event
-     * @param {jQuery|EventTarget} [options.mousemoveTarget=undefined] target of the mousemove event
-     * @param {jQuery|EventTarget} [options.mouseupTarget=undefined] target of the mouseup event
-     * @param {jQuery|EventTarget} [options.ctrlKey=undefined] if the ctrl key should be considered pressed at the time of mouseup
+     * @param {Element} [options.mouseenterTarget=undefined] target of the mouseenter event
+     * @param {Element} [options.mousedownTarget=undefined] target of the mousedown event
+     * @param {Element} [options.mousemoveTarget=undefined] target of the mousemove event
+     * @param {Element} [options.mouseupTarget=undefined] target of the mouseup event
+     * @param {boolean} [options.ctrlKey=undefined] if the ctrl key should be considered pressed at the time of mouseup
      * @returns {Promise}
      */
-    async function dragAndDrop($el, $to, options) {
-        let el = null;
-        if (_isEventTarget($el)) {
-            el = $el;
-            $el = $(el);
-        }
-        if (_isEventTarget($to)) {
-            $to = $($to);
-        }
+    async function dragAndDrop(el, to, options) {
         options = options || {};
         const position = options.position || 'center';
-        const elementCenter = $el.offset();
-        const toOffset = $to.offset();
+        const elementCenter = _offset(el);
+        const toOffset = _offset(to);
 
         if (typeof position === 'object') {
             toOffset.top += position.top + 1;
             toOffset.left += position.left + 1;
         } else {
-            toOffset.top += $to.outerHeight() / 2;
-            toOffset.left += $to.outerWidth() / 2;
+            toOffset.top += to.offsetHeight / 2;
+            toOffset.left += to.offsetWidth / 2;
             const vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
             if (position === 'top') {
-                toOffset.top -= $to.outerHeight() / 2 + vertical_offset;
+                toOffset.top -= to.offsetHeight / 2 + vertical_offset;
             } else if (position === 'bottom') {
-                toOffset.top += $to.outerHeight() / 2 - vertical_offset;
+                toOffset.top += to.offsetHeight / 2 - vertical_offset;
             } else if (position === 'left') {
-                toOffset.left -= $to.outerWidth() / 2;
+                toOffset.left -= to.offsetWidth / 2;
             } else if (position === 'right') {
-                toOffset.left += $to.outerWidth() / 2;
+                toOffset.left += to.offsetWidth / 2;
             }
         }
 
-        if ($to[0].ownerDocument !== document) {
+        if (to.ownerDocument !== document) {
             // we are in an iframe
-            const bound = $('iframe')[0].getBoundingClientRect();
+            const bound = document.querySelector('iframe').getBoundingClientRect();
             toOffset.left += bound.left;
             toOffset.top += bound.top;
         }
-        await triggerEvent(options.mouseenterTarget || el || $el, 'mouseover', {}, true);
+        await triggerEvent(options.mouseenterTarget || el, 'mouseover', {}, true);
         if (!(options.continueMove)) {
-            elementCenter.left += $el.outerWidth() / 2;
-            elementCenter.top += $el.outerHeight() / 2;
+            elementCenter.left += el.offsetWidth / 2;
+            elementCenter.top += el.offsetHeight / 2;
 
-            await triggerEvent(options.mousedownTarget || el || $el, 'mousedown', {
+            await triggerEvent(options.mousedownTarget || el, 'mousedown', {
                 which: 1,
                 pageX: elementCenter.left,
                 pageY: elementCenter.top
             }, true);
         }
-        await triggerEvent(options.mousemoveTarget || el || $el, 'mousemove', {
+        await triggerEvent(options.mousemoveTarget || el, 'mousemove', {
             which: 1,
             pageX: toOffset.left,
             pageY: toOffset.top
         }, true);
 
         if (!options.disableDrop) {
-            await triggerEvent(options.mouseupTarget || el || $el, 'mouseup', {
+            await triggerEvent(options.mouseupTarget || el, 'mouseup', {
                 which: 1,
                 pageX: toOffset.left,
                 pageY: toOffset.top,
                 ctrlKey: options.ctrlKey,
             }, true);
             if (options.withTrailingClick) {
-                await triggerEvent(options.mouseupTarget || el || $el, 'click', {}, true);
+                await triggerEvent(options.mouseupTarget || el, 'click', {}, true);
             }
         } else {
             // It's impossible to drag another element when one is already
             // being dragged. So it's necessary to finish the drop when the test is
             // over otherwise it's impossible for the next tests to drag and
             // drop elements.
-            $el.on('remove', function () {
-                triggerEvent($el, 'mouseup', {}, true);
+            const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    for (const removed of mutation.removedNodes) {
+                        if (removed === el || removed.contains(el)) {
+                            observer.disconnect();
+                            triggerEvent(el, 'mouseup', {}, true);
+                            return;
+                        }
+                    }
+                }
             });
+            observer.observe(el.parentNode || document.body, { childList: true, subtree: true });
         }
         return returnAfterNextAnimationFrame();
     }
@@ -316,14 +339,11 @@ import { delay } from "@web/core/utils/concurrency";
 
     /**
      * Trigger an event on the specified target.
-     * This function will dispatch a native event to an EventTarget or a
-     * jQuery event to a jQuery object. This behaviour can be overridden by the
-     * jquery option.
+     * This function will dispatch a native DOM event to an EventTarget.
      *
      * @param {EventTarget|EventTarget[]} el
      * @param {string} eventType event type
      * @param {Object} [eventAttrs] event attributes
-     *   on a jQuery element with the `$.fn.trigger` function
      * @param {Boolean} [fast=false] true if the trigger event have to wait for a single tick instead of waiting for the next animation frame
      * @returns {Promise}
      */
@@ -362,16 +382,11 @@ import { delay } from "@web/core/utils/concurrency";
     /**
      * Trigger multiple events on the specified element.
      *
-     * @param {EventTarget|EventTarget[]} el
+     * @param {EventTarget} el
      * @param {string[]} events the events you want to trigger
      * @returns {Promise}
      */
     async function triggerEvents(el, events) {
-        if (el instanceof jQuery) {
-            if (el.length !== 1) {
-                throw new Error(`target has length ${el.length} instead of 1`);
-            }
-        }
         if (typeof events === 'string') {
             events = [events];
         }

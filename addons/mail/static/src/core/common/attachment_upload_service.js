@@ -2,7 +2,6 @@ import { EventBus } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-
 export class AttachmentUploadService {
     constructor(env, services) {
         this.setup(env, services);
@@ -33,10 +32,15 @@ export class AttachmentUploadService {
                 const tmpUrl = upload.data.get("tmp_url");
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
                 const attachment = this.store["ir.attachment"].insert(
-                    this._makeAttachmentData(upload, tmpId, composer ? undefined : thread, tmpUrl)
+                    this._makeAttachmentData(
+                        upload,
+                        tmpId,
+                        composer ? undefined : thread,
+                        tmpUrl,
+                    ),
                 );
                 composer?.attachments.push(attachment);
-            }
+            },
         );
         this.fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_LOADED",
@@ -47,13 +51,17 @@ export class AttachmentUploadService {
                 }
                 const def = this.deferredByAttachmentId.get(tmpId);
                 if (upload.xhr.status === 413) {
-                    this.notificationService.add(_t("File too large"), { type: "danger" });
+                    this.notificationService.add(_t("File too large"), {
+                        type: "danger",
+                    });
                     def.resolve();
                     this._cleanupUploading(tmpId);
                     return;
                 }
                 if (upload.xhr.status !== 200) {
-                    this.notificationService.add(_t("Server error"), { type: "danger" });
+                    this.notificationService.add(_t("Server error"), {
+                        type: "danger",
+                    });
                     def.resolve();
                     this._cleanupUploading(tmpId);
                     return;
@@ -67,7 +75,7 @@ export class AttachmentUploadService {
                 }
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
                 this._processLoaded(thread, composer, response, tmpId, def);
-            }
+            },
         );
         this.fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_ERROR",
@@ -78,7 +86,7 @@ export class AttachmentUploadService {
                 }
                 this.deferredByAttachmentId.get(tmpId).resolve();
                 this._cleanupUploading(tmpId);
-            }
+            },
         );
     }
 
@@ -136,7 +144,14 @@ export class AttachmentUploadService {
         await this.fileUploadService
             .upload(this.getUploadURL(thread), [file], {
                 buildFormData: (formData) => {
-                    this._buildFormData(formData, tmpURL, thread, composer, tmpId, options);
+                    this._buildFormData(
+                        formData,
+                        tmpURL,
+                        thread,
+                        composer,
+                        tmpId,
+                        options,
+                    );
                 },
             })
             .catch((e) => {

@@ -84,7 +84,7 @@ test("should add opacity to custom background colors but not to theme colors", a
     expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
     // Verify computed background color has no opacity.
     const backgroundColor = getComputedStyle(el.querySelector("p font")).backgroundColor;
-    expect(backgroundColor).toBe("rgb(113, 75, 103)");
+    expect(backgroundColor).toBe("rgb(168, 85, 247)");
 });
 
 test("default opacity should get applied when applying background color to icon", async () => {
@@ -1096,7 +1096,7 @@ describe("color preview", () => {
         expect(queryAll("font")).toHaveLength(0); // The color was deleted
         await press("Tab"); // Tab to 1st color
         await animationFrame();
-        expect("font").toHaveStyle({ color: "rgb(113, 75, 103)" });
+        expect("font").toHaveStyle({ color: "rgb(168, 85, 247)" });
     });
 
     test("should preview when changing custom color", async () => {

@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/main default=false */
 
 import { setupQUnit } from "./qunit";

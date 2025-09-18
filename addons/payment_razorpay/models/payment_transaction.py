@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode as url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError

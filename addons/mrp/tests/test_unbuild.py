@@ -176,7 +176,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = lot
             ml.quantity = 20
@@ -266,11 +266,11 @@ class TestUnbuild(TestMrpCommon):
         mo_form.qty_producing = 5.0
         mo_form.lot_producing_ids.set(lot_final)
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 5
         details_operation_form.save()
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 20
         details_operation_form.save()
@@ -416,7 +416,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.lot_producing_ids.set(lot_finished_1)
         mo = mo_form.save()
         self.assertEqual(mo.move_raw_ids[1].quantity, 12)
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 3
             ml.lot_id = lot_1
@@ -443,7 +443,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.qty_producing = 2
         mo_form.lot_producing_ids.set(lot_finished_2)
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 2
             ml.lot_id = lot_2
@@ -683,11 +683,11 @@ class TestUnbuild(TestMrpCommon):
         mo = mo_form.save()
         mo.action_assign()
 
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 1
         details_operation_form.save()
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 1
         details_operation_form.save()
@@ -831,7 +831,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.product_id = product_2
         mo2 = mo_form.save()
         mo2.action_confirm()
-        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.lot_id = product_1_sn
             ml.quantity = 1

@@ -1,7 +1,6 @@
-import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { browser } from "@web/core/browser/browser";
-
+import { patch } from "@web/core/utils/patch";
 patch(PosStore.prototype, {
     async setup() {
         this.employeeBuffer = [];
@@ -16,7 +15,7 @@ patch(PosStore.prototype, {
             this.employeeBuffer.forEach((employee) =>
                 this.data.write("pos.session", [this.config.current_session_id.id], {
                     employee_id: employee.id,
-                })
+                }),
             );
             this.employeeBuffer = [];
         });
@@ -121,7 +120,9 @@ patch(PosStore.prototype, {
         if (!this.config.module_pos_hr) {
             return super._getConnectedCashier(...arguments);
         }
-        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        const cashier_id = Number(
+            sessionStorage.getItem(`connected_cashier_${this.config.id}`),
+        );
         if (cashier_id && this.models["hr.employee"].get(cashier_id)) {
             return this.models["hr.employee"].get(cashier_id);
         }
@@ -139,12 +140,15 @@ patch(PosStore.prototype, {
     },
     async allowProductCreation() {
         if (this.config.module_pos_hr) {
-            return this.employeeIsAdmin;
+            return this.employeeIsAdmin && (await super.allowProductCreation());
         }
         return await super.allowProductCreation();
     },
     canEditPayment(order) {
-        return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
+        return (
+            super.canEditPayment(order) &&
+            (!this.config.module_pos_hr || this.employeeIsAdmin)
+        );
     },
     async handleUrlParams() {
         if (this.config.module_pos_hr && !this.cashier) {

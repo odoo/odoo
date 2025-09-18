@@ -1,8 +1,6 @@
 import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
-
 import { patch } from "@web/core/utils/patch";
-
 export const CALL_PROMOTE_FULLSCREEN = Object.freeze({
     INACTIVE: "INACTIVE",
     ACTIVE: "ACTIVE",
@@ -39,13 +37,15 @@ const ThreadPatch = {
             async onUpdate() {
                 const hadSelfSession = this.hadSelfSession;
                 const lastSessionIds = this.lastSessionIds;
-                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtc_session_ids));
+                this.hadSelfSession = Boolean(
+                    this.store.rtc.selfSession?.in(this.rtc_session_ids),
+                );
                 this.lastSessionIds = new Set(this.rtc_session_ids.map((s) => s.id));
                 const shouldPlayJoinSound = [...this.lastSessionIds].some(
-                    (id) => !lastSessionIds.has(id)
+                    (id) => !lastSessionIds.has(id),
                 );
                 const shouldPlayLeaveSound = [...lastSessionIds].some(
-                    (id) => !this.lastSessionIds.has(id)
+                    (id) => !this.lastSessionIds.has(id),
                 );
                 if (
                     !hadSelfSession || // sound for self-join is played instead
@@ -66,7 +66,7 @@ const ThreadPatch = {
         this.videoCountNotSelf = fields.Attr(0, {
             compute() {
                 return this.rtc_session_ids.filter(
-                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
+                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession),
                 ).length;
             },
             onUpdate() {
@@ -91,9 +91,12 @@ const ThreadPatch = {
                 const raisingHandCards = [];
                 const sessionCards = [];
                 const invitationCards = [];
-                const filterVideos = this.store.settings.showOnlyVideo && this.videoCount > 0;
+                const filterVideos =
+                    this.store.settings.showOnlyVideo && this.videoCount > 0;
                 for (const session of this.rtc_session_ids) {
-                    const target = session.raisingHand ? raisingHandCards : sessionCards;
+                    const target = session.raisingHand
+                        ? raisingHandCards
+                        : sessionCards;
                     const cameraStream = session.is_camera_on
                         ? session.videoStreams.get("camera")
                         : undefined;
@@ -122,15 +125,20 @@ const ThreadPatch = {
                         invitationCards.push({ key: "member_" + member.id, member });
                     }
                 }
-                raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
+                raisingHandCards.sort(
+                    (c1, c2) => c1.session.raisingHand - c2.session.raisingHand,
+                );
                 sessionCards.sort(
                     (c1, c2) =>
                         c1.session.channel_member_id?.persona?.name?.localeCompare(
-                            c2.session.channel_member_id?.persona?.name
-                        ) ?? 1
+                            c2.session.channel_member_id?.persona?.name,
+                        ) ?? 1,
                 );
                 invitationCards.sort(
-                    (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
+                    (c1, c2) =>
+                        c1.member.persona?.name?.localeCompare(
+                            c2.member.persona?.name,
+                        ) ?? 1,
                 );
                 return raisingHandCards.concat(sessionCards, invitationCards);
             },
@@ -138,11 +146,14 @@ const ThreadPatch = {
         this.useCameraByDefault = fields.Attr(null, {
             /** @this {import("models").Thread} */
             compute() {
-                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
+                if (
+                    this.channel_type === "chat" &&
+                    this.store.rtc.selfSession?.channel?.eq(this)
+                ) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
                 return JSON.parse(
-                    localStorage.getItem(`discuss_channel_camera_default_${this.id}`)
+                    localStorage.getItem(`discuss_channel_camera_default_${this.id}`),
                 );
             },
             /** @this {import("models").Thread} */
@@ -150,7 +161,7 @@ const ThreadPatch = {
                 if (this.useCameraByDefault !== null) {
                     localStorage.setItem(
                         `discuss_channel_camera_default_${this.id}`,
-                        JSON.stringify(this.useCameraByDefault)
+                        JSON.stringify(this.useCameraByDefault),
                     );
                 }
             },
@@ -177,15 +188,14 @@ const ThreadPatch = {
             return;
         }
         const otherStreamingSession = this.rtc_session_ids.find(
-            (session) => session.notEq(this.store.rtc.selfSession) && session.hasVideo
+            (session) => session.notEq(this.store.rtc.selfSession) && session.hasVideo,
         );
         if (!otherStreamingSession) {
             return;
         }
         this.activeRtcSession = otherStreamingSession;
-        otherStreamingSession.mainVideoStreamType = otherStreamingSession.is_screen_sharing_on
-            ? "screen"
-            : "camera";
+        otherStreamingSession.mainVideoStreamType =
+            otherStreamingSession.is_screen_sharing_on ? "screen" : "camera";
     },
     open(options) {
         if (this.store.fullscreenChannel?.notEq(this)) {

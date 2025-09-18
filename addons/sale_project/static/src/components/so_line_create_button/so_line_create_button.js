@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/fields/relational/many2one/many2one_field";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { Component } from "@odoo/owl";
 
 export class SoLineCreateButton extends Component {

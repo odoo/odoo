@@ -1,15 +1,15 @@
-import { Transition } from "@web/core/transition";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { Component, onMounted, onWillStart, reactive } from "@odoo/owl";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
+import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
+import { MainComponentsContainer } from "@web/components/main_components_container";
+import { Transition } from "@web/components/transition";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
-import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
-import { useIdleTimer } from "./utils/use_idle_timer";
+import { useOwnDebugContext } from "@web/services/debug/debug_context";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
+import { useIdleTimer } from "./utils/use_idle_timer";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -66,7 +66,7 @@ export class Chrome extends Component {
                     this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
             }),
-            [this.pos]
+            [this.pos],
         );
     }
 

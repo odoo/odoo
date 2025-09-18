@@ -1,4 +1,4 @@
-import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scrolling";
+// @ts-check
 
 /**
  * The bootstrap library extensions and fixes should be done here to avoid
@@ -15,6 +15,11 @@ import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scroll
  * We cannot disable sanitization because bootstrap uses tooltip/popover
  * DOM attributes in an "unsafe" way.
  */
+
+import {
+    compensateScrollbar,
+    getScrollingElement,
+} from "@web/core/utils/dom/scrolling";
 const bsSanitizeAllowList = Tooltip.Default.allowList;
 
 bsSanitizeAllowList["*"].push("title", "style", /^data-[\w-]+/);
@@ -53,6 +58,11 @@ Tooltip.Default.boundary = "window";
 Tooltip.Default.delay = { show: 1000, hide: 0 };
 
 const bootstrapShowFunction = Tooltip.prototype.show;
+/**
+ * Patched Tooltip.show: removes any existing tooltips before showing a new one
+ * to prevent duplicates. Silently ignores "show on visible elements" errors.
+ * @returns {*} The original show() return value, or 0 if suppressed.
+ */
 Tooltip.prototype.show = function () {
     // Overwrite bootstrap tooltip method to prevent showing 2 tooltip at the
     // same time
@@ -69,10 +79,9 @@ Tooltip.prototype.show = function () {
 };
 
 /**
- * Bootstrap disables dynamic dropdown positioning when it is in a navbar. Here
- * we make this patch to activate this dynamic navbar's dropdown positioning
- * which is useful to avoid that the elements of the website sub-menus overflow
- * the page.
+ * Patched _detectNavbar: always returns false so Bootstrap enables dynamic
+ * dropdown positioning, preventing website sub-menu overflow.
+ * @returns {false}
  */
 Dropdown.prototype._detectNavbar = function () {
     return false;
@@ -80,6 +89,11 @@ Dropdown.prototype._detectNavbar = function () {
 
 /* Bootstrap modal scrollbar compensation on non-body */
 const bsAdjustDialogFunction = Modal.prototype._adjustDialog;
+/**
+ * Patched _adjustDialog: compensates scrollbar on the actual scrolling element
+ * (not just document.body) before delegating to the original Bootstrap logic.
+ * @returns {*} The original _adjustDialog() return value.
+ */
 Modal.prototype._adjustDialog = function () {
     const document = this._element.ownerDocument;
 
@@ -98,6 +112,11 @@ Modal.prototype._adjustDialog = function () {
 };
 
 const bsResetAdjustmentsFunction = Modal.prototype._resetAdjustments;
+/**
+ * Patched _resetAdjustments: removes scrollbar compensation from the actual
+ * scrolling element before delegating to the original Bootstrap logic.
+ * @returns {*} The original _resetAdjustments() return value.
+ */
 Modal.prototype._resetAdjustments = function () {
     const document = this._element.ownerDocument;
 

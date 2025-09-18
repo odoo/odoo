@@ -6,6 +6,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selecti
 import { registry } from "@web/core/registry";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     steps: () =>
@@ -280,7 +281,11 @@ registry.category("web_tour.tours").add("test_loyalty_reward_with_variant", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomerValue("Test Partner", true),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            Dialog.discard(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductConfiguratorPopup.pickRadio("Value 1"),
             Dialog.confirm(),

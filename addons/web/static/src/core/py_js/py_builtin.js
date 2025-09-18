@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/py_js/py_builtin - Python built-in functions (bool, len, set, sorted, etc.) for the JS evaluator */
+
 import { PyDate, PyDateTime, PyRelativeDelta, PyTime, PyTimeDelta } from "./py_date";
 
 export class EvaluationError extends Error {}
@@ -12,7 +16,11 @@ export function execOnIterable(iterable, func) {
         // is not in Python
         throw new EvaluationError(`value not iterable`);
     }
-    if (typeof iterable === "object" && !Array.isArray(iterable) && !(iterable instanceof Set)) {
+    if (
+        typeof iterable === "object" &&
+        !Array.isArray(iterable) &&
+        !(iterable instanceof Set)
+    ) {
         // dicts are considered as iterable in Python
         iterable = Object.keys(iterable);
     }
@@ -29,6 +37,9 @@ export const BUILTINS = {
      * @returns {boolean}
      */
     bool(value) {
+        if (value === undefined || value === null) {
+            return false;
+        }
         switch (typeof value) {
             case "number":
                 return value !== 0;
@@ -37,13 +48,10 @@ export const BUILTINS = {
             case "boolean":
                 return value;
             case "object":
-                if (value === null || value === undefined) {
-                    return false;
-                }
                 if (value.isTrue) {
                     return value.isTrue();
                 }
-                if (value instanceof Array) {
+                if (Array.isArray(value)) {
                     return !!value.length;
                 }
                 if (value instanceof Set) {
@@ -58,22 +66,26 @@ export const BUILTINS = {
         if (arguments.length > 2) {
             // we always receive at least one argument: kwargs (return fnValue(...args, kwargs); in FunctionCall case)
             throw new EvaluationError(
-                `set expected at most 1 argument, got (${arguments.length - 1}`
+                `set expected at most 1 argument, got (${arguments.length - 1}`,
             );
         }
-        return execOnIterable(iterable, (iterable) => {
-            return new Set(iterable);
-        });
+        return execOnIterable(iterable, (iterable) => new Set(iterable));
     },
 
     max(...args) {
-        // kwargs are not supported by Math.max.
-        return Math.max(...args.slice(0, -1));
+        const values = args.slice(0, -1); // remove kwargs
+        if (values.length === 1 && Array.isArray(values[0])) {
+            return Math.max(...values[0]);
+        }
+        return Math.max(...values);
     },
 
     min(...args) {
-        // kwargs are not supported by Math.min.
-        return Math.min(...args.slice(0, -1));
+        const values = args.slice(0, -1); // remove kwargs
+        if (values.length === 1 && Array.isArray(values[0])) {
+            return Math.min(...values[0]);
+        }
+        return Math.min(...values);
     },
 
     time: {

@@ -1,6 +1,5 @@
-import { useService } from "@web/core/utils/hooks";
 import { useComponent, useEffect } from "@odoo/owl";
-
+import { useService } from "@web/core/utils/hooks";
 export function useBarcodeReader(callbackMap, exclusive = false) {
     const current = useComponent();
     const barcodeReader = useService("barcode_reader");
@@ -10,7 +9,7 @@ export function useBarcodeReader(callbackMap, exclusive = false) {
         }
         useEffect(
             () => barcodeReader.register(callbackMap, exclusive),
-            () => []
+            () => [],
         );
     }
 }

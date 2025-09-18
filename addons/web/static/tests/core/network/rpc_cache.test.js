@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Deferred, describe, expect, microTick, test, tick } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCCache } from "@web/core/network/rpc_cache";
@@ -10,8 +12,11 @@ const S_PENDING = Symbol("Promise");
  */
 function promiseState(promise) {
     return Promise.race([promise, Promise.resolve(S_PENDING)]).then(
-        (value) => (value === S_PENDING ? { status: "pending" } : { status: "fulfilled", value }),
-        (reason) => ({ status: "rejected", reason })
+        (value) =>
+            value === S_PENDING
+                ? { status: "pending" }
+                : { status: "fulfilled", value },
+        (reason) => ({ status: "rejected", reason }),
     );
 }
 
@@ -23,7 +28,7 @@ test("RamCache: can cache a simple call", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     const rpcCacheRead = (number) =>
         rpcCache.read("table", "key", () => {
@@ -41,7 +46,7 @@ test("RamCache: ram is set with promises", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     // If two identical calls are made in succession, only one fallback will be made.
@@ -72,13 +77,13 @@ test("PersistentCache: can cache a simple call", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     expect(
         await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 123,
     });
@@ -86,7 +91,7 @@ test("PersistentCache: can cache a simple call", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        'encrypted data:{"test":123}'
+        'encrypted data:{"test":123}',
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -107,8 +112,8 @@ test("PersistentCache: can cache a simple call", async () => {
                 expect.step("Fallback");
                 return Promise.resolve(def);
             },
-            { type: "disk" }
-        )
+            { type: "disk" },
+        ),
     ).toEqual({ test: 123 });
     expect.verifySteps(["Fallback"]);
 
@@ -119,7 +124,7 @@ test("PersistentCache: can cache a simple call", async () => {
     await microTick();
     // Both caches are updated with the last value
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        'encrypted data:{"test":456}'
+        'encrypted data:{"test":456}',
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -131,13 +136,13 @@ test("invalidate table", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     expect(
         await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 123,
     });
@@ -146,7 +151,7 @@ test("invalidate table", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        'encrypted data:{"test":123}'
+        'encrypted data:{"test":123}',
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -165,13 +170,13 @@ test("invalidate multiple tables", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     expect(
         await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 123,
     });
@@ -179,7 +184,7 @@ test("invalidate multiple tables", async () => {
     expect(
         await rpcCache.read("table2", "key", () => Promise.resolve({ test: 456 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 456,
     });
@@ -188,10 +193,10 @@ test("invalidate multiple tables", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        'encrypted data:{"test":123}'
+        'encrypted data:{"test":123}',
     );
     expect(rpcCache.indexedDB.mockIndexedDB.table2.key.ciphertext).toBe(
-        'encrypted data:{"test":456}'
+        'encrypted data:{"test":456}',
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -216,14 +221,14 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     await rpcCache.encryptReady;
 
     expect(
         await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 123,
     });
@@ -231,7 +236,7 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        'encrypted data:{"test":123}'
+        'encrypted data:{"test":123}',
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -252,8 +257,8 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
                 expect.step("Fallback");
                 return Promise.resolve(def);
             },
-            { type: "disk" }
-        )
+            { type: "disk" },
+        ),
     ).toEqual({ test: 123 });
     expect.verifySteps(["Fallback"]);
 
@@ -265,10 +270,12 @@ test("update callback - Ram Value", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
-    expect(await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }))).toEqual({
+    expect(
+        await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 })),
+    ).toEqual({
         test: 123,
     });
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
@@ -293,8 +300,8 @@ test("update callback - Ram Value", async () => {
                     expect.step("Callback");
                     expect(result).toEqual({ test: 456 });
                 },
-            }
-        )
+            },
+        ),
     ).toEqual({ test: 123 });
     expect.verifySteps(["Fallback"]);
 
@@ -312,13 +319,13 @@ test("update callback - Disk Value", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     expect(
         await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
             type: "disk",
-        })
+        }),
     ).toEqual({
         test: 123,
     });
@@ -326,7 +333,7 @@ test("update callback - Disk Value", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":123}`
+        `encrypted data:{"test":123}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -353,8 +360,8 @@ test("update callback - Disk Value", async () => {
                     expect.step("Callback");
                     expect(result).toEqual({ test: 456 });
                 },
-            }
-        )
+            },
+        ),
     ).toEqual({ test: 123 });
     expect.verifySteps(["Fallback"]);
 
@@ -366,7 +373,7 @@ test("update callback - Disk Value", async () => {
     expect.verifySteps(["Callback"]);
     // Both caches are updated with the last value
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":456}`
+        `encrypted data:{"test":456}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -378,11 +385,13 @@ test("Ram value shouldn't change (update the rpc response)", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     // fill the cache
-    const res = await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }));
+    const res = await rpcCache.read("table", "key", () =>
+        Promise.resolve({ test: 123 }),
+    );
     expect(res).toEqual({
         test: 123,
     });
@@ -404,7 +413,7 @@ test("Ram value shouldn't change (update the Ram response)", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     // fill the cache
@@ -434,13 +443,18 @@ test("Ram value shouldn't change (update the IndexedDB response)", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     // fill the cache
-    let res = await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
-        type: "disk",
-    });
+    let res = await rpcCache.read(
+        "table",
+        "key",
+        () => Promise.resolve({ test: 123 }),
+        {
+            type: "disk",
+        },
+    );
     expect(res).toEqual({
         test: 123,
     });
@@ -448,7 +462,7 @@ test("Ram value shouldn't change (update the IndexedDB response)", async () => {
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":123}`
+        `encrypted data:{"test":123}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -476,7 +490,7 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     let res;
@@ -518,7 +532,7 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     let res;
@@ -533,7 +547,7 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     await microTick();
     await microTick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":123}`
+        `encrypted data:{"test":123}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -574,7 +588,7 @@ test("RamCache (no update): consecutive calls (success)", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     const def = new Deferred();
@@ -601,7 +615,7 @@ test("RamCache (no update): consecutive calls and rejected promise", async () =>
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     const def = new Deferred();
@@ -625,7 +639,7 @@ test("RamCache: pending request and call to invalidate", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     const def = new Deferred();
@@ -670,7 +684,7 @@ test("RamCache: pending request and call to invalidate, update callbacks", async
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     // populate the cache
@@ -692,9 +706,10 @@ test("RamCache: pending request and call to invalidate, update callbacks", async
                 return def;
             },
             {
-                callback: (newValue) => expect.step(`second call: callback ${newValue}`),
+                callback: (newValue) =>
+                    expect.step(`second call: callback ${newValue}`),
                 update: "always",
-            }
+            },
         )
         .then((r) => expect.step(`second call: resolved with ${r}`));
     // read it twice, s.t. there's a pending request
@@ -708,7 +723,7 @@ test("RamCache: pending request and call to invalidate, update callbacks", async
             {
                 callback: (newValue) => expect.step(`third call: callback ${newValue}`),
                 update: "always",
-            }
+            },
         )
         .then((r) => {
             expect.step(`third call: resolved with ${r}`);
@@ -742,7 +757,7 @@ test("RamCache: pending request and call to invalidate, update callbacks in erro
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     const defs = [new Deferred(), new Deferred()];
@@ -779,7 +794,9 @@ test("RamCache: pending request and call to invalidate, update callbacks in erro
 
     // read again, should retrieve same prom as second call which is still pending (update "always")
     rpcCache
-        .read("table", "key", () => expect.step("should not be called"), { update: "always" })
+        .read("table", "key", () => expect.step("should not be called"), {
+            update: "always",
+        })
         .then((r) => expect.step(`fourth call: resolved with ${r}`));
     await tick();
     expect.verifySteps([]);
@@ -803,7 +820,7 @@ test("DiskCache: multiple consecutive calls, empty cache", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     const def = new Deferred();
     let id = 0;
@@ -819,7 +836,7 @@ test("DiskCache: multiple consecutive calls, empty cache", async () => {
                 callback: () => {
                     expect.step(`callback ${++id}`);
                 },
-            }
+            },
         );
     };
 
@@ -841,7 +858,7 @@ test("DiskCache: multiple consecutive calls, value already in disk cache", async
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     const def = new Deferred();
 
@@ -851,7 +868,7 @@ test("DiskCache: multiple consecutive calls, value already in disk cache", async
     });
     await tick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":123}`
+        `encrypted data:{"test":123}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -874,17 +891,23 @@ test("DiskCache: multiple consecutive calls, value already in disk cache", async
                 type: "disk",
                 callback: (result, hasChanged) => {
                     expect.step(
-                        `callback ${id}: ${JSON.stringify(result)} ${hasChanged ? "(changed)" : ""}`
+                        `callback ${id}: ${JSON.stringify(result)} ${hasChanged ? "(changed)" : ""}`,
                     );
                 },
-            }
+            },
         );
 
-    rpcCacheRead(1).then((result) => expect.step("res call 1: " + JSON.stringify(result)));
+    rpcCacheRead(1).then((result) =>
+        expect.step("res call 1: " + JSON.stringify(result)),
+    );
     await tick();
-    rpcCacheRead(2).then((result) => expect.step("res call 2: " + JSON.stringify(result)));
+    rpcCacheRead(2).then((result) =>
+        expect.step("res call 2: " + JSON.stringify(result)),
+    );
     await tick();
-    rpcCacheRead(3).then((result) => expect.step("res call 3: " + JSON.stringify(result)));
+    rpcCacheRead(3).then((result) =>
+        expect.step("res call 3: " + JSON.stringify(result)),
+    );
     await tick();
 
     expect.verifySteps([
@@ -912,7 +935,7 @@ test("DiskCache: multiple consecutive calls, fallback fails", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     const def = new Deferred();
 
@@ -922,7 +945,7 @@ test("DiskCache: multiple consecutive calls, fallback fails", async () => {
     });
     await tick();
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
-        `encrypted data:{"test":123}`
+        `encrypted data:{"test":123}`,
     );
     expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
@@ -946,14 +969,20 @@ test("DiskCache: multiple consecutive calls, fallback fails", async () => {
                 callback: () => {
                     expect.step("callback (should not be executed)");
                 },
-            }
+            },
         );
 
-    rpcCacheRead(1).then((result) => expect.step("res call 1: " + JSON.stringify(result)));
+    rpcCacheRead(1).then((result) =>
+        expect.step("res call 1: " + JSON.stringify(result)),
+    );
     await tick();
-    rpcCacheRead(2).then((result) => expect.step("res call 2: " + JSON.stringify(result)));
+    rpcCacheRead(2).then((result) =>
+        expect.step("res call 2: " + JSON.stringify(result)),
+    );
     await tick();
-    rpcCacheRead(3).then((result) => expect.step("res call 3: " + JSON.stringify(result)));
+    rpcCacheRead(3).then((result) =>
+        expect.step("res call 3: " + JSON.stringify(result)),
+    );
     await tick();
 
     expect.verifySteps([
@@ -980,7 +1009,7 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
     const def = new Deferred();
 
@@ -997,7 +1026,7 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
                 callback: () => {
                     expect.step("callback (should not be executed)");
                 },
-            }
+            },
         );
 
     rpcCacheRead(1).catch((error) => expect.step(`error call 1: ${error.message}`));
@@ -1033,7 +1062,7 @@ test("DiskCache: write throws an IDBQuotaExceededError", async () => {
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     const fallback = () => {

@@ -4,7 +4,7 @@
         <record id="quant_subcontracting_search_view" model="ir.ui.view">
             <field name="name">stock.quant.subcontracting.search</field>
             <field name="model">stock.quant</field>
-            <field name="inherit_id" ref="stock.quant_search_view" />
+            <field name="inherit_id" ref="stock.view_stock_quant_search" />
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='transit_loc']" position="after">
                     <filter string="Subcontracting Locations" name="is_subcontract" domain="[('is_subcontract', '=', True)]" groups="mrp.group_mrp_user"/>
@@ -13,4 +13,3 @@
         </record>
     </data>
 </odoo>
-

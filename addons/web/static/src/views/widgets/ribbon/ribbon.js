@@ -1,21 +1,19 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { standardWidgetProps } from "../standard_widget_props";
+// @ts-check
+
+/** @module @web/views/widgets/ribbon/ribbon - Decorative ribbon on the top-right corner of a form view with configurable label and color */
 
 import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 /**
- * This widget adds a ribbon on the top right side of the form
+ * Decorative ribbon on the top-right corner of a form view.
  *
- *      - You can specify the text with the title prop.
- *      - You can specify the title (tooltip) with the tooltip prop.
- *      - You can specify a background color for the ribbon with the bg_color prop
- *        using bootstrap classes :
- *        (bg-primary, bg-secondary, bg-success, bg-danger, bg-warning, bg-info,
- *        bg-light, bg-dark, bg-white)
- *
- *        If you don't specify the bg_color prop the bg-success class will be used
- *        by default.
+ * Configurable via arch attributes:
+ * - `title` / `text`: ribbon label
+ * - `tooltip`: hover tooltip
+ * - `bg_color`: Bootstrap background class (default: `text-bg-success`)
  */
 export class RibbonWidget extends Component {
     static template = "web.Ribbon";
@@ -31,6 +29,7 @@ export class RibbonWidget extends Component {
         bgClass: "text-bg-success",
     };
 
+    /** @returns {string} CSS classes for the ribbon element, including size modifiers */
     get classes() {
         let classes = this.props.bgClass;
         if (this.props.text.length > 15) {

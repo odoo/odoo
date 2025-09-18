@@ -1,3 +1,4 @@
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import {
     Component,
     onMounted,
@@ -11,15 +12,12 @@ import {
     useSubEnv,
     xml,
 } from "@odoo/owl";
-
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
-import { Deferred } from "@web/core/utils/concurrency";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { _t } from "@web/core/l10n/translation";
+import { Deferred } from "@web/core/utils/concurrency";
+import { makeDraggableHook } from "@web/core/utils/dnd/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
-
+import { OVERLAY_SYMBOL } from "@web/ui/overlay/overlay_container";
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
     let t;
@@ -95,7 +93,10 @@ export function onExternalClick(refName, cb) {
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
  * @returns {({ isHover: boolean })}
  */
-export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
+export function useHover(
+    refNames,
+    { onHover, onAway, stateObserver, onHovering } = {},
+) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
     const targets = [];
     let wasHovering = false;
@@ -214,13 +215,13 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             () => target.ref.el,
             "mouseenter",
             (ev) => onmouseenter(ev),
-            true
+            true,
         );
         useLazyExternalListener(
             () => target.ref.el,
             "mouseleave",
             (ev) => onmouseleave(ev),
-            true
+            true,
         );
     }
 
@@ -274,7 +275,10 @@ export class UseHoverOverlay extends Component {
 export function useOnBottomScrolled(refName, callback, threshold = 1) {
     const ref = useRef(refName);
     function onScroll() {
-        if (Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) < threshold) {
+        if (
+            Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) <
+            threshold
+        ) {
             callback();
         }
     }
@@ -313,7 +317,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
                 };
             }
         },
-        () => [ref.el, state.ready]
+        () => [ref.el, state.ready],
     );
     return state;
 }
@@ -346,7 +350,8 @@ export function useMessageScrolling(duration = 2000) {
             state.initiated = true;
             let messageScrollDirection;
             if (message.notIn(thread.messages)) {
-                messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
+                messageScrollDirection =
+                    message.id < thread.messages[0]?.id ? "top" : "bottom";
                 await thread.loadAround(message.id);
             }
             const lastHighlightedMessageId = state.highlightedMessageId;
@@ -436,7 +441,7 @@ export function useMicrophoneVolume() {
                     _t('"%(hostname)s" requires microphone access', {
                         hostname: browser.location.host,
                     }),
-                    { type: "warning" }
+                    { type: "warning" },
                 );
                 return;
             }
@@ -465,7 +470,11 @@ export function useMicrophoneVolume() {
     return state;
 }
 
-export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
+export function useSelection({
+    refName,
+    model,
+    preserveOnClickAwayPredicate = () => false,
+}) {
     const ui = useService("ui");
     const ref = useRef(refName);
     function onSelectionChange() {
@@ -629,7 +638,7 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
                 action();
                 reset();
             }, LONG_PRESS_DELAY);
-        }
+        },
     );
     useLazyExternalListener(
         () => ref.el,
@@ -644,7 +653,7 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
             if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
                 reset();
             }
-        }
+        },
     );
     useLazyExternalListener(() => ref.el, "touchend", reset);
     useLazyExternalListener(() => ref.el, "touchcancel", reset);

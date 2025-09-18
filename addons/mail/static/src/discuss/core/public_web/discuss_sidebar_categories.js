@@ -4,18 +4,15 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_sidebar_channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
-
 import { Component, useSubEnv } from "@odoo/owl";
-
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
-
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
-    "mail.discuss_sidebar_channel_indicators"
+    "mail.discuss_sidebar_channel_indicators",
 );
 
 export class DiscussSidebarSubchannel extends Component {
@@ -170,7 +167,10 @@ export class DiscussSidebarChannel extends Component {
         }
         return (
             this.isSelfOrThreadActive &&
-            !(this.thread.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
+            !(
+                this.thread.self_member_id?.mute_until_dt &&
+                sub.self_member_id?.mute_until_dt
+            )
         );
     }
 

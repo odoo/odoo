@@ -116,7 +116,7 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertIn("description_purchase", purchase.order_line.name)
         purchase.button_confirm()
-        self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
+        self.assertEqual(purchase.state, 'done', 'Purchase order should be in the approved state')
 
         # Check dropship count on SO and PO
         self.assertEqual(purchase.incoming_picking_count, 0)
@@ -186,7 +186,7 @@ class TestDropship(common.TransactionCase):
         purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_dropship.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
-        self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
+        self.assertEqual(purchase.state, 'done', 'Purchase order should be in the approved state')
 
         # Check the partner of the related picking and move
         self.assertEqual(sale_order.picking_ids.partner_id, supplier_dropship)
@@ -475,7 +475,7 @@ class TestDropshipPostInstall(common.TransactionCase):
             'name': 'Dropshipped Product',
             'tracking': 'none',
             'standard_price': 20,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'seller_ids': [Command.create({
                 'partner_id': cls.supplier.id,
             })],

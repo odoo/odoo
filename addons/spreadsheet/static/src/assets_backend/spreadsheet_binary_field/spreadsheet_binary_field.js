@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { BinaryField, binaryField } from "@web/views/fields/binary/binary_field";
+import { BinaryField, binaryField } from "@web/fields/media/binary/binary_field";
 
 export class SpreadsheetBinaryField extends BinaryField {
     static template = "spreadsheet.SpreadsheetBinaryField";

@@ -1,6 +1,8 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -268,7 +270,7 @@ test("char field translatable", async () => {
             {
                 message:
                     "the new translation value should be written and the value false voids the translation",
-            }
+            },
         );
         for (const record of this.env["res.partner"].browse(args[0])) {
             record[args[1]] = args[2][kwargs.context.lang];
@@ -417,7 +419,7 @@ test("html field translatable", async () => {
     onRpc("res.partner", "update_field_translations", ({ args }) => {
         expect(args[2]).toEqual(
             { en_US: { "first paragraph": "first paragraph modified" } },
-            { message: "the new translation value should be written" }
+            { message: "the new translation value should be written" },
         );
         return true;
     });
@@ -442,7 +444,7 @@ test("html field translatable", async () => {
         "<p>first paragraph</p><p>second paragraph</p>",
         {
             message: "the new partial translation should not be transfered",
-        }
+        },
     );
 });
 
@@ -571,13 +573,15 @@ test("input field: change value before pending onchange returns (2)", async () =
     def.resolve();
     await animationFrame();
     expect(".o_field_widget[name='name'] input").toHaveValue("test", {
-        message: "The onchage value should not be applied because the input is in edition",
+        message:
+            "The onchage value should not be applied because the input is in edition",
     });
     await fieldInput("name").press("Enter");
     await expect(".o_field_widget[name='name'] input").toHaveValue("test");
     await fieldInput("int_field").edit("10");
     await expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
-        message: "The onchange value should be applied because the input is not in edition",
+        message:
+            "The onchange value should be applied because the input is not in edition",
     });
 });
 
@@ -693,9 +697,13 @@ test("support autocomplete attribute", async () => {
             <field name="name" autocomplete="coucou"/>
         </form>`,
     });
-    expect(".o_field_widget[name='name'] input").toHaveAttribute("autocomplete", "coucou", {
-        message: "attribute autocomplete should be set",
-    });
+    expect(".o_field_widget[name='name'] input").toHaveAttribute(
+        "autocomplete",
+        "coucou",
+        {
+            message: "attribute autocomplete should be set",
+        },
+    );
 });
 
 test("input autocomplete attribute set to none by default", async () => {
@@ -708,9 +716,13 @@ test("input autocomplete attribute set to none by default", async () => {
             <field name="name"/>
         </form>`,
     });
-    expect(".o_field_widget[name='name'] input").toHaveAttribute("autocomplete", "off", {
-        message: "attribute autocomplete should be set to none by default",
-    });
+    expect(".o_field_widget[name='name'] input").toHaveAttribute(
+        "autocomplete",
+        "off",
+        {
+            message: "attribute autocomplete should be set to none by default",
+        },
+    );
 });
 
 test("support password attribute", async () => {
@@ -785,7 +797,8 @@ test("input field: empty password", async () => {
         message: "password field input value should with type 'password' in edit mode",
     });
     expect(".o_field_char input").toHaveValue("", {
-        message: "password field input value should be the (non-hidden, empty) password value",
+        message:
+            "password field input value should be the (non-hidden, empty) password value",
     });
 });
 
@@ -835,9 +848,13 @@ test("char field with placeholder", async () => {
             </sheet>
         </form>`,
     });
-    expect(".o_field_widget[name='name'] input").toHaveAttribute("placeholder", "Placeholder", {
-        message: "placeholder attribute should be set",
-    });
+    expect(".o_field_widget[name='name'] input").toHaveAttribute(
+        "placeholder",
+        "Placeholder",
+        {
+            message: "placeholder attribute should be set",
+        },
+    );
 });
 
 test("Form: placeholder_field shows as placeholder", async () => {

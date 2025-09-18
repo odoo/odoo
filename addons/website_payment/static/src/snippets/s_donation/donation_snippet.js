@@ -2,7 +2,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { formatCurrency } from "@web/core/currency";
+import { formatCurrency } from "@web/services/currency";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 

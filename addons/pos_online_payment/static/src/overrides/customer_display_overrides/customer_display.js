@@ -1,9 +1,8 @@
-import { patch } from "@web/core/utils/patch";
-import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
 import { useEffect } from "@odoo/owl";
 import { CustomerDisplay } from "@point_of_sale/customer_display/customer_display";
 import { useSingleDialog } from "@point_of_sale/customer_display/utils";
-
+import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
+import { patch } from "@web/core/utils/patch";
 patch(CustomerDisplay.prototype, {
     setup() {
         super.setup(...arguments);
@@ -16,7 +15,7 @@ patch(CustomerDisplay.prototype, {
                     singleDialog.close();
                 }
             },
-            () => [this.order.onlinePaymentData]
+            () => [this.order.onlinePaymentData],
         );
     },
 });

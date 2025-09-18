@@ -1,8 +1,8 @@
 import { reactive } from "@odoo/owl";
 import { getOnNotified } from "@point_of_sale/utils";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
 
 export const CustomerDisplayDataService = {
     dependencies: ["bus_service", "notification"],
@@ -24,21 +24,24 @@ export const CustomerDisplayDataService = {
                                     action: "get",
                                 },
                             }),
-                        }
+                        },
                     );
                     const payload = await response.json();
                     Object.assign(data, payload.result?.data || payload.result);
                 } catch (error) {
                     notification.add(
                         _t(
-                            "Make sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box."
+                            "Make sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box.",
                         ),
                         {
                             title: _t("IoT Customer Display Error"),
                             type: "danger",
-                        }
+                        },
                     );
-                    console.error("Error fetching data for the IoT customer display: %s", error);
+                    console.error(
+                        "Error fetching data for the IoT customer display: %s",
+                        error,
+                    );
                     clearInterval(intervalId);
                 }
             }, 1000);
@@ -50,7 +53,7 @@ export const CustomerDisplayDataService = {
                 `UPDATE_CUSTOMER_DISPLAY-${session.device_uuid}`,
                 (payload) => {
                     Object.assign(data, payload);
-                }
+                },
             );
         }
         return data;

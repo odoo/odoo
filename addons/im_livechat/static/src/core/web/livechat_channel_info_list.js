@@ -9,10 +9,10 @@ import { Component, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
 import { startUrl } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { TagsList } from "@web/components/tags_list/tags_list";
 
 export class LivechatChannelInfoList extends Component {
     static components = { ActionPanel, TagsList, ExpertiseTagsAutocomplete, TranscriptSender };

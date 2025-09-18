@@ -161,15 +161,15 @@ class StockMove(models.Model):
     def _action_done(self, cancel_backorder=False):
         # Use _is_out() instead of is_out since the move is not done
         # It's called before action_done since we need the current fifo
-        # stack. Limitation when validating at same time out and in.s
+        # stack. Limitation when validating at same time out and ins
         moves_out = self.filtered(lambda m: m._is_out())
         moves_out._set_value()
         moves = super()._action_done(cancel_backorder=cancel_backorder)
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
         moves._create_account_move()
-        # Update standard price on outgoing fifo products
-        moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo')._update_standard_price()
+        # Update standard price on outgoing fifo or lot valuated average products
+        moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
         (moves_in | moves_out).sudo()._create_analytic_move()
         return moves
 
@@ -183,7 +183,7 @@ class StockMove(models.Model):
                 move_to_link.add(move.id)
         if not aml_vals_list:
             return self.env['account.move']
-        account_move = self.env['account.move'].create({
+        account_move = self.env['account.move'].sudo().create({
             'journal_id': self.company_id.account_stock_journal_id.id,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
             'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
@@ -239,10 +239,13 @@ class StockMove(models.Model):
         """ Returns the COGS unit price to value this stock move
         quantity should be given in product uom """
 
+        if len(self.product_id) > 1:
+            return 0
         total_qty = sum(m._get_valued_qty() for m in self)
         if not total_qty:
             return 0
-        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' else self.product_id.standard_price
+        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' or \
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average') else self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -450,6 +453,9 @@ class StockMove(models.Model):
         std_price = std_price if std_price else self.product_id.standard_price
         if at_date and self.product_id.cost_method == 'standard':
             std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
+        # If multiple lots keep standard_price from product
+        elif self.product_id.lot_valuated and len(self.lot_ids) == 1:
+            std_price = self.lot_ids.standard_price
         return {
             'value': std_price * quantity,
             'quantity': quantity,
@@ -463,27 +469,7 @@ class StockMove(models.Model):
         return dict(VALUATION_DICT)
 
     def _get_move_directions(self):
-        move_in_ids = set()
-        move_out_ids = set()
-        locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
-        for record in self:
-            for move_line in record.move_line_ids:
-                if move_line._should_exclude_for_valuation() or not move_line.picked:
-                    continue
-                if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
-                    move_in_ids.add(record.id)
-                if move_line.location_id in locations_should_be_valued and move_line.location_dest_id not in locations_should_be_valued:
-                    move_out_ids.add(record.id)
-
-        move_directions = defaultdict(set)
-        for record in self:
-            if record.id in move_in_ids and not record._is_dropshipped_returned():
-                move_directions[record.id].add('in')
-
-            if record.id in move_out_ids and not record._is_dropshipped():
-                move_directions[record.id].add('out')
-
-        return move_directions
+        return defaultdict(set)
 
     def _get_in_move_lines(self, lot=None):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks

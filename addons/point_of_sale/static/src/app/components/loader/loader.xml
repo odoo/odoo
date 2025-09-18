@@ -1,13 +1,10 @@
 <templates>
     <t t-name="point_of_sale.Loader">
         <div class="pos-loader" t-att-style="props.loader.isShown ? '' : 'opacity: 0'">
+            <CriticalPOSError t-if="props.loader.error" error="props.loader.error"/>
             <div class="loader-feedback">
                 <!-- spinner from https://loading.io/css/ -->
-                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                <!-- FIXME POSREF restore skip button? -->
-                <!-- <t t-if="false and pos.loadingSkipButtonIsShown">
-                    <h1 class="message">Connecting to devices</h1>
-                </t> -->
+                <div t-if="!props.loader.error" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
             </div>
         </div>
     </t>

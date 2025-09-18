@@ -1,9 +1,14 @@
-import { session } from "@web/session";
-import { browser } from "../browser/browser";
-import { shallowEqual } from "@web/core/utils/objects";
-const { DateTime } = luxon;
+// @ts-check
 
-export class RedirectionError extends Error {}
+/** @module @web/core/utils/urls - URL construction, origin resolution, image URL generation, and redirect handling */
+
+import { browser } from "@web/core/browser/browser";
+import { shallowEqual } from "@web/core/utils/collections/objects";
+import { session } from "@web/session";
+
+const { DateTime } = /** @type {any} */ (luxon);
+
+class RedirectionError extends Error {}
 
 /**
  * Transforms a key value mapping to a string formatted as url hash, e.g.
@@ -21,8 +26,8 @@ export function objectToUrlEncodedString(obj) {
 /**
  * Gets the origin url of the page, or cleans a given one
  *
- * @param {string} [origin]: a given origin url
- * @return {string} a cleaned origin url
+ * @param {string} [origin] a given origin url
+ * @returns {string} a cleaned origin url
  */
 export function getOrigin(origin) {
     if (origin) {
@@ -36,10 +41,11 @@ export function getOrigin(origin) {
 }
 
 /**
- * @param {string} route: the relative route, or absolute in the case of cors urls
- * @param {object} [queryParams]: parameters to be appended as the url's queryString
+ * @param {string} route the relative route, or absolute in the case of cors urls
+ * @param {object} [queryParams] parameters to be appended as the url's queryString
  * @param {object} [options]
- * @param {string} [options.origin]: a precomputed origin
+ * @param {string} [options.origin] a precomputed origin
+ * @returns {string}
  */
 export function url(route, queryParams, options = {}) {
     const origin = getOrigin(options.origin ?? session.origin);
@@ -51,10 +57,8 @@ export function url(route, queryParams, options = {}) {
     queryString = queryString.length > 0 ? `?${queryString}` : queryString;
 
     // Compare the wanted url against the current origin
-    let prefix = ["http://", "https://", "//"].some(
-        (el) => route.length >= el.length && route.slice(0, el.length) === el
-    );
-    prefix = prefix ? "" : origin;
+    const isAbsolute = ["http://", "https://", "//"].some((el) => route.startsWith(el));
+    const prefix = isAbsolute ? "" : origin;
     return `${prefix}${route}${queryString}`;
 }
 
@@ -63,17 +67,19 @@ export function url(route, queryParams, options = {}) {
  * @param {number} id
  * @param {string} field
  * @param {Object} [options]
+ * @param {string} [options.access_token]
  * @param {string} [options.crop]
  * @param {string} [options.filename]
  * @param {number} [options.height]
- * @param {string|import('luxon').DateTime} [options.unique]
+ * @param {string|any} [options.unique]
  * @param {number} [options.width]
+ * @returns {string}
  */
 export function imageUrl(
     model,
     id,
     field,
-    { access_token, crop, filename, height, unique, width } = {}
+    { access_token, crop, filename, height, unique, width } = {},
 ) {
     let route = `/web/image/${model}/${id}/${field}`;
     if (width && height) {
@@ -82,6 +88,7 @@ export function imageUrl(
     if (filename) {
         route = `${route}/${filename}`;
     }
+    /** @type {{[key: string]: any}} */
     const urlParams = {};
     if (access_token) {
         Object.assign(urlParams, { access_token });
@@ -109,7 +116,7 @@ export function imageUrl(
  * Technically wraps FileReader.readAsDataURL in Promise.
  *
  * @param {Blob | File} file
- * @returns {Promise} resolved with the dataURL, or rejected if the file is
+ * @returns {Promise<string>} resolved with the dataURL, or rejected if the file is
  *  empty or if an error occurs.
  */
 export function getDataURLFromFile(file) {
@@ -123,7 +130,7 @@ export function getDataURLFromFile(file) {
             if (reader.result === "data:") {
                 resolve(`data:${file.type};base64,`);
             } else {
-                resolve(reader.result);
+                resolve(/** @type {string} */ (reader.result));
             }
         });
         reader.addEventListener("abort", reject);
@@ -136,6 +143,7 @@ export function getDataURLFromFile(file) {
  * Safely redirects to the given url within the same origin.
  *
  * @param {string} url
+ * @returns {void}
  * @throws {RedirectionError} if the given url has a different origin
  */
 export function redirect(url) {
@@ -162,7 +170,7 @@ export function compareUrls(_url1, _url2) {
         url1.pathname === url2.pathname &&
         shallowEqual(
             Object.fromEntries(url1.searchParams),
-            Object.fromEntries(url2.searchParams)
+            Object.fromEntries(url2.searchParams),
         ) &&
         url1.hash === url2.hash
     );

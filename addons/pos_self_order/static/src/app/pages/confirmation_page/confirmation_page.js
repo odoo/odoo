@@ -1,11 +1,10 @@
-import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useService } from "@web/core/utils/hooks";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { rpc } from "@web/core/network/rpc";
-import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
-
+import { useService } from "@web/core/utils/hooks";
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
     static props = ["orderAccessToken", "screenMode"];
@@ -36,7 +35,7 @@ export class ConfirmationPage extends Component {
 
                 this.printOrder();
             },
-            () => [this.confirmedOrder?.uiState?.receiptReady]
+            () => [this.confirmedOrder?.uiState?.receiptReady],
         );
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
@@ -53,7 +52,7 @@ export class ConfirmationPage extends Component {
 
     async initOrder(retry = true) {
         const order = this.selfOrder.models["pos.order"].find(
-            (o) => o.access_token === this.props.orderAccessToken
+            (o) => o.access_token === this.props.orderAccessToken,
         );
 
         if (!order && retry) {
@@ -93,7 +92,10 @@ export class ConfirmationPage extends Component {
     }
 
     async printOrder() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
+        if (
+            this.selfOrder.config.self_ordering_mode === "kiosk" &&
+            this.canPrintReceipt()
+        ) {
             try {
                 this.isPrinting = true;
                 const order = this.confirmedOrder;
@@ -102,7 +104,7 @@ export class ConfirmationPage extends Component {
                     {
                         order: order,
                     },
-                    this.printOptions
+                    this.printOptions,
                 );
                 if (!this.selfOrder.has_paper) {
                     this.updateHasPaper(true);

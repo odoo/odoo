@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 from unittest import skip
 from unittest.mock import patch
 
@@ -59,7 +59,7 @@ class TestUser(MailCommon):
         super().setUpClass()
         cls.portal_user = cls._create_portal_user()
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_notification_type_constraint(self):
         with self.assertRaises(IntegrityError, msg='Portal user can not receive notification in Odoo'):
             mail_new_test_user(

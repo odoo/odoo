@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { addLoadingEffect } from "@web/core/utils/ui";
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 
 export class Signup extends Interaction {
     static selector = ".oe_signup_form, .oe_reset_password_form";

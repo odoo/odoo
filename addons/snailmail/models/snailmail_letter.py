@@ -4,11 +4,11 @@ import re
 import base64
 import io
 
-from reportlab.platypus import Frame, Paragraph, KeepInFrame
-from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
+from reportlab.platypus import Frame, KeepInFrame, Paragraph
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
@@ -500,25 +500,23 @@ class SnailmailLetter(models.Model):
         invoice = PdfFileReader(io.BytesIO(invoice_bin))
         cover_bin = io.BytesIO(cover_buf.getvalue())
         cover_file = PdfFileReader(cover_bin)
-        out_writer.appendPagesFromReader(cover_file)
+        out_writer.append_pages_from_reader(cover_file)
 
         # Add a blank buffer page to avoid printing behind the cover page
         if self.duplex:
-            out_writer.addBlankPage()
+            out_writer.add_blank_page()
 
-        out_writer.appendPagesFromReader(invoice)
+        out_writer.append_pages_from_reader(invoice)
 
         out_buff = io.BytesIO()
         out_writer.write(out_buff)
         return out_buff.getvalue()
 
     def _overwrite_margins(self, invoice_bin: bytes):
-        """
-        Fill the margins with white for validation purposes.
-        """
+        """Fill the margins with white for validation purposes."""
         pdf_buf = io.BytesIO()
         canvas = Canvas(pdf_buf, pagesize=A4)
-        canvas.setFillColorRGB(255, 255, 255)
+        canvas.setFillColorRGB(1, 1, 1)
         page_width = A4[0]
         page_height = A4[1]
 
@@ -550,8 +548,8 @@ class SnailmailLetter(models.Model):
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.mergePage(new_pdf.getPage(0))
-            out.addPage(page)
+            page.merge_page(new_pdf.pages[0])
+            out.add_page(page)
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()

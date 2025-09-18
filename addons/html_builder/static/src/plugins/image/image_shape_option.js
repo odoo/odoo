@@ -2,7 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
-import { deepCopy } from "@web/core/utils/objects";
+import { deepCopy } from "@web/core/utils/collections/objects";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";

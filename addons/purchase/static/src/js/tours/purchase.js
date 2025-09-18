@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".o_purchase_order",
         },
         {
-            trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
+            trigger: ".o_field_widget[name='partner_id'] input",
             content: _t("Search a vendor name, or create one on the fly."),
             tooltipPosition: "bottom",
             async run(actions) {
@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         },
         {
             isActive: ["auto", "mobile"],
-            trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']",
+            trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_send_rfq']",
         },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",

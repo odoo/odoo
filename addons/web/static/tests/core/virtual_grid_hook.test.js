@@ -1,10 +1,12 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { resize, scroll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
-import { useVirtualGrid } from "@web/core/virtual_grid_hook";
+import { useVirtualGrid } from "@web/core/utils/virtual_grid";
 
 function objectToStyle(obj) {
     return Object.entries(obj)
@@ -36,7 +38,7 @@ const MAX_SCROLL_TOP = ROW_COUNT * ITEM_HEIGHT - CONTAINER_HEIGHT;
 const MAX_SCROLL_LEFT = COLUMN_COUNT * ITEM_WIDTH - CONTAINER_WIDTH;
 
 /**
- * @param {import("@web/core/virtual_grid_hook").VirtualGridParams} [virtualGridParams]
+ * @param {import("@web/core/utils/virtual_grid").VirtualGridParams} [virtualGridParams]
  * @returns {typeof Component}
  */
 function getTestComponent(virtualGridParams) {
@@ -75,9 +77,11 @@ function getTestComponent(virtualGridParams) {
                 scrollableRef,
                 ...virtualGridParams,
             });
-            this.virtualGrid.setRowsHeights(Array.from({ length: ROW_COUNT }, () => ITEM_HEIGHT));
+            this.virtualGrid.setRowsHeights(
+                Array.from({ length: ROW_COUNT }, () => ITEM_HEIGHT),
+            );
             this.virtualGrid.setColumnsWidths(
-                Array.from({ length: COLUMN_COUNT }, () => ITEM_WIDTH)
+                Array.from({ length: COLUMN_COUNT }, () => ITEM_WIDTH),
             );
         }
         get innerStyle() {
@@ -87,15 +91,14 @@ function getTestComponent(virtualGridParams) {
             const [rowStart, rowEnd] = this.virtualGrid.rowsIndexes;
             return Array.from({ length: ROW_COUNT }, (_, i) => ({ id: i + 1 })).slice(
                 rowStart,
-                rowEnd + 1
+                rowEnd + 1,
             );
         }
         get virtualColumns() {
             const [colStart, colEnd] = this.virtualGrid.columnsIndexes;
-            return Array.from({ length: COLUMN_COUNT }, (_, i) => ({ id: i + 1 })).slice(
-                colStart,
-                colEnd + 1
-            );
+            return Array.from({ length: COLUMN_COUNT }, (_, i) => ({
+                id: i + 1,
+            })).slice(colStart, colEnd + 1);
         }
     }
     return TestComponent;
@@ -290,7 +293,9 @@ test("onChange", async () => {
     comp.virtualGrid.setRowsHeights([1, 2, 3]);
     comp.virtualGrid.setColumnsWidths([1, 2, 3]);
     expect.verifySteps([]);
-    expect([comp.virtualGrid.rowsIndexes, comp.virtualGrid.columnsIndexes]).not.toEqual(actualGrid);
+    expect([comp.virtualGrid.rowsIndexes, comp.virtualGrid.columnsIndexes]).not.toEqual(
+        actualGrid,
+    );
 });
 
 test("when scrolling to the bottom right then updating to smaller rows and columns", async () => {

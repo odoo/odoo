@@ -1,13 +1,16 @@
-import { _t } from "@web/core/l10n/translation";
-import { AccordionItem } from "@web/core/dropdown/accordion_item";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+// @ts-check
+
+/** @module @web/search/custom_favorite_item/custom_favorite_item - Dropdown form for saving the current search as a named favorite filter */
 
 import { Component, useRef, useState } from "@odoo/owl";
-
+import { CheckBox } from "@web/components/checkbox/checkbox";
+import { AccordionItem } from "@web/components/dropdown/accordion_item";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
+/** Dropdown form for saving the current search as a named favorite filter. */
 export class CustomFavoriteItem extends Component {
     static template = "web.CustomFavoriteItem";
     static components = { CheckBox, AccordionItem };
@@ -28,9 +31,12 @@ export class CustomFavoriteItem extends Component {
      */
     async saveFavorite(ev, isShared = false) {
         if (!this.state.description) {
-            this.notificationService.add(_t("A name for your favorite filter is required."), {
-                type: "danger",
-            });
+            this.notificationService.add(
+                _t("A name for your favorite filter is required."),
+                {
+                    type: "danger",
+                },
+            );
             ev.stopPropagation();
             this.descriptionRef.el.focus();
             return false;
@@ -82,7 +88,7 @@ export class CustomFavoriteItem extends Component {
             case "Escape":
                 // Gives the focus back to the component.
                 ev.preventDefault();
-                ev.target.blur();
+                /** @type {HTMLElement} */ (ev.target).blur();
                 break;
         }
     }
@@ -91,5 +97,5 @@ export class CustomFavoriteItem extends Component {
 favoriteMenuRegistry.add(
     "custom-favorite-item",
     { Component: CustomFavoriteItem, groupNumber: 3 },
-    { sequence: 0 }
+    { sequence: 0 },
 );

@@ -1,11 +1,11 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
-import { Dialog } from "@web/core/dialog/dialog";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
-import { useService } from "@web/core/utils/hooks";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class EventRegistrationPopup extends Component {
     static template = "pos_event.EventRegistrationPopup";
@@ -51,11 +51,15 @@ export class EventRegistrationPopup extends Component {
     }
 
     get questionsByRegistration() {
-        return this.props.event.question_ids.filter((question) => !question.once_per_order);
+        return this.props.event.question_ids.filter(
+            (question) => !question.once_per_order,
+        );
     }
 
     get questionsOncePerOrder() {
-        return this.props.event.question_ids.filter((question) => question.once_per_order);
+        return this.props.event.question_ids.filter(
+            (question) => question.once_per_order,
+        );
     }
 
     isQuestionMissingMandatoryAnswer(id, value) {
@@ -64,7 +68,9 @@ export class EventRegistrationPopup extends Component {
     }
 
     confirm() {
-        const requiredByRegistration = Object.values(this.state.byRegistration).some((data) => {
+        const requiredByRegistration = Object.values(
+            this.state.byRegistration,
+        ).some((data) => {
             for (const [id, value] of Object.entries(data.questions)) {
                 if (this.isQuestionMissingMandatoryAnswer(id, value)) {
                     return true;
@@ -72,8 +78,8 @@ export class EventRegistrationPopup extends Component {
             }
         });
 
-        const requiredByOrder = Object.entries(this.state.byOrder).some(([id, value]) =>
-            this.isQuestionMissingMandatoryAnswer(id, value)
+        const requiredByOrder = Object.entries(this.state.byOrder).some(
+            ([id, value]) => this.isQuestionMissingMandatoryAnswer(id, value),
         );
 
         if (requiredByRegistration || requiredByOrder) {
@@ -84,14 +90,17 @@ export class EventRegistrationPopup extends Component {
             return;
         }
 
-        const registrationByTickets = this.state.byRegistration.reduce((acc, data) => {
-            if (!acc[data.ticket_id.id]) {
-                acc[data.ticket_id.id] = [];
-            }
+        const registrationByTickets = this.state.byRegistration.reduce(
+            (acc, data) => {
+                if (!acc[data.ticket_id.id]) {
+                    acc[data.ticket_id.id] = [];
+                }
 
-            acc[data.ticket_id.id].push(data.questions);
-            return acc;
-        }, {});
+                acc[data.ticket_id.id].push(data.questions);
+                return acc;
+            },
+            {},
+        );
 
         this.props.getPayload({
             byRegistration: registrationByTickets,

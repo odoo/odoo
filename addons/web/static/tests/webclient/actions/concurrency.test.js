@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
@@ -20,15 +22,14 @@ import {
     toggleSearchBarMenu,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
-import { registry } from "@web/core/registry";
-import { redirect } from "@web/core/utils/urls";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSetupAction } from "@web/search/action_hook";
-import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
+import { useSetupAction } from "@web/search/action_hook";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { WebClient } from "@web/webclient/webclient";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
@@ -177,8 +178,12 @@ test("handle switching view and switching back on slow network", async () => {
     // we resolve def => list view is now ready (but we want to ignore it)
     def.resolve();
     await animationFrame();
-    expect(".o_kanban_view").toHaveCount(1, { message: "there should be a kanban view in dom" });
-    expect(".o_list_view").toHaveCount(0, { message: "there should not be a list view in dom" });
+    expect(".o_kanban_view").toHaveCount(1, {
+        message: "there should be a kanban view in dom",
+    });
+    expect(".o_list_view").toHaveCount(0, {
+        message: "there should not be a list view in dom",
+    });
 });
 
 test.tags("desktop");
@@ -203,7 +208,9 @@ test("clicking quickly on breadcrumbs...", async () => {
     // resolve the form view read
     def.resolve();
     await animationFrame();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners Action 4",
+    ]);
 });
 
 test.tags("desktop");
@@ -227,7 +234,9 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
 
     await mountWithCleanup(WebClient);
     await animationFrame(); // blank component
-    expect(".o_form_view").toHaveCount(1, { message: "should display the form view of action 4" });
+    expect(".o_form_view").toHaveCount(1, {
+        message: "should display the form view of action 4",
+    });
 
     // click to go back to Kanban (this request is blocked)
     def = new Deferred();
@@ -239,7 +248,9 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
     // execute another action meanwhile (don't block this request)
     await getService("action").doAction(8, { clearBreadcrumbs: true });
     expect(".o_list_view").toHaveCount(1, { message: "should display action 8" });
-    expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
+    expect(".o_form_view").toHaveCount(0, {
+        message: "should no longer display the form view",
+    });
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -280,7 +291,9 @@ test("execute a new action while handling a call_button", async () => {
     // execute action 3 and open a record in form view
     await getService("action").doAction(3);
     await contains(".o_list_view .o_data_cell").click();
-    expect(".o_form_view").toHaveCount(1, { message: "should display the form view of action 3" });
+    expect(".o_form_view").toHaveCount(1, {
+        message: "should display the form view of action 3",
+    });
 
     // click on 'Call method' button (this request is blocked)
     await contains('.o_form_view button[name="object"]').click();
@@ -290,8 +303,12 @@ test("execute a new action while handling a call_button", async () => {
 
     // execute another action
     await getService("action").doAction(8, { clearBreadcrumbs: true });
-    expect(".o_list_view").toHaveCount(1, { message: "should display the list view of action 8" });
-    expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
+    expect(".o_list_view").toHaveCount(1, {
+        message: "should display the list view of action 8",
+    });
+    expect(".o_form_view").toHaveCount(0, {
+        message: "should no longer display the form view",
+    });
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -332,7 +349,9 @@ test("execute a new action while switching to another controller", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
-    expect(".o_list_view").toHaveCount(1, { message: "should display the list view of action 3" });
+    expect(".o_list_view").toHaveCount(1, {
+        message: "should display the list view of action 3",
+    });
 
     // switch to the form view (this request is blocked)
     def = new Deferred();
@@ -346,7 +365,9 @@ test("execute a new action while switching to another controller", async () => {
     expect(".o_kanban_view").toHaveCount(1, {
         message: "should display the kanban view of action 8",
     });
-    expect(".o_list_view").toHaveCount(0, { message: "should no longer display the list view" });
+    expect(".o_list_view").toHaveCount(0, {
+        message: "should no longer display the list view",
+    });
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -396,7 +417,9 @@ test("execute a new action while loading views", async () => {
     expect(".o_list_view").toHaveCount(0, {
         message: "should not display the list view of action 3",
     });
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners Action 4",
+    ]);
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -439,7 +462,9 @@ test("execute a new action while loading data of default view", async () => {
     expect(".o_form_view").toHaveCount(0, {
         message: "should not display the form view",
     });
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners Action 4",
+    ]);
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -498,15 +523,21 @@ test("properly drop client actions after new action is initiated", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("slowAction");
     await animationFrame();
-    expect(".client_action").toHaveCount(0, { message: "client action isn't ready yet" });
+    expect(".client_action").toHaveCount(0, {
+        message: "client action isn't ready yet",
+    });
 
     getService("action").doAction(4);
     await animationFrame();
-    expect(".o_kanban_view").toHaveCount(1, { message: "should have loaded a kanban view" });
+    expect(".o_kanban_view").toHaveCount(1, {
+        message: "should have loaded a kanban view",
+    });
 
     slowWillStartDef.resolve();
     await animationFrame();
-    expect(".o_kanban_view").toHaveCount(1, { message: "should still display the kanban view" });
+    expect(".o_kanban_view").toHaveCount(1, {
+        message: "should still display the kanban view",
+    });
 });
 
 test.tags("desktop");
@@ -525,13 +556,17 @@ test("restoring a controller when doing an action -- load_action slow", async ()
     def = new Deferred();
     getService("action").doAction(4, { clearBreadcrumbs: true });
     await animationFrame();
-    expect(".o_form_view").toHaveCount(1, { message: "should still contain the form view" });
+    expect(".o_form_view").toHaveCount(1, {
+        message: "should still contain the form view",
+    });
 
     await contains(".o_control_panel .breadcrumb-item a").click();
     def.resolve();
     await animationFrame();
     expect(".o_list_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners",
+    ]);
     expect(".o_form_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -559,13 +594,17 @@ test("switching when doing an action -- load_action slow", async () => {
     def = new Deferred();
     getService("action").doAction(4, { clearBreadcrumbs: true });
     await animationFrame();
-    expect(".o_list_view").toHaveCount(1, { message: "should still contain the list view" });
+    expect(".o_list_view").toHaveCount(1, {
+        message: "should still contain the list view",
+    });
 
     await switchView("kanban");
     def.resolve();
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners",
+    ]);
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -592,13 +631,17 @@ test("switching when doing an action -- get_views slow", async () => {
     def = new Deferred();
     getService("action").doAction(4);
     await animationFrame();
-    expect(".o_list_view").toHaveCount(1, { message: "should still contain the list view" });
+    expect(".o_list_view").toHaveCount(1, {
+        message: "should still contain the list view",
+    });
 
     await switchView("kanban");
     def.resolve();
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners",
+    ]);
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -633,7 +676,9 @@ test("switching when doing an action -- search_read slow", async () => {
     def.resolve();
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners",
+    ]);
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -794,6 +839,8 @@ test("doing browser back temporarily disables the UI", async () => {
     def.resolve();
 
     await animationFrame();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+        "Partners Action 4",
+    ]);
     expect(document.body.style.pointerEvents).toBe("auto");
 });

@@ -1,5 +1,8 @@
+// @ts-check
+
 import { before, withFetch } from "@odoo/hoot";
 import { loadBundle } from "@web/core/assets";
+
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
@@ -13,8 +16,8 @@ import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country";
 import { ResCurrency } from "./_framework/mock_server/mock_models/res_currency";
-import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_groups_privilege";
 import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
+import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_groups_privilege";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./_framework/mock_server/mock_models/res_users_settings";
@@ -45,7 +48,12 @@ export {
     mountWithCleanup,
     waitUntilIdle,
 } from "./_framework/component_test_helpers";
-export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
+export {
+    contains,
+    defineStyle,
+    editAce,
+    sortableDrag,
+} from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
     getMockEnv,
@@ -119,8 +127,8 @@ export {
     pagerNext,
     pagerPrevious,
     removeFacet,
-    saveFavorite,
     saveAndEditFavorite,
+    saveFavorite,
     selectGroup,
     switchView,
     toggleActionMenu,
@@ -136,9 +144,9 @@ export {
 } from "./_framework/search_test_helpers";
 export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
+    allowTranslations,
     installLanguages,
     patchTranslations,
-    allowTranslations,
 } from "./_framework/translation_test_helpers";
 export {
     clickButton,
@@ -148,6 +156,7 @@ export {
     clickModalButton,
     clickSave,
     clickViewButton,
+    editSelectMenu,
     expectMarkup,
     fieldInput,
     hideTab,
@@ -155,9 +164,11 @@ export {
     mountViewInDialog,
     parseViewProps,
     selectFieldDropdownItem,
-    editSelectMenu,
 } from "./_framework/view_test_helpers";
-export { mountWebClient, useTestClientAction } from "./_framework/webclient_test_helpers";
+export {
+    mountWebClient,
+    useTestClientAction,
+} from "./_framework/webclient_test_helpers";
 
 export function defineWebModels() {
     return defineModels(webModels);
@@ -180,6 +191,10 @@ export function preloadBundle(bundleName, options) {
     });
 }
 
+/**
+ * @param {string} dataURI
+ * @returns {Blob}
+ */
 export function dataURItoBlob(dataURI) {
     const binary = atob(dataURI.split(",")[1]);
     const array = [];

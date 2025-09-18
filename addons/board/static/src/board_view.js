@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { BoardController } from "./board_controller";
-import { visitXML } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/dom/xml";
 import { Domain } from "@web/core/domain";
 export class BoardArchParser {
     parse(arch, customViewId) {

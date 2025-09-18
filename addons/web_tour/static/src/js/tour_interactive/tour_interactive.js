@@ -1,9 +1,9 @@
 import { tourState } from "@web_tour/js/tour_state";
 import { debounce } from "@web/core/utils/timing";
 import * as hoot from "@odoo/hoot-dom";
-import { utils } from "@web/core/ui/ui_service";
+import { utils } from "@web/ui/block/ui_service";
 import { TourStep } from "@web_tour/js/tour_step";
-import { MacroMutationObserver } from "@web/core/macro";
+import { MacroMutationObserver } from "@web/core/utils/macro";
 import { getScrollParent } from "@web_tour/js/utils/tour_utils";
 
 /**

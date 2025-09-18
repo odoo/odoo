@@ -1,7 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 
 describe.current.tags("headless");
 
@@ -31,7 +32,7 @@ test("multiple cache key", async () => {
 test("compute key", async () => {
     const cache = new Cache(
         (key) => expect.step(key),
-        (key) => key.toLowerCase()
+        (key) => key.toLowerCase(),
     );
 
     cache.read("a");

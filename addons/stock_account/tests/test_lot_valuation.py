@@ -28,13 +28,13 @@ class TestLotValuation(TestStockValuationCommon):
         """ Lots have their own valuation """
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
         self._make_in_move(self.product1, 10, 7, lot_ids=[self.lot3])
-        self.assertEqual(self.product1.standard_price, 6.0)
+        self.assertAlmostEqual(self.product1.standard_price, 6.0)
         self.assertEqual(self.lot1.standard_price, 5)
         self._make_out_move(self.product1, 2, lot_ids=[self.lot1])
 
         # lot1 has a cost different than the product it self. So a out move should recompute the
         # product cost
-        self.assertEqual(self.product1.standard_price, 6.11)
+        self.assertAlmostEqual(self.product1.standard_price, 6.1111111)
         self.assertEqual(len(self.lot1.stock_valuation_layer_ids), 2)
         self.assertEqual(self.lot1.stock_valuation_layer_ids.mapped('lot_id'), self.lot1)
         self.assertEqual(self.lot1.value_svl, 15)
@@ -245,7 +245,7 @@ class TestLotValuation(TestStockValuationCommon):
 
         self.assertEqual(productA.value_svl, 156)
         self.assertEqual(productA.quantity_svl, 24)
-        self.assertEqual(productB.value_svl, 144.1)  # 144.1 because of multiplying quantity with rounded standard price
+        self.assertEqual(productB.value_svl, 144.0)
         self.assertEqual(productB.quantity_svl, 22)
 
         # 4 original + 1 empty stock + 2 for the lots
@@ -255,9 +255,9 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(lotA_1.quantity_svl, 7)
         self.assertEqual(lotA_2.value_svl, 110.5)
         self.assertEqual(lotA_2.quantity_svl, 17)
-        self.assertEqual(lotB_1.value_svl, 39.3)
+        self.assertEqual(lotB_1.value_svl, 39.27)
         self.assertEqual(lotB_1.quantity_svl, 6)
-        self.assertEqual(lotB_2.value_svl, 104.8)
+        self.assertEqual(lotB_2.value_svl, 104.73)
         self.assertEqual(lotB_2.quantity_svl, 16)
 
     def test_enforce_lot_receipt(self):
@@ -309,7 +309,7 @@ class TestLotValuation(TestStockValuationCommon):
         })
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1])
         self._make_in_move(self.product1, 10, 9, lot_ids=[self.lot2])
-        self.assertEqual(self.product1.standard_price, 7)
+        self.assertAlmostEqual(self.product1.standard_price, 7)
         inventory_quant = self.env['stock.quant'].create({
             'location_id': shelf1.id,
             'product_id': self.product1.id,
@@ -404,7 +404,7 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.quantity_svl, 3)
         self.assertEqual(self.lot1.standard_price, 10)
         # product cost should be updated al well
-        self.assertEqual(self.product1.standard_price, 6.94)
+        self.assertAlmostEqual(self.product1.standard_price, 6.94444445)
         # rest remains unchanged
         self.assertEqual(len(self.lot2.stock_valuation_layer_ids), 1)
         self.assertEqual(self.lot2.stock_valuation_layer_ids.mapped('lot_id'), self.lot2)
@@ -424,7 +424,7 @@ class TestLotValuation(TestStockValuationCommon):
         self._make_in_move(self.product1, 6, 7, lot_ids=[self.lot1])
         self.assertEqual(self.lot1.standard_price, 6.2)
         self.assertEqual(self.lot1.value_svl, 62)
-        self.assertEqual(self.product1.standard_price, 5.86)
+        self.assertAlmostEqual(self.product1.standard_price, 5.8571429)
 
         Form(self.env['stock.valuation.layer.revaluation'].with_context({
             'default_product_id': self.product1.id,
@@ -440,7 +440,7 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.standard_price, 7, "lot1 cost changed")
         self.assertEqual(self.lot1.value_svl, 70, "lot1 value changed")
         self.assertEqual(self.lot2.standard_price, 5, "lot2 cost remains unchanged")
-        self.assertEqual(self.product1.standard_price, 6.43, "product cost changed too")
+        self.assertAlmostEqual(self.product1.standard_price, 6.4314286, msg="product cost changed too")
 
     def test_average_manual_product_revaluation_with_lots(self):
         self.product1.categ_id.property_cost_method = 'average'
@@ -451,7 +451,7 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.value_svl, 62)
         self.assertEqual(self.lot2.standard_price, 5)
         self.assertEqual(self.lot2.value_svl, 20)
-        self.assertEqual(self.product1.standard_price, 5.86)
+        self.assertAlmostEqual(self.product1.standard_price, 5.8571429)
 
         Form(self.env['stock.valuation.layer.revaluation'].with_context({
             'default_product_id': self.product1.id,
@@ -466,7 +466,7 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.value_svl, 70, "lot1 value changed")
         self.assertEqual(self.lot2.standard_price, 5.8, "lot2 cost changed")
         self.assertEqual(self.lot2.value_svl, 23.2, "lot2 value changed")
-        self.assertEqual(self.product1.standard_price, 6.66, "product cost changed too")
+        self.assertAlmostEqual(self.product1.standard_price, 6.66, msg="product cost changed too")
 
     def test_lot_move_update_after_done(self):
         """validate a stock move. Edit the move line in done state."""
@@ -506,13 +506,13 @@ class TestLotValuation(TestStockValuationCommon):
             {'value': -20, 'lot_id': self.lot2.id, 'quantity': -4},
             {'value': 20, 'lot_id': self.lot3.id, 'quantity': 4},
         ])
-        self.assertEqual(self.product1.standard_price, 5)
+        self.assertAlmostEqual(self.product1.standard_price, 5)
 
         self._make_in_move(self.product1, 4, 4, create_picking=True, lot_ids=[self.lot3])
-        self.assertEqual(self.product1.standard_price, 4.67)
+        self.assertAlmostEqual(self.product1.standard_price, 4.6666667)
 
         move = self._make_out_move(self.product1, 3, create_picking=True, lot_ids=[self.lot1])
-        self.assertEqual(self.product1.standard_price, 4.56)
+        self.assertAlmostEqual(self.product1.standard_price, 4.5555556)
 
         quant = self.env['stock.quant'].search([
             ('lot_id', '=', self.lot3.id),
@@ -522,7 +522,7 @@ class TestLotValuation(TestStockValuationCommon):
         move.move_line_ids = [
             Command.update(move.move_line_ids.id, {'quant_id': quant.id}),
         ]
-        self.assertEqual(self.product1.standard_price, 4.72)
+        self.assertAlmostEqual(self.product1.standard_price, 4.7222222)
 
         self.assertRecordValues(move.stock_valuation_layer_ids, [
             {'value': -15, 'lot_id': self.lot1.id, 'quantity': -3},
@@ -791,3 +791,44 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertRecordValues(delivery.move_ids, [
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
+
+    def test_in_move_lot_valuated_standard_price(self):
+        """Check that when the standard price is used to value a move
+        with a single lot, the standard price of the lot is used instead of the
+        standard price of the product
+        """
+        lot_product = self.product_avco_auto
+        lot_product.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        lot1, lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': lot_product.id},
+            {'name': 'lot2', 'product_id': lot_product.id},
+        ])
+        self._make_in_move(lot_product, 1, 10, lot_ids=[lot1])
+        self._make_in_move(lot_product, 1, 16, lot_ids=[lot2])
+        self.assertEqual(lot_product.standard_price, 13)
+        self.assertEqual(lot1.standard_price, 10)
+        self.assertEqual(lot2.standard_price, 16)
+
+        # not using _make_in_move to not a create a product.value linked to this move
+        move = self.env['stock.move'].create({
+            'product_id': lot_product.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 1,
+            'picking_type_id': self.picking_type_in.id,
+            'move_line_ids': [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'quantity': 1,
+                'product_id': lot_product.id,
+                'lot_id': lot1.id,
+            })]
+        })
+        move.picked = True
+        move._action_done()
+        self.assertEqual(lot1.standard_price, 10)
+        self.assertEqual(lot_product.standard_price, 12)

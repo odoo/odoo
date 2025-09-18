@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="vendor_delay_report_filter" model="ir.ui.view">
         <field name="name">vendor.delay.report.search</field>
         <field name="model">vendor.delay.report</field>
         <field name="arch" type="xml">
             <search string="On-time Delivery">
-                <field name="partner_id"/>
-                <field name="product_id"/>
-                <filter string="Effective Date Last Year" name="later_than_a_year_ago"  domain="[('date', '&gt;=', 'today -1y')]"/>
+                <field name="partner_id" />
+                <field name="product_id" />
+                <filter string="Effective Date Last Year" name="later_than_a_year_ago"
+                    domain="[('date', '&gt;=', 'today -1y')]" />
             </search>
-            </field>
+        </field>
     </record>
 
     <record id="vendor_delay_report_view_graph" model="ir.ui.view">
@@ -17,8 +19,8 @@
         <field name="model">vendor.delay.report</field>
         <field name="arch" type="xml">
             <graph string="On-Time Delivery" sample="1" disable_linking="1">
-                <field name="product_id"/>
-                <field name="on_time_rate" type="measure"/>
+                <field name="product_id" />
+                <field name="on_time_rate" type="measure" />
             </graph>
         </field>
     </record>
@@ -27,9 +29,10 @@
         <field name="name">On-time Delivery</field>
         <field name="res_model">vendor.delay.report</field>
         <field name="view_mode">graph</field>
-        <field name="search_view_id" ref="vendor_delay_report_filter"/>
+        <field name="search_view_id" ref="vendor_delay_report_filter" />
         <field name="help">Vendor On-time Delivery analysis</field>
         <field name="target">current</field>
         <field name="context">{'search_default_later_than_a_year_ago':1}</field>
     </record>
+
 </odoo>

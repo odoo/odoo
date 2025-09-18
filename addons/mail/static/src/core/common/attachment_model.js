@@ -1,12 +1,10 @@
 import { fields, Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
-
-import { FileModelMixin } from "@web/core/file_viewer/file_model";
+import { FileModelMixin } from "@web/components/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { imageUrl, url } from "@web/core/utils/urls";
-
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
     static id = "id";
@@ -37,7 +35,10 @@ export class Attachment extends FileModelMixin(Record) {
             if (
                 this.isPdf &&
                 !this.has_thumbnail &&
-                (this.store.self.main_user_id?.share === false || this.ownership_token)
+                (this.ownership_token ||
+                    // If related to a record, must have write access to it
+                    ((!this.thread || this.thread.hasWriteAccess) &&
+                        this.store.self.main_user_id?.share === false))
             ) {
                 this.setPdfThumbnail();
             }
@@ -57,8 +58,8 @@ export class Attachment extends FileModelMixin(Record) {
                     height: 110,
                     unique: this.checksum,
                     width: 180,
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -100,7 +101,10 @@ export class Attachment extends FileModelMixin(Record) {
         if (this.id > 0) {
             await rpc(
                 "/mail/attachment/delete",
-                assignDefined({ attachment_id: this.id }, { access_token: this.ownership_token })
+                assignDefined(
+                    { attachment_id: this.id },
+                    { access_token: this.ownership_token },
+                ),
             );
         }
         this.delete();
@@ -114,16 +118,16 @@ export class Attachment extends FileModelMixin(Record) {
         const { isPdfValid, thumbnail } = await generatePdfThumbnail(
             url(
                 `/mail/attachment/pdf_first_page/${this.id}`,
-                assignDefined({}, { access_token: this.ownership_token })
-            )
+                assignDefined({}, { access_token: this.ownership_token }),
+            ),
         );
         if (isPdfValid) {
             rpc(
                 `/mail/attachment/update_thumbnail`,
                 assignDefined(
                     { attachment_id: this.id, thumbnail },
-                    { access_token: this.ownership_token }
-                )
+                    { access_token: this.ownership_token },
+                ),
             );
         }
     }

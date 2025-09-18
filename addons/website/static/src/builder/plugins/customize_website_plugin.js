@@ -2,11 +2,11 @@ import { isCSSVariable, setBuilderCSSVariables } from "@html_builder/utils/utils
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor } from "@web/core/utils/format/colors";
 import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { withSequence } from "@html_editor/utils/resource";
@@ -843,12 +843,7 @@ class TemplatePreviewableWebsiteConfigAction extends WebsiteConfigAction {
         // The promise ensures this completes before continuing, avoiding a race
         // that could mark the element o_dirty and trigger an unnecessary save.
         if (params.previewClass) {
-            await new Promise((resolve) => {
-                requestAnimationFrame(() => {
-                    params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
-                    resolve();
-                });
-            });
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
         }
     }
 }

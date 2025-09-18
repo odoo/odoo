@@ -8,11 +8,12 @@ from odoo.tools.misc import file_open
 class TestImportFiles(TransactionCase):
 
     @unittest.skipUnless(
-        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available",
+        can_import("openpyxl"),
+        "openpyxl not available",
     )
     def test_import_requests_for_quotation_template_xls(self):
         if not loaded_demo_data(self.env):
-            self.skipTest('Needs demo data to be able to import those files')
+            self.skipTest("Needs demo data to be able to import those files")
         model = "purchase.order"
         filename = "requests_for_quotation_import_template.xlsx"
 
@@ -31,7 +32,7 @@ class TestImportFiles(TransactionCase):
             },
         )
         self.assertIsNone(result.get("error"))
-        field_names = ['/'.join(v) for v in result["matches"].values()]
+        field_names = ["/".join(v) for v in result["matches"].values()]
         results = import_wizard.execute_import(
             field_names,
             [r.lower() for r in result["headers"]],

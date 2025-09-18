@@ -1,10 +1,14 @@
+// @ts-check
+
+/** @module @web/core/position/utils - Compute optimal popper placement with direction/variant flipping and RTL support */
+
 import { localization } from "@web/core/l10n/localization";
 
 /**
- * @typedef {"top" | "left" | "bottom" | "right"} Direction
+ * @typedef {"top" | "left" | "bottom" | "right" | "center"} Direction
  * @typedef {"start" | "middle" | "end" | "fit"} Variant
  *
- * @typedef {{[direction in Direction]: string}} DirectionFlipOrder
+ * @typedef {{[direction: string]: string}} DirectionFlipOrder
  *  string values should match regex /^[tbrl]+$/m
  *
  * @typedef {{[variant in Variant]: string}} VariantFlipOrder
@@ -17,10 +21,11 @@ import { localization } from "@web/core/l10n/localization";
  *  direction: Direction,
  *  variant: Variant,
  *  variantOffset?: number,
+ *  [key: string]: any,
  * }} PositioningSolution
  *
  * @typedef ComputePositionOptions
- * @property {HTMLElement | () => HTMLElement} [container] container element
+ * @property {HTMLElement | (() => HTMLElement)} [container] container element
  * @property {number} [margin=0]
  *  margin in pixels between the popper and the target.
  * @property {Direction | `${Direction}-${Variant}`} [position="bottom"]
@@ -42,11 +47,23 @@ const DEFAULTS = {
 };
 
 /** @type {{[d: string]: Direction}} */
-const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left", c: "center" };
+const DIRECTIONS = {
+    t: "top",
+    r: "right",
+    b: "bottom",
+    l: "left",
+    c: "center",
+};
 /** @type {{[v: string]: Variant}} */
 const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
-const DIRECTION_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr", center: "c" };
+const DIRECTION_FLIP_ORDER = {
+    top: "tb",
+    right: "rl",
+    bottom: "bt",
+    left: "lr",
+    center: "c",
+};
 /** @type DirectionFlipOrder */
 const EXTENDED_DIRECTION_FLIP_ORDER = {
     top: "tbrlc",
@@ -65,7 +82,7 @@ const VARIANT_FLIP_ORDER = { start: "se", middle: "m", end: "es", fit: "f" };
  */
 function getIFrame(popperEl, targetEl) {
     return [...popperEl.ownerDocument.getElementsByTagName("iframe")].find((iframe) =>
-        iframe.contentDocument?.contains(targetEl)
+        iframe.contentDocument?.contains(targetEl),
     );
 }
 
@@ -113,15 +130,21 @@ export function reverseForRTL(direction, variant = "middle") {
 function computePosition(
     popper,
     target,
-    { container, extendedFlipping, flip, margin, position, shrink }
+    { container, extendedFlipping, flip, margin, position, shrink },
 ) {
     // Retrieve directions and variants
-    const [direction, variant = "middle"] = reverseForRTL(...position.split("-"));
+    const [d, v] = position.split("-");
+    const [direction, variant = "middle"] = reverseForRTL(
+        /** @type {Direction} */ (d),
+        /** @type {Variant} */ (v),
+    );
     let directions = [direction.at(0)];
     if (flip) {
-        directions = extendedFlipping
-            ? EXTENDED_DIRECTION_FLIP_ORDER[direction]
-            : DIRECTION_FLIP_ORDER[direction];
+        directions = /** @type {any} */ (
+            extendedFlipping
+                ? EXTENDED_DIRECTION_FLIP_ORDER[direction]
+                : DIRECTION_FLIP_ORDER[direction]
+        );
     }
     const variants = VARIANT_FLIP_ORDER[variant];
 
@@ -131,10 +154,14 @@ function computePosition(
     } else if (typeof container === "function") {
         container = container();
     }
+    // At this point container is always an HTMLElement
+    const /** @type {HTMLElement} */ cont = /** @type {HTMLElement} */ (container);
 
     if (variant === "fit") {
         // make sure the popper has the desired dimensions during the computation of the position
-        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
+        const styleProperty = ["top", "bottom"].includes(direction)
+            ? "width"
+            : "height";
         popper.style[styleProperty] = getComputedStyle(target)[styleProperty];
     }
 
@@ -155,12 +182,12 @@ function computePosition(
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
-    const contBox = container.getBoundingClientRect();
+    const contBox = cont.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
-    const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
+    const containerIsHTMLNode = cont === cont.ownerDocument.firstElementChild;
     const containerIsInIframe =
-        shouldAccountForIFrame && target.ownerDocument === container.ownerDocument;
+        shouldAccountForIFrame && target.ownerDocument === cont.ownerDocument;
 
     // Compute positioning data
     const directionsData = {
@@ -183,7 +210,8 @@ function computePosition(
 
     function getPositioningData(d, v) {
         const [direction, variant] = reverseForRTL(DIRECTIONS[d], VARIANTS[v]);
-        const result = { direction, variant };
+        /** @type {PositioningSolution} */
+        const result = { direction, variant, top: 0, left: 0 };
         const vertical = ["t", "b", "c"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
@@ -204,11 +232,11 @@ function computePosition(
 
         if (containerIsHTMLNode) {
             if (vertical) {
-                directionMin += container.scrollTop;
-                directionMax += container.scrollTop;
+                directionMin += cont.scrollTop;
+                directionMax += cont.scrollTop;
             } else {
-                variantMin += container.scrollTop;
-                variantMax += container.scrollTop;
+                variantMin += cont.scrollTop;
+                variantMax += cont.scrollTop;
             }
         }
 
@@ -216,7 +244,9 @@ function computePosition(
         let directionOverflow = 0;
         if (Math.floor(directionValue) < Math.ceil(directionMin)) {
             directionOverflow = Math.floor(directionValue) - Math.ceil(directionMin);
-        } else if (Math.ceil(directionValue + directionSize) > Math.floor(directionMax)) {
+        } else if (
+            Math.ceil(directionValue + directionSize) > Math.floor(directionMax)
+        ) {
             directionOverflow =
                 Math.ceil(directionValue + directionSize) - Math.floor(directionMax);
         }
@@ -224,7 +254,8 @@ function computePosition(
         if (Math.floor(variantValue) < Math.ceil(variantMin)) {
             variantOverflow = Math.floor(variantValue) - Math.ceil(variantMin);
         } else if (Math.ceil(variantValue + variantSize) > Math.floor(variantMax)) {
-            variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
+            variantOverflow =
+                Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
         }
 
         // All non zero values of variantOverflow lead to the
@@ -251,12 +282,16 @@ function computePosition(
             malus = 1.001;
             result.top -= directionOverflow;
         } else if (shrink && malus) {
-            const minTop = Math.floor(!vertical && v === "s" ? targetBox.top : contBox.top);
+            const minTop = Math.floor(
+                !vertical && v === "s" ? targetBox.top : contBox.top,
+            );
             result.top = Math.max(minTop, result.top);
 
             let height;
             if (vertical) {
-                height = Math.abs(targetBox[direction] - (d === "t" ? directionMin : directionMax));
+                height = Math.abs(
+                    targetBox[direction] - (d === "t" ? directionMin : directionMax),
+                );
             } else {
                 height = {
                     s: variantMax - targetBox.top,
@@ -308,7 +343,10 @@ export function reposition(popper, target, options) {
     popper.style.left = "0px";
 
     // Compute positioning solution
-    const solution = computePosition(popper, target, { ...DEFAULTS, ...options });
+    const solution = computePosition(popper, target, {
+        ...DEFAULTS,
+        ...options,
+    });
 
     // Apply it
     const { top, left, maxHeight } = solution;

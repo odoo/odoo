@@ -1,7 +1,7 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { AlertDialog, ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { handleRPCError } from "./error_handlers";
 import { ask } from "./make_awaitable_dialog";
 
@@ -167,36 +167,47 @@ export default class OrderPaymentValidation {
             if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
                 if (this.order.raw.account_move) {
                     await this.pos.env.services.account_move.downloadPdf(
-                        this.order.raw.account_move
+                        this.order.raw.account_move,
                     );
                 } else {
                     this.pos.dialog.add(AlertDialog, {
                         title: _t("Backend Invoice"),
                         body: _t(
-                            "An error occurred while generating an invoice. You can try again from the order list."
+                            "An error occurred while generating an invoice. You can try again from the order list.",
                         ),
                     });
                 }
             }
 
             // 3. Post process.
-            const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
+            const postPushOrders = syncOrderResult.filter((order) =>
+                order.waitForPushOrder(),
+            );
             if (postPushOrders.length > 0) {
-                await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
+                await this.postPushOrderResolve(
+                    postPushOrders.map((order) => order.id),
+                );
             }
 
-            return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+            return await this.afterOrderValidation(
+                !!syncOrderResult && syncOrderResult.length > 0,
+            );
         } catch (error) {
             return this.handleValidationError(error);
         }
     }
 
     async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this.beforePostPushOrderResolve(this.order, ordersServerId);
+        const postPushResult = await this.beforePostPushOrderResolve(
+            this.order,
+            ordersServerId,
+        );
         if (!postPushResult) {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
+                body: _t(
+                    "Some, if not all, post-processing after syncing order failed.",
+                ),
             });
         }
     }
@@ -211,7 +222,9 @@ export default class OrderPaymentValidation {
         }
 
         if (this.order.nb_print === 0 && this.pos.config.iface_print_auto) {
-            const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
+            const invoiced_finalized = this.order.isToInvoice()
+                ? this.order.finalized
+                : true;
             if (invoiced_finalized) {
                 await this.pos.printReceipt({ order: this.order });
             }
@@ -264,12 +277,16 @@ export default class OrderPaymentValidation {
                     "The amount of your payment lines must be rounded to validate the transaction.\n" +
                         "The rounding precision is %(rounding)s so you should set %(expectedAmount)s as payment amount instead of %(paidAmount)s.",
                     {
-                        rounding: cashRounding.rounding.toFixed(this.pos.currency.decimal_places),
-                        expectedAmount: expectedAmountPaid.toFixed(
-                            this.pos.currency.decimal_places
+                        rounding: cashRounding.rounding.toFixed(
+                            this.pos.currency.decimal_places,
                         ),
-                        paidAmount: amountPaid.toFixed(this.pos.currency.decimal_places),
-                    }
+                        expectedAmount: expectedAmountPaid.toFixed(
+                            this.pos.currency.decimal_places,
+                        ),
+                        paidAmount: amountPaid.toFixed(
+                            this.pos.currency.decimal_places,
+                        ),
+                    },
                 ),
             });
             return false;
@@ -286,7 +303,7 @@ export default class OrderPaymentValidation {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Empty Order"),
                 body: _t(
-                    "There must be at least one product in your order before it can be validated and invoiced."
+                    "There must be at least one product in your order before it can be validated and invoiced.",
                 ),
             });
             return false;
@@ -299,7 +316,7 @@ export default class OrderPaymentValidation {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
                 body: _t(
-                    "You need to select the customer before you can invoice or ship an order."
+                    "You need to select the customer before you can invoice or ship an order.",
                 ),
             });
             if (confirmed) {
@@ -333,7 +350,9 @@ export default class OrderPaymentValidation {
             !this.pos.currency.isZero(this.order.priceIncl) &&
             this.order.payment_ids.length === 0
         ) {
-            this.pos.notification.add(_t("Select a payment method to validate the order."));
+            this.pos.notification.add(
+                _t("Select a payment method to validate the order."),
+            );
             return false;
         }
 
@@ -343,14 +362,17 @@ export default class OrderPaymentValidation {
 
         // The exact amount must be paid if there is no cash payment method defined.
         if (
-            Math.abs(this.order.priceIncl - this.order.amountPaid + this.order.appliedRounding) >
-            0.00001
+            Math.abs(
+                this.order.priceIncl -
+                    this.order.amountPaid +
+                    this.order.appliedRounding,
+            ) > 0.00001
         ) {
             if (!this.pos.models["pos.payment.method"].some((pm) => pm.is_cash_count)) {
                 this.pos.dialog.add(AlertDialog, {
                     title: _t("Cannot return change without a cash payment method"),
                     body: _t(
-                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
+                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration",
                     ),
                 });
                 return false;
@@ -389,13 +411,16 @@ export default class OrderPaymentValidation {
 
     async _askForCustomerIfRequired() {
         const splitPayments = this.order.payment_ids.filter(
-            (payment) => payment.payment_method_id.split_transactions
+            (payment) => payment.payment_method_id.split_transactions,
         );
         if (splitPayments.length && !this.order.getPartner()) {
             const paymentMethod = splitPayments[0].payment_method_id;
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Customer Required"),
-                body: _t("Customer is required for %s payment method.", paymentMethod.name),
+                body: _t(
+                    "Customer is required for %s payment method.",
+                    paymentMethod.name,
+                ),
             });
             if (confirmed) {
                 await this.pos.selectPartner();

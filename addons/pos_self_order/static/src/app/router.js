@@ -1,8 +1,7 @@
 import { Component, onWillRender, xml } from "@odoo/owl";
-import { escapeRegExp } from "@web/core/utils/strings";
-import { zip } from "@web/core/utils/arrays";
+import { zip } from "@web/core/utils/collections/arrays";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { useService } from "@web/core/utils/hooks";
-
 function parseParams(matches, paramSpecs) {
     return Object.fromEntries(
         zip(matches, paramSpecs).map(([match, paramSpec]) => {
@@ -15,7 +14,7 @@ function parseParams(matches, paramSpecs) {
                 default:
                     throw new Error(`Unknown type ${type}`);
             }
-        })
+        }),
     );
 }
 
@@ -52,7 +51,7 @@ export class Router extends Component {
                 `${lgPrefixRegex}${route
                     .split(/\{\w+:\w+\}/)
                     .map((part) => escapeRegExp(part))
-                    .join("([^/]+)")}$`
+                    .join("([^/]+)")}$`,
             );
 
             this.routes[routeName] = { route, paramSpecs, regex };

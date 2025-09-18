@@ -1,15 +1,16 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { rpc } from "@web/core/network/rpc";
-import { localization } from "@web/core/l10n/localization";
 import { isValidEmail } from "@point_of_sale/utils";
-
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { localization } from "@web/core/l10n/localization";
+import { rpc } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
     static template = "pos_self_order.PresetInfoPopup";
     static props = { callback: Function };
 
     setup() {
+        this.notification = useService("notification");
         this.selfOrder = useSelfOrder();
         this.state = useState({
             selectedSlot: null,
@@ -17,9 +18,11 @@ export class PresetInfoPopup extends Component {
             name: "",
             email: "",
             phone: "",
+            phoneError: "",
             street: "",
             countryId: this.selfOrder.config.company_id.country_id.id,
-            stateId: this.selfOrder.config.company_id.country_id.state_ids[0]?.id || null,
+            stateId:
+                this.selfOrder.config.company_id.country_id.state_ids[0]?.id || null,
             city: "",
             zip: "",
         });
@@ -30,7 +33,11 @@ export class PresetInfoPopup extends Component {
     }
 
     async setInformations() {
-        if (this.preset.needsPartner) {
+        if (!this.checkPhoneFormat()) {
+            return;
+        }
+
+        if (this.preset.needsPartner || this.state.phone) {
             const result = await rpc(`/pos-self-order/validate-partner`, {
                 access_token: this.selfOrder.access_token,
                 partner_id: this.state.selectedPartnerId,
@@ -51,7 +58,9 @@ export class PresetInfoPopup extends Component {
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(this.state.selectedSlot)
+            this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(
+                this.state.selectedSlot,
+            )
                 .toUTC()
                 .toFormat("yyyy-MM-dd HH:mm:ss");
         }
@@ -89,7 +98,7 @@ export class PresetInfoPopup extends Component {
 
     get slots() {
         return Object.entries(this.preset.uiState.availabilities).filter(
-            (s) => Object.keys(s[1]).length > 0
+            (s) => Object.keys(s[1]).length > 0,
         );
     }
 
@@ -112,15 +121,26 @@ export class PresetInfoPopup extends Component {
             (this.state.stateId || !this.states.length) &&
             this.state.zip;
         return (
-            (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
+            (!this.preset.needsSlot ||
+                DateTime.fromSQL(this.state.selectedSlot).isValid) &&
             (!this.preset.needsName || this.state.name) &&
             (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
-            (!this.preset.needsPartner || partnerInfo)
+            (!this.preset.needsPartner || partnerInfo) &&
+            this.checkPhoneFormat()
         );
     }
 
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
         return dateObj.toFormat(localization.dateFormat);
+    }
+
+    checkPhoneFormat() {
+        if (!this.state.phone) {
+            return true;
+        }
+        const phone = this.state.phone.replace(/[\s.\-()]/g, "");
+        const pattern = /^\+\d{8,18}$/;
+        return pattern.test(phone);
     }
 }

@@ -5,13 +5,14 @@ import gzip
 import uuid
 
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_encode, url_parse
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import float_is_zero, float_round, urls
+from odoo.tools import float_is_zero, float_round
+from odoo.libs.web import urls
 
 from odoo.addons.website_sale import const, utils
 
@@ -197,10 +198,10 @@ class ProductFeed(models.Model):
 
         def format_product_link(url_):
             if self.pricelist_id:
-                parsed_url = url_parse(url_)
-                query = parsed_url.decode_query()
+                parsed_url = urlsplit(url_)
+                query = dict(parse_qsl(parsed_url.query))
                 query['pricelist'] = self.pricelist_id.id
-                url_ = parsed_url._replace(query=url_encode(query)).to_url()
+                url_ = urlunsplit(parsed_url._replace(query=urlencode(query)))
             return urls.urljoin(
                 base_url, self.env['ir.http']._url_lang(url_, lang_code=self.lang_id.code)
             )
@@ -325,7 +326,7 @@ class ProductFeed(models.Model):
             start_date = combination_info['discount_start_date']
             end_date = combination_info['discount_end_date']
             if start_date and end_date:
-                price_info['sale_price_effective_date'] = '/'.join(
+                price_info['sale_price_date_effective'] = '/'.join(
                     map(utils.gmc_format_date, (start_date, end_date)),
                 )
 

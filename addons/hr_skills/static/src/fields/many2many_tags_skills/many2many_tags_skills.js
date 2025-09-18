@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/fields/relational/many2many_tags/many2many_tags_field";
 
 import { SkillsTagList } from "../hr_skills_tags_list/hr_skills_tags_list";
 

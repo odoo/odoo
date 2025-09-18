@@ -1,8 +1,6 @@
+import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-import { Component, onWillStart } from "@odoo/owl";
-
 /**
  * This popover is used to show a card with details for the recipients' partner with its name,
  * email and phone number. The card can also redirect the user to the `res.partner` form view if he
@@ -19,7 +17,11 @@ export class RecipientsPopover extends Component {
     setup() {
         this.orm = useService("orm");
         onWillStart(async () => {
-            [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
+            [this.partner] = await this.orm.read(
+                "res.partner",
+                [this.props.id],
+                this.fieldNames,
+            );
         });
     }
 

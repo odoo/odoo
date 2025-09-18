@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta
-
-import pytz
+from datetime import UTC, timedelta
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -19,8 +17,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         else:
             # start by default today 00:00:00
             user_tz = self.env.tz
-            today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
-            date_start = today.astimezone(pytz.timezone('UTC')).replace(tzinfo=None)
+            today = fields.Datetime.from_string(fields.Date.context_today(self)).replace(tzinfo=user_tz)
+            date_start = today.astimezone(UTC).replace(tzinfo=None)
 
         if date_stop:
             date_stop = fields.Datetime.from_string(date_stop)

@@ -2,7 +2,7 @@
 <odoo>
     <record model="ir.ui.view" id="stock_move_view_list">
         <field name="name">stock.move.view.list.inherit.stock.account</field>
-        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="inherit_id" ref="stock.view_stock_move_list"/>
         <field name="model">stock.move</field>
         <field name="arch" type="xml">
             <field name="state" position="after">
@@ -13,10 +13,10 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_move_search">
+    <record model="ir.ui.view" id="view_stock_move_search">
         <field name="name">stock.move.search.inherit.stock.account</field>
         <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="inherit_id" ref="stock.view_stock_move_search"/>
         <field name="arch" type="xml">
             <filter name="inventory" position="after">
                 <separator/>

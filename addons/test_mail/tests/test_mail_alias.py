@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
+import psycopg
 
 from ast import literal_eval
 
@@ -230,7 +230,7 @@ class TestMailAlias(TestMailAliasCommon):
             'alias_name': 'unused.test.alias'
         })
 
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
+        with mute_logger('odoo.db'), self.assertRaises(psycopg.errors.UniqueViolation):
             new_mail_alias.copy({'alias_name': 'unused.test.alias'})
 
         # test that duplicating an alias should have blank name
@@ -469,7 +469,7 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
 
         # cannot unlink alias domain as there are aliases linked to it
-        with self.assertRaises(psycopg2.errors.ForeignKeyViolation), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg.errors.ForeignKeyViolation), mute_logger('odoo.db'):
             mail_alias_domain.unlink()
 
         # eject linked aliases then remove alias domain of first company; should
@@ -613,7 +613,7 @@ class TestMailAliasDomain(TestMailAliasCommon):
         alias_domain = self.mail_alias_domain.with_env(self.env)
 
         # copying directly would duplicate bounce / catchall emails
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
+        with mute_logger('odoo.db'), self.assertRaises(psycopg.errors.UniqueViolation):
             new_alias_domain = alias_domain.copy()
 
         # same domain name is authorized if bounce and catchall are different
@@ -632,12 +632,12 @@ class TestMailAliasDomain(TestMailAliasCommon):
             'name': alias_domain.name,
         })
         # any not unique should raise UniqueViolation (SQL constraint fired after check)
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
+        with mute_logger('odoo.db'), self.assertRaises(psycopg.errors.UniqueViolation):
             self.env['mail.alias.domain'].create({
                 'bounce_alias': alias_domain.bounce_alias,
                 'name': alias_domain.name,
             })
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
+        with mute_logger('odoo.db'), self.assertRaises(psycopg.errors.UniqueViolation):
             self.env['mail.alias.domain'].create({
                 'catchall_alias': alias_domain.catchall_alias,
                 'name': alias_domain.name,

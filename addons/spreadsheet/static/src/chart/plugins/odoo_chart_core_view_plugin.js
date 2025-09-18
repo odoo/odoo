@@ -1,7 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual } from "@web/core/utils/collections/objects";
 
 export class OdooChartCoreViewPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ (["getChartDataSource", "getOdooEnv"]);

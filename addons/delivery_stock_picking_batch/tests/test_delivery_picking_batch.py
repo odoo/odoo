@@ -26,7 +26,7 @@ class TestDeliveryPickingBatch(common.TransactionCase):
                 'sale_ok': False,
                 'purchase_ok': False,
                 'list_price': 10.0,
-                'invoice_policy': 'order'
+                'invoice_policy': 'ordered'
             }).id
         })
         cls.stock_location = cls.env.ref('stock.stock_location_stock')

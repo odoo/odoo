@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="product_category_form_view" model="ir.ui.view">
+    <record id="view_product_category_search" model="ir.ui.view">
+        <field name="name">product.category.search</field>
+        <field name="model">product.category</field>
+        <field name="arch" type="xml">
+            <search string="Product Categories">
+                <field name="name" string="Product Categories"/>
+                <field name="parent_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_product_category_list" model="ir.ui.view">
+        <field name="name">product.category.list</field>
+        <field name="model">product.category</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list string="Product Categories">
+                <field name="display_name" string="Product Category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_product_category_form" model="ir.ui.view">
         <field name="name">product.category.form</field>
         <field name="model">product.category</field>
         <field name="arch" type="xml">
@@ -9,7 +31,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
-                            name="%(product_template_action_all)d"
+                            name="%(action_product_template_all)d"
                             icon="fa-th-list"
                             type="action"
                             context="{'search_default_categ_id': id, 'default_categ_id': id, 'group_expand': True}">
@@ -32,34 +54,12 @@
         </field>
     </record>
 
-    <record id="product_category_list_view" model="ir.ui.view">
-        <field name="name">product.category.list</field>
-        <field name="model">product.category</field>
-        <field name="priority">1</field>
-        <field name="arch" type="xml">
-            <list string="Product Categories">
-                <field name="display_name" string="Product Category"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="product_category_search_view" model="ir.ui.view">
-        <field name="name">product.category.search</field>
-        <field name="model">product.category</field>
-        <field name="arch" type="xml">
-            <search string="Product Categories">
-                <field name="name" string="Product Categories"/>
-                <field name="parent_id"/>
-            </search>
-        </field>
-    </record>
-
-    <record id="product_category_action_form" model="ir.actions.act_window">
+    <record id="action_product_category" model="ir.actions.act_window">
         <field name="name">Categories</field>
         <field name="res_model">product.category</field>
         <field name="path">product-categories</field>
-        <field name="search_view_id" ref="product_category_search_view"/>
-        <field name="view_id" ref="product_category_list_view"/>
+        <field name="search_view_id" ref="view_product_category_search"/>
+        <field name="view_id" ref="view_product_category_list"/>
     </record>
 
 </odoo>

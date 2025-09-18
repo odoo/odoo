@@ -6,11 +6,11 @@ import logging
 import time
 import requests
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode as url_encode
 
 from odoo import _, fields, models, tools, release
 from odoo.exceptions import AccessError, UserError
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 from odoo.addons.google_gmail.tools import get_iap_error_message
 
 GMAIL_TOKEN_REQUEST_TIMEOUT = 5

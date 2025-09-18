@@ -23,15 +23,15 @@ declare module "registries" {
     }
 
     export interface ViewsRegistryItemShape {
-        ArchParser: ArchParser;
+        ArchParser?: any;
         buttonTemplate?: string;
-        Controller: typeof Component;
-        Compiler?: typeof ViewCompiler;
-        Model: typeof Model;
-        props(genericProps: ViewInfo, viewDescr: ViewsRegistryItemShape, config: object): object;
-        Renderer: typeof Component;
-        searchMenuTypes?: ("filter" | "groupBy" | "comparison" | "favorite")[];
-        SearchModel?: typeof SearchModel;
+        Controller?: any;
+        Compiler?: any;
+        Model?: any;
+        props?(genericProps: ViewInfo, viewDescr: ViewsRegistryItemShape, config: object): object;
+        Renderer?: any;
+        searchMenuTypes?: string[];
+        SearchModel?: any;
         type: string;
     }
 

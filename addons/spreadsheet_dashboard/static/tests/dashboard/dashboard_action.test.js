@@ -11,7 +11,7 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
-import { range } from "@web/core/utils/numbers";
+import { range } from "@web/core/utils/format/numbers";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 
 describe.current.tags("desktop");

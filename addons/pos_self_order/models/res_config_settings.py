@@ -4,8 +4,8 @@ from io import BytesIO
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.misc import split_every
-from werkzeug.urls import url_unquote
+from itertools import batched
+from urllib.parse import unquote
 
 
 class ResConfigSettings(models.TransientModel):
@@ -119,7 +119,7 @@ class ResConfigSettings(models.TransientModel):
             for row_num, table in enumerate(table_ids, start=1):
                 table_number = table.table_number
                 floor_name = table.floor_id.name
-                url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
+                url = unquote(self.pos_config_id._get_self_order_url(table.id))
                 qr_images.append({
                     'images': self.pos_config_id._generate_single_qr_code__(url),
                     'name': f"{floor_name} - {table_number}",
@@ -127,7 +127,7 @@ class ResConfigSettings(models.TransientModel):
                 excel_rows.append([self.pos_config_id.name, floor_name, table_number, url])
             headers = ['Pos config', 'Floor', 'Table id', 'Url shortened']
         else:
-            url = url_unquote(self.pos_config_id._get_self_order_url())
+            url = unquote(self.pos_config_id._get_self_order_url())
             qr_images.append({
                 'images': self.pos_config_id._generate_single_qr_code__(url),
                 'name': "generic",
@@ -178,10 +178,10 @@ class ResConfigSettings(models.TransientModel):
             if not table_ids:
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
-            url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
+            url = unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
             name = table_ids[0].table_number
         else:
-            url = url_unquote(self.pos_config_id._get_self_order_url())
+            url = unquote(self.pos_config_id._get_self_order_url())
             name = ""
 
         return self.env.ref("pos_self_order.report_self_order_qr_codes_page").report_action(
@@ -191,7 +191,7 @@ class ResConfigSettings(models.TransientModel):
                     {
                         "name": floor.get("name"),
                         "type": floor.get("type"),
-                        "table_rows": list(split_every(3, floor["tables"], list)),
+                        "table_rows": [list(b) for b in batched(floor["tables"], 3)],
                     }
                     for floor in self.pos_config_id._get_qr_code_data()
                 ],

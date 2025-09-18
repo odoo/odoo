@@ -25,7 +25,8 @@ $enable-deprecation-messages: false !default;
       }
     }
 
-    @warn "Found no color leading to #{$min-contrast-ratio}:1 contrast ratio against #{$real-color} (mix of given color and background)...";
+    // No foreground color met the #{$min-contrast-ratio}:1 ratio against #{$real-color}.
+    // Falls back to the highest-contrast candidate below.
 
     @return $max-ratio-color;
 }

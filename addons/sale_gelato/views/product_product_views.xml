@@ -4,7 +4,7 @@
     <record id="product_product_normal_form" model="ir.ui.view">
         <field name="name">Product Product Normal Form</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"></field>
+        <field name="inherit_id" ref="product.view_product_product_form_normal"></field>
         <field name="arch" type="xml">
             <group name="description" position="after">
                 <group
@@ -19,7 +19,7 @@
     <record id="product_product_easy_form" model="ir.ui.view">
         <field name="name">Product Product Easy Form</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
+        <field name="inherit_id" ref="product.view_product_product_form_easy_edit"></field>
         <field name="arch" type="xml">
             <group name="sales" position="after">
                 <group

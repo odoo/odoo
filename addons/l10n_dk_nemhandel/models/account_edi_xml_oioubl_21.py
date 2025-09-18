@@ -1,6 +1,6 @@
 from odoo import _, models, tools
 from odoo.tools import html2plaintext
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 

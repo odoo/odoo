@@ -1,15 +1,13 @@
-import { Component } from "@odoo/owl";
-
 import { useDiscussSystray } from "@mail/utils/common/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Component } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
-import { useCommand } from "@web/core/commands/command_hook";
-import { _t } from "@web/core/l10n/translation";
-
+import { useCommand } from "@web/services/commands/command_hook";
+import { user } from "@web/services/user";
 export class ActivityMenu extends Component {
     static components = { Dropdown };
     static props = [];
@@ -30,7 +28,7 @@ export class ActivityMenu extends Component {
             hotkeyOptions: { bypassEditableProtection: true },
             isAvailable: () =>
                 !this.ui.activeElement.querySelector(
-                    "[data-hotkey='shift+a'], .o_mail_activity_schedule_wizard"
+                    "[data-hotkey='shift+a'], .o_mail_activity_schedule_wizard",
                 ),
         });
     }
@@ -107,7 +105,7 @@ export class ActivityMenu extends Component {
                 newWindow,
                 clearBreadcrumbs: true,
                 viewType: group.view_type,
-            }
+            },
         );
     }
 

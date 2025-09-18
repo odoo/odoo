@@ -43,3 +43,45 @@
     from { box-shadow: 0 0 0 0 var(--pulse-color-from, #{$primary}); }
     to { box-shadow: 0 0 0 var(--pulse-spread-radius, 2em) var(--pulse-color-to, #{rgba(#FFF, 0)}); }
 }
+
+// Bold & Modern keyframes
+
+@keyframes o-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes o-fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes o-fadeInDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes o-scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes o-slideInRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes o-slideInLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes o-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes o-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

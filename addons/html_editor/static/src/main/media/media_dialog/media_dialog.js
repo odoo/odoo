@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Notebook } from "@web/core/notebook/notebook";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { Notebook } from "@web/components/notebook/notebook";
 import { ImageSelector } from "./image_selector";
 import { IconSelector } from "./icon_selector";
 

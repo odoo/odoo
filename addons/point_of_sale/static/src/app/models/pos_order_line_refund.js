@@ -27,7 +27,9 @@ export class PosOrderLineRefund {
             return false;
         }
 
-        return this.models["pos.order"].find((o) => o.uuid === this.destination_order_uuid);
+        return this.models["pos.order"].find(
+            (o) => o.uuid === this.destination_order_uuid,
+        );
     }
 
     get maxQty() {

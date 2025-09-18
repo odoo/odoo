@@ -18,8 +18,8 @@
             border-top: 1px solid;
             border-top-color: inherit;
         }
-        &:before { margin: 0 $grid-gutter-width/2 0 -100%; }
-        &:after  { margin: 0 -100% 0 $grid-gutter-width/2; }
+        &:before { margin: 0 calc($grid-gutter-width / 2) 0 -100%; }
+        &:after  { margin: 0 -100% 0 calc($grid-gutter-width / 2); }
     }
     .s_title_underlined {
         @extend %o-page-header;

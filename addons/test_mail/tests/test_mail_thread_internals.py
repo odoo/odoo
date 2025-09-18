@@ -414,7 +414,7 @@ class TestAPI(ThreadRecipients):
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(22):
+        with self.assertQueryCount(14):
             defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
             defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
@@ -926,7 +926,7 @@ class TestAPI(ThreadRecipients):
                 for sugg, expected_sugg in zip(suggested, expected, strict=True):
                     self.assertDictEqual(sugg, expected_sugg)
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content(self):
         """ Test updating message content. """
@@ -982,7 +982,7 @@ class TestAPI(ThreadRecipients):
         )
         self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content_check(self):
         """ Test cases where updating content should be prevented """
@@ -1168,7 +1168,7 @@ class TestDiscuss(MailCommon, TestRecipients):
             'email_from': 'ignasse@example.com'
         })
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
         def _employee_crash(recordset, operation):
             """ If employee is test employee, consider they have no access on document """

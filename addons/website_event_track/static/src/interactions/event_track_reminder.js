@@ -5,7 +5,7 @@ import { Component } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { isEmail } from "@web/core/utils/strings";
+import { isEmail } from "@web/core/utils/format/strings";
 
 export class WebsiteEventTrackReminder extends Interaction {
     static selector = ".o_wetrack_js_reminder";

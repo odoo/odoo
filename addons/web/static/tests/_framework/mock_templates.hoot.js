@@ -1,3 +1,5 @@
+// @ts-check
+
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 //-----------------------------------------------------------------------------
@@ -17,8 +19,13 @@ const replaceAttributes = (template) => {
         for (const prefix of ATTRIBUTE_PREFIXES) {
             const targetAttribute = `${prefix}src`;
             const dataAttribute = `${prefix}data-src`;
-            for (const element of template.querySelectorAll(`${tagName}[${targetAttribute}]`)) {
-                element.setAttribute(dataAttribute, element.getAttribute(targetAttribute));
+            for (const element of template.querySelectorAll(
+                `${tagName}[${targetAttribute}]`,
+            )) {
+                element.setAttribute(
+                    dataAttribute,
+                    element.getAttribute(targetAttribute),
+                );
                 if (prefix) {
                     element.removeAttribute(targetAttribute);
                 }
@@ -68,11 +75,17 @@ export function makeTemplateFactory(name, factory) {
                     return getTemplate(name);
                 }
                 const rawTemplate = getTemplate(name) || this.rawTemplates[name];
-                if (typeof rawTemplate === "function" && !(rawTemplate instanceof Element)) {
+                if (
+                    typeof rawTemplate === "function" &&
+                    !(rawTemplate instanceof Element)
+                ) {
                     return rawTemplate;
                 }
                 if (!compiledTemplates.has(rawTemplate)) {
-                    compiledTemplates.set(rawTemplate, this._compileTemplate(name, rawTemplate));
+                    compiledTemplates.set(
+                        rawTemplate,
+                        this._compileTemplate(name, rawTemplate),
+                    );
                 }
                 return compiledTemplates.get(rawTemplate);
             };

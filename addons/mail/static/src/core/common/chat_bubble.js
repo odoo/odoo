@@ -1,13 +1,10 @@
-import { ImStatus } from "@mail/core/common/im_status";
-
-import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
-
-import { useChildRef, useService } from "@web/core/utils/hooks";
-import { useHover } from "@mail/utils/common/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { ImStatus } from "@mail/core/common/im_status";
+import { useHover } from "@mail/utils/common/hooks";
+import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/ui/popover/popover_hook";
 class ChatBubblePreview extends Component {
     static props = ["chatWindow", "close"];
     static template = "mail.ChatBubblePreview";
@@ -56,7 +53,9 @@ export class ChatBubble extends Component {
         this.hover = useHover(["root", popoverRef], {
             onHover: () => {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
-                this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
+                this.popover.open(this.rootRef.el, {
+                    chatWindow: this.props.chatWindow,
+                });
             },
             onAway: () => this.popover.close(),
         });
@@ -66,7 +65,7 @@ export class ChatBubble extends Component {
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);
             },
-            () => [this.thread?.importantCounter]
+            () => [this.thread?.importantCounter],
         );
         useSubEnv({ inChatBubble: true });
     }

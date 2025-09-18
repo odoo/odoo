@@ -1,15 +1,15 @@
 /* global Sha1 */
 
-import { _t } from "@web/core/l10n/translation";
-
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
-import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { CashierSelectionPopup } from "@pos_hr/app/components/popups/cashier_selection_popup/cashier_selection_popup";
-
-export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+export function useCashierSelector(
+    { exclusive, onScan } = { onScan: () => {}, exclusive: false },
+) {
     const pos = usePos();
     const dialog = useService("dialog");
     const notification = useService("notification");
@@ -17,7 +17,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         {
             async cashier(code) {
                 const employee = pos.models["hr.employee"].find(
-                    (emp) => emp._barcode === Sha1.hash(code.code)
+                    (emp) => emp._barcode === Sha1.hash(code.code),
                 );
                 if (
                     employee &&
@@ -29,7 +29,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                 return employee;
             },
         },
-        exclusive
+        exclusive,
     );
 
     async function checkPin(employee, pin = false) {
@@ -74,10 +74,10 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
 
         let employee = false;
         const allEmployees = pos.models["hr.employee"].filter(
-            (employee) => employee.id !== pos.getCashier()?.id
+            (employee) => employee.id !== pos.getCashier()?.id,
         );
         const pinMatchEmployees = allEmployees.filter(
-            (employee) => !pin || Sha1.hash(pin) === employee._pin
+            (employee) => !pin || Sha1.hash(pin) === employee._pin,
         );
 
         if (!pinMatchEmployees.length && !pin) {

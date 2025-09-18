@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField, charField } from "@web/views/fields/char/char_field";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { CharField, charField } from "@web/fields/basic/char/char_field";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { googlePlacesSession } from "../google_places_session";
 import { useChildRef } from "@web/core/utils/hooks";
-import { useInputField } from "@web/views/fields/input_field_hook";
+import { useInputField } from "@web/fields/input_field_hook";
 
 const standardAddressFields = {
     street: {

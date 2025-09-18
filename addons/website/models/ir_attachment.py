@@ -2,6 +2,7 @@
 
 import logging
 from odoo import fields, models, api
+from odoo.fields import Domain
 _logger = logging.getLogger(__name__)
 
 
@@ -26,6 +27,6 @@ class IrAttachment(models.Model):
 
     def _get_serve_attachment(self, url, extra_domain=None, order=None):
         website = self.env['website'].get_current_website()
-        extra_domain = (extra_domain or []) + website.website_domain()
+        extra_domain = Domain(extra_domain or []) & website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
         return super()._get_serve_attachment(url, extra_domain, order)

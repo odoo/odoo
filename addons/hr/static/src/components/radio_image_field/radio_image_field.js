@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { RadioField, radioField } from "@web/views/fields/radio/radio_field";
+import { RadioField, radioField } from "@web/fields/selection/radio/radio_field";
 
 class RadioImageField extends RadioField {
     static template = "hr_homeworking.RadioImageField";

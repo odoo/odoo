@@ -1,7 +1,11 @@
+// @ts-check
+
+/** @module @web/views/calendar/calendar_arch_parser - Parses calendar view XML arch into field mappings, scales, filters, and popover config */
+
 import { evaluateExpr } from "@web/core/py_js/py";
-import { exprToBoolean } from "@web/core/utils/strings";
-import { visitXML } from "@web/core/utils/xml";
-import { Field } from "@web/views/fields/field";
+import { visitXML } from "@web/core/utils/dom/xml";
+import { exprToBoolean } from "@web/core/utils/format/strings";
+import { Field } from "@web/fields/field";
 
 const FIELD_ATTRIBUTE_NAMES = [
     "date_start",
@@ -13,9 +17,20 @@ const FIELD_ATTRIBUTE_NAMES = [
 ];
 const SCALES = ["day", "week", "month", "year"];
 
-export class CalendarParseArchError extends Error {}
+class CalendarParseArchError extends Error {}
 
+/** Parses a calendar view's XML arch into a structured configuration object. */
 export class CalendarArchParser {
+    /**
+     * Parse the calendar arch XML document and extract view configuration.
+     *
+     * @param {Element} xmlDoc - root element of the calendar arch
+     * @param {Object} models - map of model names to their field definitions
+     * @param {string} modelName - technical name of the primary model
+     * @returns {Object} parsed arch info including field mapping, scales, filters,
+     *   permissions, and popover field nodes
+     * @throws {CalendarParseArchError} if required attributes are missing or invalid
+     */
     parse(xmlDoc, models, modelName) {
         const fields = models[modelName].fields;
         const fieldNames = new Set(fields.display_name ? ["display_name"] : []);
@@ -54,12 +69,20 @@ export class CalendarArchParser {
         const isDateHidden = exprToBoolean(xmlDoc.getAttribute("hide_date"));
         const isTimeHidden = exprToBoolean(xmlDoc.getAttribute("hide_time"));
         const jsClass = xmlDoc.getAttribute("js_class") || null;
-        const monthOverflow = exprToBoolean(xmlDoc.getAttribute("month_overflow"), true);
+        const monthOverflow = exprToBoolean(
+            xmlDoc.getAttribute("month_overflow"),
+            true,
+        );
         const multiCreateView = xmlDoc.getAttribute("multi_create_view");
         const quickCreate = exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
         const quickCreateViewId =
-            (quickCreate && parseInt(xmlDoc.getAttribute("quick_create_view_id"), 10)) || null;
-        const showDatePicker = exprToBoolean(xmlDoc.getAttribute("show_date_picker"), true);
+            (quickCreate &&
+                parseInt(xmlDoc.getAttribute("quick_create_view_id"), 10)) ||
+            null;
+        const showDatePicker = exprToBoolean(
+            xmlDoc.getAttribute("show_date_picker"),
+            true,
+        );
         const showUnusualDays = exprToBoolean(xmlDoc.getAttribute("show_unusual_days"));
 
         const popoverFieldNodes = {};
@@ -75,11 +98,14 @@ export class CalendarArchParser {
                         models,
                         modelName,
                         "calendar",
-                        jsClass
+                        jsClass,
                     );
                     popoverFieldNodes[fieldName] = fieldInfo;
 
-                    if (!node.hasAttribute("invisible") || node.hasAttribute("filters")) {
+                    if (
+                        !node.hasAttribute("invisible") ||
+                        node.hasAttribute("filters")
+                    ) {
                         if (
                             node.hasAttribute("avatar_field") ||
                             node.hasAttribute("write_model") ||
@@ -100,13 +126,18 @@ export class CalendarArchParser {
                                 writeResModel: null,
                             };
                             const filterInfo = filtersInfo[fieldName];
-                            filterInfo.avatarFieldName = node.getAttribute("avatar_field") || null;
+                            filterInfo.avatarFieldName =
+                                node.getAttribute("avatar_field") || null;
                             filterInfo.colorFieldName =
-                                (node.hasAttribute("filters") && node.getAttribute("color")) ||
+                                (node.hasAttribute("filters") &&
+                                    node.getAttribute("color")) ||
                                 null;
-                            filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
-                            filterInfo.writeFieldName = node.getAttribute("write_field") || null;
-                            filterInfo.writeResModel = node.getAttribute("write_model") || null;
+                            filterInfo.filterFieldName =
+                                node.getAttribute("filter_field") || null;
+                            filterInfo.writeFieldName =
+                                node.getAttribute("write_field") || null;
+                            filterInfo.writeResModel =
+                                node.getAttribute("write_model") || null;
                         }
                     }
                     break;
@@ -115,13 +146,19 @@ export class CalendarArchParser {
         });
 
         if (!fieldMapping.date_start) {
-            throw new CalendarParseArchError(`Calendar view must define "date_start" attribute.`);
+            throw new CalendarParseArchError(
+                `Calendar view must define "date_start" attribute.`,
+            );
         }
         if (!scales.includes(scale)) {
-            throw new CalendarParseArchError(`Calendar view cannot display mode: ${scale}`);
+            throw new CalendarParseArchError(
+                `Calendar view cannot display mode: ${scale}`,
+            );
         }
         if (!Number.isInteger(eventLimit)) {
-            throw new CalendarParseArchError(`Calendar view's event limit should be a number`);
+            throw new CalendarParseArchError(
+                `Calendar view's event limit should be a number`,
+            );
         }
 
         return {

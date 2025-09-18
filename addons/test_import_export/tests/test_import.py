@@ -7,6 +7,7 @@ import pprint
 import unittest
 
 from PIL import Image
+import xlsxwriter
 
 from odoo.tests.common import TransactionCase, can_import, RecordCapturer
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -48,39 +49,33 @@ def sorted_fields(fields):
 
 def generate_xls(data):
     """
-    Generates an XLS file from the given data dictionary. Each key in the `data` dictionary represents a column header,
+    Generates an XLS (actually XLSX) file from the given data dictionary.
+    Each key in the `data` dictionary represents a column header,
     and its corresponding values are written as rows under that column.
 
-    Date and datetime objects in the values will automatically set the style of the cell to a date/datetime.
+    Date and datetime objects in the values will automatically set the format of the cell.
 
     :param dict data: keys are column headers, values are rows.
-    :return bytes: the xls file as bytes.
+    :return bytes: the xlsx file as bytes.
     """
-    import xlwt  # noqa: PLC0415
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Sheet1')
-
-    default_style = xlwt.XFStyle()
-
-    date_style = xlwt.XFStyle()
-    date_style.num_format_str = 'yyyy-mm-dd'
-
-    datetime_style = xlwt.XFStyle()
-    datetime_style.num_format_str = 'yyyy-mm-dd hh:mm:ss'
-
-    for column, (key, values) in enumerate(data.items()):
-        ws.write(0, column, key, default_style)
-        for row, value in enumerate(values, 1):
-            style = default_style
-            if isinstance(value, datetime.datetime):
-                style = datetime_style
-            elif isinstance(value, datetime.date):
-                style = date_style
-            ws.write(row, column, value, style)
 
     output = io.BytesIO()
-    wb.save(output)
+    with xlsxwriter.Workbook(output, {'in_memory': True}) as wb:
+        ws = wb.add_worksheet('Sheet1')
+
+        date_format = wb.add_format({'num_format': 'yyyy-mm-dd'})
+        datetime_format = wb.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'})
+
+        for column, (key, values) in enumerate(data.items()):
+            ws.write(0, column, key)
+            for row, value in enumerate(values, 1):
+                if isinstance(value, datetime.datetime):
+                    ws.write_datetime(row, column, value, datetime_format)
+                elif isinstance(value, datetime.date):
+                    ws.write_datetime(row, column, value, date_format)
+                else:
+                    ws.write(row, column, value)
+
     return output.getvalue()
 
 
@@ -467,30 +462,7 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['5'], ['4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
-    def test_xls_success(self):
-        file_content = file_open('test_import_export/data/test_import.xls', 'rb').read()
-        import_wizard = self.env['base_import.import'].create({
-            'res_model': 'import.preview',
-            'file': file_content,
-            'file_type': 'application/vnd.ms-excel'
-        })
-
-        result = import_wizard.parse_preview({
-            'has_headers': True,
-        })
-        self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
-        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
-        self.assertItemsEqual(result['fields'][:4], [
-            get_id_field('import.preview'),
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.preview'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
-        ])
-        self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
-
-    @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl module not available")
     def test_xlsx_success(self):
         file_content = file_open('test_import_export/data/test_import.xlsx', 'rb').read()
         import_wizard = self.env['base_import.import'].create({
@@ -915,7 +887,7 @@ foo3,US,0,persons\n""",
         self.assertItemsEqual(last_record.html, "<p>foo</p><br><p>bar</p>")
 
     @mute_logger('odoo.addons.base_import.models.base_import')
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    @unittest.skipUnless(can_import('xlsxwriter') and can_import('openpyxl'), "xlsxwriter/openpyxl not available")
     def test_xls_datetime_values(self):
         """ Test the support of having dates set as strings with the user format and date/datetime objects
         in the same xls(x) file.
@@ -964,7 +936,7 @@ foo3,US,0,persons\n""",
             ])
         ]:
             for file_content, file_type in [
-                (generate_xls(data), 'application/vnd.ms-excel'),
+                (generate_xls(data), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
                 (generate_xlsx(data), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
             ]:
                 import_wizard = self.env['base_import.import'].create({
@@ -988,7 +960,7 @@ foo3,US,0,persons\n""",
 
                 self.assertFalse(response.get('messages'))
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_char_field(self):
         """Test that importing datetime values to char field is converted"""
 
@@ -1021,7 +993,7 @@ foo3,US,0,persons\n""",
         self.assertFalse(response.get('messages'))
         self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_related_char_field(self):
         """Test that importing datetime values to a related char field is converted"""
         file_content = generate_xlsx(
@@ -1050,7 +1022,7 @@ foo3,US,0,persons\n""",
             ['foo', '08:10:00 06/01/2020', '01/07/2024']
         )
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_property_char_field(self):
         """Test that importing datetime values to a property char field is converted"""
         def_record = self.env['import.properties.definition'].create([

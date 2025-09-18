@@ -3,9 +3,9 @@ import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 export class JsonPopOver extends Component {
     static template = "";

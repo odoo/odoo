@@ -1,31 +1,42 @@
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { Notebook } from "@web/core/notebook/notebook";
-import { Setting } from "./setting/setting";
-import { Field } from "@web/views/fields/field";
-import { browser } from "@web/core/browser/browser";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { useService } from "@web/core/utils/hooks";
-import { useDebounced, useThrottleForAnimation } from "@web/core/utils/timing";
-import { ButtonBox } from "@web/views/form/button_box/button_box";
-import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewCompiler } from "@web/views/view_compiler";
-import { Widget } from "@web/views/widgets/widget";
-import { FormCompiler } from "./form_compiler";
-import { FormLabel } from "./form_label";
-import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
+// @ts-check
+
+/** @module @web/views/form/form_renderer - Compiles form arch into an OWL template and manages autofocus, sticky statusbar, and field ID uniqueness */
 
 import {
     Component,
     onMounted,
     onWillUnmount,
     useEffect,
-    useSubEnv,
     useRef,
     useState,
+    useSubEnv,
     xml,
 } from "@odoo/owl";
+import { Notebook } from "@web/components/notebook/notebook";
+import { browser } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { useService } from "@web/core/utils/hooks";
+import { useDebounced, useThrottleForAnimation } from "@web/core/utils/timing";
+import { Field } from "@web/fields/field";
+import { ButtonBox } from "@web/views/form/button_box/button_box";
+import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { useViewCompiler } from "@web/views/view_compiler";
+import { Widget } from "@web/views/widgets/widget";
 
+import { FormCompiler } from "./form_compiler";
+import { FormLabel } from "./form_label";
+import { Setting } from "./setting/setting";
+import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
+
+/**
+ * Renderer for the form view.
+ *
+ * Compiles the form arch into an OWL template, manages autofocus on new
+ * records, handles scroll-based sticky statusbar behavior, and ensures
+ * field ID uniqueness when rendered inside a dialog.
+ */
 export class FormRenderer extends Component {
     static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
     static components = {
@@ -63,14 +74,18 @@ export class FormRenderer extends Component {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
         const templates = { FormRenderer: archInfo.xmlDoc };
-        this.state = useState({}); // Used by Form Compiler
+        this.state = useState(/** @type {any} */ ({})); // Used by Form Compiler
         this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");
         this.onResize = useDebounced(this.render, 200);
         this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
-        onMounted(() => browser.addEventListener("resize", this.onResize));
-        onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
+        onMounted(() =>
+            browser.addEventListener("resize", /** @type {any} */ (this.onResize)),
+        );
+        onWillUnmount(() =>
+            browser.removeEventListener("resize", /** @type {any} */ (this.onResize)),
+        );
 
         const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
@@ -98,14 +113,14 @@ export class FormRenderer extends Component {
                             rootEl.querySelector(
                                 focusableSelectors
                                     .map((sel) => `.o_content .o_field_widget ${sel}`)
-                                    .join(", ")
+                                    .join(", "),
                             );
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isNew, rootRef.el]
+                () => [this.props.record.isNew, rootRef.el],
             );
         }
 
@@ -122,7 +137,7 @@ export class FormRenderer extends Component {
                 }
                 for (const id of fieldNodeIds) {
                     const els = [...document.querySelectorAll(`[id=${id}]`)].filter(
-                        (el) => !rootRef.el.contains(el)
+                        (el) => !rootRef.el.contains(el),
                     );
                     if (els.length) {
                         els[0].removeAttribute("id");

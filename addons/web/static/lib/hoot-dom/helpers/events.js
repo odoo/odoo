@@ -33,7 +33,7 @@ import { microTick } from "./time";
  *
  * @typedef {{
  *  dataTransfer?: DataTransfer;
- *  dropEffect: "none" | "copy" | "link" | "move";
+ *  dropEffect?: "none" | "copy" | "link" | "move";
  *  effectAllowed?: "none" | "copy" | "copyLink" | "copyMove" | "link" | "linkMove" | "move" | "all" | "uninitialized";
  *  files?: File[];
  *  items?: [string, string][];
@@ -228,7 +228,7 @@ function constrainScrollY(target, y) {
 }
 
 /**
- * @param {DataTransferOptions} options
+ * @param {DataTransferOptions} [options]
  */
 function createDataTransfer(options) {
     const dataTransfer = isInstanceOf(options?.dataTransfer, DataTransfer)
@@ -574,7 +574,7 @@ function getFirstCommonParent(a, b) {
  * no interactive elements are found.
  *
  * @param {HTMLElement} element
- * @param {QueryOptions} options
+ * @param {QueryOptions} [options]
  * @param {AsyncTarget} [originalTarget]
  */
 function getPointerTarget(element, options, originalTarget) {
@@ -2311,7 +2311,7 @@ export async function drag(target, options) {
  * @see {@link clear}
  * @see {@link fill}
  * @param {InputValue} value
- * @param {FillOptions} options
+ * @param {FillOptions} [options]
  * @returns {Promise<EventList>}
  * @example
  *  fill("foo"); // Types "foo" in the active element

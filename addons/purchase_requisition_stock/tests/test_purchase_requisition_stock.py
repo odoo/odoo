@@ -289,7 +289,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Cancel other alternatives
         warning_wizard.action_cancel_alternatives()
         self.assertEqual(orig_po.state, 'cancel', "Original PO should have been cancelled.")
-        self.assertEqual(alt_po.state, 'purchase', "Alternative PO should have been confirmed.")
+        self.assertEqual(alt_po.state, 'done', "Alternative PO should have been confirmed.")
         # Set all qty as done and validate the alternative PO's picking
         in_picking = alt_po.picking_ids
         self.assertEqual(in_picking.picking_type_id.code, 'incoming', "Must be the reception picking.")

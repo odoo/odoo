@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="stock_package_type_form_delivery">
+    <record model="ir.ui.view" id="view_stock_package_type_form_delivery">
         <field name="name">stock.package.type.form.delivery</field>
         <field name="model">stock.package.type</field>
-        <field name="inherit_id" ref="stock.stock_package_type_form"/>
+        <field name="inherit_id" ref="stock.view_stock_package_type_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='delivery']" position="inside">
                 <field name="package_carrier_type"/>
@@ -13,10 +13,10 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="stock_package_type_tree_delivery">
+    <record model="ir.ui.view" id="view_stock_package_type_list_delivery">
         <field name="name">stock.package.type.list.delivery</field>
         <field name="model">stock.package.type</field>
-        <field name="inherit_id" ref="stock.stock_package_type_tree"/>
+        <field name="inherit_id" ref="stock.view_stock_package_type_list"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sequence']" position="after">
                 <field name="package_carrier_type"/>

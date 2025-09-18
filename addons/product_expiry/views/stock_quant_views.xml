@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
-    <record id="view_stock_quant_tree" model="ir.ui.view">
+    <record id="view_stock_quant_list" model="ir.ui.view">
         <field name="name">stock.quant.list.inherit.expiry_date</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+        <field name="inherit_id" ref="stock.view_stock_quant_list"/>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="decoration-danger">
@@ -16,10 +16,10 @@
         </field>
     </record>
 
-    <record id="view_stock_quant_tree_editable" model="ir.ui.view">
+    <record id="view_stock_quant_list_editable" model="ir.ui.view">
         <field name="name">stock.quant.list.editable.inherit.expiry_date</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="inherit_id" ref="stock.view_stock_quant_list_editable"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="use_expiration_date" column_invisible="True"/>
@@ -33,10 +33,10 @@
         </field>
     </record>
 
-    <record id="view_stock_quant_tree_inventory_editable" model="ir.ui.view">
+    <record id="view_stock_quant_list_inventory_editable" model="ir.ui.view">
         <field name="name">stock.quant.inventory.list.editable.inherit.expiry_date</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+        <field name="inherit_id" ref="stock.view_stock_quant_list_inventory_editable"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="use_expiration_date" column_invisible="True"/>
@@ -50,10 +50,10 @@
         </field>
     </record>
 
-    <record id="quant_search_view_inherit_product_expiry" model="ir.ui.view">
+    <record id="view_stock_quant_search_inherit_product_expiry" model="ir.ui.view">
         <field name="name">stock.quant.search.inherit</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="inherit_id" ref="stock.view_stock_quant_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='negative']" position="after">
                 <separator/>

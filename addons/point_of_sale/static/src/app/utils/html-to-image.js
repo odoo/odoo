@@ -102,7 +102,6 @@ const uuid = (() => {
     let counter = 0;
     // ref: http://stackoverflow.com/a/6248722/2519373
     const random = () =>
-        // eslint-disable-next-line no-bitwise
         `0000${((Math.random() * 36 ** 4) << 0).toString(36)}`.slice(-4);
     return () => {
         counter += 1;
@@ -144,7 +143,8 @@ function getPixelRatio() {
     } catch {
         // pass
     }
-    const val = FINAL_PROCESS && FINAL_PROCESS.env ? FINAL_PROCESS.env.devicePixelRatio : null;
+    const val =
+        FINAL_PROCESS && FINAL_PROCESS.env ? FINAL_PROCESS.env.devicePixelRatio : null;
     if (val) {
         ratio = parseInt(val, 10);
         if (Number.isNaN(ratio)) {
@@ -157,7 +157,10 @@ function getPixelRatio() {
 const canvasDimensionLimit = 16384;
 function checkCanvasDimensions(canvas) {
     if (canvas.width > canvasDimensionLimit || canvas.height > canvasDimensionLimit) {
-        if (canvas.width > canvasDimensionLimit && canvas.height > canvasDimensionLimit) {
+        if (
+            canvas.width > canvasDimensionLimit &&
+            canvas.height > canvasDimensionLimit
+        ) {
             if (canvas.width > canvas.height) {
                 canvas.height *= canvasDimensionLimit / canvas.width;
                 canvas.width = canvasDimensionLimit;
@@ -180,7 +183,7 @@ function canvasToBlob(canvas, options = {}) {
             canvas.toBlob(
                 resolve,
                 options.type ? options.type : "image/png",
-                options.quality ? options.quality : 1
+                options.quality ? options.quality : 1,
             );
         });
     }
@@ -189,9 +192,9 @@ function canvasToBlob(canvas, options = {}) {
             canvas
                 .toDataURL(
                     options.type ? options.type : undefined,
-                    options.quality ? options.quality : undefined
+                    options.quality ? options.quality : undefined,
                 )
-                .split(",")[1]
+                .split(",")[1],
         );
         const len = binaryString.length;
         const binaryArray = new Uint8Array(len);
@@ -201,7 +204,7 @@ function canvasToBlob(canvas, options = {}) {
         resolve(
             new Blob([binaryArray], {
                 type: options.type ? options.type : "image/png",
-            })
+            }),
         );
     });
 }
@@ -365,7 +368,6 @@ async function resourceToDataURL(resourceUrl, contentType, options) {
     }
     // ref: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
     if (options.cacheBust) {
-        // eslint-disable-next-line no-param-reassign
         resourceUrl += (/\?/.test(resourceUrl) ? "&" : "?") + new Date().getTime();
     }
     let dataURL;
@@ -375,11 +377,10 @@ async function resourceToDataURL(resourceUrl, contentType, options) {
             options.fetchRequestInit,
             ({ res, result }) => {
                 if (!contentType) {
-                    // eslint-disable-next-line no-param-reassign
                     contentType = res.headers.get("Content-Type") || "";
                 }
                 return getContentFromDataUrl(result);
-            }
+            },
         );
         dataURL = makeDataUrl(content, contentType);
     } catch (error) {
@@ -440,7 +441,8 @@ async function cloneSingleNode(node, options) {
     }
     return node.cloneNode(false);
 }
-const isSlotElement = (node) => node.tagName != null && node.tagName.toUpperCase() === "SLOT";
+const isSlotElement = (node) =>
+    node.tagName != null && node.tagName.toUpperCase() === "SLOT";
 async function cloneChildren(nativeNode, clonedNode, options) {
     let children = [];
     if (isSlotElement(nativeNode) && nativeNode.assignedNodes) {
@@ -465,7 +467,7 @@ async function cloneChildren(nativeNode, clonedNode, options) {
                         clonedNode.appendChild(clonedChild);
                     }
                 }),
-        Promise.resolve()
+        Promise.resolve(),
     );
     return clonedNode;
 }
@@ -512,7 +514,7 @@ function cloneSelectValue(nativeNode, clonedNode) {
     if (isInstanceOfElement(nativeNode, HTMLSelectElement)) {
         const clonedSelect = clonedNode;
         const selectedOption = Array.from(clonedSelect.children).find(
-            (child) => nativeNode.value === child.getAttribute("value")
+            (child) => nativeNode.value === child.getAttribute("value"),
         );
         if (selectedOption) {
             selectedOption.setAttribute("selected", "");
@@ -541,7 +543,6 @@ async function ensureSVGSymbols(clone, options) {
             const exist = clone.querySelector(id);
             const definition = document.querySelector(id);
             if (!exist && definition && !processedDefs[id]) {
-                // eslint-disable-next-line no-await-in-loop
                 processedDefs[id] = await cloneNode(definition, options, true);
             }
         }
@@ -613,7 +614,6 @@ function filterPreferredFontFormat(str, { preferredFontFormat }) {
     return !preferredFontFormat
         ? str
         : str.replace(FONT_SRC_REGEX, (match) => {
-              // eslint-disable-next-line no-constant-condition
               while (true) {
                   const [src, , format] = URL_WITH_FORMAT_REGEX.exec(match) || [];
                   if (!format) {
@@ -636,7 +636,7 @@ async function embedResources(cssText, baseUrl, options) {
     const urls = parseURLs(filteredCSSText);
     return urls.reduce(
         (deferred, url) => deferred.then((css) => embed(css, url, baseUrl, options)),
-        Promise.resolve(filteredCSSText)
+        Promise.resolve(filteredCSSText),
     );
 }
 
@@ -644,7 +644,11 @@ async function embedProp(propName, node, options) {
     const propValue = node.style?.getPropertyValue(propName);
     if (propValue) {
         const cssString = await embedResources(propValue, null, options);
-        node.style.setProperty(propName, cssString, node.style.getPropertyPriority(propName));
+        node.style.setProperty(
+            propName,
+            cssString,
+            node.style.getPropertyPriority(propName),
+        );
         return true;
     }
     return false;
@@ -661,7 +665,10 @@ async function embedImageNode(clonedNode, options) {
     const isImageElement = isInstanceOfElement(clonedNode, HTMLImageElement);
     if (
         !(isImageElement && !isDataUrl(clonedNode.src)) &&
-        !(isInstanceOfElement(clonedNode, SVGImageElement) && !isDataUrl(clonedNode.href.baseVal))
+        !(
+            isInstanceOfElement(clonedNode, SVGImageElement) &&
+            !isDataUrl(clonedNode.href.baseVal)
+        )
     ) {
         return;
     }
@@ -754,9 +761,12 @@ function parseCSS(source) {
     const commentsRegex = /(\/\*[\s\S]*?\*\/)/gi;
     // strip out comments
     let cssText = source.replace(commentsRegex, "");
-    // eslint-disable-next-line prefer-regex-literals
-    const keyframesRegex = new RegExp("((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})", "gi");
-    // eslint-disable-next-line no-constant-condition
+
+    const keyframesRegex = new RegExp(
+        "((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})",
+        "gi",
+    );
+
     while (true) {
         const matches = keyframesRegex.exec(cssText);
         if (matches === null) {
@@ -772,7 +782,7 @@ function parseCSS(source) {
         "*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})";
     // unified regex
     const unifiedRegex = new RegExp(combinedCSSRegex, "gi");
-    // eslint-disable-next-line no-constant-condition
+
     while (true) {
         let matches = importRegex.exec(cssText);
         if (matches === null) {
@@ -809,15 +819,18 @@ async function getCSSRules(styleSheets, options) {
                                             rule,
                                             rule.startsWith("@import")
                                                 ? (importIndex += 1)
-                                                : sheet.cssRules.length
+                                                : sheet.cssRules.length,
                                         );
                                     } catch (error) {
-                                        console.error("Error inserting rule from remote css", {
-                                            rule,
-                                            error,
-                                        });
+                                        console.error(
+                                            "Error inserting rule from remote css",
+                                            {
+                                                rule,
+                                                error,
+                                            },
+                                        );
                                     }
-                                })
+                                }),
                             )
                             .catch((e) => {
                                 console.error("Error loading remote css", e.toString());
@@ -826,7 +839,8 @@ async function getCSSRules(styleSheets, options) {
                     }
                 });
             } catch (e) {
-                const inline = styleSheets.find((a) => a.href == null) || document.styleSheets[0];
+                const inline =
+                    styleSheets.find((a) => a.href == null) || document.styleSheets[0];
                 if (sheet.href != null) {
                     deferreds.push(
                         fetchCSS(sheet.href)
@@ -834,11 +848,11 @@ async function getCSSRules(styleSheets, options) {
                             .then((cssText) =>
                                 parseCSS(cssText).forEach((rule) => {
                                     inline.insertRule(rule, sheet.cssRules.length);
-                                })
+                                }),
                             )
                             .catch((err) => {
                                 console.error("Error loading remote stylesheet", err);
-                            })
+                            }),
                     );
                 }
                 console.error("Error inlining remote css file", e);
@@ -854,7 +868,10 @@ async function getCSSRules(styleSheets, options) {
                         ret.push(item);
                     });
                 } catch (e) {
-                    console.error(`Error while reading CSS rules from ${sheet.href}`, e);
+                    console.error(
+                        `Error while reading CSS rules from ${sheet.href}`,
+                        e,
+                    );
                 }
             }
         });
@@ -880,7 +897,7 @@ async function getWebFontCSS(node, options) {
         rules.map((rule) => {
             const baseUrl = rule.parentStyleSheet ? rule.parentStyleSheet.href : null;
             return embedResources(rule.cssText, baseUrl, options);
-        })
+        }),
     );
     return cssTexts.join("\n");
 }
@@ -889,8 +906,8 @@ async function embedWebFonts(clonedNode, options) {
         options.fontEmbedCSS != null
             ? options.fontEmbedCSS
             : options.skipFonts
-            ? null
-            : await getWebFontCSS(clonedNode, options);
+              ? null
+              : await getWebFontCSS(clonedNode, options);
     if (cssText) {
         const styleNode = document.createElement("style");
         const sytleContent = document.createTextNode(cssText);

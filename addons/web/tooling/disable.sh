@@ -4,16 +4,17 @@ community=$(cd -- "$(dirname "$0")" &> /dev/null && cd ../../.. && pwd)
 disableInDir () {
     cd "$1" || exit
     git config --unset core.hooksPath
-    rm .eslintignore
-    rm .eslintrc.json
-    rm jsconfig.json
-    rm package.json
-    rm package-lock.json
-    rm -r node_modules
+    rm -f eslint.config.mjs
+    rm -f jsconfig.json
+    rm -f package.json
+    rm -f package-lock.json
+    rm -rf node_modules
 
-    # to support old versions
+    # Clean up legacy files from ESLint 8
+    rm -f .eslintignore
+    rm -f .eslintrc.json
     rm -f .prettierignore
-    rm -r .prettierrc.json
+    rm -f .prettierrc.json
 
     cd - &> /dev/null
 }

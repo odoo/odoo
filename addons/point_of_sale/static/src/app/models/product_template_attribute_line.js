@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
-
 export class ProductTemplateAttributeLine extends Base {
     static pythonModel = "product.template.attribute.line";
 

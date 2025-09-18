@@ -19,7 +19,7 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
         or being connected as portal user"""
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.portal_user.partner_id
-        with so_form.order_line.new() as line:
+        with so_form.line_ids.new() as line:
             line.product_id = self.product_a
         so = so_form.save()
         so.action_confirm()

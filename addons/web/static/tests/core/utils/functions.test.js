@@ -1,6 +1,7 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { memoize, uniqueId } from "@web/core/utils/functions";
 
 describe.current.tags("headless");

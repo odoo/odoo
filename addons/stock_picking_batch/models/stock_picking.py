@@ -118,7 +118,7 @@ class StockPicking(models.Model):
         return res
 
     def action_add_operations(self):
-        view = self.env.ref('stock_picking_batch.view_move_line_tree_detailed_wave')
+        view = self.env.ref('stock_picking_batch.view_stock_move_line_list_detailed_wave')
         return {
             'name': _('Add Operations'),
             'type': 'ir.actions.act_window',

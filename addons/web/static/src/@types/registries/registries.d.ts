@@ -1,7 +1,7 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
     import { OdooEnv } from "@web/env";
-    import { NotificationOptions } from "@web/core/notifications/notification_service";
+    import { NotificationOptions } from "@web/services/notifications/notification_service";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
     import { ActionDescription } from "@web/webclient/actions/action_service";
@@ -31,7 +31,7 @@ declare module "registries" {
 
     export type ErrorDialogsRegistryItemShape = typeof Component;
 
-    export type ErrorHandlersRegistryItemShape = (env: OdooEnv, error: Error, originalError: Error) => boolean;
+    export type ErrorHandlersRegistryItemShape = (env: OdooEnv, error: any, originalError?: any) => boolean | void;
 
     export type ErrorNotificationsRegistryItemShape = NotificationOptions & { message?: string };
 
@@ -41,7 +41,7 @@ declare module "registries" {
         isDisplayed?: (env: OdooEnv) => boolean;
     }
 
-    export type FormattersRegistryItemShape = (value: any) => any;
+    export type FormattersRegistryItemShape = (value: any, options?: any) => any;
 
     export type FormCompilersRegistryItemShape = Compiler;
 
@@ -58,16 +58,18 @@ declare module "registries" {
         method: string | (() => {});
         isVisible: boolean | ((params: KanbanHeaderConfigItemsFnParams) => boolean);
         class: string | ((params: KanbanHeaderConfigItemsFnParams) => (string | string[] | { [key: string]: boolean }));
+        icon?: string;
+        [key: string]: any;
     }
 
     export type LazyComponentsRegistryItemShape = typeof Component;
 
     export interface MainComponentsRegistryItemShape {
-        component: typeof Component;
+        Component: typeof Component | (new (...args: any[]) => Component);
         props?: object;
     }
 
-    export type ParsersRegistryItemShape = (value: any) => any;
+    export type ParsersRegistryItemShape = (value: any, options?: any) => any;
 
     export type PublicComponentsRegistryItemShape = typeof Component;
 
@@ -88,6 +90,7 @@ declare module "registries" {
         cogMenu: CogMenuRegistryItemShape;
         dialogs: DialogsRegistryItemShape;
         effetcs: EffectsRegistryItemShape;
+        effects: EffectsRegistryItemShape;
         error_dialogs: ErrorDialogsRegistryItemShape;
         error_handlers: ErrorHandlersRegistryItemShape;
         error_notifications: ErrorNotificationsRegistryItemShape;
@@ -103,5 +106,7 @@ declare module "registries" {
         sample_server: SampleServerRegistryItemShape;
         systray: SystrayRegistryItemShape;
         "ir.actions.report handlers": IrActionsReportHandlers;
+        /** Catch-all for dynamically registered categories */
+        [key: string]: any;
     }
 }

@@ -3,7 +3,7 @@ import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { deepCopy, deepMerge, pick } from "@web/core/utils/objects";
+import { deepCopy, deepMerge, pick } from "@web/core/utils/collections/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";

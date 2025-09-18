@@ -1,3 +1,5 @@
+// @ts-check
+
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { onServerStateChange, serverState } from "./mock_server_state.hoot";
@@ -47,7 +49,9 @@ const makeSession = ({
     // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
     // to see what user_companies is
     user_companies: {
-        allowed_companies: Object.fromEntries(companies.map((company) => [company.id, company])),
+        allowed_companies: Object.fromEntries(
+            companies.map((company) => [company.id, company]),
+        ),
         current_company: companies[0]?.id,
         disallowed_ancestor_companies: {},
     },

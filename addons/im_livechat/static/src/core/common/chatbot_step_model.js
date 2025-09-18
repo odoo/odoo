@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/core/common/record";
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { createDocumentFragmentFromContent } from "@web/core/utils/dom/html";
 
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");

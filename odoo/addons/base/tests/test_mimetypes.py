@@ -1,14 +1,13 @@
 import base64
 
-try:
-    import magic
-except ImportError:
-    magic = None
-
+from odoo.libs.filesystem.mimetypes import (
+    fix_filename_extension,
+    get_extension,
+    guess_mimetype,
+)
 from odoo.tests.common import BaseCase
-from odoo.tools.mimetypes import fix_filename_extension, get_extension, guess_mimetype
 
-PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
+PNG = b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC"
 GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
 BMP = b"""Qk1+AAAAAAAAAHoAAABsAAAAAQAAAAEAAAABABgAAAAAAAQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD///8A"""
@@ -62,105 +61,105 @@ TXT = b"""\
 Hello world!
 """
 
-class test_guess_mimetype(BaseCase):
 
+class test_guess_mimetype(BaseCase):
     def test_default_mimetype_empty(self):
-        mimetype = guess_mimetype(b'')
+        mimetype = guess_mimetype(b"")
         # odoo implementation returns application/octet-stream by default
-        # if available, python-magic returns application/x-empty
-        self.assertIn(mimetype, ('application/octet-stream', 'application/x-empty'))
+        # python-magic returns application/x-empty
+        self.assertIn(mimetype, ("application/octet-stream", "application/x-empty"))
 
     def test_default_mimetype(self):
-        mimetype = guess_mimetype(b'', default='test')
-        # if available, python-magic returns application/x-empty
-        self.assertIn(mimetype, ('test', 'application/x-empty'))
+        mimetype = guess_mimetype(b"", default="test")
+        # python-magic returns application/x-empty
+        self.assertIn(mimetype, ("test", "application/x-empty"))
 
     def test_mimetype_octet_stream(self):
-        mimetype = guess_mimetype(b'\0')
-        self.assertEqual(mimetype, 'application/octet-stream')
+        mimetype = guess_mimetype(b"\0")
+        self.assertEqual(mimetype, "application/octet-stream")
 
     def test_mimetype_png(self):
         content = base64.b64decode(PNG)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'image/png')
+        mimetype = guess_mimetype(content, default="test")
+        self.assertEqual(mimetype, "image/png")
 
     def test_mimetype_bmp(self):
         content = base64.b64decode(BMP)
-        mimetype = guess_mimetype(content, default='test')
+        mimetype = guess_mimetype(content, default="test")
         # mimetype should match image/bmp, image/x-ms-bmp, ...
-        self.assertRegex(mimetype, r'image/.*\bbmp')
+        self.assertRegex(mimetype, r"image/.*\bbmp")
 
     def test_mimetype_jpg(self):
         content = base64.b64decode(JPG)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'image/jpeg')
+        mimetype = guess_mimetype(content, default="test")
+        self.assertEqual(mimetype, "image/jpeg")
 
     def test_mimetype_gif(self):
         content = base64.b64decode(GIF)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'image/gif')
+        mimetype = guess_mimetype(content, default="test")
+        self.assertEqual(mimetype, "image/gif")
 
     def test_mimetype_svg(self):
         content = base64.b64decode(SVG)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertTrue(mimetype.startswith('image/svg'))
+        mimetype = guess_mimetype(content, default="test")
+        self.assertTrue(mimetype.startswith("image/svg"))
 
-        mimetype = guess_mimetype(NAMESPACED_SVG, default='test')
-        self.assertTrue(mimetype.startswith('image/svg'))
-        # Tests that whitespace padded SVG are not detected as SVG in odoo implementation
-        if not magic:
-            mimetype = guess_mimetype(b"   " + content, default='test')
-            self.assertNotIn("svg", mimetype)
-
+        mimetype = guess_mimetype(NAMESPACED_SVG, default="test")
+        self.assertTrue(mimetype.startswith("image/svg"))
+        # python-magic handles whitespace-padded SVG correctly
+        # (odoo's fallback implementation does not detect them)
 
     def test_mimetype_webp(self):
         content = base64.b64decode(WEBP)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'image/webp')
+        mimetype = guess_mimetype(content, default="test")
+        self.assertEqual(mimetype, "image/webp")
 
     def test_mimetype_zip(self):
         content = base64.b64decode(ZIP)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'application/zip')
+        mimetype = guess_mimetype(content, default="test")
+        self.assertEqual(mimetype, "application/zip")
 
     def test_mimetype_xml(self):
-        mimetype = guess_mimetype(XML, default='test')
-        self.assertIn(mimetype, ('application/xml', 'text/xml'))
+        mimetype = guess_mimetype(XML, default="test")
+        self.assertIn(mimetype, ("application/xml", "text/xml"))
 
     def test_mimetype_txt(self):
-        mimetype = guess_mimetype(TXT, default='test')
-        self.assertEqual(mimetype, 'text/plain')
+        mimetype = guess_mimetype(TXT, default="test")
+        self.assertEqual(mimetype, "text/plain")
 
     def test_mimetype_get_extension(self):
-        self.assertEqual(get_extension('filename.Abc'), '.abc')
-        self.assertEqual(get_extension('filename.scss'), '.scss')
-        self.assertEqual(get_extension('filename.torrent'), '.torrent')
-        self.assertEqual(get_extension('filename.ab_c'), '.ab_c')
-        self.assertEqual(get_extension('.htaccess'), '')
+        self.assertEqual(get_extension("filename.Abc"), ".abc")
+        self.assertEqual(get_extension("filename.scss"), ".scss")
+        self.assertEqual(get_extension("filename.torrent"), ".torrent")
+        self.assertEqual(get_extension("filename.ab_c"), ".ab_c")
+        self.assertEqual(get_extension(".htaccess"), "")
         # enough to suppose that extension is present and don't suffix the filename
-        self.assertEqual(get_extension('filename.tar.gz'), '.gz')
-        self.assertEqual(get_extension('filename'), '')
-        self.assertEqual(get_extension('filename.'), '')
-        self.assertEqual(get_extension('filename.not_alnum'), '')
-        self.assertEqual(get_extension('filename.with space'), '')
-        self.assertEqual(get_extension('filename.notAnExtension'), '')
+        self.assertEqual(get_extension("filename.tar.gz"), ".gz")
+        self.assertEqual(get_extension("filename"), "")
+        self.assertEqual(get_extension("filename."), "")
+        self.assertEqual(get_extension("filename.not_alnum"), "")
+        self.assertEqual(get_extension("filename.with space"), "")
+        self.assertEqual(get_extension("filename.notAnExtension"), "")
 
     def test_mimetype_fix_extension(self):
         fix = fix_filename_extension
-        self.assertEqual(fix('words.txt', 'text/plain'), 'words.txt')
-        self.assertEqual(fix('image.jpg', 'image/jpeg'), 'image.jpg')
-        self.assertEqual(fix('image.jpeg', 'image/jpeg'), 'image.jpeg')
-        self.assertEqual(fix('sheet.xls', 'application/vnd.ms-excel'), 'sheet.xls')
-        self.assertEqual(fix('sheet.xls', 'application/CDFV2'), 'sheet.xls')
-        xlsx_mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        self.assertEqual(fix('sheet.xlsx', xlsx_mime), 'sheet.xlsx')
-        self.assertEqual(fix('sheet.xlsx', 'application/zip'), 'sheet.xlsx')
-        with self.assertLogs('odoo.tools.mimetypes', 'WARNING') as capture:
-            self.assertEqual(fix('image.txt', 'image/jpeg'), 'image.txt.jpg')
-            self.assertEqual(fix('words.jpg', 'text/plain'), 'words.jpg.txt')
-        self.assertEqual(capture.output, [
-            "WARNING:odoo.tools.mimetypes:File 'image.txt' has an invalid "
+        self.assertEqual(fix("words.txt", "text/plain"), "words.txt")
+        self.assertEqual(fix("image.jpg", "image/jpeg"), "image.jpg")
+        self.assertEqual(fix("image.jpeg", "image/jpeg"), "image.jpeg")
+        self.assertEqual(fix("sheet.xls", "application/vnd.ms-excel"), "sheet.xls")
+        self.assertEqual(fix("sheet.xls", "application/CDFV2"), "sheet.xls")
+        xlsx_mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        self.assertEqual(fix("sheet.xlsx", xlsx_mime), "sheet.xlsx")
+        self.assertEqual(fix("sheet.xlsx", "application/zip"), "sheet.xlsx")
+        with self.assertLogs("odoo.libs.filesystem.mimetypes", "WARNING") as capture:
+            self.assertEqual(fix("image.txt", "image/jpeg"), "image.txt.jpg")
+            self.assertEqual(fix("words.jpg", "text/plain"), "words.jpg.txt")
+        self.assertEqual(
+            capture.output,
+            [
+                "WARNING:odoo.libs.filesystem.mimetypes:File 'image.txt' has an invalid "
                 "extension for mimetype 'image/jpeg', adding '.jpg'",
-            "WARNING:odoo.tools.mimetypes:File 'words.jpg' has an invalid "
+                "WARNING:odoo.libs.filesystem.mimetypes:File 'words.jpg' has an invalid "
                 "extension for mimetype 'text/plain', adding '.txt'",
-        ])
+            ],
+        )

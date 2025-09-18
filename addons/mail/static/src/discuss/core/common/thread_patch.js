@@ -1,10 +1,7 @@
 import { Thread } from "@mail/core/common/thread";
-
-import { useEffect, toRaw } from "@odoo/owl";
-
+import { toRaw, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-
 /** @type {Thread} */
 const threadPatch = {
     setup() {
@@ -24,14 +21,20 @@ const threadPatch = {
                     this.props.thread.self_member_id.hideUnreadBanner = true;
                 }
             },
-            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
+            () => [
+                this.props.thread.loadNewer,
+                this.state.mountedAndLoaded,
+                this.state.scrollTop,
+            ],
         );
     },
     /** @override */
     applyScrollContextually(thread) {
         if (thread.self_member_id && thread.scrollUnread) {
             if (thread.firstUnreadMessage) {
-                const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
+                const messageEl = this.refByMessageId.get(
+                    thread.firstUnreadMessage.id,
+                )?.el;
                 if (!messageEl) {
                     return;
                 }
@@ -43,7 +46,8 @@ const threadPatch = {
             } else {
                 const scrollTop =
                     this.props.order === "asc"
-                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        ? this.scrollableRef.el.scrollHeight -
+                          this.scrollableRef.el.clientHeight
                         : 0;
                 this.setScroll(scrollTop);
             }
@@ -59,7 +63,7 @@ const threadPatch = {
     fetchMessages() {
         if (this.props.thread.self_member_id && this.props.thread.scrollUnread) {
             toRaw(this.props.thread).loadAround(
-                this.props.thread.self_member_id.new_message_separator
+                this.props.thread.self_member_id.new_message_separator,
             );
         } else {
             super.fetchMessages();
@@ -67,17 +71,20 @@ const threadPatch = {
     },
     get newMessageBannerText() {
         if (this.props.thread.self_member_id?.message_unread_counter > 1) {
-            return _t("%s new messages", this.props.thread.self_member_id.message_unread_counter);
+            return _t(
+                "%s new messages",
+                this.props.thread.self_member_id.message_unread_counter,
+            );
         }
         return _t("1 new message");
     },
     async onClickUnreadMessagesBanner() {
         await this.props.thread.loadAround(
-            this.props.thread.self_member_id.new_message_separator_ui
+            this.props.thread.self_member_id.new_message_separator_ui,
         );
         this.messageHighlight?.highlightMessage(
             this.props.thread.firstUnreadMessage,
-            this.props.thread
+            this.props.thread,
         );
     },
 };

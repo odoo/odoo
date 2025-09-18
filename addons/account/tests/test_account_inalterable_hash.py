@@ -351,7 +351,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         move2 = self.init_invoice("out_invoice", self.partner_a, "2024-01-02", amounts=[1000], post=True)
         move3 = self.init_invoice("out_invoice", self.partner_a, "2024-01-02", amounts=[1000], post=True)
 
-        move2.button_draft()  # Create hole in the middle of unhashed chain [move1, move2, move3]
+        move2.action_draft()  # Create hole in the middle of unhashed chain [move1, move2, move3]
 
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
 
@@ -595,7 +595,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
             moves_v3_pre_restrict_mode.button_hash()
 
         # Test that we allow holes that are not in the moves_to_hash and
-        moves_v3_pre_restrict_mode[2].button_draft()  # Create hole in sequence
+        moves_v3_pre_restrict_mode[2].action_draft()  # Create hole in sequence
         moves_v4 |= self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000, 2000], post=True)
         with self._skip_hash_moves():
             moves_v3_pre_restrict_mode[2].action_post()  # Revert

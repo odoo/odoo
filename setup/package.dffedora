@@ -6,7 +6,7 @@ MAINTAINER Odoo S.A. <info@odoo.com>
 # Dependencies and postgres
 RUN dnf install \
         createrepo \
-        libsass \
+        nodejs-npm \
         postgresql \
         postgresql-contrib \
         postgresql-devel \
@@ -27,7 +27,6 @@ RUN dnf install \
         python3-greenlet \
         python3-idna \
         python3-jinja2 \
-        python3-libsass \
         python3-lxml \
         python3-lxml-html-clean \
         python3-magic \
@@ -36,9 +35,9 @@ RUN dnf install \
         python3-num2words \
         python3-ofxparse.noarch \
         python3-openpyxl \
-        python3-passlib \
         python3-pillow \
         python3-polib \
+        python3-protobuf \
         python3-psutil \
         python3-psycopg2 \
         python3-pyldap \

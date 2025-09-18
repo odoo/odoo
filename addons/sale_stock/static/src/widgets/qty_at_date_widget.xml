@@ -18,18 +18,18 @@
                     <tr>
                         <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
                         <td class="text-end">
-                            <b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom_id[1]'/>
+                            <b t-out='props.record.data.qty_available_virtual_at_date'/> <t t-out='props.record.data.product_uom_id[1]'/>
                             <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
+                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_qty_available_virtual_at_date"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
                             </t>
                         </td>
                     </tr>
                     <tr>
                         <td><strong t-out="availableLabel"/><br /><small>All planned operations included</small></td>
                         <td class="text-end">
-                            <b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom_id[1]'/>
+                            <b t-out='props.record.data.qty_free_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom_id[1]'/>
                             <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="`fs-7 text-muted ${!props.calcData.will_be_fulfilled ? 'text-danger': ''}`"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
+                                <br/><span t-out="props.calcData.product_uom_qty_free_today" t-att-class="`fs-7 text-muted ${!props.calcData.will_be_fulfilled ? 'text-danger': ''}`"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
                             </t>
                         </td>
                     </tr>
@@ -43,7 +43,7 @@
                         <p>This product is replenished on demand.</p>
                     </tr>
                 </t>
-                <t t-elif="props.record.data.state == 'sale'">
+                <t t-elif="props.record.data.state == 'done'">
                     <tr>
                         <td>
                             <strong>Reserved</strong><br/>
@@ -52,12 +52,12 @@
                             <b t-out='props.record.data.qty_available_today'/> <t t-out='props.record.data.product_uom_id[1]'/>
                         </td>
                     </tr>
-                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
+                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_transfer">
                         <td>
-                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
-                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
+                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.date_planned_forecast_str">
+                                Remaining demand available at <b t-out="props.calcData.date_planned_forecast_str" t-att-class="props.record.data.date_planned &lt; props.record.data.date_planned_forecast ? 'text-danger' : ''"/>
                             </span>
-                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
+                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.date_planned_forecast_str" class="text-danger">
                                 Not enough future availability
                             </span>
                             <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">

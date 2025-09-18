@@ -1,4 +1,9 @@
-import { user } from "@web/core/user";
+// @ts-check
+
+/** @module @web/core/l10n/utils/format_list - Locale-aware list formatting via Intl.ListFormat (conjunction, disjunction, unit) */
+
+import { localization } from "@web/core/l10n/localization";
+import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 
 /**
  * @typedef {keyof typeof LIST_STYLES} FormatListStyle
@@ -7,7 +12,7 @@ import { user } from "@web/core/user";
 /**
  * Convert Unicode TR35-49 list pattern types to ES Intl.ListFormat options
  */
-const LIST_STYLES = {
+const LIST_STYLES = /** @type {const} */ ({
     standard: {
         type: "conjunction",
         style: "long",
@@ -36,7 +41,7 @@ const LIST_STYLES = {
         type: "unit",
         style: "narrow",
     },
-};
+});
 
 /**
  * Format the items in `values` as a list in a locale-dependent manner with the
@@ -75,7 +80,7 @@ const LIST_STYLES = {
  * @returns {string} formatted list.
  */
 export function formatList(values, { localeCode, style } = {}) {
-    const locale = localeCode || user.lang || "en-US";
+    const locale = localeCode || pyToJsLocale(localization.code) || "en-US";
     const formatter = new Intl.ListFormat(locale, LIST_STYLES[style || "standard"]);
     return formatter.format(Array.from(values, String));
 }

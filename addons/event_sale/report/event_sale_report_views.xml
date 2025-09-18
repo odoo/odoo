@@ -64,7 +64,7 @@
         </field>
     </record>
 
-    <record id="event_sale_report_view_tree" model="ir.ui.view">
+    <record id="event_view_sale_report_list" model="ir.ui.view">
         <field name="name">event.sale.report.view.list</field>
         <field name="model">event.sale.report</field>
         <field name="arch" type="xml">
@@ -81,7 +81,7 @@
                 <field name="invoice_partner_id" optional="hide"/>
                 <field name="event_registration_name" optional="hide"/>
                 <field name="sale_order_state" widget="badge"
-                       decoration-success="sale_order_state == 'sale'"
+                       decoration-success="sale_order_state == 'done'"
                        decoration-info="sale_order_state == 'draft' or sale_order_state == 'sent'"/>
             </list>
         </field>

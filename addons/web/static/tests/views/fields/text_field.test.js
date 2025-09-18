@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { press, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -37,7 +39,9 @@ test("basic rendering", async () => {
 });
 
 test("doesn't have a scrollbar with long content", async () => {
-    Product._records = [{ id: 1, description: "L\no\nn\ng\nD\ne\ns\nc\nr\ni\np\nt\ni\no\nn\n" }];
+    Product._records = [
+        { id: 1, description: "L\no\nn\ng\nD\ne\ns\nc\nr\ni\np\nt\ni\no\nn\n" },
+    ];
     await mountView({
         type: "form",
         resModel: "product",
@@ -98,7 +102,9 @@ test("render following an onchange", async () => {
 });
 
 test("no scroll bar in editable list", async () => {
-    Product._records = [{ id: 1, description: "L\no\nn\ng\nD\ne\ns\nc\nr\ni\np\nt\ni\no\nn\n" }];
+    Product._records = [
+        { id: 1, description: "L\no\nn\ng\nD\ne\ns\nc\nr\ni\np\nt\ni\no\nn\n" },
+    ];
     await mountView({
         type: "list",
         resModel: "product",
@@ -137,7 +143,11 @@ test("is translatable", async () => {
     ]);
     onRpc("get_field_translations", () => [
         [
-            { lang: "en_US", source: "Description as text", value: "Description as text" },
+            {
+                lang: "en_US",
+                source: "Description as text",
+                value: "Description as text",
+            },
             {
                 lang: "fr_BE",
                 source: "Description as text",

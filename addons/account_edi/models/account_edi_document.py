@@ -169,8 +169,8 @@ class AccountEdiDocument(models.Model):
 
             if move_ids_to_cancel:
                 invoices = self.env['account.move'].browse(list(move_ids_to_cancel))
-                invoices.button_draft()
-                invoices.button_cancel()
+                invoices.action_draft()
+                invoices.action_cancel()
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.

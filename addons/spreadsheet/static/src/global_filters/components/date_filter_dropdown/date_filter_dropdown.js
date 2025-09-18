@@ -6,8 +6,8 @@ import {
     getPreviousDateFilterValue,
     RELATIVE_PERIODS,
 } from "@spreadsheet/global_filters/helpers";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DateTimeInput } from "@web/components/datetime/datetime_input";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 const { DateTime } = luxon;
 

@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { CopyButton } from "@web/core/copy_button/copy_button";
-import { Dialog } from "@web/core/dialog/dialog";
+import { CopyButton } from "@web/components/copy_button/copy_button";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { EmailSharingInput } from "./email_sharing_input";
 
 import { Component, useRef } from "@odoo/owl";

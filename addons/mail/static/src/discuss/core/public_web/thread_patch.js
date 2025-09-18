@@ -1,6 +1,5 @@
 import { Thread } from "@mail/core/common/thread";
 import { patch } from "@web/core/utils/patch";
-
 patch(Thread.prototype, {
     get orderedMessages() {
         const result = super.orderedMessages;

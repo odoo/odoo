@@ -109,10 +109,10 @@
                 </a>
             </td>
         </xpath>
-        <xpath expr="//t[@name='invoice_status_posted']/span[1]" position="before">
+        <xpath expr="//t[@name='invoice_state_posted']/span[1]" position="before">
             <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
         </xpath>
-        <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
+        <xpath expr="//span[@name='invoice_state_waiting_for_payment']" position="before">
             <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
                     class="badge rounded-pill text-bg-primary">
                 <i class="fa fa-fw fa-check"/>

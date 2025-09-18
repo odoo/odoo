@@ -1,8 +1,12 @@
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { ActionMenus } from "@web/search/action_menus/action_menus";
-import { _t } from "@web/core/l10n/translation";
+// @ts-check
+
+/** @module @web/search/cog_menu/cog_menu - Combined cog dropdown merging Action, Print, and registry-based menu items */
+
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { ActionMenus } from "@web/search/action_menus/action_menus";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -18,6 +22,7 @@ const cogMenuRegistry = registry.category("cogMenu");
  *
  * @extends ActionMenus
  */
+// @ts-expect-error - static props/defaultProps shapes differ from parent (OWL pattern)
 export class CogMenu extends ActionMenus {
     static template = "web.CogMenu";
     static components = {
@@ -47,14 +52,21 @@ export class CogMenu extends ActionMenus {
         });
     }
 
+    /** @returns {boolean} whether there are any cog or print items to display */
     get hasItems() {
         return this.cogItems.length || this.props.items.print?.length;
     }
 
+    /**
+     * Collect visible items from the cogMenu registry.
+     * @returns {Promise<Array<{Component: typeof Component, groupNumber: number, key: string}>>}
+     */
     async _registryItems() {
         const registryItems = cogMenuRegistry.getAll();
         const areDisplayed = await Promise.all(
-            registryItems.map((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            registryItems.map((item) =>
+                "isDisplayed" in item ? item.isDisplayed(this.env) : true,
+            ),
         );
         const items = [];
         for (let i = 0; i < registryItems.length; i++) {
@@ -70,12 +82,17 @@ export class CogMenu extends ActionMenus {
         return items;
     }
 
+    /** @returns {Array<{Component: typeof Component, groupNumber: number, key: string}>} all cog items sorted by group */
     get cogItems() {
-        return [...this.registryItems, ...this.actionItems].sort(
-            (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0)
+        return [...this.registryItems, ...this.actionItems].toSorted(
+            (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0),
         );
     }
 
+    /**
+     * @param {{ description: string }} item
+     * @returns {string}
+     */
     getPrintItemAriaLabel(item) {
         return _t("Print report: %s", item.description);
     }

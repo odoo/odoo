@@ -18,7 +18,7 @@ import { busService } from "@bus/services/bus_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 import { on, runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual } from "@web/core/utils/collections/objects";
 import { patch } from "@web/core/utils/patch";
 
 /**

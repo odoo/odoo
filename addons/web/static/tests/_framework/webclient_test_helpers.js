@@ -1,7 +1,10 @@
+// @ts-check
+
 import { animationFrame } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
+
 import { mountWithCleanup } from "./component_test_helpers";
 
 class TestClientAction extends Component {
@@ -27,8 +30,8 @@ export function useTestClientAction() {
  * @param {Parameters<typeof mountWithCleanup>[1]} [options]
  */
 export async function mountWebClient(options = {}) {
-    const WebClientComponent = options.WebClient || WebClient;
-    delete options.WebClient;
+    const WebClientComponent = /** @type {any} */ (options).WebClient || WebClient;
+    delete (/** @type {any} */ (options).WebClient);
     const webClient = await mountWithCleanup(WebClientComponent, options);
     // Wait for visual changes caused by a potential loadState
     await animationFrame();

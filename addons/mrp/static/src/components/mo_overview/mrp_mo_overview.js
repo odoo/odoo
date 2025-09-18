@@ -6,7 +6,7 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_servic
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewDisplayFilter } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 import { MoOverviewComponentsBlock } from "../mo_overview_components_block/mrp_mo_overview_components_block";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatMonetary } from "@web/fields/formatters";
 
 export class MoOverview extends Component {
     static components = {

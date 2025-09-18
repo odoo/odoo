@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
 from OpenSSL.crypto import X509, X509Store, X509StoreContext, X509StoreContextError
 
@@ -34,7 +33,7 @@ def validate_certificate_chain(
     # Prepare leaf cert
     try:
         leaf_cert_bytes = x5c[0]
-        leaf_cert_crypto = load_der_x509_certificate(leaf_cert_bytes, default_backend())
+        leaf_cert_crypto = load_der_x509_certificate(leaf_cert_bytes)
         leaf_cert = X509().from_cryptography(leaf_cert_crypto)
     except Exception as err:
         raise InvalidCertificateChain(f"Could not prepare leaf cert: {err}")
@@ -44,7 +43,7 @@ def validate_certificate_chain(
         # May be an empty array, that's fine
         intermediate_certs_bytes = x5c[1:]
         intermediate_certs_crypto = [
-            load_der_x509_certificate(cert, default_backend()) for cert in intermediate_certs_bytes
+            load_der_x509_certificate(cert) for cert in intermediate_certs_bytes
         ]
         intermediate_certs = [X509().from_cryptography(cert) for cert in intermediate_certs_crypto]
     except Exception as err:

@@ -21,7 +21,7 @@
                     </div>
                     <div class="text-center py-2 border-top">
                         <p class="alert alert-danger" t-if="error" role="alert">
-                            <t t-esc="error"/>
+                            <t t-out="error"/>
                         </p>
                     <div class="mb-2 mt-2 text-muted">
                         <input type="checkbox" name="remember" id="switch-remember" value="1"/>

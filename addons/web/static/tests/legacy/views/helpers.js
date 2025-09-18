@@ -1,10 +1,12 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/views/helpers default=false */
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
-import { createDebugContext } from "@web/core/debug/debug_context";
-import { Dialog } from "@web/core/dialog/dialog";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { createDebugContext } from "@web/services/debug/debug_context";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { MainComponentsContainer } from "@web/components/main_components_container";
 import { registry } from "@web/core/registry";
 import { View, getDefaultConfig } from "@web/views/view";
 import {

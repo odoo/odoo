@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import psycopg2
+import psycopg
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -17,7 +17,7 @@ class TestAnalyticPlanOperations(TransactionCase):
         self.env.cr.execute(f"SELECT {column} FROM account_analytic_line LIMIT 1")
 
         plan.unlink()
-        with self.assertRaises(psycopg2.errors.UndefinedColumn), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg.errors.UndefinedColumn), mute_logger('odoo.db'):
             # column has been deleted
             self.env.cr.execute(f"SELECT {column} FROM account_analytic_line LIMIT 1")
 

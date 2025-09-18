@@ -26,7 +26,7 @@ class PurchaseOrder(models.Model):
 
     def _prepare_reference_vals(self):
         res = super()._prepare_reference_vals()
-        sale_orders = self.order_line.sale_order_id
+        sale_orders = self.line_ids.sale_order_id
         if len(sale_orders) == 1:
             res['sale_ids'] = [Command.link(sale_orders.id)]
         return res

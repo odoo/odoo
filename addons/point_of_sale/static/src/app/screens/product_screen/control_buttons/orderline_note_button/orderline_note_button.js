@@ -1,10 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
-import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 export class NoteButton extends Component {
     static template = "point_of_sale.NoteButton";
     static props = {
@@ -86,11 +85,15 @@ export class NoteButton extends Component {
 
     get orderlineNote() {
         const orderline = this.pos.getOrder().getSelectedOrderline();
-        return this.type === "internal" ? orderline.getNote() : orderline.getCustomerNote();
+        return this.type === "internal"
+            ? orderline.getNote()
+            : orderline.getCustomerNote();
     }
 
     get currentNote() {
-        return this.pos.getOrder().getSelectedOrderline() ? this.orderlineNote : this.orderNote;
+        return this.pos.getOrder().getSelectedOrderline()
+            ? this.orderlineNote
+            : this.orderNote;
     }
     get type() {
         return "customer";
@@ -108,7 +111,7 @@ export class InternalNoteButton extends NoteButton {
         for (const noteName of payload.split("\n")) {
             if (noteName.trim()) {
                 const defaultNote = this.pos.models["pos.note"].find(
-                    (note) => note.name === noteName
+                    (note) => note.name === noteName,
                 );
                 notesArray.push({
                     text: noteName,
@@ -126,7 +129,9 @@ export class InternalNoteButton extends NoteButton {
     async onClick() {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
         const selectedNote = JSON.parse(this.currentNote || "[]");
-        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"));
+        const payload = await this.openTextInput(
+            selectedNote.map((n) => n.text).join("\n"),
+        );
         const coloredNotes = payload ? this.reframeNotes(payload) : "[]";
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, coloredNotes);

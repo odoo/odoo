@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.survey.tests import common
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
@@ -69,7 +69,7 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'certification_badge_id': self.certification_badge.id
         })
         # set the same badge on another survey should fail:
-        with mute_logger('odoo.sql_db'):
+        with mute_logger('odoo.db'):
             with self.assertRaises(IntegrityError):
                 self.certification_survey_2.write({
                     'certification_give_badge': True,

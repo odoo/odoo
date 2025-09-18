@@ -1,9 +1,11 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/views/calendar/helpers default=false */
 
-import { uiService } from "@web/core/ui/ui_service";
-import { createElement } from "@web/core/utils/xml";
+import { uiService } from "@web/ui/block/ui_service";
+import { createElement } from "@web/core/utils/dom/xml";
 import { registry } from "@web/core/registry";
-import { Field } from "@web/views/fields/field";
+import { Field } from "@web/fields/field";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";

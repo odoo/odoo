@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from psycopg2 import sql
+from psycopg import sql
 
 from odoo import tools
 from odoo import fields, models

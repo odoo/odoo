@@ -6,7 +6,7 @@ import xmlrpc.client
 from concurrent.futures import ThreadPoolExecutor
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
-from itertools import islice
+from itertools import batched
 from urllib.parse import quote
 
 # This is a script to manually clean up unused google blobs.
@@ -77,19 +77,11 @@ def list_blob_urls(bucket_name, batch_size=1000):
     _logger.info('The cloud storage container has %d blobs.', cloud_storage_blobs_num)
 
 
-def split_every(n, iterable, piece_maker=tuple):
-    iterator = iter(iterable)
-    piece = piece_maker(islice(iterator, n))
-    while piece:
-        yield piece
-        piece = piece_maker(islice(iterator, n))
-
-
 def get_blobs_to_be_deleted(blob_urls, batch_size=1000):
     common = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/common')
     uid = common.authenticate(odoo_db, odoo_username, odoo_password, {})
     models = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/object')
-    for blob_urls_ in split_every(batch_size, blob_urls):
+    for blob_urls_ in batched(blob_urls, batch_size):
         blob_urls_ = list(blob_urls_)
         attachments = models.execute_kw(odoo_db, uid, odoo_password, 'ir.attachment', 'search_read', [
             [('type', '=', 'cloud_storage'), ('url', 'in', blob_urls_)],

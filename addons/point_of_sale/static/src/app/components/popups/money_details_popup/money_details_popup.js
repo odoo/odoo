@@ -1,10 +1,9 @@
-import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
     static components = { NumericInput, Dialog };
@@ -27,7 +26,9 @@ export class MoneyDetailsPopup extends Component {
         this.state = useState({
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
-                : Object.fromEntries(this.pos.models["pos.bill"].map((bill) => [bill.value, 0])),
+                : Object.fromEntries(
+                      this.pos.models["pos.bill"].map((bill) => [bill.value, 0]),
+                  ),
         });
         this.env.dialogData.dismiss = () => {
             if (
@@ -53,14 +54,14 @@ export class MoneyDetailsPopup extends Component {
                 moneyDetailsNotes +=
                     "\t" +
                     `${this.state.moneyDetails[bill.value]} x ${this.env.utils.formatCurrency(
-                        bill.value
+                        bill.value,
                     )}\n`;
             }
         });
         if (moneyDetailsNotes) {
             moneyDetailsNotes += _t(
                 "Total: %s",
-                this.env.utils.formatCurrency(this.computeTotal())
+                this.env.utils.formatCurrency(this.computeTotal()),
             );
         }
         this.props.getPayload({

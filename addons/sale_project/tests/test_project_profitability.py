@@ -5,7 +5,7 @@ from datetime import datetime
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools.float_utils import float_compare
+from odoo.libs.numbers.float_utils import float_compare
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.project.tests.test_project_profitability import TestProjectProfitabilityCommon as Common
@@ -24,7 +24,7 @@ class TestProjectProfitabilityCommon(Common):
             'type': 'consu',
             'standard_price': 5,
             'list_price': 10,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_unit_id,
         })
 
@@ -35,7 +35,7 @@ class TestProjectProfitabilityCommon(Common):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'manual',
             'uom_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
@@ -56,7 +56,7 @@ class TestProjectProfitabilityCommon(Common):
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True, default_order_id=cls.sale_order.id)
         cls.delivery_service_order_line = SaleOrderLine.create({
             'product_id': cls.product_delivery_service.id,
-            'product_uom_qty': 10,
+            'product_qty': 10,
         })
         cls.sale_order.action_confirm()
 
@@ -102,7 +102,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         panel_data = self.project_non_billable.get_panel_data()
         self.assertFalse(panel_data.get('profitability_items'))
         self.assertFalse(panel_data.get('profitability_labels'))
-        self.project_non_billable.write({'sale_line_id': self.sale_order.order_line[0].id})
+        self.project_non_billable.write({'sale_line_id': self.sale_order.line_ids[0].id})
         panel_data = self.project_non_billable.get_panel_data()
         self.assertFalse(panel_data.get('profitability_items'),
                          "Even if the project has a sale order item linked, the project profitability should not be computed since it is not billable.")
@@ -146,7 +146,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'manual',
             'uom_id': self.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
@@ -162,11 +162,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         sale_order_foreign.currency_id = self.foreign_currency.id
         sol_foreign = self.env['sale.order.line'].with_context(tracking_disable=True, default_order_id=sale_order_foreign.id).create({
             'product_id': product_delivery_service_foreign.id,
-            'product_uom_qty': 10,
+            'product_qty': 10,
             'company_id': foreign_company.id,
         })
         sale_order_foreign.action_confirm()
-        sol_foreign.qty_delivered = 1
+        sol_foreign.qty_transferred = 1
         service_policy_to_invoice_type = self.project._get_service_policy_to_invoice_type()
         invoice_type = service_policy_to_invoice_type[self.delivery_service_order_line.product_id.service_policy]
         self.assertIn(
@@ -190,12 +190,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             # id should be equal to "billable_manual" if "sale_timesheet" module is installed otherwise "service_revenues"
                             'id': invoice_type,
                             'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sol_foreign.untaxed_amount_to_invoice * 0.2,
+                            'to_invoice': sol_foreign.amount_taxexc_to_invoice * 0.2,
                             'invoiced': 0.0,
                         },
                     ],
                     'total': {
-                        'to_invoice': sol_foreign.untaxed_amount_to_invoice * 0.2,
+                        'to_invoice': sol_foreign.amount_taxexc_to_invoice * 0.2,
                         'invoiced': 100.0,
                     },
                 },
@@ -205,11 +205,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             }
         )
-        self.assertNotEqual(sol_foreign.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(sol_foreign.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(sol_foreign.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(sol_foreign.amount_taxexc_invoiced, 0.0)
 
-        # Set the qty_delivered of the sol of the main so to 1, this sol should now be computed for the project_profitability.
-        self.delivery_service_order_line.qty_delivered = 1
+        # Set the qty_transferred of the sol of the main so to 1, this sol should now be computed for the project_profitability.
+        self.delivery_service_order_line.qty_transferred = 1
         self.assertIn('service_revenues', sequence_per_invoice_type)
         self.assertDictEqual(
             self.project._get_profitability_items(False),
@@ -226,12 +226,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             # id should be equal to "billable_manual" if "sale_timesheet" module is installed otherwise "service_revenues"
                             'id': invoice_type,
                             'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': self.delivery_service_order_line.untaxed_amount_to_invoice + sol_foreign.untaxed_amount_to_invoice * 0.2,
+                            'to_invoice': self.delivery_service_order_line.amount_taxexc_to_invoice + sol_foreign.amount_taxexc_to_invoice * 0.2,
                             'invoiced': 0.0,
                         },
                     ],
                     'total': {
-                        'to_invoice': self.delivery_service_order_line.untaxed_amount_to_invoice + sol_foreign.untaxed_amount_to_invoice * 0.2,
+                        'to_invoice': self.delivery_service_order_line.amount_taxexc_to_invoice + sol_foreign.amount_taxexc_to_invoice * 0.2,
                         'invoiced': 100,
                     },
                 },
@@ -241,8 +241,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             }
         )
-        self.assertNotEqual(self.delivery_service_order_line.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(self.delivery_service_order_line.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(self.delivery_service_order_line.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(self.delivery_service_order_line.amount_taxexc_invoiced, 0.0)
 
         # Create and post an invoice for the foreign SO.
         context = {
@@ -271,13 +271,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             # id should be equal to "billable_manual" if "sale_timesheet" module is installed otherwise "service_revenues"
                             'id': invoice_type,
                             'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': self.delivery_service_order_line.untaxed_amount_to_invoice,
-                            'invoiced': sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'to_invoice': self.delivery_service_order_line.amount_taxexc_to_invoice,
+                            'invoiced': sol_foreign.amount_taxexc_invoiced * 0.2,
                         },
                     ],
                     'total': {
-                        'to_invoice': self.delivery_service_order_line.untaxed_amount_to_invoice,
-                        'invoiced': 100 + sol_foreign.untaxed_amount_invoiced * 0.2,
+                        'to_invoice': self.delivery_service_order_line.amount_taxexc_to_invoice,
+                        'invoiced': 100 + sol_foreign.amount_taxexc_invoiced * 0.2,
                     },
                 },
                 'costs': {
@@ -289,8 +289,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             }
         )
         self.assertEqual(sol_foreign.qty_invoiced, 1)
-        self.assertEqual(sol_foreign.untaxed_amount_to_invoice, 0.0)
-        self.assertNotEqual(sol_foreign.untaxed_amount_invoiced, 0.0)
+        self.assertEqual(sol_foreign.amount_taxexc_to_invoice, 0.0)
+        self.assertNotEqual(sol_foreign.amount_taxexc_invoiced, 0.0)
 
         # Create and post an invoice for the main SO.
         context = {
@@ -323,12 +323,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'id': invoice_type,
                             'sequence': sequence_per_invoice_type[invoice_type],
                             'to_invoice': 0.0,
-                            'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced + sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'invoiced': self.delivery_service_order_line.amount_taxexc_invoiced + sol_foreign.amount_taxexc_invoiced * 0.2,
                         },
                     ],
                     'total': {
                         'to_invoice': 0.0,
-                        'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced + 100 + sol_foreign.untaxed_amount_invoiced * 0.2,
+                        'invoiced': self.delivery_service_order_line.amount_taxexc_invoiced + 100 + sol_foreign.amount_taxexc_invoiced * 0.2,
                     },
                 },
                 'costs': {
@@ -338,19 +338,19 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             }
         )
         self.assertEqual(self.delivery_service_order_line.qty_invoiced, 1)
-        self.assertEqual(self.delivery_service_order_line.untaxed_amount_to_invoice, 0.0)
-        self.assertNotEqual(self.delivery_service_order_line.untaxed_amount_invoiced, 0.0)
+        self.assertEqual(self.delivery_service_order_line.amount_taxexc_to_invoice, 0.0)
+        self.assertNotEqual(self.delivery_service_order_line.amount_taxexc_invoiced, 0.0)
 
         # Add 2 sale order item to the foreign SO.
         SaleOrderLineForeign = self.env['sale.order.line'].with_context(tracking_disable=True, default_order_id=sale_order_foreign.id)
         manual_service_sol_foreign, material_sol_foreign = SaleOrderLineForeign.create([{
             'product_id': self.product_delivery_service.id,
-            'product_uom_qty': 5,
-            'qty_delivered': 5,
+            'product_qty': 5,
+            'qty_transferred': 5,
         }, {
             'product_id': self.material_product.id,
-            'product_uom_qty': 1,
-            'qty_delivered': 1,
+            'product_qty': 1,
+            'qty_transferred': 1,
         }])
         service_sols_foreign = sol_foreign + manual_service_sol_foreign
         # Ensures that the 'materials' section is now present, and that the new manual sol is computed in the 'to_invoice' section.
@@ -366,21 +366,21 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': 0.0,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) * 0.2,
-                            'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced + sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) * 0.2,
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'to_invoice': material_sol_foreign.untaxed_amount_to_invoice * 0.2,
-                            'invoiced': material_sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'to_invoice': material_sol_foreign.amount_taxexc_to_invoice * 0.2,
+                            'invoiced': material_sol_foreign.amount_taxexc_invoiced * 0.2,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'to_invoice': sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) * 0.2,
+                            'invoiced': self.delivery_service_order_line.amount_taxexc_invoiced + sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) * 0.2,
                         },
                     ],
                     'total': {
-                        'to_invoice': (sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) + material_sol_foreign.untaxed_amount_to_invoice) * 0.2,
-                        'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced + (sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) + material_sol_foreign.untaxed_amount_invoiced) * 0.2 + 100,
+                        'to_invoice': (sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) + material_sol_foreign.amount_taxexc_to_invoice) * 0.2,
+                        'invoiced': self.delivery_service_order_line.amount_taxexc_invoiced + (sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) + material_sol_foreign.amount_taxexc_invoiced) * 0.2 + 100,
                     },
                 },
                 'costs': {
@@ -389,21 +389,21 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
-        self.assertNotEqual(manual_service_sol_foreign.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(manual_service_sol_foreign.untaxed_amount_invoiced, 0.0)
-        self.assertNotEqual(material_sol_foreign.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(material_sol_foreign.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(manual_service_sol_foreign.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(manual_service_sol_foreign.amount_taxexc_invoiced, 0.0)
+        self.assertNotEqual(material_sol_foreign.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(material_sol_foreign.amount_taxexc_invoiced, 0.0)
         # Add 2 sales order items in the main SO.
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True, default_order_id=self.sale_order.id)
         manual_service_order_line = SaleOrderLine.create({
             'product_id': self.product_delivery_service.id,
-            'product_uom_qty': 5,
-            'qty_delivered': 5,
+            'product_qty': 5,
+            'qty_transferred': 5,
         })
         material_order_line = SaleOrderLine.create({
             'product_id': self.material_product.id,
-            'product_uom_qty': 1,
-            'qty_delivered': 1,
+            'product_qty': 1,
+            'qty_transferred': 1,
         })
         service_sols = self.delivery_service_order_line + manual_service_order_line
         invoice_type = service_policy_to_invoice_type[manual_service_order_line.product_id.service_policy]
@@ -424,23 +424,23 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': 0.0,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) * 0.2,
-                            'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) * 0.2,
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'to_invoice': material_order_line.untaxed_amount_to_invoice + material_sol_foreign.untaxed_amount_to_invoice * 0.2,
-                            'invoiced': material_order_line.untaxed_amount_invoiced + material_sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'to_invoice': material_order_line.amount_taxexc_to_invoice + material_sol_foreign.amount_taxexc_to_invoice * 0.2,
+                            'invoiced': material_order_line.amount_taxexc_invoiced + material_sol_foreign.amount_taxexc_invoiced * 0.2,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) * 0.2,
+                            'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) * 0.2,
                         },
                     ],
                     'total': {
-                        'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice +
-                                      (sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) + material_sol_foreign.untaxed_amount_to_invoice) * 0.2,
-                        'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + material_order_line.untaxed_amount_invoiced +
-                                    (sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) + material_sol_foreign.untaxed_amount_invoiced) * 0.2 + 100,
+                        'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + material_order_line.amount_taxexc_to_invoice +
+                                      (sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) + material_sol_foreign.amount_taxexc_to_invoice) * 0.2,
+                        'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + material_order_line.amount_taxexc_invoiced +
+                                    (sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) + material_sol_foreign.amount_taxexc_invoiced) * 0.2 + 100,
                     },
                 },
                 'costs': {
@@ -449,10 +449,10 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
-        self.assertNotEqual(manual_service_order_line.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(manual_service_order_line.untaxed_amount_invoiced, 0.0)
-        self.assertNotEqual(material_order_line.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(material_order_line.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(manual_service_order_line.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(manual_service_order_line.amount_taxexc_invoiced, 0.0)
+        self.assertNotEqual(material_order_line.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(material_order_line.amount_taxexc_invoiced, 0.0)
 
         # Revert the invoice from the foreign SO.
         credit_notes = invoices_foreign._reverse_moves()
@@ -470,23 +470,23 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': 0.0,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) * 0.2,
-                            'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) * 0.2,
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'to_invoice': material_order_line.untaxed_amount_to_invoice + material_sol_foreign.untaxed_amount_to_invoice * 0.2,
-                            'invoiced': material_order_line.untaxed_amount_invoiced + material_sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'to_invoice': material_order_line.amount_taxexc_to_invoice + material_sol_foreign.amount_taxexc_to_invoice * 0.2,
+                            'invoiced': material_order_line.amount_taxexc_invoiced + material_sol_foreign.amount_taxexc_invoiced * 0.2,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) * 0.2,
+                            'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) * 0.2,
                         },
                     ],
                     'total': {
-                        'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice +
-                                      (sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) + material_sol_foreign.untaxed_amount_to_invoice) * 0.2,
-                        'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + material_order_line.untaxed_amount_invoiced +
-                                    (sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) + material_sol_foreign.untaxed_amount_invoiced) * 0.2 + 100,
+                        'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + material_order_line.amount_taxexc_to_invoice +
+                                      (sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) + material_sol_foreign.amount_taxexc_to_invoice) * 0.2,
+                        'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + material_order_line.amount_taxexc_invoiced +
+                                    (sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) + material_sol_foreign.amount_taxexc_invoiced) * 0.2 + 100,
                     },
                 },
                 'costs': {
@@ -496,8 +496,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             },
         )
         self.assertEqual(sol_foreign.qty_invoiced, 0.0)
-        self.assertNotEqual(sol_foreign.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(sol_foreign.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(sol_foreign.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(sol_foreign.amount_taxexc_invoiced, 0.0)
 
         # Revert the invoice from the main SO.
         credit_notes = invoices._reverse_moves()
@@ -515,23 +515,23 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': 0.0,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) * 0.2,
-                            'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) * 0.2,
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'to_invoice': material_order_line.untaxed_amount_to_invoice + material_sol_foreign.untaxed_amount_to_invoice * 0.2,
-                            'invoiced': material_order_line.untaxed_amount_invoiced + material_sol_foreign.untaxed_amount_invoiced * 0.2,
+                            'to_invoice': material_order_line.amount_taxexc_to_invoice + material_sol_foreign.amount_taxexc_to_invoice * 0.2,
+                            'invoiced': material_order_line.amount_taxexc_invoiced + material_sol_foreign.amount_taxexc_invoiced * 0.2,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) * 0.2,
+                            'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) * 0.2,
                         },
                     ],
                     'total': {
-                        'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice +
-                                      (sum(service_sols_foreign.mapped('untaxed_amount_to_invoice')) + material_sol_foreign.untaxed_amount_to_invoice) * 0.2,
-                        'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + material_order_line.untaxed_amount_invoiced +
-                                    (sum(service_sols_foreign.mapped('untaxed_amount_invoiced')) + material_sol_foreign.untaxed_amount_invoiced) * 0.2 + 100,
+                        'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + material_order_line.amount_taxexc_to_invoice +
+                                      (sum(service_sols_foreign.mapped('amount_taxexc_to_invoice')) + material_sol_foreign.amount_taxexc_to_invoice) * 0.2,
+                        'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + material_order_line.amount_taxexc_invoiced +
+                                    (sum(service_sols_foreign.mapped('amount_taxexc_invoiced')) + material_sol_foreign.amount_taxexc_invoiced) * 0.2 + 100,
                     },
                 },
                 'costs': {
@@ -541,8 +541,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             },
         )
         self.assertEqual(self.delivery_service_order_line.qty_invoiced, 0.0)
-        self.assertNotEqual(self.delivery_service_order_line.untaxed_amount_to_invoice, 0.0)
-        self.assertEqual(self.delivery_service_order_line.untaxed_amount_invoiced, 0.0)
+        self.assertNotEqual(self.delivery_service_order_line.amount_taxexc_to_invoice, 0.0)
+        self.assertEqual(self.delivery_service_order_line.amount_taxexc_invoiced, 0.0)
 
         # Cancel the foreign SO.
         sale_order_foreign._action_cancel()
@@ -559,21 +559,21 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': 0.0,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')),
-                            'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')),
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'to_invoice': material_order_line.untaxed_amount_to_invoice,
-                            'invoiced': material_order_line.untaxed_amount_invoiced,
+                            'to_invoice': material_order_line.amount_taxexc_to_invoice,
+                            'invoiced': material_order_line.amount_taxexc_invoiced,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')),
+                            'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')),
                         },
                     ],
                     'total': {
-                        'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice,
-                        'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')) + material_order_line.untaxed_amount_invoiced + 100,
+                        'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')) + material_order_line.amount_taxexc_to_invoice,
+                        'invoiced': sum(service_sols.mapped('amount_taxexc_invoiced')) + material_order_line.amount_taxexc_invoiced + 100,
                     },
                 },
                 'costs': {
@@ -612,9 +612,9 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # Ensures the 2 down payments are correctly computed for the project profitability.
         self._assert_dict_equal(invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced)
 
-        for sol in sale_order_foreign.order_line:
-            self.assertEqual(sol.untaxed_amount_to_invoice, 0.0)
-            self.assertEqual(sol.untaxed_amount_invoiced, 0.0)
+        for sol in sale_order_foreign.line_ids:
+            self.assertEqual(sol.amount_taxexc_to_invoice, 0.0)
+            self.assertEqual(sol.amount_taxexc_invoiced, 0.0)
 
         # Cancel the main SO.
         self.sale_order._action_cancel()
@@ -635,11 +635,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             },
         )
         #downpayment invoiced amount are not updated when the SO is canceled.
-        for sol in self.sale_order.order_line:
+        for sol in self.sale_order.line_ids:
             if sol.is_downpayment:
                 continue
-            self.assertEqual(sol.untaxed_amount_to_invoice, 0.0)
-            self.assertEqual(sol.untaxed_amount_invoiced, 0.0)
+            self.assertEqual(sol.amount_taxexc_to_invoice, 0.0)
+            self.assertEqual(sol.amount_taxexc_invoiced, 0.0)
 
     def _assert_dict_equal(self, invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced):
         self.assertDictEqual(
@@ -658,22 +658,22 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                             'to_invoice': -down_payment_invoiced,
                         },
                         {
-                            'id': invoice_type,
-                            'sequence': sequence_per_invoice_type[invoice_type],
-                            'invoiced': manual_service_order_line.untaxed_amount_invoiced,
-                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')),
-                        },
-                        {
                             'id': 'materials',
                             'sequence': sequence_per_invoice_type['materials'],
-                            'invoiced': material_order_line.untaxed_amount_invoiced,
-                            'to_invoice': material_order_line.untaxed_amount_to_invoice,
+                            'invoiced': material_order_line.amount_taxexc_invoiced,
+                            'to_invoice': material_order_line.amount_taxexc_to_invoice,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'invoiced': manual_service_order_line.amount_taxexc_invoiced,
+                            'to_invoice': sum(service_sols.mapped('amount_taxexc_to_invoice')),
                         },
                     ],
                     'total': {
-                        'invoiced': manual_service_order_line.untaxed_amount_invoiced + material_order_line.untaxed_amount_invoiced + down_payment_invoiced + 100,
+                        'invoiced': manual_service_order_line.amount_taxexc_invoiced + material_order_line.amount_taxexc_invoiced + down_payment_invoiced + 100,
                         'to_invoice': sum(service_sols.mapped(
-                            'untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice - down_payment_invoiced,
+                            'amount_taxexc_to_invoice')) + material_order_line.amount_taxexc_to_invoice - down_payment_invoiced,
                     },
                 },
                 'costs': {

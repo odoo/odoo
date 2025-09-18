@@ -1,11 +1,8 @@
 import { Composer } from "@mail/core/common/composer";
-import { markEventHandled } from "@web/core/utils/misc";
-
 import { markup, useRef } from "@odoo/owl";
-
+import { markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-
 /** @type {Composer} */
 const composerPatch = {
     setup() {
@@ -25,7 +22,8 @@ const composerPatch = {
     },
     get hasGifPicker() {
         return (
-            (this.store.hasGifPickerFeature || this.store.self.main_user_id?.is_admin) &&
+            (this.store.hasGifPickerFeature ||
+                this.store.self.main_user_id?.is_admin) &&
             !this.env.inChatter &&
             !this.props.composer.message
         );
@@ -42,7 +40,7 @@ const composerPatch = {
             markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
             {
                 parentId: this.props.composer.replyToMessage?.id,
-            }
+            },
         );
     },
 };

@@ -1,16 +1,27 @@
-import { _t } from "@web/core/l10n/translation";
+// @ts-check
+
+/** @module @web/views/view_dialogs/export_data_dialog - Export configuration dialog: field selection, template management, and format options */
+
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { CheckBox } from "@web/components/checkbox/checkbox";
 import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { unique } from "@web/core/utils/arrays";
+import { unique } from "@web/core/utils/collections/arrays";
+import { useSortable } from "@web/core/utils/dnd/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
+import { Dialog } from "@web/ui/dialog/dialog";
 
-import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
-
+/** Confirmation dialog for deleting a saved export template. */
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
     static template = "web.DeleteExportListDialog";
@@ -25,6 +36,7 @@ class DeleteExportListDialog extends Component {
     }
 }
 
+/** Recursive tree item for a single exportable field, expandable to show sub-fields of relational fields. */
 class ExportDataItem extends Component {
     static template = "web.ExportDataItem";
     static components = { ExportDataItem };
@@ -52,6 +64,11 @@ class ExportDataItem extends Component {
         });
     }
 
+    /**
+     * Expand or collapse sub-fields for a relational field.
+     * @param {string} id - field identifier path (e.g. "partner_id/name")
+     * @param {boolean} isUserToggle - true if triggered by user click (shows all sub-fields)
+     */
     async toggleItem(id, isUserToggle) {
         if (this.props.isFieldExpandable(id)) {
             if (this.state.subfields.length) {
@@ -80,6 +97,10 @@ class ExportDataItem extends Component {
     }
 }
 
+/**
+ * Dialog for configuring and executing data exports. Supports field selection with
+ * search/drag-reorder, format choice (xlsx/csv), and saved export templates.
+ */
 export class ExportDataDialog extends Component {
     static template = "web.ExportDataDialog";
     static components = { CheckBox, Dialog, ExportDataItem };
@@ -133,8 +154,8 @@ export class ExportDataDialog extends Component {
                     (e) =>
                         e &&
                         Object.values(this.state.exportList).findIndex(
-                            ({ id }) => id === e.dataset.field_id
-                        )
+                            ({ id }) => id === e.dataset.field_id,
+                        ),
                 );
                 let target;
                 if (indexes[0] < indexes[1]) {
@@ -154,7 +175,7 @@ export class ExportDataDialog extends Component {
                 [],
                 {
                     context: this.props.context,
-                }
+                },
             );
             await this.fetchFields();
         });
@@ -164,11 +185,17 @@ export class ExportDataDialog extends Component {
             this.updateSize();
         });
 
-        onWillUnmount(() => browser.removeEventListener("resize", this.debouncedOnResize));
+        onWillUnmount(() =>
+            browser.removeEventListener("resize", this.debouncedOnResize),
+        );
     }
 
+    /** @returns {Array<Object>} fields matching the current search, or all known fields */
     get fieldsAvailable() {
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (
+            this.searchRef.el &&
+            /** @type {HTMLInputElement} */ (this.searchRef.el).value
+        ) {
             return this.state.search.length && Object.values(this.state.search);
         }
         return Object.values(this.knownFields);
@@ -178,12 +205,18 @@ export class ExportDataDialog extends Component {
         return Boolean(odoo.debug);
     }
 
+    /** @returns {Array<Object>} top-level fields (or search-matching roots) for the left panel tree */
     get rootFields() {
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (
+            this.searchRef.el &&
+            /** @type {HTMLInputElement} */ (this.searchRef.el).value
+        ) {
             const rootFromSearchResults = this.fieldsAvailable.map((f) => {
                 if (f.parent) {
                     const parentEl = this.knownFields[f.parent.id];
-                    return this.knownFields[parentEl.parent ? parentEl.parent.id : parentEl.id];
+                    return this.knownFields[
+                        parentEl.parent ? parentEl.parent.id : parentEl.id
+                    ];
                 }
                 return this.knownFields[f.id];
             });
@@ -192,19 +225,35 @@ export class ExportDataDialog extends Component {
         return this.fieldsAvailable.filter(({ parent }) => !parent);
     }
 
+    /**
+     * Filter sub-fields to only those matching the current search query.
+     * @param {Array<Object>} subfields
+     * @returns {Array<Object>}
+     */
     filterSubfields(subfields) {
         let subfieldsFromSearchResults = [];
         let searchResults;
-        if (this.searchRef.el && this.searchRef.el.value) {
-            searchResults = this.lookup(this.searchRef.el.value);
+        if (
+            this.searchRef.el &&
+            /** @type {HTMLInputElement} */ (this.searchRef.el).value
+        ) {
+            searchResults = this.lookup(
+                /** @type {HTMLInputElement} */ (this.searchRef.el).value,
+            );
         }
         const fieldsAvailable = Object.values(searchResults || this.knownFields);
-        if (this.searchRef.el && this.searchRef.el.value) {
+        if (
+            this.searchRef.el &&
+            /** @type {HTMLInputElement} */ (this.searchRef.el).value
+        ) {
             subfieldsFromSearchResults = fieldsAvailable
                 .filter((f) => f.parent && this.knownFields[f.parent.id].parent)
                 .map((f) => f.parent);
         }
-        const availableSubFields = unique([...fieldsAvailable, ...subfieldsFromSearchResults]);
+        const availableSubFields = unique([
+            ...fieldsAvailable,
+            ...subfieldsFromSearchResults,
+        ]);
         return subfields.filter((a) => availableSubFields.some((b) => a.id === b.id));
     }
 
@@ -222,7 +271,7 @@ export class ExportDataDialog extends Component {
         await this.setDefaultExportList();
         this.state.search = [];
         if (this.searchRef.el) {
-            this.searchRef.el.value = "";
+            /** @type {HTMLInputElement} */ (this.searchRef.el).value = "";
         }
         if (this.state.templateId) {
             this.loadExportList(this.state.templateId);
@@ -235,10 +284,18 @@ export class ExportDataDialog extends Component {
         }
     }
 
+    /**
+     * @param {string} id - field path
+     * @returns {boolean} true if the field has children and nesting depth < 3
+     */
     isFieldExpandable(id) {
         return this.knownFields[id].children && id.split("/").length < 3;
     }
 
+    /**
+     * Load the field list for a saved export template, or prepare for a new one.
+     * @param {string | number} value - template ID, "new_template", or falsy to reset
+     */
     async loadExportList(value) {
         this.state.templateId = value === "new_template" ? value : Number(value);
         this.state.isEditingTemplate = value === "new_template";
@@ -253,6 +310,12 @@ export class ExportDataDialog extends Component {
         this.state.exportList = fields;
     }
 
+    /**
+     * Fetch exportable (sub-)fields from the server and cache them.
+     * @param {string} [id] - parent field path to expand; omit for root fields
+     * @param {boolean} [preventLoad=false] - if true, return cached data only (no RPC)
+     * @returns {Promise<Array<Object> | undefined>}
+     */
     async loadFields(id, preventLoad = false) {
         let parentField, parentParams;
         if (id) {
@@ -272,7 +335,10 @@ export class ExportDataDialog extends Component {
         if (preventLoad) {
             return;
         }
-        const fields = await this.props.getExportedFields(this.isCompatible, parentParams);
+        const fields = await this.props.getExportedFields(
+            this.isCompatible,
+            parentParams,
+        );
         for (const field of fields) {
             field.parent = parentField;
             if (!this.knownFields[field.id]) {
@@ -285,15 +351,26 @@ export class ExportDataDialog extends Component {
         return fields;
     }
 
+    /**
+     * Reorder the export list after a drag-and-drop operation.
+     * @param {number} item - source index
+     * @param {number} target - destination index
+     */
     onDraggingEnd(item, target) {
-        this.state.exportList.splice(target, 0, this.state.exportList.splice(item, 1)[0]);
+        this.state.exportList.splice(
+            target,
+            0,
+            this.state.exportList.splice(item, 1)[0],
+        );
     }
 
+    /** @param {string} fieldId - add a field to the export list */
     onAddItemExportList(fieldId) {
         this.state.exportList.push(this.knownFields[fieldId]);
         this.enterTemplateEdition();
     }
 
+    /** @param {string} fieldId - remove a field from the export list */
     onRemoveItemExportList(fieldId) {
         const item = this.state.exportList.findIndex(({ id }) => id === fieldId);
         this.state.exportList.splice(item, 1);
@@ -304,29 +381,32 @@ export class ExportDataDialog extends Component {
         this.loadExportList(ev.target.value);
     }
 
+    /** Persist the current export field list as a named ir.exports template. */
     async onSaveExportTemplate() {
-        const name = this.exportListRef.el.value;
+        const name = /** @type {HTMLInputElement} */ (this.exportListRef.el).value;
         if (!name) {
             return this.notification.add(_t("Please enter save field list name"), {
                 type: "danger",
             });
         }
-        const [id] = await this.orm.create(
-            "ir.exports",
-            [
-                {
-                    name,
-                    export_fields: this.state.exportList.map((field) => [
-                        0,
-                        0,
-                        {
-                            name: field.id,
-                        },
-                    ]),
-                    resource: this.props.root.resModel,
-                },
-            ],
-            { context: this.props.context }
+        const [id] = /** @type {any} */ (
+            await this.orm.create(
+                "ir.exports",
+                [
+                    {
+                        name,
+                        export_fields: this.state.exportList.map((field) => [
+                            0,
+                            0,
+                            {
+                                name: field.id,
+                            },
+                        ]),
+                        resource: this.props.root.resModel,
+                    },
+                ],
+                { context: this.props.context },
+            )
         );
         this.state.isEditingTemplate = false;
         this.state.templateId = id;
@@ -342,30 +422,37 @@ export class ExportDataDialog extends Component {
         this.loadExportList(this.state.templateId);
     }
 
+    /** Validate the export list and trigger the download in the selected format. */
     async onClickExportButton() {
         if (!this.state.exportList.length) {
-            return this.notification.add(_t("Please select fields to save export list..."), {
-                type: "danger",
-            });
+            return this.notification.add(
+                _t("Please select fields to save export list..."),
+                {
+                    type: "danger",
+                },
+            );
         }
         this.state.disabled = true;
         await this.props.download(
             this.state.exportList,
             this.isCompatible,
-            this.availableFormats[this.state.selectedFormat].tag
+            this.availableFormats[this.state.selectedFormat].tag,
         );
         this.state.disabled = false;
     }
 
+    /** Delete the currently selected export template after confirmation. */
     async onDeleteExportTemplate() {
         this.dialog.add(DeleteExportListDialog, {
             text: _t("Do you really want to delete this export template?"),
             delete: async () => {
                 const id = Number(this.state.templateId);
-                await this.orm.unlink("ir.exports", [id], { context: this.props.context });
+                await this.orm.unlink("ir.exports", [id], {
+                    context: this.props.context,
+                });
                 this.templates.splice(
                     this.templates.findIndex((i) => i.id === id),
-                    1
+                    1,
                 );
                 this.state.templateId = null;
                 this.setDefaultExportList();
@@ -377,13 +464,18 @@ export class ExportDataDialog extends Component {
         this.state.search = this.lookup(ev.target.value);
     }
 
+    /**
+     * Fuzzy-search known fields by label (and by technical name in debug mode).
+     * @param {string} value - search query
+     * @returns {Array<Object>}
+     */
     lookup(value) {
         let lookupResult = fuzzyLookup(
             value,
             Object.values(this.knownFields),
             // because fuzzyLookup gives an higher score if the string starts with the pattern,
             // reversing the string makes the search more reliable in this context
-            (field) => field.string.split("/").reverse().join("/")
+            (field) => field.string.split("/").reverse().join("/"),
         );
         if (this.isDebug) {
             lookupResult = unique([
@@ -405,7 +497,7 @@ export class ExportDataDialog extends Component {
             .filter((field) => field);
 
         const defaultExportfields = Object.values(this.knownFields).filter(
-            (field) => field.default_export
+            (field) => field.default_export,
         );
 
         this.state.exportList = unique([...defaultExportList, ...defaultExportfields]);
@@ -414,7 +506,7 @@ export class ExportDataDialog extends Component {
     setFormat(ev) {
         if (ev.target.checked) {
             this.state.selectedFormat = this.availableFormats.findIndex(
-                ({ tag }) => tag === ev.target.value
+                ({ tag }) => tag === ev.target.value,
             );
         }
     }

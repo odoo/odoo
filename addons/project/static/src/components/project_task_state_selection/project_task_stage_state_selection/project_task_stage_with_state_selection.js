@@ -2,9 +2,9 @@ import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { omit } from "@web/core/utils/objects";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { omit } from "@web/core/utils/collections/objects";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 import { ProjectTaskStateSelection } from "../project_task_state_selection";
 

@@ -1,10 +1,14 @@
-import { registry } from "@web/core/registry";
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { Interaction } from "./interaction";
-import { getTemplate } from "@web/core/templates";
-import { PairSet } from "./utils";
-import { Colibri } from "./colibri";
+// @ts-check
 
+/** @module @web/public/interaction_service - Core service that discovers, mounts, and manages Interaction instances on DOM elements */
+
+import { appTranslateFn } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { getTemplate } from "@web/core/templates";
+
+import { Colibri } from "./colibri";
+import { Interaction } from "./interaction";
+import { PairSet } from "./utils";
 /**
  * Website Core
  *
@@ -27,9 +31,8 @@ import { Colibri } from "./colibri";
 
 class InteractionService {
     /**
-     *
-     * @param {HTMLElement} el
-     * @param {Object} env
+     * @param {HTMLElement} el root element to monitor for interactions
+     * @param {import("@web/env").OdooEnv} env
      */
     constructor(el, env) {
         this.Interactions = [];
@@ -46,10 +49,11 @@ class InteractionService {
     }
 
     /**
+     * Registers interaction classes and starts them on the target element.
      *
-     * @param {Interaction[]} Interactions
-     * @param {HTMLElement} target - The target element where interactions need
-     *                               to be activated.
+     * @param {Array<typeof import("@web/public/interaction").Interaction>} Interactions
+     * @param {HTMLElement} [target]
+     * @returns {void}
      */
     activate(Interactions, target) {
         this.Interactions = Interactions;
@@ -57,6 +61,15 @@ class InteractionService {
         this.proms.push(startProm);
     }
 
+    /**
+     * Prepares a mountable OWL component root inside the given element.
+     *
+     * @param {HTMLElement} el
+     * @param {typeof import("@odoo/owl").Component} C
+     * @param {Record<string, any>} [props]
+     * @param {InsertPosition} [position]
+     * @returns {{ C: typeof import("@odoo/owl").Component, root: any, el: HTMLElement, mount: () => Promise<any>, destroy: () => void }}
+     */
     prepareRoot(el, C, props, position = "beforeend") {
         if (!this.owlApp) {
             const { App } = odoo.loader.modules.get("@odoo/owl");
@@ -89,26 +102,37 @@ class InteractionService {
         };
     }
 
+    /**
+     * @param {HTMLElement} el
+     * @param {typeof import("@odoo/owl").Component} C
+     * @returns {Promise<void>}
+     */
     async _mountComponent(el, C) {
         const root = this.prepareRoot(el, C);
         this.roots.push(root);
         return root.mount();
     }
 
+    /**
+     * Starts all registered interactions on elements matching their selectors inside `el`.
+     *
+     * @param {HTMLElement} [el]
+     * @returns {Promise<void>}
+     */
     startInteractions(el = this.el) {
         if (!el.isConnected) {
             return Promise.resolve();
         }
-        const proms = [];
+        const proms = /** @type {Array<Promise<void>>} */ ([]);
         for (const I of this.Interactions) {
             if (I.selector === "") {
                 throw new Error(
-                    `The selector should be defined as a static property on the class ${I.name}, not on the instance`
+                    `The selector should be defined as a static property on the class ${I.name}, not on the instance`,
                 );
             }
             if (I.dynamicContent) {
                 throw new Error(
-                    `The dynamic content object should be defined on the instance, not on the class (${I.name})`
+                    `The dynamic content object should be defined on the instance, not on the class (${I.name})`,
                 );
             }
             let targets;
@@ -118,18 +142,24 @@ class InteractionService {
                     ? [el, ...el.querySelectorAll(I.selector)]
                     : el.querySelectorAll(I.selector);
                 if (I.selectorHas) {
-                    targets = [...targets].filter((el) => !!el.querySelector(I.selectorHas));
+                    targets = [...targets].filter(
+                        (el) => !!el.querySelector(I.selectorHas),
+                    );
                 }
                 if (I.selectorNotHas) {
-                    targets = [...targets].filter((el) => !el.querySelector(I.selectorNotHas));
+                    targets = [...targets].filter(
+                        (el) => !el.querySelector(I.selectorNotHas),
+                    );
                 }
             } catch {
-                const selectorHasError = I.selectorHas ? ` or selectorHas: '${I.selectorHas}'` : "";
+                const selectorHasError = I.selectorHas
+                    ? ` or selectorHas: '${I.selectorHas}'`
+                    : "";
                 const selectorNotHasError = I.selectorNotHas
                     ? ` or selectorNotHas: '${I.selectorNotHas}'`
                     : "";
                 const error = new Error(
-                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError}${selectorNotHasError})`
+                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError}${selectorNotHasError})`,
                 );
                 proms.push(Promise.reject(error));
                 continue;
@@ -141,11 +171,19 @@ class InteractionService {
         if (el === this.el) {
             this.isActive = true;
         }
-        const prom = Promise.all(proms);
+        const prom = /** @type {Promise<void>} */ (
+            /** @type {unknown} */ (Promise.all(proms))
+        );
         this.proms.push(prom);
         return prom;
     }
 
+    /**
+     * @param {HTMLElement} el
+     * @param {typeof import("@web/public/interaction").Interaction} I
+     * @param {Array<Promise<any>>} proms
+     * @returns {void}
+     */
     _startInteraction(el, I, proms) {
         if (this.activeInteractions.has(el, I)) {
             return;
@@ -160,12 +198,26 @@ class InteractionService {
                 this.proms.push(Promise.reject(e));
             }
         } else {
-            proms.push(this._mountComponent(el, I));
+            proms.push(
+                this._mountComponent(
+                    el,
+                    /** @type {typeof import("@odoo/owl").Component} */ (
+                        /** @type {unknown} */ (I)
+                    ),
+                ),
+            );
         }
     }
 
+    /**
+     * @param {HTMLElement} el
+     * @param {import("@web/public/colibri").Colibri} interaction
+     * @returns {boolean}
+     */
     shouldStop(el, interaction) {
-        const { selectorNotHas, selectorHas } = interaction.interaction.constructor;
+        const { selectorNotHas, selectorHas } = /** @type {any} */ (
+            interaction.interaction.constructor
+        );
         if (!interaction.el) {
             return true;
         }
@@ -177,19 +229,28 @@ class InteractionService {
         );
     }
 
+    /**
+     * Destroys all active interactions started on elements inside `el`.
+     *
+     * @param {HTMLElement} [el]
+     * @returns {void}
+     */
     stopInteractions(el = this.el) {
         const interactions = [];
-        for (const interaction of this.interactions.slice().reverse()) {
+        for (const interaction of this.interactions.toReversed()) {
             if (this.shouldStop(el, interaction)) {
                 interaction.destroy();
-                this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
+                this.activeInteractions.delete(
+                    interaction.el,
+                    interaction.interaction.constructor,
+                );
             } else {
                 interactions.push(interaction);
             }
         }
         this.interactions = interactions;
         const roots = [];
-        for (const root of this.roots.slice().reverse()) {
+        for (const root of this.roots.toReversed()) {
             if (el === root.el || el.contains(root.el)) {
                 root.destroy();
                 this.activeInteractions.delete(root.el, root.C);
@@ -218,7 +279,9 @@ export const publicInteractionService = {
     dependencies: ["localization"],
     async start(env) {
         // fallback if #wrapwrap is not present in the dom
-        const el = document.querySelector("#wrapwrap") || document.querySelector("body");
+        const el = /** @type {HTMLElement} */ (
+            document.querySelector("#wrapwrap") || document.querySelector("body")
+        );
         const Interactions = registry.category("public.interactions").getAll();
         const service = new InteractionService(el, env);
         service.activate(Interactions);
@@ -226,4 +289,6 @@ export const publicInteractionService = {
     },
 };
 
-registry.category("services").add("public.interactions", publicInteractionService);
+registry
+    .category("services")
+    .add("public.interactions", /** @type {any} */ (publicInteractionService));

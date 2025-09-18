@@ -16,7 +16,11 @@ export class AvatarStack extends Component {
     static template = "mail.AvatarStack";
     static props = {
         containerClass: { type: String, optional: true },
-        direction: { type: String, optional: true, validate: (d) => ["v", "h"].includes(d) },
+        direction: {
+            type: String,
+            optional: true,
+            validate: (d) => ["v", "h"].includes(d),
+        },
         avatarClass: { type: Function, optional: true },
         max: { type: Number, optional: true },
         onClick: { type: Function, optional: true },

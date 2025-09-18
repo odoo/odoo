@@ -1,10 +1,9 @@
-import { Component, useEffect, useState, onWillUnmount } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { useService } from "@web/core/utils/hooks";
+import { Component, onWillUnmount, useEffect, useState } from "@odoo/owl";
 import { AccordionItem } from "@point_of_sale/app/components/accordion_item/accordion_item";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-
 export class ProductInfoBanner extends Component {
     static template = "point_of_sale.ProductInfoBanner";
     static components = {
@@ -18,9 +17,12 @@ export class ProductInfoBanner extends Component {
 
     setup() {
         this.pos = usePos();
-        this.fetchStock = useTrackedAsync((pt, p) => this.pos.getProductInfo(pt, 1, 0, p), {
-            keepLast: true,
-        });
+        this.fetchStock = useTrackedAsync(
+            (pt, p) => this.pos.getProductInfo(pt, 1, 0, p),
+            {
+                keepLast: true,
+            },
+        );
         this.ui = useService("ui");
         this.state = useState({
             other_warehouses: [],
@@ -44,7 +46,8 @@ export class ProductInfoBanner extends Component {
             if (result) {
                 const productInfo = result.productInfo;
                 this.state.other_warehouses = productInfo.warehouses.slice(1);
-                this.state.available_quantity = productInfo.warehouses[0]?.available_quantity;
+                this.state.available_quantity =
+                    productInfo.warehouses[0]?.available_quantity;
                 this.state.free_qty = productInfo.warehouses[0]?.free_qty;
                 this.state.uom = productInfo.warehouses[0]?.uom;
             }
@@ -53,10 +56,13 @@ export class ProductInfoBanner extends Component {
         useEffect(
             () => {
                 if (this.props.productTemplate) {
-                    debouncedFetchStocks(this.props.product, this.props.productTemplate);
+                    debouncedFetchStocks(
+                        this.props.product,
+                        this.props.productTemplate,
+                    );
                 }
             },
-            () => [this.props.product]
+            () => [this.props.product],
         );
         onWillUnmount(() => debouncedFetchStocks.cancel());
     }

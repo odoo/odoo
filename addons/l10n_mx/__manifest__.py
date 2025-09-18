@@ -17,7 +17,7 @@ accounting feature of Odoo.
 This doesn't pretend be all the localization for MX it is just the minimal
 data required to start from 0 in mexican localization.
 
-This modules and its content is updated frequently by openerp-mexico team.
+This modules and its content is updated frequently by the Odoo Mexico team.
 
 With this module you will have:
 

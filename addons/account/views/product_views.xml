@@ -3,7 +3,7 @@
          <field name="name">product.view.search.catalog.inherit.account</field>
          <field name="model">product.product</field>
          <field name="mode">primary</field>
-         <field name="inherit_id" ref="product.product_view_search_catalog"/>
+         <field name="inherit_id" ref="product.view_product_product_search_catalog"/>
          <field name="arch" type="xml">
              <xpath expr="//field[@name='product_tmpl_id']" position="after">
                  <field name="seller_ids" string="Vendor"/>
@@ -14,7 +14,7 @@
      <record id="product_product_view_form_normalized_account" model="ir.ui.view">
          <field name="name">product.product.view.form.normalized.account.inherit</field>
          <field name="model">product.product</field>
-         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+         <field name="inherit_id" ref="product.view_product_product_form_normalized"/>
          <field name="arch" type="xml">
             <field name="list_price" position="after">
                 <label for="taxes_id"/>

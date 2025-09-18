@@ -1,9 +1,7 @@
 import { Activity } from "@mail/core/common/activity_model";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-
 import { patch } from "@web/core/utils/patch";
-
 patch(Activity.prototype, {
     setup() {
         super.setup(...arguments);
@@ -36,16 +34,21 @@ patch(Activity.prototype, {
                 },
                 {
                     onClose: resolve,
-                }
-            )
+                },
+            ),
         );
     },
     /** @param {number[]} attachmentIds */
     async markAsDone(attachmentIds = []) {
-        await this.store.env.services.orm.call("mail.activity", "action_feedback", [[this.id]], {
-            attachment_ids: attachmentIds,
-            feedback: this.feedback,
-        });
+        await this.store.env.services.orm.call(
+            "mail.activity",
+            "action_feedback",
+            [[this.id]],
+            {
+                attachment_ids: attachmentIds,
+                feedback: this.feedback,
+            },
+        );
         this.store.activityBroadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
             payload: { id: this.res_id, model: this.res_model },
@@ -57,7 +60,7 @@ patch(Activity.prototype, {
             "mail.activity",
             "action_feedback_schedule_next",
             [[this.id]],
-            { feedback: this.feedback }
+            { feedback: this.feedback },
         );
         this.activityBroadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",

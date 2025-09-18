@@ -1,7 +1,6 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
-
+import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class DatePickerPopup extends Component {
     static template = "point_of_sale.DatePickerPopup";
     static components = { Dialog };
@@ -24,7 +23,9 @@ export class DatePickerPopup extends Component {
     }
     confirm() {
         this.props.getPayload(
-            this.state.shippingDate < this._today() ? this._today() : this.state.shippingDate
+            this.state.shippingDate < this._today()
+                ? this._today()
+                : this.state.shippingDate,
         );
         this.props.close();
     }

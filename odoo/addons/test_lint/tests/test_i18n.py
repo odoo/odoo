@@ -1,9 +1,9 @@
 import logging
 import re
 
-from . import lint_case
-
 from odoo import tools
+
+from . import lint_case
 
 _logger = logging.getLogger(__name__)
 
@@ -103,7 +103,12 @@ class TestI18n(lint_case.LintCase):
         for i, (file_content, expected_matches) in enumerate(test_cases):
             matches = [(m.group(3)) for m in self.PROPS_RE.finditer(file_content)]
             if matches != expected_matches:
-                _logger.error("Test case %s failed: expected %s, got %s", i + 1, expected_matches, matches)
+                _logger.error(
+                    "Test case %s failed: expected %s, got %s",
+                    i + 1,
+                    expected_matches,
+                    matches,
+                )
                 error_count += 1
         self.assertEqual(error_count, 0)
 

@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo.http import Controller, request, route, SessionExpiredException
+from odoo.libs.json import dumps as json_dumps
 from ..models.bus import channel_with_db
 from ..websocket import WebsocketConnectionHandler
 
@@ -21,7 +20,7 @@ class WebsocketController(Controller):
 
     @route('/websocket/health', type='http', auth='none', save_session=False)
     def health(self):
-        data = json.dumps({
+        data = json_dumps({
             'status': 'pass',
         })
         headers = [('Content-Type', 'application/json'),

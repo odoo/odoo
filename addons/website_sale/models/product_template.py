@@ -3,7 +3,7 @@
 import logging
 from collections import defaultdict
 
-from werkzeug import urls
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
@@ -599,7 +599,7 @@ class ProductTemplate(models.Model):
             product=product_or_template,
             quantity=quantity,
             uom=uom,
-            target_currency=currency,
+            currency=currency,
         )
 
         price_before_discount = pricelist_price
@@ -1118,6 +1118,6 @@ class ProductTemplate(models.Model):
             query_params['attribute_values'] = ','.join(str(i) for i in available_pav_ids)
 
         if query_params:
-            url = f'{url}?{urls.url_encode(query_params)}'
+            url = f'{url}?{urlencode(query_params)}'
 
         return url

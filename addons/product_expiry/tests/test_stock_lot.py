@@ -308,7 +308,7 @@ class TestStockLot(TestStockCommon):
         receipt.action_confirm()
 
         # Defines a date during the receipt.
-        move_form = Form(receipt.move_ids, view="stock.view_stock_move_operations")
+        move_form = Form(receipt.move_ids, view="stock.view_stock_move_form_operations")
         with move_form.move_line_ids.edit(0) as line:
             line.lot_name = 'Apple Box #2'
             line.expiration_date = expiration_date
@@ -652,7 +652,7 @@ class TestStockLot(TestStockCommon):
         picking_out.action_assign()
         self.assertEqual(picking_out.move_line_ids.lot_id, apple_lot)
 
-    def test_compute_expiration_date_from_scheduled_date(self):
+    def test_compute_expiration_date_from_date_planned(self):
         partner = self.env['res.partner'].create({
             'name': 'Apple\'s Joe',
             'company_id': self.env.ref('base.main_company').id,
@@ -664,7 +664,7 @@ class TestStockLot(TestStockCommon):
 
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
-        picking_form.scheduled_date = new_date
+        picking_form.date_planned = new_date
         picking_form.picking_type_id = self.picking_type_in
 
         with picking_form.move_ids.new() as move:

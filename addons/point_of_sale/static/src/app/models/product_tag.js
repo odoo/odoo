@@ -1,7 +1,6 @@
-import { Base } from "./related_models";
 import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-
+import { Base } from "./related_models";
 export class ProductTag extends Base {
     static pythonModel = "product.tag";
 

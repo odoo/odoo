@@ -1,10 +1,10 @@
+import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
+import { user } from "@web/services/user";
 import { session } from "@web/session";
-import { EventBus, reactive } from "@odoo/owl";
-import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set([
@@ -44,7 +44,7 @@ export const busService = {
             notification,
             "bus.parameters": params,
             worker_service: workerService,
-        }
+        },
     ) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
@@ -71,16 +71,22 @@ export const busService = {
                     const a = document.createElement("a");
                     a.href = url;
                     a.download = `bus_logs_${luxon.DateTime.now().toFormat(
-                        "yyyy-LL-dd-HH-mm-ss"
+                        "yyyy-LL-dd-HH-mm-ss",
                     )}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
                     break;
                 }
                 case "BUS:NOTIFICATION": {
-                    const notifications = data.map(({ id, message }) => ({ id, ...message }));
+                    const notifications = data.map(({ id, message }) => ({
+                        id,
+                        ...message,
+                    }));
                     state.lastNotificationId = notifications.at(-1).id;
-                    legacyMultiTab.setSharedValue("last_notification_id", state.lastNotificationId);
+                    legacyMultiTab.setSharedValue(
+                        "last_notification_id",
+                        state.lastNotificationId,
+                    );
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
@@ -98,7 +104,7 @@ export const busService = {
                     multiTab.unregister();
                     notification.add(
                         _t(
-                            "Save your work and refresh to get the latest updates and avoid potential issues."
+                            "Save your work and refresh to get the latest updates and avoid potential issues.",
                         ),
                         {
                             title: _t("The page is out of date"),
@@ -113,7 +119,7 @@ export const busService = {
                                     },
                                 },
                             ],
-                        }
+                        },
                     );
                     break;
                 }
@@ -129,7 +135,9 @@ export const busService = {
         async function ensureWorkerStarted() {
             if (!connectionInitializedDeferred) {
                 connectionInitializedDeferred = new Deferred();
-                let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
+                let uid = Array.isArray(session.user_id)
+                    ? session.user_id[0]
+                    : user.userId;
                 if (!uid && uid !== undefined) {
                     uid = false;
                 }
@@ -141,7 +149,10 @@ export const busService = {
                     }`,
                     db: session.db,
                     debug: odoo.debug,
-                    lastNotificationId: legacyMultiTab.getSharedValue("last_notification_id", 0),
+                    lastNotificationId: legacyMultiTab.getSharedValue(
+                        "last_notification_id",
+                        0,
+                    ),
                     uid,
                     startTs: startedAt.valueOf(),
                 });
@@ -165,7 +176,7 @@ export const busService = {
                     }
                 }, BACK_ONLINE_RECONNECT_DELAY);
             },
-            { capture: true }
+            { capture: true },
         );
         browser.addEventListener(
             "offline",
@@ -175,7 +186,7 @@ export const busService = {
             },
             {
                 capture: true,
-            }
+            },
         );
         const state = reactive({
             addEventListener: bus.addEventListener.bind(bus),
@@ -229,7 +240,7 @@ export const busService = {
             unsubscribe(notificationType, callback) {
                 notificationBus.removeEventListener(
                     notificationType,
-                    subscribeFnToWrapper.get(callback)
+                    subscribeFnToWrapper.get(callback),
                 );
                 subscribeFnToWrapper.delete(callback);
             },

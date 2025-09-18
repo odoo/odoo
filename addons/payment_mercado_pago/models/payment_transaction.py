@@ -2,7 +2,7 @@
 
 from urllib.parse import quote as url_quote
 
-from werkzeug.urls import url_decode, url_parse
+from urllib.parse import parse_qsl, urlsplit as url_parse
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
@@ -10,6 +10,7 @@ from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 
@@ -46,7 +47,7 @@ class PaymentTransaction(models.Model):
 
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = url_parse(api_url)
-        url_params = url_decode(parsed_url.query)
+        url_params = dict(parse_qsl(parsed_url.query))
         rendering_values = {
             'api_url': api_url,
             'url_params': url_params,  # Encore the params as inputs to preserve them.
@@ -176,7 +177,9 @@ class PaymentTransaction(models.Model):
         :rtype: float
         """
         unit_price = self.amount
-        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        decimal_places = const.CURRENCY_DECIMALS.get(
+            self.currency_id.name, CURRENCY_MINOR_UNITS.get(self.currency_id.name)
+        )
         if decimal_places is not None:
             unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
         return unit_price

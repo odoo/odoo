@@ -1,7 +1,6 @@
 import { Component, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class AddZatcaRefundReasonPopup extends Component {
     static template = "l10n_sa_pos.AddZatcaRefundReasonPopup";
     static components = { Dialog };

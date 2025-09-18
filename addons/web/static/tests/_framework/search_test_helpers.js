@@ -1,11 +1,13 @@
+// @ts-check
+
 import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
+import { WithSearch } from "@web/search/with_search/with_search";
+import { getDefaultConfig } from "@web/views/view";
+
 import { findComponent, mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
-
-import { WithSearch } from "@web/search/with_search/with_search";
-import { getDefaultConfig } from "@web/views/view";
 
 const ensureSearchView = async () => {
     if (
@@ -65,13 +67,16 @@ function filterPropsForComponent(Component, props) {
 /**
  * Mounts a component wrapped within a WithSearch.
  *
- * @template T
- * @param {T} componentConstructor
- * @param {Record<string, any>} [options]
+ * @param {any} componentConstructor
+ * @param {Record<string, any>} [searchProps]
  * @param {Record<string, any>} [config]
- * @returns {Promise<InstanceType<T>>}
+ * @returns {Promise<any>}
  */
-export async function mountWithSearch(componentConstructor, searchProps = {}, config = {}) {
+export async function mountWithSearch(
+    componentConstructor,
+    searchProps = {},
+    config = {},
+) {
     class ComponentWithSearch extends Component {
         static template = xml`
             <WithSearch t-props="withSearchProps" t-slot-scope="search">
@@ -102,7 +107,10 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
     const fullConfig = { ...getDefaultConfig(), ...config };
     const env = await makeMockEnv({ config: fullConfig });
     const root = await mountWithCleanup(ComponentWithSearch, { env });
-    return findComponent(root, (component) => component instanceof componentConstructor);
+    return findComponent(
+        root,
+        (component) => component instanceof componentConstructor,
+    );
 }
 
 //-----------------------------------------------------------------------------
@@ -120,7 +128,7 @@ export async function toggleMenu(label) {
  * @param {string} label
  */
 export async function toggleMenuItem(label) {
-    const target = queryOne`.o_menu_item:text(${label})`;
+    const target = /** @type {any} */ (queryOne)`.o_menu_item:text(${label})`;
     if (target.classList.contains("dropdown-toggle")) {
         await contains(target).hover();
     } else {
@@ -133,7 +141,9 @@ export async function toggleMenuItem(label) {
  * @param {string} optionLabel
  */
 export async function toggleMenuItemOption(itemLabel, optionLabel) {
-    const { parentElement: root } = queryOne`.o_menu_item:text(${itemLabel})`;
+    const { parentElement: root } = /** @type {any} */ (
+        queryOne
+    )`.o_menu_item:text(${itemLabel})`;
     const target = queryOne(`.o_item_option:text(${optionLabel})`, { root });
     if (target.classList.contains("dropdown-toggle")) {
         await contains(target).hover();
@@ -146,7 +156,9 @@ export async function toggleMenuItemOption(itemLabel, optionLabel) {
  * @param {string} label
  */
 export function isItemSelected(label) {
-    return queryOne`.o_menu_item:text(${label})`.classList.contains("selected");
+    return /** @type {any} */ (
+        queryOne
+    )`.o_menu_item:text(${label})`.classList.contains("selected");
 }
 
 /**
@@ -154,9 +166,11 @@ export function isItemSelected(label) {
  * @param {string} optionLabel
  */
 export function isOptionSelected(itemLabel, optionLabel) {
-    const { parentElement: root } = queryOne`.o_menu_item:text(${itemLabel})`;
+    const { parentElement: root } = /** @type {any} */ (
+        queryOne
+    )`.o_menu_item:text(${itemLabel})`;
     return queryOne(`.o_item_option:text(${optionLabel})`, { root }).classList.contains(
-        "selected"
+        "selected",
     );
 }
 
@@ -233,7 +247,7 @@ export async function toggleSaveFavorite() {
 export async function editFavoriteName(name) {
     await ensureSearchBarMenu();
     await contains(
-        `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`
+        `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`,
     ).edit(name, { confirm: false });
 }
 
@@ -281,7 +295,7 @@ export async function validateSearch() {
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./mock_server/mock_server").ViewType} viewType
+ * @param {string} viewType
  */
 export async function switchView(viewType) {
     if (getMockEnv().isSmall) {
@@ -338,8 +352,6 @@ export async function editPager(value) {
 //-----------------------------------------------------------------------------
 
 /**
- * @param {EventTarget} el
- * @param {string} [menuFinder="Action"]
  * @returns {Promise}
  */
 export async function toggleActionMenu() {

@@ -1,14 +1,14 @@
-import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
-
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 patch(OrderDisplay.prototype, {
     get buttonToShow() {
-        const buttonName = this.router.activeSlot === "product_list" ? _t("Order") : _t("Pay");
+        const buttonName =
+            this.router.activeSlot === "product_list" ? _t("Order") : _t("Pay");
         const type = this.selfOrder.config.self_ordering_mode;
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.models["pos.payment.method"].find(
-            (p) => p.is_online_payment
+            (p) => p.is_online_payment,
         );
         const order = this.selfOrder.currentOrder;
         const service = this.selfOrder.config.self_ordering_service_mode;
@@ -43,7 +43,8 @@ patch(OrderDisplay.prototype, {
                             disabled: true,
                         };
                     } else {
-                        const label = service === "counter" ? _t("Pay at cashier") : _t("Pay");
+                        const label =
+                            service === "counter" ? _t("Pay at cashier") : _t("Pay");
                         return {
                             label: label,
                             disabled: false,

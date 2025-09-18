@@ -1,6 +1,6 @@
 import { useState, onRendered, onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
+import { StateSelectionField, stateSelectionField } from "@web/fields/selection/state_selection/state_selection_field";
 
 export class TodoDoneCheckmark extends StateSelectionField {
     static template = "project_todo.TodoDoneCheckmark";

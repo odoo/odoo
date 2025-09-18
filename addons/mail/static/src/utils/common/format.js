@@ -1,7 +1,6 @@
 import { htmlEscape, markup } from "@odoo/owl";
-
+import { loadEmoji, loader } from "@web/components/emoji_picker/emoji_picker";
 import { router } from "@web/core/browser/router";
-import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { normalize } from "@web/core/l10n/utils";
 import {
     createDocumentFragmentFromContent,
@@ -12,14 +11,15 @@ import {
     htmlReplaceAll,
     htmlTrim,
     setElementContent,
-} from "@web/core/utils/html";
-import { escapeRegExp } from "@web/core/utils/strings";
+} from "@web/core/utils/dom/html";
+import { setAttributes } from "@web/core/utils/dom/xml";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { getOrigin } from "@web/core/utils/urls";
-import { setAttributes } from "@web/core/utils/xml";
-
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
+const messageUrlRegExp = new RegExp(
+    `^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`,
+);
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -51,9 +51,15 @@ export function prettifyMessageText(rawBody, { validMentions = {}, thread } = {}
 /**
  * @param {string|ReturnType<markup>} htmlBody
  */
-export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true } = {}) {
+export async function generateEmojisOnHtml(
+    htmlBody,
+    { allowEmojiLoading = true } = {},
+) {
     let body = htmlBody;
-    if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
+    if (
+        allowEmojiLoading ||
+        odoo.loader.modules.get("@web/components/emoji_picker/emoji_data")
+    ) {
         body = await _generateEmojisOnHtml(body);
     }
     return body;
@@ -66,7 +72,7 @@ export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true 
  */
 export async function prettifyMessageContent(
     rawBody,
-    { validMentions = [], allowEmojiLoading = true } = {}
+    { validMentions = [], allowEmojiLoading = true } = {},
 ) {
     let body = prettifyMessageText(rawBody, { validMentions });
     body = await generateEmojisOnHtml(body, { allowEmojiLoading });
@@ -108,8 +114,8 @@ function _parseAndTransform(nodes, transformFunction) {
         Object.values(nodes).map((node) =>
             transformFunction(node, function () {
                 return _parseAndTransform(node.childNodes, transformFunction);
-            })
-        )
+            }),
+        ),
     );
 }
 
@@ -181,7 +187,6 @@ function generateMentionElement({ className, id, model, text }) {
         class: className,
         "data-oe-id": id,
         "data-oe-model": model,
-        "data-oe-protected": "true",
         target: "_blank",
         contenteditable: "false",
     });
@@ -217,7 +222,6 @@ export function generateSpecialMentionElement(label) {
     const link = document.createElement("a");
     setAttributes(link, {
         class: "o-discuss-mention",
-        "data-oe-protected": "true",
         contenteditable: "false",
     });
     link.textContent = `@${label}`;
@@ -248,7 +252,7 @@ export function generateThreadMentionElement(thread) {
  */
 function generateMentionsLinks(
     body,
-    { partners = [], roles = [], threads = [], specialMentions = [], thread }
+    { partners = [], roles = [], threads = [], specialMentions = [], thread },
 ) {
     const mentions = [];
     for (const partner of partners) {
@@ -307,9 +311,13 @@ async function _generateEmojisOnHtml(htmlString) {
             const escapedSource = htmlEscape(String(source));
             const regexp = new RegExp(
                 "(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$|<)",
-                "g"
+                "g",
             );
-            htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
+            htmlString = htmlReplace(
+                htmlString,
+                regexp,
+                (_, group1) => group1 + emoji.codepoints,
+            );
         }
     }
     return htmlEscape(htmlString);
@@ -407,7 +415,7 @@ export function decorateEmojis(content) {
         doc.body,
         null,
         XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
-        null
+        null,
     );
     for (let i = 0; i < nodes.snapshotLength; i++) {
         const node = nodes.snapshotItem(i);
@@ -418,10 +426,10 @@ export function decorateEmojis(content) {
                 markup(
                     `<span class="o-mail-emoji" title="${htmlFormatList(
                         loader.loaded.emojiValueToShortcodes[codepoints],
-                        { style: "unit-narrow" }
-                    )}">${htmlEscape(codepoints)}</span>`
-                )
-            )
+                        { style: "unit-narrow" },
+                    )}">${htmlEscape(codepoints)}</span>`,
+                ),
+            ),
         );
         node.replaceWith(...span.childNodes);
     }

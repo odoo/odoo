@@ -1,4 +1,7 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
 import {
     clickSave,
     contains,
@@ -9,8 +12,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class Partner extends models.Model {
@@ -76,7 +77,8 @@ test("still human readable when readonly", async () => {
         arch: `<form><field readonly="true" name="float_field" options="{'human_readable': 'true', 'decimals': 4}"/></form>`,
     });
     expect(".o_field_widget span").toHaveText("6.6754T", {
-        message: "The value should be rendered in human readable format when input is readonly.",
+        message:
+            "The value should be rendered in human readable format when input is readonly.",
     });
 });
 
@@ -98,7 +100,10 @@ test("unset field should be set to 0", async () => {
 });
 
 test("use correct digit precision from field definition", async () => {
-    Partner._fields.float_field = fields.Float({ string: "Float field", digits: [0, 1] });
+    Partner._fields.float_field = fields.Float({
+        string: "Float field",
+        digits: [0, 1],
+    });
 
     await mountView({
         type: "form",
@@ -147,7 +152,8 @@ test("with 'step' option", async () => {
     });
 
     expect(".o_field_widget input").toHaveAttribute("step", "0.3", {
-        message: 'Integer field with option type must have a step attribute equals to "3".',
+        message:
+            'Integer field with option type must have a step attribute equals to "3".',
     });
 });
 
@@ -235,18 +241,26 @@ test("use incorrect formula", async () => {
         arch: `<form><field name="float_field" options="{ 'digits': [0, 3] }" /></form>`,
     });
 
-    await contains(".o_field_widget[name=float_field] input").edit("=abc", { confirm: false });
+    await contains(".o_field_widget[name=float_field] input").edit("=abc", {
+        confirm: false,
+    });
     await clickSave();
 
     expect(".o_field_widget[name=float_field]").toHaveClass("o_field_invalid", {
         message: "fload field should be displayed as invalid",
     });
-    expect(".o_form_editable").toHaveCount(1, { message: "form view should still be editable" });
+    expect(".o_form_editable").toHaveCount(1, {
+        message: "form view should still be editable",
+    });
 
-    await contains(".o_field_widget[name=float_field] input").edit("=3:2?+4", { confirm: false });
+    await contains(".o_field_widget[name=float_field] input").edit("=3:2?+4", {
+        confirm: false,
+    });
     await clickSave();
 
-    expect(".o_form_editable").toHaveCount(1, { message: "form view should still be editable" });
+    expect(".o_form_editable").toHaveCount(1, {
+        message: "form view should still be editable",
+    });
     expect(".o_field_widget[name=float_field]").toHaveClass("o_field_invalid", {
         message: "float field should be displayed as invalid",
     });
@@ -270,13 +284,17 @@ test("float field in editable list view", async () => {
         message: "The view should have 1 input for editable float.",
     });
 
-    await contains('div[name="float_field"] input').edit("108.2458938598598", { confirm: "blur" });
+    await contains('div[name="float_field"] input').edit("108.2458938598598", {
+        confirm: "blur",
+    });
     expect(".o_field_widget:eq(0)").toHaveText("108.246", {
         message: "The value should have been formatted on blur.",
     });
 
     await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
-    await contains('div[name="float_field"] input').edit("18.8958938598598", { confirm: false });
+    await contains('div[name="float_field"] input').edit("18.8958938598598", {
+        confirm: false,
+    });
     await contains(".o_control_panel_main_buttons .o_list_button_save").click();
     expect(".o_field_widget:eq(0)").toHaveText("18.896", {
         message: "The new value should be rounded properly.",
@@ -299,7 +317,8 @@ test("float field with type number option", async () => {
         resId: 4,
     });
     expect(".o_field_widget input").toHaveAttribute("type", "number", {
-        message: 'Float field with option type must have a type attribute equals to "number".',
+        message:
+            'Float field with option type must have a type attribute equals to "number".',
     });
     await contains(".o_field_widget input").fill("123456.7890", { instantly: true });
     await clickSave();
@@ -328,7 +347,8 @@ test("float field with type number option and comma decimal separator", async ()
     });
 
     expect(".o_field_widget input").toHaveAttribute("type", "number", {
-        message: 'Float field with option type must have a type attribute equals to "number".',
+        message:
+            'Float field with option type must have a type attribute equals to "number".',
     });
     await contains(".o_field_widget[name=float_field] input").fill("123456.789", {
         instantly: true,

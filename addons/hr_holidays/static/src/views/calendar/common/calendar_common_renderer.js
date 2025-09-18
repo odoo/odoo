@@ -1,5 +1,5 @@
 import { onWillStart } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { CalendarCommonRenderer } from '@web/views/calendar/calendar_common/calendar_common_renderer';
 import { useMandatoryDays } from '../../hooks';
 import { TimeOffCalendarCommonPopover } from './calendar_common_popover';

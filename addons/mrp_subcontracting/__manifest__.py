@@ -50,10 +50,10 @@
             'web/static/lib/odoo_ui_icons/*',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/core/color_picker/color_picker.scss',
+            'web/static/src/components/color_picker/color_picker.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/views/fields/translation_dialog.scss',
+            'web/static/src/fields/translation_dialog.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
             'web/static/src/module_loader.js',
@@ -62,7 +62,6 @@
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
@@ -91,7 +90,6 @@
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/libs/bootstrap.js',
-            'web/static/src/legacy/js/libs/jquery.js',
 
             ('include', 'web._assets_bootstrap'),
 
@@ -99,12 +97,12 @@
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            ('remove', 'web/static/src/components/emoji_picker/emoji_data.js'),
             'web/static/src/search/**/*',
             'web/static/src/views/*.js',
             'web/static/src/views/*.xml',
             'web/static/src/views/*.scss',
-            'web/static/src/views/fields/**/*',
+            'web/static/src/fields/**/*',
             'web/static/src/views/form/**/*',
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',
@@ -131,7 +129,7 @@
             'web/static/src/views/form/button_box/*.scss',
 
             'mrp_subcontracting/static/src/subcontracting_portal/*',
-            'web/static/src/start.js',
+            'web/static/src/boot/start.js',
 
             'stock/static/src/widgets/*',
             'stock/static/src/fields/*',

@@ -1,10 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
-
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
-
 import { useService } from "@web/core/utils/hooks";
-
 /**
  * @typedef {Object} Props
  * @property {import("models").LinkPreview} linkPreview
@@ -30,7 +27,7 @@ export class LinkPreview extends Component {
                     el.onload = () => (this.state.videoLoaded = true);
                 }
             },
-            () => [this.videoRef.el]
+            () => [this.videoRef.el],
         );
     }
 

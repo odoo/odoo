@@ -5,7 +5,7 @@ import binascii
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 
 
 class AccountMove(models.Model):

@@ -56,8 +56,8 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         with file_open('base/tests/minimal.pdf', 'rb') as pdf_file:
             pdf_reader = PdfFileReader(pdf_file)
             pdf_writer = PdfFileWriter()
-            for page_num in range(pdf_reader.getNumPages()):
-                pdf_writer.addPage(pdf_reader.getPage(page_num))
+            for page_num in range(len(pdf_reader.pages)):
+                pdf_writer.add_page(pdf_reader.pages[page_num])
             # Encrypt the PDF
             pdf_writer.encrypt('')
             # Get the binary

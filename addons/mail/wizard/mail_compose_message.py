@@ -4,6 +4,7 @@
 import ast
 import base64
 import datetime
+import itertools
 import json
 
 from odoo import _, api, fields, models, Command, tools
@@ -823,7 +824,7 @@ class MailComposeMessage(models.TransientModel):
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or self._batch_size or 50  # be sure to not have 0, as otherwise no iteration is done
         counter_mails_done = 0
-        for res_ids_iter in tools.split_every(batch_size, res_ids):
+        for res_ids_iter in itertools.batched(res_ids, batch_size):
             prepared_mail_values_filtered = self._manage_mail_values(self._prepare_mail_values(res_ids_iter))
             iter_mails_sudo = self.env['mail.mail'].sudo().create(list(prepared_mail_values_filtered.values()))
             self.env['mail.notification'].create(self._generate_mail_notification_values(iter_mails_sudo))
@@ -839,7 +840,7 @@ class MailComposeMessage(models.TransientModel):
                 iter_mails_sudo_tosend = iter_mails_sudo.filtered(
                     lambda mail: (
                         not mail.scheduled_date or
-                        mail.scheduled_date <= datetime.datetime.utcnow()
+                        mail.scheduled_date <= datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
                     )
                 )
                 if iter_mails_sudo_tosend:

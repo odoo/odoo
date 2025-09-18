@@ -31,7 +31,7 @@ import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -207,7 +207,7 @@ test("websocket disconnects when user logs out", async () => {
         ["BUS:RECONNECT", () => asyncStep("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
     );
-    patchWithCleanup(session, { user_id: null, db: "openerp" });
+    patchWithCleanup(session, { user_id: null, db: "odoo" });
     patchWithCleanup(user, { userId: 1 });
     const firstTabEnv = await makeMockEnv();
     await startBusService(firstTabEnv);

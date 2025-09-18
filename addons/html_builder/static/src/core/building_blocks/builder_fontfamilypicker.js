@@ -6,7 +6,7 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
 } from "@html_builder/core/utils";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
 import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
 

@@ -1,9 +1,7 @@
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-
-// Previously ProxyStatusWidget
+import { useService } from "@web/core/utils/hooks";
 export class ProxyStatus extends Component {
     static template = "point_of_sale.ProxyStatus";
     static props = {};
@@ -43,7 +41,7 @@ export class ProxyStatus extends Component {
             ];
             const disconnectedDevices = devices.filter(
                 ({ enabled, driver }) =>
-                    enabled && !["connected", "connecting"].includes(driver?.status)
+                    enabled && !["connected", "connecting"].includes(driver?.status),
             );
             if (disconnectedDevices.length) {
                 return `${disconnectedDevices.map((d) => d.name).join(" & ")} ${_t("Offline")}`;

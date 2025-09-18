@@ -7,7 +7,7 @@
     }
     &:not(.o-mobile) {
         --border-opacity: .15;
-        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
+        height: Min(95vh, calc($o-mail-ChatWindow-width * 15 / 9))
     }
     outline: none;
 }
@@ -30,7 +30,7 @@
 }
 
 .o-mail-ChatWindow-counter {
-    margin-bottom: map-get($spacers, 1) / 2;
+    margin-bottom: calc(map-get($spacers, 1) / 2);
 }
 
 .o-mail-ChatWindow-country {
@@ -42,7 +42,7 @@
         gap: map-get($spacers, 3);
 
         button:not(:hover):not(:focus-visible):not(:active):not(.btn-success) {
-            --o-mail-ActionList-Button-opacity: 1;
+            --o-mail-ActionList-Button-opacity: .5;
         }
 
         @include media-breakpoint-up(md) {

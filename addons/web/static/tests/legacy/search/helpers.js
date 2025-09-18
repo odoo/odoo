@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/search/helpers default=false */
 
 import { Component, xml } from "@odoo/owl";
@@ -11,23 +13,23 @@ import {
     triggerEvent,
     triggerEvents,
 } from "@web/../tests/helpers/utils";
-import { commandService } from "@web/core/commands/command_service";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { fieldService } from "@web/core/field_service";
-import { treeProcessorService } from "@web/core/tree_editor/tree_processor";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { notificationService } from "@web/core/notifications/notification_service";
-import { ormService } from "@web/core/orm_service";
-import { popoverService } from "@web/core/popover/popover_service";
+import { commandService } from "@web/services/commands/command_service";
+import { dialogService } from "@web/ui/dialog/dialog_service";
+import { fieldService } from "@web/services/field_service";
+import { treeProcessorService } from "@web/services/tree_processor_service";
+import { hotkeyService } from "@web/services/hotkeys/hotkey_service";
+import { notificationService } from "@web/ui/notification/notification_service";
+import { ormService } from "@web/services/orm_service";
+import { popoverService } from "@web/ui/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { nameService } from "@web/core/name_service";
-import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import { MainComponentsContainer } from "@web/components/main_components_container";
+import { nameService } from "@web/services/name_service";
+import { datetimePickerService } from "@web/components/datetime/datetime_picker_service";
 
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -202,14 +204,13 @@ export function getMenuItemTexts(target) {
 }
 
 export function getVisibleButtons(el) {
-    return [
-        ...$(el).find(
-            [
-                "div.o_control_panel_breadcrumbs button:visible", // button in the breadcrumbs
-                "div.o_control_panel_actions button:visible", // buttons for list selection
-            ].join(",")
-        ),
+    const selectors = [
+        "div.o_control_panel_breadcrumbs button", // button in the breadcrumbs
+        "div.o_control_panel_actions button", // buttons for list selection
     ];
+    return [...el.querySelectorAll(selectors.join(","))].filter(
+        (btn) => btn.offsetWidth > 0 || btn.offsetHeight > 0
+    );
 }
 
 /** Filter menu */
@@ -315,7 +316,6 @@ export async function editPager(el, value) {
 /////////////////////////////////////
 /**
  * @param {EventTarget} el
- * @param {string} [menuFinder="Action"]
  * @returns {Promise}
  */
 export async function toggleActionMenu(el) {

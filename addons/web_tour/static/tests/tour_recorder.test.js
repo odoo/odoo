@@ -9,7 +9,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import { TourRecorder } from "@web_tour/js/tour_recorder/tour_recorder";
 import {

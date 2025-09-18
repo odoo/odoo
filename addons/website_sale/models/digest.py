@@ -17,7 +17,7 @@ class DigestDigest(models.Model):
         self._calculate_company_based_kpi(
             'sale.report',
             'kpi_website_sale_total_value',
-            date_field='date',
+            date_field='date_order',
             additional_domain=[('state', 'not in', ['draft', 'cancel', 'sent']), ('website_id', '!=', False)],
             sum_field='price_subtotal',
         )

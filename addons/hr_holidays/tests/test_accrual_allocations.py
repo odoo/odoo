@@ -2,7 +2,7 @@ import datetime
 from freezegun import freeze_time
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -1604,7 +1604,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 18 / self.hours_per_day, "Should accrue 8 additional hours")
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_yearly_cap_constraint(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'accrued_gain_time': 'end',

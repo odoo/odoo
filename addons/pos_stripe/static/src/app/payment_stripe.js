@@ -1,11 +1,10 @@
 /* global StripeTerminal */
 
-import { _t } from "@web/core/l10n/translation";
-import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-
+import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 export class PaymentStripe extends PaymentInterface {
     setup() {
         super.setup(...arguments);
@@ -23,7 +22,7 @@ export class PaymentStripe extends PaymentInterface {
             const data = await this.pos.data.call(
                 "pos.payment.method",
                 "stripe_connection_token",
-                []
+                [],
             );
             if (data.error) {
                 throw data.error;
@@ -45,7 +44,9 @@ export class PaymentStripe extends PaymentInterface {
         } else {
             // Need to stringify all Readers to avoid to put the array into a proxy Object not interpretable
             // for the Stripe SDK
-            this.pos.discoveredReaders = JSON.stringify(discoverResult.discoveredReaders);
+            this.pos.discoveredReaders = JSON.stringify(
+                discoverResult.discoveredReaders,
+            );
         }
     }
 
@@ -54,13 +55,19 @@ export class PaymentStripe extends PaymentInterface {
             if (!this.terminal) {
                 const createStripeTerminal = this.createStripeTerminal();
                 if (!createStripeTerminal) {
-                    throw _t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED.");
+                    throw _t(
+                        "Failed to load resource: net::ERR_INTERNET_DISCONNECTED.",
+                    );
                 }
             }
         } catch (error) {
-            logPosMessage("PaymentStripe", "checkReader", "Error while checking reader", false, [
-                error,
-            ]);
+            logPosMessage(
+                "PaymentStripe",
+                "checkReader",
+                "Error while checking reader",
+                false,
+                [error],
+            );
             this._showError(error);
             return false;
         }
@@ -73,7 +80,10 @@ export class PaymentStripe extends PaymentInterface {
         ) {
             const disconnectResult = await this.terminal.disconnectReader();
             if (disconnectResult.error) {
-                this._showError(disconnectResult.error.message, disconnectResult.error.code);
+                this._showError(
+                    disconnectResult.error.message,
+                    disconnectResult.error.code,
+                );
                 line.setPaymentStatus("retry");
                 return false;
             } else {
@@ -90,15 +100,22 @@ export class PaymentStripe extends PaymentInterface {
         const line = this.pos.getOrder().getSelectedPaymentline();
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
-            if (selectedReader.serial_number == this.payment_method_id.stripe_serial_number) {
+            if (
+                selectedReader.serial_number ==
+                this.payment_method_id.stripe_serial_number
+            ) {
                 try {
-                    const connectResult = await this.terminal.connectReader(selectedReader, {
-                        fail_if_in_use: true,
-                    });
+                    const connectResult = await this.terminal.connectReader(
+                        selectedReader,
+                        {
+                            fail_if_in_use: true,
+                        },
+                    );
                     if (connectResult.error) {
                         throw connectResult;
                     }
-                    this.pos.connectedReader = this.payment_method_id.stripe_serial_number;
+                    this.pos.connectedReader =
+                        this.payment_method_id.stripe_serial_number;
                     return true;
                 } catch (error) {
                     logPosMessage(
@@ -106,7 +123,7 @@ export class PaymentStripe extends PaymentInterface {
                         "connectReader",
                         "Error when connecting reader",
                         false,
-                        [error]
+                        [error],
                     );
                     if (error.error) {
                         this._showError(error.error.message, error.code);
@@ -121,8 +138,8 @@ export class PaymentStripe extends PaymentInterface {
         this._showError(
             _t(
                 "Stripe readers %s not listed in your account",
-                this.payment_method_id.stripe_serial_number
-            )
+                this.payment_method_id.stripe_serial_number,
+            ),
         );
     }
 
@@ -140,7 +157,8 @@ export class PaymentStripe extends PaymentInterface {
             // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
             return ["interac", intentCharge.id];
         }
-        const cardPresentBrand = this.getCardBrandFromPaymentMethodDetails(processPaymentDetails);
+        const cardPresentBrand =
+            this.getCardBrandFromPaymentMethodDetails(processPaymentDetails);
         if (cardPresentBrand.includes("eftpos")) {
             // Australian eftpos should not be captured:
             // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
@@ -154,26 +172,33 @@ export class PaymentStripe extends PaymentInterface {
         const line = this.pos.getOrder().getSelectedPaymentline();
         const clientSecret = await this.fetchPaymentIntentClientSecret(
             line.payment_method_id,
-            amount
+            amount,
         );
         if (!clientSecret) {
             line.setPaymentStatus("retry");
             return false;
         }
         line.setPaymentStatus("waitingCard");
-        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
+        const collectPaymentMethod =
+            await this.terminal.collectPaymentMethod(clientSecret);
         if (collectPaymentMethod.error) {
-            this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
+            this._showError(
+                collectPaymentMethod.error.message,
+                collectPaymentMethod.error.code,
+            );
             line.setPaymentStatus("retry");
             return false;
         } else {
             line.setPaymentStatus("waitingCapture");
             const processPayment = await this.terminal.processPayment(
-                collectPaymentMethod.paymentIntent
+                collectPaymentMethod.paymentIntent,
             );
             line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
-                this._showError(processPayment.error.message, processPayment.error.code);
+                this._showError(
+                    processPayment.error.message,
+                    processPayment.error.code,
+                );
                 line.setPaymentStatus("retry");
                 return false;
             } else if (processPayment.paymentIntent) {
@@ -198,12 +223,16 @@ export class PaymentStripe extends PaymentInterface {
         try {
             this.terminal = StripeTerminal.create({
                 onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
-                onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
+                onUnexpectedReaderDisconnect:
+                    this.stripeUnexpectedDisconnect.bind(this),
             });
             this.discoverReaders();
             return true;
         } catch (error) {
-            this._showError(_t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED."), error);
+            this._showError(
+                _t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED."),
+                error,
+            );
             this.terminal = false;
             return false;
         }
@@ -222,10 +251,12 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async captureAfterPayment(processPayment, line) {
-        const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        const capturePayment = await this.capturePayment(
+            processPayment.paymentIntent.id,
+        );
         if (capturePayment.charges) {
             line.card_type = this.getCardBrandFromPaymentMethodDetails(
-                capturePayment.charges.data[0].payment_method_details
+                capturePayment.charges.data[0].payment_method_details,
             );
         }
         line.transaction_id = capturePayment.id;
@@ -244,7 +275,7 @@ export class PaymentStripe extends PaymentInterface {
                 {
                     amount,
                     context,
-                }
+                },
             );
             if (data.error) {
                 throw data.error;
@@ -259,10 +290,11 @@ export class PaymentStripe extends PaymentInterface {
 
     async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await this.pos.data.call("pos.payment.method", "stripe_payment_intent", [
-                [payment_method.id],
-                amount,
-            ]);
+            const data = await this.pos.data.call(
+                "pos.payment.method",
+                "stripe_payment_intent",
+                [[payment_method.id], amount],
+            );
             if (data.error) {
                 throw data.error;
             }
@@ -291,7 +323,7 @@ export class PaymentStripe extends PaymentInterface {
                 "sendPaymentRequest",
                 "Error when sending payment request",
                 false,
-                [error]
+                [error],
             );
             this._showError(String(error));
             return false;
@@ -318,11 +350,12 @@ export class PaymentStripe extends PaymentInterface {
             this._showError(_t("Payment cancelled because not reader connected"));
             return true;
         } else {
-            const cancelCollectPaymentMethod = await this.terminal.cancelCollectPaymentMethod();
+            const cancelCollectPaymentMethod =
+                await this.terminal.cancelCollectPaymentMethod();
             if (cancelCollectPaymentMethod.error) {
                 this._showError(
                     cancelCollectPaymentMethod.error.message,
-                    cancelCollectPaymentMethod.error.code
+                    cancelCollectPaymentMethod.error.code,
                 );
             }
             return true;

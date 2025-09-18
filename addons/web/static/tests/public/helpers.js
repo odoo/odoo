@@ -1,5 +1,11 @@
-import { getFixture, after } from "@odoo/hoot";
-import { clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+// @ts-check
+
+import { after, getFixture } from "@odoo/hoot";
+import {
+    clearRegistry,
+    makeMockEnv,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 
 let activeInteractions = null;
@@ -8,7 +14,9 @@ const content = elementRegistry.content;
 
 export function setupInteractionWhiteList(interactions) {
     if (arguments.length > 1) {
-        throw new Error("Multiple white-listed interactions should be listed in an array.");
+        throw new Error(
+            "Multiple white-listed interactions should be listed in an array.",
+        );
     }
     if (typeof interactions === "string") {
         interactions = [interactions];
@@ -28,10 +36,12 @@ export async function startInteraction(I, html, options) {
 
 export async function startInteractions(
     html,
-    options = { waitForStart: true, editMode: false, translateMode: false }
+    options = { waitForStart: true, editMode: false, translateMode: false },
 ) {
     if (odoo.loader.modules.has("@mail/../tests/mail_test_helpers")) {
-        const { defineMailModels } = odoo.loader.modules.get("@mail/../tests/mail_test_helpers");
+        const { defineMailModels } = odoo.loader.modules.get(
+            "@mail/../tests/mail_test_helpers",
+        );
         defineMailModels();
     }
     const fixture = getFixture();
@@ -49,7 +59,9 @@ export async function startInteractions(
                 if (name in content) {
                     elementRegistry.add(name, content[name][1]);
                 } else {
-                    throw new Error(`White-listed Interaction does not exist: ${name}.`);
+                    throw new Error(
+                        `White-listed Interaction does not exist: ${name}.`,
+                    );
                 }
             }
         }

@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import models, Command
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tools import mute_logger, unique, lazy
-from odoo.tools.constants import PREFETCH_MAX
+from odoo import Command, models
 from odoo.exceptions import AccessError
+from odoo.libs.constants import PREFETCH_MAX
+from odoo.tools import lazy, mute_logger, unique
+
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
 class TestAPI(SavepointCaseWithUserDemo):
-    """ test the new API of the ORM """
+    """test the new API of the ORM"""
 
     @classmethod
     def setUpClass(cls):
-        super(TestAPI, cls).setUpClass()
+        super().setUpClass()
         cls._load_partners_set()
 
     def assertIsRecordset(self, value, model):
@@ -28,145 +26,165 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertIsRecordset(value, model)
         self.assertFalse(value)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_00_query(self):
-        """ Build a recordset, and check its contents. """
-        domain = [('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)]
-        partners = self.env['res.partner'].search(domain)
+        """Build a recordset, and check its contents."""
+        domain = [("name", "ilike", "j"), ("id", "in", self.partners.ids)]
+        partners = self.env["res.partner"].search(domain)
 
         # partners is a collection of browse records
         self.assertTrue(partners)
 
         # partners and its contents are instance of the model
-        self.assertIsRecordset(partners, 'res.partner')
+        self.assertIsRecordset(partners, "res.partner")
         for p in partners:
-            self.assertIsRecord(p, 'res.partner')
+            self.assertIsRecord(p, "res.partner")
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_01_query_offset(self):
-        """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], offset=5)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)])[5:]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        """Build a recordset with offset, and check equivalence."""
+        partners1 = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], offset=5
+        )
+        partners2 = self.env["res.partner"].search([("id", "in", self.partners.ids)])[
+            5:
+        ]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_02_query_limit(self):
-        """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc', limit=5)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc')[:5]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        """Build a recordset with offset, and check equivalence."""
+        partners1 = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], order="id asc", limit=5
+        )
+        partners2 = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], order="id asc"
+        )[:5]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_03_query_offset_limit(self):
-        """ Build a recordset with offset and limit, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc', offset=3, limit=7)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc')[3:10]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        """Build a recordset with offset and limit, and check equivalence."""
+        partners1 = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], order="id asc", offset=3, limit=7
+        )
+        partners2 = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], order="id asc"
+        )[3:10]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_04_query_count(self):
-        """ Test the search_count method. """
+        """Test the search_count method."""
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
-        count2 = self.env['res.partner'].search_count([])
+        count2 = self.env["res.partner"].search_count([])
         self.assertIsInstance(count1, int)
         self.assertIsInstance(count2, int)
         self.assertEqual(count1, count2)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_05_immutable(self):
-        """ Check that a recordset remains the same, even after updates. """
-        domain = [('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)]
-        partners = self.env['res.partner'].search(domain)
+        """Check that a recordset remains the same, even after updates."""
+        domain = [("name", "ilike", "g"), ("id", "in", self.partners.ids)]
+        partners = self.env["res.partner"].search(domain)
         self.assertTrue(partners)
         ids = partners.ids
 
         # modify those partners, and check that partners has not changed
-        partners.write({'active': False})
+        partners.write({"active": False})
         self.assertEqual(ids, partners.ids)
 
         # redo the search, and check that the result is now empty
-        partners2 = self.env['res.partner'].search(domain)
+        partners2 = self.env["res.partner"].search(domain)
         self.assertFalse(partners2)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_06_fields(self):
-        """ Check that relation fields return records, recordsets or nulls. """
+        """Check that relation fields return records, recordsets or nulls."""
         user = self.env.user
-        self.assertIsRecord(user, 'res.users')
-        self.assertIsRecord(user.partner_id, 'res.partner')
-        self.assertIsRecordset(user.group_ids, 'res.groups')
+        self.assertIsRecord(user, "res.users")
+        self.assertIsRecord(user.partner_id, "res.partner")
+        self.assertIsRecordset(user.group_ids, "res.groups")
 
         for name, field in self.partners._fields.items():
-            if field.type == 'many2one':
+            if field.type == "many2one":
                 for p in self.partners:
                     self.assertIsRecord(p[name], field.comodel_name)
-            elif field.type == 'reference':
+            elif field.type == "reference":
                 for p in self.partners:
                     if p[name]:
                         self.assertIsRecord(p[name], field.comodel_name)
-            elif field.type in ('one2many', 'many2many'):
+            elif field.type in ("one2many", "many2many"):
                 for p in self.partners:
                     self.assertIsRecordset(p[name], field.comodel_name)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_07_null(self):
-        """ Check behavior of null instances. """
+        """Check behavior of null instances."""
         # select a partner without a parent
-        partner = self.env['res.partner'].search([('parent_id', '=', False), ('id', 'in', self.partners.ids)])[0]
+        partner = self.env["res.partner"].search(
+            [("parent_id", "=", False), ("id", "in", self.partners.ids)]
+        )[0]
 
         # check partner and related null instances
         self.assertTrue(partner)
-        self.assertIsRecord(partner, 'res.partner')
+        self.assertIsRecord(partner, "res.partner")
 
         self.assertFalse(partner.parent_id)
-        self.assertIsNull(partner.parent_id, 'res.partner')
+        self.assertIsNull(partner.parent_id, "res.partner")
 
         self.assertIs(partner.parent_id.id, False)
 
         self.assertFalse(partner.parent_id.user_id)
-        self.assertIsNull(partner.parent_id.user_id, 'res.users')
+        self.assertIsNull(partner.parent_id.user_id, "res.users")
 
         self.assertIs(partner.parent_id.user_id.name, False)
 
         self.assertFalse(partner.parent_id.user_id.group_ids)
-        self.assertIsRecordset(partner.parent_id.user_id.group_ids, 'res.groups')
+        self.assertIsRecordset(partner.parent_id.user_id.group_ids, "res.groups")
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_40_new_new(self):
-        """ Call new-style methods in the new API style. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)])
+        """Call new-style methods in the new API style."""
+        partners = self.env["res.partner"].search(
+            [("name", "ilike", "g"), ("id", "in", self.partners.ids)]
+        )
         self.assertTrue(partners)
 
         # call method write on partners itself, and check its effect
-        partners.write({'active': False})
+        partners.write({"active": False})
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_45_new_new(self):
-        """ Call new-style methods on records (new API style). """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)])
+        """Call new-style methods on records (new API style)."""
+        partners = self.env["res.partner"].search(
+            [("name", "ilike", "g"), ("id", "in", self.partners.ids)]
+        )
         self.assertTrue(partners)
 
         # call method write on partner records, and check its effects
         for p in partners:
-            p.write({'active': False})
+            p.write({"active": False})
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('odoo.models')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger("odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_model")
     def test_50_environment(self):
-        """ Test environment on records. """
+        """Test environment on records."""
         # partners and reachable records are attached to self.env
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)])
+        partners = self.env["res.partner"].search(
+            [("name", "ilike", "j"), ("id", "in", self.partners.ids)]
+        )
         self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.env, self.env)
@@ -174,15 +192,17 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(p.env, self.env)
 
         # check that the current user can read and modify company data
-        partners[0].company_id.name
-        partners[0].company_id.write({'name': 'Fools'})
+        _ = partners[0].company_id.name
+        partners[0].company_id.write({"name": "Fools"})
 
         # create an environment with a demo user
-        demo = self.env['res.users'].create({
-            'name': 'test_environment_demo',
-            'login': 'test_environment_demo',
-            'password': 'test_environment_demo',
-        })
+        demo = self.env["res.users"].create(
+            {
+                "name": "test_environment_demo",
+                "login": "test_environment_demo",
+                "password": "test_environment_demo",
+            }
+        )
         demo_env = self.env(user=demo)
         self.assertNotEqual(demo_env, self.env)
 
@@ -202,36 +222,46 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(p.env, demo_env)
 
         # demo user can read but not modify company data
-        demo_partner = self.env['res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
-        self.assertTrue(demo_partner.company_id, 'This partner is supposed to be linked to a company')
-        demo_partner.company_id.name
+        demo_partner = (
+            self.env["res.partner"]
+            .search([("name", "=", "Landon Roberts")])
+            .with_user(demo)
+        )
+        self.assertTrue(
+            demo_partner.company_id,
+            "This partner is supposed to be linked to a company",
+        )
+        _ = demo_partner.company_id.name
         with self.assertRaises(AccessError):
-            demo_partner.company_id.write({'name': 'Pricks'})
+            demo_partner.company_id.write({"name": "Pricks"})
 
         # remove demo user from all groups
-        demo.write({'group_ids': [Command.clear()]})
+        demo.write({"group_ids": [Command.clear()]})
 
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):
-            demo_partner.company_id.name
+            _ = demo_partner.company_id.name
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_cache(self):
-        """ Check the record cache behavior """
-        Partners = self.env['res.partner']
-        pids = []
+        """Check the record cache behavior"""
+        Partners = self.env["res.partner"]
         data = {
-            'partner One': ['Partner One - One', 'Partner One - Two'],
-            'Partner Two': ['Partner Two - One'],
-            'Partner Three': ['Partner Three - One'],
+            "partner One": ["Partner One - One", "Partner One - Two"],
+            "Partner Two": ["Partner Two - One"],
+            "Partner Three": ["Partner Three - One"],
         }
-        for p in data:
-            pids.append(Partners.create({
-                'name': p,
-                'child_ids': [Command.create({'name': c}) for c in data[p]],
-            }).id)
+        pids = [
+            Partners.create(
+                {
+                    "name": p,
+                    "child_ids": [Command.create({"name": c}) for c in data[p]],
+                }
+            ).id
+            for p in data
+        ]
 
-        partners = Partners.search([('id', 'in', pids)])
+        partners = Partners.search([("id", "in", pids)])
         partner1, partner2 = partners[0], partners[1]
         children1, children2 = partner1.child_ids, partner2.child_ids
         self.assertTrue(children1)
@@ -245,11 +275,11 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # fetch data in the cache
         for p in partners:
-            p.name, p.company_id.name, p.user_id.name, p.contact_address
+            _ = p.name, p.company_id.name, p.user_id.name, p.contact_address
         self.env.cache.check(self.env)
 
         # change its parent
-        child.write({'parent_id': partner2.id})
+        child.write({"parent_id": partner2.id})
         self.env.cache.check(self.env)
 
         # check recordsets
@@ -265,21 +295,23 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.env.cache.check(self.env)
 
         # check recordsets
-        self.assertEqual(set(partner1.child_ids), set(children1) - set([child]))
+        self.assertEqual(set(partner1.child_ids), set(children1) - {child})
         self.assertEqual(set(partner2.child_ids), set(children2))
         self.env.cache.check(self.env)
 
         # convert from the cache format to the write format
         partner = partner1
-        partner.country_id, partner.child_ids
+        _ = partner.country_id, partner.child_ids
         data = partner._convert_to_write(partner._cache)
-        self.assertEqual(data['country_id'], partner.country_id.id)
-        self.assertEqual(data['child_ids'], [Command.set(partner.child_ids.ids)])
+        self.assertEqual(data["country_id"], partner.country_id.id)
+        self.assertEqual(data["child_ids"], [Command.set(partner.child_ids.ids)])
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_prefetch(self):
-        """ Check the record cache prefetching """
-        partners = self.env['res.partner'].search([('id', 'in', self.partners.ids)], limit=PREFETCH_MAX)
+        """Check the record cache prefetching"""
+        partners = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], limit=PREFETCH_MAX
+        )
         self.assertTrue(len(partners) > 1)
 
         # all the records in partners are ready for prefetching
@@ -289,16 +321,16 @@ class TestAPI(SavepointCaseWithUserDemo):
         for partner in partners:
             state = partner.state_id
             break
-        partner_ids_with_field = [partner.id
-                                  for partner in partners
-                                  if 'state_id' in partner._cache]
+        partner_ids_with_field = [
+            partner.id for partner in partners if "state_id" in partner._cache
+        ]
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
         # partners' states are ready for prefetching
         state_ids = {
-            partner._cache['state_id']
+            partner._cache["state_id"]
             for partner in partners
-            if partner._cache['state_id'] is not None
+            if partner._cache["state_id"] is not None
         }
         self.assertTrue(len(state_ids) > 1)
         self.assertItemsEqual(state_ids, state._prefetch_ids)
@@ -306,15 +338,19 @@ class TestAPI(SavepointCaseWithUserDemo):
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
             if partner.state_id:
-                partner.state_id.name
+                _ = partner.state_id.name
                 break
-        state_ids_with_field = [st.id for st in partners.state_id if 'name' in st._cache]
+        state_ids_with_field = [
+            st.id for st in partners.state_id if "name" in st._cache
+        ]
         self.assertItemsEqual(state_ids_with_field, state_ids)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_prefetch_model(self):
-        """ Check the prefetching model. """
-        partners = self.env['res.partner'].search([('id', 'in', self.partners.ids)], limit=PREFETCH_MAX)
+        """Check the prefetching model."""
+        partners = self.env["res.partner"].search(
+            [("id", "in", self.partners.ids)], limit=PREFETCH_MAX
+        )
         self.assertTrue(partners)
 
         def same_prefetch(a, b):
@@ -335,21 +371,21 @@ class TestAPI(SavepointCaseWithUserDemo):
         same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
 
         # iteration and relational fields should use the same prefetch set
-        self.assertEqual(type(partners).country_id.type, 'many2one')
-        self.assertEqual(type(partners).bank_ids.type, 'one2many')
-        self.assertEqual(type(partners).category_id.type, 'many2many')
+        self.assertEqual(type(partners).country_id.type, "many2one")
+        self.assertEqual(type(partners).bank_ids.type, "one2many")
+        self.assertEqual(type(partners).category_id.type, "many2many")
 
         vals0 = {
-            'name': 'Empty relational fields',
-            'country_id': False,
-            'bank_ids': [],
-            'category_id': [],
+            "name": "Empty relational fields",
+            "country_id": False,
+            "bank_ids": [],
+            "category_id": [],
         }
         vals1 = {
-            'name': 'Non-empty relational fields',
-            'country_id': self.ref('base.be'),
-            'bank_ids': [Command.create({'acc_number': 'FOO42'})],
-            'category_id': [Command.link(self.partner_category.id)],
+            "name": "Non-empty relational fields",
+            "country_id": self.ref("base.be"),
+            "bank_ids": [Command.create({"acc_number": "FOO42"})],
+            "category_id": [Command.link(self.partner_category.id)],
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:
@@ -358,30 +394,30 @@ class TestAPI(SavepointCaseWithUserDemo):
             same_prefetch(partner.bank_ids, partners.bank_ids)
             same_prefetch(partner.category_id, partners.category_id)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_prefetch_read(self):
-        """ Check that reading a field computes it on self only. """
-        Partner = self.env['res.partner']
+        """Check that reading a field computes it on self only."""
+        Partner = self.env["res.partner"]
         field = type(Partner).company_type
         self.assertTrue(field.compute and not field.store)
 
-        partner1 = Partner.create({'name': 'Foo'})
-        partner2 = Partner.create({'name': 'Bar', 'parent_id': partner1.id})
+        partner1 = Partner.create({"name": "Foo"})
+        partner2 = Partner.create({"name": "Bar", "parent_id": partner1.id})
         self.assertEqual(partner1.child_ids, partner2)
 
         # reading partner1 should not prefetch 'company_type' on partner2
         self.env.clear()
         partner1 = partner1.with_prefetch()
-        partner1.read(['company_type'])
-        self.assertIn('company_type', partner1._cache)
-        self.assertNotIn('company_type', partner2._cache)
+        partner1.read(["company_type"])
+        self.assertIn("company_type", partner1._cache)
+        self.assertNotIn("company_type", partner2._cache)
 
         # reading partner1 should not prefetch 'company_type' on partner2
         self.env.clear()
         partner1 = partner1.with_prefetch()
-        partner1.read(['child_ids', 'company_type'])
-        self.assertIn('company_type', partner1._cache)
-        self.assertNotIn('company_type', partner2._cache)
+        partner1.read(["child_ids", "company_type"])
+        self.assertIn("company_type", partner1._cache)
+        self.assertNotIn("company_type", partner2._cache)
 
     def test_60_reversed(self):
         records = self.partners
@@ -407,11 +443,11 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # check prefetching across many2one field
         prefetch_ids = records.state_id.ids
-        reversed_ids = list(unique(
-            record.state_id.id
-            for record in reversed(records)
-            if record.state_id
-        ))
+        reversed_ids = list(
+            unique(
+                record.state_id.id for record in reversed(records) if record.state_id
+            )
+        )
 
         self.assertEqual(list(first.state_id._prefetch_ids), prefetch_ids)
         self.assertEqual(list(last.state_id._prefetch_ids), reversed_ids)
@@ -421,11 +457,11 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # check prefetching across x2many field
         prefetch_ids = records.child_ids.ids
-        reversed_ids = list(unique(
-            child.id
-            for record in reversed(records)
-            for child in record.child_ids
-        ))
+        reversed_ids = list(
+            unique(
+                child.id for record in reversed(records) for child in record.child_ids
+            )
+        )
 
         self.assertEqual(list(first.child_ids._prefetch_ids), prefetch_ids)
         self.assertEqual(list(last.child_ids._prefetch_ids), reversed_ids)
@@ -433,11 +469,13 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(list(reversed(first.child_ids._prefetch_ids)), reversed_ids)
         self.assertEqual(list(reversed(last.child_ids._prefetch_ids)), prefetch_ids)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_70_one(self):
-        """ Check method one(). """
+        """Check method one()."""
         # check with many records
-        ps = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
+        ps = self.env["res.partner"].search(
+            [("name", "ilike", "a"), ("id", "in", self.partners.ids)]
+        )
         self.assertTrue(len(ps) > 1)
         with self.assertRaises(ValueError):
             ps.ensure_one()
@@ -446,40 +484,54 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(len(p1), 1)
         self.assertEqual(p1.ensure_one(), p1)
 
-        p0 = self.env['res.partner'].browse()
+        p0 = self.env["res.partner"].browse()
         self.assertEqual(len(p0), 0)
         with self.assertRaises(ValueError):
             p0.ensure_one()
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_contains(self):
-        """ Test membership on recordset. """
+        """Test membership on recordset."""
         p1 = self.partners[0]
         ps = self.partners
         self.assertTrue(p1 in ps)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+        with self.assertRaisesRegex(
+            TypeError, r"unsupported operand types in: 42 in res\.partner.*"
+        ):
             _ = 42 in ps
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
-            _ = self.env['ir.ui.menu'] in ps
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*",
+        ):
+            _ = self.env["ir.ui.menu"] in ps
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_lazy_contains(self):
-        """ Test membership on recordset. """
+        """Test membership on recordset."""
         p1 = lazy(lambda: self.partners[0])
         ps = lazy(lambda: self.partners)
         self.assertTrue(p1 in ps)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+        with self.assertRaisesRegex(
+            TypeError, r"unsupported operand types in: 42 in res\.partner.*"
+        ):
             _ = lazy(lambda: 42) in ps
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
-            _ = lazy(lambda: self.env['ir.ui.menu']) in ps
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*",
+        ):
+            _ = lazy(lambda: self.env["ir.ui.menu"]) in ps
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_set_operations(self):
-        """ Check set operations on recordsets. """
-        pa = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
-        pb = self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)])
+        """Check set operations on recordsets."""
+        pa = self.env["res.partner"].search(
+            [("name", "ilike", "a"), ("id", "in", self.partners.ids)]
+        )
+        pb = self.env["res.partner"].search(
+            [("name", "ilike", "b"), ("id", "in", self.partners.ids)]
+        )
 
         self.assertTrue(pa)
         self.assertTrue(pb)
@@ -508,19 +560,34 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # one cannot mix different models with set operations
         ps = pa
-        ms = self.env['ir.ui.menu'].search([])
+        ms = self.env["ir.ui.menu"].search([])
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
-            _ = ps + 'string'
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"unsupported operand types in: res\.partner.* \+ 'string'",
+        ):
+            _ = ps + "string"
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*",
+        ):
             _ = ps + ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*",
+        ):
             _ = ps - ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*",
+        ):
             _ = ps & ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*",
+        ):
             _ = ps | ms
         with self.assertRaises(TypeError):
             _ = ps < ms
@@ -531,11 +598,19 @@ class TestAPI(SavepointCaseWithUserDemo):
         with self.assertRaises(TypeError):
             _ = ps >= ms
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_lazy_set_operations(self):
-        """ Check set operations on recordsets. """
-        pa = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)]))
-        pb = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)]))
+        """Check set operations on recordsets."""
+        pa = lazy(
+            lambda: self.env["res.partner"].search(
+                [("name", "ilike", "a"), ("id", "in", self.partners.ids)]
+            )
+        )
+        pb = lazy(
+            lambda: self.env["res.partner"].search(
+                [("name", "ilike", "b"), ("id", "in", self.partners.ids)]
+            )
+        )
 
         self.assertTrue(pa)
         self.assertTrue(pb)
@@ -564,19 +639,34 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # one cannot mix different models with set operations
         ps = pa
-        ms = lazy(lambda: self.env['ir.ui.menu'].search([]))
+        ms = lazy(lambda: self.env["ir.ui.menu"].search([]))
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
-            _ = ps + 'string'
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"unsupported operand types in: res\.partner.* \+ 'string'",
+        ):
+            _ = ps + "string"
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*",
+        ):
             _ = ps + ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*",
+        ):
             _ = ps - ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*",
+        ):
             _ = ps & ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*",
+        ):
             _ = ps | ms
         with self.assertRaises(TypeError):
             _ = ps < ms
@@ -587,25 +677,25 @@ class TestAPI(SavepointCaseWithUserDemo):
         with self.assertRaises(TypeError):
             _ = ps >= ms
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_filter(self):
-        """ Check filter on recordsets. """
+        """Check filter on recordsets."""
         ps = self.partners
         customers = ps.browse([p.id for p in ps if p.employee])
 
         # filter on a single field
         self.assertEqual(ps.filtered(lambda p: p.employee), customers)
-        self.assertEqual(ps.filtered('employee'), customers)
+        self.assertEqual(ps.filtered("employee"), customers)
 
         # filter on a sequence of fields
         self.assertEqual(
             ps.filtered(lambda p: p.parent_id.employee),
-            ps.filtered('parent_id.employee')
+            ps.filtered("parent_id.employee"),
         )
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_map(self):
-        """ Check map on recordsets. """
+        """Check map on recordsets."""
         ps = self.partners
         parents = ps.browse()
         for p in ps:
@@ -613,56 +703,52 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # map a single field
         self.assertEqual(ps.mapped(lambda p: p.parent_id), parents)
-        self.assertEqual(ps.mapped('parent_id'), parents)
+        self.assertEqual(ps.mapped("parent_id"), parents)
         self.assertEqual(ps.parent_id, parents)
 
         # map a sequence of fields
         self.assertEqual(
             ps.mapped(lambda p: p.parent_id.name),
-            [p.parent_id.name for p in ps]
+            [p.parent_id.name for p in ps],
         )
-        self.assertEqual(
-            ps.mapped('parent_id.name'),
-            [p.name for p in parents]
-        )
-        self.assertEqual(
-            ps.parent_id.mapped('name'),
-            [p.name for p in parents]
-        )
+        self.assertEqual(ps.mapped("parent_id.name"), [p.name for p in parents])
+        self.assertEqual(ps.parent_id.mapped("name"), [p.name for p in parents])
 
         # map an empty sequence of fields
-        self.assertEqual(ps.mapped(''), ps)
+        self.assertEqual(ps.mapped(""), ps)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_sorted(self):
-        """ Check sorted on recordsets. """
-        ps = self.env['res.partner'].search([('id', 'in', self.partners.ids)])
+        """Check sorted on recordsets."""
+        ps = self.env["res.partner"].search([("id", "in", self.partners.ids)])
 
         # sort by model order
-        qs = ps[:len(ps) // 2] + ps[len(ps) // 2:]
+        qs = ps[: len(ps) // 2] + ps[len(ps) // 2 :]
         self.assertEqual(qs.sorted().ids, ps.ids)
 
         # sort by name, with a function or a field name
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name)]
         self.assertEqual(ps.sorted(lambda p: p.name).ids, by_name_ids)
-        self.assertEqual(ps.sorted('name').ids, by_name_ids)
+        self.assertEqual(ps.sorted("name").ids, by_name_ids)
 
         # sort by inverse name, with a field name
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
-        self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+        self.assertEqual(ps.sorted("name", reverse=True).ids, by_name_ids)
 
     def test_group_on(self):
-        p0, p1, p2 = self.env['res.partner'].create([
-            {'name': "bob", 'function': "guest"},
-            {'name': "james", 'function': "host"},
-            {'name': "rhod", 'function': "guest"}
-        ])
-        pn = self.env['res.partner'].new({'name': 'alex', 'function': "host"})
+        p0, p1, p2 = self.env["res.partner"].create(
+            [
+                {"name": "bob", "function": "guest"},
+                {"name": "james", "function": "host"},
+                {"name": "rhod", "function": "guest"},
+            ]
+        )
+        pn = self.env["res.partner"].new({"name": "alex", "function": "host"})
 
         with self.subTest("Should work with mixes of db and new records"):
             self.assertEqual(
-                (p0 | p1 | p2 | pn).grouped('function'),
-                {'guest': p0 | p2, 'host': p1 | pn}
+                (p0 | p1 | p2 | pn).grouped("function"),
+                {"guest": p0 | p2, "host": p1 | pn},
             )
             self.assertEqual(
                 (p0 | p1 | p2 | pn).grouped(lambda r: len(r.name)),
@@ -670,11 +756,14 @@ class TestAPI(SavepointCaseWithUserDemo):
             )
 
         with self.subTest("Should allow cross-group prefetching"):
-            byfn = (p0 | p1 | p2).grouped('function')
+            byfn = (p0 | p1 | p2).grouped("function")
             self.env.invalidate_all(flush=False)
-            self.assertFalse(self.env.transaction.field_data, "ensure the cache is empty")
-            self.assertEqual(byfn['guest'].mapped('name'), ['bob', 'rhod'])
+            self.assertFalse(
+                dict(self.env._core.iter_field_items()),
+                "ensure the cache is empty",
+            )
+            self.assertEqual(byfn["guest"].mapped("name"), ["bob", "rhod"])
             # name should have been prefetched by previous statement (on guest
             # group), so should be nothing here
             with self.assertQueries([]):
-                _ = byfn['host'].name
+                _ = byfn["host"].name

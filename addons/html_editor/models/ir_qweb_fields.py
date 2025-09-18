@@ -11,9 +11,9 @@ import base64
 import io
 import json
 import logging
-import os
 import re
 from datetime import datetime
+from pathlib import Path
 
 import babel
 import pytz
@@ -21,7 +21,7 @@ import requests
 from lxml import etree, html
 from markupsafe import Markup, escape_silent
 from PIL import Image as I
-from werkzeug import urls
+from urllib.parse import parse_qs, urlsplit
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
@@ -490,10 +490,10 @@ class IrQwebFieldImage(models.AbstractModel):
             return False
         url = element.find('img').get('src')
 
-        url_object = urls.url_parse(url)
+        url_object = urlsplit(url)
         if url_object.path.startswith('/web/image'):
             fragments = url_object.path.split('/')
-            query = url_object.decode_query()
+            query = {k: v[0] for k, v in parse_qs(url_object.query).items()}
             url_id = fragments[3].split('-')[0]
             # ir.attachment image urls: /web/image/<id>[-<checksum>][/...]
             if url_id.isdigit():
@@ -516,11 +516,10 @@ class IrQwebFieldImage(models.AbstractModel):
         return self.load_remote_url(url)
 
     def load_local_url(self, url):
-        match = self.local_url_re.match(urls.url_parse(url).path)
+        match = self.local_url_re.match(urlsplit(url).path)
         rest = match.group('rest')
 
-        path = os.path.join(
-            match.group('module'), 'static', rest)
+        path = str(Path(match.group('module')) / 'static' / rest)
 
         try:
             with file_open(path, 'rb') as f:

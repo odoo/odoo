@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { floatField, FloatField } from "@web/views/fields/float/float_field";
+import { floatField, FloatField } from "@web/fields/basic/float/float_field";
 
 const fieldRegistry = registry.category("fields");
 

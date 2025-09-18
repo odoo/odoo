@@ -1,4 +1,4 @@
-import { intersection } from "@web/core/utils/arrays";
+import { intersection } from "@web/core/utils/collections/arrays";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { App, Component } from "@odoo/owl";
@@ -88,20 +88,22 @@ function autocompleteWithPages(input, options = {}, env = undefined) {
 }
 
 /**
- * @param {jQuery} $element
- * @param {jQuery} [$excluded]
+ * @param {HTMLElement} element
+ * @param {HTMLElement} [excluded]
  */
-function onceAllImagesLoaded($element, $excluded) {
-    var defs = Array.from($element.find("img").addBack("img")).map((img) => {
-        if (img.complete || ($excluded && ($excluded.is(img) || $excluded.has(img).length))) {
+function onceAllImagesLoaded(element, excluded) {
+    // Collect all <img> descendants, plus the element itself if it's an <img>
+    const imgs = [...element.querySelectorAll("img")];
+    if (element.tagName === "IMG") {
+        imgs.push(element);
+    }
+    var defs = imgs.map((img) => {
+        if (img.complete || (excluded && (excluded === img || excluded.contains(img)))) {
             return; // Already loaded
         }
-        var def = new Promise(function (resolve, reject) {
-            $(img).one("load", function () {
-                resolve();
-            });
+        return new Promise(function (resolve) {
+            img.addEventListener("load", resolve, { once: true });
         });
-        return def;
     });
     return Promise.all(defs);
 }
@@ -165,18 +167,18 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = new Promise(function (resolve, reject) {
-        var dialog = $(renderToElement(_qweb, options)).appendTo("body");
+        var dialog = renderToElement(_qweb, options);
+        document.body.appendChild(dialog);
         options.$dialog = dialog;
-        var field = dialog.find(options.field_type).first();
-        field.val(options["default"]); // dict notation for IE<9
+        var field = dialog.querySelector(options.field_type);
+        field.value = options["default"];
         field.fillWith = function (data) {
-            if (field.is("select")) {
-                var select = field[0];
+            if (field.tagName === "SELECT") {
                 data.forEach(function (item) {
-                    select.options[select.options.length] = new window.Option(item[1], item[0]);
+                    field.options[field.options.length] = new window.Option(item[1], item[0]);
                 });
             } else {
-                field.val(data);
+                field.value = data;
             }
         };
         var init = options.init(field, dialog);
@@ -184,26 +186,28 @@ function prompt(options, _qweb) {
             if (fill) {
                 field.fillWith(fill);
             }
-            dialog.modal("show");
+            const bsModal = window.Modal.getOrCreateInstance(dialog);
+            bsModal.show();
             field.focus();
-            dialog.on("click", ".btn-primary", function () {
-                var backdrop = $(".modal-backdrop");
-                resolve({ val: field.val(), field: field, dialog: dialog });
-                dialog.modal("hide").remove();
-                backdrop.remove();
+            dialog.addEventListener("click", function (e) {
+                if (e.target.closest(".btn-primary")) {
+                    resolve({ val: field.value, field: field, dialog: dialog });
+                    bsModal.hide();
+                    dialog.remove();
+                    document.querySelector(".modal-backdrop")?.remove();
+                }
             });
         });
-        dialog.on("hidden.bs.modal", function () {
-            var backdrop = $(".modal-backdrop");
+        dialog.addEventListener("hidden.bs.modal", function () {
             reject();
             dialog.remove();
-            backdrop.remove();
+            document.querySelector(".modal-backdrop")?.remove();
         });
-        if (field.is('input[type="text"], select')) {
-            field.keypress(function (e) {
+        if (field.matches('input[type="text"], select')) {
+            field.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
-                    dialog.find(".btn-primary").trigger("click");
+                    dialog.querySelector(".btn-primary")?.click();
                 }
             });
         }

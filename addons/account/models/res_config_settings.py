@@ -205,8 +205,8 @@ class ResConfigSettings(models.TransientModel):
 
     # Autopost of bills
     autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)
-    income_account_id = fields.Many2one(related='company_id.income_account_id', readonly=False)
-    expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False)
+    income_account_id = fields.Many2one(related='company_id.income_account_id', readonly=False, check_company=True)
+    expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False, check_company=True)
 
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):

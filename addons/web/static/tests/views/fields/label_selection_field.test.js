@@ -1,7 +1,15 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char();
@@ -46,16 +54,20 @@ test("LabelSelectionField in form view", async () => {
     });
 
     expect(".o_field_widget .badge.text-bg-warning").toHaveCount(1, {
-        message: "should have a warning status label since selection is the second, blocked state",
+        message:
+            "should have a warning status label since selection is the second, blocked state",
     });
     expect(".o_field_widget .badge.text-bg-secondary").toHaveCount(0, {
-        message: "should not have a default status since selection is the second, blocked state",
+        message:
+            "should not have a default status since selection is the second, blocked state",
     });
     expect(".o_field_widget .badge.text-bg-success").toHaveCount(0, {
-        message: "should not have a success status since selection is the second, blocked state",
+        message:
+            "should not have a success status since selection is the second, blocked state",
     });
     expect(".o_field_widget .badge.text-bg-warning").toHaveText("Blocked", {
-        message: "the label should say 'Blocked' since this is the label value for that state",
+        message:
+            "the label should say 'Blocked' since this is the label value for that state",
     });
 });
 

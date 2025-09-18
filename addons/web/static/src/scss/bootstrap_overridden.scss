@@ -56,8 +56,8 @@ $enable-negative-margins: true !default;
 // Enable CSS Grid classes
 $enable-cssgrid: true !default;
 
-// Disable BS5's dark mode until we actually use it for our own dark mode implementation
-$enable-dark-mode: false !default;
+// Enable BS5 dark mode for our dark mode implementation
+$enable-dark-mode: true !default;
 
 // Spacing
 $spacer: $o-spacer !default;
@@ -124,14 +124,14 @@ $line-height-base: $o-line-height-base !default;
 $line-height-sm: $o-line-height-sm !default;
 $line-height-lg: $o-line-height-lg !default;
 
-$h1-font-size: $font-size-base * 2.0 !default;
-$h2-font-size: $font-size-base * 1.5 !default;
-$h3-font-size: $font-size-base * 1.3 !default;
+$h1-font-size: $font-size-base * 2.25 !default;
+$h2-font-size: $font-size-base * 1.75 !default;
+$h3-font-size: $font-size-base * 1.375 !default;
 $h4-font-size: $font-size-base * 1.2 !default;
 $h5-font-size: $font-size-base * 1.1 !default;
 
 $headings-font-family: $o-headings-font-family !default;
-$headings-font-weight: $font-weight-bold !default;
+$headings-font-weight: $o-font-weight-semibold !default;
 $headings-color: $o-main-headings-color !default;
 
 // Tables
@@ -158,14 +158,14 @@ $table-th-font-weight: $headings-font-weight !default;
 //
 // Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
 
-$input-btn-padding-y: o-to-rem(5) !default;
-$input-btn-padding-x: o-to-rem(10) !default;
+$input-btn-padding-y: o-to-rem(6) !default;
+$input-btn-padding-x: o-to-rem(12) !default;
 
-$input-btn-padding-y-sm: o-to-rem(3) !default;
+$input-btn-padding-y-sm: o-to-rem(4) !default;
 $input-btn-padding-x-sm: o-to-rem(8) !default;
 
-$input-btn-padding-y-lg: o-to-rem(6) !default;
-$input-btn-padding-x-lg: o-to-rem(12) !default;
+$input-btn-padding-y-lg: o-to-rem(8) !default;
+$input-btn-padding-x-lg: o-to-rem(16) !default;
 
 // Buttons
 //
@@ -257,6 +257,7 @@ $toast-header-background-color: $toast-background-color !default;
 
 // Padding applied to the modal body
 $modal-inner-padding: $o-horizontal-padding !default;
+$modal-content-color: null !default;
 $modal-footer-margin-between: 1px !default;
 
 $modal-lg: $o-modal-lg !default;

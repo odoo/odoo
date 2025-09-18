@@ -3,7 +3,9 @@ import { registry } from "@web/core/registry";
 
 function assertEqual(actual, expected) {
     if (actual !== expected) {
-        throw new Error(`Assert failed: expected: ${expected} ; got: ${actual}`);
+        throw new Error(
+            `Assert failed: expected: ${expected} ; got: ${actual}`,
+        );
     }
 }
 
@@ -24,15 +26,20 @@ registry.category("web_tour.tours").add("test_company_access_error_redirect", {
             trigger: ".o-dropdown--menu",
             run() {
                 assertEqual(
-                    document.querySelectorAll(".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]")
-                        .length,
-                    2
+                    document.querySelectorAll(
+                        ".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]",
+                    ).length,
+                    2,
                 );
                 assertEqual(
                     cookie.get("cids"),
-                    [...document.querySelectorAll(".o_switch_company_item[data-company-id]")]
+                    [
+                        ...document.querySelectorAll(
+                            ".o_switch_company_item[data-company-id]",
+                        ),
+                    ]
                         .flatMap((x) => x.getAttribute("data-company-id"))
-                        .join("-")
+                        .join("-"),
                 );
             },
         },

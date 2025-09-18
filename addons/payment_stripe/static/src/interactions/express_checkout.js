@@ -18,7 +18,7 @@ patch(ExpressCheckout.prototype, {
      */
     _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        const minorAmount = parseInt(this.paymentContext['minorAmount']);
+        const minorAmount = parseInt(this.paymentContext['minorAmount'] || 0);
         const displayItems = [{
             label: _t("Your order"),
             amount: minorAmount,

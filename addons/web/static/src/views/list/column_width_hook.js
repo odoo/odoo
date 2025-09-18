@@ -1,12 +1,6 @@
-import { renderToElement } from "@web/core/utils/render";
-import { useDebounced } from "@web/core/utils/timing";
-import {
-    formatDate,
-    formatDateTime,
-    toLocaleDateString,
-    toLocaleDateTimeString,
-} from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
+// @ts-check
+
+/** @module @web/views/list/column_width_hook - Column width calculation, min/max enforcement, and resize-freeze hook for list view */
 
 import {
     onMounted,
@@ -15,9 +9,7 @@ import {
     useComponent,
     useEffect,
     useExternalListener,
-    xml,
 } from "@odoo/owl";
-
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
 // to ensure that the columns don't flicker. This hook is meant to be used by the ListRenderer only,
@@ -60,115 +52,18 @@ import {
 // change (e.g. optional column toggled), if the window is resized, if we remove a filter or open
 // a group s.t. the list contains records for the first time, we forget the computed widths and
 // start over.
-
 // Hardcoded widths
+import { localization } from "@web/core/l10n/localization";
+import { useDebounced } from "@web/core/utils/timing";
+import { FIELD_WIDTHS, resetDateFieldWidths } from "@web/fields/field_widths";
+
+// Re-export for backward compatibility — canonical import is @web/fields/field_widths
+export { FIELD_WIDTHS, resetDateFieldWidths };
+
 const DEFAULT_MIN_WIDTH = 80;
 const SELECTOR_WIDTH = 20;
 const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
 const DELETE_BUTTON_WIDTH = 12;
-let _dateWidths = null; // computed dynamically, lazily, see @computeOptimalDateWidths
-export const FIELD_WIDTHS = Object.freeze({
-    boolean: [20, 100], // [minWidth, maxWidth]
-    char: [80], // only minWidth, no maxWidth
-    get date() {
-        if (!_dateWidths) {
-            computeOptimalDateWidths();
-        }
-        return _dateWidths.date;
-    },
-    get datetime() {
-        if (!_dateWidths) {
-            computeOptimalDateWidths();
-        }
-        return _dateWidths.datetime;
-    },
-    get numeric_date() {
-        if (!_dateWidths) {
-            computeOptimalDateWidths();
-        }
-        return _dateWidths.numericDate;
-    },
-    get numeric_datetime() {
-        if (!_dateWidths) {
-            computeOptimalDateWidths();
-        }
-        return _dateWidths.numericDatetime;
-    },
-    float: 93,
-    integer: 71,
-    many2many: [80],
-    many2one_reference: [80],
-    many2one: [80],
-    monetary: 105,
-    one2many: [80],
-    reference: [80],
-    selection: [80],
-    text: [80, 1200],
-});
-
-export function resetDateFieldWidths() {
-    // useful for tests
-    _dateWidths = null;
-}
-
-/**
- * Compute ideal date and datetime widths. There's no static value for them as they depend on the
- * localization. Moreover, as we want to have the exact minimum width necessary, it also depends on
- * the fonts (we never want to see "..." in date fields). So we render date(time) values, we insert
- * them into the DOM and compute their width.
- */
-function computeOptimalDateWidths() {
-    const { timeFormat } = localization;
-    const values = {
-        date: [],
-        datetime: [],
-        numericDate: [],
-        numericDatetime: [],
-    };
-    // dates in the "human readable" format (must generate a date by month as width could vary)
-    for (let month = 1; month <= 12; month++) {
-        values.date.push(toLocaleDateString(luxon.DateTime.local(2017, month, 20)));
-        values.datetime.push(
-            toLocaleDateTimeString(luxon.DateTime.local(2017, month, 25, 10, 0, 0), {
-                showSeconds: true,
-            })
-        );
-        if (timeFormat === "hh:mm:ss a") {
-            // generate a date in the afternoon if time is displayed with AM/PM or equivalent
-            values.datetime.push(
-                toLocaleDateTimeString(luxon.DateTime.local(2017, month, 25, 22, 0, 0), {
-                    showSeconds: true,
-                })
-            );
-        }
-    }
-    // dates in the "numeric" format
-    values.numericDate.push(formatDate(luxon.DateTime.local(2017, 1, 1)));
-    values.numericDatetime.push(formatDateTime(luxon.DateTime.local(2017, 1, 1, 10, 0, 0)));
-    if (timeFormat === "hh:mm:ss a") {
-        // generate a date in the afternoon if time is displayed with AM/PM or equivalent
-        values.numericDatetime.push(formatDateTime(luxon.DateTime.local(2017, 1, 1, 22, 0, 0)));
-    }
-
-    const template = xml`
-        <div class="invisible" style="font-variant-numeric: tabular-nums;">
-            <div t-foreach="Object.keys(values)" t-as="key" t-key="key" t-att-class="key">
-                <div t-foreach="values[key]" t-as="value" t-key="value_index">
-                    <span t-esc="value"/>
-                </div>
-            </div>
-        </div>`;
-    const div = renderToElement(template, { values });
-    document.body.append(div);
-    _dateWidths = {};
-    for (const key in values) {
-        const spans = div.querySelectorAll(`.${key} span`);
-        const widths = [...spans].map((span) => span.getBoundingClientRect().width);
-        // add a 5% margin to cope with potential bold decorations
-        _dateWidths[key] = Math.ceil(Math.max(...widths) * 1.05);
-    }
-    document.body.removeChild(div);
-}
 
 /**
  * Compute ideal widths based on the rules described on top of this file.
@@ -286,7 +181,10 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
             const colDiff = diff / remainingExpandableColumns;
             for (const { thIndex, maxWidth } of expandableColumns) {
                 const currentWidth = _columnWidths[thIndex];
-                const newWidth = Math.min(currentWidth + colDiff, maxWidth || Number.MAX_VALUE);
+                const newWidth = Math.min(
+                    currentWidth + colDiff,
+                    maxWidth || Number.MAX_VALUE,
+                );
                 diff -= newWidth - currentWidth;
                 _columnWidths[thIndex] = newWidth;
                 if (newWidth === maxWidth) {
@@ -400,8 +298,12 @@ export function useMagicColumnWidths(tableRef, getState) {
 
         const parentPadding = getHorizontalPadding(table.parentNode);
         const cellPaddings = headers.map((th) => getHorizontalPadding(th));
-        const totalCellPadding = cellPaddings.reduce((total, padding) => padding + total, 0);
-        const nextAllowedWidth = table.parentNode.clientWidth - parentPadding - totalCellPadding;
+        const totalCellPadding = cellPaddings.reduce(
+            (total, padding) => padding + total,
+            0,
+        );
+        const nextAllowedWidth =
+            table.parentNode.clientWidth - parentPadding - totalCellPadding;
         const allowedWidthDiff = Math.abs(allowedWidth - nextAllowedWidth);
         allowedWidth = nextAllowedWidth;
 
@@ -440,7 +342,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     function onStartResize(ev) {
         _resizing = true;
         const table = tableRef.el;
-        const th = ev.target.closest("th");
+        const th = /** @type {HTMLElement} */ (ev.target).closest("th");
         table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName("tr")]
@@ -455,7 +357,7 @@ export function useMagicColumnWidths(tableRef, getState) {
         if (!table.parentElement.style.width) {
             parentWidthFixed = true;
             table.parentElement.style.width = `${Math.floor(
-                table.parentElement.getBoundingClientRect().width
+                table.parentElement.getBoundingClientRect().width,
             )}px`;
         }
 
@@ -483,7 +385,7 @@ export function useMagicColumnWidths(tableRef, getState) {
             // Store current column widths to freeze them
             const headers = [...table.querySelectorAll("thead th")];
             columnWidths = headers.map(
-                (th) => th.getBoundingClientRect().width - getHorizontalPadding(th)
+                (th) => th.getBoundingClientRect().width - getHorizontalPadding(th),
             );
 
             // Ignores the 'left mouse button down' event as it used to start resizing
@@ -505,7 +407,7 @@ export function useMagicColumnWidths(tableRef, getState) {
             // We remove the focus to make sure that the there is no focus inside
             // the tr.  If that is the case, there is some css to darken the whole
             // thead, and it looks quite weird with the small css hover effect.
-            document.activeElement.blur();
+            /** @type {HTMLElement} */ (document.activeElement).blur();
         };
         // We have to listen to several events to properly stop the resizing function. Those are:
         // - pointerdown (e.g. pressing right click)
@@ -525,7 +427,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     }
 
     // Side effects
-    if (renderer.constructor.useMagicColumnWidths) {
+    if (/** @type {any} */ (renderer.constructor).useMagicColumnWidths) {
         useEffect(forceColumnWidths);
         // Forget computed widths (and potential manual column resize) on window resize
         useExternalListener(window, "resize", unsetWidths);
@@ -544,7 +446,7 @@ export function useMagicColumnWidths(tableRef, getState) {
                 }
             },
             200,
-            { immediate: true, trailing: true }
+            { immediate: true, trailing: true },
         );
         const resizeObserver = new ResizeObserver(() => {
             const newParentWidth = tableRef.el.parentNode.clientWidth;

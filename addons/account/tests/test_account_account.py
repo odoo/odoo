@@ -3,7 +3,7 @@ from odoo.addons.account.tests.common import TestAccountMergeCommon
 from odoo.tests import Form, tagged, new_test_user
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
-import psycopg2
+import psycopg
 from freezegun import freeze_time
 
 @tagged('post_install', '-at_install')
@@ -366,7 +366,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError):
             self.env['account.account'].name_create('550003 Existing Account')
         # account code is mandatory and providing a name without a code should raise an error
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg.DatabaseError), mute_logger('odoo.db'):
             self.env['account.account'].with_context(import_file=True).name_create('Existing Account')
         account_id = self.env['account.account'].with_context(import_file=True).name_create('550003 Existing Account')[0]
         account = self.env['account.account'].browse(account_id)
@@ -465,7 +465,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         account_payable._compute_current_balance()
         self.assertEqual(account_payable.current_balance, -100)
 
-        self.env['account.move'].create(payable_credit_move).button_cancel()
+        self.env['account.move'].create(payable_credit_move).action_cancel()
         account_payable._compute_current_balance()
         self.assertEqual(account_payable.current_balance, -100, 'Canceled invoices/bills should not be used when computing the balance')
 

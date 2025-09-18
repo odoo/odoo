@@ -1,9 +1,7 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
-
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
-
 /** @type {import("models").Store} */
 const storeServicePatch = {
     /** @override */
@@ -20,7 +18,7 @@ const storeServicePatch = {
         this.channel_types_with_seen_infos = [];
         this.updateBusSubscription = debounce(
             () => this.env.services.bus_service.forceUpdateChannels(),
-            0
+            0,
         );
     },
     get onlineMemberStatuses() {
@@ -37,14 +35,16 @@ const storeServicePatch = {
         const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
             { default_display_mode, partners_to, name },
-            { readonly: false, requestData: true }
+            { readonly: false, requestData: true },
         );
         await channel.open({ focus: true });
         return channel;
     },
     /** @param {number} channelId */
     async fetchChannel(channelId) {
-        const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
+        const fetchParam = this.fetchParams.find(
+            ([name]) => name === "discuss.channel",
+        );
         if (fetchParam) {
             const [, channelIds, dataRequest] = fetchParam;
             channelIds.push(channelId);
@@ -61,8 +61,14 @@ const storeServicePatch = {
      */
     getRecentChatPartnerIds() {
         return Object.values(this.Thread.records)
-            .filter((thread) => thread.channel_type === "chat" && thread.correspondent?.partner_id)
-            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
+            .filter(
+                (thread) =>
+                    thread.channel_type === "chat" && thread.correspondent?.partner_id,
+            )
+            .sort(
+                (a, b) =>
+                    compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+            )
             .map((thread) => thread.correspondent.partner_id.id);
     },
     /**
@@ -80,7 +86,7 @@ const storeServicePatch = {
             chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
+                (partnerId) => partnerId !== this.store.self.id,
             );
             const chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true, bypassCompact: true });

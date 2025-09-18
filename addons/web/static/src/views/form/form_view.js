@@ -1,10 +1,16 @@
+// @ts-check
+
+/** @module @web/views/form/form_view - View registry descriptor for the standard form view */
+
 import { registry } from "@web/core/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { FormRenderer } from "./form_renderer";
-import { FormArchParser } from "./form_arch_parser";
-import { FormController } from "./form_controller";
-import { FormCompiler } from "./form_compiler";
 
+import { FormArchParser } from "./form_arch_parser";
+import { FormCompiler } from "./form_compiler";
+import { FormController } from "./form_controller";
+import { FormRenderer } from "./form_renderer";
+
+/** View registry descriptor for the standard form view. */
 export const formView = {
     type: "form",
     searchMenuTypes: [],
@@ -24,7 +30,8 @@ export const formView = {
             ...genericProps,
             readonly:
                 genericProps.readonly ||
-                (archInfo.activeActions?.edit === false && genericProps.resId !== false),
+                (archInfo.activeActions?.edit === false &&
+                    genericProps.resId !== false),
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: genericProps.buttonTemplate || view.buttonTemplate,
@@ -34,4 +41,4 @@ export const formView = {
     },
 };
 
-registry.category("views").add("form", formView);
+registry.category("views").add("form", /** @type {any} */ (formView));

@@ -1,9 +1,8 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { Component, toRaw } from "@odoo/owl";
-import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Reactive } from "@web/core/utils/reactive";
-
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
@@ -70,8 +69,8 @@ export class Action {
             (rawOwner[STORE_SYM]
                 ? owner
                 : isRecord(owner)
-                ? owner.store
-                : useService("mail.store"));
+                  ? owner.store
+                  : useService("mail.store"));
     }
 
     get params() {
@@ -151,7 +150,7 @@ export class Action {
             this._componentCondition(this.params) ??
             (typeof this.definition.componentCondition === "function"
                 ? this.definition.componentCondition.call(this, this.params)
-                : this.definition.componentCondition ?? true)
+                : (this.definition.componentCondition ?? true))
         );
     }
 
@@ -173,7 +172,7 @@ export class Action {
             this._condition(this.params) ??
             (typeof this.definition.condition === "function"
                 ? this.definition.condition.call(this, this.params)
-                : this.definition.condition ?? true)
+                : (this.definition.condition ?? true))
         );
     }
 
@@ -183,7 +182,7 @@ export class Action {
     get disabledCondition() {
         return Boolean(
             this._disabledCondition(this.params) ??
-                this.definition.disabledCondition?.call(this, this.params)
+            this.definition.disabledCondition?.call(this, this.params),
         );
     }
 
@@ -397,7 +396,9 @@ export class Action {
     _setup(action) {}
     /** setup is executed when the owner is being setup. */
     setup() {
-        return this._setup(this.params) ?? this.definition.setup?.call(this, this.params);
+        return (
+            this._setup(this.params) ?? this.definition.setup?.call(this, this.params)
+        );
     }
 
     /** @param {Action} action @returns {string|string[]|undefined} */
@@ -487,7 +488,7 @@ export class UseActions extends Reactive {
             groups[a.sequenceGroup].push(a);
         }
         const sortedGroups = Object.entries(groups).sort(
-            ([groupId1], [groupId2]) => groupId1 - groupId2
+            ([groupId1], [groupId2]) => groupId1 - groupId2,
         );
         for (const [, actions] of sortedGroups) {
             actions.sort((a1, a2) => a1.sequence - a2.sequence);

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
 import {
@@ -60,7 +62,7 @@ test("simple week recurrence widget", async () => {
 
     expect(queryAllTexts(".o_recurrent_weekday_label")).toEqual(
         ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        { message: "labels should be short week names" }
+        { message: "labels should be short week names" },
     );
     expect(".form-check input:disabled").toHaveCount(0, {
         message: "all inputs should be enabled in edit mode",
@@ -94,7 +96,9 @@ test("simple week recurrence widget", async () => {
     expect("td:nth-child(7) input").not.toBeChecked({
         message: "sunday checkbox should be unchecked",
     });
-    expect("td:nth-child(1) input").toBeChecked({ message: "monday checkbox should be checked" });
+    expect("td:nth-child(1) input").toBeChecked({
+        message: "monday checkbox should be checked",
+    });
     expect("td:nth-child(2) input").toBeChecked({
         message: "tuesday checkbox should be checked",
     });
@@ -111,7 +115,7 @@ test("week recurrence widget readonly modifiers", async () => {
 
     expect(queryAllTexts(".o_recurrent_weekday_label")).toEqual(
         ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        { message: "labels should be short week names" }
+        { message: "labels should be short week names" },
     );
     expect(".form-check input:disabled").toHaveCount(7, {
         message: "all inputs should be disabled in readonly mode",
@@ -129,6 +133,6 @@ test("week recurrence widget show week start as per language configuration", asy
 
     expect(queryAllTexts(".o_recurrent_weekday_label")).toEqual(
         ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"],
-        { message: "labels should be short week names" }
+        { message: "labels should be short week names" },
     );
 });

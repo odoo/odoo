@@ -150,10 +150,10 @@ class GamificationChallenge(models.Model):
                   FROM gamification_challenge_users_rel rel
              LEFT JOIN res_users users
                     ON users.id=rel.res_users_id AND users.active = TRUE
-                 WHERE gamification_challenge_id IN %s
+                 WHERE gamification_challenge_id = ANY(%s)
               GROUP BY gamification_challenge_id
             """
-            self.env.cr.execute(query, [tuple(self.ids)])
+            self.env.cr.execute(query, [list(self.ids)])
             mapped_data = dict(
                 (challenge_id, user_count)
                 for challenge_id, user_count in self.env.cr.fetchall()
@@ -277,13 +277,13 @@ class GamificationChallenge(models.Model):
                        WHERE gg.write_date <= mp.last_presence
                          AND mp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
-                         AND gg.challenge_id IN %(challenge_ids)s
+                         AND gg.challenge_id = ANY(%(challenge_ids)s)
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached' AND gg.end_date >= %(yesterday)s))
                       GROUP BY gg.id
         """, {
             'session_lifetime': SESSION_LIFETIME,
-            'challenge_ids': tuple(self.ids),
+            'challenge_ids': list(self.ids),
             'yesterday': yesterday
         })
 
@@ -387,7 +387,7 @@ class GamificationChallenge(models.Model):
                               {date_clause}
                         """.format(date_clause=date_clause)
                 self.env.cr.execute(query, query_params)
-                user_with_goal_ids = {it for [it] in self.env.cr._obj}
+                user_with_goal_ids = {it for [it] in self.env.cr.fetchall()}
 
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids

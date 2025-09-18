@@ -1,6 +1,6 @@
-import { parseXML } from "@web/core/utils/xml";
 import { GLORY_RESULT } from "./constants";
 
+import { parseXML } from "@web/core/utils/dom/xml";
 /**
  * @param {Blob} xmlBlob
  */
@@ -44,7 +44,7 @@ export function serializeGloryXml(gloryElement) {
  */
 export const makeGloryHeader = (sequenceNumber, sessionId) => {
     const sequenceNumberString = sequenceNumber.toString(10).padStart(11, "0");
-    return [
+    const header = [
         {
             name: "Id",
             children: ["OdooPos"],
@@ -53,11 +53,14 @@ export const makeGloryHeader = (sequenceNumber, sessionId) => {
             name: "SeqNo",
             children: [sequenceNumberString],
         },
-        {
+    ];
+    if (sessionId) {
+        header.push({
             name: "SessionID",
             children: [sessionId],
-        },
-    ];
+        });
+    }
+    return header;
 };
 
 /**
@@ -68,9 +71,10 @@ export const makeGloryHeader = (sequenceNumber, sessionId) => {
  * @returns {string}
  */
 export function parseGloryResult(xmlResponse) {
-    const resultString = GLORY_RESULT[xmlResponse.getAttribute("result")];
+    const resultCode = xmlResponse.getAttribute("result");
+    const resultString = GLORY_RESULT[resultCode];
     if (!resultString) {
-        throw new Error("Not a valid Glory XML response");
+        return `UNKNOWN_STATUS_${resultCode}`;
     }
 
     return resultString;
@@ -97,19 +101,29 @@ export function parseGloryResult(xmlResponse) {
  */
 export function parseVerificationInfo(xmlResponse) {
     const denominationInfos = Array.from(
-        xmlResponse.getElementsByTagName("RequireVerifyDenomination")
+        xmlResponse.getElementsByTagName("RequireVerifyDenomination"),
     );
     const collectionContainerInfos = Array.from(
-        xmlResponse.getElementsByTagName("RequireVerifyCollectionContainer")
+        xmlResponse.getElementsByTagName("RequireVerifyCollectionContainer"),
     );
-    const mixStackerInfos = Array.from(xmlResponse.getElementsByTagName("RequireVerifyMixStacker"));
-    const allInfos = [...denominationInfos, ...collectionContainerInfos, ...mixStackerInfos];
+    const mixStackerInfos = Array.from(
+        xmlResponse.getElementsByTagName("RequireVerifyMixStacker"),
+    );
+    const allInfos = [
+        ...denominationInfos,
+        ...collectionContainerInfos,
+        ...mixStackerInfos,
+    ];
 
     const notesRequireVerify = allInfos.some(
-        (info) => info.getAttribute("devid") === "1" && info.getAttribute("val") === "1"
+        (info) =>
+            info.getAttribute("devid") === "1" &&
+            info.getAttribute("val") === "1",
     );
     const coinsRequireVerify = allInfos.some(
-        (info) => info.getAttribute("devid") === "2" && info.getAttribute("val") === "1"
+        (info) =>
+            info.getAttribute("devid") === "2" &&
+            info.getAttribute("val") === "1",
     );
 
     if (notesRequireVerify && coinsRequireVerify) {

@@ -1,10 +1,10 @@
-import { useState, onWillUnmount, status, useComponent } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { Mp3Encoder } from "./mp3_encoder";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
+import { onWillUnmount, status, useComponent, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
+import { Mp3Encoder } from "./mp3_encoder";
 export const patchable = {
     makeFile(file) {
         return file;
@@ -39,7 +39,7 @@ export function useVoiceRecorder() {
             }
         },
     });
-    /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
+    /** @type {ReturnType<typeof import("@web/ui/notification/notification_service").notificationService.start>} */
     const notification = useService("notification");
     const store = useService("mail.store");
     const config = { bitRate: 128 }; // 128 or 160 kbit/s – mid-range bitrate quality
@@ -81,7 +81,7 @@ export function useVoiceRecorder() {
                     _t('"%(hostname)s" needs to access your microphone', {
                         hostname: window.location.host,
                     }),
-                    { type: "warning" }
+                    { type: "warning" },
                 );
                 state.isActionPending = false;
                 return;
@@ -112,9 +112,12 @@ export function useVoiceRecorder() {
                 state.limitWarning = true;
             }
             if (elapsedSeconds === 60) {
-                notification.add(_t("The duration of voice messages is limited to 1 minute."), {
-                    type: "warning",
-                });
+                notification.add(
+                    _t("The duration of voice messages is limited to 1 minute."),
+                    {
+                        type: "warning",
+                    },
+                );
                 stopRecording();
             }
             if (!e.data) {

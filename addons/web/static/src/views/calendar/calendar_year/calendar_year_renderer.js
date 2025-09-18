@@ -1,13 +1,17 @@
-import { getLocalYearAndWeek } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
-import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
-import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
-import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
-import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
+// @ts-check
+
+/** @module @web/views/calendar/calendar_year/calendar_year_renderer - Year-scale renderer displaying 12 mini month grids with background events */
 
 import { Component, useEffect, useRef } from "@odoo/owl";
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
+import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
+import { convertRecordToEvent, getColor } from "@web/views/calendar/calendar_utils";
+import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
+import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
+import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 
+/** Year-scale calendar renderer displaying 12 mini month grids with background events. */
 export class CalendarYearRenderer extends Component {
     static components = {
         Popover: CalendarYearPopover,
@@ -27,10 +31,12 @@ export class CalendarYearRenderer extends Component {
         for (const month of this.months) {
             this.fcs[month] = useFullCalendar(
                 `fullCalendar-${month}`,
-                this.getOptionsForMonth(month)
+                this.getOptionsForMonth(month),
             );
         }
-        this.popover = useCalendarPopover(this.constructor.components.Popover);
+        this.popover = useCalendarPopover(
+            /** @type {any} */ (this.constructor).components.Popover,
+        );
         this.rootRef = useRef("root");
 
         useEffect(() => {
@@ -90,12 +96,14 @@ export class CalendarYearRenderer extends Component {
         const weekText = view.calendar.currentData.options.weekText;
         const weekColumn = !this.customOptions.weekNumbersWithinDays;
         if (showWeek && weekColumn) {
-            makeWeekColumn({ el, weekText });
+            makeWeekColumn(/** @type {any} */ ({ el, weekText }));
         }
     }
 
     mapRecordsToEvents() {
-        return Object.values(this.props.model.records).map((r) => this.convertRecordToEvent(r));
+        return Object.values(this.props.model.records).map((r) =>
+            this.convertRecordToEvent(r),
+        );
     }
     convertRecordToEvent(record) {
         return {
@@ -104,7 +112,9 @@ export class CalendarYearRenderer extends Component {
         };
     }
     getDateWithMonth(month) {
-        return this.props.model.date.set({ month: this.months.indexOf(month) + 1 }).toISO();
+        return this.props.model.date
+            .set({ month: this.months.indexOf(month) + 1 })
+            .toISO();
     }
     getOptionsForMonth(month) {
         return {
@@ -147,7 +157,10 @@ export class CalendarYearRenderer extends Component {
         // With date value we don't want to change the time, we need the exact date
         const date = luxon.DateTime.fromISO(info.dateStr);
         const records = Object.values(this.props.model.records).filter((r) =>
-            luxon.Interval.fromDateTimes(r.start.startOf("day"), r.end.endOf("day")).contains(date)
+            luxon.Interval.fromDateTimes(
+                r.start.startOf("day"),
+                r.end.endOf("day"),
+            ).contains(date),
         );
 
         this.popover.close();

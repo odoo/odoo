@@ -120,24 +120,18 @@ class ResCurrency(models.Model):
 
             last_date_to = date_to
 
-        self.env.cr.execute(SQL(
-            """
-                -- Tests may call this function multiple times within the same transaction; we then need to delete an regenerate the currency table
-                DROP TABLE IF EXISTS account_currency_table;
-
-                -- Create a temporary table
-                CREATE TEMPORARY TABLE
+        currency_table_build_query = SQL(" UNION ALL ").join(SQL('(%s)', builder) for builder in table_builders)
+        cr = self.env.cr
+        cr.execute(SQL("DROP TABLE IF EXISTS account_currency_table"))
+        cr.execute(SQL(
+            """CREATE TEMPORARY TABLE
                 account_currency_table (company_id, period_key, date_from, date_next, rate_type, rate)
                 ON COMMIT DROP
-                AS (%(currency_table_build_query)s);
-
-                -- Create a supporting index to avoid seq.scans
-                CREATE INDEX account_currency_table_index ON account_currency_table (company_id, rate_type, date_from, date_next);
-                -- Update statistics for correct planning
-                ANALYZE account_currency_table;
-            """,
-            currency_table_build_query=SQL(" UNION ALL ").join(SQL('(%s)', builder) for builder in table_builders),
+                AS (%s)""",
+            currency_table_build_query,
         ))
+        cr.execute(SQL("CREATE INDEX account_currency_table_index ON account_currency_table (company_id, rate_type, date_from, date_next)"))
+        cr.execute(SQL("ANALYZE account_currency_table"))
 
     def _get_table_builder_domestic_currency(self, companies, use_cta_rates) -> SQL:
         """ Returns a query building one rate of each appropriate type equal to 1 for each of the provided companies. Those companies should be

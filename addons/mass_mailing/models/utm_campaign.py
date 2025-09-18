@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 
 
 class UtmCampaign(models.Model):
@@ -92,10 +92,10 @@ class UtmCampaign(models.Model):
                 utm_campaign c
                 ON (c.id = s.campaign_id)
             WHERE
-                c.id IN %s
+                c.id = ANY(%s)
             GROUP BY
                 c.id
-        """, (tuple(self.ids), ))
+        """, (list(self.ids), ))
 
         all_stats = self.env.cr.dictfetchall()
         stats_per_campaign = {

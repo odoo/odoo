@@ -38,7 +38,7 @@ the methods over HTTP, with examples in various programming languages.
             'web/static/src/core/registry.js',
             'web/static/src/session.js',
             'web/static/src/core/assets.js',
-            'web/static/src/core/code_editor/**',
+            'web/static/src/components/code_editor/**',
 
             # Bootstrap
             ('include', 'web._assets_helpers'),

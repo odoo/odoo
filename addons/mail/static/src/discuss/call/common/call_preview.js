@@ -8,12 +8,16 @@ import {
 } from "@mail/discuss/call/common/call_actions";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { closeStream, onChange } from "@mail/utils/common/misc";
-
-import { Component, onWillDestroy, status, useEffect, useRef, useState } from "@odoo/owl";
-
+import {
+    Component,
+    onWillDestroy,
+    status,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
 /**
  * @typedef {Object} Props
  * @property {Number} [activateCamera]
@@ -31,7 +35,11 @@ export class CallPreview extends Component {
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
+        this.state = useState({
+            audioStream: null,
+            blurManager: null,
+            videoStream: null,
+        });
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
         useEffect(
@@ -49,7 +57,7 @@ export class CallPreview extends Component {
                 this.state.audioStream,
                 this.state.videoStream,
                 this.state.blurManager?.stream,
-            ]
+            ],
         );
         if (this.hasRtcSupport) {
             onChange(this.rtc, "microphonePermission", () => {
@@ -84,13 +92,18 @@ export class CallPreview extends Component {
                     this.disableBlur();
                 }
             });
-            onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
-                if (this.state.blurManager) {
-                    this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                    this.state.blurManager.backgroundBlur =
-                        this.store.settings.backgroundBlurAmount;
-                }
-            });
+            onChange(
+                this.store.settings,
+                ["edgeBlurAmount", "backgroundBlurAmount"],
+                () => {
+                    if (this.state.blurManager) {
+                        this.state.blurManager.edgeBlur =
+                            this.store.settings.edgeBlurAmount;
+                        this.state.blurManager.backgroundBlur =
+                            this.store.settings.backgroundBlurAmount;
+                    }
+                },
+            );
             onWillDestroy(() => {
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
@@ -101,7 +114,7 @@ export class CallPreview extends Component {
                         this.enableCamera();
                     }
                 },
-                () => [this.props.activateCamera]
+                () => [this.props.activateCamera],
             );
             useEffect(
                 (activateMicrophone) => {
@@ -109,21 +122,24 @@ export class CallPreview extends Component {
                         this.enableMicrophone();
                     }
                 },
-                () => [this.props.activateMicrophone]
+                () => [this.props.activateMicrophone],
             );
         }
     }
 
     get hasRtcSupport() {
         return Boolean(
-            navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaStream
+            navigator.mediaDevices &&
+            navigator.mediaDevices.getUserMedia &&
+            window.MediaStream,
         );
     }
 
     get actions() {
         const cameraOnActionUpdated = {
             ...cameraOnAction,
-            name: () => (this.state.videoStream ? _t("Stop camera") : _t("Turn camera on")),
+            name: () =>
+                this.state.videoStream ? _t("Stop camera") : _t("Turn camera on"),
             isActive: () => this.state.videoStream,
             onSelected: () => this.toggleCamera(),
             tags: (...args) => {
@@ -271,12 +287,14 @@ export class CallPreview extends Component {
     }
 
     async enableBlur() {
-        this.store.settings.useBlur = true;
+        this.store.settings.setUseBlur(true);
         if (!this.videoRef.el) {
             return;
         }
         try {
-            this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
+            this.state.blurManager = await this.rtc.applyBlurEffect(
+                this.state.videoStream,
+            );
             this.videoRef.el.srcObject = await this.state.blurManager.stream;
         } catch (_e) {
             this.notification.add(_e.message, { type: "warning" });
@@ -285,7 +303,7 @@ export class CallPreview extends Component {
     }
 
     disableBlur() {
-        this.store.settings.useBlur = false;
+        this.store.settings.setUseBlur(false);
         if (this.videoRef.el) {
             this.videoRef.el.srcObject = this.state.videoStream;
         }

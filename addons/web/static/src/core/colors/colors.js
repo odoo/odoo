@@ -1,4 +1,8 @@
-import { clamp } from "@web/core/utils/numbers";
+// @ts-check
+
+/** @module @web/core/colors/colors - Predefined color palettes for charts and graph visualizations */
+
+import { clamp } from "@web/core/utils/format/numbers";
 /**
  * Lists of colors that contrast well with each other to be used in various
  * visualizations (eg. graphs/charts), both in bright and dark themes.
@@ -92,7 +96,7 @@ const COLORS_XL = [
 /**
  * @param {string} colorScheme
  * @param {string} paletteName
- * @returns {array}
+ * @returns {string[]}
  */
 export function getColors(colorScheme, paletteName) {
     switch (paletteName) {
@@ -177,19 +181,19 @@ export function getCustomColor(colorScheme, brightModeColor, darkModeColor) {
 export function lightenColor(color, factor) {
     factor = clamp(factor, 0, 1);
 
-    let r = parseInt(color.substring(1, 3), 16);
-    let g = parseInt(color.substring(3, 5), 16);
-    let b = parseInt(color.substring(5, 7), 16);
+    let r = parseInt(color.slice(1, 3), 16);
+    let g = parseInt(color.slice(3, 5), 16);
+    let b = parseInt(color.slice(5, 7), 16);
 
     r = Math.round(r + (255 - r) * factor);
     g = Math.round(g + (255 - g) * factor);
     b = Math.round(b + (255 - b) * factor);
 
-    r = r.toString(16).padStart(2, "0");
-    g = g.toString(16).padStart(2, "0");
-    b = b.toString(16).padStart(2, "0");
+    const rHex = r.toString(16).padStart(2, "0");
+    const gHex = g.toString(16).padStart(2, "0");
+    const bHex = b.toString(16).padStart(2, "0");
 
-    return `#${r}${g}${b}`;
+    return `#${rHex}${gHex}${bHex}`;
 }
 
 /**
@@ -201,17 +205,17 @@ export function lightenColor(color, factor) {
 export function darkenColor(color, factor) {
     factor = clamp(factor, 0, 1);
 
-    let r = parseInt(color.substring(1, 3), 16);
-    let g = parseInt(color.substring(3, 5), 16);
-    let b = parseInt(color.substring(5, 7), 16);
+    let r = parseInt(color.slice(1, 3), 16);
+    let g = parseInt(color.slice(3, 5), 16);
+    let b = parseInt(color.slice(5, 7), 16);
 
     r = Math.round(r * (1 - factor));
     g = Math.round(g * (1 - factor));
     b = Math.round(b * (1 - factor));
 
-    r = r.toString(16).padStart(2, "0");
-    g = g.toString(16).padStart(2, "0");
-    b = b.toString(16).padStart(2, "0");
+    const rHex = r.toString(16).padStart(2, "0");
+    const gHex = g.toString(16).padStart(2, "0");
+    const bHex = b.toString(16).padStart(2, "0");
 
-    return `#${r}${g}${b}`;
+    return `#${rHex}${gHex}${bHex}`;
 }

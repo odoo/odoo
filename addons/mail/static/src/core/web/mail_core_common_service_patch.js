@@ -1,6 +1,5 @@
-import { patch } from "@web/core/utils/patch";
 import { MailCoreCommon } from "@mail/core/common/mail_core_common_service";
-
+import { patch } from "@web/core/utils/patch";
 patch(MailCoreCommon.prototype, {
     _handleNotificationToggleStar(payload, metadata) {
         super._handleNotificationToggleStar(payload, metadata);

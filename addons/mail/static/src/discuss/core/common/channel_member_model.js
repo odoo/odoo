@@ -1,10 +1,8 @@
-import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/core/common/record";
-
+import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
-
+import { user } from "@web/services/user";
 const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
@@ -87,14 +85,15 @@ export class ChannelMember extends Record {
             browser.clearTimeout(this.typingTimeoutId);
             if (
                 !this.is_typing_dt ||
-                DateTime.now().diff(this.is_typing_dt).milliseconds > Store.OTHER_LONG_TYPING
+                DateTime.now().diff(this.is_typing_dt).milliseconds >
+                    Store.OTHER_LONG_TYPING
             ) {
                 this.isTyping = false;
             }
             if (this.isTyping) {
                 this.typingTimeoutId = browser.setTimeout(
                     () => (this.isTyping = false),
-                    Store.OTHER_LONG_TYPING
+                    Store.OTHER_LONG_TYPING,
                 );
             }
         },
@@ -142,7 +141,9 @@ export class ChannelMember extends Record {
      * @param {import("models").Message} message
      */
     hasSeen(message) {
-        return this.persona.eq(message.author) || this.seen_message_id?.id >= message.id;
+        return (
+            this.persona.eq(message.author) || this.seen_message_id?.id >= message.id
+        );
     }
     get lastSeenDt() {
         return this.last_seen_dt

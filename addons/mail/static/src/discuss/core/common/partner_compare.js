@@ -4,12 +4,13 @@ partnerCompareRegistry.add(
     "discuss.recent-chats",
     (p1, p2, { env, context }) => {
         const recentChatPartnerIds =
-            context.recentChatPartnerIds || env.services["mail.store"].getRecentChatPartnerIds();
+            context.recentChatPartnerIds ||
+            env.services["mail.store"].getRecentChatPartnerIds();
         const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
-            (partnerId) => partnerId === p1.id
+            (partnerId) => partnerId === p1.id,
         );
         const recentChatIndex_p2 = recentChatPartnerIds.findIndex(
-            (partnerId) => partnerId === p2.id
+            (partnerId) => partnerId === p2.id,
         );
         if (recentChatIndex_p1 !== -1 && recentChatIndex_p2 === -1) {
             return -1;
@@ -21,7 +22,7 @@ partnerCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 25 }
+    { sequence: 45 },
 );
 
 partnerCompareRegistry.add(
@@ -38,5 +39,5 @@ partnerCompareRegistry.add(
             }
         }
     },
-    { sequence: 40 }
+    { sequence: 40 },
 );

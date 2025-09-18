@@ -1,15 +1,16 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { localization } from "@web/core/l10n/localization";
-import { nbsp } from "@web/core/utils/strings";
+import { nbsp } from "@web/core/utils/format/strings";
 import {
     parseFloat,
     parseFloatTime,
     parseInteger,
     parseMonetary,
     parsePercentage,
-} from "@web/views/fields/parsers";
+} from "@web/fields/parsers";
 
 beforeEach(makeMockEnv);
 

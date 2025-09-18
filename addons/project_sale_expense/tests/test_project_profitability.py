@@ -185,7 +185,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
         )
 
-        expense.account_move_id.button_draft()
+        expense.account_move_id.action_draft()
         expense.account_move_id.unlink()
         expense_profitability = project._get_expenses_profitability_items(False)
         self.assertDictEqual(
@@ -230,7 +230,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(-expense_foreign.untaxed_amount_currency * 0.2), 'to_bill': 0.0},
         )
 
-        expense_foreign.account_move_id.button_draft()
+        expense_foreign.account_move_id.action_draft()
         expense_foreign.account_move_id.unlink()
         expense_profitability = project._get_expenses_profitability_items(False)
         self.assertDictEqual(

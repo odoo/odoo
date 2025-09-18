@@ -1,11 +1,8 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
-
 import { Component } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
+import { standardFieldProps } from "@web/fields/standard_field_props";
 class ListActivityButton extends ActivityButton {
     static props = {
         ...ActivityButton.props,

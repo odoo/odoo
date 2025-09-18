@@ -1,11 +1,39 @@
-import { exprToBoolean } from "@web/core/utils/strings";
-import { visitXML } from "@web/core/utils/xml";
+// @ts-check
+
+/** @module @web/views/graph/graph_arch_parser - Parses graph view XML arch into chart mode, measures, groupBy, and display flags */
+
+import { visitXML } from "@web/core/utils/dom/xml";
+import { exprToBoolean } from "@web/core/utils/format/strings";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 
 const MODES = ["bar", "line", "pie"];
 const ORDERS = ["ASC", "DESC", "asc", "desc", null];
 
+/** Parser for `<graph>` view architecture definitions. */
 export class GraphArchParser {
+    /**
+     * Parse a graph arch XML node into a structured descriptor.
+     *
+     * Extracts chart mode, stacking/cumulation flags, ordering, title,
+     * measures and groupBy definitions from `<graph>` and `<field>` elements.
+     *
+     * @param {Element} arch - the root `<graph>` XML element
+     * @param {Object} [fields={}] - field definitions keyed by field name
+     * @returns {{
+     *   fields: Object,
+     *   fieldAttrs: Object,
+     *   groupBy: string[],
+     *   measures: string[],
+     *   measure?: string,
+     *   mode?: string,
+     *   order?: string,
+     *   title?: string,
+     *   stacked?: boolean,
+     *   cumulated?: boolean,
+     *   cumulatedStart?: boolean,
+     *   disableLinking?: boolean,
+     * }}
+     */
     parse(arch, fields = {}) {
         const archInfo = { fields, fieldAttrs: {}, groupBy: [], measures: [] };
         visitXML(arch, (node) => {
@@ -13,18 +41,20 @@ export class GraphArchParser {
                 case "graph": {
                     if (node.hasAttribute("disable_linking")) {
                         archInfo.disableLinking = exprToBoolean(
-                            node.getAttribute("disable_linking")
+                            node.getAttribute("disable_linking"),
                         );
                     }
                     if (node.hasAttribute("stacked")) {
                         archInfo.stacked = exprToBoolean(node.getAttribute("stacked"));
                     }
                     if (node.hasAttribute("cumulated")) {
-                        archInfo.cumulated = exprToBoolean(node.getAttribute("cumulated"));
+                        archInfo.cumulated = exprToBoolean(
+                            node.getAttribute("cumulated"),
+                        );
                     }
                     if (node.hasAttribute("cumulated_start")) {
                         archInfo.cumulatedStart = exprToBoolean(
-                            node.getAttribute("cumulated_start")
+                            node.getAttribute("cumulated_start"),
                         );
                     }
                     const mode = node.getAttribute("type");

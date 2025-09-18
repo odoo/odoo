@@ -153,7 +153,7 @@
             <field name="sequence" eval="2"/>
             <field name="product_id" ref="product.product_product_furniture"/>
             <field name="product_uom_qty">15</field>
-            <field name="qty_delivered">12</field>
+            <field name="qty_transferred">12</field>
         </record>
 
         <record id="sale_line_construction_3" model="sale.order.line">
@@ -161,7 +161,7 @@
             <field name="sequence" eval="2"/>
             <field name="product_id" ref="product_product_flooring"/>
             <field name="product_uom_qty">10</field>
-            <field name="qty_delivered">8</field>
+            <field name="qty_transferred">8</field>
         </record>
 
         <record id="sale_line_construction_4" model="sale.order.line">
@@ -169,7 +169,7 @@
             <field name="sequence" eval="2"/>
             <field name="product_id" ref="product_product_plumbing"/>
             <field name="product_uom_qty">12</field>
-            <field name="qty_delivered">10</field>
+            <field name="qty_transferred">10</field>
         </record>
 
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction_material')]]"/>

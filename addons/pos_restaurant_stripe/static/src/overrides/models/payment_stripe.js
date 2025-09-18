@@ -1,6 +1,5 @@
 import { PaymentStripe } from "@pos_stripe/app/payment_stripe";
 import { patch } from "@web/core/utils/patch";
-
 patch(PaymentStripe.prototype, {
     async captureAfterPayment(processPayment, line) {
         // Don't capture if the customer can tip, in that case we

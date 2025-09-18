@@ -1,6 +1,6 @@
 from odoo.tests.common import users
 from odoo.tests import tagged
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
 
 

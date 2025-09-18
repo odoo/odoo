@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
-from odoo.tools.float_utils import json_float_round
+from odoo.libs.numbers.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
 from odoo.tools import float_compare, SQL
 from odoo.tools.date_utils import get_month
@@ -253,7 +253,7 @@ class AccountMove(models.Model):
                         'message': _("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
                         'actions': invalid_tax_lines.with_context(tax_validation=True)._get_records_action(
                             name=action_name,
-                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
+                            views=[(_xmlid_to_res_id("l10n_in.view_stock_move_line_list_hsn_l10n_in"), "list")],
                             domain=[('id', 'in', invalid_tax_lines.ids)],
                         ),
                         'action_text': action_text,
@@ -309,7 +309,7 @@ class AccountMove(models.Model):
                         'message': msg,
                         'action': lines._get_records_action(
                             name=action_name,
-                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
+                            views=[(_xmlid_to_res_id("l10n_in.view_stock_move_line_list_hsn_l10n_in"), "list")],
                             domain=[('id', 'in', lines.ids)]
                         ),
                         'action_text': action_text,

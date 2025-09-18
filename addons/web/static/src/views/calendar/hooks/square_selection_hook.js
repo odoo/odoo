@@ -1,7 +1,11 @@
+// @ts-check
+
+/** @module @web/views/calendar/hooks/square_selection_hook - Drag-to-select date range hook for month-view calendar cells */
+
 import { useComponent, useEffect, useExternalListener, useRef } from "@odoo/owl";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { shallowEqual } from "@web/core/utils/objects";
-import { closest } from "@web/core/utils/ui";
+import { shallowEqual } from "@web/core/utils/collections/objects";
+import { makeDraggableHook } from "@web/core/utils/dnd/draggable_hook_builder_owl";
+import { closest } from "@web/core/utils/dom/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
 
 const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell)`;
@@ -9,30 +13,40 @@ const ROW_SELECTOR = `tr[role="row"]`;
 const EVENT_CONTAINER_SELECTOR = ".fc-daygrid-event-harness";
 const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(",");
 
+/** @param {Object} ctx - drag context with pointer position and ref element */
 function getClosestCell(ctx) {
     const { pointer, ref } = ctx;
     return closest(ref.el.querySelectorAll(CELL_SELECTOR), pointer);
 }
 
+/** @param {Element} element - DOM element whose sibling index to compute */
 function getElementIndex(element) {
-    return [].indexOf.call(element?.parentNode.children || [], element);
+    return [...(element?.parentNode.children || [])].indexOf(element);
 }
 
+/** @param {Element} cell - day cell element to get grid coordinates from */
 function getCoordinates(cell) {
     const colIndex = getElementIndex(cell);
     const rowIndex = getElementIndex(cell.closest(ROW_SELECTOR));
     return { colIndex, rowIndex };
 }
 
+/** Compute the bounding rectangle of a selection between two grid coordinates. */
 function getBlockBounds({ initCoord, coord }) {
-    const [startColIndex, endColIndex] = [initCoord.colIndex, coord.colIndex].sort((a, b) => a - b);
-    const [startRowIndex, endRowIndex] = [initCoord.rowIndex, coord.rowIndex].sort((a, b) => a - b);
+    const [startColIndex, endColIndex] = [initCoord.colIndex, coord.colIndex].sort(
+        (a, b) => a - b,
+    );
+    const [startRowIndex, endRowIndex] = [initCoord.rowIndex, coord.rowIndex].sort(
+        (a, b) => a - b,
+    );
     return { startColIndex, endColIndex, startRowIndex, endRowIndex };
 }
 
+/** Collect all selectable cells within the current rectangular selection bounds. */
 function getSelectedCellsInBlock(ctx) {
     const { cellIsSelectable, current, ref } = ctx;
-    const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
+    const { startColIndex, endColIndex, startRowIndex, endRowIndex } =
+        getBlockBounds(current);
     const selectedCells = [];
     for (const cell of ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)) {
         const { colIndex, rowIndex } = getCoordinates(cell);
@@ -49,6 +63,7 @@ function getSelectedCellsInBlock(ctx) {
     return { selectedCells };
 }
 
+/** Select all cells in linear order between two cells (for Shift+click ranges). */
 function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     const { cellIsSelectable, ref } = ctx;
     const cells = [...ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)];
@@ -58,11 +73,12 @@ function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     }
     const index2 = cells.indexOf(cellClicked);
     const [startIndex, endIndex] = [index1, index2].sort((a, b) => a - b);
-    return new Set(cells.slice(startIndex, endIndex + 1).filter((cell) => cellIsSelectable(cell)));
+    return new Set(
+        cells.slice(startIndex, endIndex + 1).filter((cell) => cellIsSelectable(cell)),
+    );
 }
 
-// @ts-ignore
-const useBlockSelection = makeDraggableHook({
+const useBlockSelection = /** @type {any} */ (makeDraggableHook)({
     name: "useBlockSelection",
     acceptedParams: {
         cellIsSelectable: [Function],
@@ -99,6 +115,16 @@ const useBlockSelection = makeDraggableHook({
     },
 });
 
+/**
+ * OWL hook enabling rectangular cell selection on a FullCalendar month grid.
+ *
+ * Supports click, Ctrl+click (toggle), Shift+click (range), and drag-to-select.
+ * Selected cells are highlighted and reported via `onSquareSelection` callback.
+ * Used by the multi-create feature in month scale.
+ *
+ * @param {Object} [params]
+ * @param {Function} [params.cellIsSelectable] - predicate to filter selectable day cells
+ */
 export function useSquareSelection(params = {}) {
     const cellIsSelectable = params.cellIsSelectable || (() => true);
     const component = useComponent();
@@ -144,26 +170,28 @@ export function useSquareSelection(params = {}) {
         highlight({ selectedCells: allSelectedCells });
     };
 
-    const selectState = useBlockSelection({
-        enable: () => component.props.model.hasMultiCreate,
-        ignore: EVENT_CONTAINER_SELECTOR,
-        elements: CELL_SELECTOR,
-        ref,
-        edgeScrolling: { speed: 40, threshold: 150 },
-        cellIsSelectable,
-        onDragStart: ({ selectedCells }) => {
-            prevSelectedCell = null;
-            action = ctrlPressed ? "add" : "replace";
-            update({ selectedCells });
-        },
-        onDrag: update,
-        onDrop: ({ selectedCells }) => {
-            allSelectedCells = getAllCells(selectedCells, action);
-            action = null;
-            highlight({ selectedCells: allSelectedCells });
-            component.props.onSquareSelection([...allSelectedCells]);
-        },
-    });
+    const selectState = useBlockSelection(
+        /** @type {any} */ ({
+            enable: () => component.props.model.hasMultiCreate,
+            ignore: EVENT_CONTAINER_SELECTOR,
+            elements: CELL_SELECTOR,
+            ref,
+            edgeScrolling: { speed: 40, threshold: 150 },
+            cellIsSelectable,
+            onDragStart: ({ selectedCells }) => {
+                prevSelectedCell = null;
+                action = ctrlPressed ? "add" : "replace";
+                update({ selectedCells });
+            },
+            onDrag: update,
+            onDrop: ({ selectedCells }) => {
+                allSelectedCells = getAllCells(selectedCells, action);
+                action = null;
+                highlight({ selectedCells: allSelectedCells });
+                component.props.onSquareSelection([...allSelectedCells]);
+            },
+        }),
+    );
 
     const onClick = (ev) => {
         if (selectState.dragging) {
@@ -190,7 +218,7 @@ export function useSquareSelection(params = {}) {
             allSelectedCells = getSelectedCellsBetween2Cells(
                 pseudoCtx,
                 prevSelectedCell,
-                selectedCell
+                selectedCell,
             );
         } else {
             const action = ctrlPressed ? "toggle" : "replace";
@@ -208,12 +236,12 @@ export function useSquareSelection(params = {}) {
             if (!hasMultiCreate) {
                 return;
             }
-            el && el.addEventListener("click", onClick);
+            el?.addEventListener("click", onClick);
             return () => {
-                el && el.removeEventListener("click", onClick);
+                el?.removeEventListener("click", onClick);
             };
         },
-        () => [ref.el, component.props.model.hasMultiCreate]
+        () => [ref.el, component.props.model.hasMultiCreate],
     );
 
     let ctrlPressed = false;

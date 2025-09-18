@@ -58,7 +58,7 @@ export class ElectionWorker {
         this.electionDeferred = null;
         this.heartbeatRequestInterval = setInterval(
             () => this.requestHeartbeat(this.masterTab),
-            this.MAIN_TAB_TIMEOUT_PERIOD / 2
+            this.MAIN_TAB_TIMEOUT_PERIOD / 2,
         );
     }
 

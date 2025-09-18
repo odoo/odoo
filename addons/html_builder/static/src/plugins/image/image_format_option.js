@@ -1,6 +1,6 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getImageSrc, getMimetype } from "@html_editor/utils/image";
-import { clamp } from "@web/core/utils/numbers";
+import { clamp } from "@web/core/utils/format/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
     static template = "html_builder.ImageFormat";

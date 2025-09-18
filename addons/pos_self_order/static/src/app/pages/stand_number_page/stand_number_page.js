@@ -1,9 +1,8 @@
 import { Component, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { useService } from "@web/core/utils/hooks";
 import { Numpad } from "@point_of_sale/app/components/numpad/numpad";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { _t } from "@web/core/l10n/translation";
-
+import { useService } from "@web/core/utils/hooks";
 export class StandNumberPage extends Component {
     static template = "pos_self_order.StandNumberPage";
     static components = { Numpad };

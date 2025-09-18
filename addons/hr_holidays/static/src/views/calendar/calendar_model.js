@@ -5,7 +5,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 const { DateTime } = luxon;
 
 export class TimeOffCalendarModel extends CalendarModel {

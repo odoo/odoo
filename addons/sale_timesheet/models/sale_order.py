@@ -32,7 +32,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.timesheet_count = timesheets_per_so.get(order.id, 0)
 
-    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
+    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'line_ids.timesheet_ids')
     def _compute_timesheet_total_duration(self):
         group_data = self.env['account.analytic.line']._read_group([
             ('order_id', 'in', self.ids), ('project_id', '!=', False)
@@ -48,13 +48,13 @@ class SaleOrder(models.Model):
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
-        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+        if field.name != 'invoice_state' or self.env.context.get('mail_activity_automation_skip'):
             return super()._compute_field_value(field)
 
         # Get SOs which their state is not equal to upselling and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
         upsellable_orders = self.filtered(lambda so:
-            so.state == 'sale'
-            and so.invoice_status != 'upselling'
+            so.state == 'done'
+            and so.invoice_state != 'upselling'
             and so.id
             and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
         )
@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         created_records = super().create(vals_list)
         if self.env.context.get('create_for_employee_mapping'):
-            if not next((sol for sol in created_records.order_line if sol.is_service), False):
+            if not next((sol for sol in created_records.line_ids if sol.is_service), False):
                 raise UserError(_('The Sales Order must contain at least one service product.'))
             created_records.with_context(disable_project_task_generation=True).action_confirm()
         return created_records
@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
             [
                 ('order_id', 'in', self.ids),
                 '|', ('product_id.service_type', 'not in', ['milestones', 'manual']),
-                     ('product_id.invoice_policy', '!=', 'delivery'),
+                     ('product_id.invoice_policy', '!=', 'transfered'),
             ]
         ]), aggregates=['order_id:array_agg'])[0][0]
 
@@ -101,13 +101,13 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit')
-        return self.order_line.filtered(lambda sol:
+        return self.line_ids.filtered(lambda sol:
             sol.is_service
-            and sol.invoice_status != "invoiced"
+            and sol.invoice_state != "invoiced"
             and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
             and sol.product_id.service_policy == 'ordered_prepaid'
             and float_compare(
-                sol.qty_delivered,
+                sol.qty_transferred,
                 sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),
                 precision_digits=precision
             ) > 0
@@ -115,29 +115,29 @@ class SaleOrder(models.Model):
 
     def action_view_timesheet(self):
         self.ensure_one()
-        if not self.order_line:
+        if not self.line_ids:
             return {'type': 'ir.actions.act_window_close'}
 
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")
-        default_sale_line = next((sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet']), self.env['sale.order.line'])
+        default_sale_line = next((sale_line for sale_line in self.line_ids if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet']), self.env['sale.order.line'])
         context = {
             'search_default_billable_timesheet': True,
             'default_is_so_line_edited': True,
             'default_so_line': default_sale_line.id,
         }  # erase default filters
 
-        tasks = self.order_line.task_id._filtered_access('write')
+        tasks = self.line_ids.task_id._filtered_access('write')
         if tasks:
             context['default_task_id'] = tasks[0].id
         else:
-            projects = self.order_line.project_id._filtered_access('write')
+            projects = self.line_ids.project_id._filtered_access('write')
             if projects:
                 context['default_project_id'] = projects[0].id
             elif self.project_ids:
                 context['default_project_id'] = self.project_ids[0].id
         action.update({
             'context': context,
-            'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
+            'domain': [('so_line', 'in', self.line_ids.ids), ('project_id', '!=', False)],
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No activities found. Let's start a new one!
@@ -151,8 +151,8 @@ class SaleOrder(models.Model):
 
     def _reset_has_displayed_warning_upsell_order_lines(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
-        for line in self.order_line:
-            if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
+        for line in self.line_ids:
+            if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_transferred, line.product_uom_qty, precision_digits=precision) == 0:
                 line.has_displayed_warning_upsell = False
 
     def _create_invoices(self, grouped=False, final=False, date=None):

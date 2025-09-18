@@ -45,7 +45,7 @@ class Cart(PaymentPortal):
                 request.session['sale_order_id'] = abandoned_order.id
                 return request.redirect('/shop/cart')
             elif revive_method == 'merge':
-                abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
+                abandoned_order.line_ids.write({'order_id': request.session['sale_order_id']})
                 abandoned_order.action_cancel()
             elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
                 values.update({'id': abandoned_order.id, 'access_token': abandoned_order.access_token})
@@ -56,7 +56,7 @@ class Cart(PaymentPortal):
             'suggested_products': [],
         })
         if order_sudo:
-            order_sudo.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+            order_sudo.line_ids.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
             values['suggested_products'] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
@@ -133,7 +133,7 @@ class Cart(PaymentPortal):
         is_combo = product.type == 'combo'
         updated_line = (
             values['line_id']
-            and order_sudo.order_line.filtered(lambda line: line.id == values['line_id'])
+            and order_sudo.line_ids.filtered(lambda line: line.id == values['line_id'])
         ) or order_sudo.env['sale.order.line']
 
         if linked_products and values['line_id']:
@@ -308,7 +308,7 @@ class Cart(PaymentPortal):
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
         # In this case, the line_id must be found out through the given product id.
         if not line_id:
-            line_id = order_sudo.order_line.filtered(
+            line_id = order_sudo.line_ids.filtered(
                 lambda sol: sol.product_id.id == product_id
             )[:1].id
 
@@ -368,16 +368,16 @@ class Cart(PaymentPortal):
         previous_orders_lines_sudo = request.env['sale.order'].sudo().search(
             [
                 ('partner_id', '=', request.env.user.partner_id.id),
-                ('state', '=', 'sale'),
+                ('state', '=', 'done'),
                 ('website_id', '=', request.website.id),
             ],
             order='date_order desc',
             limit=10,
-        ).order_line
+        ).line_ids
 
         # Prepare the order history.
         SaleOrderLineSudo = request.env['sale.order.line'].sudo()
-        cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
+        cart_lines_sudo = request.cart.line_ids if request.cart else SaleOrderLineSudo
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
         for line_sudo in previous_orders_lines_sudo:
@@ -439,7 +439,7 @@ class Cart(PaymentPortal):
         website=True
     )
     def clear_cart(self):
-        request.cart.order_line.unlink()
+        request.cart.line_ids.unlink()
 
     def _get_cart_notification_information(self, order, added_qty_per_line):
         """ Get the information about the sales order lines to show in the notification.
@@ -460,11 +460,10 @@ class Cart(PaymentPortal):
                 }],
             }
         """
-        lines = order.order_line.filtered(lambda line: line.id in set(added_qty_per_line))
+        lines = order.line_ids.filtered(lambda line: line.id in set(added_qty_per_line))
         if not lines:
             return {}
 
-        show_tax = order.website_id.show_line_subtotals_tax_selection == 'tax_included'
         return {
             'currency_id': order.currency_id.id,
             'lines': [
@@ -474,11 +473,8 @@ class Cart(PaymentPortal):
                     'quantity': added_qty_per_line[line.id],
                     'name': line._get_line_header(),
                     'combination_name': line._get_combination_name(),
-                    'description': line._get_sale_order_line_multiline_description_variants(),
-                    'price_total': (
-                        line.price_reduce_taxinc
-                        if show_tax else line.price_reduce_taxexcl
-                    ) * added_qty_per_line[line.id],
+                    'description': line._get_line_multiline_description_variants(),
+                    'price_total': line.price_unit * added_qty_per_line[line.id],
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],
@@ -492,7 +488,7 @@ class Cart(PaymentPortal):
         :rtype: dict
         :return: The tracking information.
         """
-        lines = order_sudo.order_line.filtered(
+        lines = order_sudo.line_ids.filtered(
             lambda line: line.id in line_ids
         ).with_context(display_default_code=False)
         return [
@@ -501,8 +497,8 @@ class Cart(PaymentPortal):
                 'item_name': line.product_id.display_name,
                 'item_category': line.product_id.categ_id.name,
                 'currency': line.currency_id.name,
-                'price': line.price_reduce_taxexcl,
-                'discount': line.price_unit - line.price_reduce_taxexcl,
+                'price': line.price_unit_discounted_taxexc,
+                'discount': line.price_unit - line.price_unit_discounted_taxexc,
                 'quantity': line.product_uom_qty,
             } for line in lines
         ]

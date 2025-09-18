@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
-import { isVisible } from "@web/core/utils/ui";
+import { getScrollingElement, isScrollableY } from "@web/core/utils/dom/scrolling";
+import { isVisible } from "@web/core/utils/dom/ui";
 
 export class Animation extends Interaction {
     static selector = ".o_animate";

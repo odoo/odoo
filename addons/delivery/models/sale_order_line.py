@@ -1,29 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     is_delivery = fields.Boolean(string="Is a Delivery", default=False)
-    product_qty = fields.Float(
-        string='Product Qty', compute='_compute_product_qty', digits='Product Unit'
-    )
     recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
 
     def _can_be_invoiced_alone(self):
         return super()._can_be_invoiced_alone() and not self.is_delivery
-
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
-    def _compute_product_qty(self):
-        for line in self:
-            if not line.product_id or not line.product_uom_id or not line.product_uom_qty:
-                line.product_qty = 0.0
-                continue
-            line.product_qty = line.product_uom_id._compute_quantity(
-                line.product_uom_qty, line.product_id.uom_id
-            )
 
     def unlink(self):
         self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
@@ -37,7 +24,8 @@ class SaleOrderLine(models.Model):
         """Retrieve lines containing physical products with no weight defined."""
         return self.filtered(
             lambda line:
-                line.product_qty > 0
+                line.product_id
+                and line.product_uom_qty > 0
                 and line.product_id.type not in ('service', 'combo')
                 and line.product_id.weight == 0,
         )

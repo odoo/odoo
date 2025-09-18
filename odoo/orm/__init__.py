@@ -1,20 +1,35 @@
 """The implementation of the ORM.
 
-A `Registry` object is instantiated per database, and exposes all the available
-models for its database. The available models are determined by the modules
-that must be loaded for the given database.
-The `decorators` defines various method decorators.
-The 'environments` defines `Transaction`, collecting database
-transaction-specific data, and `Environment`, which contains specific
-context-dependent data inside a transaction.
+Package Structure (layered architecture):
 
-The `fields` file defines the base class of fields for models.
-After loading it, you may load scalar fields.
-Finally, `models` provides the base classes for defining models.
-You may now define relational fields.
+Layer 0 — Zero-dependency foundations:
+  primitives.py    Constants, Command, NewId, type aliases
+  protocols.py     RecordSetProto (runtime_checkable Protocol)
+  parsing.py       Field expression / read_group spec parsing
+  validation.py    Name-checking helpers (pg, object, method)
+  constants.py     Read group constants (granularity, aggregates, display)
 
-We export the needed features in various packages and developers should not
-import directly from here.
+Layer 1 — Field & domain system:
+  fields/          Field type definitions (base, relational, temporal, ...)
+  domain/          Domain expression processing and optimization
+
+Layer 2 — Model system:
+  models/          BaseModel, MetaModel, mixins, table objects
+    mixins/        14 focused mixins (crud, copy, search, cache, ...)
+      read_group/  Read group sub-package (sql, format, fill, mixin)
+
+Layer 3 — Runtime:
+  runtime/         Environment, Transaction, Registry
+
+Cross-cutting:
+  decorators.py    API method decorators (@api.depends, @api.constrains, ...)
+  registration.py  Model registration and setup
+  helpers.py       Shared utility functions (OriginIds, company domain, etc.)
+  _typing.py       Composite type aliases (DomainType, ModelType)
+
+Developers should import from the public API packages (odoo.api, odoo.fields,
+odoo.models) rather than directly from odoo.orm submodules.
 """
+
 # import first for core setup
-import odoo.init  # noqa: F401
+import odoo.init

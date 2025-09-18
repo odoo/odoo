@@ -1,10 +1,11 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
-import { useDraggable } from "@web/core/utils/draggable";
+import { useDraggable } from "@web/core/utils/dnd/draggable";
 
 test("Parameters error handling", async () => {
     expect.assertions(2);
@@ -28,15 +29,17 @@ test("Parameters error handling", async () => {
     // Incorrect params
     await mountList(() => {
         expect(() => useDraggable({})).toThrow(
-            `Error in hook useDraggable: missing required property "ref" in parameter`
+            `Error in hook useDraggable: missing required property "ref" in parameter`,
         );
     });
     await mountList(() => {
         expect(() =>
             useDraggable({
                 elements: ".item",
-            })
-        ).toThrow(`Error in hook useDraggable: missing required property "ref" in parameter`);
+            }),
+        ).toThrow(
+            `Error in hook useDraggable: missing required property "ref" in parameter`,
+        );
     });
 
     // Correct params
@@ -237,25 +240,25 @@ test("Ignore specific elements in a nested draggable", async () => {
 
     // Drag ignored under non-ignored -> block
     await contains(".not-ignored.parent .ignored.child").dragAndDrop(
-        ".not-ignored.parent .not-ignored.child"
+        ".not-ignored.parent .not-ignored.child",
     );
     expect.verifySteps([]);
 
     // Drag not-ignored-under not-ignored -> succeed
     await contains(".not-ignored.parent .not-ignored.child").dragAndDrop(
-        ".not-ignored.parent .ignored.child"
+        ".not-ignored.parent .ignored.child",
     );
     expect.verifySteps(["start"]);
 
     // Drag ignored under ignored -> block
     await contains(".ignored.parent .ignored.child").dragAndDrop(
-        ".ignored.parent .not-ignored.child"
+        ".ignored.parent .not-ignored.child",
     );
     expect.verifySteps([]);
 
     // Drag not-ignored under ignored -> succeed
     await contains(".ignored.parent .not-ignored.child").dragAndDrop(
-        ".ignored.parent .ignored.child"
+        ".ignored.parent .ignored.child",
     );
     expect.verifySteps(["start"]);
 });

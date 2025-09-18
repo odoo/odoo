@@ -1,8 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dialog } from "@web/core/dialog/dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";

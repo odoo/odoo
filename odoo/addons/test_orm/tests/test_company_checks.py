@@ -9,109 +9,147 @@ class TestCompanyCheck(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_a = cls.env['res.company'].create({
-            'name': 'Company A',
-        })
-        cls.company_b = cls.env['res.company'].create({
-            'name': 'Company B',
-        })
-        cls.company_c = cls.env['res.company'].create({
-            'name': 'Company C',
-        })
-        cls.parent_0 = cls.env['test_orm.model_parent'].create({
-            'name': 'M0',
-            'company_id': False,
-        })
-        cls.parent_a = cls.env['test_orm.model_parent'].create({
-            'name': 'M1',
-            'company_id': cls.company_a.id,
-        })
-        cls.parent_b = cls.env['test_orm.model_parent'].create({
-            'name': 'M2',
-            'company_id': cls.company_b.id,
-        })
-        cls.test_user = cls.env['res.users'].create({
-            'name': 'Test',
-            'login': 'test',
-            'company_id': cls.company_a.id,
-            'company_ids': (cls.company_a | cls.company_c).ids,
-        })
+        cls.company_a = cls.env["res.company"].create(
+            {
+                "name": "Company A",
+            }
+        )
+        cls.company_b = cls.env["res.company"].create(
+            {
+                "name": "Company B",
+            }
+        )
+        cls.company_c = cls.env["res.company"].create(
+            {
+                "name": "Company C",
+            }
+        )
+        cls.parent_0 = cls.env["test_orm.model_parent"].create(
+            {
+                "name": "M0",
+                "company_id": False,
+            }
+        )
+        cls.parent_a = cls.env["test_orm.model_parent"].create(
+            {
+                "name": "M1",
+                "company_id": cls.company_a.id,
+            }
+        )
+        cls.parent_b = cls.env["test_orm.model_parent"].create(
+            {
+                "name": "M2",
+                "company_id": cls.company_b.id,
+            }
+        )
+        cls.test_user = cls.env["res.users"].create(
+            {
+                "name": "Test",
+                "login": "test",
+                "company_id": cls.company_a.id,
+                "company_ids": (cls.company_a | cls.company_c).ids,
+            }
+        )
 
     def test_check_company_auto(self):
-        """ Check the option _check_company_auto is well set on records"""
-        m1 = self.env['test_orm.model_child'].create({'company_id': self.company_a.id})
+        """Check the option _check_company_auto is well set on records"""
+        m1 = self.env["test_orm.model_child"].create({"company_id": self.company_a.id})
         self.assertTrue(m1._check_company_auto)
 
     def test_company_and_same_company(self):
-        """ Check you can create an object if the company are consistent"""
-        self.env['test_orm.model_child'].create({
-            'name': 'M1',
-            'company_id': self.company_a.id,
-            'parent_id': self.parent_a.id,
-            'parent_ids': [Command.link(self.parent_a.id)],
-        })
+        """Check you can create an object if the company are consistent"""
+        self.env["test_orm.model_child"].create(
+            {
+                "name": "M1",
+                "company_id": self.company_a.id,
+                "parent_id": self.parent_a.id,
+                "parent_ids": [Command.link(self.parent_a.id)],
+            }
+        )
 
     def test_company_and_different_company(self):
-        """ Check you cannot create a record if the company is inconsistent"""
+        """Check you cannot create a record if the company is inconsistent"""
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
-                'name': 'M1',
-                'company_id': self.company_b.id,
-                'parent_id': self.parent_a.id,
-            })
+            self.env["test_orm.model_child"].create(
+                {
+                    "name": "M1",
+                    "company_id": self.company_b.id,
+                    "parent_id": self.parent_a.id,
+                }
+            )
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
-                'name': 'M1',
-                'company_id': self.company_b.id,
-                'parent_ids': [Command.link(self.parent_a.id), Command.link(self.parent_b.id)],
-            })
+            self.env["test_orm.model_child"].create(
+                {
+                    "name": "M1",
+                    "company_id": self.company_b.id,
+                    "parent_ids": [
+                        Command.link(self.parent_a.id),
+                        Command.link(self.parent_b.id),
+                    ],
+                }
+            )
 
     def test_company_and_no_company(self):
-        self.env['test_orm.model_child'].create({
-            'name': 'M1',
-            'company_id': self.company_a.id,
-            'parent_id': self.parent_0.id,
-            'parent_ids': [Command.link(self.parent_0.id)],
-        })
+        self.env["test_orm.model_child"].create(
+            {
+                "name": "M1",
+                "company_id": self.company_a.id,
+                "parent_id": self.parent_0.id,
+                "parent_ids": [Command.link(self.parent_0.id)],
+            }
+        )
 
     def test_no_company_and_no_company(self):
-        self.env['test_orm.model_child'].create({
-            'name': 'M1',
-            'company_id': False,
-            'parent_id': self.parent_0.id,
-            'parent_ids': [Command.link(self.parent_0.id)],
-        })
+        self.env["test_orm.model_child"].create(
+            {
+                "name": "M1",
+                "company_id": False,
+                "parent_id": self.parent_0.id,
+                "parent_ids": [Command.link(self.parent_0.id)],
+            }
+        )
 
     def test_no_company_and_some_company(self):
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
-                'name': 'M1',
-                'company_id': False,
-                'parent_id': self.parent_a.id,
-            })
+            self.env["test_orm.model_child"].create(
+                {
+                    "name": "M1",
+                    "company_id": False,
+                    "parent_id": self.parent_a.id,
+                }
+            )
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
-                'name': 'M1',
-                'company_id': False,
-                'parent_ids': [Command.link(self.parent_0.id), Command.link(self.parent_a.id)],
-            })
+            self.env["test_orm.model_child"].create(
+                {
+                    "name": "M1",
+                    "company_id": False,
+                    "parent_ids": [
+                        Command.link(self.parent_0.id),
+                        Command.link(self.parent_a.id),
+                    ],
+                }
+            )
 
     def test_no_company_check(self):
-        """ Check you can create a record with the inconsistent company if there are no check"""
-        self.env['test_orm.model_child_nocheck'].create({
-            'name': 'M1',
-            'company_id': self.company_b.id,
-            'parent_id': self.parent_a.id,
-        })
+        """Check you can create a record with the inconsistent company if there are no check"""
+        self.env["test_orm.model_child_nocheck"].create(
+            {
+                "name": "M1",
+                "company_id": self.company_b.id,
+                "parent_id": self.parent_a.id,
+            }
+        )
 
     def test_company_write(self):
-        """ Check the company consistency is respected at write. """
-        child = self.env['test_orm.model_child'].create({
-            'name': 'M1',
-            'company_id': self.company_a.id,
-            'parent_id': self.parent_a.id,
-            'parent_ids': [Command.link(self.parent_a.id)],
-        })
+        """Check the company consistency is respected at write."""
+        child = self.env["test_orm.model_child"].create(
+            {
+                "name": "M1",
+                "company_id": self.company_a.id,
+                "parent_id": self.parent_a.id,
+                "parent_ids": [Command.link(self.parent_a.id)],
+            }
+        )
 
         with self.assertRaises(UserError):
             child.company_id = self.company_b.id
@@ -122,58 +160,81 @@ class TestCompanyCheck(common.TransactionCase):
         with self.assertRaises(UserError):
             child.parent_ids = [Command.link(self.parent_b.id)]
 
-        child.write({
-            'parent_id': self.parent_b.id,
-            'parent_ids': [Command.unlink(self.parent_a.id), Command.link(self.parent_b.id)],
-            'company_id': self.company_b.id,
-        })
+        child.write(
+            {
+                "parent_id": self.parent_b.id,
+                "parent_ids": [
+                    Command.unlink(self.parent_a.id),
+                    Command.link(self.parent_b.id),
+                ],
+                "company_id": self.company_b.id,
+            }
+        )
 
     def test_check_company_write_performance(self):
-        child = self.env['test_orm.model_child'].create({
-            'name': 'M1',
-            'company_id': self.company_b.id,
-        })
+        child = self.env["test_orm.model_child"].create(
+            {
+                "name": "M1",
+                "company_id": self.company_b.id,
+            }
+        )
         self.env.invalidate_all()
 
-        ChildModel = self.registry['test_orm.model_child']
-        _check_company = ChildModel._check_company  # noqa: RUF052
+        ChildModel = self.registry["test_orm.model_child"]
+        _check_company = ChildModel._check_company
         # One query for reading child company_id field (for check_company)
         # One query for reading parent_b company_id field (for check_company)
         # One query for the update
         with (
             self.assertQueryCount(3),
-            patch.object(ChildModel, '_check_company', autospec=True, side_effect=_check_company) as spy,
+            patch.object(
+                ChildModel,
+                "_check_company",
+                autospec=True,
+                side_effect=_check_company,
+            ) as spy,
         ):
             child.parent_id = self.parent_b
 
-        spy.assert_called_once_with(child, ['parent_id', 'write_uid', 'write_date'])
+        spy.assert_called_once_with(child, ["parent_id", "write_uid", "write_date"])
 
     def test_company_environment(self):
-        """ Check the company context on the environment is verified. """
+        """Check the company context on the environment is verified."""
 
-        user = self.test_user.with_user(self.test_user).with_context(allowed_company_ids=[])
+        user = self.test_user.with_user(self.test_user).with_context(
+            allowed_company_ids=[]
+        )
 
         # When accessing company/companies, check raises error if unauthorized/unexisting company.
         with self.assertRaises(AccessError):
-            user.with_context(allowed_company_ids=[self.company_a.id, self.company_b.id, self.company_c.id]).env.companies
+            user.with_context(
+                allowed_company_ids=[
+                    self.company_a.id,
+                    self.company_b.id,
+                    self.company_c.id,
+                ]
+            ).env.companies
 
         with self.assertRaises(AccessError):
             user.with_context(allowed_company_ids=[self.company_b.id]).env.company
 
         with self.assertRaises(AccessError):
             # crap in company context is not allowed.
-            user.with_context(allowed_company_ids=['company_qsdf', 'company564654']).env.companies
+            user.with_context(
+                allowed_company_ids=["company_qsdf", "company564654"]
+            ).env.companies
 
         # In sudo mode, context check is bypassed.
-        companies = (self.company_a | self.company_b)
+        companies = self.company_a | self.company_b
         self.assertEqual(
             user.sudo().with_context(allowed_company_ids=companies.ids).env.companies,
             companies,
         )
 
         self.assertEqual(
-            user.sudo().with_context(
-                allowed_company_ids=[self.company_b.id, 'abc']).env.company,
+            user.sudo()
+            .with_context(allowed_company_ids=[self.company_b.id, "abc"])
+            .env.company,
             self.company_b,
         )
         """
@@ -187,19 +248,23 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertEqual(user.env.companies, user.company_ids)
 
     def test_with_company(self):
-        """ Check that with_company() works as expected """
+        """Check that with_company() works as expected"""
 
-        user = self.test_user.with_user(self.test_user).with_context(allowed_company_ids=[])
+        user = self.test_user.with_user(self.test_user).with_context(
+            allowed_company_ids=[]
+        )
         self.assertEqual(user.env.companies, user.company_ids)
 
-        self.assertEqual(user.with_company(user.env.company).env.company, user.env.company)
+        self.assertEqual(
+            user.with_company(user.env.company).env.company, user.env.company
+        )
         self.assertEqual(
             user.with_company(self.company_a).env.company,
             user.with_company(self.company_a.id).env.company,
         )
 
         # Falsy values shouldn't change current environment, record, or context.
-        for falsy in [False, None, 0, '', self.env['res.company'], []]:
+        for falsy in [False, None, 0, "", self.env["res.company"], []]:
             no_change = user.with_company(falsy)
             self.assertEqual(no_change, user)
             self.assertEqual(no_change.env.context, user.env.context)
@@ -228,7 +293,7 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertEqual(comp_c_a_user.env.companies[0], self.company_c)
         self.assertEqual(comp_c_a_user.env.companies[1], self.company_a)
         self.assertEqual(
-            comp_c_a_user.env.context['allowed_company_ids'],
+            comp_c_a_user.env.context["allowed_company_ids"],
             [self.company_c.id, self.company_a.id],
         )
 
@@ -236,7 +301,7 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertEqual(comp_a_c_user.env.companies[0], self.company_a)
         self.assertEqual(comp_a_c_user.env.companies[1], self.company_c)
         self.assertEqual(
-            comp_a_c_user.env.context['allowed_company_ids'],
+            comp_a_c_user.env.context["allowed_company_ids"],
             [self.company_a.id, self.company_c.id],
         )
 
@@ -251,11 +316,11 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertEqual(comp_user.env.companies, user.company_id)
 
     def test_company_sticky_with_context(self):
-        context = frozendict({'nothing_to_see_here': True})
-        companies_1 = frozendict({'allowed_company_ids': [1]})
-        companies_2 = frozendict({'allowed_company_ids': [2]})
+        context = frozendict({"nothing_to_see_here": True})
+        companies_1 = frozendict({"allowed_company_ids": [1]})
+        companies_2 = frozendict({"allowed_company_ids": [2]})
 
-        User = self.env['res.users'].with_context(context)
+        User = self.env["res.users"].with_context(context)
         self.assertEqual(User.env.context, context)
 
         User = User.with_context(**companies_1)

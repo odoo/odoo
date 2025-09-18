@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/utils/patch - Reversible monkey-patching for class prototypes and object properties */
+
 /**
  *  @typedef {{
  *      originalProperties: Map<string, PropertyDescriptor>;
@@ -36,7 +40,8 @@ function isClassPrototype(objToPatch) {
     // isClassPrototype(new A()) === false
     // isClassPrototype({}) === false
     return (
-        Object.hasOwn(objToPatch, "constructor") && objToPatch.constructor?.prototype === objToPatch
+        Object.hasOwn(objToPatch, "constructor") &&
+        objToPatch.constructor?.prototype === objToPatch
     );
 }
 
@@ -47,13 +52,15 @@ function isClassPrototype(objToPatch) {
  * @returns {object}
  */
 function findAncestorPropertyDescriptor(objToPatch, key) {
-    let descriptor = null;
     let prototype = objToPatch;
     do {
-        descriptor = Object.getOwnPropertyDescriptor(prototype, key);
+        const descriptor = Object.getOwnPropertyDescriptor(prototype, key);
+        if (descriptor) {
+            return descriptor;
+        }
         prototype = Object.getPrototypeOf(prototype);
-    } while (!descriptor && prototype);
-    return descriptor;
+    } while (prototype);
+    return null;
 }
 
 /**
@@ -71,7 +78,7 @@ function findAncestorPropertyDescriptor(objToPatch, key) {
 export function patch(objToPatch, extension) {
     if (typeof extension === "string") {
         throw new Error(
-            `Patch "${extension}": Second argument is not the patch name anymore, it should be the object containing the patched properties`
+            `Patch "${extension}": Second argument is not the patch name anymore, it should be the object containing the patched properties`,
         );
     }
 

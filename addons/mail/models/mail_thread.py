@@ -24,9 +24,9 @@ from xmlrpc import client as xmlrpclib
 from lxml import etree, html
 from markupsafe import Markup, escape
 from requests import Session
-from werkzeug import urls
+from urllib.parse import urlencode
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import _, api, exceptions, fields, models, tools, Command
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -34,9 +34,11 @@ from odoo.addons.mail.tools.web_push import (
 )
 from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
+from itertools import batched
+
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
-    clean_context, split_every, Query, SQL,
+    clean_context, Query, SQL,
     ormcache, is_list_of,
 )
 from odoo.tools.mail import (
@@ -253,8 +255,8 @@ class MailThread(models.AbstractModel):
             self.env.cr.execute(""" SELECT msg.res_id FROM mail_message msg
                                  RIGHT JOIN mail_notification rel
                                  ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND (rel.is_read = false OR rel.is_read IS NULL)
-                                 WHERE msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'""",
-                             (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+                                 WHERE msg.model = %s AND msg.res_id = ANY(%s) AND msg.message_type != 'user_notification'""",
+                             (self.env.user.partner_id.id, self._name, list(self.ids),))
             for result in self.env.cr.fetchall():
                 res[result[0]] += 1
 
@@ -277,10 +279,10 @@ class MailThread(models.AbstractModel):
                      WHERE notif.notification_status in ('exception', 'bounce')
                        AND notif.author_id = %(author_id)s
                        AND msg.model = %(model_name)s
-                       AND msg.res_id in %(res_ids)s
+                       AND msg.res_id = ANY(%(res_ids)s)
                        AND msg.message_type != 'user_notification'
                   GROUP BY msg.res_id
-            """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': tuple(self.ids)})
+            """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': list(self.ids)})
             res.update(self.env.cr.fetchall())
 
         for record in self:
@@ -341,8 +343,8 @@ class MailThread(models.AbstractModel):
             for key, val in self.env.context.items():
                 if key.startswith('default_') and key[8:] not in create_values:
                     create_values[key[8:]] = val
-            thread._message_auto_subscribe(create_values, followers_existing_policy='update')
             create_values_list[thread.id] = create_values
+        threads._message_auto_subscribe_batch(create_values_list, followers_existing_policy='update')
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self.env.context.get('mail_create_nolog'):
@@ -3449,7 +3451,7 @@ class MailThread(models.AbstractModel):
             recipients_ids = recipients_group['recipients_ids']
 
             # create MailMail for partners
-            for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
+            for recipients_ids_chunk in batched(recipients_ids, gen_batch_size):
                 mail_values = self._notify_by_email_get_final_mail_values(
                     recipients_ids_chunk,
                     base_mail_values,
@@ -4353,7 +4355,7 @@ class MailThread(models.AbstractModel):
             token = self._encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, urls.url_encode(params, sort=True))
+        link = '%s?%s' % (base_link, urlencode(sorted(params.items())))
         if self:
             link = self[0].get_base_url() + link
 
@@ -4815,6 +4817,166 @@ class MailThread(models.AbstractModel):
 
         return True
 
+    def _message_auto_subscribe_batch(self, vals_per_record, followers_existing_policy='skip'):
+        """Batch variant of :meth:`_message_auto_subscribe` for ``create()``.
+
+        Instead of calling ``_message_auto_subscribe`` once per record (N+1
+        pattern for parent-relation subscription queries), this method:
+
+        1. Fetches subtype metadata once (ormcached).
+        2. Collects **all** parent-doc IDs across records and fetches their
+           subscription data in a **single** query.
+        3. Calls ``_message_auto_subscribe_followers`` per record (pure-Python
+           hook required for model-specific overrides in project, hr, etc.).
+        4. Inserts followers for each record that needs them, using a single
+           existence-check query and a single batch create.
+
+        :param dict vals_per_record: ``{record_id: create_values_dict}``
+        :param str followers_existing_policy: see ``_insert_followers``
+        """
+        if not self:
+            return True
+
+        # Step 1: subtype metadata (ormcached — same for all records of this model)
+        child_ids, def_ids, all_int_ids, parent, relation = \
+            self.env['mail.message.subtype']._get_auto_subscription_subtypes(self._name)
+
+        # Step 2: collect ALL parent-doc IDs across all records
+        # Build {res_model: set(parent_doc_ids)} and per-record relation info
+        all_parent_ids_by_model = {}
+        records_with_relations = {}  # {record_id: (updated_values, updated_relation)}
+
+        for record_id, updated_values in vals_per_record.items():
+            updated_relation = {}
+            for res_model, fnames in relation.items():
+                for fname in fnames:
+                    if updated_values.get(fname):
+                        updated_relation.setdefault(res_model, set()).add(fname)
+                        all_parent_ids_by_model.setdefault(res_model, set()).add(updated_values[fname])
+            if updated_relation:
+                records_with_relations[record_id] = (updated_values, updated_relation)
+
+        # ONE query for all parent-doc subscription data (instead of N)
+        parent_subscription_data = {}  # {parent_doc_id: [(partner_id, sids, pshare, active)]}
+        if all_parent_ids_by_model:
+            doc_data = [(model, list(pids)) for model, pids in all_parent_ids_by_model.items()]
+            res = self.env['mail.followers']._get_subscription_data(
+                doc_data, None, include_pshare=True, include_active=True,
+            )
+            for _fol_id, _res_id, partner_id, subtype_ids, pshare, active in res:
+                parent_subscription_data.setdefault(_res_id, []).append(
+                    (partner_id, subtype_ids, pshare, active)
+                )
+
+        # Step 3: per-record computation (pure Python, no DB queries)
+        # {record_id: {partner_id: set(subtype_ids)}}
+        all_new_partner_subtypes = {}
+        all_notify_data = {}  # {record_id: {(template, lang): [partner_ids]}}
+
+        for record in self:
+            record_id = record.id
+            updated_values = vals_per_record[record_id]
+            new_partner_subtypes = {}
+
+            # 3a: partner subtypes from parent-doc followers
+            if record_id in records_with_relations:
+                _vals, rec_updated_relation = records_with_relations[record_id]
+                for res_model, fnames in rec_updated_relation.items():
+                    for fname in fnames:
+                        parent_doc_id = updated_values[fname]
+                        for partner_id, subtype_ids, pshare, active in \
+                                parent_subscription_data.get(parent_doc_id, []):
+                            sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
+                            sids += [sid for sid in subtype_ids if sid not in parent and sid in child_ids]
+                            if partner_id and active:
+                                if pshare:
+                                    new_partner_subtypes[partner_id] = set(sids) - set(all_int_ids)
+                                else:
+                                    new_partner_subtypes[partner_id] = set(sids)
+
+            # 3b: model-specific followers hook (e.g. user_id assignment)
+            notify_data = {}
+            res = record._message_auto_subscribe_followers(updated_values, def_ids)
+            for partner_id, sids, template in res:
+                new_partner_subtypes.setdefault(partner_id, sids)
+                if template:
+                    partner = self.env['res.partner'].browse(partner_id)
+                    lang = partner.lang if partner else None
+                    notify_data.setdefault((template, lang), []).append(partner_id)
+
+            if new_partner_subtypes:
+                all_new_partner_subtypes[record_id] = new_partner_subtypes
+            if notify_data:
+                all_notify_data[record_id] = notify_data
+
+        # Step 4: batch insert followers for all records that need them
+        if all_new_partner_subtypes:
+            # Collect ALL partner IDs and ALL record IDs for a single existence check
+            all_record_ids = list(all_new_partner_subtypes.keys())
+            all_partner_ids = set()
+            for partner_subtypes in all_new_partner_subtypes.values():
+                all_partner_ids.update(partner_subtypes.keys())
+
+            # ONE existence-check query for all records × all partners
+            doc_pids = {rid: set() for rid in all_record_ids}
+            data_fols = {}
+            if all_partner_ids:
+                for fid, rid, pid, sids in self.env['mail.followers']._get_subscription_data(
+                    [(self._name, all_record_ids)], list(all_partner_ids),
+                ):
+                    if followers_existing_policy != 'force':
+                        if pid:
+                            doc_pids[rid].add(pid)
+                    data_fols[fid] = (rid, pid, sids)
+
+                if followers_existing_policy == 'force':
+                    self.env['mail.followers'].sudo().browse(data_fols.keys()).unlink()
+
+            # Build batch create values and per-follower updates
+            new_vals_list = []
+            updates = {}
+            for record_id, partner_subtypes in all_new_partner_subtypes.items():
+                for partner_id, sids in partner_subtypes.items():
+                    if partner_id not in doc_pids.get(record_id, set()):
+                        new_vals_list.append({
+                            'res_model': self._name,
+                            'res_id': record_id,
+                            'partner_id': partner_id,
+                            'subtype_ids': [Command.set(list(sids))],
+                        })
+                    elif followers_existing_policy in ('replace', 'update'):
+                        fol_id, existing_sids = next(
+                            ((key, val[2]) for key, val in data_fols.items()
+                             if val[0] == record_id and val[1] == partner_id),
+                            (False, []),
+                        )
+                        if not fol_id:
+                            continue
+                        new_sids = set(sids) - set(existing_sids)
+                        old_sids = set(existing_sids) - set(sids)
+                        update_cmd = []
+                        if new_sids:
+                            update_cmd += [Command.link(sid) for sid in new_sids]
+                        if old_sids and followers_existing_policy == 'replace':
+                            update_cmd += [Command.unlink(sid) for sid in old_sids]
+                        if update_cmd:
+                            updates[fol_id] = {'subtype_ids': update_cmd}
+
+            # ONE batch create for all new followers
+            sudo_followers = self.env['mail.followers'].sudo().with_context(default_partner_id=False)
+            if new_vals_list:
+                sudo_followers.create(new_vals_list)
+            for fol_id, values in updates.items():
+                sudo_followers.browse(fol_id).write(values)
+
+        # Step 5: notifications (rare path — only when templates are involved)
+        for record_id, notify_data in all_notify_data.items():
+            record = self.browse(record_id)
+            for (template, lang), pids in notify_data.items():
+                record.with_context(lang=lang)._message_auto_subscribe_notify(pids, template)
+
+        return True
+
     @api.readonly
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
         self.ensure_one()
@@ -4924,7 +5086,7 @@ class MailThread(models.AbstractModel):
         if body is not None:
             if body or not message._filter_empty():
                 tree = html.fragment_fromstring(escape(body), create_parent="div")
-                children = tree.getchildren()
+                children = list(tree)
                 if len(children) > 0:  # body is a valid html
                     # If the last element is a div or p, add the edited span inside it to avoid the edit markup
                     # to be on its own line. Otherwise, append it to the end of the last element.
@@ -5004,7 +5166,7 @@ class MailThread(models.AbstractModel):
             if is_request and store.target.is_current_user(self.env):
                 res["hasReadAccess"] = thread.sudo(False).has_access("read")
                 res["hasWriteAccess"] = thread.sudo(False).has_access("write")
-                res["canPostOnReadonly"] = self._mail_post_access == "read"
+                res["canPostOnReadonly"] = self._mail_get_operation_for_mail_message_operation('create').get(self) == "read"
             if (
                "activities" in request_list
                 and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])

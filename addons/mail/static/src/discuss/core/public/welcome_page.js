@@ -1,11 +1,8 @@
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
-
 import { Component, useState, useSubEnv } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
 export class WelcomePage extends Component {
     static props = ["proceed?"];
     static template = "mail.WelcomePage";
@@ -35,10 +32,13 @@ export class WelcomePage extends Component {
         if (!this.store.self_partner) {
             await this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
-        browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
+        browser.localStorage.setItem(
+            "discuss_call_preview_join_mute",
+            !this.state.hasMicrophone,
+        );
         browser.localStorage.setItem(
             "discuss_call_preview_join_video",
-            Boolean(this.state.hasCamera)
+            Boolean(this.state.hasCamera),
         );
         this.props.proceed?.();
     }

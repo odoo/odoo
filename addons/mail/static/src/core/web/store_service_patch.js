@@ -2,9 +2,7 @@ import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
 import { patch } from "@web/core/utils/patch";
-
 const unread_store = (() => {
     if (!window.idbKeyval) {
         return undefined;
@@ -29,7 +27,9 @@ const StorePatch = {
                  * the end (other activities).
                  */
                 const getSortId = (activityGroup) =>
-                    activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
+                    activityGroup.model === "mail.activity"
+                        ? Number.MAX_VALUE
+                        : activityGroup.id;
                 return getSortId(g1) - getSortId(g2);
             },
         });
@@ -79,7 +79,9 @@ const StorePatch = {
         };
         try {
             // useful for synchronizing activity data between multiple tabs
-            this.activityBroadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
+            this.activityBroadcastChannel = new browser.BroadcastChannel(
+                "mail.activity.channel",
+            );
             this.activityBroadcastChannel.onmessage =
                 this._onActivityBroadcastChannelMessage.bind(this);
         } catch {
@@ -121,14 +123,16 @@ const StorePatch = {
                     additionalContext: {
                         dialog_size: "large",
                     },
-                }
-            )
+                },
+            ),
         );
     },
     updateAppBadge() {
         if (unread_store) {
             window.idbKeyval.set("unread", this.globalCounter, unread_store);
-            Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
+            Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(
+                () => {},
+            ); // FIXME: Illegal invocation error in HOOT
         }
     },
     /**
@@ -141,7 +145,9 @@ const StorePatch = {
                 this.insert(data.payload, { broadcast: false });
                 break;
             case "DELETE": {
-                const activity = this["mail.activity"].insert(data.payload, { broadcast: false });
+                const activity = this["mail.activity"].insert(data.payload, {
+                    broadcast: false,
+                });
                 activity.remove({ broadcast: false });
                 break;
             }
@@ -173,7 +179,7 @@ const StorePatch = {
                     res_model: model,
                     views: [[false, "form"]],
                     res_id: id,
-                })
+                }),
             ).then(() => this.onLinkFollowed(thread));
             return true;
         }

@@ -1,4 +1,4 @@
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { patch } from "@web/core/utils/patch";
 
 const FIELDS = [

@@ -6,12 +6,12 @@ import logging
 import time
 import requests
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode as url_encode
 
 from odoo import _, api, fields, models, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import hmac, email_normalize
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 from odoo.addons.google_gmail.tools import get_iap_error_message
 
 _logger = logging.getLogger(__name__)

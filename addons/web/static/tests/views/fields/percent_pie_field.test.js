@@ -1,6 +1,13 @@
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
-import { test, expect } from "@odoo/hoot";
+// @ts-check
+
+import { expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char({
@@ -35,18 +42,20 @@ test("PercentPieField in form view with value < 50%", async () => {
     });
 
     expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
-    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText("10%", {
-        message: "should have 10% as pie value since int_field=10",
-    });
+    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText(
+        "10%",
+        {
+            message: "should have 10% as pie value since int_field=10",
+        },
+    );
 
     expect(
-        queryOne(".o_field_percent_pie.o_field_widget .o_pie").style.background.replaceAll(
-            /\s+/g,
-            " "
-        )
+        queryOne(
+            ".o_field_percent_pie.o_field_widget .o_pie",
+        ).style.background.replaceAll(/\s+/g, " "),
     ).toBe(
         "conic-gradient( var(--PercentPieField-color-active) 0% 10%, var(--PercentPieField-color-static) 0% 100% )",
-        { message: "pie should have a background computed for its value of 10%" }
+        { message: "pie should have a background computed for its value of 10%" },
     );
 });
 
@@ -66,17 +75,19 @@ test("PercentPieField in form view with value > 50%", async () => {
     });
 
     expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
-    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText("80%", {
-        message: "should have 80% as pie value since int_field=80",
-    });
+    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText(
+        "80%",
+        {
+            message: "should have 80% as pie value since int_field=80",
+        },
+    );
     expect(
-        queryOne(".o_field_percent_pie.o_field_widget .o_pie").style.background.replaceAll(
-            /\s+/g,
-            " "
-        )
+        queryOne(
+            ".o_field_percent_pie.o_field_widget .o_pie",
+        ).style.background.replaceAll(/\s+/g, " "),
     ).toBe(
         "conic-gradient( var(--PercentPieField-color-active) 0% 80%, var(--PercentPieField-color-static) 0% 100% )",
-        { message: "pie should have a background computed for its value of 80%" }
+        { message: "pie should have a background computed for its value of 80%" },
     );
 });
 
@@ -96,18 +107,20 @@ test("PercentPieField in form view with float value", async () => {
     });
 
     expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
-    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText("33.33%", {
-        message:
-            "should have 33.33% as pie value since float_field=33.3333 and its value is rounded to 2 decimals",
-    });
+    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value").toHaveText(
+        "33.33%",
+        {
+            message:
+                "should have 33.33% as pie value since float_field=33.3333 and its value is rounded to 2 decimals",
+        },
+    );
     expect(
-        queryOne(".o_field_percent_pie.o_field_widget .o_pie").style.background.replaceAll(
-            /\s+/g,
-            " "
-        )
+        queryOne(
+            ".o_field_percent_pie.o_field_widget .o_pie",
+        ).style.background.replaceAll(/\s+/g, " "),
     ).toBe(
         "conic-gradient( var(--PercentPieField-color-active) 0% 33.3333%, var(--PercentPieField-color-static) 0% 100% )",
-        { message: "pie should have a background computed for its value of 33.3333%" }
+        { message: "pie should have a background computed for its value of 33.3333%" },
     );
 });
 
@@ -127,7 +140,9 @@ test("hide the string when the PercentPieField widget is used in the view", asyn
     });
 
     expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
-    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").not.toBeVisible();
+    expect(
+        ".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text",
+    ).not.toBeVisible();
 });
 
 test.tags("desktop");

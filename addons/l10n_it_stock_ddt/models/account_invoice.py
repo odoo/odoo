@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, fields, _
-from odoo.tools.float_utils import float_compare
+from odoo.libs.numbers.float_utils import float_compare
 
 
 class AccountMove(models.Model):

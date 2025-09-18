@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
+import { integerField, IntegerField } from "@web/fields/basic/integer/integer_field";
 
 import { useEffect, useRef } from "@odoo/owl";
 

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
@@ -6,16 +8,21 @@ import {
     resize,
     scroll,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onMounted, useRef, xml } from "@odoo/owl";
-import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
+import {
+    defineParams,
+    defineStyle,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { usePosition } from "@web/core/position/position_hook";
 
 before(
     () =>
         document.readyState === "complete" ||
-        new Promise((resolve) => window.addEventListener("load", resolve, { once: true }))
+        new Promise((resolve) =>
+            window.addEventListener("load", resolve, { once: true }),
+        ),
 );
 
 function getTestComponent(popperOptions, styles = {}, target = false) {
@@ -98,19 +105,28 @@ test("can add margin", async () => {
     // With/without additional margin, direction is top
     [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "top" });
     expect(popBox.top).toBe(targetBox.top - popBox.height - SHEET_MARGINS.bottom);
-    [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "top", margin: 10 });
+    [popBox, targetBox] = await _mountTestComponentAndDestroy({
+        position: "top",
+        margin: 10,
+    });
     expect(popBox.top).toBe(targetBox.top - popBox.height - SHEET_MARGINS.bottom - 10);
 
     // With/without additional margin, direction is left
     [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "left" });
     expect(popBox.left).toBe(targetBox.left - popBox.width - SHEET_MARGINS.right);
-    [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "left", margin: 10 });
+    [popBox, targetBox] = await _mountTestComponentAndDestroy({
+        position: "left",
+        margin: 10,
+    });
     expect(popBox.left).toBe(targetBox.left - popBox.width - SHEET_MARGINS.right - 10);
 
     // With/without additional margin, direction is right
     [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "right" });
     expect(popBox.left).toBe(targetBox.right + SHEET_MARGINS.left);
-    [popBox, targetBox] = await _mountTestComponentAndDestroy({ position: "right", margin: 10 });
+    [popBox, targetBox] = await _mountTestComponentAndDestroy({
+        position: "right",
+        margin: 10,
+    });
     expect(popBox.left).toBe(targetBox.right + SHEET_MARGINS.left + 10);
 });
 
@@ -254,7 +270,7 @@ test("reposition popper when a scroll event occurs", async () => {
                 overflow: "auto",
                 maxHeight: "40px",
             },
-        }
+        },
     );
 
     await mountWithCleanup(TestComp);
@@ -285,7 +301,7 @@ test("is positioned relative to its containing block", async () => {
             container: {
                 margin: `${margin}px`,
             },
-        }
+        },
     );
 
     let popper = await mountWithCleanup(TestComp);
@@ -304,7 +320,7 @@ test("is positioned relative to its containing block", async () => {
                 margin: `${margin}px`,
                 contain: "layout",
             },
-        }
+        },
     );
 
     popper = await mountWithCleanup(TestComp);
@@ -339,7 +355,7 @@ function getPopperComponent(popperOptions, target) {
 
 test("iframe: popper is outside, target inside", async () => {
     await mountWithCleanup(
-        `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px"/>`
+        `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px"/>`,
     );
 
     const iframe = document.createElement("iframe");
@@ -377,7 +393,7 @@ test("iframe: popper is outside, target inside", async () => {
                 expect.step(`${solution.direction}-${solution.variant}`);
             },
         },
-        popperTarget
+        popperTarget,
     );
     await mountWithCleanup(Popper, { target: container, noMainContainer: true });
 
@@ -395,7 +411,10 @@ test("iframe: popper is outside, target inside", async () => {
     let popperBox = onPositionedArgs.el.getBoundingClientRect();
     let expectedTop = iframeTop + targetBox.top + popperTarget.offsetHeight;
     let expectedLeft =
-        iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+        iframeLeft +
+        targetBox.left +
+        popperTarget.offsetWidth / 2 -
+        popperBox.width / 2;
 
     expect(popperBox.top).toBe(expectedTop);
     expect(popperBox.top).toBe(onPositionedArgs.solution.top);
@@ -409,13 +428,19 @@ test("iframe: popper is outside, target inside", async () => {
     await scroll(":iframe html", { y: scrollOffset }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
-    expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
+    expect(previousPositionSolution.top).toBe(
+        onPositionedArgs.solution.top + scrollOffset,
+    );
 
     // Check the expected position
     targetBox = popperTarget.getBoundingClientRect();
     popperBox = onPositionedArgs.el.getBoundingClientRect();
     expectedTop = iframeTop + targetBox.top + popperTarget.offsetHeight;
-    expectedLeft = iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+    expectedLeft =
+        iframeLeft +
+        targetBox.left +
+        popperTarget.offsetWidth / 2 -
+        popperBox.width / 2;
 
     expect(popperBox.top).toBe(expectedTop);
     expect(popperBox.top).toBe(onPositionedArgs.solution.top);
@@ -426,7 +451,7 @@ test("iframe: popper is outside, target inside", async () => {
 
 test("iframe: popper is outside, target and container inside", async () => {
     await mountWithCleanup(
-        `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 700px; height: 700px; margin: 25px"/>`
+        `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 700px; height: 700px; margin: 25px"/>`,
     );
 
     const iframe = document.createElement("iframe");
@@ -463,7 +488,7 @@ test("iframe: popper is outside, target and container inside", async () => {
                 onPositionedArgs = { el, solution };
             },
         },
-        popperTarget
+        popperTarget,
     );
     await mountWithCleanup(Popper, { target: container, noMainContainer: true });
 
@@ -478,7 +503,10 @@ test("iframe: popper is outside, target and container inside", async () => {
     const popperBox = onPositionedArgs.el.getBoundingClientRect();
     const expectedTop = iframeTop + targetBox.top;
     const expectedLeft =
-        iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+        iframeLeft +
+        targetBox.left +
+        popperTarget.offsetWidth / 2 -
+        popperBox.width / 2;
 
     expect(popperBox.bottom).toBe(expectedTop);
     expect(popperBox.top).toBe(onPositionedArgs.solution.top);
@@ -545,7 +573,8 @@ test("iframe: both popper and target inside", async () => {
     let targetBox = popperTarget.getBoundingClientRect();
     let popperBox = onPositionedArgs.el.getBoundingClientRect();
     let expectedTop = targetBox.top + popperTarget.offsetHeight;
-    let expectedLeft = targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+    let expectedLeft =
+        targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
 
     expect(popperBox.top).toBe(expectedTop);
     expect(popperBox.top).toBe(onPositionedArgs.solution.top);
@@ -559,7 +588,9 @@ test("iframe: both popper and target inside", async () => {
     await scroll(":iframe html", { y: scrollOffset }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
-    expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
+    expect(previousPositionSolution.top).toBe(
+        onPositionedArgs.solution.top + scrollOffset,
+    );
 
     // Check the expected position
     targetBox = popperTarget.getBoundingClientRect();
@@ -820,35 +851,35 @@ test(
     shrinkPopperTest("top", 10, ({ c, p, t }) => {
         expect(p.top).toBe(c.top);
         expect(p.bottom).toBe(t.top);
-    })
+    }),
 );
 test(
     "max height to prevent container overflow - bottom",
     shrinkPopperTest("bottom", -10, ({ c, p, t }) => {
         expect(p.top).toBe(t.bottom);
         expect(p.bottom).toBe(c.bottom);
-    })
+    }),
 );
 test(
     "max height to prevent container overflow - right-start",
     shrinkPopperTest("right-start", 0, ({ c, p, t }) => {
         expect(p.top).toBe(t.top);
         expect(p.bottom).toBe(c.bottom);
-    })
+    }),
 );
 test(
     "max height to prevent container overflow - right-middle",
     shrinkPopperTest("right-middle", 0, ({ c, p }) => {
         expect(p.top).toBe(c.top);
         expect(p.bottom).toBe(c.bottom);
-    })
+    }),
 );
 test(
     "max height to prevent container overflow - right-end",
     shrinkPopperTest("right-end", 0, ({ c, p, t }) => {
         expect(p.bottom).toBe(t.bottom);
         expect(p.top).toBe(c.top);
-    })
+    }),
 );
 test(
     "max height to prevent container overflow - smaller max-height set on element",
@@ -860,8 +891,8 @@ test(
             expect(p.top).toBe(t.top - 100);
             expect(p.bottom).toBe(t.top);
         },
-        { "max-height": "100px" }
-    )
+        { "max-height": "100px" },
+    ),
 );
 
 test(
@@ -874,8 +905,8 @@ test(
             expect(p.top).toBe(c.top);
             expect(p.bottom).toBe(t.top);
         },
-        { "max-height": "900px" }
-    )
+        { "max-height": "900px" },
+    ),
 );
 
 function getPositionTest(position, positionToCheck) {
@@ -964,8 +995,14 @@ function getRepositionTest(from, to, containerStyleChanges, extendedFlipping = f
 
         // Change container style and force update
         for (const styleToApply of containerStyleChanges.split(" ")) {
-            Object.assign(queryOne("#container").style, CONTAINER_STYLE_MAP[styleToApply]);
-            Object.assign(queryOne("#scroll-container").style, CONTAINER_STYLE_MAP[styleToApply]);
+            Object.assign(
+                queryOne("#container").style,
+                CONTAINER_STYLE_MAP[styleToApply],
+            );
+            Object.assign(
+                queryOne("#scroll-container").style,
+                CONTAINER_STYLE_MAP[styleToApply],
+            );
         }
         await scroll("#scroll-container", { y: 1 });
         await animationFrame();
@@ -976,218 +1013,257 @@ function getRepositionTest(from, to, containerStyleChanges, extendedFlipping = f
 }
 
 // -----------------------------------------------------------------------------
-test("reposition from top-start to top", getRepositionTest("top-start", "bottom-start", "top"));
+test(
+    "reposition from top-start to top",
+    getRepositionTest("top-start", "bottom-start", "top"),
+);
 test(
     "reposition from top-start to top right",
-    getRepositionTest("top-start", "bottom-end", "top right")
+    getRepositionTest("top-start", "bottom-end", "top right"),
 );
 test(
     "reposition from top-start to slimfit bottom",
-    getRepositionTest("top-start", "top-start", "slimfit bottom")
+    getRepositionTest("top-start", "top-start", "slimfit bottom"),
 );
-test("reposition from top-start to right", getRepositionTest("top-start", "top-end", "right"));
+test(
+    "reposition from top-start to right",
+    getRepositionTest("top-start", "top-end", "right"),
+);
 // -----------------------------------------------------------------------------
-test("reposition from top-middle to top", getRepositionTest("top-middle", "bottom-middle", "top"));
+test(
+    "reposition from top-middle to top",
+    getRepositionTest("top-middle", "bottom-middle", "top"),
+);
 test(
     "reposition from top-middle to slimfit bottom",
-    getRepositionTest("top-middle", "top-middle", "slimfit bottom")
+    getRepositionTest("top-middle", "top-middle", "slimfit bottom"),
 );
 // -----------------------------------------------------------------------------
 test(
     "reposition from top-end to top left",
-    getRepositionTest("top-end", "bottom-start", "top left")
+    getRepositionTest("top-end", "bottom-start", "top left"),
 );
-test("reposition from top-end to top", getRepositionTest("top-end", "bottom-end", "top"));
-test("reposition from top-end to left", getRepositionTest("top-end", "top-start", "left"));
+test(
+    "reposition from top-end to top",
+    getRepositionTest("top-end", "bottom-end", "top"),
+);
+test(
+    "reposition from top-end to left",
+    getRepositionTest("top-end", "top-start", "left"),
+);
 test(
     "reposition from top-end to slimfit bottom",
-    getRepositionTest("top-end", "top-end", "slimfit bottom")
+    getRepositionTest("top-end", "top-end", "slimfit bottom"),
 );
 // -----------------------------------------------------------------------------
-test("reposition from left-start to left", getRepositionTest("left-start", "right-start", "left"));
+test(
+    "reposition from left-start to left",
+    getRepositionTest("left-start", "right-start", "left"),
+);
 test(
     "reposition from left-start to left bottom",
-    getRepositionTest("left-start", "right-end", "left bottom")
+    getRepositionTest("left-start", "right-end", "left bottom"),
 );
 test(
     "reposition from left-start to slimfit top",
-    getRepositionTest("left-start", "left-start", "slimfit top")
+    getRepositionTest("left-start", "left-start", "slimfit top"),
 );
-test("reposition from left-start to bottom", getRepositionTest("left-start", "left-end", "bottom"));
+test(
+    "reposition from left-start to bottom",
+    getRepositionTest("left-start", "left-end", "bottom"),
+);
 // -----------------------------------------------------------------------------
 test(
     "reposition from left-middle to left",
-    getRepositionTest("left-middle", "right-middle", "left")
+    getRepositionTest("left-middle", "right-middle", "left"),
 );
 test(
     "reposition from left-middle to slimfit bottom",
-    getRepositionTest("left-middle", "left-middle", "slimfit bottom")
+    getRepositionTest("left-middle", "left-middle", "slimfit bottom"),
 );
 // -----------------------------------------------------------------------------
 test(
     "reposition from left-end to left top",
-    getRepositionTest("left-end", "right-start", "left top")
+    getRepositionTest("left-end", "right-start", "left top"),
 );
-test("reposition from left-end to left", getRepositionTest("left-end", "right-end", "left"));
-test("reposition from left-end to top", getRepositionTest("left-end", "left-start", "top"));
+test(
+    "reposition from left-end to left",
+    getRepositionTest("left-end", "right-end", "left"),
+);
+test(
+    "reposition from left-end to top",
+    getRepositionTest("left-end", "left-start", "top"),
+);
 test(
     "reposition from left-end to slimfit bottom",
-    getRepositionTest("left-end", "left-end", "slimfit bottom")
+    getRepositionTest("left-end", "left-end", "slimfit bottom"),
 );
 // -----------------------------------------------------------------------------
 test(
     "reposition from bottom-start to slimfit top",
-    getRepositionTest("bottom-start", "bottom-start", "slimfit top")
+    getRepositionTest("bottom-start", "bottom-start", "slimfit top"),
 );
 test(
     "reposition from bottom-start to right",
-    getRepositionTest("bottom-start", "bottom-end", "right")
+    getRepositionTest("bottom-start", "bottom-end", "right"),
 );
 test(
     "reposition from bottom-start to bottom",
-    getRepositionTest("bottom-start", "top-start", "bottom")
+    getRepositionTest("bottom-start", "top-start", "bottom"),
 );
 test(
     "reposition from bottom-start to bottom right",
-    getRepositionTest("bottom-start", "top-end", "bottom right")
+    getRepositionTest("bottom-start", "top-end", "bottom right"),
 );
 // -----------------------------------------------------------------------------
 test(
     "reposition from bottom-middle to slimfit top",
-    getRepositionTest("bottom-middle", "bottom-middle", "slimfit top")
+    getRepositionTest("bottom-middle", "bottom-middle", "slimfit top"),
 );
 test(
     "reposition from bottom-middle to bottom",
-    getRepositionTest("bottom-middle", "top-middle", "bottom")
+    getRepositionTest("bottom-middle", "top-middle", "bottom"),
 );
 // -----------------------------------------------------------------------------
-test("reposition from bottom-end to left", getRepositionTest("bottom-end", "bottom-start", "left"));
+test(
+    "reposition from bottom-end to left",
+    getRepositionTest("bottom-end", "bottom-start", "left"),
+);
 test(
     "reposition from bottom-end to slimfit top",
-    getRepositionTest("bottom-end", "bottom-end", "slimfit top")
+    getRepositionTest("bottom-end", "bottom-end", "slimfit top"),
 );
 test(
     "reposition from bottom-end to bottom left",
-    getRepositionTest("bottom-end", "top-start", "bottom left")
+    getRepositionTest("bottom-end", "top-start", "bottom left"),
 );
-test("reposition from bottom-end to bottom", getRepositionTest("bottom-end", "top-end", "bottom"));
+test(
+    "reposition from bottom-end to bottom",
+    getRepositionTest("bottom-end", "top-end", "bottom"),
+);
 // -----------------------------------------------------------------------------
 test(
     "reposition from right-start to slimfit top",
-    getRepositionTest("right-start", "right-start", "slimfit top")
+    getRepositionTest("right-start", "right-start", "slimfit top"),
 );
 test(
     "reposition from right-start to bottom",
-    getRepositionTest("right-start", "right-end", "bottom")
+    getRepositionTest("right-start", "right-end", "bottom"),
 );
 test(
     "reposition from right-start to right",
-    getRepositionTest("right-start", "left-start", "right")
+    getRepositionTest("right-start", "left-start", "right"),
 );
 test(
     "reposition from right-start to right bottom",
-    getRepositionTest("right-start", "left-end", "right bottom")
+    getRepositionTest("right-start", "left-end", "right bottom"),
 );
 // -----------------------------------------------------------------------------
 test(
     "reposition from right-middle to slimfit bottom",
-    getRepositionTest("right-middle", "right-middle", "slimfit bottom")
+    getRepositionTest("right-middle", "right-middle", "slimfit bottom"),
 );
 test(
     "reposition from right-middle to right",
-    getRepositionTest("right-middle", "left-middle", "right")
+    getRepositionTest("right-middle", "left-middle", "right"),
 );
 // -----------------------------------------------------------------------------
-test("reposition from right-end to top", getRepositionTest("right-end", "right-start", "top"));
+test(
+    "reposition from right-end to top",
+    getRepositionTest("right-end", "right-start", "top"),
+);
 test(
     "reposition from right-end to slimfit bottom",
-    getRepositionTest("right-end", "right-end", "slimfit bottom")
+    getRepositionTest("right-end", "right-end", "slimfit bottom"),
 );
 test(
     "reposition from right-end to right top",
-    getRepositionTest("right-end", "left-start", "right top")
+    getRepositionTest("right-end", "left-start", "right top"),
 );
-test("reposition from right-end to right", getRepositionTest("right-end", "left-end", "right"));
+test(
+    "reposition from right-end to right",
+    getRepositionTest("right-end", "left-end", "right"),
+);
 // Reposition with all flipping directions allowed
 test(
     "extended reposition from top-start to slimfit bottom",
-    getRepositionTest("top-start", "center-start", "slimfit bottom", true)
+    getRepositionTest("top-start", "center-start", "slimfit bottom", true),
 );
 test(
     "extended reposition from top-start to right",
-    getRepositionTest("top-start", "top-end", "right", true)
+    getRepositionTest("top-start", "top-end", "right", true),
 );
 test(
     "extended reposition from top-middle to slimfit bottom",
-    getRepositionTest("top-middle", "center-middle", "slimfit bottom", true)
+    getRepositionTest("top-middle", "center-middle", "slimfit bottom", true),
 );
 test(
     "extended reposition from top-end to left",
-    getRepositionTest("top-end", "top-start", "left", true)
+    getRepositionTest("top-end", "top-start", "left", true),
 );
 test(
     "extended reposition from top-end to slimfit bottom",
-    getRepositionTest("top-end", "center-end", "slimfit bottom", true)
+    getRepositionTest("top-end", "center-end", "slimfit bottom", true),
 );
 test(
     "extended reposition from left-start to slimfit top",
-    getRepositionTest("left-start", "center-start", "slimfit top", true)
+    getRepositionTest("left-start", "center-start", "slimfit top", true),
 );
 test(
     "extended reposition from left-start to bottom",
-    getRepositionTest("left-start", "left-end", "bottom", true)
+    getRepositionTest("left-start", "left-end", "bottom", true),
 );
 test(
     "extended reposition from left-middle to slimfit bottom",
-    getRepositionTest("left-middle", "center-middle", "slimfit bottom", true)
+    getRepositionTest("left-middle", "center-middle", "slimfit bottom", true),
 );
 test(
     "extended reposition from left-end to top",
-    getRepositionTest("left-end", "left-start", "top", true)
+    getRepositionTest("left-end", "left-start", "top", true),
 );
 test(
     "extended reposition from left-end to slimfit bottom",
-    getRepositionTest("left-end", "center-end", "slimfit bottom", true)
+    getRepositionTest("left-end", "center-end", "slimfit bottom", true),
 );
 test(
     "extended reposition from bottom-start to slimfit top",
-    getRepositionTest("bottom-start", "center-start", "slimfit top", true)
+    getRepositionTest("bottom-start", "center-start", "slimfit top", true),
 );
 test(
     "extended reposition from bottom-start to right",
-    getRepositionTest("bottom-start", "bottom-end", "right", true)
+    getRepositionTest("bottom-start", "bottom-end", "right", true),
 );
 test(
     "extended reposition from bottom-middle to slimfit top",
-    getRepositionTest("bottom-middle", "center-middle", "slimfit top", true)
+    getRepositionTest("bottom-middle", "center-middle", "slimfit top", true),
 );
 test(
     "extended reposition from bottom-end to left",
-    getRepositionTest("bottom-end", "bottom-start", "left", true)
+    getRepositionTest("bottom-end", "bottom-start", "left", true),
 );
 test(
     "extended reposition from bottom-end to slimfit top",
-    getRepositionTest("bottom-end", "center-end", "slimfit top", true)
+    getRepositionTest("bottom-end", "center-end", "slimfit top", true),
 );
 test(
     "extended reposition from right-start to slimfit top",
-    getRepositionTest("right-start", "center-start", "slimfit top", true)
+    getRepositionTest("right-start", "center-start", "slimfit top", true),
 );
 test(
     "extended reposition from right-start to bottom",
-    getRepositionTest("right-start", "right-end", "bottom", true)
+    getRepositionTest("right-start", "right-end", "bottom", true),
 );
 test(
     "extended reposition from right-middle to slimfit bottom",
-    getRepositionTest("right-middle", "center-middle", "slimfit bottom", true)
+    getRepositionTest("right-middle", "center-middle", "slimfit bottom", true),
 );
 test(
     "extended reposition from right-end to top",
-    getRepositionTest("right-end", "right-start", "top", true)
+    getRepositionTest("right-end", "right-start", "top", true),
 );
 test(
     "extended reposition from right-end to slimfit bottom",
-    getRepositionTest("right-end", "center-end", "slimfit bottom", true)
+    getRepositionTest("right-end", "center-end", "slimfit bottom", true),
 );
 
 function getFittingTest(position, styleAttribute) {
@@ -1198,14 +1274,35 @@ function getFittingTest(position, styleAttribute) {
     };
 }
 
-test("reposition from bottom-fit to top-fit", getRepositionTest("bottom-fit", "top-fit", "bottom"));
-test("reposition from top-fit to bottom-fit", getRepositionTest("top-fit", "bottom-fit", "top"));
-test("reposition from right-fit to left-fit", getRepositionTest("right-fit", "left-fit", "right"));
-test("reposition from left-fit to right-fit", getRepositionTest("left-fit", "right-fit", "left"));
-test("bottom-fit has the same width as the target", getFittingTest("bottom-fit", "width"));
+test(
+    "reposition from bottom-fit to top-fit",
+    getRepositionTest("bottom-fit", "top-fit", "bottom"),
+);
+test(
+    "reposition from top-fit to bottom-fit",
+    getRepositionTest("top-fit", "bottom-fit", "top"),
+);
+test(
+    "reposition from right-fit to left-fit",
+    getRepositionTest("right-fit", "left-fit", "right"),
+);
+test(
+    "reposition from left-fit to right-fit",
+    getRepositionTest("left-fit", "right-fit", "left"),
+);
+test(
+    "bottom-fit has the same width as the target",
+    getFittingTest("bottom-fit", "width"),
+);
 test("top-fit has the same width as the target", getFittingTest("top-fit", "width"));
-test("left-fit has the same height as the target", getFittingTest("left-fit", "height"));
-test("right-fit has the same height as the target", getFittingTest("right-fit", "height"));
+test(
+    "left-fit has the same height as the target",
+    getFittingTest("left-fit", "height"),
+);
+test(
+    "right-fit has the same height as the target",
+    getFittingTest("right-fit", "height"),
+);
 
 test("popper with the fit variant and a large content inside is resized to match the toggler - horizontally", async () => {
     const TestComp = getTestComponent(
@@ -1217,7 +1314,7 @@ test("popper with the fit variant and a large content inside is resized to match
             popper: {
                 width: "unset",
             },
-        }
+        },
     );
     await mountWithCleanup(TestComp);
     expect(queryOne("#target").getBoundingClientRect().left).toBe(225);
@@ -1234,7 +1331,7 @@ test("popper with the fit variant and a large content inside is resized to match
             popper: {
                 height: "unset",
             },
-        }
+        },
     );
     await mountWithCleanup(TestComp);
     expect(queryOne("#target").getBoundingClientRect().top).toBe(225);

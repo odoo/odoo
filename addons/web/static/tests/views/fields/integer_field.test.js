@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import {

@@ -2,8 +2,8 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { browser } from '@web/core/browser/browser';
-import { usePopover } from "@web/core/popover/popover_hook";
-import { Tooltip } from "@web/core/tooltip/tooltip";
+import { usePopover } from "@web/ui/popover/popover_hook";
+import { Tooltip } from "@web/ui/tooltip/tooltip";
 
 export class EmbedShare extends Interaction {
     static selector = ".oe_slide_js_embed_code_widget";

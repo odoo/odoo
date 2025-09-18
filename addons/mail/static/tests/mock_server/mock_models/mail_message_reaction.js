@@ -1,5 +1,5 @@
 import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
-import { groupBy } from "@web/core/utils/arrays";
+import { groupBy } from "@web/core/utils/collections/arrays";
 import { mailDataHelpers } from "../mail_mock_server";
 
 export class MailMessageReaction extends models.ServerModel {

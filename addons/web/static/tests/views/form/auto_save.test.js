@@ -1,6 +1,10 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { unload } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
+import { WebClient } from "@web/webclient/webclient";
+
 import {
     contains,
     defineActions,
@@ -16,8 +20,6 @@ import {
     mountWithCleanup,
     onRpc,
 } from "../../web_test_helpers";
-
-import { WebClient } from "@web/webclient/webclient";
 
 onRpc("has_group", () => true);
 
@@ -434,7 +436,9 @@ test("save on closing tab/browser (not dirty but trailing spaces)", async () => 
         resId: 1,
     });
     expect.verifySteps(["get_views", "web_read"]);
-    expect(`.o_field_widget[name=expertise] input`).toHaveValue("name with trailing spaces   ");
+    expect(`.o_field_widget[name=expertise] input`).toHaveValue(
+        "name with trailing spaces   ",
+    );
 
     await unload();
     await animationFrame();
@@ -544,7 +548,9 @@ test("save on closing tab/browser (onchanges)", async () => {
         resId: 1,
     });
 
-    await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: "blur" });
+    await contains(`.o_field_widget[name="expertise"] input`).edit("test", {
+        confirm: "blur",
+    });
     await unload();
     await animationFrame();
     await sendBeaconDeferred;
@@ -562,7 +568,10 @@ test("save on closing tab/browser (onchanges 2)", async () => {
         blob.text().then((r) => {
             const { params } = JSON.parse(r);
             if (params.method === "web_save") {
-                expect(params.args).toEqual([[1], { expertise: "test1", name: "test2" }]);
+                expect(params.args).toEqual([
+                    [1],
+                    { expertise: "test1", name: "test2" },
+                ]);
             }
             sendBeaconDeferred.resolve();
         });
@@ -586,8 +595,12 @@ test("save on closing tab/browser (onchanges 2)", async () => {
         resId: 1,
     });
 
-    await contains(`.o_field_widget[name="expertise"] input`).edit("test1", { confirm: "blur" });
-    await contains(`.o_field_widget[name="name"] input`).edit("test2", { confirm: "blur" });
+    await contains(`.o_field_widget[name="expertise"] input`).edit("test1", {
+        confirm: "blur",
+    });
+    await contains(`.o_field_widget[name="name"] input`).edit("test2", {
+        confirm: "blur",
+    });
 
     await unload();
     await animationFrame();
@@ -620,7 +633,9 @@ test("save on closing tab/browser (pending change)", async () => {
 
     // edit 'expertise' but do not focusout -> the model isn't aware of the change
     // until the 'beforeunload' event is triggered
-    await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: false });
+    await contains(`.o_field_widget[name="expertise"] input`).edit("test", {
+        confirm: false,
+    });
     await unload();
     await animationFrame();
     await sendBeaconDeferred;
@@ -643,7 +658,11 @@ test("save on closing tab/browser (onchanges + pending change)", async () => {
             if (params.method === "web_save") {
                 expect(params.args).toEqual([
                     [1],
-                    { unformatted_name: "John Doe ", name: "john doe", expertise: "test" },
+                    {
+                        unformatted_name: "John Doe ",
+                        name: "john doe",
+                        expertise: "test",
+                    },
                 ]);
             }
             sendBeaconDeferred.resolve();
@@ -676,11 +695,15 @@ test("save on closing tab/browser (onchanges + pending change)", async () => {
     expect.verifySteps(["onchange"]);
 
     // edit 'name' and simulate a focusout (trigger the 'change' event)
-    await contains(`.o_field_widget[name="name"] input`).edit("john doe", { confirm: "blur" });
+    await contains(`.o_field_widget[name="name"] input`).edit("john doe", {
+        confirm: "blur",
+    });
 
     // edit 'expertise' but do not focusout -> the model isn't aware of the change
     // until the 'beforeunload' event is triggered
-    await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: false });
+    await contains(`.o_field_widget[name="expertise"] input`).edit("test", {
+        confirm: false,
+    });
 
     // trigger the 'beforeunload' event -> notifies the model directly and saves
     await unload();
@@ -705,7 +728,9 @@ test("save on closing tab/browser (invalid pending change)", async () => {
 
     // edit 'expertise' but do not focusout -> the model isn't aware of the change
     // until the 'beforeunload' event is triggered
-    await contains(`.o_field_widget[name="age"] input`).edit("invalid value", { confirm: false });
+    await contains(`.o_field_widget[name="age"] input`).edit("invalid value", {
+        confirm: false,
+    });
     await unload();
     await animationFrame();
     expect.verifySteps([]);
@@ -738,7 +763,9 @@ test("save on closing tab/browser (onchanges + invalid field)", async () => {
     });
     expect.verifySteps(["get_views", "web_read"]);
 
-    await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: "blur" });
+    await contains(`.o_field_widget[name="expertise"] input`).edit("test", {
+        confirm: "blur",
+    });
     expect.verifySteps(["onchange"]);
 
     await contains(`.o_field_widget[name="name"] input`).edit("", { confirm: "blur" });
@@ -935,7 +962,10 @@ test(`doesn't autosave when a many2one search more is open (visibility change)`,
 });
 
 test(`doesn't autosave when a x2many is in openned (visibility change)`, async () => {
-    Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
+    Partner._fields.child_ids = fields.One2many({
+        string: "one2many field",
+        relation: "partner",
+    });
     Partner._records[0].child_ids = [1, 2];
     onRpc("web_save", () => {
         expect.step("web_save");
@@ -978,7 +1008,10 @@ test(`doesn't autosave when a x2many is in openned (visibility change)`, async (
 });
 
 test(`doesn't autosave when a x2many is in openned (visibility change) 2`, async () => {
-    Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
+    Partner._fields.child_ids = fields.One2many({
+        string: "one2many field",
+        relation: "partner",
+    });
     Partner._records[0].child_ids = [1, 2];
     onRpc("web_save", () => {
         expect.step("web_save");

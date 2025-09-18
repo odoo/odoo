@@ -2,20 +2,29 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
-
 import { Component, useExternalListener, useRef, useState, useSubEnv } from "@odoo/owl";
-
-import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import {
+    hasTouch,
+    isDisplayStandalone,
+    isIOS,
+} from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
+
 import { DiscussContent } from "./discuss_content";
 
 export class MessagingMenu extends Component {
-    static components = { CountryFlag, DiscussContent, Dropdown, NotificationItem, ImStatus };
+    static components = {
+        CountryFlag,
+        DiscussContent,
+        Dropdown,
+        NotificationItem,
+        ImStatus,
+    };
     static props = [];
     static template = "mail.MessagingMenu";
 
@@ -74,7 +83,8 @@ export class MessagingMenu extends Component {
         if (this.notificationItems.length === 0) {
             return;
         }
-        const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
+        const activeOptionId =
+            this.state.activeIndex !== null ? this.state.activeIndex : 0;
         let targetId = undefined;
         switch (direction) {
             case "first":
@@ -185,7 +195,8 @@ export class MessagingMenu extends Component {
         this.store.discuss.activeTab = tabId;
         if (
             this.store.discuss.activeTab === "inbox" &&
-            (!this.store.discuss.thread || this.store.discuss.thread.model !== "mail.box")
+            (!this.store.discuss.thread ||
+                this.store.discuss.thread.model !== "mail.box")
         ) {
             this.store.inbox.setAsDiscussThread();
         }

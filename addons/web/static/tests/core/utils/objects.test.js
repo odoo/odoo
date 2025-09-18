@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import {
     deepCopy,
     deepEqual,
@@ -8,7 +9,7 @@ import {
     omit,
     pick,
     shallowEqual,
-} from "@web/core/utils/objects";
+} from "@web/core/utils/collections/objects";
 
 describe.current.tags("headless");
 
@@ -32,7 +33,9 @@ describe("shallowEqual", () => {
 
         const arr = ["x", "y", "z"];
         expect(shallowEqual({ a: arr }, { a: arr })).toBe(true);
-        expect(shallowEqual({ a: ["x", "y", "z"] }, { a: ["x", "y", "z"] })).toBe(false);
+        expect(shallowEqual({ a: ["x", "y", "z"] }, { a: ["x", "y", "z"] })).toBe(
+            false,
+        );
 
         const fn = () => {};
         expect(shallowEqual({ a: fn }, { a: fn })).toBe(true);
@@ -46,8 +49,8 @@ describe("shallowEqual", () => {
         expect(shallowEqual({ a: 1, date: dateA }, { a: 1, date: dateB })).toBe(false);
         expect(
             shallowEqual({ a: 1, date: dateA }, { a: 1, date: dateB }, (a, b) =>
-                a instanceof Date ? Number(a) === Number(b) : a === b
-            )
+                a instanceof Date ? Number(a) === Number(b) : a === b,
+            ),
         ).toBe(true);
     });
 });
@@ -128,7 +131,11 @@ test("pick", () => {
     expect(pick({}, "a")).toEqual({});
     expect(pick({ a: 3, b: "a", c: [] }, "a")).toEqual({ a: 3 });
     expect(pick({ a: 3, b: "a", c: [] }, "a", "c")).toEqual({ a: 3, c: [] });
-    expect(pick({ a: 3, b: "a", c: [] }, "a", "b", "c")).toEqual({ a: 3, b: "a", c: [] });
+    expect(pick({ a: 3, b: "a", c: [] }, "a", "b", "c")).toEqual({
+        a: 3,
+        b: "a",
+        c: [],
+    });
 
     // Non enumerable property
     class MyClass {
@@ -157,8 +164,8 @@ test("deepMerge", () => {
                     b_b: 3,
                     b_c: 4,
                 },
-            }
-        )
+            },
+        ),
     ).toEqual({
         a: 2,
         b: {
@@ -202,8 +209,8 @@ test("deepMerge", () => {
             {
                 [symbolA]: 3,
                 [symbolB]: 2,
-            }
-        )
+            },
+        ),
     ).toEqual({
         [symbolA]: 3,
         [symbolB]: 2,

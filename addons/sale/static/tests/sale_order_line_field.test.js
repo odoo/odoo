@@ -182,7 +182,7 @@ test("Test combo columns", async () => {
     // Set different defaults for checking aggregation of columns on combo line
     SaleOrderLine._fields.price_unit = fields.Float({ default: 3.00 });
     SaleOrderLine._fields.price_total = fields.Float({ default: 3.00 });
-    SaleOrderLine._fields.product_uom_qty = fields.Float({ default: 3.00 });
+    SaleOrderLine._fields.product_qty = fields.Float({ default: 3.00 });
     SaleOrderLine._fields.discount = fields.Integer({ default: 30 });
     await mountView({
         type: 'form',
@@ -205,7 +205,7 @@ test("Test combo columns", async () => {
                         <field name="sequence" widget="handle" invisible="combo_item_id"/>
                         <field name="name"/>
                         <field name="price_unit"/>
-                        <field name="product_uom_qty"/>
+                        <field name="product_qty"/>
                         <field name="discount"/>
                         <field name="price_total"/>
                         <field name="display_type" column_invisible="1"/>
@@ -232,17 +232,17 @@ test("Test combo columns", async () => {
 
     expect(queryAllTexts('.o_data_row:contains(Test Combo1) > td').filter(Boolean)).toEqual([
         "Test Combo1", // name
-        "3.00", // product_uom_qty
+        "3.00", // product_qty
         "30",  // discount
         "9.00",  // price_total
     ], {
-        message: 'combo line should only have name, product_uom_qty, discount and `aggregated_fields` columns'
+        message: 'combo line should only have name, product_qty, discount and `aggregated_fields` columns'
     });
 
     expect(queryAllTexts('.o_data_row:contains(Non Combo Line1) > td').filter(Boolean)).toEqual([
         "Non Combo Line1", // name
         "3.00",  // price_unit
-        "3.00",  // product_uom_qty
+        "3.00",  // product_qty
         "30",  // discount
         "3.00",  // price_total
     ], {

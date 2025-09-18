@@ -6,7 +6,7 @@ import { Component, useSubEnv, xml } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 // overlay inside shadow so that the styles are dicted by the shadow dom
-import { OverlayContainer } from "@web/core/overlay/overlay_container";
+import { OverlayContainer } from "@web/ui/overlay/overlay_container";
 
 export class LivechatRoot extends Component {
     static template = xml`

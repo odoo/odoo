@@ -11,7 +11,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -25,7 +25,7 @@ import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual } from "@web/core/utils/collections/objects";
 
 const { DateTime } = luxon;
 

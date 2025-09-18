@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 from unittest import TestCase
 
-import psycopg2
+import psycopg
 
 
 class TestWebsiteResUsers(TransactionCase):
@@ -40,7 +40,7 @@ class TestWebsiteResUsers(TransactionCase):
     def test_change_login(self):
         new_test_user(self.env, login='Pou', website_id=self.website_1.id, groups='base.group_portal')
         user_belle = new_test_user(self.env, login='Belle', website_id=self.website_1.id, groups='base.group_portal')
-        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg.errors.UniqueViolation), mute_logger('odoo.db'):
             user_belle.login = 'Pou'
 
     def test_change_login_no_website(self):
@@ -64,7 +64,7 @@ class TestWebsiteResUsers(TransactionCase):
             # IntegrityError. Do not use self.assertRaises as it would try
             # to create and rollback to a savepoint that is removed by the
             # rollback in retrying().
-            with TestCase.assertRaises(self, ValidationError), mute_logger('odoo.sql_db'):
+            with TestCase.assertRaises(self, ValidationError), mute_logger('odoo.db'):
                 retrying(create_user_pou, env)
 
     def _create_user_via_website(self, website, login):

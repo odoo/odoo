@@ -1,36 +1,39 @@
-import { _t } from "@web/core/l10n/translation";
-import { debounce } from "@web/core/utils/timing";
-import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
-
-import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
-import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
 import {
     Component,
     onMounted,
-    useRef,
-    useState,
+    onPatched,
+    onWillUnmount,
     useEffect,
     useExternalListener,
-    onWillUnmount,
-    onPatched,
+    useRef,
+    useState,
 } from "@odoo/owl";
+import {
+    BACKSPACE,
+    DECIMAL,
+    getButtons,
+    ZERO,
+} from "@point_of_sale/app/components/numpad/numpad";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
-import { getDataURLFromFile } from "@web/core/utils/urls";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { getButtons, DECIMAL, ZERO, BACKSPACE } from "@point_of_sale/app/components/numpad/numpad";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { pick } from "@web/core/utils/objects";
-import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { NumpadDropdown } from "@pos_restaurant/app/components/numpad_dropdown/numpad_dropdown";
-
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { cookie } from "@web/core/browser/cookie";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/collections/objects";
+import { makeDraggableHook } from "@web/core/utils/dnd/draggable_hook_builder_owl";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
@@ -104,14 +107,15 @@ export class FloorScreen extends Component {
         this.floorScrollBox = useRef("floor-map-scroll");
         this.map = useRef("map");
         this.alert = useService("alert");
-        const getTableElem = (table) => this.map.el.querySelector(`.tableId-${table.id}`);
+        const getTableElem = (table) =>
+            this.map.el.querySelector(`.tableId-${table.id}`);
         const findIntersectingTableElem = (tableElem) => {
             const table = this.getPosTable(tableElem);
             return [...tableElem.parentElement.getElementsByClassName("table")].find(
                 (t) =>
                     t !== tableElem &&
                     areElementsIntersecting(t, tableElem) &&
-                    !table.isParent(this.getPosTable(t))
+                    !table.isParent(this.getPosTable(t)),
             );
         };
         const TABLE_LINKING_DELAY = 400;
@@ -150,7 +154,9 @@ export class FloorScreen extends Component {
                 table.position_v = table.getY();
                 if (table.parent_id) {
                     this.unMergeTable(table);
-                    this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
+                    this.pos.data.write("restaurant.table", [table.id], {
+                        parent_id: null,
+                    });
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -170,7 +176,10 @@ export class FloorScreen extends Component {
                         offsetY -
                         this.map.el.getBoundingClientRect().top -
                         this.state.floorMapOffset.y;
-                    if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+                    if (
+                        this.pos.isEditMode &&
+                        !this.activeFloor.floor_background_image
+                    ) {
                         table.position_h -= table.position_h % GRID_SIZE;
                         table.position_v -= table.position_v % GRID_SIZE;
                     }
@@ -188,12 +197,13 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`,
                     );
                     return;
                 }
                 const { child, parent } = this.state.potentialLink;
-                const { left, top, width, height } = getTableElem(parent).getBoundingClientRect();
+                const { left, top, width, height } =
+                    getTableElem(parent).getBoundingClientRect();
                 const dx = x - left - width / 2;
                 const dy = y - top - height / 2;
                 if (
@@ -210,8 +220,8 @@ export class FloorScreen extends Component {
                             ? "left"
                             : "right"
                         : dy < 0
-                        ? "top"
-                        : "bottom"
+                          ? "top"
+                          : "bottom",
                 );
             },
             onDrop: ({ element }) => {
@@ -237,7 +247,10 @@ export class FloorScreen extends Component {
                 }
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
-                    this.pos.mergeTableOrders(oToTrans.uuid, this.state.potentialLink.parent);
+                    this.pos.mergeTableOrders(
+                        oToTrans.uuid,
+                        this.state.potentialLink.parent,
+                    );
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
@@ -263,7 +276,7 @@ export class FloorScreen extends Component {
             () => {
                 this.computeFloorSize();
             },
-            () => [this.activeFloor, this.pos.floorPlanStyle, this.pos.isEditMode]
+            () => [this.activeFloor, this.pos.floorPlanStyle, this.pos.isEditMode],
         );
 
         onPatched(() => {
@@ -317,8 +330,14 @@ export class FloorScreen extends Component {
                 };
                 const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
                 const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
-                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
-                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
+                newPosition[moveX] = constrain(
+                    newPosition[moveX] + dx,
+                    ...bounds[moveX],
+                );
+                newPosition[moveY] = constrain(
+                    newPosition[moveY] + dy,
+                    ...bounds[moveY],
+                );
                 if (!this.activeFloor.floor_background_image) {
                     newPosition[moveX] -= newPosition[moveX] % GRID_SIZE;
                     newPosition[moveY] -= newPosition[moveY] % GRID_SIZE;
@@ -333,7 +352,7 @@ export class FloorScreen extends Component {
                 this.pos.data.write(
                     "restaurant.table",
                     [table.id],
-                    pick(table, "position_h", "position_v", "width", "height")
+                    pick(table, "position_h", "position_v", "width", "height"),
                 );
             },
             onDragEnd: ({ element }) => {
@@ -367,11 +386,11 @@ export class FloorScreen extends Component {
 
         const positionH = Math.max(
             ...tables.map((table) => table.position_h + table.width),
-            floorH
+            floorH,
         );
         const positionV = Math.max(
             ...tables.map((table) => table.position_v + table.height),
-            floorV
+            floorV,
         );
 
         this.restoreFloorScrollPosition();
@@ -385,7 +404,8 @@ export class FloorScreen extends Component {
                 this.state.floorWidth = `${width}px`;
                 this.restoreFloorScrollPosition();
             };
-            img.src = "data:image/png;base64," + this.activeFloor.floor_background_image;
+            img.src =
+                "data:image/png;base64," + this.activeFloor.floor_background_image;
         } else {
             this.state.floorMapOffset = this._computeFloorMapOffset();
             this.state.floorHeight = `${positionV + this.state.floorMapOffset.y}px`;
@@ -409,7 +429,11 @@ export class FloorScreen extends Component {
         const offset = { x: 0, y: 0 };
 
         // Adjusts the offset to reduce the scrolling area on mobile devices
-        if (hasTouch() && !this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+        if (
+            hasTouch() &&
+            !this.pos.isEditMode &&
+            !this.activeFloor.floor_background_image
+        ) {
             const MIN_OFFSET = 20; // Minimum space between the border and the table
 
             const tables = this.activeTables;
@@ -423,7 +447,7 @@ export class FloorScreen extends Component {
                     minLeft: Math.min(data.minLeft, table.position_h),
                     minTop: Math.min(data.minTop, table.position_v),
                 }),
-                { minLeft: Infinity, minTop: Infinity }
+                { minLeft: Infinity, minTop: Infinity },
             );
 
             if (isFinite(minLeft) && minLeft > MIN_OFFSET) {
@@ -443,7 +467,9 @@ export class FloorScreen extends Component {
             await this.pos.unsetTable();
         }
         // Set order to null when reaching the floor screen.
-        if (!(this.pos.getOrder()?.isFilledDirectSale && !this.pos.getOrder().finalized)) {
+        if (
+            !(this.pos.getOrder()?.isFilledDirectSale && !this.pos.getOrder().finalized)
+        ) {
             this.pos.setOrder(null);
         }
     }
@@ -543,15 +569,24 @@ export class FloorScreen extends Component {
             let actualHeight = 100;
             let impossible = true;
 
-            while (actualHeight <= v_max - heightTable - spaceBetweenTable && impossible) {
+            while (
+                actualHeight <= v_max - heightTable - spaceBetweenTable &&
+                impossible
+            ) {
                 const tableIntervals = [
                     [h_min, h_min, v_max],
                     [h_max, h_max, v_max],
                 ];
                 for (let i = 0; i < positionTable.length; i++) {
-                    if (positionTable[i][0] >= actualHeight + heightTable + spaceBetweenTable) {
+                    if (
+                        positionTable[i][0] >=
+                        actualHeight + heightTable + spaceBetweenTable
+                    ) {
                         continue;
-                    } else if (positionTable[i][1] + spaceBetweenTable <= actualHeight) {
+                    } else if (
+                        positionTable[i][1] + spaceBetweenTable <=
+                        actualHeight
+                    ) {
                         continue;
                     } else {
                         tableIntervals.push([
@@ -640,7 +675,9 @@ export class FloorScreen extends Component {
         return this.activeFloor?.table_ids?.filter((table) => table.active) || [];
     }
     get selectedTables() {
-        return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
+        return this.state.selectedTableIds.map((id) =>
+            this.pos.models["restaurant.table"].get(id),
+        );
     }
     movePinch(hypot) {
         const delta = hypot / this.scalehypot;
@@ -673,7 +710,7 @@ export class FloorScreen extends Component {
         if (this.pos.isEditMode) {
             if (this.state.selectedTableIds.includes(table.id)) {
                 this.state.selectedTableIds = this.state.selectedTableIds.filter(
-                    (id) => id !== table.id
+                    (id) => id !== table.id,
                 );
                 return;
             }
@@ -694,7 +731,11 @@ export class FloorScreen extends Component {
     unselectTables() {
         if (this.selectedTables.length) {
             for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], table.serializeForORM());
+                this.pos.data.write(
+                    "restaurant.table",
+                    [table.id],
+                    table.serializeForORM(),
+                );
             }
         }
         this.state.selectedTableIds = [];
@@ -717,7 +758,7 @@ export class FloorScreen extends Component {
                             pos_config_ids: [this.pos.config.id],
                         },
                     ],
-                    false
+                    false,
                 );
 
                 this.selectFloor(floor[0]);
@@ -822,9 +863,13 @@ export class FloorScreen extends Component {
                 isValid: (x) => x,
                 getPayload: (newNumber) => {
                     if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
-                        this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                            table_number: parseInt(newNumber),
-                        });
+                        this.pos.data.write(
+                            "restaurant.table",
+                            [this.selectedTables[0].id],
+                            {
+                                table_number: parseInt(newNumber),
+                            },
+                        );
                     }
                 },
             });
@@ -910,7 +955,9 @@ export class FloorScreen extends Component {
             turquoise: [30, 140, 150],
         };
 
-        return cookie.get("pos_color_scheme") === "dark" ? darkModeColors : lightModeColors;
+        return cookie.get("pos_color_scheme") === "dark"
+            ? darkModeColors
+            : lightModeColors;
     }
 
     formatColor(color) {
@@ -918,7 +965,7 @@ export class FloorScreen extends Component {
     }
     getColors() {
         return Object.fromEntries(
-            Object.entries(this._getColors()).map(([k, v]) => [k, this.formatColor(v)])
+            Object.entries(this._getColors()).map(([k, v]) => [k, this.formatColor(v)]),
         );
     }
     getLighterShade(color) {
@@ -929,7 +976,7 @@ export class FloorScreen extends Component {
             title: `Removing floor ${this.activeFloor.name}`,
             body: _t(
                 "Removing a floor cannot be undone. Do you still want to remove %s?",
-                this.activeFloor.name
+                this.activeFloor.name,
             ),
         });
         if (!confirmed) {
@@ -944,7 +991,9 @@ export class FloorScreen extends Component {
         } catch {
             this.dialog.add(AlertDialog, {
                 title: _t("Delete Error"),
-                body: _t("You cannot delete a floor with orders still in draft for this floor."),
+                body: _t(
+                    "You cannot delete a floor with orders still in draft for this floor.",
+                ),
             });
             return;
         }
@@ -981,7 +1030,7 @@ export class FloorScreen extends Component {
             const response = await this.pos.data.call(
                 "restaurant.table",
                 "are_orders_still_in_draft",
-                [originalSelectedTableIds]
+                [originalSelectedTableIds],
             );
 
             if (response) {
@@ -1001,7 +1050,9 @@ export class FloorScreen extends Component {
         } catch {
             this.dialog.add(AlertDialog, {
                 title: _t("Delete Error"),
-                body: _t("You cannot delete a table with orders still in draft for this table."),
+                body: _t(
+                    "You cannot delete a table with orders still in draft for this table.",
+                ),
             });
         }
 
@@ -1037,16 +1088,22 @@ export class FloorScreen extends Component {
         if (!file.type.match(/image.*/)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Unsupported File Format"),
-                body: _t("Only web-compatible Image formats such as .png or .jpeg are supported."),
+                body: _t(
+                    "Only web-compatible Image formats such as .png or .jpeg are supported.",
+                ),
             });
         } else {
             const imageUrl = await getDataURLFromFile(file);
             const loadedImage = await loadImage(imageUrl);
             if (loadedImage) {
                 this.env.services.ui.block();
-                await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
-                    floor_background_image: imageUrl.split(",")[1],
-                });
+                await this.pos.data.ormWrite(
+                    "restaurant.floor",
+                    [this.activeFloor.id],
+                    {
+                        floor_background_image: imageUrl.split(",")[1],
+                    },
+                );
                 // A read is added to be sure that we have the same image as the one in backend
                 await this.pos.data.read("restaurant.floor", [this.activeFloor.id]);
                 this.env.services.ui.unblock();
@@ -1063,11 +1120,14 @@ export class FloorScreen extends Component {
         // If the table is not synced, we need to count the unsynced orders
         let changeCount = 0;
         const tableOrders = this.pos.models["pos.order"].filter(
-            (o) => o.table_id?.id === table.id && !o.finalized
+            (o) => o.table_id?.id === table.id && !o.finalized,
         );
 
         for (const order of tableOrders) {
-            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
+            const changes = getOrderChanges(
+                order,
+                this.pos.config.preparationCategories,
+            );
             changeCount += changes.nbrOfChanges;
         }
 

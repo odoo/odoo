@@ -1550,7 +1550,7 @@ $-transition-duration: 200ms;
 
     &.o_header_is_scrolled {
         .navbar-brand {
-            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
+            @include font-size(calc($o-theme-navbar-fixed-logo-height / $line-height-base));
 
             img {
                 height: $o-theme-navbar-fixed-logo-height;
@@ -1872,8 +1872,8 @@ header {
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
         // inside another container (the one in the navbar)
-        padding-left: $grid-gutter-width / 2;
-        padding-right: $grid-gutter-width / 2;
+        padding-left: calc($grid-gutter-width / 2);
+        padding-right: calc($grid-gutter-width / 2);
     }
 }
 

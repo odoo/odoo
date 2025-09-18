@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import {
     cartesian,
     ensureArray,
@@ -11,7 +12,7 @@ import {
     unique,
     zip,
     zipWith,
-} from "@web/core/utils/arrays";
+} from "@web/core/utils/collections/arrays";
 
 describe.current.tags("headless");
 
@@ -21,13 +22,13 @@ describe("groupby", () => {
         // Other navigator: array is not iterable
         expect(() => groupBy({})).toThrow(/TypeError: \w+ is not iterable/);
         expect(() => groupBy([], true)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'boolean'/
+            /Expected criterion of type 'string' or 'function' and got 'boolean'/,
         );
         expect(() => groupBy([], 3)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'number'/
+            /Expected criterion of type 'string' or 'function' and got 'number'/,
         );
         expect(() => groupBy([], {})).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'object'/
+            /Expected criterion of type 'string' or 'function' and got 'object'/,
         );
     });
 
@@ -62,16 +63,16 @@ describe("sortby", () => {
     test("sortBy parameter validation", () => {
         expect(() => sortBy({})).toThrow(/TypeError: \w+ is not iterable/);
         expect(() => sortBy([Symbol("b"), Symbol("a")])).toThrow(
-            /(Cannot convert a (Symbol value)|(symbol) to a number)|(can't convert symbol to number)/
+            /(Cannot convert a (Symbol value)|(symbol) to a number)|(can't convert symbol to number)/,
         );
         expect(() => sortBy([2, 1, 5], true)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'boolean'/
+            /Expected criterion of type 'string' or 'function' and got 'boolean'/,
         );
         expect(() => sortBy([2, 1, 5], 3)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'number'/
+            /Expected criterion of type 'string' or 'function' and got 'number'/,
         );
         expect(() => sortBy([2, 1, 5], {})).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'object'/
+            /Expected criterion of type 'string' or 'function' and got 'object'/,
         );
     });
 
@@ -91,7 +92,11 @@ describe("sortby", () => {
             { x: false },
             { x: true },
         ]);
-        expect(sortBy([{ x: 2 }, { x: 1 }, { x: 5 }])).toEqual([{ x: 2 }, { x: 1 }, { x: 5 }]);
+        expect(sortBy([{ x: 2 }, { x: 1 }, { x: 5 }])).toEqual([
+            { x: 2 },
+            { x: 1 },
+            { x: 5 },
+        ]);
         expect(sortBy([{ x: "b" }, { x: "a" }, { x: "z" }])).toEqual([
             { x: "b" },
             { x: "a" },
@@ -109,7 +114,11 @@ describe("sortby", () => {
             { x: true },
             { x: true },
         ]);
-        expect(sortBy([{ x: 2 }, { x: 1 }, { x: 5 }], "x")).toEqual([{ x: 1 }, { x: 2 }, { x: 5 }]);
+        expect(sortBy([{ x: 2 }, { x: 1 }, { x: 5 }], "x")).toEqual([
+            { x: 1 },
+            { x: 2 },
+            { x: 5 },
+        ]);
         expect(sortBy([{ x: "b" }, { x: "a" }, { x: "z" }], "x")).toEqual([
             { x: "a" },
             { x: "b" },
@@ -169,7 +178,9 @@ describe("cartesian", () => {
 
     test("cartesian product of a single array", () => {
         expect(cartesian([])).toEqual([]);
-        expect(cartesian([1])).toEqual([1], { message: "we don't want unecessary brackets" });
+        expect(cartesian([1])).toEqual([1], {
+            message: "we don't want unecessary brackets",
+        });
         expect(cartesian([1, 2])).toEqual([1, 2]);
         expect(cartesian([[1, 2]])).toEqual([[1, 2]], {
             message: "the internal structure of elements should be preserved",
@@ -178,13 +189,13 @@ describe("cartesian", () => {
             cartesian([
                 [1, 2],
                 [3, [2]],
-            ])
+            ]),
         ).toEqual(
             [
                 [1, 2],
                 [3, [2]],
             ],
-            { message: "the internal structure of elements should be preserved" }
+            { message: "the internal structure of elements should be preserved" },
         );
     });
 
@@ -203,7 +214,7 @@ describe("cartesian", () => {
                 [4, 2],
                 [4, [3]],
             ],
-            { message: "the internal structure of elements should be preserved" }
+            { message: "the internal structure of elements should be preserved" },
         );
     });
 
@@ -211,14 +222,15 @@ describe("cartesian", () => {
         expect(cartesian([], [], [])).toEqual([]);
         expect(cartesian([1], [], [2, 5])).toEqual([]);
         expect(cartesian([1], [2], [3])).toEqual([[1, 2, 3]], {
-            message: "we should have no unecessary brackets, we want elements to be 'triples'",
+            message:
+                "we should have no unecessary brackets, we want elements to be 'triples'",
         });
         expect(cartesian([[1], 2], [3], [4])).toEqual(
             [
                 [[1], 3, 4],
                 [2, 3, 4],
             ],
-            { message: "the internal structure of elements should be preserved" }
+            { message: "the internal structure of elements should be preserved" },
         );
     });
 
@@ -291,7 +303,9 @@ describe("zip", () => {
 
 describe("zipWith", () => {
     test("zipWith", () => {
-        expect(zipWith([{ a: 1 }, { b: 2 }], ["a", "b"], (o, k) => o[k])).toEqual([1, 2]);
+        expect(zipWith([{ a: 1 }, { b: 2 }], ["a", "b"], (o, k) => o[k])).toEqual([
+            1, 2,
+        ]);
     });
 });
 

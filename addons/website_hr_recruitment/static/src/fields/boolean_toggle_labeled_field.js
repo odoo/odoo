@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import {
     BooleanToggleField,
     booleanToggleField,
-} from "@web/views/fields/boolean_toggle/boolean_toggle_field";
+} from "@web/fields/basic/boolean_toggle/boolean_toggle_field";
 
 export class BooleanToggleFieldLabeled extends BooleanToggleField {
     static template = "website_hr_recruitment.BooleanToggleFieldLabeled";

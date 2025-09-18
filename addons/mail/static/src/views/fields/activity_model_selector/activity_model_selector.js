@@ -1,12 +1,11 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
+import { ModelSelector } from "@web/components/model_selector/model_selector";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { ModelSelector } from "@web/core/model_selector/model_selector";
-import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
 /** largely taken from documents' DocumentsDetailPanel, which selects arbitrary models and records
  * through two interactions:
  * 1- select the model through a list of accesible and appropriate models (getAvailableResModels)
@@ -15,7 +14,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 // Small hack, memoize uses the first argument as cache key, but we need the orm which will not be the same.
 const getAvailableResModels = memoize((_null, orm) =>
-    orm.call("mail.activity.schedule", "get_model_options")
+    orm.call("mail.activity.schedule", "get_model_options"),
 );
 
 class ActivityModelSelector extends Component {
@@ -32,7 +31,9 @@ class ActivityModelSelector extends Component {
             resModelName: this.props.record.data.res_model_name || "",
             models: [],
         });
-        getAvailableResModels(null, this.orm).then((models) => (this.state.models = models));
+        getAvailableResModels(null, this.orm).then(
+            (models) => (this.state.models = models),
+        );
     }
 
     async onModelSelected(value) {
@@ -64,7 +65,7 @@ class ActivityModelSelector extends Component {
                                 res_model: this.state.resModel,
                                 res_ids: resId,
                             },
-                            { save: false }
+                            { save: false },
                         );
                         const recordInfo = await this.orm.call(
                             this.state.resModel,
@@ -72,7 +73,7 @@ class ActivityModelSelector extends Component {
                             [],
                             {
                                 domain: [["id", "in", resId]],
-                            }
+                            },
                         );
                         this.state.resModelName = recordInfo[0][1];
 
@@ -86,7 +87,7 @@ class ActivityModelSelector extends Component {
                             this.onRecordReset();
                         }
                     },
-                }
+                },
             );
         }
     }

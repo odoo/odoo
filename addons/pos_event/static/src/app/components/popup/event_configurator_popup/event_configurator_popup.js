@@ -1,18 +1,24 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
-import { Dialog } from "@web/core/dialog/dialog";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 
 export class EventConfiguratorPopup extends Component {
     static template = "pos_event.EventConfiguratorPopup";
-    static props = ["tickets", "getPayload", "close", "slotResult", "availabilityPerTicket"];
+    static props = [
+        "tickets",
+        "getPayload",
+        "close",
+        "slotResult",
+        "availabilityPerTicket",
+    ];
     static components = {
         Dialog,
         ProductCard,
@@ -34,11 +40,16 @@ export class EventConfiguratorPopup extends Component {
     get dialogTitle() {
         const event = this.props.tickets[0].event_id;
         if (event.seats_limited) {
-            return _t("Select tickets for %(event)s (%(seats)s seats available%(suffix)s)", {
-                event: event.name,
-                seats: this.slotId ? this.slotAvailability : event.seats_available,
-                suffix: this.slotId ? _t(" for this slot") : "",
-            });
+            return _t(
+                "Select tickets for %(event)s (%(seats)s seats available%(suffix)s)",
+                {
+                    event: event.name,
+                    seats: this.slotId
+                        ? this.slotAvailability
+                        : event.seats_available,
+                    suffix: this.slotId ? _t(" for this slot") : "",
+                },
+            );
         }
         return _t("Select tickets for %(event)s", { event: event.name });
     }
@@ -46,20 +57,28 @@ export class EventConfiguratorPopup extends Component {
         if (typeof this.props.availabilityPerTicket[ticket.id] !== "object") {
             return this.props.availabilityPerTicket[ticket.id];
         }
-        const ticketAvailability = this.props.availabilityPerTicket[ticket.id][this.slotId];
-        const existingUnsyncRegistration = this.pos.models["event.registration"].filter(
-            (r) => !r.isSynced && r.event_slot_id.id === this.slotId
-        );
+        const ticketAvailability =
+            this.props.availabilityPerTicket[ticket.id][this.slotId];
+        const existingUnsyncRegistration = this.pos.models[
+            "event.registration"
+        ].filter((r) => !r.isSynced && r.event_slot_id.id === this.slotId);
         if (ticketAvailability === "unlimited") {
-            return ticket.event_id.seats_limited ? ticket.event_id.seats_available : "unlimited";
+            return ticket.event_id.seats_limited
+                ? ticket.event_id.seats_available
+                : "unlimited";
         }
-        return Math.max(ticketAvailability - existingUnsyncRegistration.length, 0);
+        return Math.max(
+            ticketAvailability - existingUnsyncRegistration.length,
+            0,
+        );
     }
     confirm() {
         const data = [];
         for (const [ticketId, { qty }] of Object.entries(this.state)) {
             if (qty > 0) {
-                const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
+                const ticket = this.pos.models["event.event.ticket"].get(
+                    parseInt(ticketId),
+                );
                 const available = this.ticketIsAvailable(ticket);
 
                 if (!available) {
@@ -67,7 +86,7 @@ export class EventConfiguratorPopup extends Component {
                         title: _t("Error"),
                         body: _t(
                             "The selected ticket (%s) is not available. Please select a different ticket.",
-                            [ticket.name]
+                            [ticket.name],
                         ),
                     });
                     this.props.close();
@@ -92,9 +111,11 @@ export class EventConfiguratorPopup extends Component {
         const dateTimeNow = DateTime.now();
 
         const eventSaleEnd =
-            !ticket.end_sale_datetime || ticket.end_sale_datetime.ts > dateTimeNow.ts;
+            !ticket.end_sale_datetime ||
+            ticket.end_sale_datetime.ts > dateTimeNow.ts;
         const eventSaleStart =
-            !ticket.start_sale_datetime || ticket.start_sale_datetime.ts < dateTimeNow.ts;
+            !ticket.start_sale_datetime ||
+            ticket.start_sale_datetime.ts < dateTimeNow.ts;
         if (!eventSaleStart || !eventSaleEnd) {
             return false;
         }

@@ -5,7 +5,7 @@ import { TimeOffCalendarModel } from './calendar_model';
 import { TimeOffCalendarRenderer, TimeOffDashboardCalendarRenderer } from './calendar_renderer';
 
 import { registry } from '@web/core/registry';
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 

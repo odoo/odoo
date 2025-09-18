@@ -1,8 +1,8 @@
 import { Component, useState } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
@@ -32,6 +32,10 @@ export class EditWebsiteSystrayItem extends Component {
     onClickEditPage() {
         this.websiteContext.edition = true;
         this.props.onEditPage();
+    }
+
+    onEditDropdownClick() {
+        this.closeNotification?.();
     }
 
     get currentWebsiteInfo() {
@@ -111,7 +115,7 @@ export class EditWebsiteSystrayItem extends Component {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
             if (doc.querySelector("#wrap .o_delay_translation")) {
-                this.notification.add(
+                this.closeNotification = this.notification.add(
                     _t('Click on "Edit/Translate" to apply changes made on default language.'),
                     { type: "info" }
                 );

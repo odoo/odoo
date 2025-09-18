@@ -1,5 +1,12 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
 
 class Product extends models.Model {
     json_field = fields.Json();

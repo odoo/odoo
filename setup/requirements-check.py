@@ -47,21 +47,20 @@ from urllib.request import urlopen as _urlopen
 
 from packaging.markers import Marker
 from packaging.requirements import Requirement
-from packaging.tags import mac_platforms  # noqa: PLC2701
+from packaging.tags import mac_platforms
 from packaging.utils import canonicalize_name
-
 from pip._internal.index.package_finder import (
-    LinkEvaluator,  # noqa: PLC2701
+    LinkEvaluator,
 )
-from pip._internal.models.link import Link  # noqa: PLC2701
-from pip._internal.models.target_python import TargetPython  # noqa: PLC2701
+from pip._internal.models.link import Link
+from pip._internal.models.target_python import TargetPython
 
-Version = Tuple[int, ...]
+Version = tuple[int, ...]
 
 # shared beween debian and ubuntu
 SPECIAL = {
     'pytz': 'tz',
-    'libsass': 'libsass-python',
+    'protobuf': 'protobuf',
 }
 SUPPORTED_FORMATS = ('txt', 'ansi', 'svg', 'html', 'json')
 PLATFORM_CODES = ('linux', 'win32', 'darwin')
@@ -70,16 +69,16 @@ PLATFORM_NAMES = ('Linux', 'Win', 'OSX')
 
 def urlopen(url):
     file_name = "".join(c if c.isalnum() else '_' for c in url)
-    os.makedirs('/tmp/package_versions_cache/', exist_ok=True)
+    Path('/tmp/package_versions_cache/').mkdir(exist_ok=True, parents=True)
     file_path = f'/tmp/package_versions_cache/{file_name}'
-    if not os.path.isfile(file_path):
+    if not Path(file_path).is_file():
         response = _urlopen(url)
-        with open(file_path, 'wb') as fw:
+        with Path(file_path).open('wb') as fw:
             fw.write(response.read())
-    return open(file_path, 'rb')   # noqa: SIM115
+    return Path(file_path).open('rb')
 
 
-def parse_version(vstring: str) -> Optional[Version]:
+def parse_version(vstring: str) -> Version | None:
     if not vstring:
         return None
     return tuple(map(int, vstring.split('.')))
@@ -180,7 +179,7 @@ class Distribution(ABC):
         self._release = release
 
     @abstractmethod
-    def get_version(self, package: str) -> Optional[Version]:
+    def get_version(self, package: str) -> Version | None:
         ...
 
     def __str__(self):
@@ -218,7 +217,7 @@ class Debian(Distribution):
             if res.get('error') is None:
                 break
         if res.get('error'):
-            return
+            return None
 
         try:
             return next(
@@ -228,7 +227,7 @@ class Debian(Distribution):
                 if self._release.lower() in distr['suites']
             )
         except StopIteration:
-            return
+            return None
 
 
 class Ubuntu(Distribution):
@@ -264,7 +263,7 @@ def _strip_comment(line):
     return line.split('#', 1)[0].strip()
 
 
-def parse_requirements(reqpath: Path) -> Dict[str, List[Tuple[str, Marker]]]:
+def parse_requirements(reqpath: Path) -> dict[str, list[tuple[str, Marker]]]:
     """ Parses a requirement file to a dict of {package: [(version, markers)]}
 
     The env markers express *whether* that specific dep applies.
@@ -331,7 +330,7 @@ def main(args):
             python_headers.append(v)
 
     # distro headers
-    for checker, version in zip(checkers, pyvers):
+    for checker, version in zip(checkers, pyvers, strict=False):
         platform_headers.append(checker._release[:5])
         python_headers.append(version)
 
@@ -415,7 +414,7 @@ def main(args):
     for row in table:
         sizes = [
             max(s, len(cell[0] if isinstance(cell, tuple) else cell))
-            for s, cell in zip(sizes, row)
+            for s, cell in zip(sizes, row, strict=False)
         ]
 
     output_format = 'ansi'
@@ -435,7 +434,7 @@ def main(args):
         # format table
         for row in table:
             output += ' '
-            for cell, width, sep in zip(row, sizes, seps):
+            for cell, width, sep in zip(row, sizes, seps, strict=False):
                 cell_content = cell
                 deco = default
                 if isinstance(cell, tuple):
@@ -469,10 +468,10 @@ def main(args):
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
             <circle cx="44" cy="0" r="7" fill="#28c840"/>
-            </g>''', "")  #
+            </g>''', "")
 
     if args.output:
-        with open(args.output, 'w', encoding='utf8') as f:
+        with Path(args.output).open('w', encoding='utf8') as f:
             f.write(output)
     else:
         stdout.write(output)

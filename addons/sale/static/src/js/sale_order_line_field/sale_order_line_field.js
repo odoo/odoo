@@ -12,7 +12,7 @@ import {
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
 import { useSubEnv } from '@odoo/owl';
 import { registry } from '@web/core/registry';
-import { CharField } from '@web/views/fields/char/char_field';
+import { CharField } from '@web/fields/basic/char/char_field';
 
 function getComboRecords(listRecords, record) {
     const comboRecords = [];
@@ -78,7 +78,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      * while accessing comboColumns
      */
     get comboColumns() {
-        return [this.titleField, ...this.props.aggregatedFields, 'product_uom_qty', 'discount'];
+        return [this.titleField, ...this.props.aggregatedFields, 'product_qty', 'discount'];
     }
 
     /**
@@ -117,7 +117,8 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     isCellReadonly(column, record) {
         return super.isCellReadonly(column, record) || (
             this.isComboItem(record)
-                && !['name', 'tax_ids', 'qty_delivered'].includes(column.name)
+                && !['name', 'tax_ids', 'qty_transferred'].includes(column.name)
+
         );
     }
 

@@ -1,5 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { expect, test } from "@odoo/hoot";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 
 function compileTemplate(arch) {

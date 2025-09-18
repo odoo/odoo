@@ -1,3 +1,5 @@
+// @ts-check
+
 import { after, onTimeZoneChange } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
 

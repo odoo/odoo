@@ -5,7 +5,7 @@
         <field name="name">product.product.view.form.normalized.website.sale.inherit</field>
         <field name="model">product.product</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="inherit_id" ref="product.view_product_product_form_normalized"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="js_class">website_new_content_form</attribute>
@@ -19,7 +19,7 @@
     <record id="product_product_view_form_normalized" model="ir.ui.view">
         <field name="name">product.product.view.form.normalized.website.sale</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="inherit_id" ref="product.view_product_product_form_normalized"/>
         <field name="arch" type="xml">
             <div name="tax_info" position="after">
                 <field name="public_categ_ids" string="Website Category" class="oe_inline" widget="many2many_tags" placeholder="Unpublished"/>

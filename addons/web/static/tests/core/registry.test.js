@@ -1,7 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { Component } from "@odoo/owl";
 import { serverState } from "@web/../tests/web_test_helpers";
-
 import { Registry } from "@web/core/registry";
 
 describe.current.tags("headless");
@@ -174,7 +175,9 @@ test("can validate the values from a schema", () => {
     expect(friendsRegistry.get("luc")).toEqual({ name: "Luc", age: 32 });
     expect(() => friendsRegistry.add("adrien", { name: 23 })).toThrow();
     expect(() => friendsRegistry.add("hubert", { age: 54 })).toThrow();
-    expect(() => friendsRegistry.add("chris", { name: "chris", city: "Namur" })).toThrow();
+    expect(() =>
+        friendsRegistry.add("chris", { name: "chris", city: "Namur" }),
+    ).toThrow();
     expect(() => friendsRegistry.addValidation({ something: Number })).toThrow();
 });
 
@@ -191,7 +194,7 @@ test("can validate subclassess", async () => {
     const schema = { component: { validate: (c) => c.prototype instanceof Component } };
     const widgetRegistry = new Registry();
     widgetRegistry.addValidation(schema);
-    class Widget extends Component {} // eslint-disable-line
+    class Widget extends Component {}
     expect(() => widgetRegistry.add("calculator", { component: Widget })).not.toThrow({
         message: "Support subclasses",
     });

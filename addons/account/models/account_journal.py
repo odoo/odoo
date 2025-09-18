@@ -4,7 +4,8 @@ from urllib.parse import urlencode
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.tools import email_normalize, email_normalize_all, groupby, urls
+from odoo.tools import email_normalize, email_normalize_all, groupby
+from odoo.libs.web import urls
 from odoo.tools.misc import hash_sign
 from collections import defaultdict
 import logging
@@ -288,9 +289,6 @@ class AccountJournal(models.Model):
     incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
         string="Send Copy To",
         help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
-        compute='_compute_incoming_einvoice_notification_email',
-        store=True,
-        readonly=False,
     )
 
     _code_company_uniq = models.Constraint(
@@ -372,9 +370,9 @@ class AccountJournal(models.Model):
                     FROM account_payment_method_line apml
                     JOIN account_journal journal ON journal.id = apml.journal_id
                     JOIN account_payment_method apm ON apm.id = apml.payment_method_id
-                    WHERE apm.id IN %s
+                    WHERE apm.id = ANY(%s)
                 ''',
-                [tuple(unique_electronic_ids)],
+                [list(unique_electronic_ids)],
             )
             for pay_method_id, company_id, journal_id, provider_id in self.env.cr.fetchall():
                 values = method_information_mapping[pay_method_id]
@@ -536,16 +534,6 @@ class AccountJournal(models.Model):
         for journal in self:
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
-
-    @api.depends('company_id', 'type')
-    def _compute_incoming_einvoice_notification_email(self):
-        for journal in self:
-            if (
-                journal.type == 'purchase'
-                and not journal.incoming_einvoice_notification_email
-                and journal.company_id.email
-            ):
-                journal.incoming_einvoice_notification_email = journal.company_id.email
 
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):
@@ -1286,6 +1274,7 @@ class AccountJournal(models.Model):
                 invoice.id,
                 email_values={
                     **(mail_params or {}),
+                    'email_from': invoice.company_id.email_formatted,
                     'email_to': recipient,
                 },
                 force_send=True,

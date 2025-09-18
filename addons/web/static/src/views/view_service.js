@@ -1,6 +1,10 @@
+// @ts-check
+
+/** @module @web/views/view_service - Service that loads, caches, and invalidates view descriptions (arch, filters, action menus) */
+
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { UPDATE_METHODS } from "@web/core/orm_service";
+import { UPDATE_METHODS } from "@web/services/orm_service";
 
 /**
  * @typedef {Object} IrFilter
@@ -40,6 +44,8 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
  * @property {boolean} loadIrFilters
  */
 
+/** @typedef {Record<string, ViewDescription>} ViewDescriptions */
+
 export const viewService = {
     dependencies: ["orm"],
     async: ["loadViews"],
@@ -61,14 +67,15 @@ export const viewService = {
          * @param {LoadViewsOptions} [options={}]
          * @returns {Promise<ViewDescriptions>}
          */
-        async function loadViews(params, options = {}) {
+        async function loadViews(params, /** @type {any} */ options = {}) {
             const { context, resModel, views } = params;
             const loadViewsOptions = {
                 action_id: options.actionId || false,
                 embedded_action_id: options.embeddedActionId || false,
                 embedded_parent_res_id: options.embeddedParentResId || false,
                 load_filters: options.loadIrFilters || false,
-                toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
+                toolbar:
+                    (!context?.disable_toolbar && options.loadActionMenus) || false,
             };
             for (const key in options) {
                 if (
@@ -91,22 +98,26 @@ export const viewService = {
             }
             const filteredContext = Object.fromEntries(
                 Object.entries(context || {}).filter(
-                    ([k, v]) => k == "lang" || k.endsWith("_view_ref")
-                )
+                    ([k, v]) => k === "lang" || k.endsWith("_view_ref"),
+                ),
             );
 
-            const result = await orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
-                context: filteredContext,
-                views,
-                options: loadViewsOptions,
-            });
+            const result = await orm
+                .cache({ type: "disk" })
+                .call(resModel, "get_views", [], {
+                    context: filteredContext,
+                    views,
+                    options: loadViewsOptions,
+                });
+            /** @type {any} */
             const viewDescriptions = {
                 fields: result.models[resModel].fields,
                 relatedModels: result.models,
                 views: {},
             };
             for (const viewType in result.views) {
-                const { arch, toolbar, id, filters, custom_view_id } = result.views[viewType];
+                const { arch, toolbar, id, filters, custom_view_id } =
+                    result.views[viewType];
                 const viewDescription = { arch, id, custom_view_id };
                 if (toolbar) {
                     viewDescription.actionMenus = toolbar;

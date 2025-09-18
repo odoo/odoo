@@ -1,10 +1,12 @@
+// @ts-check
+
 import { expect, onError, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, useRef, xml } from "@odoo/owl";
 import { contains, getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDraggable } from "@web/core/utils/draggable";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { useDraggable } from "@web/core/utils/dnd/draggable";
 
 test("contains: all actions", async () => {
     class Container extends Component {
@@ -39,7 +41,11 @@ test("contains: all actions", async () => {
         // Pointer-based
         ["button", CLICK, (t) => contains(t).click()],
         ["button", ["pointerdown"], (t) => contains(t).drag()],
-        ["button", ["pointerdown", "pointerup"], (t) => contains(t).dragAndDrop("button")],
+        [
+            "button",
+            ["pointerdown", "pointerup"],
+            (t) => contains(t).dragAndDrop("button"),
+        ],
         ["input[type=checkbox]", CLICK, (t) => contains(t).check()],
         ["input[type=checkbox]", CLICK, (t) => contains(t).uncheck()],
         ["button", ["pointerdown", "focus"], (t) => contains(t).focus()],
@@ -95,7 +101,7 @@ test("contains: all actions", async () => {
 
     for (const [target, events, action] of actions) {
         const cleanups = [...new Set(events)].map((event) =>
-            on(target, event, () => expect.step(event))
+            on(target, event, () => expect.step(event)),
         );
 
         await action(target);
@@ -138,7 +144,7 @@ test("only one drag sequence is allowed at a time", async () => {
                     },
                 });
             }
-        }
+        },
     );
 
     let throwOnDragEnd = false;

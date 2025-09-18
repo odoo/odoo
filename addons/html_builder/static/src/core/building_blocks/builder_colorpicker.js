@@ -4,7 +4,7 @@ import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
-} from "@web/core/color_picker/color_picker";
+} from "@web/components/color_picker/color_picker";
 import { BuilderComponent } from "./builder_component";
 import {
     basicContainerBuilderComponentProps,
@@ -14,7 +14,7 @@ import {
     useDomState,
     useHasPreview,
 } from "../utils";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { isCSSColor, isColorGradient } from "@web/core/utils/format/colors";
 import { getAllUsedColors } from "@html_builder/utils/utils_css";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU

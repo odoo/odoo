@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/utils/functions - memoize and uniqueId general-purpose function helpers */
+
 /**
  * Creates a version of the function that's memoized on the value of its first
  * argument, if any.
@@ -8,13 +12,13 @@
  */
 export function memoize(func) {
     const cache = new Map();
-    const funcName = func.name ? func.name + " (memoized)" : "memoized";
+    const funcName = func.name ? `${func.name} (memoized)` : "memoized";
     return {
-        [funcName](...args) {
+        [funcName](/** @type {any[]} */ ...args) {
             if (!cache.has(args[0])) {
-                cache.set(args[0], func(...args));
+                cache.set(args[0], /** @type {any} */ (func)(...args));
             }
-            return cache.get(...args);
+            return cache.get(args[0]);
         },
     }[funcName];
 }

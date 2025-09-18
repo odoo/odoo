@@ -1,6 +1,5 @@
-import { patch } from "@web/core/utils/patch";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
-
+import { patch } from "@web/core/utils/patch";
 patch(PaymentScreenPaymentLines.prototype, {
     async sendPaymentAdjust(line) {
         const prevAmount = line.get_amount();
@@ -12,7 +11,9 @@ patch(PaymentScreenPaymentLines.prototype, {
         line.set_payment_status("waiting");
 
         const isAdjustSuccessful =
-            await line.payment_method_id.payment_terminal?.send_payment_adjust(line.uuid);
+            await line.payment_method_id.payment_terminal?.send_payment_adjust(
+                line.uuid,
+            );
         if (!isAdjustSuccessful) {
             line.set_amount(prevAmount);
         }

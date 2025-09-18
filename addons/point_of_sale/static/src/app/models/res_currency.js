@@ -1,6 +1,5 @@
-import { registry } from "@web/core/registry";
 import * as numbers from "@point_of_sale/app/utils/numbers";
-
+import { registry } from "@web/core/registry";
 export class ResCurrency extends numbers.AbstractNumbers {
     static pythonModel = "res.currency";
     get precision() {

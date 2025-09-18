@@ -83,13 +83,13 @@
 
         align-items: baseline;
         min-width: 50px;
-        margin: 0 (-$o-form-spacing-unit/2);
+        margin: 0 calc($o-form-spacing-unit / -2);
 
         > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
             flex: 0 1 auto;
             width: auto!important;
-            margin-right: $o-form-spacing-unit/2;
-            margin-left: $o-form-spacing-unit/2;
+            margin-right: calc($o-form-spacing-unit / 2);
+            margin-left: calc($o-form-spacing-unit / 2);
         }
 
         > .o_row {
@@ -252,16 +252,17 @@
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
         padding: var(--formView-sheet-padding-y) var(--formView-sheet-padding-x);
         border-style: solid;
-        border-color: $border-color;
+        border-color: $o-gray-200;
         border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
         border-radius: var(--formView-sheet-border-radius, 0);
         background-color: $o-view-background-color;
+        box-shadow: $o-shadow-sm;
 
         @include media-breakpoint-up(md) {
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
             --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
             --formView-sheet-border-width: var(--formView-sheet-border-width-md, #{$border-width});
-            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius});
+            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$o-border-radius-xl});
         }
 
         @include media-breakpoint-up(lg) {
@@ -301,14 +302,16 @@
     .o_form_statusbar {
         position: relative;
         z-index: 0;
-        margin-inline: calc(-1 * var(--formView-sheetBg-padding-x)) calc(-1 * var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x));
-        padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x);
+        margin-inline: calc(-1 * var(--formView-sheetBg-padding-x)) calc(-1 * var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x)));
+        padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
+        border-radius: $o-border-radius-xl $o-border-radius-xl 0 0;
+        background-color: rgba($o-brand-primary, 0.02);
 
         @include media-breakpoint-up(md) {
             position: sticky;
             top: 0;
             z-index: $zindex-sticky;
-            background-color: $body-bg;
+            background-color: rgba($o-brand-primary, 0.02);
 
             .modal & {
                 background-color: $o-view-background-color;
@@ -494,8 +497,11 @@
 
     // Separators
     .o_horizontal_separator {
+        font-weight: $o-font-weight-semibold;
+        color: $o-gray-500;
+
         &:not(:empty) {
-            box-shadow: 0 $border-width 0 $o-form-separator-color;
+            box-shadow: 0 $border-width 0 $o-gray-200;
         }
 
         &:empty {

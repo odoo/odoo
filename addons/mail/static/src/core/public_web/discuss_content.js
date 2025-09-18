@@ -1,17 +1,14 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
-
-import { useThreadActions } from "@mail/core/common/thread_actions";
-import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { ActionList } from "@mail/core/common/action_list";
-import { Thread } from "@mail/core/common/thread";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
-
+import { Thread } from "@mail/core/common/thread";
+import { useThreadActions } from "@mail/core/common/thread_actions";
+import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
-
+import { FileUploader } from "@web/fields/file_handler";
 export class DiscussContent extends Component {
     static components = {
         ActionList,
@@ -36,12 +33,14 @@ export class DiscussContent extends Component {
         this.isDiscussContent = true;
         useEffect(
             () => this.actionPanelAutoOpenFn(),
-            () => [this.thread]
+            () => [this.thread],
         );
     }
 
     actionPanelAutoOpenFn() {
-        const memberListAction = this.threadActions.actions.find((a) => a.id === "member-list");
+        const memberListAction = this.threadActions.actions.find(
+            (a) => a.id === "member-list",
+        );
         if (memberListAction && this.store.discuss.isMemberPanelOpenByDefault) {
             memberListAction.open();
         }

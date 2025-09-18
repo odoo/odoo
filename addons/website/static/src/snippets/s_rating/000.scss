@@ -45,7 +45,7 @@
         @for $counter from 5 to 0 {
             &.s_rating_#{$counter} {
                 .s_rating_bar:before {
-                    width: percentage($counter/5);
+                    width: calc(100% * $counter / 5);
                 }
             }
         }

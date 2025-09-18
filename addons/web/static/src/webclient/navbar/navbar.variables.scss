@@ -1,6 +1,6 @@
 // = Main Navbar Variables
 // ============================================================================
-$o-navbar-height: 46px !default;
+$o-navbar-height: 52px !default;
 $o-navbar-padding-v: 0px !default;
 $o-navbar-font-size: $o-font-size-base !default;
 
@@ -9,7 +9,7 @@ $o-navbar-border-bottom: 1px solid darken($o-brand-odoo, 10%) !default;
 
 $o-navbar-entry-margin-h: 0 !default;
 $o-navbar-entry-padding-h: .63em !default;
-$o-navbar-entry-border-radius: 0 !default;
+$o-navbar-entry-border-radius: $o-border-radius-sm !default;
 $o-navbar-entry-color: rgba($o-white, .9) !default;
 $o-navbar-entry-color--hover: $o-white !default;
 $o-navbar-entry-font-size: 1em !default;
@@ -41,6 +41,7 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     user-select: none;
     background-color: inherit;
     font-size: $o-navbar-entry-font-size;
+    transition: all $o-duration-fast $o-easing-standard;
 
     @include o-hover-text-color(
         var(--NavBar-entry-color, #{$o-navbar-entry-color}),

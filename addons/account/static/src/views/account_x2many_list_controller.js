@@ -11,7 +11,7 @@ export class AccountX2ManyListController extends ListController {
     }
 
     async openRecord(record) {
-        const action = await this.orm.call(record.resModel, 'action_open_business_doc', [record.resId], {});
+        const action = await this.orm.call(record.resModel, 'action_view_business_doc', [record.resId], {});
         return this.actionService.doAction(action);
     }
 }

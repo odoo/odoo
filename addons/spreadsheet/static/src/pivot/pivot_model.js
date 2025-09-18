@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { PivotModel } from "@web/views/pivot/pivot_model";
+import { getLeafCounts } from "@web/views/pivot/pivot_group_tree";
 
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
@@ -647,7 +648,7 @@ export class OdooPivotModel extends PivotModel {
         const height = colGroupBys.length;
         const measures = this.getDefinition().measures.filter((measure) => !measure.isHidden);
         const measureCount = measures.length;
-        const leafCounts = this._getLeafCounts(this.data.colGroupTree);
+        const leafCounts = getLeafCounts(this.data.colGroupTree);
 
         const headers = new Array(height).fill(0).map(() => []);
 

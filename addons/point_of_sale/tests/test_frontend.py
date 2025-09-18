@@ -748,7 +748,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         '''
         self.product_a.available_in_pos = True
         self.pos_admin.write({
-            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
+            'group_ids': [Command.link(self.env.ref('product.group_product_manager').id)],
         })
         self.main_pos_config.write({
             'is_margins_costs_accessible_to_every_user': True,
@@ -1526,6 +1526,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.printer.write({
             'product_categories_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 2')]).ids)],
         })
+        self.office_combo.write({
+            'pos_categ_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 1')]).ids)],
+        })
         self.main_pos_config.write({
             'is_order_printer': True,
             'printer_ids': [Command.set(self.printer.ids)],
@@ -1660,6 +1663,15 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_display_with_qr(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourWithQr', login="pos_user")
 
+    def test_combo_refund_different_qty(self):
+        setup_product_combo_items(self)
+        self.desks_combo.write({
+            'qty_free': 2,
+            'qty_max': 2,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_refund_different_qty')
+
     def test_order_refund_flow(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_order_refund_flow')
@@ -1701,6 +1713,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         report_refund_order, report_order = self.env['report.pos.order'].sudo().search([('order_id', 'in', current_session.order_ids.ids)])
         self.assertEqual(report_order.margin, 20.0)
         self.assertEqual(report_refund_order.margin, -20.0)
+        self.assertEqual(report_order.price_total, 20.0)
+        self.assertEqual(report_refund_order.price_total, -20.0)
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
@@ -2934,6 +2948,54 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
         self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
 
+    def test_available_product_uom_ids(self):
+        # Making sure that all of the non-special products that are included in the `load_data` are the ones created in this method.
+        self.env['product.template'].search([]).write({'is_favorite': False})
+
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '2')
+        uom = self.env['uom.uom'].create({
+            'name': 'Random UOM',
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        product_one, product_two, product_three = self.env['product.product'].create([{
+            'name': "product_one",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_two",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_three",
+            'available_in_pos': True,
+        }])
+
+        _, _, product_uom_three = self.env['product.uom'].create([{
+            'barcode': "product_one_barcode",
+            'uom_id': uom.id,
+            'product_id': product_one.id,
+        },
+        {
+            'barcode': "product_two_barcode",
+            'uom_id': uom.id,
+            'product_id': product_two.id,
+        },
+        {
+            'barcode': "product_three_barcode",
+            'uom_id': uom.id,
+            'product_id': product_three.id,
+        },
+        ])
+
+        self.env['product.template'].flush_model()
+        self.main_pos_config.open_ui()
+        loaded_data = self.main_pos_config.current_session_id.load_data([])
+        loaded_product_uoms = [loaded_product_uom['id'] for loaded_product_uom in loaded_data['product.uom']]
+
+        self.assertNotIn(product_uom_three.id, loaded_product_uoms, f"Product UOM {product_uom_three} shouldn't be loaded as its product {product_three} is not included in the results")
+
     def test_pos_order_shipping_date(self):
         self.env['res.partner'].create({
             'name': 'Partner Test with Address',
@@ -3559,6 +3621,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_configurator_price', login="pos_user")
+
+    def test_combo_no_free_item(self):
+        """ Test a product combo with no free item allowed. """
+        setup_product_combo_items(self)
+        for combo_item in self.office_combo.combo_ids:
+            combo_item.write({
+                'qty_free': 0,
+                'qty_max': 5,
+            })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_no_free_item')
 
 
 # This class just runs the same tests as above but with mobile emulation

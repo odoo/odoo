@@ -1,10 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, useState } from "@odoo/owl";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { Component, useState } from "@odoo/owl";
-import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-
 patch(TicketScreen.prototype, {
     _getScreenToStatusMap() {
         return Object.assign(super._getScreenToStatusMap(...arguments), {
@@ -39,7 +38,8 @@ patch(TicketScreen.prototype, {
         return res;
     },
     async setOrder(order) {
-        const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
+        const shouldBeOverridden =
+            this.pos.config.module_pos_restaurant && order.table_id;
         if (shouldBeOverridden) {
             const orderTable = order.getTable();
             await this.pos.setTable(orderTable, order.uuid);
@@ -49,13 +49,15 @@ patch(TicketScreen.prototype, {
     async settleTips() {
         const promises = [];
         for (const order of this.getFilteredOrderList()) {
-            const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
+            const amount = this.env.utils.parseValidFloat(
+                order.uiState.TipScreen.inputTipAmount,
+            );
 
             if (!order.isSynced) {
                 logPosMessage(
                     "TicketScreen",
                     "settleTips",
-                    `${order.name} is not yet sync. Sync it to server before setting a tip.`
+                    `${order.name} is not yet sync. Sync it to server before setting a tip.`,
                 );
                 continue;
             }
@@ -75,10 +77,14 @@ patch(TicketScreen.prototype, {
                         const tipLine = await this.pos.data.create("pos.order.line", [
                             serializedTipLine,
                         ]);
-                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
-                            is_tipped: true,
-                            tip_amount: tipLine[0].price_unit,
-                        });
+                        const state = await this.pos.data.ormWrite(
+                            "pos.order",
+                            [order.id],
+                            {
+                                is_tipped: true,
+                                tip_amount: tipLine[0].price_unit,
+                            },
+                        );
 
                         if (state) {
                             order.update({
@@ -89,7 +95,7 @@ patch(TicketScreen.prototype, {
                         resolve();
                     };
                     fn();
-                })
+                }),
             );
         }
 
@@ -125,7 +131,7 @@ export class TipCell extends Component {
     }
     get tipAmountStr() {
         return this.env.utils.formatCurrency(
-            this.env.utils.parseValidFloat(this.orderUiState.inputTipAmount)
+            this.env.utils.parseValidFloat(this.orderUiState.inputTipAmount),
         );
     }
     onBlur() {

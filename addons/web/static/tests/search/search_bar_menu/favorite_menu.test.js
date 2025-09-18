@@ -1,7 +1,9 @@
+// @ts-check
+
 import { after, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { editValue } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { editValue } from "@web/../tests/components/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     editFavorite,
@@ -13,11 +15,11 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { defineSearchBarModels } from "./models";
-
 import { registry } from "@web/core/registry";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
+
+import { defineSearchBarModels } from "./models";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -39,7 +41,7 @@ test("simple rendering with no favorite (without ability to save)", async () => 
             searchMenuTypes: ["favorite"],
             searchViewId: false,
         },
-        { getDisplayName: () => "Action Name" }
+        { getDisplayName: () => "Action Name" },
     );
 
     await toggleSearchBarMenu();
@@ -59,7 +61,7 @@ test("simple rendering with no favorite", async () => {
         },
         {
             getDisplayName: () => "Action Name",
-        }
+        },
     );
 
     await toggleSearchBarMenu();
@@ -224,7 +226,9 @@ test("edit a favorite with a groupby", async () => {
     expect(getFacetTexts()).toEqual(["My favorite"]);
 
     await toggleSearchBarMenu();
-    expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);
+    expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(
+        0,
+    );
 
     await contains(`.o_searchview_facet_label`).click();
     expect(`.modal`).toHaveCount(1);
@@ -235,7 +239,9 @@ test("edit a favorite with a groupby", async () => {
     expect(getFacetTexts()).toEqual(["Foo contains abcde", "Bar"]);
 
     await toggleSearchBarMenu();
-    expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);
+    expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(
+        0,
+    );
 });
 
 test("shared favorites are partially shown if there is more than 4", async () => {

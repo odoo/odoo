@@ -2,8 +2,16 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "baseUrl": ".",
-        "target": "ES2022",
+        "target": "ESNext",
         "noEmit": true,
+        "allowJs": true,
+        "strict": false,
+        "noImplicitAny": false,
+        "strictNullChecks": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "skipLibCheck": true,
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "disableSizeLimit": true,
         "typeRoots": [
             "*/static/src/@types",
@@ -11,6 +19,12 @@
             "addons/web/tooling/types"
         ],
         "paths": {
+            "@odoo/hoot": ["addons/web/static/lib/hoot/hoot.js"],
+            "@odoo/hoot-mock": ["addons/web/static/lib/hoot/hoot-mock.js"],
+            "@odoo/hoot-dom": ["addons/web/static/lib/hoot-dom/hoot-dom.js"],
+            "@web/../tests/helpers/*": ["addons/web/static/tests/legacy/helpers/*"],
+            "@web/../tests/views/*": ["addons/web/static/tests/legacy/views/*"],
+            "@web/../tests/legacy_tests/*": ["addons/web/static/tests/legacy/legacy_tests/*"],
             "@web/*": ["addons/web/static/src/*"],
             "@web_enterprise/*": ["web_enterprise/static/src/*"],
             "@web_unsplash/*": ["addons/web_unsplash/static/src/*"],

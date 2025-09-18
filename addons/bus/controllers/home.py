@@ -8,7 +8,7 @@ from odoo.addons.web.controllers.home import Home as WebHome
 
 
 def _admin_password_warn(uid):
-    if request.params['password'] != 'admin':
+    if request.params.get('password') != 'admin':
         return
     if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
         return

@@ -8,7 +8,7 @@ from markupsafe import Markup
 from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
-from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
+from odoo.libs.colors import hsl_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
@@ -217,8 +217,8 @@ class DiscussChannel(models.Model):
                  ORDER BY id
                     LIMIT 3
                 ) as member ON TRUE
-             WHERE channel.id IN %s
-        """, (tuple(to_compute.ids),))
+             WHERE channel.id = ANY(%s)
+        """, (list(to_compute.ids),))
         channel_id_to_member_ids = defaultdict(list)
         for channel_id, member_id in self.env.cr.fetchall():
             channel_id_to_member_ids[channel_id].append(member_id)
@@ -248,7 +248,7 @@ class DiscussChannel(models.Model):
         if self.channel_type not in ('channel', 'group'):
             return False
         avatar = group_avatar if self.channel_type == 'group' else channel_avatar
-        bgcolor = get_hsl_from_seed(self.uuid)
+        bgcolor = hsl_from_seed(self.uuid)
         avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
         return base64.b64encode(avatar.encode())
 
@@ -1028,6 +1028,21 @@ class DiscussChannel(models.Model):
         if self.self_member_id and message.is_current_user_or_guest_author:
             self.self_member_id._set_last_seen_message(message, notify=False)
             self.self_member_id._set_new_message_separator(message.id + 1)
+        # Invite mentioned partners to sub-channel.
+        if self.parent_channel_id and message.partner_ids:
+            members = self.env["discuss.channel.member"].search([
+                ("channel_id", "=", self.parent_channel_id.id),
+                ("partner_id", "in", message.partner_ids.ids),
+            ])
+            to_invite = members.filtered(lambda m:
+                m.custom_notifications != "no_notif" if m.custom_notifications
+                else m.partner_id.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+            ).partner_id
+            if self.parent_channel_id.channel_type == "channel":
+                to_invite |= (message.partner_ids - members.partner_id).filtered(lambda p:
+                    p.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+                )
+            self._add_members(partners=to_invite)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _message_update_content(self, message, /, *, partner_ids=None, **kwargs):
@@ -1335,7 +1350,7 @@ class DiscussChannel(models.Model):
                         AND M2.partner_id NOT IN %(partner_ids)s
                 )
             GROUP BY M.channel_id
-            HAVING ARRAY_AGG(DISTINCT M.partner_id ORDER BY M.partner_id) = %(sorted_partner_ids)s
+            HAVING ARRAY_AGG(DISTINCT M.partner_id ORDER BY M.partner_id) = %(sorted_partner_ids)s::int[]
             LIMIT 1
                 """,
                 partner_ids=tuple(partners.ids),
@@ -1591,11 +1606,11 @@ class DiscussChannel(models.Model):
                             ORDER BY id DESC
                                LIMIT 1
                           ) AS t(last_message_id) ON TRUE
-                    WHERE discuss_channel.id IN %(ids)s
+                    WHERE discuss_channel.id = ANY(%(ids)s)
                  GROUP BY discuss_channel.id, t.last_message_id
                  ORDER BY discuss_channel.id
             """,
-            {"ids": tuple(self.ids)},
+            {"ids": list(self.ids)},
         )
         return self.env["mail.message"].browse([mid for (mid,) in self.env.cr.fetchall() if mid])
 

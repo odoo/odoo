@@ -1,13 +1,10 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
-
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
-
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
+import { isEventHandled, markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
-
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 export class NavigableList extends Component {
     static components = { ImStatus };
     static template = "mail.NavigableList";
@@ -48,12 +45,14 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
+        usePosition("root", () => this.props.anchorRef, {
+            position: this.props.position,
+        });
         useEffect(
             () => {
                 this.open();
             },
-            () => [this.props]
+            () => [this.props],
         );
         useEffect(
             () => {
@@ -61,15 +60,20 @@ export class NavigableList extends Component {
                     clearTimeout(this.loadingTimeoutId);
                     this.state.showLoading = false;
                 } else if (!this.loadingTimeoutId) {
-                    this.loadingTimeoutId = setTimeout(() => (this.state.showLoading = true), 2000);
+                    this.loadingTimeoutId = setTimeout(
+                        () => (this.state.showLoading = true),
+                        2000,
+                    );
                 }
             },
-            () => [this.props.isLoading]
+            () => [this.props.isLoading],
         );
     }
 
     get show() {
-        return Boolean(this.state.open && (this.props.isLoading || this.props.options.length));
+        return Boolean(
+            this.state.open && (this.props.isLoading || this.props.options.length),
+        );
     }
 
     get sortedOptions() {
@@ -108,7 +112,8 @@ export class NavigableList extends Component {
         if (this.props.options.length === 0) {
             return;
         }
-        const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
+        const activeOptionId =
+            this.state.activeIndex !== null ? this.state.activeIndex : 0;
         let targetId = undefined;
         switch (direction) {
             case "first":

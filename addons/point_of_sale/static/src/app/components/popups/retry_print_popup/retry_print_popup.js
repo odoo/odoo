@@ -1,7 +1,6 @@
 import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class RetryPrintPopup extends Component {
     static template = "point_of_sale.RetryPrintPopup";
     static components = { Dialog };
@@ -15,7 +14,9 @@ export class RetryPrintPopup extends Component {
     };
     static defaultProps = {
         title: _t("Printing failed"),
-        message: _t("An unknown error occurred. Do you want to download the receipt instead?"),
+        message: _t(
+            "An unknown error occurred. Do you want to download the receipt instead?",
+        ),
     };
 
     onClickDownload() {

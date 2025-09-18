@@ -1511,13 +1511,18 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                     mbody in message.body and message.message_type == mtype and
                     msubtype == message.subtype_id
                 ))
+                debug_info = '\n'.join(
+                    f'Msg: message_type {message.message_type}, subtype {message.subtype_id.name}, content {message.body}'
+                    for message in messages
+                )
             else:
                 message = self.env['mail.message'].sudo().search([
                     ('body', 'ilike', mbody),
                     ('message_type', '=', mtype),
                     ('subtype_id', '=', msubtype.id)
                 ], limit=1, order='id DESC')
-            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype and msubtype.name))
+                debug_info = ''
+            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s\n%s)' % (mbody, mtype, msubtype and msubtype.name, debug_info))
 
             # check message values
             if message_values:
@@ -2068,5 +2073,5 @@ def freeze_all_time(dt=None):
     """
     if not dt:
         dt = fields.Datetime.now()
-    with patch('odoo.sql_db.BaseCursor.now', return_value=dt), freeze_time(dt):
+    with patch('odoo.db.BaseCursor.now', return_value=dt), freeze_time(dt):
         yield

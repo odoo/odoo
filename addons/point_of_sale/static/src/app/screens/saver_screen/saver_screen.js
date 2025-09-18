@@ -1,8 +1,7 @@
-import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-
 export class SaverScreen extends Component {
     static template = "point_of_sale.SaverScreen";
     static storeOnOrder = false;

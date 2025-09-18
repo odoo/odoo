@@ -87,7 +87,7 @@ class AccountMoveLine(models.Model):
         help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
-    move_type = fields.Selection(related='move_id.move_type')
+    move_type = fields.Selection(related='move_id.move_type', store=True)
 
     # === Accountable fields === #
     account_id = fields.Many2one(
@@ -378,7 +378,7 @@ class AccountMoveLine(models.Model):
     price_unit = fields.Float(
         string='Unit Price',
         compute="_compute_price_unit", store=True, readonly=False, precompute=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
     )
     price_subtotal = fields.Monetary(
         string='Subtotal',
@@ -555,8 +555,12 @@ class AccountMoveLine(models.Model):
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)
                 if line.move_id.payment_reference and line.move_id.ref and line.move_id.payment_reference != line.move_id.ref:
                     name = f'{line.move_id.ref} - {line.move_id.payment_reference}'
+                elif line.move_id.payment_reference:
+                    name = line.move_id.payment_reference
+                elif line.move_id.move_type in ['in_invoice', 'in_refund'] and line.move_id.ref:
+                    name = line.move_id.ref
                 else:
-                    name = line.move_id.payment_reference or False
+                    name = False
 
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
@@ -567,7 +571,7 @@ class AccountMoveLine(models.Model):
             if not line.product_id or line.display_type in ('line_section', 'line_subsection', 'line_note'):
                 continue
 
-            if not line.name or line._origin.name == get_name(line._origin):
+            if not line.name or line._origin.name == get_name(line._origin) or line.product_id != line._origin.product_id:
                 line.name = get_name(line)
 
     def _compute_account_id(self):
@@ -785,7 +789,7 @@ class AccountMoveLine(models.Model):
             self.env['account.partial.reconcile'].flush_model()
             self.env['res.currency'].flush_model(['decimal_places'])
 
-            aml_ids = tuple(stored_lines.ids)
+            aml_ids = list(stored_lines.ids)
             self.env.cr.execute('''
                 SELECT
                     part.debit_move_id AS line_id,
@@ -794,7 +798,7 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.debit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.debit_currency_id
-                WHERE part.debit_move_id IN %s
+                WHERE part.debit_move_id = ANY(%s)
                 GROUP BY part.debit_move_id, curr.decimal_places
                 UNION ALL
                 SELECT
@@ -804,7 +808,7 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.credit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.credit_currency_id
-                WHERE part.credit_move_id IN %s
+                WHERE part.credit_move_id = ANY(%s)
                 GROUP BY part.credit_move_id, curr.decimal_places
             ''', [aml_ids, aml_ids])
             amounts_map = {
@@ -1672,7 +1676,6 @@ class AccountMoveLine(models.Model):
                         )
 
         lines.move_id._synchronize_business_models(['line_ids'])
-        lines._check_constrains_account_id_journal_id()
         # Remove analytic lines created for draft AMLs, after analytic_distribution has been updated
         lines.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         return lines
@@ -1896,7 +1899,7 @@ class AccountMoveLine(models.Model):
             names.append(move_name)
         if move_ref and move_ref != '/':
             names.append(f"({move_ref})")
-        if line_name and line_name not in ['/', move_name, f"{move_ref} - {move_name}"]:
+        if line_name and line_name not in ['/', move_name, f"{move_ref} - {move_name}", move_ref]:
             names.append(line_name)
         name = ' '.join(names)
         return name or _('Draft Entry')
@@ -3069,7 +3072,7 @@ class AccountMoveLine(models.Model):
                     'res_model': 'account.move.line',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', lines_with_missing_analytic_distribution.ids)],
-                    'views': [(self.env.ref('account.view_move_line_tree').id, 'list')],
+                    'views': [(self.env.ref('account.view_account_move_line_list').id, 'list')],
                 },
                 button_text=_("See items"),
             )
@@ -3478,7 +3481,7 @@ class AccountMoveLine(models.Model):
     def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
         return False
 
-    def get_parent_section_line(self):
+    def get_line_parent_section(self):
         if self.display_type == 'product' and self.parent_id.display_type == 'line_subsection':
             return self.parent_id.parent_id
 
@@ -3510,8 +3513,8 @@ class AccountMoveLine(models.Model):
         action['domain'] = [('id', 'in', ids)]
         return clean_action(action, self.env)
 
-    def action_open_business_doc(self):
-        return self.move_id.action_open_business_doc()
+    def action_view_business_doc(self):
+        return self.move_id.action_view_business_doc()
 
     def action_automatic_entry(self, default_action=None):
         action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')

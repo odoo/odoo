@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        Footer row for the list view aggregate summary.
+
+        Extracted from web.ListRenderer so OWL template-level reactive tracking
+        constrains aggregate recomputation to changes in list.records / record.data
+        / record.selected — not triggered by unrelated parent state changes such as
+        editedRecord toggling when the user clicks a cell.
+    -->
+    <t t-name="web.ListAggregatesRow">
+        <tr>
+            <t t-set="groupNameCellColspan" t-value="getGroupNameCellColSpan()"/>
+            <td t-if="groupNameCellColspan > 0" t-att-colspan="groupNameCellColspan">
+                <button
+                    t-if="props.list.isGrouped and props.canCreateGroup and !props.showGroupInput"
+                    class="btn btn-link o_list_group_add d-print-none"
+                    t-on-click.stop.prevent="props.onShowGroupInput"
+                >
+                    Add a <t t-out="props.list.groupByField.string"/>
+                </button>
+                <div t-elif="props.showGroupInput" class="input-group mb-1">
+                    <input type="text"
+                        class="form-control bg-view o_list_group_input"
+                        t-attf-placeholder="{{ props.list.groupByField.string }}..."
+                        t-ref="groupInput"
+                        t-on-keydown="(ev) => this.onGroupInputKeydown(ev)"
+                    />
+                    <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="_confirmGroupInput">
+                        <i class="fa fa-check"/>
+                    </button>
+                    <button class="btn btn-danger o_list_group_cancel" type="button" t-on-click="props.onHideGroupInput">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+            </td>
+            <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                <span t-if="column.type === 'field' and aggregates[column.name]" t-att-data-tooltip="aggregates[column.name].help">
+                    <t t-esc="aggregates[column.name].value"/>
+                    <sup
+                        t-if="aggregates[column.name].multiCurrency"
+                        class="p-1 fw-bolder text-info"
+                        t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
+                        t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
+                    >?</sup>
+                </span>
+            </td>
+            <td t-if="props.hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
+            <td t-if="props.displayOptionalFields or props.activeActions.onDelete" class="w-print-0 p-print-0"/>
+        </tr>
+    </t>
+
+</templates>

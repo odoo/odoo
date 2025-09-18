@@ -35,16 +35,21 @@ class PatchImportHook:
 
         # skip all finders before this one
         idx = sys.meta_path.index(self)
-        for finder in sys.meta_path[idx + 1:]:
+        for finder in sys.meta_path[idx + 1 :]:
             spec = finder.find_spec(fullname, path, target)
             if spec is not None:
                 # we found a spec, change the loader
 
-                def exec_module(module: ModuleType, exec_module=spec.loader.exec_module) -> None:
+                def exec_module(
+                    module: ModuleType, exec_module=spec.loader.exec_module
+                ) -> None:
                     exec_module(module)
                     patch_module(module.__name__)
 
-                spec.loader = SimpleNamespace(create_module=spec.loader.create_module, exec_module=exec_module)
+                spec.loader = SimpleNamespace(
+                    create_module=spec.loader.create_module,
+                    exec_module=exec_module,
+                )
                 return spec
         raise ImportError(f"Could not load the module {fullname!r} to patch")
 
@@ -54,8 +59,8 @@ sys.meta_path.insert(0, HOOK_IMPORT)
 
 
 def patch_init() -> None:
-    os.environ['TZ'] = 'UTC'  # Set the timezone
-    if hasattr(time, 'tzset'):
+    os.environ["TZ"] = "UTC"  # Set the timezone
+    if hasattr(time, "tzset"):
         time.tzset()
 
     for submodule in pkgutil.iter_modules(__path__):
@@ -63,5 +68,5 @@ def patch_init() -> None:
 
 
 def patch_module(name: str) -> None:
-    module = importlib.import_module(f'.{name}', __name__)
+    module = importlib.import_module(f".{name}", __name__)
     module.patch_module()

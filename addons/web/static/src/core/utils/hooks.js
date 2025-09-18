@@ -1,6 +1,17 @@
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+// @ts-check
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+/** @module @web/core/utils/hooks - OWL component hooks: useService, useBus, useAutofocus, useOwnedDialogs, useForwardRefToParent */
+
+import {
+    onWillUnmount,
+    status,
+    toRaw,
+    useComponent,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * This file contains various custom hooks.
@@ -55,20 +66,27 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
             return true;
         }
         const rootNode = el.getRootNode();
-        return rootNode instanceof ShadowRoot && uiService.activeElement.contains(rootNode.host);
+        return (
+            rootNode instanceof ShadowRoot &&
+            uiService.activeElement.contains(rootNode.host)
+        );
     }
     // LEGACY
     useEffect(
         (el) => {
             if (isFocusable(el)) {
                 el.focus();
-                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
-                    el.selectionEnd = el.value.length;
-                    el.selectionStart = selectAll ? 0 : el.value.length;
+                if (
+                    ["INPUT", "TEXTAREA"].includes(el.tagName) &&
+                    /** @type {HTMLInputElement} */ (el).type !== "number"
+                ) {
+                    const input = /** @type {HTMLInputElement} */ (el);
+                    input.selectionEnd = input.value.length;
+                    input.selectionStart = selectAll ? 0 : input.value.length;
                 }
             }
         },
-        () => [ref.el]
+        () => [ref.el],
     );
     return ref;
 }
@@ -83,6 +101,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
  * @param {import("@odoo/owl").EventBus} bus
  * @param {string} eventName
  * @param {EventListener} callback
+ * @returns {void}
  */
 export function useBus(bus, eventName, callback) {
     const component = useComponent();
@@ -92,19 +111,26 @@ export function useBus(bus, eventName, callback) {
             bus.addEventListener(eventName, listener);
             return () => bus.removeEventListener(eventName, listener);
         },
-        () => []
+        () => [],
     );
 }
 
-// In an object so that it can be patched in tests (prevent error on blocking RPCs after tests)
+/**
+ * Patchable object for controlling protected method behavior in tests.
+ * In production, returns a rejected promise when the component is destroyed.
+ * In tests, can be mocked to return an unresolved promise to prevent crashes.
+ */
 export const useServiceProtectMethodHandling = {
+    /** @returns {Promise<never>} */
     fn() {
         return this.original();
     },
+    /** @returns {Promise<never>} */
     mocked() {
         // Keep them unresolved so that no crash in test due to triggered RPCs by services
         return new Promise(() => {});
     },
+    /** @returns {Promise<never>} */
     original() {
         return Promise.reject(new Error("Component is destroyed"));
     },
@@ -113,6 +139,14 @@ export const useServiceProtectMethodHandling = {
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
+/**
+ * Wrap a service method so that it returns a pending promise when the
+ * owning component is destroyed, preventing post-teardown side effects.
+ *
+ * @param {import("@odoo/owl").Component} component
+ * @param {Function} fn
+ * @returns {Function}
+ */
 function _protectMethod(component, fn) {
     return function (...args) {
         if (status(component) === "destroyed") {
@@ -121,15 +155,16 @@ function _protectMethod(component, fn) {
 
         const prom = Promise.resolve(fn.call(this, ...args));
         const protectedProm = prom.then((result) =>
-            status(component) === "destroyed" ? new Promise(() => {}) : result
+            status(component) === "destroyed" ? new Promise(() => {}) : result,
         );
         return Object.assign(protectedProm, {
-            abort: prom.abort,
-            cancel: prom.cancel,
+            abort: /** @type {any} */ (prom).abort,
+            cancel: /** @type {any} */ (prom).cancel,
         });
     };
 }
 
+/** @type {Record<string, string[]>} */
 export const SERVICES_METADATA = {};
 
 /**
@@ -172,6 +207,9 @@ export function useService(serviceName) {
  * To avoid elements to keep their spellcheck appearance when they are no
  * longer in focus. We only add this attribute when needed. To disable this
  * behavior, use the spellcheck attribute on the element.
+ *
+ * @param {{ refName?: string }} [params]
+ * @returns {void}
  */
 export function useSpellCheck({ refName } = {}) {
     const elements = [];
@@ -185,7 +223,9 @@ export function useSpellCheck({ refName } = {}) {
                 const inputs =
                     ["INPUT", "TEXTAREA"].includes(el.nodeName) || el.isContentEditable
                         ? [el]
-                        : el.querySelectorAll("input, textarea, [contenteditable=true]");
+                        : el.querySelectorAll(
+                              "input, textarea, [contenteditable=true]",
+                          );
                 inputs.forEach((input) => {
                     if (input.spellcheck !== false) {
                         elements.push(input);
@@ -201,7 +241,7 @@ export function useSpellCheck({ refName } = {}) {
                 });
             };
         },
-        () => [ref.el]
+        () => [ref.el],
     );
 }
 
@@ -252,7 +292,7 @@ export function useForwardRefToParent(refName) {
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.
  *
- * @returns {import("@web/core/dialog/dialog_service").DialogServiceInterface}
+ * @returns {(...args: any[]) => () => void}
  */
 export function useOwnedDialogs() {
     const dialogService = useService("dialog");
@@ -261,7 +301,7 @@ export function useOwnedDialogs() {
         cbs.forEach((cb) => cb());
     });
     const addDialog = (...args) => {
-        const close = dialogService.add(...args);
+        const close = /** @type {any} */ (dialogService).add(...args);
         cbs.push(close);
         return close;
     };
@@ -274,14 +314,18 @@ export function useOwnedDialogs() {
  * returning it from the hook and letting the user attach it with t-on.
  *
  * @param {Ref} ref
- * @param {Parameters<typeof EventTarget.prototype.addEventListener>} listener
+ * @param  {...any} listener addEventListener arguments (eventName, handler, options)
+ * @returns {void}
  */
 export function useRefListener(ref, ...listener) {
+    const args = /** @type {[string, EventListenerOrEventListenerObject, ...any[]]} */ (
+        listener
+    );
     useEffect(
         (el) => {
-            el?.addEventListener(...listener);
-            return () => el?.removeEventListener(...listener);
+            el?.addEventListener(...args);
+            return () => el?.removeEventListener(...args);
         },
-        () => [ref.el]
+        () => [ref.el],
     );
 }

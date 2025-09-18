@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
 import { Component } from "@odoo/owl";
 
 export class Many2One extends Component {

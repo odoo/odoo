@@ -1,4 +1,13 @@
-import { animationFrame, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot";
+// @ts-check
+
+import {
+    animationFrame,
+    queryAll,
+    queryAllAttributes,
+    queryAllTexts,
+    queryOne,
+} from "@odoo/hoot";
+
 import { getDropdownMenu } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { buildSelector } from "./view_test_helpers";
@@ -7,11 +16,13 @@ import { buildSelector } from "./view_test_helpers";
  * @param {number} [columnIndex=0]
  */
 export function clickKanbanLoadMore(columnIndex = 0) {
-    return contains(".o_kanban_load_more button", { root: getKanbanColumn(columnIndex) }).click();
+    return contains(".o_kanban_load_more button", {
+        root: getKanbanColumn(columnIndex),
+    }).click();
 }
 
 /**
- * @param {SelectorOptions} [options]
+ * @param {any} [options]
  */
 export async function clickKanbanRecord(options) {
     await contains(buildSelector(`.o_kanban_record`, options)).click();
@@ -42,7 +53,9 @@ export function editKanbanRecord() {
  * @param {string} value
  */
 export function editKanbanRecordQuickCreateInput(fieldName, value) {
-    return contains(`.o_kanban_quick_create .o_field_widget[name=${fieldName}] input`).edit(value, {
+    return contains(
+        `.o_kanban_quick_create .o_field_widget[name=${fieldName}] input`,
+    ).edit(value, {
         confirm: "tab",
     });
 }
@@ -74,7 +87,9 @@ export function getKanbanColumnDropdownMenu(columnIndex = 0, ignoreFolded = fals
 export function getKanbanColumnTooltips(columnIndex) {
     queryAllAttributes;
     const root = columnIndex >= 0 && getKanbanColumn(columnIndex);
-    return queryAllAttributes(".o_column_progress .progress-bar", "data-tooltip", { root });
+    return queryAllAttributes(".o_column_progress .progress-bar", "data-tooltip", {
+        root,
+    });
 }
 
 export function getKanbanCounters() {
@@ -90,7 +105,7 @@ export function getKanbanProgressBars(columnIndex = 0) {
 }
 
 /**
- * @param {SelectorOptions} options
+ * @param {any} options
  */
 export function getKanbanRecord(options) {
     return queryOne(buildSelector(`.o_kanban_record`, options));
@@ -112,7 +127,9 @@ export function quickCreateKanbanColumn() {
  * @param {number} [columnIndex=0]
  */
 export async function quickCreateKanbanRecord(columnIndex = 0) {
-    await contains(".o_kanban_quick_add", { root: getKanbanColumn(columnIndex) }).click();
+    await contains(".o_kanban_quick_add", {
+        root: getKanbanColumn(columnIndex),
+    }).click();
     return animationFrame(); // the kanban quick create is rendered in a second animation frame
 }
 
@@ -121,10 +138,15 @@ export async function quickCreateKanbanRecord(columnIndex = 0) {
  */
 export async function toggleKanbanColumnActions(columnIndex = 0) {
     const column = getKanbanColumn(columnIndex);
-    await contains(".o_group_config .dropdown-toggle", { root: column, visible: false }).click();
+    await contains(".o_group_config .dropdown-toggle", {
+        root: column,
+        visible: false,
+    }).click();
     return (buttonText) => {
         const menu = getDropdownMenu(column);
-        return contains(`.dropdown-item:contains(/\\b${buttonText}\\b/i)`, { root: menu }).click();
+        return contains(`.dropdown-item:contains(/\\b${buttonText}\\b/i)`, {
+            root: menu,
+        }).click();
     };
 }
 
@@ -132,9 +154,12 @@ export async function toggleKanbanColumnActions(columnIndex = 0) {
  * @param {number} [recordIndex=0]
  */
 export function toggleKanbanRecordDropdown(recordIndex = 0) {
-    return contains(`.o_kanban_record:eq(${recordIndex}) .o_dropdown_kanban .dropdown-toggle`, {
-        visible: false,
-    }).click();
+    return contains(
+        `.o_kanban_record:eq(${recordIndex}) .o_dropdown_kanban .dropdown-toggle`,
+        {
+            visible: false,
+        },
+    ).click();
 }
 
 export function validateKanbanColumn() {

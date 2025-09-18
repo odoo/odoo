@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ReferenceField, referenceField } from "@web/views/fields/reference/reference_field";
+import { ReferenceField, referenceField } from "@web/fields/relational/reference/reference_field";
 
 export class EventMailTemplateReferenceField extends ReferenceField {
     static template = "event.mailTemplateReferenceField";

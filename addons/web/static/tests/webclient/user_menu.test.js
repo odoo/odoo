@@ -1,5 +1,12 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
+import {
+    click,
+    queryAllAttributes,
+    queryAllProperties,
+    queryAllTexts,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -12,14 +19,15 @@ import {
     serverState,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { getOrigin } from "@web/core/utils/urls";
-
+import { user } from "@web/services/user";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
-import { odooAccountItem, preferencesItem } from "@web/webclient/user_menu/user_menu_items";
+import {
+    odooAccountItem,
+    preferencesItem,
+} from "@web/webclient/user_menu/user_menu_items";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
@@ -83,7 +91,7 @@ test("can be rendered", async () => {
     expect("img.o_user_avatar").toHaveCount(1);
     expect("img.o_user_avatar").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/res.partner/17/avatar_128?unique=1704106800000`
+        `${getOrigin()}/web/image/res.partner/17/avatar_128?unique=1704106800000`,
     );
     expect(".dropdown-menu .dropdown-item").toHaveCount(0);
     await contains("button.dropdown-toggle").click();
@@ -103,7 +111,12 @@ test("can be rendered", async () => {
         "frodo",
         "eye",
     ]);
-    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["Ring", "Bad", "Frodo", "Eye"]);
+    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual([
+        "Ring",
+        "Bad",
+        "Frodo",
+        "Eye",
+    ]);
 
     for (let i = 0; i < 4; i++) {
         await click(`.dropdown-menu .dropdown-item:eq(${i})`);

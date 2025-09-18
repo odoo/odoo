@@ -36,11 +36,11 @@
     }
 
     &.o-chatWindow .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) / 2;
+        margin-top: calc(map-get($spacers, 1) / 2);
     }
 
     &.o-isUiSmall:not(.o-editing) .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) * 6 / 4;
+        margin-top: calc(map-get($spacers, 1) * 6 / 4);
     }
 
     &:not(.o-focused) {
@@ -125,8 +125,8 @@
     .o-mail-Composer.o-chatWindow & {
         padding-top: 7px;
         padding-bottom: 7px;
-        padding-left: map-get($spacers, 1) / 2;
-        padding-right: map-get($spacers, 1) / 2;
+        padding-left: calc(map-get($spacers, 1) / 2);
+        padding-right: calc(map-get($spacers, 1) / 2);
     }
 
     .o-mail-Composer.o-isUiSmall & {
@@ -211,4 +211,8 @@
 
 .o-mail-Composer-suggestionList:has(.o-open) {
     border: $border-width solid $border-color;
+}
+
+.o-mail-Composer-suggestionPartner-name.o-has-email {
+    max-width: 70%;
 }

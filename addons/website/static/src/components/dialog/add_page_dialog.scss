@@ -45,12 +45,12 @@
 
             iframe {
                 width: #{$-iframe-width}px;
-                transform: scale($-preview-width / $-iframe-width);
+                transform: scale(calc($-preview-width / $-iframe-width));
                 @include media-breakpoint-down(xl) {
-                    transform: scale($-preview-width-xl / $-iframe-width);
+                    transform: scale(calc($-preview-width-xl / $-iframe-width));
                 }
                 @include media-breakpoint-down(lg) {
-                    transform: scale($-preview-width-lg / $-iframe-width);
+                    transform: scale(calc($-preview-width-lg / $-iframe-width));
                 }
                 transform-origin: 0 0;
             }

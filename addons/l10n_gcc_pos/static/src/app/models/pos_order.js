@@ -1,9 +1,10 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-
 patch(PosOrder.prototype, {
     get isGccCountry() {
-        return ["SA", "AE", "BH", "OM", "QA", "KW"].includes(this.company.country_id?.code);
+        return ["SA", "AE", "BH", "OM", "QA", "KW"].includes(
+            this.company.country_id?.code,
+        );
     },
     /**
      * If the order is empty (there are no products)
@@ -18,7 +19,8 @@ patch(PosOrder.prototype, {
             this.isEmpty() &&
             !!this.payment_ids.filter(
                 (paymentline) =>
-                    paymentline.payment_method_id.type === "pay_later" && paymentline.amount < 0
+                    paymentline.payment_method_id.type === "pay_later" &&
+                    paymentline.amount < 0,
             ).length
         );
     },

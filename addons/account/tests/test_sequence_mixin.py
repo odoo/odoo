@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from functools import reduce
 import json
-import psycopg2
+import psycopg
 from unittest.mock import patch, Mock
 
 
@@ -77,7 +77,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(self.test_move, 'MyMISC/2020/0000001')
 
         # Has been posted, and it doesn't change anymore
-        self.test_move.button_draft()
+        self.test_move.action_draft()
         self.test_move.date = '2020-01-02'
         self.test_move.action_post()
         self.assertMoveName(self.test_move, 'MyMISC/2020/0000001')
@@ -262,7 +262,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(move_b, 'MISC/22-23/02/0001')
 
         # The first sequence slot is now taken by move_b, move_a's name and placeholder should be False.
-        move_a.button_cancel()
+        move_a.action_cancel()
         self.assertMoveName(move_a, False)
 
     def test_journal_sequence(self):
@@ -281,7 +281,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         copy2.journal_id = new_journal
         self.assertMoveName(copy2, 'MISC2/15-16/01/0001')
         copy2.action_post()
-        copy2.button_draft()
+        copy2.action_draft()
         with Form(copy2) as move_form:  # It is editable in the form
             with self.assertLogs('odoo.tests.form') as cm:
                 move_form.name = 'MyMISC/2016/0001'
@@ -404,7 +404,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         moves = self.env['account.move'].create([{
             'journal_id': journals[journal_index].id,
             'line_ids': [(0, 0, {'account_id': account.id, 'name': 'line'})],
-            'date': f'2010-{month}-01',
+            'date': f'2010-{month:02d}-01',
         } for journal_index, month in [(1, 1), (0, 1), (1, 2), (1, 1)]])._post()
         self.assertEqual(
             moves.mapped('name'),
@@ -436,7 +436,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         next_move.action_post()
         self.assertMoveName(next_move, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
-        next_move.button_draft()
+        next_move.action_draft()
         next_move.name = False
         next_move.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
         next_move.action_post()
@@ -510,7 +510,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(copies[5], 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg.DatabaseError), mute_logger('odoo.db'):
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date
@@ -521,9 +521,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         copies[4].name = 'XMISC/2019/10005'
         copies[5].name = 'XMISC/2019/10006'
 
-        copies[4].button_draft()
+        copies[4].action_draft()
         copies[4].with_context(force_delete=True).unlink()
-        copies[5].button_draft()
+        copies[5].action_draft()
 
         wizard = Form(self.env['account.resequence.wizard'].with_context(
             active_ids=set(copies.ids) - set(copies[4].ids),
@@ -672,7 +672,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         moves.action_post()
 
         mistake = moves[1]
-        mistake.button_draft()
+        mistake.action_draft()
         mistake.posted_before = False
         mistake.with_context(force_delete=True).unlink()
         moves -= mistake
@@ -781,18 +781,18 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.assertEqual(new_move.made_sequence_gap, False)
 
     def test_unlink(self):
-        self.all_moves[0].button_draft()
+        self.all_moves[0].action_draft()
         self.all_moves[0].unlink()
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
-        self.all_moves[1].button_draft()
+        self.all_moves[1].action_draft()
         self.all_moves[1].unlink()
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
 
     def test_unlink_2(self):
-        self.all_moves[1].button_draft()
+        self.all_moves[1].action_draft()
         self.all_moves[1].unlink()
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
-        self.all_moves[0].button_draft()
+        self.all_moves[0].action_draft()
         self.all_moves[0].unlink()
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
 
@@ -819,7 +819,7 @@ class TestSequenceGaps(TestSequenceMixinCommon):
 
     def test_create_fill_gap(self):
         previous = self.all_moves[1].name
-        self.all_moves[1].button_draft()
+        self.all_moves[1].action_draft()
         self.all_moves[1].unlink()
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
         new_move = self.create_move(name=previous)
@@ -868,13 +868,13 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         # The last element of each sequence chain should allow deletion.
         # Everything should be deletable if we follow this order (a bit randomized on purpose)
         for move in (self.move_1_3, self.move_1_2, self.move_3_1, self.move_2_2, self.move_2_1, self.move_1_1):
-            move.button_draft()
+            move.action_draft()
             move.unlink()
 
     def test_sequence_deletion_2(self):
         """Can delete in batch."""
         all_moves = (self.move_1_3 + self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
-        all_moves.button_draft()
+        all_moves.action_draft()
         all_moves.unlink()
 
 
@@ -919,7 +919,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         with self.env.registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
             moves = env['account.move'].browse(self.data['move_ids'])
-            moves.filtered(lambda x: x.state in ('posted', 'cancel')).button_draft()
+            moves.filtered(lambda x: x.state in ('posted', 'cancel')).action_draft()
             moves.posted_before = False
             moves.unlink()
             journal = env['account.journal'].browse(self.data['journal_id'])

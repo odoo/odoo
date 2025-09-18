@@ -1,6 +1,8 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 import {
     contains,
@@ -26,6 +28,19 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import {
+    DEFAULT_BG,
+    getBorderWhite,
+    getColors,
+    lightenColor,
+} from "@web/core/colors/colors";
+import { Domain } from "@web/core/domain";
+import { SampleServer } from "@web/model/sample_server";
+import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
+import { GraphModel } from "@web/views/graph/graph_model";
+import { GraphRenderer } from "@web/views/graph/graph_renderer";
+import { WebClient } from "@web/webclient/webclient";
+
+import {
     checkDatasets,
     checkLabels,
     checkLegend,
@@ -45,14 +60,6 @@ import {
     selectMode,
     setupChartJsForTests,
 } from "./graph_test_helpers";
-
-import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
-import { Domain } from "@web/core/domain";
-import { SampleServer } from "@web/model/sample_server";
-import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
-import { GraphModel } from "@web/views/graph/graph_model";
-import { GraphRenderer } from "@web/views/graph/graph_renderer";
-import { WebClient } from "@web/webclient/webclient";
 
 class Color extends models.Model {
     name = fields.Char();
@@ -300,7 +307,7 @@ test("simple bar chart rendering (two groupBy)", async () => {
                 data: [5, 3],
                 label: "Sum",
             },
-        ]
+        ],
     );
     checkLegend(view, ["xphone", "xpad", "Sum"]);
     checkTooltip(view, { lines: [{ label: "false / xphone", value: "1" }] }, 0, 0);
@@ -330,7 +337,11 @@ test("bar chart many2many groupBy", async () => {
         label: "Revenue",
     });
     checkLegend(view, "Revenue");
-    checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
+    checkTooltip(
+        view,
+        { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+        0,
+    );
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
     checkTooltip(view, { lines: [{ label: "None", value: "8" }], title: "Revenue" }, 2);
 });
@@ -358,9 +369,17 @@ test("differentiate many2many values with same label", async () => {
         data: [10, 13, 14, 8],
         label: "Revenue",
     });
-    checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
+    checkTooltip(
+        view,
+        { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+        0,
+    );
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
-    checkTooltip(view, { lines: [{ label: "red (2)", value: "14" }], title: "Revenue" }, 2);
+    checkTooltip(
+        view,
+        { lines: [{ label: "red (2)", value: "14" }], title: "Revenue" },
+        2,
+    );
     checkTooltip(view, { lines: [{ label: "None", value: "8" }], title: "Revenue" }, 3);
 });
 
@@ -439,7 +458,7 @@ test("line chart rendering (two groupBy)", async () => {
                 data: [4, 0],
                 label: "xpad",
             },
-        ]
+        ],
     );
     checkLegend(view, ["xphone", "xpad"]);
     checkTooltip(
@@ -450,7 +469,7 @@ test("line chart rendering (two groupBy)", async () => {
                 { label: "false / xphone", value: "1" },
             ],
         },
-        0
+        0,
     );
     checkTooltip(
         view,
@@ -460,7 +479,7 @@ test("line chart rendering (two groupBy)", async () => {
                 { label: "true / xpad", value: "0" },
             ],
         },
-        1
+        1,
     );
 });
 
@@ -485,7 +504,11 @@ test("line chart many2many groupBy", async () => {
         label: "Revenue",
     });
     checkLegend(view, "Revenue");
-    checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
+    checkTooltip(
+        view,
+        { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+        0,
+    );
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
 });
 
@@ -527,7 +550,7 @@ test("Check if values in tooltip are correctly sorted when groupBy filter are ap
             ],
             title: "Revenue",
         },
-        0
+        0,
     );
     checkTooltip(
         view,
@@ -544,7 +567,7 @@ test("Check if values in tooltip are correctly sorted when groupBy filter are ap
             ],
             title: "Revenue",
         },
-        1
+        1,
     );
 });
 
@@ -566,7 +589,9 @@ test("format total in hh:mm when measure is unit_amount", async () => {
 
     expect(".o_graph_view").toHaveClass("o_view_controller");
     expect("div.o_graph_canvas_container canvas").toHaveCount(1);
-    expect(measure).toBe("unit_amount", { message: `the measure should be "unit_amount"` });
+    expect(measure).toBe("unit_amount", {
+        message: `the measure should be "unit_amount"`,
+    });
     checkLegend(view, "Unit Amount");
     checkLabels(view, ["Total"]);
     expect(fieldAttrs[measure].widget).toBe("float_time", {
@@ -583,7 +608,11 @@ test("format total in hh:mm when measure is unit_amount", async () => {
         "07:00",
         "08:00",
     ]);
-    checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
+    checkTooltip(
+        view,
+        { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] },
+        0,
+    );
 });
 
 test("Stacked button visible in the line chart", async () => {
@@ -640,7 +669,8 @@ test("Stacked line prop click false", async () => {
             "the y axes should have a stacked property set to false since the stacked property in line chart is false.",
     });
     expect(getGraphRenderer(view).getElementOptions().line.fill).toBe(false, {
-        message: "The fill property should be false since the stacked property is false.",
+        message:
+            "The fill property should be false since the stacked property is false.",
     });
 
     const expectedDatasets = [
@@ -683,7 +713,8 @@ test("Stacked prop and default line chart", async () => {
             "the stacked property in y axes should be true when the stacked is enabled in line chart",
     });
     expect(getGraphRenderer(view).getElementOptions().line.fill).toBe(true, {
-        message: "The fill property should be true to add backgroundColor in line chart.",
+        message:
+            "The fill property should be true to add backgroundColor in line chart.",
     });
 
     const expectedDatasets = [];
@@ -881,9 +912,21 @@ test("pie chart many2many groupby", async () => {
         data: [10, 13, 8],
     });
     checkLegend(view, ["black", "red", "None"]);
-    checkTooltip(view, { lines: [{ label: "black", value: "10 (32.26%)" }], title: "Revenue" }, 0);
-    checkTooltip(view, { lines: [{ label: "red", value: "13 (41.94%)" }], title: "Revenue" }, 1);
-    checkTooltip(view, { lines: [{ label: "None", value: "8 (25.81%)" }], title: "Revenue" }, 2);
+    checkTooltip(
+        view,
+        { lines: [{ label: "black", value: "10 (32.26%)" }], title: "Revenue" },
+        0,
+    );
+    checkTooltip(
+        view,
+        { lines: [{ label: "red", value: "13 (41.94%)" }], title: "Revenue" },
+        1,
+    );
+    checkTooltip(
+        view,
+        { lines: [{ label: "None", value: "8 (25.81%)" }], title: "Revenue" },
+        2,
+    );
 });
 
 test("pie chart rendering (two groupBy)", async () => {
@@ -907,7 +950,11 @@ test("pie chart rendering (two groupBy)", async () => {
         label: "",
     });
     checkLegend(view, ["false / xphone", "false / xpad", "true / xphone"]);
-    checkTooltip(view, { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] }, 0);
+    checkTooltip(
+        view,
+        { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] },
+        0,
+    );
     checkTooltip(view, { lines: [{ label: "false / xpad", value: "4 (50.00%)" }] }, 1);
     checkTooltip(view, { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] }, 2);
 });
@@ -932,7 +979,7 @@ test("pie chart rendering (no data)", async () => {
                 data: [1],
                 label: "",
             },
-        ]
+        ],
     );
     checkLegend(view, ["No data"]);
     checkTooltip(view, { lines: [{ label: "No data", value: "0 (100.00%)" }] }, 0);
@@ -1274,7 +1321,9 @@ test("display the provided no content helper when search has no matching data", 
     await toggleMenuItem("color");
 
     expect(".o_graph_canvas_container canvas").toHaveCount(0);
-    expect(".o_nocontent_help:contains(This helper should be displayed)").toHaveCount(1);
+    expect(".o_nocontent_help:contains(This helper should be displayed)").toHaveCount(
+        1,
+    );
 });
 
 test("can reload with other group by", async () => {
@@ -1512,8 +1561,16 @@ test("format values as float in case at least one value is not an number", async
 
     checkDatasets(view, "data", { data: [1.5, 2] });
     checkLabels(view, ["false", "true"]);
-    checkTooltip(view, { title: "Revenue", lines: [{ label: "false", value: "1.50" }] }, 0);
-    checkTooltip(view, { title: "Revenue", lines: [{ label: "true", value: "2.00" }] }, 1);
+    checkTooltip(
+        view,
+        { title: "Revenue", lines: [{ label: "false", value: "1.50" }] },
+        0,
+    );
+    checkTooltip(
+        view,
+        { title: "Revenue", lines: [{ label: "true", value: "2.00" }] },
+        1,
+    );
 });
 
 test("the active measure description is the arch string attribute in priority", async () => {
@@ -1528,12 +1585,20 @@ test("the active measure description is the arch string attribute in priority", 
         `,
     });
 
-    checkTooltip(view, { title: "FooFighters", lines: [{ label: "Total", value: "239" }] }, 0);
+    checkTooltip(
+        view,
+        { title: "FooFighters", lines: [{ label: "Total", value: "239" }] },
+        0,
+    );
 
     await toggleMenu("Measures");
     await toggleMenuItem("Nirvana");
 
-    checkTooltip(view, { title: "Nirvana", lines: [{ label: "Total", value: "23" }] }, 0);
+    checkTooltip(
+        view,
+        { title: "Nirvana", lines: [{ label: "Total", value: "23" }] },
+        0,
+    );
 });
 
 test("reload graph with correct fields", async () => {
@@ -1672,7 +1737,11 @@ test("not use a many2one as a measure by default", async () => {
 
     await toggleMenu("Measures");
 
-    expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
+    expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual([
+        "Foo",
+        "Revenue",
+        "Count",
+    ]);
 });
 
 test.tags("desktop");
@@ -1753,7 +1822,11 @@ test("graph view `graph_measure` field in context", async () => {
 
     expect(getYAxisLabel(view)).toBe("Product");
     checkLegend(view, "Product");
-    checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
+    checkTooltip(
+        view,
+        { title: "Product", lines: [{ label: "Total", value: "2" }] },
+        0,
+    );
 });
 
 test("`graph_measure` in context is prefered to measure in arch", async () => {
@@ -1772,7 +1845,11 @@ test("`graph_measure` in context is prefered to measure in arch", async () => {
 
     expect(getYAxisLabel(view)).toBe("Product");
     checkLegend(view, "Product");
-    checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
+    checkTooltip(
+        view,
+        { title: "Product", lines: [{ label: "Total", value: "2" }] },
+        0,
+    );
 });
 
 test("None should appear in bar, pie graph but not in line graph with multiple groupbys", async () => {
@@ -1846,7 +1923,7 @@ test("graph view only keeps finer groupby filter option for a given groupby", as
                 label: "xpad",
                 data: [0, 0, 1, 1],
             },
-        ]
+        ],
     );
 });
 
@@ -1871,6 +1948,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1885,6 +1963,7 @@ test("clicking on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1910,6 +1989,7 @@ test("middle click on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1924,6 +2004,7 @@ test("middle click on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1949,6 +2030,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1963,6 +2045,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1990,6 +2073,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2004,6 +2088,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2038,6 +2123,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2052,6 +2138,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2127,7 +2214,8 @@ test("graph view with invisible attribute on field", async () => {
     await toggleMenu("Measures");
 
     expect(".o_menu_item").toHaveCount(2, {
-        message: "there should be only two menu items in the measures dropdown (count and foo)",
+        message:
+            "there should be only two menu items in the measures dropdown (count and foo)",
     });
     expect(".o_menu_item:contains(Revenue)").toHaveCount(0);
 });
@@ -2225,23 +2313,39 @@ test("graph view sort by measure for grouped data", async () => {
     });
 
     checkLegend(view, ["false", "true", "Sum"], "measure should be by count");
-    checkDatasets(view, "data", [{ data: [1, 1, 3] }, { data: [3, 0, 0] }, { data: [4, 1, 3] }]);
+    checkDatasets(view, "data", [
+        { data: [1, 1, 3] },
+        { data: [3, 0, 0] },
+        { data: [4, 1, 3] },
+    ]);
 
     await clickSort("asc");
 
     expect(".fa-sort-amount-asc").toHaveClass("active");
-    checkDatasets(view, "data", [{ data: [1, 3, 1] }, { data: [0, 0, 3] }, { data: [1, 3, 4] }]);
+    checkDatasets(view, "data", [
+        { data: [1, 3, 1] },
+        { data: [0, 0, 3] },
+        { data: [1, 3, 4] },
+    ]);
 
     await clickSort("desc");
 
     expect(".fa-sort-amount-desc").toHaveClass("active");
-    checkDatasets(view, "data", [{ data: [1, 3, 1] }, { data: [3, 0, 0] }, { data: [4, 3, 1] }]);
+    checkDatasets(view, "data", [
+        { data: [1, 3, 1] },
+        { data: [3, 0, 0] },
+        { data: [4, 3, 1] },
+    ]);
 
     // again click on descending button to deactivate order
     await clickSort("desc");
 
     expect(".fa-sort-amount-desc").not.toHaveClass("active");
-    checkDatasets(view, "data", [{ data: [1, 1, 3] }, { data: [3, 0, 0] }, { data: [4, 1, 3] }]);
+    checkDatasets(view, "data", [
+        { data: [1, 1, 3] },
+        { data: [3, 0, 0] },
+        { data: [4, 1, 3] },
+    ]);
 });
 
 test("graph view sort by measure for multiple grouped data", async () => {
@@ -2254,7 +2358,7 @@ test("graph view sort by measure for multiple grouped data", async () => {
         { id: 1, foo: 48, bar: false, product_id: 200, date: "2016-04-01" },
         { id: 2, foo: 49, bar: false, product_id: 200, date: "2016-04-01" },
         { id: 3, foo: 50, bar: true, product_id: 100, date: "2016-01-03" },
-        { id: 4, foo: 50, bar: true, product_id: 200, date: "2016-01-03" }
+        { id: 4, foo: 50, bar: true, product_id: 200, date: "2016-01-03" },
     );
 
     const view = await mountView({
@@ -2268,7 +2372,11 @@ test("graph view sort by measure for multiple grouped data", async () => {
         `,
     });
 
-    checkLegend(view, ["xphone", "xpad", "zphone", "Sum"], "measure should be by count");
+    checkLegend(
+        view,
+        ["xphone", "xpad", "zphone", "Sum"],
+        "measure should be by count",
+    );
     checkDatasets(view, "data", [
         { data: [1, 0, 0, 0] },
         { data: [1, 2, 1, 2] },
@@ -2814,7 +2922,10 @@ test("missing property field definition is fetched", async function () {
         definition_record_field: "properties_definition",
     });
     onRpc(({ method, kwargs }) => {
-        if (method === "formatted_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+        if (
+            method === "formatted_read_group" &&
+            kwargs.groupby?.includes("properties.my_char")
+        ) {
             expect.step(JSON.stringify(kwargs.groupby));
             return [
                 {
@@ -2863,7 +2974,7 @@ test("missing property field definition is fetched", async function () {
                 data: [2, 1],
                 label: "Count",
             },
-        ]
+        ],
     );
 });
 
@@ -2875,7 +2986,10 @@ test("missing deleted property field definition is created", async function () {
         definition_record_field: "properties_definition",
     });
     onRpc(({ method, kwargs }) => {
-        if (method === "formatted_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+        if (
+            method === "formatted_read_group" &&
+            kwargs.groupby?.includes("properties.my_char")
+        ) {
             expect.step(JSON.stringify(kwargs.groupby));
             return [
                 {
@@ -2921,7 +3035,7 @@ test("missing deleted property field definition is created", async function () {
                 data: [2, 1],
                 label: "Count",
             },
-        ]
+        ],
     );
 });
 
@@ -3070,6 +3184,14 @@ test("monetary chart rendering with multiple currencies", async () => {
     });
     checkLegend(view, "Amount");
     // should display the sum in the company currency, i.e. EUR
-    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
-    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
+    checkTooltip(
+        view,
+        { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] },
+        0,
+    );
+    checkTooltip(
+        view,
+        { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] },
+        1,
+    );
 });

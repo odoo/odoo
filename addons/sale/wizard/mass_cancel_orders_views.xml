@@ -6,9 +6,9 @@
         <field name="model">sale.mass.cancel.orders</field>
         <field name="arch" type="xml">
             <form string="Cancel quotations">
-                <field name="sale_order_ids" invisible="1"/>
-                <field name="sale_orders_count" invisible="1"/>
-                <field name="has_confirmed_order" invisible="1"/>
+                <field name="sale_order_ids" invisible="1" />
+                <field name="sale_orders_count" invisible="1" />
+                <field name="has_confirmed_order" invisible="1" />
                 <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
                         Some confirmed orders are selected. Their related documents might be
@@ -18,15 +18,14 @@
                 <div invisible="sale_orders_count &gt; 1">
                     Are you sure you want to cancel the selected item?
                 </div>
-                <div invisible="sale_orders_count == 1">
-                    So, are you sure you want to cancel these <field name="sale_orders_count"/> items?
-                </div>
+                <div invisible="sale_orders_count == 1"> So, are you sure you want to cancel these <field
+                        name="sale_orders_count" /> items? </div>
                 <footer>
                     <button class="btn-primary"
-                            name="action_mass_cancel"
-                            type="object"
-                            string="Cancel"/>
-                    <button string="Discard" special="cancel"/>
+                        name="action_mass_cancel"
+                        type="object"
+                        string="Cancel" />
+                    <button string="Discard" special="cancel" />
                 </footer>
             </form>
         </field>
@@ -36,9 +35,9 @@
         <field name="name">Cancel</field>
         <field name="res_model">sale.mass.cancel.orders</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="mass_cancel_orders_view_form"/>
+        <field name="view_id" ref="mass_cancel_orders_view_form" />
         <field name="target">new</field>
-        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref="model_sale_order" />
         <field name="binding_view_types">list,kanban</field>
     </record>
 

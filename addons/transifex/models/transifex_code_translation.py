@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
+import psycopg
 
 from odoo import api, models, fields
 from odoo.tools.translate import CodeTranslations
@@ -51,7 +51,7 @@ class TransifexCodeTranslation(models.Model):
             ]
             self.sudo().create(create_value_list)
 
-        except psycopg2.errors.LockNotAvailable:
+        except psycopg.errors.LockNotAvailable:
             return False
 
         return True

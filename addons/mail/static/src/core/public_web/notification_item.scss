@@ -16,8 +16,8 @@
 .o-mail-NotificationItem-avatarContainer {
     height: 42px;
     aspect-ratio: 1;
-    margin-top: map-get($spacers, 1) / 2;
-    margin-bottom: map-get($spacers, 1) / 2;
+    margin-top: calc(map-get($spacers, 1) / 2);
+    margin-bottom: calc(map-get($spacers, 1) / 2);
 
     &.o-small {
         height: 52px;
@@ -56,7 +56,7 @@
     color: $success !important;
     outline: 1px solid rgba($success, .75);
     outline-offset: -1px;
-    padding: map-get($spacers, 1) / 2;
+    padding: calc(map-get($spacers, 1) / 2);
 
     &:hover {
         outline-color: rgba(darken($success, 10%), 1);

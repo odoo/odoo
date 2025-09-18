@@ -1,11 +1,13 @@
+// @ts-check
+
+/** @module @web/webclient/loading_indicator/loading_indicator - Loading indicator counting active RPCs and blocking the UI after a 3s delay */
+
+import { Component, useState } from "@odoo/owl";
+import { Transition } from "@web/components/transition";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { Transition } from "@web/core/transition";
-
-import { Component, useState } from "@odoo/owl";
-
 /**
  * Loading Indicator
  *
@@ -28,10 +30,11 @@ export class LoadingIndicator extends Component {
         });
         this.rpcIds = new Set();
         this.startShowTimer = null;
-        useBus(rpcBus, "RPC:REQUEST", this.requestCall);
-        useBus(rpcBus, "RPC:RESPONSE", this.responseCall);
+        useBus(rpcBus, "RPC:REQUEST", /** @type {any} */ (this.requestCall));
+        useBus(rpcBus, "RPC:RESPONSE", /** @type {any} */ (this.responseCall));
     }
 
+    /** @param {{ detail: { settings: Object, data: { id: number } } }} ev */
     requestCall({ detail }) {
         if (detail.settings.silent) {
             return;
@@ -48,6 +51,7 @@ export class LoadingIndicator extends Component {
         this.state.count++;
     }
 
+    /** @param {{ detail: { settings: Object, data: { id: number } } }} ev */
     responseCall({ detail }) {
         if (detail.settings.silent) {
             return;

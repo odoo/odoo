@@ -11,7 +11,7 @@ from odoo.tools import pdf
 def _ensure_document_not_encrypted(document):
     document_is_invalid = False
     try:
-        document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).isEncrypted
+        document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).is_encrypted
     except (pdf.DependencyError, pdf.PdfReadError):
         document_is_invalid = True
     if document_is_invalid:
@@ -34,4 +34,4 @@ def _get_form_fields_from_pdf(pdf_data):
 
     reader = pdf.PdfFileReader(io.BytesIO(pdf_bytes), strict=False)
 
-    return set(reader.getFormTextFields() or {})
+    return set(reader.get_form_text_fields() or {})

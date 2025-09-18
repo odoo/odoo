@@ -4,7 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
-import { loader } from "@web/core/emoji_picker/emoji_picker";
+import { loader } from "@web/components/emoji_picker/emoji_picker";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";

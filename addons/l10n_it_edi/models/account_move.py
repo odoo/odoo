@@ -7,7 +7,8 @@ from collections import defaultdict
 from datetime import datetime
 
 from lxml import etree
-from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
+from markupsafe import Markup
+from odoo.libs.text.html import nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
 from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
 from odoo.tools.sql import column_exists, create_column

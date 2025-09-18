@@ -85,7 +85,7 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
         this.bandpassFilter = new BiquadBandpassFilter(
             globalThis.sampleRate,
             centerFrequency,
-            centerFrequency / bandwidth
+            centerFrequency / bandwidth,
         );
     }
 
@@ -126,11 +126,17 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
 
         if (this.wasAboveThreshold !== this.isAboveThreshold) {
             this.wasAboveThreshold = this.isAboveThreshold;
-            this.port.postMessage({ volume: this.volume, isAboveThreshold: this.isAboveThreshold });
+            this.port.postMessage({
+                volume: this.volume,
+                isAboveThreshold: this.isAboveThreshold,
+            });
             return true;
         }
         this.postAllTics &&
-            this.port.postMessage({ volume: this.volume, isAboveThreshold: this.isAboveThreshold });
+            this.port.postMessage({
+                volume: this.volume,
+                isAboveThreshold: this.isAboveThreshold,
+            });
         return true;
     }
 }

@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { addLoadingEffect } from "@web/core/utils/ui";
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 import { browser } from "@web/core/browser/browser";
 import { WebsiteLinksTagsWrapper } from "@website_links/components/website_links_tags_wrapper";
 

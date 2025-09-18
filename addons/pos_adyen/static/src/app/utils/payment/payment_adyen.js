@@ -1,8 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
-import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 const { DateTime } = luxon;
 
 export class PaymentAdyen extends PaymentInterface {
@@ -36,8 +36,8 @@ export class PaymentAdyen extends PaymentInterface {
         }
         this._show_error(
             _t(
-                "Could not connect to the Odoo server, please check your internet connection and try again."
-            )
+                "Could not connect to the Odoo server, please check your internet connection and try again.",
+            ),
         );
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
@@ -60,7 +60,9 @@ export class PaymentAdyen extends PaymentInterface {
 
     _adyenCommonMessageHeader() {
         var config = this.pos.config;
-        this.most_recent_service_id = Math.floor(Math.random() * Math.pow(2, 64)).toString(); // random ID to identify request/response pairs
+        this.most_recent_service_id = Math.floor(
+            Math.random() * Math.pow(2, 64),
+        ).toString(); // random ID to identify request/response pairs
         this.most_recent_service_id = this.most_recent_service_id.substring(0, 10); // max length is 10
 
         return {
@@ -86,7 +88,9 @@ export class PaymentAdyen extends PaymentInterface {
                     SaleData: {
                         SaleTransactionID: {
                             TransactionID: `${order.uuid}--${order.session_id.id}`,
-                            TimeStamp: DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm:ssZZ"), // iso format: '2018-01-10T11:30:15+00:00'
+                            TimeStamp: DateTime.now().toFormat(
+                                "yyyy-MM-dd'T'HH:mm:ssZZ",
+                            ), // iso format: '2018-01-10T11:30:15+00:00'
                         },
                     },
                     PaymentTransaction: {
@@ -148,8 +152,8 @@ export class PaymentAdyen extends PaymentInterface {
             if (!ignore_error && data !== true) {
                 this._show_error(
                     _t(
-                        "Cancelling the payment failed. Please cancel it manually on the payment terminal."
-                    )
+                        "Cancelling the payment failed. Please cancel it manually on the payment terminal.",
+                    ),
                 );
             }
             return true;
@@ -177,24 +181,34 @@ export class PaymentAdyen extends PaymentInterface {
         var line = this.pendingAdyenline();
 
         if (!response || (response.error && response.error.status_code == 401)) {
-            this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
+            this._show_error(
+                _t("Authentication failed. Please check your Adyen credentials."),
+            );
             line.setPaymentStatus("force_done");
             return false;
         }
 
         response = response.SaleToPOIRequest;
         if (response?.EventNotification?.EventToNotify === "Reject") {
-            logPosMessage("PaymentAdyen", "_adyenHandleResponse", `Error from Adyen`, false, [
-                response,
-            ]);
+            logPosMessage(
+                "PaymentAdyen",
+                "_adyenHandleResponse",
+                `Error from Adyen`,
+                false,
+                [response],
+            );
 
             var msg = "";
             if (response.EventNotification) {
-                var params = new URLSearchParams(response.EventNotification.EventDetails);
+                var params = new URLSearchParams(
+                    response.EventNotification.EventDetails,
+                );
                 msg = params.get("message");
             }
 
-            this._show_error(_t("An unexpected error occurred. Message from Adyen: %s", msg));
+            this._show_error(
+                _t("An unexpected error occurred. Message from Adyen: %s", msg),
+            );
             if (line) {
                 line.setPaymentStatus("force_done");
             }
@@ -219,7 +233,7 @@ export class PaymentAdyen extends PaymentInterface {
         const notification = await this.pos.data.silentCall(
             "pos.payment.method",
             "get_latest_adyen_status",
-            [[this.payment_method_id.id]]
+            [[this.payment_method_id.id]],
         );
 
         if (!notification) {
@@ -233,7 +247,9 @@ export class PaymentAdyen extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(line, notification, additional_response);
         } else {
-            this._show_error(_t("Message from Adyen: %s", additional_response.get("message")));
+            this._show_error(
+                _t("Message from Adyen: %s", additional_response.get("message")),
+            );
         }
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
@@ -260,22 +276,22 @@ export class PaymentAdyen extends PaymentInterface {
         const payment_result = payment_response.PaymentResult;
 
         const cashier_receipt = payment_response.PaymentReceipt.find(
-            (receipt) => receipt.DocumentQualifier == "CashierReceipt"
+            (receipt) => receipt.DocumentQualifier == "CashierReceipt",
         );
 
         if (cashier_receipt) {
             line.setCashierReceipt(
-                this._convertReceiptInfo(cashier_receipt.OutputContent.OutputText)
+                this._convertReceiptInfo(cashier_receipt.OutputContent.OutputText),
             );
         }
 
         const customer_receipt = payment_response.PaymentReceipt.find(
-            (receipt) => receipt.DocumentQualifier == "CustomerReceipt"
+            (receipt) => receipt.DocumentQualifier == "CustomerReceipt",
         );
 
         if (customer_receipt) {
             line.setReceiptInfo(
-                this._convertReceiptInfo(customer_receipt.OutputContent.OutputText)
+                this._convertReceiptInfo(customer_receipt.OutputContent.OutputText),
             );
         }
 

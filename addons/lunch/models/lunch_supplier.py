@@ -337,12 +337,12 @@ class LunchSupplier(models.Model):
         self.env.cr.execute("""
             SELECT supplier_id, state, COUNT(*)
               FROM lunch_order
-             WHERE supplier_id IN %s
+             WHERE supplier_id = ANY(%s)
                AND state in ('ordered', 'sent')
                AND date = %s
                AND active
           GROUP BY supplier_id, state
-        """, (tuple(self.ids), fields.Date.context_today(self)))
+        """, (list(self.ids), fields.Date.context_today(self)))
         supplier_orders = defaultdict(dict)
         for order in self.env.cr.fetchall():
             supplier_orders[order[0]][order[1]] = order[2]

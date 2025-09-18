@@ -26,7 +26,7 @@ class TestProjectDashboardCommon(Common):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'manual',
             'uom_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
@@ -37,7 +37,7 @@ class TestProjectDashboardCommon(Common):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'milestones',
             'uom_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
@@ -67,24 +67,24 @@ class TestDashboardProject(TestProjectDashboardCommon):
         unit_uom_id = self.env.ref('uom.product_uom_unit').id
         sol_service_1, sol_service_2, sol_service_3, sol_service_4 = self.dashboardSaleOrderLine.create([{
                 'product_id': self.product_milestone.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
             }, {
                 'product_id': self.product_prepaid.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
             }, {
                 'product_id': self.material_product.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
             }, {
                 'product_id': self.dashboard_product_delivery_service.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
         }])
         expected_dict = sol_service_3._read_format(
-            ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id']
+            ['display_name', 'product_uom_qty', 'qty_transferred', 'qty_invoiced', 'product_uom_id', 'product_id']
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='materials')
         self.assertEqual(sale_item_data['sol_items'], expected_dict)
         expected_dict = (sol_service_1 + sol_service_2 + sol_service_4)._read_format(
-            ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id']
+            ['display_name', 'product_uom_qty', 'qty_transferred', 'qty_invoiced', 'product_uom_id', 'product_id']
         )
         sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
         self.assertEqual(sale_item_data['sol_items'], expected_dict)

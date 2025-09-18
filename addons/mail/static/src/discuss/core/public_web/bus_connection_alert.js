@@ -1,7 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-
 /**
  * @typedef {Object} Props
  * @extends {Component<Props, Env>}

@@ -1,7 +1,5 @@
-import { Component, useRef, useState, onWillUpdateProps, onMounted } from "@odoo/owl";
-
-import { useAutoresize } from "@web/core/utils/autoresize";
-
+import { Component, onMounted, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { useAutoresize } from "@web/core/utils/dom/autoresize";
 export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
     static props = {

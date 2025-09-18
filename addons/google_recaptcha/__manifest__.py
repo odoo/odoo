@@ -8,7 +8,7 @@
     'description': """
 This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
     """,
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'data': [
         'views/res_config_settings_view.xml',
     ],

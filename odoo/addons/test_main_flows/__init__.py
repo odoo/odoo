@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from .models import model_multicompany
+
 
 #
 # Conditional installation of enterprise modules.
@@ -10,6 +9,8 @@ from .models import model_multicompany
 # modules dependencies, this post install hook will install accounting if exists.
 #
 def _auto_install_enterprise_dependencies(env):
-    module_list = ['accountant']
-    module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
+    module_list = ["accountant"]
+    module_ids = env["ir.module.module"].search(
+        [("name", "in", module_list), ("state", "=", "uninstalled")]
+    )
     module_ids.sudo().button_install()

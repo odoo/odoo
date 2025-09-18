@@ -1,5 +1,10 @@
+// @ts-check
+
+/** @module @web/core/assets - Lazy-loads CSS/JS asset bundles into documents with caching */
+
 import { Component, onWillStart, whenReady, xml } from "@odoo/owl";
 import { session } from "@web/session";
+
 import { registry } from "./registry";
 
 /**
@@ -12,10 +17,15 @@ import { registry } from "./registry";
 export const globalBundleCache = new Map();
 export const assetCacheByDocument = new WeakMap();
 
+/** @returns {Map<string, Promise<any>>} */
 function getGlobalBundleCache() {
     return globalBundleCache;
 }
 
+/**
+ * @param {Document} targetDoc
+ * @returns {Map<string, Promise<any>>}
+ */
 function getAssetCache(targetDoc) {
     if (!assetCacheByDocument.has(targetDoc)) {
         assetCacheByDocument.set(targetDoc, new Map());
@@ -23,7 +33,10 @@ function getAssetCache(targetDoc) {
     return assetCacheByDocument.get(targetDoc);
 }
 
-export function computeBundleCacheMap(targetDoc) {
+/**
+ * @param {Document} targetDoc
+ */
+function computeBundleCacheMap(targetDoc) {
     const cacheMap = getGlobalBundleCache();
     for (const script of targetDoc.head.querySelectorAll("script[src]")) {
         cacheMap.set(script.getAttribute("src"), Promise.resolve());
@@ -64,24 +77,39 @@ const onLoadAndError = (el, onLoad, onError) => {
     });
 };
 
-/** @type {typeof assets["getBundle"]} */
-export function getBundle() {
-    return assets.getBundle(...arguments);
+/**
+ * @param {string} bundleName
+ * @returns {Promise<BundleFileNames>}
+ */
+export function getBundle(bundleName) {
+    return assets.getBundle(bundleName);
 }
 
-/** @type {typeof assets["loadBundle"]} */
-export function loadBundle() {
-    return assets.loadBundle(...arguments);
+/**
+ * @param {string} bundleName
+ * @param {{ targetDoc?: Document, css?: boolean, js?: boolean }} [options]
+ * @returns {Promise<void[]>}
+ */
+export function loadBundle(bundleName, options) {
+    return assets.loadBundle(bundleName, options);
 }
 
-/** @type {typeof assets["loadJS"]} */
-export function loadJS() {
-    return assets.loadJS(...arguments);
+/**
+ * @param {string} url
+ * @param {{ targetDoc?: Document }} [options]
+ * @returns {Promise<void>}
+ */
+export function loadJS(url, options) {
+    return assets.loadJS(url, options);
 }
 
-/** @type {typeof assets["loadCSS"]} */
-export function loadCSS() {
-    return assets.loadCSS(...arguments);
+/**
+ * @param {string} url
+ * @param {{ retryCount?: number, targetDoc?: Document }} [options]
+ * @returns {Promise<void>}
+ */
+export function loadCSS(url, options) {
+    return assets.loadCSS(url, options);
 }
 
 export class AssetsLoadingError extends Error {}
@@ -99,12 +127,16 @@ export class LazyComponent extends Component {
     setup() {
         onWillStart(async () => {
             await loadBundle(this.props.bundle);
-            this.Component = registry.category("lazy_components").get(this.props.Component);
+            this.Component = registry
+                .category("lazy_components")
+                .get(this.props.Component);
         });
     }
 
     get componentProps() {
-        return typeof this.props.props === "function" ? this.props.props() : this.props.props;
+        return typeof this.props.props === "function"
+            ? this.props.props()
+            : this.props.props;
     }
 }
 
@@ -153,7 +185,9 @@ export const assets = {
             })
             .catch((reason) => {
                 cacheMap.delete(bundleName);
-                throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: reason });
+                throw new AssetsLoadingError(`The loading of ${url} failed`, {
+                    cause: reason,
+                });
             });
         cacheMap.set(bundleName, promise);
         return promise;
@@ -174,17 +208,21 @@ export const assets = {
         if (typeof bundleName !== "string") {
             throw new Error(
                 `loadBundle(bundleName:string) accepts only bundleName argument as a string ! Not ${JSON.stringify(
-                    bundleName
-                )} as ${typeof bundleName}`
+                    bundleName,
+                )} as ${typeof bundleName}`,
             );
         }
         return getBundle(bundleName).then(({ cssLibs, jsLibs }) => {
             const promises = [];
             if (css && cssLibs) {
-                promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
+                promises.push(
+                    ...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })),
+                );
             }
             if (js && jsLibs) {
-                promises.push(...jsLibs.map((url) => assets.loadJS(url, { targetDoc })));
+                promises.push(
+                    ...jsLibs.map((url) => assets.loadJS(url, { targetDoc })),
+                );
             }
             return Promise.all(promises);
         });
@@ -194,10 +232,7 @@ export const assets = {
      * Loads the given url as a stylesheet.
      *
      * @param {string} url the url of the stylesheet
-     * @param {number} [retryCount]
-     * @param {Object} options
-     * @param {number} [retryCount]
-     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
+     * @param {{ retryCount?: number, targetDoc?: Document }} [options]
      * @returns {Promise<void>} resolved when the stylesheet has been loaded
      */
     loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
@@ -213,7 +248,8 @@ export const assets = {
             onLoadAndError(linkEl, resolve, async (error) => {
                 cacheMap.delete(url);
                 if (retryCount < assets.retries.count) {
-                    const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
+                    const delay =
+                        assets.retries.delay + assets.retries.extraDelay * retryCount;
                     await new Promise((res) => setTimeout(res, delay));
                     linkEl.remove();
                     loadCSS(url, { retryCount: retryCount + 1, targetDoc })
@@ -224,10 +260,12 @@ export const assets = {
                         });
                 } else {
                     reject(
-                        new AssetsLoadingError(`The loading of ${url} failed`, { cause: error })
+                        new AssetsLoadingError(`The loading of ${url} failed`, {
+                            cause: error,
+                        }),
                     );
                 }
-            })
+            }),
         );
         cacheMap.set(url, promise);
         targetDoc.head.appendChild(linkEl);
@@ -238,7 +276,7 @@ export const assets = {
      * Loads the given url inside a script tag.
      *
      * @param {string} url the url of the script
-     * @param {Document} targetDoc document to which the bundle will be applied (e.g. iframe document)
+     * @param {{ targetDoc?: Document }} [options]
      * @returns {Promise<void>} resolved when the script has been loaded
      */
     loadJS(url, { targetDoc = document } = {}) {
@@ -248,12 +286,18 @@ export const assets = {
         }
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
-        scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
+        scriptEl.type = url.includes("web/static/lib/pdfjs/")
+            ? "module"
+            : "text/javascript";
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
-                reject(new AssetsLoadingError(`The loading of ${url} failed`, { cause: error }));
-            })
+                reject(
+                    new AssetsLoadingError(`The loading of ${url} failed`, {
+                        cause: error,
+                    }),
+                );
+            }),
         );
         cacheMap.set(url, promise);
         targetDoc.head.appendChild(scriptEl);

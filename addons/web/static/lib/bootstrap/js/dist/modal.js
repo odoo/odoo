@@ -1,6 +1,6 @@
 /*!
-  * Bootstrap modal.js v5.3.3 (https://getbootstrap.com/)
-  * Copyright 2011-2024 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap modal.js v5.3.8 (https://getbootstrap.com/)
+  * Copyright 2011-2025 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 (function (global, factory) {
@@ -158,7 +158,7 @@
       index_js.reflow(this._element);
       this._element.classList.add(CLASS_NAME_SHOW);
       const transitionComplete = () => {
-        if (this._config?.focus) {
+        if (this._config.focus) {
           this._focustrap.activate();
         }
         this._isTransitioning = false;

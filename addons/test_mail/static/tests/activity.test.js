@@ -29,7 +29,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { formatDate, serializeDate } from "@web/core/l10n/dates";
-import { deepEqual, omit } from "@web/core/utils/objects";
+import { deepEqual, omit } from "@web/core/utils/collections/objects";
 import { getOrigin } from "@web/core/utils/urls";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
 import { RelationalModel } from "@web/model/relational_model/relational_model";

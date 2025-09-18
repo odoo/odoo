@@ -5,7 +5,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
-from werkzeug import urls
+from urllib.parse import parse_qs, urlsplit
 
 
 class ResConfigSettings(models.TransientModel):
@@ -133,8 +133,8 @@ class ResConfigSettings(models.TransientModel):
             value = config.plausible_shared_key
             if value and value.startswith('http'):
                 try:
-                    url = urls.url_parse(value)
-                    config.plausible_shared_key = urls.url_decode(url.query).get('auth', '')
+                    url = urlsplit(value)
+                    config.plausible_shared_key = parse_qs(url.query).get('auth', [''])[0]
                     config.plausible_site = url.path.split('/')[-1]
                 except Exception:  # noqa
                     pass

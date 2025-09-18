@@ -5,7 +5,7 @@ import re
 import time
 
 import lxml.html
-from werkzeug import urls
+from urllib.parse import urlsplit, urlunsplit
 
 import odoo
 
@@ -29,7 +29,7 @@ class Crawler(HttpCaseWithUserDemo):
             'social_facebook': "https://www.facebook.com/Odoo",
             'social_twitter': 'https://twitter.com/Odoo',
             'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_youtube': 'https://www.youtube.com/@odoo',
             'social_github': 'https://github.com/odoo',
             'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
             'social_tiktok': 'https://www.tiktok.com/@odoo',
@@ -80,7 +80,7 @@ class Crawler(HttpCaseWithUserDemo):
             # check local redirect to avoid fetch externals pages
             new_url = r.headers.get('Location')
             current_url = r.url
-            if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
+            if urlsplit(new_url).netloc != urlsplit(current_url).netloc:
                 return seen
             r = self.url_open(new_url)
 
@@ -92,9 +92,9 @@ class Crawler(HttpCaseWithUserDemo):
             for link in doc.xpath('//a[@href]'):
                 href = link.get('href')
 
-                parts = urls.url_parse(href)
+                parts = urlsplit(href)
                 # href with any fragment removed
-                href = parts.replace(fragment='').to_url()
+                href = urlunsplit(parts._replace(fragment=''))
 
                 # FIXME: handle relative link (not parts.path.startswith /)
                 if parts.netloc or \

@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete } from "@web/fields/relational/many2x_autocomplete";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/fields/relational/many2many_tags/many2many_tags_field";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {

@@ -1,12 +1,12 @@
 import {
-    registerComposerAction,
     pickerOnClick,
     pickerSetup,
+    registerComposerAction,
 } from "@mail/core/common/composer_actions";
 import { _t } from "@web/core/l10n/translation";
-import { markEventHandled } from "@web/core/utils/misc";
-import { useGifPicker } from "./gif_picker";
+import { markEventHandled } from "@web/core/utils/dom/events";
 
+import { useGifPicker } from "./gif_picker";
 registerComposerAction("add-gif", {
     condition: ({ composer, owner, store }) =>
         (store.hasGifPickerFeature || store.self.main_user_id?.is_admin) &&
@@ -28,8 +28,8 @@ registerComposerAction("add-gif", {
                     onSelect: (gif) => owner.sendGifMessage(gif),
                     onClose: () => owner.setActivePicker(null),
                 },
-                { arrow: false }
-            )
+                { arrow: false },
+            ),
         );
     },
     sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),

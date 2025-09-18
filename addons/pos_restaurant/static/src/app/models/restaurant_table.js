@@ -1,6 +1,5 @@
-import { registry } from "@web/core/registry";
 import { Base } from "@point_of_sale/app/models/related_models";
-
+import { registry } from "@web/core/registry";
 export class RestaurantTable extends Base {
     static pythonModel = "restaurant.table";
 
@@ -17,7 +16,9 @@ export class RestaurantTable extends Base {
         };
     }
     isParent(t) {
-        return t.parent_id && (t.parent_id.id === this.id || this.isParent(t.parent_id));
+        return (
+            t.parent_id && (t.parent_id.id === this.id || this.isParent(t.parent_id))
+        );
     }
     getParent() {
         return this.parent_id?.getParent() || this;
@@ -71,7 +72,7 @@ export class RestaurantTable extends Base {
             (o) =>
                 o.table_id?.id === this.id &&
                 // Include the orders that are in tipping state.
-                (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
+                (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen"),
         );
     }
     getOrder() {
@@ -101,4 +102,6 @@ export class RestaurantTable extends Base {
         return table;
     }
 }
-registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);
+registry
+    .category("pos_available_models")
+    .add(RestaurantTable.pythonModel, RestaurantTable);

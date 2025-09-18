@@ -10,94 +10,100 @@ class TestGroupExpand(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(**cls.env.context, read_group_expand=True))
-        cls.Model = cls.env['test_read_group.on_selection']
+        cls.Model = cls.env["test_read_group.on_selection"]
 
     def test_none(self):
-        self.Model.create({'value': 1})
-        self.Model.create({'value': 2})
-        self.Model.create({'value': 3})
+        self.Model.create({"value": 1})
+        self.Model.create({"value": 2})
+        self.Model.create({"value": 3})
 
-        groups = self.Model.formatted_read_group([], ['state'], ['__count', 'value:sum'])
+        groups = self.Model.formatted_read_group(
+            [], ["state"], ["__count", "value:sum"]
+        )
         self.assertEqual(
             groups,
             [
                 {
-                    'state': 'a',
-                    '__count': 0,
-                    'value:sum': False,
-                    '__extra_domain': [('state', '=', 'a')],
+                    "state": "a",
+                    "__count": 0,
+                    "value:sum": False,
+                    "__extra_domain": [("state", "=", "a")],
                 },
                 {
-                    'state': 'b',
-                    '__count': 0,
-                    'value:sum': False,
-                    '__extra_domain': [('state', '=', 'b')],
+                    "state": "b",
+                    "__count": 0,
+                    "value:sum": False,
+                    "__extra_domain": [("state", "=", "b")],
                 },
                 {
-                    'state': False,
-                    '__count': 3,
-                    'value:sum': 6,
-                    '__extra_domain': [('state', '=', False)],
+                    "state": False,
+                    "__count": 3,
+                    "value:sum": 6,
+                    "__extra_domain": [("state", "=", False)],
                 },
             ],
         )
 
     def test_partial(self):
-        self.Model.create({'state': 'a', 'value': 1})
-        self.Model.create({'state': 'a', 'value': 2})
-        self.Model.create({'value': 3})
+        self.Model.create({"state": "a", "value": 1})
+        self.Model.create({"state": "a", "value": 2})
+        self.Model.create({"value": 3})
 
-        groups = self.Model.formatted_read_group([], ['state'], ['__count', 'value:sum'])
+        groups = self.Model.formatted_read_group(
+            [], ["state"], ["__count", "value:sum"]
+        )
         self.assertEqual(
             groups,
             [
                 {
-                    'state': 'a',
-                    '__count': 2,
-                    'value:sum': 3,
-                    '__extra_domain': [('state', '=', 'a')],
+                    "state": "a",
+                    "__count": 2,
+                    "value:sum": 3,
+                    "__extra_domain": [("state", "=", "a")],
                 },
                 {
-                    'state': 'b',
-                    '__count': 0,
-                    'value:sum': False,
-                    '__extra_domain': [('state', '=', 'b')],
+                    "state": "b",
+                    "__count": 0,
+                    "value:sum": False,
+                    "__extra_domain": [("state", "=", "b")],
                 },
                 {
-                    'state': False,
-                    '__count': 1,
-                    'value:sum': 3,
-                    '__extra_domain': [('state', '=', False)],
+                    "state": False,
+                    "__count": 1,
+                    "value:sum": 3,
+                    "__extra_domain": [("state", "=", False)],
                 },
             ],
         )
 
     def test_full(self):
-        self.Model.create({'state': 'a', 'value': 1})
-        self.Model.create({'state': 'b', 'value': 2})
-        self.Model.create({'value': 3})
+        self.Model.create({"state": "a", "value": 1})
+        self.Model.create({"state": "b", "value": 2})
+        self.Model.create({"value": 3})
 
-        groups = self.Model.formatted_read_group([], ['state'], ['__count', 'value:sum'])
+        groups = self.Model.formatted_read_group(
+            [], ["state"], ["__count", "value:sum"]
+        )
         self.assertEqual(
             groups,
             [
                 {
-                    'state': 'a',
-                    '__count': 1,
-                    'value:sum': 1,
-                    '__extra_domain': [('state', '=', 'a')],
+                    "state": "a",
+                    "__count": 1,
+                    "value:sum": 1,
+                    "__extra_domain": [("state", "=", "a")],
                 },
                 {
-                    'state': 'b',
-                    '__count': 1,
-                    'value:sum': 2,
-                    '__extra_domain': [('state', '=', 'b')],
+                    "state": "b",
+                    "__count": 1,
+                    "value:sum": 2,
+                    "__extra_domain": [("state", "=", "b")],
                 },
                 {
-                    'state': False,
-                    '__count': 1,
-                    'value:sum': 3,
-                    '__extra_domain': [('state', '=', False)],
+                    "state": False,
+                    "__count": 1,
+                    "value:sum": 3,
+                    "__extra_domain": [("state", "=", False)],
                 },
             ],
         )
@@ -128,28 +134,28 @@ class TestGroupExpand(common.TransactionCase):
             groups,
             [
                 {
-                    'static_expand': 'c',
-                    '__count': 1,
-                    'value:sum': 2,
-                    '__extra_domain': [('static_expand', '=', 'c')],
+                    "static_expand": "c",
+                    "__count": 1,
+                    "value:sum": 2,
+                    "__extra_domain": [("static_expand", "=", "c")],
                 },
                 {
-                    'static_expand': 'b',
-                    '__count': 0,
-                    'value:sum': 0,
-                    '__extra_domain': [('static_expand', '=', 'b')],
+                    "static_expand": "b",
+                    "__count": 0,
+                    "value:sum": 0,
+                    "__extra_domain": [("static_expand", "=", "b")],
                 },
                 {
-                    'static_expand': 'a',
-                    '__count': 1,
-                    'value:sum': 1,
-                    '__extra_domain': [('static_expand', '=', 'a')],
+                    "static_expand": "a",
+                    "__count": 1,
+                    "value:sum": 1,
+                    "__extra_domain": [("static_expand", "=", "a")],
                 },
                 {
-                    'static_expand': False,
-                    '__count': 1,
-                    'value:sum': 3,
-                    '__extra_domain': [('static_expand', '=', False)],
+                    "static_expand": False,
+                    "__count": 1,
+                    "value:sum": 3,
+                    "__extra_domain": [("static_expand", "=", False)],
                 },
             ],
         )
@@ -176,28 +182,28 @@ class TestGroupExpand(common.TransactionCase):
             groups,
             [
                 {
-                    'dynamic_expand': 'c',
-                    '__count': 1,
-                    'value:sum': 2,
-                    '__extra_domain': [('dynamic_expand', '=', 'c')],
+                    "dynamic_expand": "c",
+                    "__count": 1,
+                    "value:sum": 2,
+                    "__extra_domain": [("dynamic_expand", "=", "c")],
                 },
                 {
-                    'dynamic_expand': 'b',
-                    '__count': 0,
-                    'value:sum': 0,
-                    '__extra_domain': [('dynamic_expand', '=', 'b')],
+                    "dynamic_expand": "b",
+                    "__count": 0,
+                    "value:sum": 0,
+                    "__extra_domain": [("dynamic_expand", "=", "b")],
                 },
                 {
-                    'dynamic_expand': 'a',
-                    '__count': 1,
-                    'value:sum': 1,
-                    '__extra_domain': [('dynamic_expand', '=', 'a')],
+                    "dynamic_expand": "a",
+                    "__count": 1,
+                    "value:sum": 1,
+                    "__extra_domain": [("dynamic_expand", "=", "a")],
                 },
                 {
-                    'dynamic_expand': False,
-                    '__count': 1,
-                    'value:sum': 3,
-                    '__extra_domain': [('dynamic_expand', '=', False)],
+                    "dynamic_expand": False,
+                    "__count": 1,
+                    "value:sum": 3,
+                    "__extra_domain": [("dynamic_expand", "=", False)],
                 },
             ],
         )
@@ -223,42 +229,42 @@ class TestGroupExpand(common.TransactionCase):
             groups,
             [
                 {
-                    'no_expand': 'a',
-                    '__count': 1,
-                    'value:sum': 1,
-                    '__extra_domain': [('no_expand', '=', 'a')],
+                    "no_expand": "a",
+                    "__count": 1,
+                    "value:sum": 1,
+                    "__extra_domain": [("no_expand", "=", "a")],
                 },
                 {
-                    'no_expand': 'c',
-                    '__count': 1,
-                    'value:sum': 2,
-                    '__extra_domain': [('no_expand', '=', 'c')],
+                    "no_expand": "c",
+                    "__count": 1,
+                    "value:sum": 2,
+                    "__extra_domain": [("no_expand", "=", "c")],
                 },
                 {
-                    'no_expand': False,
-                    '__count': 1,
-                    'value:sum': 3,
-                    '__extra_domain': [('no_expand', '=', False)],
+                    "no_expand": False,
+                    "__count": 1,
+                    "value:sum": 3,
+                    "__extra_domain": [("no_expand", "=", False)],
                 },
             ],
         )
 
     def test_with_limit_offset_performance(self):
-        order_1, order_2, order_3, order_4 = self.env['test_read_group.order'].create(
+        order_1, order_2, order_3, order_4 = self.env["test_read_group.order"].create(
             [
-                {'name': 'O1', 'fold': False},
-                {'name': 'O2', 'fold': True},
-                {'name': 'O3 empty', 'fold': False},
-                {'name': 'O4 empty', 'fold': True},
+                {"name": "O1", "fold": False},
+                {"name": "O2", "fold": True},
+                {"name": "O3 empty", "fold": False},
+                {"name": "O4 empty", "fold": True},
             ]
         )
-        Line = self.env['test_read_group.order.line']
+        Line = self.env["test_read_group.order.line"]
         Line.create(
             [
-                {'order_expand_id': order_1.id, 'value': 1},
-                {'order_expand_id': order_2.id, 'value': 2},
-                {'order_expand_id': order_2.id, 'value': 2},
-                {'order_expand_id': False, 'value': 3},
+                {"order_expand_id": order_1.id, "value": 1},
+                {"order_expand_id": order_2.id, "value": 2},
+                {"order_expand_id": order_2.id, "value": 2},
+                {"order_expand_id": False, "value": 3},
             ]
         )
 
@@ -266,19 +272,21 @@ class TestGroupExpand(common.TransactionCase):
         with self.assertQueryCount(2):
             self.env.invalidate_all()
             self.assertEqual(  # No group_expand limit reached directly
-                Line.formatted_read_group([], ['order_expand_id'], ['value:sum'], limit=2),
+                Line.formatted_read_group(
+                    [], ["order_expand_id"], ["value:sum"], limit=2
+                ),
                 [
                     {
-                        'order_expand_id': (order_1.id, 'O1'),
-                        '__fold': False,
-                        '__extra_domain': [('order_expand_id', '=', order_1.id)],
-                        'value:sum': 1,
+                        "order_expand_id": (order_1.id, "O1"),
+                        "__fold": False,
+                        "__extra_domain": [("order_expand_id", "=", order_1.id)],
+                        "value:sum": 1,
                     },
                     {
-                        'order_expand_id': (order_2.id, 'O2'),
-                        '__fold': True,
-                        '__extra_domain': [('order_expand_id', '=', order_2.id)],
-                        'value:sum': 4,
+                        "order_expand_id": (order_2.id, "O2"),
+                        "__fold": True,
+                        "__extra_domain": [("order_expand_id", "=", order_2.id)],
+                        "value:sum": 4,
                     },
                 ],
             )
@@ -287,19 +295,21 @@ class TestGroupExpand(common.TransactionCase):
         with self.assertQueryCount(2):
             self.env.invalidate_all()
             self.assertEqual(  # No group_expand because offset
-                Line.formatted_read_group([], ['order_expand_id'], ['value:sum'], offset=1),
+                Line.formatted_read_group(
+                    [], ["order_expand_id"], ["value:sum"], offset=1
+                ),
                 [
                     {
-                        'order_expand_id': (order_2.id, 'O2'),
-                        '__fold': True,
-                        '__extra_domain': [('order_expand_id', '=', order_2.id)],
-                        'value:sum': 4,
+                        "order_expand_id": (order_2.id, "O2"),
+                        "__fold": True,
+                        "__extra_domain": [("order_expand_id", "=", order_2.id)],
+                        "value:sum": 4,
                     },
                     {
-                        'order_expand_id': False,
-                        '__fold': False,
-                        '__extra_domain': [('order_expand_id', '=', False)],
-                        'value:sum': 3,
+                        "order_expand_id": False,
+                        "__fold": False,
+                        "__extra_domain": [("order_expand_id", "=", False)],
+                        "value:sum": 3,
                     },
                 ],
             )
@@ -308,78 +318,84 @@ class TestGroupExpand(common.TransactionCase):
         with self.assertQueryCount(3):
             self.env.invalidate_all()
             self.assertEqual(  # No group_expand because limit reached when we try to add group_expand records
-                Line.formatted_read_group([], ['order_expand_id'], ['value:sum'], limit=4),
+                Line.formatted_read_group(
+                    [], ["order_expand_id"], ["value:sum"], limit=4
+                ),
                 [
                     {
-                        'order_expand_id': (order_1.id, 'O1'),
-                        '__fold': False,
-                        '__extra_domain': [('order_expand_id', '=', order_1.id)],
-                        'value:sum': 1,
+                        "order_expand_id": (order_1.id, "O1"),
+                        "__fold": False,
+                        "__extra_domain": [("order_expand_id", "=", order_1.id)],
+                        "value:sum": 1,
                     },
                     {
-                        'order_expand_id': (order_2.id, 'O2'),
-                        '__fold': True,
-                        '__extra_domain': [('order_expand_id', '=', order_2.id)],
-                        'value:sum': 4,
+                        "order_expand_id": (order_2.id, "O2"),
+                        "__fold": True,
+                        "__extra_domain": [("order_expand_id", "=", order_2.id)],
+                        "value:sum": 4,
                     },
                     {
-                        'order_expand_id': False,
-                        '__fold': False,
-                        '__extra_domain': [('order_expand_id', '=', False)],
-                        'value:sum': 3,
+                        "order_expand_id": False,
+                        "__fold": False,
+                        "__extra_domain": [("order_expand_id", "=", False)],
+                        "value:sum": 3,
                     },
                 ],
             )
 
         result = [
             {
-                'order_expand_id': (order_1.id, 'O1'),
-                '__fold': False,
-                '__extra_domain': [('order_expand_id', '=', order_1.id)],
-                'value:sum': 1,
+                "order_expand_id": (order_1.id, "O1"),
+                "__fold": False,
+                "__extra_domain": [("order_expand_id", "=", order_1.id)],
+                "value:sum": 1,
             },
             {
-                'order_expand_id': (order_2.id, 'O2'),
-                '__fold': True,
-                '__extra_domain': [('order_expand_id', '=', order_2.id)],
-                'value:sum': 4,
+                "order_expand_id": (order_2.id, "O2"),
+                "__fold": True,
+                "__extra_domain": [("order_expand_id", "=", order_2.id)],
+                "value:sum": 4,
             },
             {
-                'order_expand_id': (order_3.id, 'O3 empty'),
-                '__fold': False,
-                '__extra_domain': [('order_expand_id', '=', order_3.id)],
-                'value:sum': False,
+                "order_expand_id": (order_3.id, "O3 empty"),
+                "__fold": False,
+                "__extra_domain": [("order_expand_id", "=", order_3.id)],
+                "value:sum": False,
             },
             {
-                'order_expand_id': (order_4.id, 'O4 empty'),
-                '__fold': True,
-                '__extra_domain': [('order_expand_id', '=', order_4.id)],
-                'value:sum': False,
+                "order_expand_id": (order_4.id, "O4 empty"),
+                "__fold": True,
+                "__extra_domain": [("order_expand_id", "=", order_4.id)],
+                "value:sum": False,
             },
             {
-                'order_expand_id': False,
-                '__fold': False,
-                '__extra_domain': [('order_expand_id', '=', False)],
-                'value:sum': 3,
+                "order_expand_id": False,
+                "__fold": False,
+                "__extra_domain": [("order_expand_id", "=", False)],
+                "value:sum": 3,
             },
         ]
         # 1 for formatted_read_group + group expand + 1 for fetch display_name/fold
         with self.assertQueryCount(3):
             self.env.invalidate_all()
             self.assertEqual(  # group_expand because limit isn't reached
-                Line.formatted_read_group([], ['order_expand_id'], ['value:sum'], limit=6),
+                Line.formatted_read_group(
+                    [], ["order_expand_id"], ["value:sum"], limit=6
+                ),
                 result,
             )
         # 1 for formatted_read_group + group expand + 1 for fetch display_name/fold
         with self.assertQueryCount(3):
             self.env.invalidate_all()
             self.assertEqual(  # group_expand because there isn't limit
-                Line.formatted_read_group([], ['order_expand_id'], ['value:sum']),
+                Line.formatted_read_group([], ["order_expand_id"], ["value:sum"]),
                 result,
             )
 
     def test_performance_prefetch_fold_display_name(self):
-        order_1, order_2, order_3, order_unused = self.env["test_read_group.order"].create(
+        order_1, order_2, order_3, order_unused = self.env[
+            "test_read_group.order"
+        ].create(
             [
                 {"name": "O1", "fold": False},
                 {"name": "O2", "fold": True},
@@ -439,7 +455,9 @@ class TestGroupExpand(common.TransactionCase):
 
         # Same result for formatted_grouping_sets
         self.assertEqual(
-            Line.formatted_read_grouping_sets([], [["order_expand_id"], []], ["value:sum"]),
+            Line.formatted_read_grouping_sets(
+                [], [["order_expand_id"], []], ["value:sum"]
+            ),
             [
                 Line.formatted_read_group([], ["order_expand_id"], ["value:sum"]),
                 Line.formatted_read_group([], [], ["value:sum"]),
@@ -451,7 +469,9 @@ class TestGroupExpand(common.TransactionCase):
         all_lines.order_expand_id = order_1.id
         self.env.invalidate_all()
 
-        old_compute_display_name = self.registry["test_read_group.order"]._compute_display_name
+        old_compute_display_name = self.registry[
+            "test_read_group.order"
+        ]._compute_display_name
 
         with patch.object(
             self.registry["test_read_group.order"],
@@ -466,25 +486,25 @@ class TestGroupExpand(common.TransactionCase):
                         "__extra_domain": [("order_expand_id", "=", order_1.id)],
                         "order_expand_id": (order_1.id, "O1"),
                         "value:sum": 11,
-                        '__fold': False,
+                        "__fold": False,
                     },
                     {
-                        '__extra_domain': [('order_expand_id', '=', order_2.id)],
-                        '__fold': True,
-                        'order_expand_id': (order_2.id, 'O2'),
-                        'value:sum': False,
+                        "__extra_domain": [("order_expand_id", "=", order_2.id)],
+                        "__fold": True,
+                        "order_expand_id": (order_2.id, "O2"),
+                        "value:sum": False,
                     },
                     {
-                        '__extra_domain': [('order_expand_id', '=', order_3.id)],
-                        '__fold': True,
-                        'order_expand_id': (order_3.id, 'O3'),
-                        'value:sum': False,
+                        "__extra_domain": [("order_expand_id", "=", order_3.id)],
+                        "__fold": True,
+                        "order_expand_id": (order_3.id, "O3"),
+                        "value:sum": False,
                     },
                     {
-                        '__extra_domain': [('order_expand_id', '=', order_unused.id)],
-                        '__fold': True,
-                        'order_expand_id': (order_unused.id, 'Not used'),
-                        'value:sum': False,
+                        "__extra_domain": [("order_expand_id", "=", order_unused.id)],
+                        "__fold": True,
+                        "order_expand_id": (order_unused.id, "Not used"),
+                        "value:sum": False,
                     },
                 ],
             )

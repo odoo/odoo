@@ -1,6 +1,7 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { cookie } from "@web/core/browser/cookie";
-import { redirect } from "@web/core/utils/urls";
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -13,8 +14,9 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { animationFrame } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
+import { redirect } from "@web/core/utils/urls";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 class Partner extends models.Model {
@@ -152,7 +154,9 @@ test("form view in dialog shows wrong company error", async () => {
         resId: 1,
     });
     await animationFrame();
-    expect.verifyErrors(['Error: The following error occurred in onWillStart: "Wrong Company"']);
+    expect.verifyErrors([
+        'Error: The following error occurred in onWillStart: "Wrong Company"',
+    ]);
     expect(cookie.get("cids")).toBe("1"); // cookies were not modified
     expect.verifySteps([]); // don't reload
 });

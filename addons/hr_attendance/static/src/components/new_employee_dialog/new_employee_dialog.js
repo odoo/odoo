@@ -2,7 +2,7 @@ import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { Many2One } from "./many2one/many2one";
 
 export class NewEmployeeDialog extends Component {

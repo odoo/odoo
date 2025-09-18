@@ -1,6 +1,5 @@
-import { roundPrecision } from "@web/core/utils/numbers";
 import { Base } from "@point_of_sale/app/models/related_models";
-
+import { roundPrecision } from "@web/core/utils/format/numbers";
 export const LT = -1;
 export const EQ = 0;
 export const GT = 1;
@@ -19,12 +18,12 @@ function invertMethod(method) {
     return method === "UP"
         ? "DOWN"
         : method === "DOWN"
-        ? "UP"
-        : method === "HALF-UP"
-        ? "HALF-DOWN"
-        : method === "HALF-DOWN"
-        ? "HALF-UP"
-        : method;
+          ? "UP"
+          : method === "HALF-UP"
+            ? "HALF-DOWN"
+            : method === "HALF-DOWN"
+              ? "HALF-UP"
+              : method;
 }
 
 export class AbstractNumbers extends Base {
@@ -75,7 +74,7 @@ export class AbstractNumbers extends Base {
             a,
             this.precision,
             // If negative, invert the rounding method
-            this.isNegative(a) ? invertMethod(this.method) : this.method
+            this.isNegative(a) ? invertMethod(this.method) : this.method,
         );
     }
 }

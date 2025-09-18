@@ -3,12 +3,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
-import { getOperatorLabel as getDomainOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { getOperatorLabel as getDomainOperatorLabel } from "@web/components/tree_editor/tree_editor_operator_editor";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual } from "@web/core/utils/collections/objects";
 import { formatList } from "@web/core/l10n/utils";
 
 export const globalFieldMatchingRegistry = new Registry();

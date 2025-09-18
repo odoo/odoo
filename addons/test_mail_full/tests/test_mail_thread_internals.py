@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_parse
+from urllib.parse import parse_qsl, urlsplit
 
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
@@ -76,7 +76,7 @@ class TestMailThreadInternals(TestMailThreadInternalsCommon):
                         'Portal Mixin should add portal customer notification group'
                     )
                     portal_url = portal_customer_group[2]['button_access']['url']
-                    parameters = url_parse(portal_url).decode_query()
+                    parameters = dict(parse_qsl(urlsplit(portal_url).query))
                     self.assertEqual(parameters['access_token'], test_record.access_token)
                     self.assertEqual(parameters['model'], test_record._name)
                     self.assertEqual(parameters['pid'], str(test_record[partner_fnames[0]].id))

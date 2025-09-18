@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { actionService } from "@web/webclient/actions/action_service";
-
 patch(actionService, {
     start(env) {
         // The action service wants to open the majority of links in the main container, not in new dialog.

@@ -1,20 +1,30 @@
 import { registry } from "@web/core/registry";
+import {
+    append,
+    createElement,
+    extractAttributes,
+    setAttributes,
+} from "@web/core/utils/dom/xml";
 import { patch } from "@web/core/utils/patch";
-import { append, createElement, extractAttributes, setAttributes } from "@web/core/utils/xml";
-import { FormCompiler } from "@web/views/form/form_compiler";
-
 /** @this {FormCompiler} */
+import { FormCompiler } from "@web/views/form/form_compiler";
 function compileChatter(node, params) {
     const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
         "t-component": "__comp__.mailComponents.Chatter",
         has_activities: "__comp__.props.archInfo.has_activities",
         hasAttachmentPreview: Boolean(
-            this.templates.FormRenderer.querySelector(".o_attachment_preview")
+            this.templates.FormRenderer.querySelector(".o_attachment_preview"),
         ),
-        hasParentReloadOnActivityChanged: Boolean(node.getAttribute("reload_on_activity")),
-        hasParentReloadOnAttachmentsChanged: Boolean(node.getAttribute("reload_on_attachment")),
-        hasParentReloadOnFollowersUpdate: Boolean(node.getAttribute("reload_on_follower")),
+        hasParentReloadOnActivityChanged: Boolean(
+            node.getAttribute("reload_on_activity"),
+        ),
+        hasParentReloadOnAttachmentsChanged: Boolean(
+            node.getAttribute("reload_on_attachment"),
+        ),
+        hasParentReloadOnFollowersUpdate: Boolean(
+            node.getAttribute("reload_on_follower"),
+        ),
         hasParentReloadOnMessagePosted: Boolean(node.getAttribute("reload_on_post")),
         isAttachmentBoxVisibleInitially: Boolean(node.getAttribute("open_attachments")),
         threadId: "__comp__.props.record.resId or undefined",
@@ -24,7 +34,10 @@ function compileChatter(node, params) {
         highlightMessageId: "__comp__.highlightMessageId",
     });
     const chatterContainerHookXml = createElement("div");
-    chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter");
+    chatterContainerHookXml.classList.add(
+        "o-mail-ChatterContainer",
+        "o-mail-Form-chatter",
+    );
     setAttributes(chatterContainerHookXml, { "t-if": "!__comp__.env.inDialog" });
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
@@ -39,7 +52,10 @@ function compileAttachmentPreview(node, params) {
         threadId: "__comp__.props.record.resId or undefined",
         threadModel: "__comp__.props.record.resModel",
     });
-    append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
+    append(
+        webClientViewAttachmentViewContainerHookXml,
+        webClientViewAttachmentViewContainerXml,
+    );
     return webClientViewAttachmentViewContainerHookXml;
 }
 
@@ -61,7 +77,7 @@ patch(FormCompiler.prototype, {
             return res; // no chatter, keep the result as it is
         }
         const chatterContainerXml = chatterContainerHookXml.querySelector(
-            "t[t-component='__comp__.mailComponents.Chatter']"
+            "t[t-component='__comp__.mailComponents.Chatter']",
         );
         setAttributes(chatterContainerXml, {
             isChatterAside: "false",
@@ -77,22 +93,26 @@ patch(FormCompiler.prototype, {
             return res; // miss-config: a sheet-bg is required for the rest
         }
 
-        const webClientViewAttachmentViewHookXml = res.querySelector(".o_attachment_preview");
+        const webClientViewAttachmentViewHookXml = res.querySelector(
+            ".o_attachment_preview",
+        );
         const hasPreview = !!webClientViewAttachmentViewHookXml;
         if (webClientViewAttachmentViewHookXml) {
             // in sheet bg (attachment viewer present)
             setAttributes(webClientViewAttachmentViewHookXml, {
                 "t-if": `__comp__.mailLayout(${hasPreview}).includes("COMBO")`,
             });
-            const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
+            const sheetBgChatterContainerHookXml =
+                chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg", "w-auto");
             setAttributes(sheetBgChatterContainerHookXml, {
                 "t-if": `__comp__.mailLayout(${hasPreview}) == "COMBO"`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
-                "t[t-component='__comp__.mailComponents.Chatter']"
-            );
+            const sheetBgChatterContainerXml =
+                sheetBgChatterContainerHookXml.querySelector(
+                    "t[t-component='__comp__.mailComponents.Chatter']",
+                );
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
                 isChatterAside: "false",

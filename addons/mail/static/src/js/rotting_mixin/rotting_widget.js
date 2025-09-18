@@ -1,23 +1,34 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
+import {
+    buildM2OFieldDescription,
+    Many2OneField,
+} from "@web/fields/relational/many2one/many2one_field";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 export function getRottingDaysTitle(modelName, rotDays) {
     switch (modelName) {
         case "crm.lead":
-            return _t("This lead has been stuck in this stage for %(numberOfDays)s days.", {
-                numberOfDays: rotDays,
-            });
+            return _t(
+                "This lead has been stuck in this stage for %(numberOfDays)s days.",
+                {
+                    numberOfDays: rotDays,
+                },
+            );
         case "hr.applicant":
-            return _t("This applicant has been stuck in this stage for %(numberOfDays)s days.", {
-                numberOfDays: rotDays,
-            });
+            return _t(
+                "This applicant has been stuck in this stage for %(numberOfDays)s days.",
+                {
+                    numberOfDays: rotDays,
+                },
+            );
         case "project.task":
-            return _t("This task has been stuck in this stage for %(numberOfDays)s days.", {
-                numberOfDays: rotDays,
-            });
+            return _t(
+                "This task has been stuck in this stage for %(numberOfDays)s days.",
+                {
+                    numberOfDays: rotDays,
+                },
+            );
     }
     return _t("This record has been stuck in this stage for %(numberOfDays)s days.", {
         numberOfDays: rotDays,
@@ -38,7 +49,7 @@ export class KanbanRottingField extends Component {
 
         this.title = getRottingDaysTitle(
             this.props.record.model.config.resModel,
-            this.props.record.data.rotting_days
+            this.props.record.data.rotting_days,
         );
     }
 }

@@ -1,9 +1,9 @@
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/components/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/format/strings";
 import { WebsiteDialog } from "./dialog";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";

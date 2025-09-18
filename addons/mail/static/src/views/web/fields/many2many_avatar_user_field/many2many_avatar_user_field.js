@@ -1,18 +1,18 @@
-import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
-
-import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
+import { TagsList } from "@web/components/tags_list/tags_list";
+import { registry } from "@web/core/registry";
 import {
-    Many2ManyTagsAvatarField,
-    many2ManyTagsAvatarField,
-    ListMany2ManyTagsAvatarField,
-    listMany2ManyTagsAvatarField,
     KanbanMany2ManyTagsAvatarField,
     kanbanMany2ManyTagsAvatarField,
     KanbanMany2ManyTagsAvatarFieldTagsList,
-} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+    ListMany2ManyTagsAvatarField,
+    listMany2ManyTagsAvatarField,
+    Many2ManyTagsAvatarField,
+    many2ManyTagsAvatarField,
+} from "@web/fields/relational/many2many_tags_avatar/many2many_tags_avatar_field";
+import { usePopover } from "@web/ui/popover/popover_hook";
+
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
 
 export class Many2ManyAvatarUserTagsList extends TagsList {
@@ -60,7 +60,9 @@ const WithUserChatter = (T) =>
         }
     };
 
-export class Many2ManyTagsAvatarUserField extends WithUserChatter(Many2ManyTagsAvatarField) {
+export class Many2ManyTagsAvatarUserField extends WithUserChatter(
+    Many2ManyTagsAvatarField,
+) {
     static template = "mail.Many2ManyTagsAvatarUserField";
     static components = {
         ...Many2ManyTagsAvatarField.components,
@@ -82,7 +84,7 @@ export class KanbanMany2ManyAvatarUserTagsList extends KanbanMany2ManyTagsAvatar
 }
 
 export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
-    KanbanMany2ManyTagsAvatarField
+    KanbanMany2ManyTagsAvatarField,
 ) {
     static template = "mail.KanbanMany2ManyTagsAvatarUserField";
     static components = {
@@ -96,12 +98,17 @@ export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
 export const kanbanMany2ManyTagsAvatarUserField = {
     ...kanbanMany2ManyTagsAvatarField,
     component: KanbanMany2ManyTagsAvatarUserField,
-    additionalClasses: ["o_field_many2many_tags_avatar", "o_field_many2many_tags_avatar_kanban"],
+    additionalClasses: [
+        "o_field_many2many_tags_avatar",
+        "o_field_many2many_tags_avatar_kanban",
+    ],
 };
-registry.category("fields").add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
+registry
+    .category("fields")
+    .add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
 
 export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
-    ListMany2ManyTagsAvatarField
+    ListMany2ManyTagsAvatarField,
 ) {
     static template = "mail.ListMany2ManyTagsAvatarUserField";
     static components = {
@@ -111,7 +118,10 @@ export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
     };
 
     get displayText() {
-        return this.props.record.data[this.props.name].records.length === 1 || !this.props.readonly;
+        return (
+            this.props.record.data[this.props.name].records.length === 1 ||
+            !this.props.readonly
+        );
     }
 }
 
@@ -119,10 +129,15 @@ export const listMany2ManyTagsAvatarUserField = {
     ...listMany2ManyTagsAvatarField,
     component: ListMany2ManyTagsAvatarUserField,
     listViewWidth: [120],
-    additionalClasses: ["o_field_many2many_tags_avatar", "o_field_many2many_tags_avatar_list"],
+    additionalClasses: [
+        "o_field_many2many_tags_avatar",
+        "o_field_many2many_tags_avatar_list",
+    ],
 };
 
-registry.category("fields").add("list.many2many_avatar_user", listMany2ManyTagsAvatarUserField);
+registry
+    .category("fields")
+    .add("list.many2many_avatar_user", listMany2ManyTagsAvatarUserField);
 registry
     .category("fields")
     .add("activity.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);

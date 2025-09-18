@@ -1,15 +1,14 @@
 import { Component, useState } from "@odoo/owl";
+import {
+    BACKSPACE,
+    EMPTY,
+    getButtons,
+    Numpad,
+    ZERO,
+} from "@point_of_sale/app/components/numpad/numpad";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { SIZES, utils } from "@web/core/ui/ui_service";
-import {
-    getButtons,
-    EMPTY,
-    ZERO,
-    BACKSPACE,
-    Numpad,
-} from "@point_of_sale/app/components/numpad/numpad";
-
+import { SIZES, utils } from "@web/ui/block/ui_service";
 export class NumpadDropdown extends Component {
     static template = "pos_restaurant.NumpadDropdown";
     static props = {};
@@ -34,13 +33,15 @@ export class NumpadDropdown extends Component {
             [BACKSPACE.value]: "o_colorlist_item_numpad_color_1",
         };
 
-        return getButtons([{ ...EMPTY, disabled: true }, ZERO, BACKSPACE]).map((button, index) => ({
-            ...button,
-            class: `
+        return getButtons([{ ...EMPTY, disabled: true }, ZERO, BACKSPACE]).map(
+            (button, index) => ({
+                ...button,
+                class: `
                 ${button.class}
                 ${colorClassMap[button.value] || ""}
             `,
-        }));
+            }),
+        );
     }
 
     searchOrder() {

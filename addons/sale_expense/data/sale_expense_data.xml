@@ -9,12 +9,12 @@
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_mileage', False)]"/>
-            <value eval="{'expense_policy': 'sales_price', 'invoice_policy': 'delivery'}"/>
+            <value eval="{'expense_policy': 'sales_price', 'invoice_policy': 'transferred'}"/>
         </function>
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_travel_accommodation', False)]"/>
-            <value eval="{'expense_policy': 'cost', 'invoice_policy': 'delivery'}"/>
+            <value eval="{'expense_policy': 'cost', 'invoice_policy': 'transferred'}"/>
         </function>
 
         <function model="product.product" name="write">

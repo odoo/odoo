@@ -81,7 +81,7 @@ class WebsiteSnippetFilter(models.Model):
             is_sample=is_sample,
             **custom_template_data,
         ))
-        return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
+        return [etree.tostring(el, encoding='unicode', method='html') for el in list(html.fromstring('<root>%s</root>' % str(content)))]
 
     def _prepare_values(self, limit=None, search_domain=None, **options):
         """Gets the data and returns it the right format for render."""

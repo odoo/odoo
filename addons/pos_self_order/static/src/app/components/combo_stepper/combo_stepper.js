@@ -1,7 +1,8 @@
-import { Component, useRef, onMounted, onPatched } from "@odoo/owl";
-import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
-import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
+import { Component, onMounted, onPatched, useRef } from "@odoo/owl";
+
 import { scrollItemIntoViewX } from "../../utils/scroll";
+import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
+import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class ComboStepper extends Component {
     static template = "pos_self_order.comboStepper";
@@ -27,9 +28,13 @@ export class ComboStepper extends Component {
             return;
         }
         const scrollEl = this.scrollContainerRef.el;
-        scrollItemIntoViewX(scrollEl, `[data-stepper="${this.props.selectedStep.id}"]`, {
-            edgePadding: 20,
-            minRightGap: scrollEl.offsetWidth / 3,
-        });
+        scrollItemIntoViewX(
+            scrollEl,
+            `[data-stepper="${this.props.selectedStep.id}"]`,
+            {
+                edgePadding: 20,
+                minRightGap: scrollEl.offsetWidth / 3,
+            },
+        );
     }
 }

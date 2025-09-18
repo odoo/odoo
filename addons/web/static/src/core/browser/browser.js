@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/browser/browser - Patchable browser API facade (localStorage, fetch, setTimeout, etc.) for testability */
+
 /**
  * Browser
  *
@@ -7,7 +11,9 @@
  * object for a test.
  */
 
+/** @type {Storage} */
 let sessionStorage;
+/** @type {Storage} */
 let localStorage;
 try {
     sessionStorage = window.sessionStorage;
@@ -28,7 +34,9 @@ export const browser = {
     AudioBufferSourceNode: window.AudioBufferSourceNode,
     AudioContext: window.AudioContext,
     AudioWorkletNode: window.AudioWorkletNode,
-    BeforeInstallPromptEvent: window.BeforeInstallPromptEvent?.bind(window),
+    BeforeInstallPromptEvent: /** @type {any} */ (
+        window
+    ).BeforeInstallPromptEvent?.bind(window),
     GainNode: window.GainNode,
     MediaStreamAudioSourceNode: window.MediaStreamAudioSourceNode,
     removeEventListener: window.removeEventListener.bind(window),
@@ -85,6 +93,7 @@ Object.defineProperty(browser, "innerWidth", {
  * @returns {typeof window["localStorage"]}
  */
 export function makeRAMLocalStorage() {
+    /** @type {{[key: string]: string}} */
     let store = {};
     return {
         setItem(key, value) {

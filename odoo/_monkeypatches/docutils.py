@@ -21,9 +21,19 @@ def _role_literal(name, rawtext, text, lineno, inliner, options=None, content=No
 
 
 def patch_module():
-    for role in ('attr', 'class', 'func', 'meth', 'ref', 'const', 'samp', 'term'):
+    for role in (
+        "attr",
+        "class",
+        "func",
+        "meth",
+        "ref",
+        "const",
+        "samp",
+        "term",
+    ):
         docutils.parsers.rst.roles.register_local_role(role, _role_literal)
 
-    for directive in ('attribute', 'deprecated'):
+    for directive in ("attribute", "deprecated"):
         docutils.parsers.rst.directives.register_directive(
-            directive, docutils.parsers.rst.directives.admonitions.Note)
+            directive, docutils.parsers.rst.directives.admonitions.Note
+        )

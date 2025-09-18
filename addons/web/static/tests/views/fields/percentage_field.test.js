@@ -1,3 +1,7 @@
+// @ts-check
+
+import { expect, test } from "@odoo/hoot";
+import { click, edit } from "@odoo/hoot-dom";
 import {
     clickSave,
     defineModels,
@@ -6,8 +10,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click, edit } from "@odoo/hoot-dom";
 
 class Partner extends models.Model {
     float_field = fields.Float({
@@ -35,7 +37,8 @@ test("PercentageField in form view", async () => {
 
     expect(".o_field_widget[name=float_field] input").toHaveValue("44.4");
     expect(".o_field_widget[name=float_field] span").toHaveText("%", {
-        message: "The input should be followed by a span containing the percentage symbol.",
+        message:
+            "The input should be followed by a span containing the percentage symbol.",
     });
 
     await click("[name='float_field'] input");

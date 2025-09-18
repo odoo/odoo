@@ -32,7 +32,7 @@ class AccountMoveLine(models.Model):
         if not self.product_id.is_storable:
             return False
         moves = self._get_stock_moves()
-        return all(not m.is_dropship for m in moves)
+        return all(not m._is_dropshipped() for m in moves)
 
     def _get_gross_unit_price(self):
         if self.product_uom_id.is_zero(self.quantity):
@@ -60,7 +60,7 @@ class AccountMoveLine(models.Model):
         if original_line:
             return original_line.price_unit
 
-        if not self.product_id:
+        if not self.product_id or self.product_uom_id.is_zero(self.quantity):
             return self.price_unit
 
         cogs_qty = self._get_cogs_qty()

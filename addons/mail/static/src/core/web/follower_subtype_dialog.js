@@ -1,10 +1,8 @@
-import { rpc } from "@web/core/network/rpc";
 import { Component, onWillStart, useState } from "@odoo/owl";
-
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 /**
  * @typedef {Object} Props
  * @property {function} close
@@ -25,12 +23,15 @@ export class FollowerSubtypeDialog extends Component {
             subtypes: [],
         });
         onWillStart(async () => {
-            const { store_data, subtype_ids } = await rpc("/mail/read_subscription_data", {
-                follower_id: this.props.follower.id,
-            });
+            const { store_data, subtype_ids } = await rpc(
+                "/mail/read_subscription_data",
+                {
+                    follower_id: this.props.follower.id,
+                },
+            );
             this.store.insert(store_data);
             this.state.subtypes = subtype_ids.map((id) =>
-                this.store["mail.message.subtype"].get(id)
+                this.store["mail.message.subtype"].get(id),
             );
         });
     }
@@ -49,7 +50,7 @@ export class FollowerSubtypeDialog extends Component {
 
     async onClickApply() {
         const selectedSubtypes = this.state.subtypes.filter((s) =>
-            s.in(this.props.follower.subtype_ids)
+            s.in(this.props.follower.subtype_ids),
         );
         if (selectedSubtypes.length === 0) {
             await this.props.follower.remove();
@@ -61,14 +62,14 @@ export class FollowerSubtypeDialog extends Component {
                 {
                     partner_ids: [this.props.follower.partner_id.id],
                     subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
-                }
+                },
             );
             if (this.store.mt_comment.notIn(selectedSubtypes)) {
                 this.props.follower.removeRecipient();
             }
             this.env.services.notification.add(
                 _t("The subscription preferences were successfully applied."),
-                { type: "success" }
+                { type: "success" },
             );
         }
         this.props.onFollowerChanged();
@@ -76,6 +77,8 @@ export class FollowerSubtypeDialog extends Component {
     }
 
     get title() {
-        return _t("Edit Subscription of %(name)s", { name: this.props.follower.displayName });
+        return _t("Edit Subscription of %(name)s", {
+            name: this.props.follower.displayName,
+        });
     }
 }

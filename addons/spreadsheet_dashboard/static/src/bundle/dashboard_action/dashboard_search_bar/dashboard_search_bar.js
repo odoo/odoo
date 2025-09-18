@@ -1,14 +1,14 @@
 import { Component, onWillUpdateProps, onWillStart, useState, status } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService, useChildRef, useAutofocus } from "@web/core/utils/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { FilterValuesList } from "@spreadsheet/global_filters/components/filter_values_list/filter_values_list";
 import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { fuzzyTest, fuzzyLookup } from "@web/core/utils/search";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 let nextItemId = 1;
@@ -350,7 +350,7 @@ export class DashboardSearchBar extends Component {
     }
 
     /**
-     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
+     * @returns {import("@web/services/navigation/navigation").NavigationOptions}
      */
     getDropdownNavigation() {
         const isExpansible = (index) => {

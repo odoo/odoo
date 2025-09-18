@@ -1,7 +1,7 @@
 import { TimeOffCard } from "./time_off_card";
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { DateTimeInput } from "@web/components/datetime/datetime_input";
 import { Component, useState, onWillStart } from "@odoo/owl";
 
 export class TimeOffDashboard extends Component {

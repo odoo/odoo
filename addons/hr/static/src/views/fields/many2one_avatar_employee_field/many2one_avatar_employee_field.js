@@ -1,13 +1,13 @@
 import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
 import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { user } from "@web/services/user";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     Many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/fields/relational/many2one/many2one_field";
 
 export class Many2OneAvatarEmployeeField extends Component {
     static template = "hr.Many2OneAvatarEmployeeField";

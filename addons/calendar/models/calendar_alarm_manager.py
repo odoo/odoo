@@ -45,7 +45,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         filter_user = """
             INNER JOIN calendar_event_res_partner_rel AS part_rel
                 ON part_rel.calendar_event_id = cal.id
-                AND part_rel.res_partner_id IN %s
+                AND part_rel.res_partner_id = ANY(%s)
             WHERE cal.active = True
         """
 
@@ -55,7 +55,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         # Add filter on partner_id
         if partners:
             base_request = base_request.replace("WHERE cal.active = True", filter_user)
-            tuple_params += (tuple(partners.ids), )
+            tuple_params += (list(partners.ids), )
 
         # Upper bound on first_alarm of requested events
         first_alarm_max_value = ""

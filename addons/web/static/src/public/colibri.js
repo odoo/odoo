@@ -1,7 +1,8 @@
-/**
- * This is a mini framework designed to make it easy to describe the dynamic
- * content of a "interaction".
- */
+// @ts-check
+
+/** @module @web/public/colibri - Mini-framework runtime that manages Interaction lifecycles, dynamic content, and event bindings for public pages */
+
+/** @import { Interaction } from "@web/public/interaction" */
 
 let owl = null;
 let Markup = null;
@@ -11,6 +12,11 @@ export const INITIAL_VALUE = Symbol("initial value");
 export const SKIP_IMPLICIT_UPDATE = Symbol();
 
 export class Colibri {
+    /**
+     * @param {any} core the InteractionService that owns this Colibri instance
+     * @param {typeof Interaction} I the Interaction class to instantiate
+     * @param {HTMLElement} el the root element for the interaction
+     */
     constructor(core, I, el) {
         this.el = el;
         this.isReady = false;
@@ -27,10 +33,12 @@ export class Colibri {
         this.setupInteraction();
     }
 
+    /** @returns {void} */
     setupInteraction() {
         this.interaction.setup();
     }
 
+    /** @returns {void} */
     destroyInteraction() {
         for (const cleanup of this.cleanups.reverse()) {
             cleanup();
@@ -39,6 +47,10 @@ export class Colibri {
         this.interaction.destroy();
     }
 
+    /**
+     * @param {Record<string, Record<string, any>> | undefined} content dynamicContent descriptor
+     * @returns {void}
+     */
     startInteraction(content) {
         if (content) {
             this.processContent(content);
@@ -48,6 +60,11 @@ export class Colibri {
         this.hasStarted = true;
     }
 
+    /**
+     * Runs willStart() and then starts the interaction.
+     *
+     * @returns {Promise<void>}
+     */
     async start() {
         await this.interaction.willStart();
         if (this.isDestroyed) {
@@ -58,16 +75,27 @@ export class Colibri {
         this.startInteraction(content);
     }
 
+    /**
+     * Attaches an event listener to nodes, with optional modifier suffixes
+     * (.prevent, .stop, .once, .capture, .noUpdate, .withTarget).
+     *
+     * @param {Iterable<EventTarget>} nodes
+     * @param {string} event event name, optionally with dot-suffixed modifiers
+     * @param {Function} fn
+     * @param {AddEventListenerOptions} [options]
+     * @returns {[string, EventListener, AddEventListenerOptions | undefined]}
+     */
     addListener(nodes, event, fn, options) {
         if (typeof fn !== "function") {
             throw new Error(`Invalid listener for event '${event}' (not a function)`);
         }
         if (!this.isReady) {
             throw new Error(
-                "this.addListener can only be called after the interaction is started. Maybe move the call in the start method."
+                "this.addListener can only be called after the interaction is started. Maybe move the call in the start method.",
             );
         }
-        const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|once|noUpdate|withTarget)$/;
+        const re =
+            /^(?<event>.*)\.(?<suffix>prevent|stop|capture|once|noUpdate|withTarget)$/;
         let groups = re.exec(event)?.groups;
         while (groups) {
             fn = {
@@ -109,23 +137,31 @@ export class Colibri {
             event = groups.event;
             groups = re.exec(event)?.groups;
         }
-        const handler = fn.isHandler
+        const fnAny = /** @type {any} */ (fn);
+        const handler = fnAny.isHandler
             ? fn
             : async (...args) => {
-                  if (SKIP_IMPLICIT_UPDATE !== (await fn.call(this.interaction, ...args))) {
+                  if (
+                      SKIP_IMPLICIT_UPDATE !==
+                      (await fn.call(this.interaction, ...args))
+                  ) {
                       if (!this.isDestroyed) {
                           this.updateContent();
                       }
                   }
               };
-        handler.isHandler = true;
+        /** @type {any} */ (handler).isHandler = true;
+        const eventListener = /** @type {EventListener} */ (handler);
         for (const node of nodes) {
-            node.addEventListener(event, handler, options);
-            this.cleanups.push(() => node.removeEventListener(event, handler, options));
+            node.addEventListener(event, eventListener, options);
+            this.cleanups.push(() =>
+                node.removeEventListener(event, eventListener, options),
+            );
         }
-        return [event, handler, options];
+        return [event, eventListener, options];
     }
 
+    /** @returns {void} */
     refreshNodes() {
         for (const sel of this.dynamicNodes.keys()) {
             const nodes = this.getNodes(sel);
@@ -155,6 +191,13 @@ export class Colibri {
         }
     }
 
+    /**
+     * @param {string} sel
+     * @param {string} event
+     * @param {EventListener} handler
+     * @param {AddEventListenerOptions | undefined} options
+     * @returns {void}
+     */
     mapSelectorToListeners(sel, event, handler, options) {
         if (this.listeners.has(sel)) {
             this.listeners.get(sel)[event] = [handler, options];
@@ -163,6 +206,15 @@ export class Colibri {
         }
     }
 
+    /**
+     * Mounts an OWL component inside `node` and registers cleanup.
+     *
+     * @param {HTMLElement} node
+     * @param {typeof import("@odoo/owl").Component} C
+     * @param {Record<string, any>} [props]
+     * @param {InsertPosition} [position]
+     * @returns {() => void} cleanup function
+     */
     mountComponent(node, C, props, position = "beforeend") {
         const root = this.core.prepareRoot(node, C, props, position);
         root.mount();
@@ -170,6 +222,14 @@ export class Colibri {
         return root.destroy;
     }
 
+    /**
+     * Applies a t-out directive: sets textContent or innerHTML for Markup values.
+     *
+     * @param {HTMLElement} el
+     * @param {any} value
+     * @param {any} initialValue
+     * @returns {void}
+     */
     applyTOut(el, value, initialValue) {
         if (value === INITIAL_VALUE) {
             value = initialValue;
@@ -197,6 +257,16 @@ export class Colibri {
         }
     }
 
+    /**
+     * Applies a t-att directive: sets class, style, or a generic attribute.
+     * For class/style, `value` is a plain object; for other attrs, a scalar.
+     *
+     * @param {HTMLElement} el
+     * @param {string} attr attribute name ("class", "style", or any HTML attribute)
+     * @param {any} value new value (object for class/style, scalar otherwise)
+     * @param {any} [initialValue] original value captured before first update
+     * @returns {void}
+     */
     applyAttr(el, attr, value, initialValue) {
         if (attr === "class") {
             if (typeof value !== "object") {
@@ -225,11 +295,7 @@ export class Colibri {
                 } else {
                     style = String(style);
                     if (style.endsWith(" !important")) {
-                        el.style.setProperty(
-                            prop,
-                            style.substring(0, style.length - 11),
-                            "important"
-                        );
+                        el.style.setProperty(prop, style.slice(0, -11), "important");
                     } else {
                         el.style.setProperty(prop, style);
                     }
@@ -250,6 +316,12 @@ export class Colibri {
         }
     }
 
+    /**
+     * Returns the DOM nodes for a selector, using dynamicSelectors overrides if present.
+     *
+     * @param {string} sel CSS selector or dynamic selector key
+     * @returns {Iterable<HTMLElement>}
+     */
     getNodes(sel) {
         const selectors = this.interaction.dynamicSelectors;
         if (sel in selectors) {
@@ -266,11 +338,18 @@ export class Colibri {
         return this.interaction.el.querySelectorAll(sel);
     }
 
+    /**
+     * Parses a dynamicContent descriptor: registers event listeners, dynamic
+     * attributes, t-out bindings, and t-component mounts.
+     *
+     * @param {Record<string, Record<string, any>>} content
+     * @returns {void}
+     */
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
                 throw new Error(
-                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`,
                 );
             }
             let nodes;
@@ -285,7 +364,11 @@ export class Colibri {
                 const value = descr[directive];
                 if (directive.startsWith("t-on-")) {
                     const ev = directive.slice(5);
-                    const [event, handler, options] = this.addListener(nodes, ev, value);
+                    const [event, handler, options] = this.addListener(
+                        nodes,
+                        ev,
+                        value,
+                    );
                     this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
@@ -296,7 +379,11 @@ export class Colibri {
                         initialValues: null,
                     });
                 } else if (directive === "t-out") {
-                    this.tOuts.push({ sel, definition: value, initialValue: null });
+                    this.tOuts.push({
+                        sel,
+                        definition: value,
+                        initialValue: null,
+                    });
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
@@ -305,25 +392,39 @@ export class Colibri {
                         }
                     } else {
                         for (const node of nodes) {
-                            this.mountComponent(node, ...value(node));
+                            const [C, props, pos] =
+                                /** @type {[typeof import("@odoo/owl").Component, Record<string, any>?, InsertPosition?]} */ (
+                                    value(node)
+                                );
+                            this.mountComponent(node, C, props, pos);
                         }
                     }
                 } else {
-                    const suffix = directive.startsWith("t-") ? "" : " (should start with t-)";
+                    const suffix = directive.startsWith("t-")
+                        ? ""
+                        : " (should start with t-)";
                     throw new Error(`Invalid directive: '${directive}'${suffix}`);
                 }
             }
         }
     }
 
+    /**
+     * Re-evaluates all dynamic attributes and t-out definitions and applies
+     * them to the DOM. Called after events or explicit state changes.
+     *
+     * @returns {void}
+     */
     updateContent() {
         if (this.isDestroyed || !this.isReady) {
             throw new Error(
-                "Cannot update content of an interaction that is not ready or is destroyed"
+                "Cannot update content of an interaction that is not ready or is destroyed",
             );
         }
         if (this.isUpdating) {
-            throw new Error("Updatecontent should not be called while interaction is updating");
+            throw new Error(
+                "Updatecontent should not be called while interaction is updating",
+            );
         }
         this.isUpdating = true;
         if (this.hasStarted) {
@@ -332,7 +433,8 @@ export class Colibri {
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
-            let { sel, attr, definition, initialValues } = dynamicAttr;
+            const { sel, attr, definition } = dynamicAttr;
+            let { initialValues } = dynamicAttr;
             const nodes = this.dynamicNodes.get(sel) || [];
             if (!initialValues && nodes.length) {
                 initialValues = new Map();
@@ -347,16 +449,20 @@ export class Colibri {
                             case "class":
                                 attrValue = {};
                                 for (const classNames of Object.keys(value)) {
-                                    attrValue[classNames] = node.classList.contains(classNames);
+                                    attrValue[classNames] =
+                                        node.classList.contains(classNames);
                                 }
                                 break;
                             case "style":
                                 attrValue = {};
                                 for (const property of Object.keys(value)) {
-                                    const propertyValue = node.style.getPropertyValue(property);
-                                    const priority = node.style.getPropertyPriority(property);
+                                    const propertyValue =
+                                        node.style.getPropertyValue(property);
+                                    const priority =
+                                        node.style.getPropertyPriority(property);
                                     attrValue[property] = propertyValue
-                                        ? propertyValue + (priority ? ` !${priority}` : "")
+                                        ? propertyValue +
+                                          (priority ? ` !${priority}` : "")
                                         : undefined;
                                 }
                                 break;
@@ -365,14 +471,20 @@ export class Colibri {
                         }
                         initialValues.set(node, attrValue);
                     }
-                    this.applyAttr(node, attr, value, dynamicAttr.initialValues.get(node));
+                    this.applyAttr(
+                        node,
+                        attr,
+                        value,
+                        dynamicAttr.initialValues.get(node),
+                    );
                 } catch (e) {
                     errors.push({ error: e, attribute: attr });
                 }
             }
         }
         for (const tOut of this.tOuts) {
-            let { sel, definition, initialValue } = tOut;
+            const { sel, definition } = tOut;
+            let { initialValue } = tOut;
             const nodes = this.dynamicNodes.get(sel) || [];
             if (!initialValue && nodes.length) {
                 initialValue = new Map();
@@ -391,7 +503,7 @@ export class Colibri {
                 this.applyTOut(
                     node,
                     definition.call(interaction, node),
-                    tOut.initialValue.get(node)
+                    tOut.initialValue.get(node),
                 );
             }
         }
@@ -400,11 +512,18 @@ export class Colibri {
             const { attribute, error } = errors[0];
             throw Error(
                 `An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`,
-                { cause: error }
+                { cause: error },
             );
         }
     }
 
+    /**
+     * Restores all dynamic attributes and t-out values to their initial state,
+     * removes event listeners, destroys the interaction, and marks this
+     * Colibri as destroyed.
+     *
+     * @returns {void}
+     */
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
@@ -446,6 +565,11 @@ export class Colibri {
      * chunk of synchronous code after returning from an asynchronous one.
      * This should typically be used around code that follows an
      * await waitFor(...).
+     *
+     * @param {Interaction} interaction
+     * @param {string} name method name (used by patches for identification)
+     * @param {Function} fn the synchronous function to protect
+     * @returns {Function}
      */
     protectSyncAfterAsync(interaction, name, fn) {
         return fn.bind(interaction);

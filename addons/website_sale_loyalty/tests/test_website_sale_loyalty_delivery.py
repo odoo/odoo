@@ -114,11 +114,11 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
         delivery_product1, delivery_product2 = cls.env['product.product'].create([{
             'name': "Delivery 1",
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'type': 'service',
         }, {
             'name': "Delivery 2",
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'type': 'service',
         }])
 

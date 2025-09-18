@@ -1,5 +1,5 @@
     import publicWidget from '@web/legacy/js/public/public_widget';
-    import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+    import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
     import { renderToElement } from "@web/core/utils/render";
     import { session } from "@web/session";
     import CourseJoin from '@website_slides/js/slides_course_join';
@@ -7,7 +7,7 @@
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
     import { rpc } from "@web/core/network/rpc";
     import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
-    import { user } from "@web/core/user";
+    import { user } from "@web/services/user";
 
     import { _t } from "@web/core/l10n/translation";
 
@@ -128,15 +128,21 @@
                 message = _t('You must be logged to submit the quiz.');
             }
 
-            this.$('.o_wslides_js_quiz_submit_error')
-                .removeClass('d-none')
-                .find('.o_wslides_js_quiz_submit_error_text')
-                .text(message);
+            const errorEl = this.el.querySelector('.o_wslides_js_quiz_submit_error');
+            if (errorEl) {
+                errorEl.classList.remove('d-none');
+                const textEl = errorEl.querySelector('.o_wslides_js_quiz_submit_error_text');
+                if (textEl) {
+                    textEl.textContent = message;
+                }
+            }
         },
 
         _hideErrorMessage: function () {
-            this.$('.o_wslides_js_quiz_submit_error')
-                .addClass('d-none');
+            const errorEl = this.el.querySelector('.o_wslides_js_quiz_submit_error');
+            if (errorEl) {
+                errorEl.classList.add('d-none');
+            }
         },
 
         /**
@@ -169,9 +175,9 @@
          * @private
          */
         _getQuestionsIds: function () {
-            return this.$('.o_wslides_js_lesson_quiz_question').map(function () {
-                return $(this).data('question-id');
-            }).get();
+            return Array.from(this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question')).map(
+                el => el.dataset.questionId
+            );
         },
 
         /**
@@ -180,8 +186,11 @@
          * @private
          */
         _modifyQuestionsSequence: function () {
-            this.$('.o_wslides_js_lesson_quiz_question').each(function (index, question) {
-                $(question).find('span.o_wslides_quiz_question_sequence').text(index + 1);
+            this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question').forEach((question, index) => {
+                const seq = question.querySelector('span.o_wslides_quiz_question_sequence');
+                if (seq) {
+                    seq.textContent = index + 1;
+                }
             });
         },
 
@@ -224,8 +233,12 @@
          * @private
          */
         _hideEditOptions: function () {
-            this.$('.o_wslides_js_lesson_quiz_question .o_wslides_js_quiz_edit_del,' +
-                   ' .o_wslides_js_lesson_quiz_question .o_wslides_js_quiz_sequence_handler').addClass('d-none');
+            for (const el of this.el.querySelectorAll(
+                '.o_wslides_js_lesson_quiz_question .o_wslides_js_quiz_edit_del,' +
+                ' .o_wslides_js_lesson_quiz_question .o_wslides_js_quiz_sequence_handler'
+            )) {
+                el.classList.add('d-none');
+            }
         },
 
         /**
@@ -233,11 +246,12 @@
          * Decorate the answers according to state
          */
         _disableAnswers: function () {
-            var self = this;
-            this.$('.o_wslides_js_lesson_quiz_question').addClass('completed-disabled');
-            this.$('input[type=radio]').each(function () {
-                $(this).prop('disabled', self.slide.completed);
-            });
+            for (const el of this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question')) {
+                el.classList.add('completed-disabled');
+            }
+            for (const input of this.el.querySelectorAll('input[type=radio]')) {
+                input.disabled = this.slide.completed;
+            }
         },
 
         /**
@@ -247,34 +261,54 @@
          * @private
          */
         _renderAnswersHighlightingAndComments: function () {
-            var self = this;
-            this.$('.o_wslides_js_lesson_quiz_question').each(function () {
-                var $question = $(this);
-                var questionId = $question.data('questionId');
-                var isCorrect = self.quiz.answers[questionId].is_correct;
-                $question.find('a.o_wslides_quiz_answer').each(function () {
-                    var $answer = $(this);
-                    $answer.find('i.fa').addClass('d-none');
-                    if ($answer.find('input[type=radio]')[0].checked) {
+            for (const question of this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question')) {
+                const questionId = question.dataset.questionId;
+                const isCorrect = this.quiz.answers[questionId].is_correct;
+                for (const answer of question.querySelectorAll('a.o_wslides_quiz_answer')) {
+                    for (const icon of answer.querySelectorAll('i.fa')) {
+                        icon.classList.add('d-none');
+                    }
+                    const radio = answer.querySelector('input[type=radio]');
+                    if (radio && radio.checked) {
                         if (isCorrect) {
-                            $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
-                            $answer.find('i.fa-check-circle').removeClass('d-none');
+                            answer.classList.remove('list-group-item-danger');
+                            answer.classList.add('list-group-item-success');
+                            const checkIcon = answer.querySelector('i.fa-check-circle');
+                            if (checkIcon) {
+                                checkIcon.classList.remove('d-none');
+                            }
                         } else {
-                            $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
-                            $answer.find('i.fa-times-circle').removeClass('d-none');
-                            $answer.find('label input').prop('checked', false);
+                            answer.classList.remove('list-group-item-success');
+                            answer.classList.add('list-group-item-danger');
+                            const timesIcon = answer.querySelector('i.fa-times-circle');
+                            if (timesIcon) {
+                                timesIcon.classList.remove('d-none');
+                            }
+                            const labelInput = answer.querySelector('label input');
+                            if (labelInput) {
+                                labelInput.checked = false;
+                            }
                         }
                     } else {
-                        $answer.removeClass('list-group-item-danger list-group-item-success');
-                        $answer.find('i.fa-circle').removeClass('d-none');
+                        answer.classList.remove('list-group-item-danger', 'list-group-item-success');
+                        const circleIcon = answer.querySelector('i.fa-circle');
+                        if (circleIcon) {
+                            circleIcon.classList.remove('d-none');
+                        }
                     }
-                });
-                var comment = self.quiz.answers[questionId].comment;
-                if (comment) {
-                    $question.find('.o_wslides_quiz_answer_info').removeClass('d-none');
-                    $question.find('.o_wslides_quiz_answer_comment').text(comment);
                 }
-            });
+                const comment = this.quiz.answers[questionId].comment;
+                if (comment) {
+                    const answerInfo = question.querySelector('.o_wslides_quiz_answer_info');
+                    if (answerInfo) {
+                        answerInfo.classList.remove('d-none');
+                    }
+                    const answerComment = question.querySelector('.o_wslides_quiz_answer_comment');
+                    if (answerComment) {
+                        answerComment.textContent = comment;
+                    }
+                }
+            }
         },
 
         /**
@@ -285,17 +319,15 @@
                 return;
             }
 
-            var self = this;
-            this.$('.o_wslides_js_lesson_quiz_question').each(function () {
-                var $question = $(this);
-                $question.find('a.o_wslides_quiz_answer').each(function () {
-                    var $answer = $(this);
-                    if (!$answer.find('input[type=radio]')[0].checked &&
-                        self.slide.sessionAnswers.includes($answer.data('answerId'))) {
-                        $answer.find('input[type=radio]').prop('checked', true);
+            for (const question of this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question')) {
+                for (const answer of question.querySelectorAll('a.o_wslides_quiz_answer')) {
+                    const radio = answer.querySelector('input[type=radio]');
+                    if (radio && !radio.checked &&
+                        this.slide.sessionAnswers.includes(parseInt(answer.dataset.answerId))) {
+                        radio.checked = true;
                     }
-                });
-            });
+                }
+            }
 
             // reset answers coming from the session
             this.slide.sessionAnswers = false;
@@ -306,10 +338,12 @@
          * Update validation box (karma, buttons) according to widget state
          */
         _renderValidationInfo: function () {
-            var $validationElem = this.$('.o_wslides_js_lesson_quiz_validation');
-            $validationElem.empty().append(
-                renderToElement('slide.slide.quiz.validation', {'widget': this})
-            );
+            const validationElem = this.el.querySelector('.o_wslides_js_lesson_quiz_validation');
+            if (validationElem) {
+                validationElem.replaceChildren(
+                    renderToElement('slide.slide.quiz.validation', {'widget': this})
+                );
+            }
         },
         /*
         * Toggle additional resource info box
@@ -329,8 +363,8 @@
          * @private
          */
         _renderJoinWidget: function () {
-            var $widgetLocation = this.$(".o_wslides_join_course_widget");
-            if ($widgetLocation.length !== 0) {
+            const widgetLocation = this.el.querySelector(".o_wslides_join_course_widget");
+            if (widgetLocation) {
                 var courseJoinWidget = new CourseJoinWidget(this, {
                     isQuiz: true,
                     channel: this.channel,
@@ -342,7 +376,7 @@
                     joinMessage: _t('Join & Submit'),
                 });
 
-                courseJoinWidget.appendTo($widgetLocation);
+                courseJoinWidget.appendTo(widgetLocation);
                 if (!this.publicUser && courseJoinWidget.channel.channelEnroll === 'public' && this.slide.sessionAnswers) {
                     courseJoinWidget.joinChannel(this.channel.channelId);
                 }
@@ -355,9 +389,9 @@
          * @private
          */
         _getQuizAnswers: function () {
-            return this.$('input[type=radio]:checked').map(function (index, element) {
-                return parseInt($(element).val());
-            }).get();
+            return Array.from(this.el.querySelectorAll('input[type=radio]:checked')).map(
+                el => parseInt(el.value)
+            );
         },
 
         /**
@@ -411,24 +445,25 @@
         /**
          * Get all the question information after clicking on
          * the edit button
-         * @param $elem
+         * @param {HTMLElement} questionEl
          * @returns {{id: *, sequence: number, text: *, answers: Array}}
          * @private
          */
-        _getQuestionDetails: function ($elem) {
+        _getQuestionDetails: function (questionEl) {
             var answers = [];
-            $elem.find('.o_wslides_quiz_answer').each(function () {
+            for (const answerEl of questionEl.querySelectorAll('.o_wslides_quiz_answer')) {
                 answers.push({
-                    'id': $(this).data('answerId'),
-                    'text_value': $(this).data('text'),
-                    'is_correct': $(this).data('isCorrect'),
-                    'comment': $(this).data('comment')
+                    'id': answerEl.dataset.answerId,
+                    'text_value': answerEl.dataset.text,
+                    'is_correct': answerEl.dataset.isCorrect,
+                    'comment': answerEl.dataset.comment,
                 });
-            });
+            }
+            const seqEl = questionEl.querySelector('.o_wslides_quiz_question_sequence');
             return {
-                'id': $elem.data('questionId'),
-                'sequence': parseInt($elem.find('.o_wslides_quiz_question_sequence').text()),
-                'text': $elem.data('title'),
+                'id': questionEl.dataset.questionId,
+                'sequence': parseInt(seqEl ? seqEl.textContent : '0'),
+                'text': questionEl.dataset.title,
                 'answers': answers,
             };
         },
@@ -457,7 +492,10 @@
         _onAnswerClick: function (ev) {
             ev.preventDefault();
             if (!this.slide.completed) {
-                $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
+                const radio = ev.currentTarget.querySelector('input[type=radio]');
+                if (radio) {
+                    radio.checked = true;
+                }
             }
         },
 
@@ -518,12 +556,15 @@
          * @private
          */
         _onCreateQuizClick: function () {
-            var $elem = this.$('.o_wslides_js_lesson_quiz_new_question');
-            this.$('.o_wslides_js_quiz_add').addClass('d-none');
+            const newQuestionEl = this.el.querySelector('.o_wslides_js_lesson_quiz_new_question');
+            const addBtn = this.el.querySelector('.o_wslides_js_quiz_add');
+            if (addBtn) {
+                addBtn.classList.add('d-none');
+            }
             new QuestionFormWidget(this, {
                 slideId: this.slide.id,
                 sequence: this.quiz.questionsCount + 1
-            }).appendTo($elem);
+            }).appendTo(newQuestionEl);
         },
 
         /**
@@ -534,16 +575,16 @@
          * @private
          */
         _onEditQuestionClick: function (ev) {
-            var $editedQuestion = $(ev.currentTarget).closest('.o_wslides_js_lesson_quiz_question');
-            var question = this._getQuestionDetails($editedQuestion);
+            const editedQuestion = ev.currentTarget.closest('.o_wslides_js_lesson_quiz_question');
+            const question = this._getQuestionDetails(editedQuestion);
             new QuestionFormWidget(this, {
-                editedQuestion: $editedQuestion,
+                editedQuestion: editedQuestion,
                 question: question,
                 slideId: this.slide.id,
                 sequence: question.sequence,
                 update: true
-            }).insertAfter($editedQuestion);
-            $editedQuestion.hide();
+            }).insertAfter(editedQuestion);
+            editedQuestion.style.display = 'none';
         },
 
         /**
@@ -581,15 +622,19 @@
          * @private
          */
         _displayCreatedQuestion: function (event) {
-            var $lastQuestion = this.$('.o_wslides_js_lesson_quiz_question:last');
-            if ($lastQuestion.length !== 0) {
-                $lastQuestion.after(event.data.newQuestionRenderedTemplate);
+            const questions = this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question');
+            const lastQuestion = questions[questions.length - 1];
+            if (lastQuestion) {
+                lastQuestion.after(event.data.newQuestionRenderedTemplate);
             } else {
-                this.$el.prepend(event.data.newQuestionRenderedTemplate);
+                this.el.prepend(event.data.newQuestionRenderedTemplate);
             }
             this.quiz.questionsCount++;
             event.data.questionFormWidget.destroy();
-            this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
+            const addQuestionBtn = this.el.querySelector('.o_wslides_js_quiz_add_question');
+            if (addQuestionBtn) {
+                addQuestionBtn.classList.remove('d-none');
+            }
         },
 
         /**
@@ -614,12 +659,18 @@
         _resetDisplay: function (event) {
             var questionFormWidget = event.data.questionFormWidget;
             if (questionFormWidget.update) {
-                questionFormWidget.$editedQuestion.show();
+                questionFormWidget.$editedQuestion.style.display = '';
             } else {
                 if (this.quiz.questionsCount > 0) {
-                    this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
+                    const addQuestionBtn = this.el.querySelector('.o_wslides_js_quiz_add_question');
+                    if (addQuestionBtn) {
+                        addQuestionBtn.classList.remove('d-none');
+                    }
                 } else {
-                    this.$('.o_wslides_js_quiz_add_quiz').removeClass('d-none');
+                    const addQuizBtn = this.el.querySelector('.o_wslides_js_quiz_add_quiz');
+                    if (addQuizBtn) {
+                        addQuizBtn.classList.remove('d-none');
+                    }
                 }
             }
             questionFormWidget.destroy();
@@ -635,15 +686,29 @@
          */
         _deleteQuestion: function (event) {
             var questionId = event.data.questionId;
-            this.$('.o_wslides_js_lesson_quiz_question[data-question-id=' + questionId + ']').remove();
+            const questionEl = this.el.querySelector(`.o_wslides_js_lesson_quiz_question[data-question-id="${questionId}"]`);
+            if (questionEl) {
+                questionEl.remove();
+            }
             this.quiz.questionsCount--;
             this._reorderQuestions();
-            var $newQuestionSequence = this.$('.o_wslides_js_lesson_quiz_new_question .o_wslides_quiz_question_sequence');
-            $newQuestionSequence.text(parseInt($newQuestionSequence.text()) - 1);
-            if (this.quiz.questionsCount === 0 && !this.$('.o_wsildes_quiz_question_input').length) {
-                this.$('.o_wslides_js_quiz_add_quiz').removeClass('d-none');
-                this.$('.o_wslides_js_quiz_add_question').addClass('d-none');
-                this.$('.o_wslides_js_lesson_quiz_validation').addClass('d-none');
+            const newQuestionSeq = this.el.querySelector('.o_wslides_js_lesson_quiz_new_question .o_wslides_quiz_question_sequence');
+            if (newQuestionSeq) {
+                newQuestionSeq.textContent = parseInt(newQuestionSeq.textContent) - 1;
+            }
+            if (this.quiz.questionsCount === 0 && !this.el.querySelector('.o_wsildes_quiz_question_input')) {
+                const addQuizBtn = this.el.querySelector('.o_wslides_js_quiz_add_quiz');
+                if (addQuizBtn) {
+                    addQuizBtn.classList.remove('d-none');
+                }
+                const addQuestionBtn = this.el.querySelector('.o_wslides_js_quiz_add_question');
+                if (addQuestionBtn) {
+                    addQuestionBtn.classList.add('d-none');
+                }
+                const validationEl = this.el.querySelector('.o_wslides_js_lesson_quiz_validation');
+                if (validationEl) {
+                    validationEl.classList.add('d-none');
+                }
             }
         },
     });
@@ -665,21 +730,33 @@
         start: function () {
             const ret = this._super(...arguments);
 
-            const $quiz = this.$('.o_wslides_js_lesson_quiz');
-            if ($quiz.length) {
-                const slideData = $quiz.data();
+            const quizEl = this.el.querySelector('.o_wslides_js_lesson_quiz');
+            if (quizEl) {
+                const slideData = quizEl.dataset;
                 const channelData = this._extractChannelData(slideData);
-                slideData.quizData = {
-                    questions: this._extractQuestionsAndAnswers(),
-                    sessionAnswers: slideData.sessionAnswers || [],
-                    quizKarmaMax: slideData.quizKarmaMax,
-                    quizKarmaWon: slideData.quizKarmaWon || 0,
-                    quizKarmaGain: slideData.quizKarmaGain,
-                    quizAttemptsCount: slideData.quizAttemptsCount,
+                // dataset values are strings; parse numeric/boolean fields
+                const parsedSlideData = {
+                    id: parseInt(slideData.id),
+                    name: slideData.name || '',
+                    hasNext: slideData.hasNext === 'true' || slideData.hasNext === '1',
+                    completed: slideData.completed === 'true' || slideData.completed === '1',
+                    isMember: slideData.isMember === 'true' || slideData.isMember === '1',
+                    isMemberOrInvited: slideData.isMemberOrInvited === 'true' || slideData.isMemberOrInvited === '1',
+                    canSelfMarkCompleted: slideData.canSelfMarkCompleted === 'true' || slideData.canSelfMarkCompleted === '1',
+                    canSelfMarkUncompleted: slideData.canSelfMarkUncompleted === 'true' || slideData.canSelfMarkUncompleted === '1',
                 };
+                const quizData = {
+                    questions: this._extractQuestionsAndAnswers(),
+                    sessionAnswers: slideData.sessionAnswers ? JSON.parse(slideData.sessionAnswers) : [],
+                    quizKarmaMax: parseInt(slideData.quizKarmaMax) || 0,
+                    quizKarmaWon: parseInt(slideData.quizKarmaWon) || 0,
+                    quizKarmaGain: parseInt(slideData.quizKarmaGain) || 0,
+                    quizAttemptsCount: parseInt(slideData.quizAttemptsCount) || 0,
+                };
+                parsedSlideData.quizData = quizData;
 
-                this.quiz = new Quiz(this, slideData, channelData, slideData.quizData);
-                this.quiz.attachTo($quiz);
+                this.quiz = new Quiz(this, parsedSlideData, channelData, parsedSlideData.quizData);
+                this.quiz.attachTo(quizEl);
             } else {
                 this.quiz = null;
             }
@@ -690,8 +767,11 @@
         // Handlers
         //---------------------------------------------------------------------
         _onQuizNextSlide: function () {
-            var url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');
-            window.location.replace(url);
+            const quizEl = this.el.querySelector('.o_wslides_js_lesson_quiz');
+            const url = quizEl?.dataset.nextSlideUrl;
+            if (url) {
+                window.location.replace(url);
+            }
         },
 
         //----------------------------------------------------------------------
@@ -714,7 +794,8 @@
                 return slide;
             }
             // A quiz in a documentation on non fullscreen view
-            return $(`.o_wslides_js_lesson_quiz[data-id="${slideId}"]`).data();
+            const el = document.querySelector(`.o_wslides_js_lesson_quiz[data-id="${slideId}"]`);
+            return el ? el.dataset : undefined;
         },
 
         /**
@@ -743,24 +824,23 @@
 
             // The quiz has been submitted in a documentation and in non fullscreen view,
             // should update the button "Mark Done" to "Mark To Do"
-            const $doneButton = $('.o_wslides_done_button');
-            if ($doneButton.length && completed) {
-                $doneButton
-                    .removeClass('o_wslides_done_button disabled btn-primary text-white')
-                    .addClass('o_wslides_undone_button btn-light')
-                    .text(_t('Mark To Do'))
-                    .removeAttr('title')
-                    .removeAttr('aria-disabled')
-                    .attr('href', `/slides/slide/${encodeURIComponent(slide.id)}/set_uncompleted`);
+            const doneButton = document.querySelector('.o_wslides_done_button');
+            if (doneButton && completed) {
+                doneButton.classList.remove('o_wslides_done_button', 'disabled', 'btn-primary', 'text-white');
+                doneButton.classList.add('o_wslides_undone_button', 'btn-light');
+                doneButton.textContent = _t('Mark To Do');
+                doneButton.removeAttribute('title');
+                doneButton.removeAttribute('aria-disabled');
+                doneButton.setAttribute('href', `/slides/slide/${encodeURIComponent(slide.id)}/set_uncompleted`);
             }
         },
 
         _extractChannelData: function (slideData) {
             return {
-                channelId: slideData.channelId,
+                channelId: parseInt(slideData.channelId) || slideData.channelId,
                 channelEnroll: slideData.channelEnroll,
                 channelRequestedAccess: slideData.channelRequestedAccess || false,
-                signupAllowed: slideData.signupAllowed
+                signupAllowed: slideData.signupAllowed === 'true' || slideData.signupAllowed === '1',
             };
         },
 
@@ -773,22 +853,20 @@
          */
         _extractQuestionsAndAnswers: function () {
             var questions = [];
-            this.$('.o_wslides_js_lesson_quiz_question').each(function () {
-                var $question = $(this);
+            for (const question of this.el.querySelectorAll('.o_wslides_js_lesson_quiz_question')) {
                 var answers = [];
-                $question.find('.o_wslides_quiz_answer').each(function () {
-                    var $answer = $(this);
+                for (const answer of question.querySelectorAll('.o_wslides_quiz_answer')) {
                     answers.push({
-                        id: $answer.data('answerId'),
-                        text: $answer.data('text'),
+                        id: parseInt(answer.dataset.answerId),
+                        text: answer.dataset.text,
                     });
-                });
+                }
                 questions.push({
-                    id: $question.data('questionId'),
-                    title: $question.data('title'),
+                    id: parseInt(question.dataset.questionId),
+                    title: question.dataset.title,
                     answer_ids: answers,
                 });
-            });
+            }
             return questions;
         },
     });

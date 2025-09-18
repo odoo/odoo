@@ -1,6 +1,8 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
 import { click } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineModels,
     fields,

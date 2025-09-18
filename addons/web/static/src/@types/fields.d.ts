@@ -15,6 +15,7 @@ declare module "fields" {
         store: boolean;
         string: string;
         type: T;
+        [key: string]: any;
     }
 
     interface IRelational {

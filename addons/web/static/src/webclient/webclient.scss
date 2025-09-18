@@ -238,11 +238,14 @@ select {
 
 //== Alerts
 .alert {
+  border-radius: $o-border-radius-lg;
+  box-shadow: $o-shadow-xs;
+
   &.alert-info,
   &.alert-success,
   &.alert-warning,
   &.alert-danger {
-    border-width: 0 0 0 3px;
+    border-width: 0 0 0 4px;
   }
   a {
     font-weight: $alert-link-font-weight;
@@ -251,6 +254,9 @@ select {
 
 //== Badges
 .badge {
+    border-radius: $o-border-radius-full;
+    font-weight: $o-font-weight-medium;
+
     &.text-bg-default, &.bg-light, &.text-bg-light, &.bg-default, &.text-primary{
         outline: 1px solid $o-brand-primary;
         outline-offset: -1px;
@@ -259,8 +265,8 @@ select {
 
 //== Buttons
 
-// Disable unnecessary box-shadows on mouse hover
-.btn:focus:hover {
+// Disable unnecessary box-shadows on mouse hover (except primary which has intentional shadows)
+.btn:not(.btn-primary):focus:hover {
   box-shadow: none;
 }
 
@@ -284,4 +290,53 @@ select {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+}
+
+// ------------------------------------------------------------------
+// Bold & Modern design system overrides
+// ------------------------------------------------------------------
+
+.card {
+  border-radius: $o-border-radius-lg;
+  box-shadow: $o-shadow-sm;
+  border-color: $o-gray-200;
+}
+
+
+// Skeleton loading placeholder
+.o_skeleton {
+    @include o-skeleton();
+}
+
+// Thin rounded scrollbars
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: $o-gray-300;
+    border-radius: $o-border-radius-full;
+
+    &:hover {
+        background: $o-gray-400;
+    }
+}
+
+// Firefox (scrollbar properties inherit, so html is sufficient)
+html {
+    scrollbar-width: thin;
+    scrollbar-color: $o-gray-300 transparent;
+}
+
+// Respect user's motion preferences
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

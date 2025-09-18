@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
-from psycopg2.errors import CheckViolation
+from psycopg.errors import CheckViolation
 
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
@@ -43,7 +43,7 @@ class TestHrVersion(TestHrCommon):
         self.assertFalse(employee.contract_date_start)
         self.assertFalse(employee.contract_date_end)
 
-        with self.assertRaises(CheckViolation), mute_logger('odoo.sql_db'):
+        with self.assertRaises(CheckViolation), mute_logger('odoo.db'):
             employee.write({
                 'contract_date_start': False,
                 'contract_date_end': '2020-12-31'

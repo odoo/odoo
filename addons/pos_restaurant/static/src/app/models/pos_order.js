@@ -1,7 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
-import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-
+import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup(_defaultObj, options) {
         super.setup(...arguments);
@@ -65,10 +64,10 @@ patch(PosOrder.prototype, {
     get isDirectSale() {
         return Boolean(
             this.config.module_pos_restaurant &&
-                !this.table_id &&
-                !this.floating_order_name &&
-                this.state == "draft" &&
-                !this.isRefund
+            !this.table_id &&
+            !this.floating_order_name &&
+            this.state == "draft" &&
+            !this.isRefund,
         );
     },
     get isFilledDirectSale() {
@@ -148,13 +147,16 @@ patch(PosOrder.prototype, {
         if (!this.uiState.selected_course_uuid) {
             return;
         }
-        return this.course_ids.find((course) => course.uuid === this.uiState.selected_course_uuid);
+        return this.course_ids.find(
+            (course) => course.uuid === this.uiState.selected_course_uuid,
+        );
     },
     getNextCourseIndex() {
         return (
             this.course_ids.reduce(
-                (maxIndex, course) => (course.index > maxIndex ? course.index : maxIndex),
-                0
+                (maxIndex, course) =>
+                    course.index > maxIndex ? course.index : maxIndex,
+                0,
             ) + 1
         );
     },

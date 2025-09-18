@@ -1,12 +1,15 @@
-import { browser } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
-import { session } from "@web/session";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+// @ts-check
+
+/** @module @web/search/action_menus/action_menus - Action/Print dropdown menus for executing server actions on selected records */
 
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { browser } from "@web/core/browser/browser";
+import { makeContext } from "@web/core/context";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;
@@ -55,7 +58,7 @@ export class ActionMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.state = useState({ printItems: []})
+        this.state = useState({ printItems: [] });
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);
         });
@@ -68,12 +71,20 @@ export class ActionMenus extends Component {
     // Private
     //---------------------------------------------------------------------
 
+    /**
+     * Transform raw action items into display-ready objects.
+     * @param {Object} props - component props
+     * @returns {Promise<Array<{key: string, groupNumber: number, description?: string, action?: Object, callback?: Function}>>}
+     */
     async getActionItems(props) {
         return (props.items.action || []).map((action) => {
             if (action.callback) {
                 return Object.assign(
-                    { key: `action-${action.description}`, groupNumber: ACTIONS_GROUP_NUMBER },
-                    action
+                    {
+                        key: `action-${action.description}`,
+                        groupNumber: ACTIONS_GROUP_NUMBER,
+                    },
+                    action,
                 );
             } else {
                 return {
@@ -90,6 +101,11 @@ export class ActionMenus extends Component {
     // Handlers
     //---------------------------------------------------------------------
 
+    /**
+     * Execute an ir.actions.* action with the current selection context.
+     * @param {{ id: number, name: string }} action
+     * @returns {Promise<void>}
+     */
     async executeAction(action) {
         let activeIds = this.props.getActiveIds();
         if (this.props.isDomainSelected) {
@@ -138,6 +154,11 @@ export class ActionMenus extends Component {
         }
     }
 
+    /**
+     * Load and filter print report actions, excluding those whose domain
+     * doesn't match the current record selection.
+     * @returns {Promise<Array<{action: Object, class: string, description: string, key: number}>>}
+     */
     async loadAvailablePrintItems() {
         const printActions = this.props.items.print || [];
         const actionWithDomainIds = [];
@@ -151,7 +172,7 @@ export class ActionMenus extends Component {
             const validActionsWithDomainIds = await this.orm.call(
                 "ir.actions.report",
                 "get_valid_action_reports",
-                [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
+                [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()],
             );
             validActionIds.push(...validActionsWithDomainIds);
         }
@@ -165,6 +186,7 @@ export class ActionMenus extends Component {
             }));
     }
 
+    /** Load print items and extra items, populating `state.printItems`. */
     async loadPrintItems() {
         if (!this.props.items.print?.length) {
             return;

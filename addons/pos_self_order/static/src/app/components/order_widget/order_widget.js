@@ -1,9 +1,8 @@
 import { Component } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
-
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 export class OrderWidget extends Component {
     static template = "pos_self_order.OrderWidget";
     static props = ["action", "removeTopClasses?"];

@@ -11,7 +11,7 @@ from odoo.addons.test_mass_mailing.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
-from odoo.sql_db import Cursor
+from odoo.db import Cursor
 
 
 @tagged('mail_blacklist')

@@ -1,7 +1,5 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
-
 import { _t } from "@web/core/l10n/translation";
-
 registerThreadAction("expand-discuss", {
     condition: ({ owner, store, thread }) =>
         thread &&
@@ -20,7 +18,7 @@ registerThreadAction("expand-discuss", {
             {
                 clearBreadcrumbs: owner.env.services["home_menu"]?.hasHomeMenu,
                 additionalContext: { active_id: thread.id },
-            }
+            },
         );
     },
     sequence: 10,

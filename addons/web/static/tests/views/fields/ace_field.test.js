@@ -1,9 +1,10 @@
+// @ts-check
+
 /* global ace */
 
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-
 import {
     clickSave,
     contains,
@@ -167,7 +168,9 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
 
     await editAce("a");
     await contains(getFixture()).focus(); // blur ace editor
-    expect.verifySteps([`onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]`]);
+    expect.verifySteps([
+        `onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]`,
+    ]);
 
     await clickSave();
     expect.verifySteps([`web_save: [[1],{"foo":"a"}]`]);

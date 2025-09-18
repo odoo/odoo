@@ -51,12 +51,12 @@ class TestSaleOrderAccess(TransactionCase):
             'user_id': self.admin_user.id,
             'partner_id': self.partner.id,
             'company_id': self.company_1.id,
-            'state': 'sale',
+            'state': 'done',
             'project_id': self.project_company_2.id
         })
         self.sale_line = self.env['sale.order.line'].create({
             'name': 'XA',
-            'product_uom_qty': 1.00,
+            'product_qty': 1.00,
             'price_unit': 20.00,
             'order_id': self.sale_order_company_1.id,
             'project_id': self.project_company_2.id,

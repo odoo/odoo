@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/py_js/py_interpreter - AST-walking interpreter for Python expressions used in domains and QWeb */
+
 import { BUILTINS, EvaluationError, execOnIterable } from "./py_builtin";
 import {
     NotSupportedError,
@@ -7,8 +11,8 @@ import {
     PyTime,
     PyTimeDelta,
 } from "./py_date";
-import { PY_DICT, toPyDict } from "./py_utils";
 import { parseArgs } from "./py_parser";
+import { PY_DICT, toPyDict } from "./py_utils";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -25,7 +29,7 @@ import { parseArgs } from "./py_parser";
 const isTrue = BUILTINS.bool;
 
 /**
- * @param {AST} ast
+ * @param {import("./py_parser").ASTUnaryOperator} ast
  * @param {Object} context
  * @returns {any}
  */
@@ -117,6 +121,11 @@ function isEqual(left, right) {
     if (left instanceof Object && left.isEqual) {
         return left.isEqual(right);
     }
+    if (Array.isArray(left) && Array.isArray(right)) {
+        return (
+            left.length === right.length && left.every((v, i) => isEqual(v, right[i]))
+        );
+    }
     return left === right;
 }
 
@@ -139,7 +148,7 @@ function isIn(left, right) {
 }
 
 /**
- * @param {AST} ast
+ * @param {import("./py_parser").ASTBinaryOperator} ast
  * @param {object} context
  * @returns {any}
  */
@@ -175,7 +184,7 @@ function applyBinaryOp(ast, context) {
                     throw new NotSupportedError();
                 }
             }
-            if (left instanceof Array && right instanceof Array) {
+            if (Array.isArray(left) && Array.isArray(right)) {
                 return [...left, ...right];
             }
 
@@ -217,7 +226,7 @@ function applyBinaryOp(ast, context) {
         case "/":
             return left / right;
         case "%":
-            return left % right;
+            return ((left % right) + right) % right;
         case "//":
             if (left instanceof PyTimeDelta) {
                 return left.divide(right); // check number type?
@@ -251,7 +260,7 @@ const DICT = {
         const { key, defValue } = parseArgs(args, ["key", "defValue"]);
         if (key in this) {
             return this[key];
-        } else if (defValue) {
+        } else if (defValue !== undefined) {
             return defValue;
         }
         return null;
@@ -274,13 +283,14 @@ function applyFunc(key, func, set, ...args) {
     }
     if (args.length > 2) {
         throw new EvaluationError(
-            `${key}: py_js supports at most 1 argument, got (${args.length - 1})`
+            `${key}: py_js supports at most 1 argument, got (${args.length - 1})`,
         );
     }
     return execOnIterable(args[0], func);
 }
 
 const SET = {
+    /** @this {Set<any>} */
     intersection(...args) {
         return applyFunc(
             "intersection",
@@ -294,9 +304,10 @@ const SET = {
                 return intersection;
             },
             this,
-            ...args
+            ...args,
         );
     },
+    /** @this {Set<any>} */
     difference(...args) {
         return applyFunc(
             "difference",
@@ -311,11 +322,17 @@ const SET = {
                 return difference;
             },
             this,
-            ...args
+            ...args,
         );
     },
+    /** @this {Set<any>} */
     union(...args) {
-        return applyFunc("union", (iterable) => new Set([...this, ...iterable]), this, ...args);
+        return applyFunc(
+            "union",
+            (iterable) => new Set([...this, ...iterable]),
+            this,
+            ...args,
+        );
     },
 };
 
@@ -329,7 +346,9 @@ const SET = {
  *  including the constructor
  */
 function methods(_class) {
-    return Object.getOwnPropertyNames(_class.prototype).map((prop) => _class.prototype[prop]);
+    return Object.getOwnPropertyNames(_class.prototype).map(
+        (prop) => _class.prototype[prop],
+    );
 }
 
 const allowedFns = new Set([
@@ -451,7 +470,7 @@ export function evaluate(ast, context = {}) {
                     result = STRING[ast.key];
                 } else if (left instanceof Set) {
                     result = SET[ast.key];
-                } else if (ast.key == "get" && typeof left === "object") {
+                } else if (ast.key === "get" && typeof left === "object") {
                     result = DICT[ast.key];
                     left = toPyDict(left);
                 } else {
@@ -475,7 +494,11 @@ export function evaluate(ast, context = {}) {
      */
     function _evaluate(ast) {
         const val = _innerEvaluate(ast);
-        if (typeof val === "function" && !allowedFns.has(val) && !allowedFns.has(val[unboundFn])) {
+        if (
+            typeof val === "function" &&
+            !allowedFns.has(val) &&
+            !allowedFns.has(val[unboundFn])
+        ) {
             throw new Error("Invalid Function Call");
         }
         return val;

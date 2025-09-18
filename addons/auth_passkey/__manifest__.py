@@ -10,7 +10,7 @@ Passkeys are a secure alternative to a username and a password.
 When a user logs in with a Passkey, MFA will not be required.
 """,
     'category': 'Hidden/Tools',
-    'depends': ['base_setup', 'web'],
+    'depends': ['web'],
     'auto_install': True,
     'data': [
         'views/auth_passkey_key_views.xml',

@@ -1,7 +1,7 @@
 import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
+import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/format/colors";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 
 const DEFAULT_GRADIENT_COLORS = [

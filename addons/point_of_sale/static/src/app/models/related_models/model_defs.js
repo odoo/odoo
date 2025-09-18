@@ -13,7 +13,9 @@ export function processModelDefs(modelDefs) {
             // Make sure that the field has a name and consistent with the key.
             if (field.name) {
                 if (fieldName !== field.name) {
-                    throw new Error(`Field name mismatch: ${fieldName} !== ${field.name}`);
+                    throw new Error(
+                        `Field name mismatch: ${fieldName} !== ${field.name}`,
+                    );
                 }
             } else {
                 field.name = fieldName;
@@ -38,7 +40,7 @@ export function processModelDefs(modelDefs) {
                     (f) =>
                         model === f.relation &&
                         f.relation_table === field.relation_table &&
-                        field.name !== f.name
+                        field.name !== f.name,
                 );
                 if (others.length > 0) {
                     throw new Error("Many2many relation must have only one inverse");
@@ -58,7 +60,7 @@ export function processModelDefs(modelDefs) {
                 inverseMap.set(inverseField, field);
             } else if (field.type === "one2many") {
                 let inverseField = Object.values(relationModel).find(
-                    (f) => f.relation === model && f.name === field.inverse_name
+                    (f) => f.relation === model && f.name === field.inverse_name,
                 );
                 if (!inverseField) {
                     const backRefName = getBackRef(model, field.name);

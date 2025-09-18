@@ -3,17 +3,17 @@
 import logging
 import pytz
 
-from datetime import datetime, date
+from datetime import UTC, datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_round
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.numbers.float_utils import float_round
+from odoo.libs.web.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 
@@ -172,7 +172,7 @@ class DigestDigest(models.Model):
                 'user': user,
                 'unsubscribe_token': unsubscribe_token,
                 'tips_count': tips_count,
-                'formatted_date': datetime.today().strftime('%B %d, %Y'),
+                'formatted_date': tools.format_date(self.env, datetime.today(), date_format='MMMM dd, yyyy'),
                 'display_mobile_banner': True,
                 'kpi_data': self._compute_kpis(user.company_id, user),
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consume_tips),
@@ -192,7 +192,7 @@ class DigestDigest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
-        unsub_params = url_encode({
+        unsub_params = urlencode({
             "token": unsubscribe_token,
             "user_id": user.id,
         })
@@ -377,10 +377,10 @@ class DigestDigest(models.Model):
         return date.today() + delta
 
     def _compute_timeframes(self, company):
-        start_datetime = datetime.utcnow()
+        start_datetime = datetime.now(UTC)
         tz_name = company.resource_calendar_id.tz
         if tz_name:
-            start_datetime = pytz.timezone(tz_name).localize(start_datetime)
+            start_datetime = start_datetime.astimezone(pytz.timezone(tz_name))
         return [
             (_('Last 24 hours'), (
                 (start_datetime + relativedelta(days=-1), start_datetime),

@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
-
 const { DateTime } = luxon;
 
 export class PosPreset extends Base {
@@ -37,7 +36,7 @@ export class PosPreset extends Base {
         const dateNow = DateTime.now();
         const sqlDate = dateNow.toFormat("yyyy-MM-dd");
         return Object.values(this.uiState.availabilities[sqlDate]).find(
-            (s) => !s.isFull && s.datetime > dateNow
+            (s) => !s.isFull && s.datetime > dateNow,
         );
     }
 
@@ -63,7 +62,7 @@ export class PosPreset extends Base {
 
         const allSlots = Object.values(this.uiState.availabilities).reduce(
             (acc, curr) => Object.assign(acc, curr),
-            {}
+            {},
         );
 
         for (const [datetime, slot] of Object.entries(allSlots)) {
@@ -80,7 +79,10 @@ export class PosPreset extends Base {
         const interval = this.interval_time;
         const todayAvailabilities = this.availabilities[now.toFormat("yyyy-MM-dd")];
         for (const slot of Object.values(todayAvailabilities)) {
-            if (slot.datetime < now && slot.datetime.plus({ minutes: interval }) > now) {
+            if (
+                slot.datetime < now &&
+                slot.datetime.plus({ minutes: interval }) > now
+            ) {
                 return slot;
             }
         }
@@ -106,7 +108,9 @@ export class PosPreset extends Base {
                 });
             const dayOfWeek = (dateNow.weekday - 1).toString();
             const date = dateNow.toFormat("yyyy-MM-dd");
-            const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
+            const attToday = this.attendance_ids.filter(
+                (a) => a.dayofweek === dayOfWeek,
+            );
             slots[date] = [];
 
             for (const attendance of attToday) {
@@ -119,7 +123,9 @@ export class PosPreset extends Base {
                         const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
 
                         if (slots[date][sqlDatetime]) {
-                            slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
+                            slots[date][sqlDatetime].order_ids.add(
+                                ...(usage[sqlDatetime] || []),
+                            );
                         } else {
                             slots[date][sqlDatetime] = {
                                 periode: attendance.day_period,

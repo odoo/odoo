@@ -9,4 +9,6 @@ export class LazyTestComponent extends Component {
     }
 }
 
-registry.category("lazy_components").add("LazyTestComponent", LazyTestComponent);
+registry
+    .category("lazy_components")
+    .add("LazyTestComponent", LazyTestComponent);

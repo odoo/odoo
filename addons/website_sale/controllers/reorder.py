@@ -28,7 +28,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        lines_to_reorder = sale_order.order_line.filtered(
+        lines_to_reorder = sale_order.line_ids.filtered(
             # Skip section headers, deliveries, event tickets, ...
             lambda line: line.with_user(request.env.user).sudo()._is_reorder_allowed()
         )

@@ -1,8 +1,8 @@
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { cookie } from "@web/core/browser/cookie";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";

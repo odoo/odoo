@@ -1,8 +1,10 @@
 import { formatDuration } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
-
+import {
+    StatusBarField,
+    statusBarField,
+} from "@web/fields/display/statusbar/statusbar_field";
 export class StatusBarDurationField extends StatusBarField {
     static template = "mail.StatusBarDurationField";
 

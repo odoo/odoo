@@ -1,7 +1,5 @@
 import { useState } from "@odoo/owl";
-
 import { useService } from "@web/core/utils/hooks";
-
 export function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
     const uiArr = new Uint8Array(binData.length);
@@ -21,7 +19,12 @@ export class AttachmentUploader {
     }
 
     async uploadFile(file, options) {
-        return this.attachmentUploadService.upload(this.thread, this.composer, file, options);
+        return this.attachmentUploadService.upload(
+            this.thread,
+            this.composer,
+            file,
+            options,
+        );
     }
 
     async unlink(attachment) {

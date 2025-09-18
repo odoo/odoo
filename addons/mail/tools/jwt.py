@@ -8,7 +8,6 @@ import time
 import enum
 import hmac
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, utils
 
@@ -29,7 +28,7 @@ class Algorithm(enum.Enum):
 
 
 def _generate_keys(key_encoding, key_format) -> (bytes, bytes):
-    private_object = ec.generate_private_key(ec.SECP256R1(), default_backend())
+    private_object = ec.generate_private_key(ec.SECP256R1())
     private_int = private_object.private_numbers().private_value
     private_bytes = private_int.to_bytes(32, "big")
     public_object = private_object.public_key()
@@ -72,7 +71,7 @@ def _generate_jwt(claims: dict, key: str, algorithm: Algorithm) -> str:
         case Algorithm.ES256:
             # Retrieve the private key using a P256 elliptic curve
             private_key = ec.derive_private_key(
-                int(binascii.hexlify(key_decoded), 16), ec.SECP256R1(), default_backend()
+                int(binascii.hexlify(key_decoded), 16), ec.SECP256R1()
             )
             signature = private_key.sign(unsigned_token.encode(), ec.ECDSA(hashes.SHA256()))
             (r, s) = utils.decode_dss_signature(signature)

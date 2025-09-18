@@ -194,6 +194,7 @@ class ThreadController(http.Controller):
                     )
                 ),
             ).ids
+        res.setdefault("message_type", "comment")
         return res
 
     @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
@@ -210,12 +211,12 @@ class ThreadController(http.Controller):
             request.env.cr.execute("""
                 UPDATE mail_canned_response SET last_used=%(last_used)s
                 WHERE id IN (
-                    SELECT id from mail_canned_response WHERE id IN %(ids)s
+                    SELECT id from mail_canned_response WHERE id = ANY(%(ids)s)
                     FOR NO KEY UPDATE SKIP LOCKED
                 )
             """, {
                 'last_used': datetime.now(),
-                'ids': canned_response_ids,
+                'ids': list(canned_response_ids),
             })
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
@@ -7,9 +9,8 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-
 import { cookie } from "@web/core/browser/cookie";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 
 const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
@@ -22,13 +23,14 @@ async function createSwitchCompanyMenu(options = { toggleDelay: 0 }) {
 function patchUserActiveCompanies(cids) {
     patchWithCleanup(
         user.activeCompanies,
-        cids.map((cid) => serverState.companies.find((company) => company.id === cid))
+        cids.map((cid) => serverState.companies.find((company) => company.id === cid)),
     );
 }
 
 describe.current.tags("mobile");
 
-const clickConfirm = () => contains(".o_switch_company_menu_buttons button:first").click();
+const clickConfirm = () =>
+    contains(".o_switch_company_menu_buttons button:first").click();
 
 /**
  * @param {number} index
@@ -63,7 +65,9 @@ test("basic rendering", async () => {
     expect(".o_switch_company_item i:eq(1)").toHaveClass("fa-square-o");
     expect(".o_switch_company_item i:eq(2)").toHaveClass("fa-square-o");
 
-    expect(".o_burger_menu_companies").toHaveText("Companies\nHermit\nHerman's\nHeroes TM");
+    expect(".o_burger_menu_companies").toHaveText(
+        "Companies\nHermit\nHerman's\nHeroes TM",
+    );
 });
 
 test("companies can be toggled: toggle a second company", async () => {
@@ -269,7 +273,13 @@ test("Show search input when more that 10 companies & search filters items but i
         { id: 1, name: "Heroes TM", sequence: 3, parent_id: false, child_ids: [4, 5] },
         { id: 4, name: "Hercules", sequence: 4, parent_id: 1, child_ids: [] },
         { id: 5, name: "Hulk", sequence: 5, parent_id: 1, child_ids: [] },
-        { id: 6, name: "Random Company a", sequence: 6, parent_id: false, child_ids: [7, 8] },
+        {
+            id: 6,
+            name: "Random Company a",
+            sequence: 6,
+            parent_id: false,
+            child_ids: [7, 8],
+        },
         { id: 7, name: "Random Company aa", sequence: 7, parent_id: 6, child_ids: [] },
         { id: 8, name: "Random Company ab", sequence: 8, parent_id: 6, child_ids: [] },
         { id: 9, name: "Random d", sequence: 9, parent_id: false, child_ids: [] },

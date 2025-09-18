@@ -245,7 +245,7 @@ test("shortcodes shown in emoji title in message", async () => {
 
 test("Emoji picker shows failure to load emojis", async () => {
     // Simulate failure to load emojis
-    patchWithCleanup(odoo.loader.modules.get("@web/core/emoji_picker/emoji_data"), {
+    patchWithCleanup(odoo.loader.modules.get("@web/components/emoji_picker/emoji_data"), {
         getEmojis() {
             return [];
         },

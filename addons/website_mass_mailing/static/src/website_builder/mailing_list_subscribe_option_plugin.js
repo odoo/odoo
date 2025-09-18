@@ -1,7 +1,7 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { _t } from "@web/core/l10n/translation";
 import {  NewsletterSubscribeCommonOptionBase } from "./newsletter_subscribe_common_option";
 import { getElementsWithOption, filterExtends } from "@html_builder/utils/utils";

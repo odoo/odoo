@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
-import { patch } from "@web/core/utils/patch";
 import { qrCodeSrc } from "@point_of_sale/utils";
 
+import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
@@ -46,7 +46,10 @@ patch(PosOrder.prototype, {
     },
 
     get notLegal() {
-        return !this.l10n_sa_invoice_qr_code_str || this.l10n_sa_invoice_edi_state !== "sent";
+        return (
+            !this.l10n_sa_invoice_qr_code_str ||
+            this.l10n_sa_invoice_edi_state !== "sent"
+        );
     },
     generateQrcode() {
         if (!this.notLegal && this.isSACompany()) {

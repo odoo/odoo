@@ -3,14 +3,14 @@ import { fillEmpty } from "@html_editor/utils/dom";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { renderToElement } from "@web/core/utils/render";
-
 export class ContentExpandablePlugin extends Plugin {
     static id = "contentexpandable";
     static dependencies = ["protectedNode", "selection"];
     resources = {
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         delete_backward_overrides: this.deleteBackward.bind(this),
-        move_node_blacklist_selectors: ".o_mail_reply_container, .o_mail_reply_container *",
+        move_node_blacklist_selectors:
+            ".o_mail_reply_container, .o_mail_reply_container *",
     };
 
     setup() {
@@ -18,7 +18,10 @@ export class ContentExpandablePlugin extends Plugin {
     }
 
     deleteBackward({ endContainer }) {
-        const closestReplyContainer = closestElement(endContainer, ".o_mail_reply_container");
+        const closestReplyContainer = closestElement(
+            endContainer,
+            ".o_mail_reply_container",
+        );
         if (closestReplyContainer && isEmptyBlock(closestReplyContainer)) {
             const parentEl = closestReplyContainer.parentElement;
             closestReplyContainer.remove();
@@ -52,7 +55,9 @@ export class ContentExpandablePlugin extends Plugin {
             this.dependencies.protectedNode.setProtectingNode(subEl, false);
             subEl.classList.add("d-none");
         }
-        const mailQuoteElement = this.editable.querySelectorAll('*[data-o-mail-quote="1"]');
+        const mailQuoteElement = this.editable.querySelectorAll(
+            '*[data-o-mail-quote="1"]',
+        );
         for (const element of mailQuoteElement) {
             element.removeAttribute("data-o-mail-quote");
             element.removeAttribute("style");

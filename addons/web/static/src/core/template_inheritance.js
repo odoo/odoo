@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/template_inheritance - XPath-based QWeb template inheritance (apply, validate, deep clone) */
+
 const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
 
 let translationContext = null;
@@ -8,10 +12,11 @@ const TCTX = "t-translation-context";
  * @param {Node} node
  */
 function getTranslationContext(node) {
-    if (node.hasAttribute(TCTX)) {
-        return node.getAttribute(TCTX);
+    const el = /** @type {Element} */ (node);
+    if (el.hasAttribute(TCTX)) {
+        return el.getAttribute(TCTX);
     }
-    return getTranslationContext(node.parentElement);
+    return getTranslationContext(el.parentElement);
 }
 
 const contextByTextNode = new Map();
@@ -22,12 +27,12 @@ const contextByTextNode = new Map();
 function setTranslationContext(node) {
     switch (node.nodeType) {
         case Node.TEXT_NODE:
-            if (node.nodeValue.trim() != "") {
+            if (node.nodeValue.trim() !== "") {
                 contextByTextNode.set(node, translationContext);
             }
             break;
         case Node.ELEMENT_NODE:
-            node.setAttribute(TCTX, translationContext);
+            /** @type {Element} */ (node).setAttribute(TCTX, translationContext);
             break;
     }
 }
@@ -44,6 +49,7 @@ export function applyContextToTextNode() {
 
 /**
  * @param {Node} node
+ * @returns {Node}
  */
 export function deepClone(node) {
     const clone = node.cloneNode();
@@ -54,7 +60,7 @@ export function deepClone(node) {
     }
     if (node.childNodes?.length) {
         for (const childNode of [...node.childNodes]) {
-            clone.append(deepClone(childNode));
+            /** @type {Element} */ (clone).append(deepClone(childNode));
         }
     }
     return clone;
@@ -76,13 +82,15 @@ function addBefore(target, operation) {
     const { previousSibling } = target;
     target.before(...nodes);
     if (previousSibling?.nodeType === Node.TEXT_NODE) {
-        const [text1, text2] = previousSibling.data.split(RSTRIP_REGEXP);
-        previousSibling.data = text1.trimEnd();
+        const prevText = /** @type {Text} */ (previousSibling);
+        const [text1, text2] = prevText.data.split(RSTRIP_REGEXP);
+        prevText.data = text1.trimEnd();
         if (text2 && nodes.some((n) => n.nodeType !== Node.TEXT_NODE)) {
             const textNode = document.createTextNode(text2);
             target.before(textNode);
             if (textNode.previousSibling.nodeType === Node.TEXT_NODE) {
-                textNode.previousSibling.data = textNode.previousSibling.data.trimEnd();
+                const sibText = /** @type {Text} */ (textNode.previousSibling);
+                sibText.data = sibText.data.trimEnd();
             }
         }
     }
@@ -113,10 +121,11 @@ function getXpath(operation) {
     if (odoo.debug) {
         if (CLASS_CONTAINS_REGEX.test(xpath)) {
             const parent = operation.closest("t[t-inherit]");
-            const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
+            const templateName =
+                parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
             console.warn(
                 `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
-                    " Use the hasclass(*classes) function to filter elements by their classes"
+                    " Use the hasclass(*classes) function to filter elements by their classes",
             );
         }
     }
@@ -126,8 +135,11 @@ function getXpath(operation) {
     return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) =>
         capturedGroup
             .split(",")
-            .map((c) => `contains(concat(' ', @class, ' '), ' ${c.trim().slice(1, -1)} ')`)
-            .join(" and ")
+            .map(
+                (c) =>
+                    `contains(concat(' ', @class, ' '), ' ${c.trim().slice(1, -1)} ')`,
+            )
+            .join(" and "),
     );
 }
 
@@ -142,14 +154,22 @@ function getNode(element, operation) {
     doc.appendChild(root); // => root is the documentElement of its ownerDocument (we do that in case root is a clone)
     if (operation.tagName === "xpath") {
         const xpath = getXpath(operation);
-        const result = doc.evaluate(xpath, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE);
+        const result = doc.evaluate(
+            xpath,
+            root,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+        );
         return result.singleNodeValue;
     }
-    const attributes = [...operation.attributes].filter((attr) => !attr.name.startsWith(TCTX));
+    const attributes = [...operation.attributes].filter(
+        (attr) => !attr.name.startsWith(TCTX),
+    );
     for (const elem of root.querySelectorAll(operation.tagName)) {
         if (
             attributes.every(
-                ({ name, value }) => name === "position" || elem.getAttribute(name) === value
+                ({ name, value }) =>
+                    name === "position" || elem.getAttribute(name) === value,
             )
         ) {
             return elem;
@@ -166,7 +186,9 @@ function getNode(element, operation) {
 function getElement(element, operation) {
     const node = getNode(element, operation);
     if (!node) {
-        throw new Error(`Element '${operation.outerHTML}' cannot be located in element tree`);
+        throw new Error(
+            `Element '${operation.outerHTML}' cannot be located in element tree`,
+        );
     }
     if (!(node instanceof Element)) {
         throw new Error(`Found node ${node} instead of an element`);
@@ -182,8 +204,11 @@ function getElement(element, operation) {
 function getNodes(element, operation) {
     const nodes = [];
     for (const childNode of operation.childNodes) {
-        if (childNode.tagName === "xpath" && childNode.getAttribute?.("position") === "move") {
-            const node = getElement(element, childNode);
+        if (
+            /** @type {Element} */ (childNode).tagName === "xpath" &&
+            /** @type {Element} */ (childNode).getAttribute?.("position") === "move"
+        ) {
+            const node = getElement(element, /** @type {Element} */ (childNode));
             node.setAttribute(TCTX, getTranslationContext(node));
             removeNode(node);
             nodes.push(node);
@@ -210,19 +235,25 @@ function modifyAttributes(target, operation) {
         }
         const attributeName = child.getAttribute("name");
         const firstNode = child.childNodes[0];
-        let value = firstNode?.nodeType === Node.TEXT_NODE ? firstNode.data : "";
+        let value =
+            firstNode?.nodeType === Node.TEXT_NODE
+                ? /** @type {Text} */ (firstNode).data
+                : "";
 
         const add = child.getAttribute("add") || "";
         const remove = child.getAttribute("remove") || "";
         if (add || remove) {
             if (firstNode?.nodeType === Node.TEXT_NODE) {
-                throw new Error(`Useless element content ${firstNode.outerHTML}`);
+                throw new Error(
+                    `Useless element content ${/** @type {Element} */ (firstNode).outerHTML}`,
+                );
             }
             const separator = child.getAttribute("separator") || ",";
             const toRemove = new Set(splitAndTrim(remove, separator));
-            const values = splitAndTrim(target.getAttribute(attributeName) || "", separator).filter(
-                (s) => !toRemove.has(s)
-            );
+            const values = splitAndTrim(
+                target.getAttribute(attributeName) || "",
+                separator,
+            ).filter((s) => !toRemove.has(s));
             values.push(...splitAndTrim(add, separator).filter((s) => s));
             value = values.join(separator);
         }
@@ -230,7 +261,10 @@ function modifyAttributes(target, operation) {
         if (value) {
             target.setAttribute(attributeName, value);
             if (!(add || remove)) {
-                target.setAttribute(`t-translation-context-${attributeName}`, translationContext);
+                target.setAttribute(
+                    `t-translation-context-${attributeName}`,
+                    translationContext,
+                );
             }
         } else {
             target.removeAttribute(attributeName);
@@ -239,19 +273,21 @@ function modifyAttributes(target, operation) {
 }
 
 /**
- * Remove node and normalize surrounind text nodes (if any)
+ * Remove node and normalize surrounding text nodes (if any)
  * Note: we assume that node has a parent element
  * @param {Node} node
  */
 function removeNode(node) {
     const { nextSibling, previousSibling } = node;
-    node.remove();
+    /** @type {ChildNode} */ (node).remove();
     if (
         nextSibling?.nodeType === Node.TEXT_NODE &&
         previousSibling?.nodeType === Node.TEXT_NODE &&
         previousSibling.parentElement.firstChild === previousSibling
     ) {
-        previousSibling.data = previousSibling.data.trimEnd();
+        /** @type {Text} */ (previousSibling).data = /** @type {Text} */ (
+            previousSibling
+        ).data.trimEnd();
     }
 }
 
@@ -268,7 +304,7 @@ function replace(root, target, operation) {
                 ".//*[text()='$0']",
                 operation,
                 null,
-                XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+                XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
             );
             target.setAttribute(TCTX, getTranslationContext(target));
             for (let i = 0; i < result.snapshotLength; i++) {
@@ -291,7 +327,7 @@ function replace(root, target, operation) {
                         comment = child;
                     }
                 }
-                root = deepClone(operationContent);
+                root = /** @type {Element} */ (deepClone(operationContent));
                 if (target.hasAttribute("t-name")) {
                     root.setAttribute("t-name", target.getAttribute("t-name"));
                 }
@@ -331,10 +367,10 @@ export function applyInheritance(root, operations, url = "") {
         if (odoo.debug && url) {
             const attributes = [...operation.attributes].map(
                 ({ name, value }) =>
-                    `${name}=${JSON.stringify(name === "position" ? position : value)}`
+                    `${name}=${JSON.stringify(name === "position" ? position : value)}`,
             );
             const comment = document.createComment(
-                ` From file: ${url} ; ${attributes.join(" ; ")} `
+                ` From file: ${url} ; ${attributes.join(" ; ")} `,
             );
             if (position === "attributes") {
                 target.before(comment); // comment won't be visible if target is root

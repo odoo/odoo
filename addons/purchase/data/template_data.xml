@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <template id="track_po_line_template">
+        <div>
+            <strong>The ordered quantity has been updated.</strong>
+            <ul>
+                <li><t t-esc="line.product_id.display_name" />:</li> Ordered Quantity: <t
+                    t-esc="line.product_qty" /> -&gt; <t t-esc="float(product_qty)" /><br />
+                <t
+                    t-if='line.order_id.product_id.type != "consu"'> Received Quantity: <t
+                        t-esc="line.qty_transferred" /><br />
+                </t> Billed Quantity: <t
+                    t-esc="line.qty_invoiced" />
+            </ul>
+        </div>
+    </template>
+
+    <template id="track_po_line_qty_transferred_template">
+        <div>
+            <strong>The received quantity has been updated.</strong>
+            <ul>
+                <li><t t-esc="line.product_id.display_name" />:</li> Received Quantity: <t
+                    t-esc="line.qty_transferred" /> -&gt; <t t-esc="float(qty_transferred)" /><br />
+            </ul>
+        </div>
+    </template>
+
+    <template id="track_po_qty_update_template">
+        <div>
+            <strong t-if="change_type == 'product_qty'">Ordered quantities updated for <t t-esc="count" />
+                lines:</strong>
+            <strong t-if="change_type == 'qty_transferred'">Received quantities updated for <t
+                    t-esc="count" /> lines:</strong>
+            <ul>
+                <t t-foreach="changes" t-as="change">
+                    <li>
+                        <strong><t t-esc="change['line'].product_id.display_name" />:</strong>
+                        <t
+                            t-esc="change['old_qty']" /> -&gt; <t t-esc="change['new_qty']" />
+                        <t
+                            t-if="change_type == 'ordered' and change['line'].product_id.type != 'consu'">
+                        (Received: <t t-esc="change['line'].qty_transferred" />) </t>
+                        <t
+                            t-if="change_type == 'ordered'"> (Billed: <t
+                                t-esc="change['line'].qty_invoiced" />) </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </template>
+
+</odoo>

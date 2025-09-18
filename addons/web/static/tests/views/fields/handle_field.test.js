@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -12,7 +14,11 @@ import {
 
 class Partner extends models.Model {
     display_name = fields.Char({ string: "Displayed name", searchable: true });
-    p = fields.One2many({ string: "one2many field", relation: "partner", searchable: true });
+    p = fields.One2many({
+        string: "one2many field",
+        relation: "partner",
+        searchable: true,
+    });
     sequence = fields.Integer({ string: "Sequence", searchable: true });
     _records = [
         {

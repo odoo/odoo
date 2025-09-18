@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
+import { Field, getPropertyFieldInfo } from "@web/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { SubtaskCreate } from "./subtask_kanban_create/subtask_kanban_create";
 

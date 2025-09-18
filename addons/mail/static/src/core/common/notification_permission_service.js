@@ -1,5 +1,4 @@
 import { reactive } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import {
     isAndroidApp,
@@ -9,7 +8,6 @@ import {
 } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
 async function getIosPwaPermission() {
     if (browser.location.protocol !== "https:") {
         return "denied";
@@ -58,32 +56,43 @@ export const notificationPermissionService = {
                 isIosApp() || isAndroidApp()
                     ? "denied"
                     : this._normalizePermission(
-                          permission?.state ?? browser.Notification?.permission
+                          permission?.state ?? browser.Notification?.permission,
                       ),
             requestPermission: async () => {
                 if (browser.Notification && state.permission === "prompt") {
                     state.permission = this._normalizePermission(
-                        await browser.Notification.requestPermission()
+                        await browser.Notification.requestPermission(),
                     );
                     if (state.permission === "denied") {
-                        notification.add(_t("Odoo will not send notifications on this device."), {
-                            type: "warning",
-                            title: _t("Notifications blocked"),
-                        });
+                        notification.add(
+                            _t("Odoo will not send notifications on this device."),
+                            {
+                                type: "warning",
+                                title: _t("Notifications blocked"),
+                            },
+                        );
                     } else if (state.permission === "granted") {
-                        notification.add(_t("Odoo will send notifications on this device!"), {
-                            type: "success",
-                            title: _t("Notifications allowed"),
-                        });
+                        notification.add(
+                            _t("Odoo will send notifications on this device!"),
+                            {
+                                type: "success",
+                                title: _t("Notifications allowed"),
+                            },
+                        );
                     }
                 }
             },
         });
         if (permission && !isIOS()) {
-            permission.addEventListener("change", () => (state.permission = permission.state));
+            permission.addEventListener(
+                "change",
+                () => (state.permission = permission.state),
+            );
         }
         return state;
     },
 };
 
-registry.category("services").add("mail.notification.permission", notificationPermissionService);
+registry
+    .category("services")
+    .add("mail.notification.permission", notificationPermissionService);

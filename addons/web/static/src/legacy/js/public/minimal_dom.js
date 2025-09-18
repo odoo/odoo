@@ -1,7 +1,12 @@
-import { addLoadingEffect } from '@web/core/utils/ui';
+// @ts-check
+
+/** @module @web/legacy/js/public/minimal_dom - Async handler protection and button debouncing utilities for public DOM events */
+
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 
 export const DEBOUNCE = 400;
-export const BUTTON_HANDLER_SELECTOR = 'a, button, input[type="submit"], input[type="button"], .btn';
+export const BUTTON_HANDLER_SELECTOR =
+    'a, button, input[type="submit"], input[type="button"], .btn';
 
 /**
  * Protects a function which is to be used as a handler by preventing its
@@ -13,15 +18,21 @@ export const BUTTON_HANDLER_SELECTOR = 'a, button, input[type="submit"], input[t
  * will be ignored too. Using the 'preventDefault' and 'stopPropagation'
  * arguments solves that problem.
  *
- * @param {function} fct
+ * @param {(...args: any[]) => any} fct
  *      The function which is to be used as a handler. If a promise
  *      is returned, it is used to determine when the handler's action is
  *      finished. Otherwise, the return is used as jQuery uses it.
- * @param {function|boolean} preventDefault
- * @param {function|boolean} stopPropagation
- * @param {function|boolean} stopImmediatePropagation
+ * @param {((...args: any[]) => boolean) | boolean} [preventDefault]
+ * @param {((...args: any[]) => boolean) | boolean} [stopPropagation]
+ * @param {((...args: any[]) => boolean) | boolean} [stopImmediatePropagation]
+ * @returns {(ev: Event) => any}
  */
-export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
+export function makeAsyncHandler(
+    fct,
+    preventDefault,
+    stopPropagation,
+    stopImmediatePropagation,
+) {
     let pending = false;
     function _isLocked() {
         return pending;
@@ -33,13 +44,19 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmed
         pending = false;
     }
     return function (ev) {
-        if (preventDefault === true || preventDefault && preventDefault()) {
+        if (preventDefault === true || (preventDefault && preventDefault())) {
             ev.preventDefault();
         }
-        if (stopPropagation === true || stopPropagation && stopPropagation()) {
+        if (
+            stopPropagation === true ||
+            (stopPropagation && stopPropagation())
+        ) {
             ev.stopPropagation();
         }
-        if (stopImmediatePropagation === true || stopImmediatePropagation && stopImmediatePropagation()) {
+        if (
+            stopImmediatePropagation === true ||
+            (stopImmediatePropagation && stopImmediatePropagation())
+        ) {
             ev.stopImmediatePropagation();
         }
 
@@ -50,7 +67,7 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmed
         }
 
         _lock();
-        const result = fct.apply(this, arguments);
+        const result = fct.apply(this, /** @type {any} */ (arguments));
         Promise.resolve(result).finally(_unlock);
         return result;
     };
@@ -65,24 +82,37 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmed
  * become enabled again once any handler's action finishes (multiple click
  * handlers should however not be bound to the same button).
  *
- * @param {function} fct
+ * @param {(...args: any[]) => any} fct
  *      The function which is to be used as a button click handler. If a
  *      promise is returned, it is used to determine when the button can be
  *      re-enabled. Otherwise, the return is used as jQuery uses it.
- * @param {function|boolean} preventDefault
- * @param {function|boolean} stopPropagation
- * @param {function|boolean} stopImmediatePropagation
+ * @param {((...args: any[]) => boolean) | boolean} [preventDefault]
+ * @param {((...args: any[]) => boolean) | boolean} [stopPropagation]
+ * @param {((...args: any[]) => boolean) | boolean} [stopImmediatePropagation]
+ * @returns {(ev: Event) => any}
  */
-export function makeButtonHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
+export function makeButtonHandler(
+    fct,
+    preventDefault,
+    stopPropagation,
+    stopImmediatePropagation,
+) {
     // Fallback: if the final handler is not bound to a button, at least
     // make it an async handler (also handles the case where some events
     // might ignore the disabled state of the button).
-    fct = makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation);
+    fct = makeAsyncHandler(
+        fct,
+        preventDefault,
+        stopPropagation,
+        stopImmediatePropagation,
+    );
 
     return function (ev) {
-        const result = fct.apply(this, arguments);
+        const result = fct.apply(this, /** @type {any} */ (arguments));
 
-        const buttonEl = ev.target.closest(BUTTON_HANDLER_SELECTOR);
+        const buttonEl = /** @type {Element | null} */ (ev.target)?.closest(
+            BUTTON_HANDLER_SELECTOR,
+        );
         if (!(buttonEl instanceof HTMLElement)) {
             return result;
         }
@@ -92,9 +122,11 @@ export function makeButtonHandler(fct, preventDefault, stopPropagation, stopImme
         // a 'real' debounce creation useless. Also, during the debouncing
         // part, the button is disabled without any visual effect.
         buttonEl.classList.add("pe-none");
-        new Promise(resolve => setTimeout(resolve, DEBOUNCE)).then(() => {
+        new Promise((resolve) => setTimeout(resolve, DEBOUNCE)).then(() => {
             buttonEl.classList.remove("pe-none");
-            const restore = addLoadingEffect(buttonEl);
+            const restore = /** @type {(value: any) => any} */ (
+                addLoadingEffect(/** @type {HTMLButtonElement} */ (buttonEl))
+            );
             return Promise.resolve(result).then(restore, restore);
         });
 

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
 const WARNING_TYPE_ORDER = ["danger", "warning", "info"];
@@ -28,9 +28,9 @@ export class ActionableErrors extends Component {
         if (errorData.action_call) {
             const [model, method, args] = errorData.action_call;
             await this.orm.call(model, method, [args]);
-            this.env.model.action.doAction("soft_reload");
+            this.actionService.doAction("soft_reload");
         } else {
-            this.env.model.action.doAction(errorData.action);
+            this.actionService.doAction(errorData.action);
         }
     }
 

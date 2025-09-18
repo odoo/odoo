@@ -28,7 +28,7 @@ Generate tasks in Project app from a form published on your website. This module
             # utils.js in its assets, otherwise, there will be an unmet
             # dependency.
             'website/static/src/js/utils.js',
-            'web/static/src/core/autocomplete/*',
+            'web/static/src/components/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
         ],
     },

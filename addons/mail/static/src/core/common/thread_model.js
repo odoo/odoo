@@ -1,12 +1,10 @@
 import { AND, fields, Record } from "@mail/core/common/record";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { assignDefined } from "@mail/utils/common/misc";
-import { rpc } from "@web/core/network/rpc";
-
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
-
+import { user } from "@web/services/user";
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
@@ -91,7 +89,8 @@ export class Thread extends Record {
     }
     get canUnpin() {
         return (
-            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+            this.parent_channel_id ||
+            this.allowedToUnpinChannelTypes.includes(this.channel_type)
         );
     }
     /** @type {boolean} */
@@ -293,7 +292,8 @@ export class Thread extends Record {
 
     get attachmentsInWebClientView() {
         const attachments = this.attachments.filter(
-            (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
+            (attachment) =>
+                (attachment.isPdf || attachment.isImage) && !attachment.uploading,
         );
         attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
@@ -313,6 +313,10 @@ export class Thread extends Record {
             this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
+    }
+
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
     }
 
     /**
@@ -367,7 +371,7 @@ export class Thread extends Record {
 
     get lastEditableMessageOfSelf() {
         const editableMessagesBySelf = this.nonEmptyMessages.filter(
-            (message) => message.isSelfAuthored && message.editable
+            (message) => message.isSelfAuthored && message.editable,
         );
         if (editableMessagesBySelf.length > 0) {
             return editableMessagesBySelf.at(-1);
@@ -393,7 +397,7 @@ export class Thread extends Record {
     newestPersistentAllMessages = fields.Many("mail.message", {
         compute() {
             const allPersistentMessages = this.allMessages.filter((message) =>
-                Number.isInteger(message.id)
+                Number.isInteger(message.id),
             );
             allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
             return allPersistentMessages;
@@ -428,7 +432,9 @@ export class Thread extends Record {
     }
 
     get persistentMessages() {
-        return this.messages.filter((message) => !message.is_transient && !message.isPending);
+        return this.messages.filter(
+            (message) => !message.is_transient && !message.isPending,
+        );
     }
 
     get prefix() {
@@ -449,7 +455,7 @@ export class Thread extends Record {
             "discuss.channel",
             command.methodName,
             [[this.id]],
-            { body }
+            { body },
         );
     }
 
@@ -486,7 +492,9 @@ export class Thread extends Record {
             ...this.getFetchParams(),
             fetch_params: {
                 limit:
-                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
+                    !around && around !== 0
+                        ? this.store.FETCH_LIMIT
+                        : this.store.FETCH_LIMIT * 2,
                 after,
                 around,
                 before,
@@ -512,15 +520,19 @@ export class Thread extends Record {
             return;
         }
         if (
-            (after !== undefined && !this.messages.some((message) => message.id === after)) ||
-            (before !== undefined && !this.messages.some((message) => message.id === before))
+            (after !== undefined &&
+                !this.messages.some((message) => message.id === after)) ||
+            (before !== undefined &&
+                !this.messages.some((message) => message.id === before))
         ) {
             // there might have been a jump to message during RPC fetch.
             // Abort feeding messages as to not put holes in message list.
             return;
         }
         const alreadyKnownMessages = new Set(this.messages.map(({ id }) => id));
-        const messagesToAdd = fetched.filter((message) => !alreadyKnownMessages.has(message.id));
+        const messagesToAdd = fetched.filter(
+            (message) => !alreadyKnownMessages.has(message.id),
+        );
         if (epoch === "older") {
             this.messages.unshift(...messagesToAdd);
         } else {
@@ -532,7 +544,7 @@ export class Thread extends Record {
             } else if (epoch === "newer") {
                 this.loadNewer = false;
                 const missingMessages = this.pendingNewMessages.filter(
-                    ({ id }) => !alreadyKnownMessages.has(id)
+                    ({ id }) => !alreadyKnownMessages.has(id),
                 );
                 if (missingMessages.length > 0) {
                     this.messages.push(...missingMessages);
@@ -575,7 +587,9 @@ export class Thread extends Record {
         if (after === undefined) {
             startIndex = 0;
         } else {
-            const afterIndex = this.messages.findIndex((message) => message.id === after);
+            const afterIndex = this.messages.findIndex(
+                (message) => message.id === after,
+            );
             if (afterIndex === -1) {
                 // there might have been a jump to message during RPC fetch.
                 // Abort feeding messages as to not put holes in message list.
@@ -590,7 +604,7 @@ export class Thread extends Record {
                 !alreadyKnownMessages.has(message.id) &&
                 (this.persistentMessages.length === 0 ||
                     message.id < this.oldestPersistentMessage.id ||
-                    message.id > this.newestPersistentMessage.id)
+                    message.id > this.newestPersistentMessage.id),
         );
         this.messages.splice(startIndex, 0, ...filtered);
         Object.assign(this, {
@@ -598,8 +612,8 @@ export class Thread extends Record {
                 after === undefined && fetched.length === this.store.FETCH_LIMIT
                     ? true
                     : after === undefined && fetched.length !== this.store.FETCH_LIMIT
-                    ? false
-                    : this.loadOlder,
+                      ? false
+                      : this.loadOlder,
         });
     }
 
@@ -665,10 +679,16 @@ export class Thread extends Record {
         this.loadNewer = messageId !== undefined ? true : false;
         this.loadOlder = true;
         const limit =
-            !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
+            !messageId && messageId !== 0
+                ? this.store.FETCH_LIMIT
+                : this.store.FETCH_LIMIT * 2;
         if (this.messages.length < limit) {
-            const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
-            const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
+            const olderMessagesCount = this.messages.filter(
+                ({ id }) => id < messageId,
+            ).length;
+            const newerMessagesCount = this.messages.filter(
+                ({ id }) => id > messageId,
+            ).length;
             if (olderMessagesCount < limit / 2 - 1) {
                 this.loadOlder = false;
             }
@@ -680,19 +700,25 @@ export class Thread extends Record {
     }
 
     async markAllMessagesAsRead() {
-        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
+        await this.store.env.services.orm.silent.call(
+            "mail.message",
+            "mark_all_as_read",
             [
-                ["model", "=", this.model],
-                ["res_id", "=", this.id],
+                [
+                    ["model", "=", this.model],
+                    ["res_id", "=", this.id],
+                ],
             ],
-        ]);
+        );
         this.message_needaction_counter = 0;
     }
 
     async markAsFetched() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
-            [this.id],
-        ]);
+        await this.store.env.services.orm.silent.call(
+            "discuss.channel",
+            "channel_fetched",
+            [[this.id]],
+        );
     }
 
     /**
@@ -725,7 +751,7 @@ export class Thread extends Record {
             "discuss.channel",
             "channel_change_description",
             [[this.id]],
-            { description }
+            { description },
         );
     }
 
@@ -740,14 +766,19 @@ export class Thread extends Record {
         return false;
     }
 
-    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact, swapOpened } = {}) {
+    async openChatWindow({
+        focus = false,
+        fromMessagingMenu,
+        bypassCompact,
+        swapOpened,
+    } = {}) {
         const thread = await this.store.Thread.getOrFetch(this);
         if (!thread) {
             return;
         }
         await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
+            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact }),
         );
         cw.open({ focus, swapOpened });
         return cw;
@@ -772,7 +803,7 @@ export class Thread extends Record {
                     "discuss.channel",
                     "channel_rename",
                     [[this.id]],
-                    { name: newName }
+                    { name: newName },
                 );
             } else if (this.supportsCustomChannelName) {
                 if (this.self_member_id) {
@@ -782,7 +813,7 @@ export class Thread extends Record {
                     "discuss.channel",
                     "channel_set_custom_name",
                     [[this.id]],
-                    { name: newName }
+                    { name: newName },
                 );
             }
         }
@@ -790,7 +821,11 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
+        if (
+            tmpMsg &&
+            tmpMsg.in(this.messages) &&
+            this.effectiveSelf.eq(message.author)
+        ) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -805,7 +840,11 @@ export class Thread extends Record {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
         const { attachments, parentId } = postData;
-        const params = await this.store.getMessagePostParams({ body, postData, thread: this });
+        const params = await this.store.getMessagePostParams({
+            body,
+            postData,
+            thread: this,
+        });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
         params.context = { ...user.context, ...params.context, temporary_id: tmpId };
@@ -860,9 +899,11 @@ export class Thread extends Record {
     /** @param {number} index */
     async setMainAttachmentFromIndex(index) {
         this.message_main_attachment_id = this.attachmentsInWebClientView[index];
-        await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
-            this.message_main_attachment_id.id,
-        ]);
+        await this.store.env.services.orm.call(
+            "ir.attachment",
+            "register_as_main_attachment",
+            [this.message_main_attachment_id.id],
+        );
     }
 
     /**
@@ -893,20 +934,24 @@ export class Thread extends Record {
             !force
         ) {
             await this.askLeaveConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
+                _t(
+                    "You are the administrator of this channel. Are you sure you want to leave?",
+                ),
             );
         }
         if (this.channel_type === "group" && !force) {
             await this.askLeaveConfirmation(
                 _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?",
+                ),
             );
         }
         await this.closeChatWindow();
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
+        await this.store.env.services.orm.silent.call(
+            "discuss.channel",
+            "action_unfollow",
+            [this.id],
+        );
     }
 
     _getActualModelName() {

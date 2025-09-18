@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
 
+import { Dialog } from "@web/ui/dialog/dialog";
 export class CancelDialog extends Component {
     static template = "pos_glory_cash.CancelDialog";
     static components = { Dialog };

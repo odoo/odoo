@@ -1,6 +1,6 @@
 import { Component, useState, useSubEnv } from '@odoo/owl';
-import { formatCurrency } from '@web/core/currency';
-import { Dialog } from '@web/core/dialog/dialog';
+import { formatCurrency } from '@web/services/currency';
+import { Dialog } from '@web/ui/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { useService } from '@web/core/utils/hooks';

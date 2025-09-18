@@ -1,13 +1,20 @@
-import { Component, onWillUnmount, useState, useSubEnv, useRef, onMounted } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { useService } from "@web/core/utils/hooks";
-import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
-import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import {
-    getProductVariantByAttributes,
+    Component,
+    onMounted,
+    onWillUnmount,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
+import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
+import {
     getAttributeValues,
     getAttributeValuesExtraPrice,
+    getProductVariantByAttributes,
 } from "@pos_self_order/app/services/card_utils";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { useService } from "@web/core/utils/hooks";
+import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -48,7 +55,7 @@ export class ProductPage extends Component {
                     {
                         root: null,
                         threshold: 0,
-                    }
+                    },
                 );
                 this.observer.observe(productNameEl);
             }
@@ -73,7 +80,8 @@ export class ProductPage extends Component {
             return false;
         }
         return (
-            el.scrollHeight > el.clientHeight && this.productTemplate.attribute_line_ids.length > 1
+            el.scrollHeight > el.clientHeight &&
+            this.productTemplate.attribute_line_ids.length > 1
         );
     }
 
@@ -100,7 +108,9 @@ export class ProductPage extends Component {
         if (!selection) {
             return true;
         }
-        return Boolean(selection.getMissingAttributeValue(this.productTemplate.attribute_line_ids));
+        return Boolean(
+            selection.getMissingAttributeValue(this.productTemplate.attribute_line_ids),
+        );
     }
 
     isAddToCartEnabled() {
@@ -122,7 +132,9 @@ export class ProductPage extends Component {
         const variantAttributeValueIds = selection
             .getAllSelectedAttributeValuesIds()
             .map((attr) => Number(attr));
-        return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
+        return this.props.productTemplate._isArchivedCombination(
+            variantAttributeValueIds,
+        );
     }
 
     getProductPrice() {
@@ -131,11 +143,11 @@ export class ProductPage extends Component {
         const productVariant = getProductVariantByAttributes(
             this.selfOrder.models,
             this.props.productTemplate,
-            attributeIds
+            attributeIds,
         );
 
         const priceExtra = getAttributeValuesExtraPrice(
-            getAttributeValues(attributeIds, this.selfOrder.models)
+            getAttributeValues(attributeIds, this.selfOrder.models),
         );
 
         const price = this.props.productTemplate.getPrice(
@@ -143,7 +155,7 @@ export class ProductPage extends Component {
             1,
             priceExtra,
             false,
-            productVariant
+            productVariant,
         );
         const taxDetails = this.props.productTemplate.getTaxDetails({
             overridedValues: { price_unit: price, quantity: this.state.qty },
@@ -170,7 +182,7 @@ export class ProductPage extends Component {
             this.state.qty,
             "",
             this.getSelectedAttributesValues(),
-            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
+            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues(),
         );
 
         this.goBack();
@@ -183,7 +195,7 @@ export class ProductPage extends Component {
     scrollUpToRequired() {
         const selection = this.state.selectedValues[this.productTemplate.id];
         const missingAttribute = selection?.getMissingAttributeValue(
-            this.productTemplate.attribute_line_ids
+            this.productTemplate.attribute_line_ids,
         );
         document
             .getElementById(missingAttribute?.attribute_id?.id)

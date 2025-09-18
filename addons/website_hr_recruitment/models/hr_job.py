@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import mute_logger
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
 
 

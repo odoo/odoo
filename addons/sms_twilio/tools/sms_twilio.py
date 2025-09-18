@@ -2,7 +2,7 @@ import base64
 import hashlib
 import hmac
 
-from werkzeug.urls import url_join
+from urllib.parse import urljoin as url_join
 
 from odoo.addons.phone_validation.tools import phone_validation
 

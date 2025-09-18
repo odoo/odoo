@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, click, tick } from "@odoo/hoot-dom";
 
 async function insertSeparator(editor) {
     execCommand(editor, "insertSeparator");
@@ -142,5 +142,19 @@ describe("insert separator", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(`<p>[abc]</p><hr contenteditable="false"><p>xyz</p>`);
+    });
+
+    test("should remove custom selection on separator when click outside of editor", async () => {
+        const { el } = await setupEditor('<p>[abc</p><hr contenteditable="false"><p>xyz]</p>');
+        expect(getContent(el)).toBe(
+            `<p>[abc</p><hr contenteditable="false" class="o_selected_hr"><p>xyz]</p>`
+        );
+
+        const selection = document.getSelection();
+        await click(document.body);
+        selection.setPosition(document.body);
+        await tick();
+
+        expect(getContent(el)).toBe(`<p>abc</p><hr contenteditable="false"><p>xyz</p>`);
     });
 });

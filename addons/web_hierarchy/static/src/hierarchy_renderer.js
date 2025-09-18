@@ -2,7 +2,7 @@ import { Component, useRef, onPatched } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web/core/utils/dom/scrolling";
 
 import { HierarchyCard } from "./hierarchy_card";
 import { useHierarchyNodeDraggable } from "./hierarchy_node_draggable";

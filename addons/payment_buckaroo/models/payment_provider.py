@@ -2,7 +2,7 @@
 
 from hashlib import sha1
 
-from werkzeug import urls
+from urllib.parse import unquote_plus
 
 from odoo import fields, models
 
@@ -76,7 +76,7 @@ class PaymentProvider(models.Model):
             # Incoming communication values must be URL-decoded before checking the signature. The
             # key 'brq_signature' must be ignored.
             items = [
-                (k, urls.url_unquote_plus(v)) for k, v in values.items()
+                (k, unquote_plus(v)) for k, v in values.items()
                 if k.lower() != 'brq_signature'
             ]
         else:

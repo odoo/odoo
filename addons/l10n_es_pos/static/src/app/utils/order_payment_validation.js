@@ -1,8 +1,7 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
-import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
+import { patch } from "@web/core/utils/patch";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 patch(OrderPaymentValidation.prototype, {
     shouldDownloadInvoice() {
         return this.pos.config.is_spanish
@@ -11,9 +10,11 @@ patch(OrderPaymentValidation.prototype, {
     },
     async beforePostPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.is_spanish) {
-            const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
-                order_server_ids,
-            ]);
+            const invoiceName = await this.pos.data.call(
+                "pos.order",
+                "get_invoice_name",
+                [order_server_ids],
+            );
             order.invoice_name = invoiceName;
         }
         return super.beforePostPushOrderResolve(...arguments);
@@ -26,14 +27,14 @@ patch(OrderPaymentValidation.prototype, {
                 this.pos.env.services.dialog.add(AlertDialog, {
                     title: _t("Error"),
                     body: _t(
-                        "Order amount is too large for a simplified invoice, use an invoice instead."
+                        "Order amount is too large for a simplified invoice, use an invoice instead.",
                     ),
                 });
                 return false;
             }
             if (this.order.is_l10n_es_simplified_invoice) {
                 this.order.to_invoice = Boolean(
-                    this.pos.config.raw.l10n_es_simplified_invoice_journal_id
+                    this.pos.config.raw.l10n_es_simplified_invoice_journal_id,
                 );
                 if ((await this._askForCustomerIfRequired()) === false) {
                     return false;

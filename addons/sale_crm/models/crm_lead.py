@@ -46,13 +46,13 @@ class CrmLead(models.Model):
         action['domain'] = Domain.AND([[('opportunity_id', '=', self.id)], self._get_action_view_sale_quotation_domain()])
         quotations = self.order_ids.filtered_domain(self._get_action_view_sale_quotation_domain())
         if len(quotations) == 1:
-            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['views'] = [(self.env.ref('sale.view_sale_order_form').id, 'form')]
             action['res_id'] = quotations.id
         return action
 
     def action_view_sale_order(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_sale_order")
         action['context'] = {
             'search_default_partner_id': self.partner_id.id,
             'default_partner_id': self.partner_id.id,
@@ -61,7 +61,7 @@ class CrmLead(models.Model):
         action['domain'] = Domain.AND([[('opportunity_id', '=', self.id)], self._get_lead_sale_order_domain()])
         orders = self.order_ids.filtered_domain(self._get_lead_sale_order_domain())
         if len(orders) == 1:
-            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['views'] = [(self.env.ref('sale.view_sale_order_form').id, 'form')]
             action['res_id'] = orders.id
         return action
 

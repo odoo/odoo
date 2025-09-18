@@ -67,7 +67,7 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         registrations = self._process_attendees_form(event, post)
         order_sudo = request.cart
-        if not any(line.event_ticket_id for line in order_sudo.order_line):
+        if not any(line.event_ticket_id for line in order_sudo.line_ids):
             # order does not contain any tickets, meaning we are confirming a free event
             return res
 

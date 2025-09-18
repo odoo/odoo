@@ -2,7 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { makeContext } from "@web/core/context";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class BoardAction extends Component {

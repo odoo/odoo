@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/components/dropdown/dropdown";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";

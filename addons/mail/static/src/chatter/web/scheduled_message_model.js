@@ -1,7 +1,6 @@
 import { fields, Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
-
 export class ScheduledMessage extends Record {
     static _name = "mail.scheduled.message";
     static id = "id";
@@ -45,7 +44,8 @@ export class ScheduledMessage extends Record {
 
     get isSubjectThreadName() {
         return (
-            this.thread.display_name?.trim().toLowerCase() === this.subject?.trim().toLowerCase()
+            this.thread.display_name?.trim().toLowerCase() ===
+            this.subject?.trim().toLowerCase()
         );
     }
 
@@ -67,21 +67,24 @@ export class ScheduledMessage extends Record {
             action = await this.store.env.services.orm.call(
                 "mail.scheduled.message",
                 "open_edit_form",
-                [this.id]
+                [this.id],
             );
         } catch {
             this.notifyAlreadySent();
             return;
         }
         return new Promise((resolve) =>
-            this.store.env.services.action.doAction(action, { onClose: resolve })
+            this.store.env.services.action.doAction(action, { onClose: resolve }),
         );
     }
 
     notifyAlreadySent() {
-        this.store.env.services.notification.add(_t("This message has already been sent."), {
-            type: "warning",
-        });
+        this.store.env.services.notification.add(
+            _t("This message has already been sent."),
+            {
+                type: "warning",
+            },
+        );
     }
 
     /**
@@ -89,9 +92,11 @@ export class ScheduledMessage extends Record {
      */
     async send() {
         try {
-            await this.store.env.services.orm.call("mail.scheduled.message", "post_message", [
-                this.id,
-            ]);
+            await this.store.env.services.orm.call(
+                "mail.scheduled.message",
+                "post_message",
+                [this.id],
+            );
         } catch {
             // already sent (by someone else or by cron)
             return;

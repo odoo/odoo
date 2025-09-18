@@ -1,8 +1,8 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-import { formatFloatTime } from "@web/views/fields/formatters";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
+import { formatFloatTime } from "@web/fields/formatters";
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { KanbanMany2OneAvatarEmployeeField } from "@hr/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field";

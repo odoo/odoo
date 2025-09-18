@@ -7,9 +7,9 @@ import {
     patchWithCleanup,
     contains,
 } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { htmlEditorVersions } from "@html_editor/html_migrations/html_migrations_utils";
-import { PropertyValue } from "@web/views/fields/properties/property_value";
+import { PropertyValue } from "@web/fields/specialized/properties/property_value";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { queryOne } from "@odoo/hoot-dom";

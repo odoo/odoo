@@ -5,12 +5,13 @@ import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
-const { formatValue, isDefined, toCartesian, toXC } = helpers;
 import {
     isMarkdownViewUrl,
     isMarkdownIrMenuIdUrl,
     isIrMenuXmlUrl,
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
+
+const { formatValue, isDefined, toCartesian, toXC } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel

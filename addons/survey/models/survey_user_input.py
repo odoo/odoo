@@ -145,9 +145,9 @@ class SurveyUser_Input(models.Model):
                 AND all_attempts_user_input.test_entry IS NOT TRUE
                 AND (user_input.invite_token IS NULL OR user_input.invite_token = all_attempts_user_input.invite_token)
                 AND (user_input.partner_id = all_attempts_user_input.partner_id OR user_input.email = all_attempts_user_input.email)
-                WHERE user_input.id IN %s
+                WHERE user_input.id = ANY(%s)
                 GROUP BY user_input.id;
-            """, (tuple(attempts_to_compute.ids),))
+            """, (list(attempts_to_compute.ids),))
 
             attempts_number_results = self.env.cr.dictfetchall()
 

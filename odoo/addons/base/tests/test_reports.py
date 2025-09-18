@@ -1,54 +1,65 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
 from base64 import b64decode
-from unittest import skipIf
 
-import odoo
+from pdfminer.converter import PDFPageAggregator
+from pdfminer.layout import LAParams, LTFigure, LTTextBox
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
+
 import odoo.tests
-
-try:
-    from pdfminer.converter import PDFPageAggregator
-    from pdfminer.layout import LAParams, LTFigure, LTTextBox
-    from pdfminer.pdfdocument import PDFDocument
-    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-    from pdfminer.pdfpage import PDFPage
-    from pdfminer.pdfparser import PDFParser
-    pdfminer = True
-except ImportError:
-    pdfminer = False
 
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'post_install_l10n')
+@odoo.tests.tagged("post_install", "-at_install", "post_install_l10n")
 class TestReports(odoo.tests.TransactionCase):
     def test_reports(self):
-        invoice_domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt'))]
+        invoice_domain = [
+            (
+                "move_type",
+                "in",
+                (
+                    "out_invoice",
+                    "out_refund",
+                    "out_receipt",
+                    "in_invoice",
+                    "in_refund",
+                    "in_receipt",
+                ),
+            )
+        ]
         specific_model_domains = {
-            'account.report_original_vendor_bill': [('move_type', 'in', ('in_invoice', 'in_receipt'))],
-            'account.report_invoice_with_payments': invoice_domain,
-            'account.report_invoice': invoice_domain,
-            'l10n_th.report_commercial_invoice': invoice_domain,
+            "account.report_original_vendor_bill": [
+                ("move_type", "in", ("in_invoice", "in_receipt"))
+            ],
+            "account.report_invoice_with_payments": invoice_domain,
+            "account.report_invoice": invoice_domain,
+            "l10n_th.report_commercial_invoice": invoice_domain,
         }
         extra_data_reports = {
             "im_livechat.report_livechat_conversation": {
                 "company": self.env["res.company"].search([], limit=1)
             },
         }
-        Report = self.env['ir.actions.report']
-        for report in Report.search([('report_type', 'like', 'qweb')]):
-            report_model = 'report.%s' % report.report_name
+        Report = self.env["ir.actions.report"]
+        for report in Report.search([("report_type", "like", "qweb")]):
+            report_model = "report.%s" % report.report_name
             try:
                 self.env[report_model]
             except KeyError:
                 # Only test the generic reports here
                 _logger.info("testing report %s", report.report_name)
                 report_model_domain = specific_model_domains.get(report.report_name, [])
-                report_records = self.env[report.model].search(report_model_domain, limit=10)
+                report_records = self.env[report.model].search(
+                    report_model_domain, limit=10
+                )
                 if not report_records:
-                    _logger.info("no record found skipping report %s", report.report_name)
+                    _logger.info(
+                        "no record found skipping report %s", report.report_name
+                    )
 
                 data = extra_data_reports.get(report.report_name, {})
                 # Test report generation
@@ -62,34 +73,44 @@ class TestReports(odoo.tests.TransactionCase):
 
     def test_report_reload_from_attachment(self):
         def get_attachments(res_id):
-            return self.env["ir.attachment"].search([('res_model', "=", "res.partner"), ("res_id", "=", res_id)])
+            return self.env["ir.attachment"].search(
+                [("res_model", "=", "res.partner"), ("res_id", "=", res_id)]
+            )
 
-        Report = self.env['ir.actions.report'].with_context(force_report_rendering=True)
+        Report = self.env["ir.actions.report"].with_context(force_report_rendering=True)
 
-        report = Report.create({
-            'name': 'test report',
-            'report_name': 'base.test_report',
-            'model': 'res.partner',
-        })
+        report = Report.create(
+            {
+                "name": "test report",
+                "report_name": "base.test_report",
+                "model": "res.partner",
+            }
+        )
 
-        self.env['ir.ui.view'].create({
-            'type': 'qweb',
-            'name': 'base.test_report',
-            'key': 'base.test_report',
-            'arch': '''
+        self.env["ir.ui.view"].create(
+            {
+                "type": "qweb",
+                "name": "base.test_report",
+                "key": "base.test_report",
+                "arch": """
                 <main>
                     <div class="article" data-oe-model="res.partner" t-att-data-oe-id="docs.id">
                         <span t-field="docs.display_name" />
                     </div>
                 </main>
-            '''
-        })
+            """,
+            }
+        )
 
         pdf_text = "0"
-        def _run_wkhtmltopdf(*args, **kwargs):
-            return bytes(pdf_text, "utf-8")
 
-        self.patch(type(Report), "_run_wkhtmltopdf", _run_wkhtmltopdf)
+        def _render_html_to_pdf(*args, **kwargs):
+            content = bytes(pdf_text, "utf-8")
+            if kwargs.get("_split"):
+                return [content] * len(args[1]) if len(args) > 1 else [content]
+            return content
+
+        self.patch(type(Report), "_render_html_to_pdf", _render_html_to_pdf)
 
         # sanity check: the report is not set to save attachment
         # assert that there are no pre-existing attachment
@@ -121,24 +142,26 @@ class TestReports(odoo.tests.TransactionCase):
 
 # Some paper format examples
 PAPER_SIZES = {
-    (842, 1190): 'A3',
-    (595, 842): 'A4',
-    (420, 595): 'A5',
-    (297, 420): 'A6',
-    (612, 792): 'Letter',
-    (612, 1008): 'Legal',
-    (792, 1224): 'Ledger',
+    (842, 1190): "A3",
+    (595, 842): "A4",
+    (420, 595): "A5",
+    (297, 420): "A6",
+    (612, 792): "Letter",
+    (612, 1008): "Legal",
+    (792, 1224): "Ledger",
 }
+
 
 class Box:
     """
     Utility class to help assertions
     """
+
     def __init__(self, obj, page_height, page_width):
         self.x1 = round(obj.x0, 1)
-        self.y1 = round(page_height-obj.y1, 1)
+        self.y1 = round(page_height - obj.y1, 1)
         self.x2 = round(obj.x1, 1)
-        self.y2 = round(page_height-obj.y0, 1)
+        self.y2 = round(page_height - obj.y0, 1)
         self.page_height = page_height
         self.page_width = page_width
 
@@ -175,31 +198,43 @@ class Box:
         return self.page_height - self.y2
 
     def __lt__(self, other):
-        return (self.y1, self.x1, self.y2, self.x2) < (other.y1, other.x1, other.y2, other.x2)
+        return (self.y1, self.x1, self.y2, self.x2) < (
+            other.y1,
+            other.x1,
+            other.y2,
+            other.x2,
+        )
 
 
-@skipIf(pdfminer is False, "pdfminer not installed")
 class TestReportsRenderingCommon(odoo.tests.HttpCase):
-
     def setUp(self):
         super().setUp()
-        self.report = self.env['ir.actions.report'].create({
-            'name': 'Test Report Partner',
-            'model': 'res.partner',
-            'report_name': 'test_report.test_report_partner',
-            'paperformat_id': self.env.ref('base.paperformat_euro').id,
-        })
+        self.report = self.env["ir.actions.report"].create(
+            {
+                "name": "Test Report Partner",
+                "model": "res.partner",
+                "report_name": "test_report.test_report_partner",
+                "paperformat_id": self.env.ref("base.paperformat_euro").id,
+            }
+        )
 
-        self.partners = self.env['res.partner'].create([{
-            'name': f'Report record {i}',
-        } for i in range(2)])
+        self.partners = self.env["res.partner"].create(
+            [
+                {
+                    "name": f"Report record {i}",
+                }
+                for i in range(2)
+            ]
+        )
 
-        self.report_view = self.env['ir.ui.view'].create({
-            'type': 'qweb',
-            'name': 'test_report_partner',
-            'key': 'test_report.test_report_partner',
-            'arch': "<t></t>",
-        })
+        self.report_view = self.env["ir.ui.view"].create(
+            {
+                "type": "qweb",
+                "name": "test_report_partner",
+                "key": "test_report.test_report_partner",
+                "arch": "<t></t>",
+            }
+        )
         self.last_pdf_content = None
         self.last_pdf_content_saved = False
 
@@ -211,40 +246,50 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
 
     def get_paper_format(self, mediabox):
         """
-            :param: mediabox: a page mediabox. (Example: (0, 0, 595, 842))
-            :return: a (format, orientation). Example ('A4', 'portait')
+        :param: mediabox: a page mediabox. (Example: (0, 0, 595, 842))
+        :return: a (format, orientation). Example ('A4', 'portait')
         """
         x, y, width, height = mediabox
-        self.assertEqual((x, y), (0, 0), "Expecting top corner to be 0, 0 ")
-        orientation = 'portait'
-        paper_size = (width, height)
+        self.assertEqual(
+            (round(x), round(y)), (0, 0), "Expecting top corner to be 0, 0 "
+        )
+        orientation = "portait"
+        # Round to integers — WeasyPrint produces exact mm→pt conversions
+        # (e.g. 595.275591 for A4 width) while PAPER_SIZES uses integers.
+        paper_size = (round(width), round(height))
         if width > height:
-            orientation = 'landscape'
-            paper_size = (height, width)
-        return PAPER_SIZES.get(paper_size, f'custom{paper_size}'), orientation
+            orientation = "landscape"
+            paper_size = (round(height), round(width))
+        return PAPER_SIZES.get(paper_size, f"custom{paper_size}"), orientation
 
-    def create_pdf(self, partners=None, header_content=None, page_content=None, footer_content=None):
+    def create_pdf(
+        self,
+        partners=None,
+        header_content=None,
+        page_content=None,
+        footer_content=None,
+    ):
         if header_content is None:
-            header_content = '''
+            header_content = """
                 <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
                 <span>Some header Text</span>
-            '''
+            """
 
         if footer_content is None:
-            footer_content = '''
+            footer_content = """
                 <div style="text-align:center">Footer for <t t-esc="o.name"/> Page: <span class="page"/> / <span class="topage"/></div>
-            '''
+            """
 
         if page_content is None:
-            page_content = '''
+            page_content = """
                 <div class="page">
                     <div style="background-color:red">
                         Name: <t t-esc="o.name"/>
                     </div>
                 </div>
-            '''
+            """
 
-        self.report_view.arch = f'''
+        self.report_view.arch = f"""
                 <t t-name="test_report.test_report_partner">
                     <t t-set="company" t-value="res_company"/>
                     <t t-call="web.html_container">
@@ -262,17 +307,28 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
                         </t>
                     </t>
                 </t>
-            '''
+            """
         # this templates doesn't use the "web.external_layout" in order to simplify the final result and make the edition of footer and header easier
         # this test does not aims to test company base.document.layout, but the rendering only.
         if partners is None:
             partners = self.partners
-        self.last_pdf_content = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf(self.report, partners.ids)[0]
+        self.last_pdf_content = (
+            self.env["ir.actions.report"]
+            .with_context(force_report_rendering=True)
+            ._render_qweb_pdf(self.report, partners.ids)[0]
+        )
         return self.last_pdf_content
 
     def save_pdf(self):
         assert self.last_pdf_content
-        odoo.tests.save_test_file(self._testMethodName, self.last_pdf_content, 'pdf_', 'pdf', document_type='Report PDF', logger=_logger)
+        odoo.tests.save_test_file(
+            self._testMethodName,
+            self.last_pdf_content,
+            "pdf_",
+            "pdf",
+            document_type="Report PDF",
+            logger=_logger,
+        )
 
     def _get_pdf_pages(self, pdf_content):
         ioBytes = io.BytesIO(pdf_content)
@@ -280,13 +336,13 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
         doc = PDFDocument(parser)
         return list(PDFPage.create_pages(doc))
 
-    def _parse_pdf(self, pdf_content, expected_format=('A4', 'portait')):
+    def _parse_pdf(self, pdf_content, expected_format=("A4", "portait")):
         """
-            :param: pdf_content: the bdf binary content
-            :param: expected_format: a get_paper_format like format.
-            :return: list[list[(box, Element)]] a list of element per page
-            Note: box is a 4 float tuple based on the top left corner to ease ordering of elements.
-            The result is also rounded to one digit
+        :param: pdf_content: the bdf binary content
+        :param: expected_format: a get_paper_format like format.
+        :return: list[list[(box, Element)]] a list of element per page
+        Note: box is a 4 float tuple based on the top left corner to ease ordering of elements.
+        The result is also rounded to one digit
         """
         pages = self._get_pdf_pages(pdf_content)
         ressource_manager = PDFResourceManager()
@@ -299,7 +355,7 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
                 self.get_paper_format(page.mediabox),
                 expected_format,
                 "Expecting pdf to be in A4 portait format",
-            ) # this is the default expected format and other layout assertions are based on this one.
+            )  # this is the default expected format and other layout assertions are based on this one.
             interpreter.process_page(page)
             layout = device.get_result()
             elements = []
@@ -311,10 +367,10 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
                     page_width=pages[0].mediabox[2],
                 )
                 if isinstance(obj, LTTextBox):
-                    #inverse x to start from top left corner
+                    # inverse x to start from top left corner
                     elements.append((box, obj.get_text().strip()))
                 elif isinstance(obj, LTFigure):
-                    elements.append((box, 'LTFigure'))
+                    elements.append((box, "LTFigure"))
             elements.sort()
 
         return parsed_pages
@@ -331,30 +387,29 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
             )
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'pdf_rendering')
+@odoo.tests.tagged("post_install", "-at_install", "pdf_rendering")
 class TestReportsRendering(TestReportsRenderingCommon):
     """
-        This test aims to test as much as possible the current pdf rendering,
-        especially multipage headers and footers
-        (the main reason why we are currently using wkhtmltopdf with patched qt)
-        A custom template without web.external_layout is used on purpose in order to
-        easily test headers and footer regarding rendering only,
-        without using any comany document.layout logic
+    This test aims to test as much as possible the current pdf rendering,
+    especially multipage headers and footers (via CSS running elements).
+    A custom template without web.external_layout is used on purpose in order to
+    easily test headers and footer regarding rendering only,
+    without using any company document.layout logic.
     """
 
     def test_format_A4(self):
-        self.report.paperformat_id = self.env.ref('base.paperformat_euro')
-        self.assertPageFormat('A4', 'portait')
+        self.report.paperformat_id = self.env.ref("base.paperformat_euro")
+        self.assertPageFormat("A4", "portait")
 
     def test_format_letter(self):
-        self.report.paperformat_id = self.env.ref('base.paperformat_us')
-        self.assertPageFormat('Letter', 'portait')
+        self.report.paperformat_id = self.env.ref("base.paperformat_us")
+        self.assertPageFormat("Letter", "portait")
 
     def test_format_landscape(self):
-        paper_format = self.env.ref('base.paperformat_euro')
-        paper_format.orientation = 'Landscape'
+        paper_format = self.env.ref("base.paperformat_euro")
+        paper_format.orientation = "Landscape"
         self.report.paperformat_id = paper_format
-        self.assertPageFormat('A4', 'landscape')
+        self.assertPageFormat("A4", "landscape")
 
     def test_layout(self):
         pdf_content = self.create_pdf()
@@ -363,12 +418,15 @@ class TestReportsRendering(TestReportsRenderingCommon):
 
         page_contents = [[elem[1] for elem in page] for page in pages]
 
-        expected_pages_content = [[
-            'LTFigure',
-            'Some header Text',
-            f'Name: {partner.name}',
-            f'Footer for {partner.name} Page: 1 / 1',
-        ] for partner in self.partners]
+        expected_pages_content = [
+            [
+                "LTFigure",
+                "Some header Text",
+                f"Name: {partner.name}",
+                f"Footer for {partner.name} Page: 1 / 1",
+            ]
+            for partner in self.partners
+        ]
 
         self.assertEqual(
             page_contents,
@@ -401,19 +459,37 @@ class TestReportsRendering(TestReportsRenderingCommon):
         #
         #
 
-        self.assertEqual(logo.left, content.left, 'Logo and content should have the same left margin')
-        self.assertEqual(header.left, logo.end_left, 'Header starts after logo')
-        self.assertGreaterEqual(header.top, logo.top, 'header is vertically centered on logo')
-        self.assertGreaterEqual(logo.end_top, header.end_top, 'header is vertically centered on logo')
-        self.assertGreaterEqual(content.top, logo.end_top, 'Content is bellow logo')
-        self.assertGreaterEqual(footer.top, content.end_top, 'Footer is bellow content')
-        self.assertGreaterEqual(100, footer.bottom, 'Footer is on the bottom of the page')
-        self.assertAlmostEqual(footer.left, footer.right, -1, 'Footer is centered on the page')
+        self.assertEqual(
+            logo.left,
+            content.left,
+            "Logo and content should have the same left margin",
+        )
+        # WeasyPrint renders inline whitespace (between <img> and <span>) as a
+        # visible gap (~3pt), whereas wkhtmltopdf absorbed it into the text box.
+        self.assertAlmostEqual(
+            header.left, logo.end_left, delta=5, msg="Header starts after logo"
+        )
+        self.assertGreaterEqual(
+            header.top, logo.top, "header is vertically centered on logo"
+        )
+        self.assertGreaterEqual(
+            logo.end_top,
+            header.end_top,
+            "header is vertically centered on logo",
+        )
+        self.assertGreaterEqual(content.top, logo.end_top, "Content is bellow logo")
+        self.assertGreaterEqual(footer.top, content.end_top, "Footer is bellow content")
+        self.assertGreaterEqual(
+            100, footer.bottom, "Footer is on the bottom of the page"
+        )
+        self.assertAlmostEqual(
+            footer.left, footer.right, -1, "Footer is centered on the page"
+        )
 
     def test_report_pdf_page_break(self):
 
         partners = self.partners[:2]
-        page_content = '''
+        page_content = """
                 <div class="page">
                     <div style="background-color:red">
                         Name: <t t-esc="o.name"/>
@@ -422,7 +498,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
                         Last page for <t t-esc="o.name"/>
                     </div>
                 </div>
-            '''
+            """
 
         pdf_content = self.create_pdf(partners=partners, page_content=page_content)
 
@@ -432,40 +508,48 @@ class TestReportsRendering(TestReportsRenderingCommon):
 
         expected_pages_contents = []
         for partner in self.partners:
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                f'Name: {partner.name}',
-                f'Footer for {partner.name} Page: 1 / 2',
-            ])
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                f'Last page for {partner.name}',
-                f'Footer for {partner.name} Page: 2 / 2',
-            ])
+            expected_pages_contents.extend(
+                [
+                    [
+                        "LTFigure",  # logo
+                        "Some header Text",
+                        f"Name: {partner.name}",
+                        f"Footer for {partner.name} Page: 1 / 2",
+                    ],
+                    [
+                        "LTFigure",  # logo
+                        "Some header Text",
+                        f"Last page for {partner.name}",
+                        f"Footer for {partner.name} Page: 2 / 2",
+                    ],
+                ]
+            )
         pages_contents = [[elem[1] for elem in page] for page in pages]
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_pdf_render_page_overflow(self):
         nb_lines = 80
 
-        page_content = f'''
+        page_content = f"""
             <div class="page">
                 <div style="background-color:red">
                     Name: <t t-esc="o.name"/>
                     <div t-foreach="range({nb_lines})" t-as="pos" t-esc="pos"/>
                 </div>
             </div>
-        '''
+        """
         pdf_content = self.create_pdf(page_content=page_content)
         pages = self._parse_pdf(pdf_content)
 
-        self.assertEqual(len(pages), 6,
-                        '6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
+        self.assertEqual(
+            len(pages),
+            6,
+            "6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)",
+        )
         first_page_break_at = int(
-            pages[1][2][1].split('\n')[0])  # This element should be the first line, 61 when this test was written
-        second_page_break_at = int(pages[2][2][1].split('\n')[0])
+            pages[1][2][1].split("\n")[0]
+        )  # This element should be the first line, 61 when this test was written
+        second_page_break_at = int(pages[2][2][1].split("\n")[0])
 
         # There is some inconsistency caused by the pdfminer library when \n are placed, to be sure we don't have issues
         # We put one element per line
@@ -473,8 +557,8 @@ class TestReportsRendering(TestReportsRenderingCommon):
         for page in pages:
             page_content = []
             for elem in page:
-                if '\n' in elem[1]:
-                    page_content.extend(elem[1].split('\n'))
+                if "\n" in elem[1]:
+                    page_content.extend(elem[1].split("\n"))
                 else:
                     page_content.append(elem[1])
             pages_contents.append(page_content)
@@ -483,31 +567,36 @@ class TestReportsRendering(TestReportsRenderingCommon):
         # Thoses changes are needed to format the page content and the expected page the same due to the inconsistency
         # With the pdfminer library
         for partner in self.partners:
-            def create_page_content(start, end, page_number, include_name=False):
+
+            def create_page_content(
+                start, end, page_number, include_name=False, partner=partner
+            ):
                 content = [
-                    'LTFigure',  # logo
-                    'Some header Text',
+                    "LTFigure",  # logo
+                    "Some header Text",
                 ]
                 if include_name:
-                    content.append(f'Name: {partner.name}')
+                    content.append(f"Name: {partner.name}")
                 content.extend([str(i) for i in range(start, end)])
-                content.append(f'Footer for {partner.name} Page: {page_number} / 3')
+                content.append(f"Footer for {partner.name} Page: {page_number} / 3")
                 return content
 
-            expected_pages_contents.extend([
-                create_page_content(0, first_page_break_at, 1, include_name=True),
-                create_page_content(first_page_break_at, second_page_break_at, 2),
-                create_page_content(second_page_break_at, nb_lines, 3)
-            ])
+            expected_pages_contents.extend(
+                [
+                    create_page_content(0, first_page_break_at, 1, include_name=True),
+                    create_page_content(first_page_break_at, second_page_break_at, 2),
+                    create_page_content(second_page_break_at, nb_lines, 3),
+                ]
+            )
 
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_thead_tbody_repeat(self):
         """
-            Check that thead and t-foot are repeated after page break inside a tbody
+        Check that thead and t-foot are repeated after page break inside a tbody
         """
         nb_lines = 50
-        page_content = f'''
+        page_content = f"""
             <div class="page">
                 <table class="table">
                     <thead><tr><th> T1 </th><th> T2 </th><th> T3 </th></tr></thead>
@@ -519,149 +608,163 @@ class TestReportsRendering(TestReportsRenderingCommon):
                     <tfoot><tr><th> T1 </th><th> T2 </th><th> T3 </th></tr></tfoot>
                 </table>
             </div>
-        '''
+        """
 
         pdf_content = self.create_pdf(page_content=page_content)
         pages = self._parse_pdf(pdf_content)
 
-        self.assertEqual(len(pages), 6, '6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
+        self.assertEqual(
+            len(pages),
+            6,
+            "6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)",
+        )
 
         # This element should be the first line of the table, 28 when this test was written
         first_page_break_at = int(pages[1][5][1])
         second_page_break_at = int(pages[2][5][1])
 
         def expected_table(start, end):
-            table = ['T1', 'T2', 'T3'] # thead
+            table = ["T1", "T2", "T3"]  # thead
             for i in range(start, end):
                 table += [str(i), str(i), str(i)]
-            table += ['T1', 'T2', 'T3'] # tfoot
+            table += ["T1", "T2", "T3"]  # tfoot
             return table
 
         expected_pages_contents = []
         for partner in self.partners:
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                * expected_table(0, first_page_break_at),
-                f'Footer for {partner.name} Page: 1 / 3',
-            ])
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                * expected_table(first_page_break_at, second_page_break_at),
-                f'Footer for {partner.name} Page: 2 / 3',
-            ])
-            expected_pages_contents.append([
-                'LTFigure',  # logo
-                'Some header Text',
-                *expected_table(second_page_break_at, nb_lines),
-                f'Footer for {partner.name} Page: 3 / 3',
-            ])
+            expected_pages_contents.extend(
+                [
+                    [
+                        "LTFigure",  # logo
+                        "Some header Text",
+                        *expected_table(0, first_page_break_at),
+                        f"Footer for {partner.name} Page: 1 / 3",
+                    ],
+                    [
+                        "LTFigure",  # logo
+                        "Some header Text",
+                        *expected_table(first_page_break_at, second_page_break_at),
+                        f"Footer for {partner.name} Page: 2 / 3",
+                    ],
+                    [
+                        "LTFigure",  # logo
+                        "Some header Text",
+                        *expected_table(second_page_break_at, nb_lines),
+                        f"Footer for {partner.name} Page: 3 / 3",
+                    ],
+                ]
+            )
 
         pages_contents = [[elem[1] for elem in page] for page in pages]
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_report_specific_paperformat_args(self):
         """
-            Verify that the values defined in `specific_paperformat_args` take
-            precedence over those in the paperformat when building the wkhtmltopdf
-            command arguments.
+        Verify that the values defined in `specific_paperformat_args` take
+        precedence over those in the paperformat when building @page CSS.
         """
-        command_args = self.env['ir.actions.report']._build_wkhtmltopdf_args(
-            self.env['report.paperformat'].new({
-                'format': 'A4',
-                'margin_top': 25,
-                'margin_left': 50,
-                'margin_bottom': 75,
-                'margin_right': 100,
-                'dpi': 90,
-                'header_spacing': 125,
-                'orientation': 'portrait'
-            }),
-            landscape=None,
+        css = self.env["ir.actions.report"]._paperformat_to_css(
+            self.env["report.paperformat"].new(
+                {
+                    "format": "A4",
+                    "margin_top": 25,
+                    "margin_left": 50,
+                    "margin_bottom": 75,
+                    "margin_right": 100,
+                    "orientation": "portrait",
+                    "header_line": True,
+                }
+            ),
+            landscape=False,
             specific_paperformat_args={
-                'data-report-landscape': True,
-                'data-report-margin-top': 0,
-                'data-report-margin-bottom': 0,
-                'data-report-header-spacing': 0,
-                'data-report-dpi': 96
-            })
-        self.assertEqual(command_args, [
-            '--disable-local-file-access',
-            '--quiet',
-            '--page-size', 'A4',
-            '--margin-top', '0',
-            '--dpi', '96',
-            '--zoom', '1.0',
-            '--header-spacing', '0',
-            '--margin-left', '50.0',
-            '--margin-bottom', '0',
-            '--margin-right', '100.0',
-            '--javascript-delay', '1000',
-            '--orientation', 'landscape',
-        ])
+                "data-report-margin-top": 0,
+                "data-report-margin-bottom": 0,
+            },
+        )
+        self.assertIn("size: a4 portrait", css)
+        self.assertIn("margin: 0.0mm 100.0mm 0.0mm 50.0mm", css)
+        self.assertIn("border-bottom: 1px solid black", css)
+        self.assertIn("content: element(page-header)", css)
+        self.assertIn("content: element(page-footer)", css)
+        # Running elements and page counters are now declared statically
+        # in report_paged_media.css, not emitted per-report by _paperformat_to_css().
+        self.assertNotIn("counter(page)", css)
+        self.assertNotIn("counter(pages)", css)
+        self.assertNotIn("running(page-header)", css)
+        self.assertNotIn("running(page-footer)", css)
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'pdf_rendering')
+@odoo.tests.tagged("post_install", "-at_install", "-standard", "pdf_rendering")
 class TestReportsRenderingLimitations(TestReportsRenderingCommon):
     def test_no_clip(self):
         """
-            Current version will add a fixed margin on top of document
-            This test demonstrates this limitation
+        Current version will add a fixed margin on top of document
+        This test demonstrates this limitation
         """
-        header_content = '''
+        header_content = """
             <div style="background-color:blue">
                 <div t-foreach="range(15)" t-as="pos" t-esc="'Header %s' % pos"/>
             </div>
-        '''
-        page_content = '''
+        """
+        page_content = """
             <div class="page">
                 <div style="background-color:red; margin-left:100px">
                     <div t-foreach="range(10)" t-as="pos" t-esc="'Content %s' % pos"/>
                 </div>
             </div>
-        '''
+        """
         # adding a margin on page to avoid bot block to me considered as the same
-        pdf_content = self.create_pdf(page_content=page_content, header_content=header_content)
+        pdf_content = self.create_pdf(
+            page_content=page_content, header_content=header_content
+        )
         pages = self._parse_pdf(pdf_content)
         self.assertEqual(len(pages), 2, "2 partners")
         page = pages[0]
         self.assertEqual(len(page), 3, "Expecting 3 box per page, Header, body, footer")
         header = page[0][0]
         content = page[1][0]
-        self.assertGreaterEqual(content.top, header.end_top, "EXISTING LIMITATION: large header shouldn't overflow on body, but they do")
+        self.assertGreaterEqual(
+            content.top,
+            header.end_top,
+            "EXISTING LIMITATION: large header shouldn't overflow on body, but they do",
+        )
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged("post_install", "-at_install")
 class TestAggregatePdfReports(odoo.tests.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partners = cls.env["res.partner"].create([{
-            "name": "Rodion Romanovich Raskolnikov"
-        }, {
-            "name": "Dmitri Prokofich Razumikhin"
-        }, {
-            "name": "Porfiry Petrovich"
-        }])
+        cls.partners = cls.env["res.partner"].create(
+            [
+                {"name": "Rodion Romanovich Raskolnikov"},
+                {"name": "Dmitri Prokofich Razumikhin"},
+                {"name": "Porfiry Petrovich"},
+            ]
+        )
 
-        cls.env["ir.actions.report"].create({
-            "name": "test report",
-            "report_name": "base.test_report",
-            "model": "res.partner",
-        })
+        cls.env["ir.actions.report"].create(
+            {
+                "name": "test report",
+                "report_name": "base.test_report",
+                "model": "res.partner",
+            }
+        )
 
-    def test_aggregate_report_with_some_resources_reloaded_from_attachment(self):
+    def test_aggregate_report_with_some_resources_reloaded_from_attachment(
+        self,
+    ):
         """
         Test for opw-3827700, which caused reports generated for multiple records to fail if there was a record in
         the middle that had an attachment, and 'Reload from attachment' was enabled for the report. The misbehavior was
         caused by an indexing issue.
         """
-        self.env["ir.ui.view"].create({
-            "type": "qweb",
-            "name": "base.test_report",
-            "key": "base.test_report",
-            "arch": """
+        self.env["ir.ui.view"].create(
+            {
+                "type": "qweb",
+                "name": "base.test_report",
+                "key": "base.test_report",
+                "arch": """
                     <main>
                         <div t-foreach="docs" t-as="user">
                             <div class="article" data-oe-model="res.partner" t-att-data-oe-id="user.id">
@@ -669,20 +772,24 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
                             </div>
                         </div>
                     </main>
-                    """
-        })
+                    """,
+            }
+        )
         self.assert_report_creation("base.test_report", self.partners, self.partners[1])
 
-    def test_aggregate_report_with_some_resources_reloaded_from_attachment_with_multiple_page_report(self):
+    def test_aggregate_report_with_some_resources_reloaded_from_attachment_with_multiple_page_report(
+        self,
+    ):
         """
         Same as @test_report_with_some_resources_reloaded_from_attachment, but tests the behavior for reports that
         span multiple pages per record.
         """
-        self.env["ir.ui.view"].create({
-            "type": "qweb",
-            "name": "base.test_report",
-            "key": "base.test_report",
-            "arch": """
+        self.env["ir.ui.view"].create(
+            {
+                "type": "qweb",
+                "name": "base.test_report",
+                "key": "base.test_report",
+                "arch": """
                     <main>
                         <div t-foreach="docs" t-as="user">
                             <div class="article" data-oe-model="res.partner" t-att-data-oe-id="user.id" >
@@ -696,14 +803,21 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
                             </div>
                         </div>
                     </main>
-                    """
-        })
+                    """,
+            }
+        )
         self.assert_report_creation("base.test_report", self.partners, self.partners[1])
 
     def assert_report_creation(self, report_ref, records, record_to_report):
-        self.assertIn(record_to_report, records, "Record to report must be in records list")
+        self.assertIn(
+            record_to_report,
+            records,
+            "Record to report must be in records list",
+        )
 
-        reports = self.env['ir.actions.report'].with_context(force_report_rendering=True)
+        reports = self.env["ir.actions.report"].with_context(
+            force_report_rendering=True
+        )
 
         # Make sure attachments are created.
         report = reports._get_report(report_ref)
@@ -712,16 +826,25 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
         report.attachment_use = True
 
         # Generate report for chosen record to create an attachment.
-        record_report, content_type = reports._render_qweb_pdf(report_ref, res_ids=record_to_report.id)
+        record_report, content_type = reports._render_qweb_pdf(
+            report_ref, res_ids=record_to_report.id
+        )
         self.assertEqual(content_type, "pdf", "Report is not a PDF")
         self.assertTrue(record_report, "PDF not generated")
 
         # Make sure the attachment is created.
         report = reports._get_report(report_ref)
-        self.assertTrue(report.retrieve_attachment(record_to_report), "Attachment not generated")
+        self.assertTrue(
+            report.retrieve_attachment(record_to_report),
+            "Attachment not generated",
+        )
 
-        aggregate_report_content, content_type = reports._render_qweb_pdf(report_ref, res_ids=records.ids)
+        aggregate_report_content, content_type = reports._render_qweb_pdf(
+            report_ref, res_ids=records.ids
+        )
         self.assertEqual(content_type, "pdf", "Report is not a PDF")
         self.assertTrue(aggregate_report_content, "PDF not generated")
         for record in records:
-            self.assertTrue(report.retrieve_attachment(record), "Attachment not generated")
+            self.assertTrue(
+                report.retrieve_attachment(record), "Attachment not generated"
+            )

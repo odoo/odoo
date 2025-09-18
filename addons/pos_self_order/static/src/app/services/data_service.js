@@ -1,7 +1,7 @@
 import { PosData } from "@point_of_sale/app/services/data_service";
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import { rpc } from "@web/core/network/rpc";
 
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
@@ -45,13 +45,13 @@ export const unpatchSelf = patch(PosData.prototype, {
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
     },
-    localDeleteCascade(record) {
-        return session.data.self_ordering_mode === "mobile"
-            ? super.localDeleteCascade(...arguments)
-            : record.delete();
-    },
     async missingRecursive(recordMap) {
         return recordMap;
     },
     async checkAndDeleteMissingOrders(results) {},
+    async deleteRecordsInIndexedDB(model, ids) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.deleteRecordsInIndexedDB(...arguments)
+            : true;
+    },
 });

@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread";
 import { useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;

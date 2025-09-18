@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
         run: function () {
             const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
-            redirect("/odoo/action-sale.action_orders/" + orderId);
+            redirect("/odoo/action-sale.action_sale_order/" + orderId);
         },
         expectUnloadPage: true,
     },
@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "click send by email",
-        trigger: '.btn[name="action_quotation_send"]',
+        trigger: '.btn[name="action_send_quotation"]',
         run: "click",
     },
     {

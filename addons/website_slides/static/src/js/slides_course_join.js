@@ -97,21 +97,24 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     },
 
     /**
+     * Shows a Bootstrap 5 popover alert on the given element.
+     *
      * @private
-     * @param {Object} $el
+     * @param {HTMLElement} el
      * @param {String} message
      */
-    _popoverAlert: function ($el, message) {
-        $el.popover({
+    _popoverAlert: function (el, message) {
+        const popover = new window.Popover(el, {
             trigger: 'focus',
-            delay: {'hide': 300},
+            delay: { hide: 300 },
             placement: 'bottom',
             container: 'body',
             html: true,
             content: function () {
                 return message;
-            }
-        }).popover('show');
+            },
+        });
+        popover.show();
     },
 
     //--------------------------------------------------------------------------
@@ -136,11 +139,11 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                         errorSignupAllowed: data.error_signup_allowed,
                         widget: self,
                     });
-                    self._popoverAlert(self.$el, popupContent);
+                    self._popoverAlert(self.el, popupContent);
                 } else if (data.error === 'join_done') {
-                    self._popoverAlert(self.$el, _t('You have already joined this channel'));
+                    self._popoverAlert(self.el, _t('You have already joined this channel'));
                 } else {
-                    self._popoverAlert(self.$el, _t('Unknown error'));
+                    self._popoverAlert(self.el, _t('Unknown error'));
                 }
             }
         });
@@ -157,7 +160,7 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var proms = [this._super.apply(this, arguments)];
-        var data = self.$el.data();
+        var data = self.el.dataset;
         var options = {
             channel: {
                 channelEnroll: data.channelEnroll,
@@ -169,9 +172,9 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
             isMemberOrInvited: data.isMemberOrInvited,
             isPartnerWithoutUser: data.isPartnerWithoutUser
         };
-        $('.o_wslides_js_course_join').each(function () {
-            proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
-        });
+        for (const el of document.querySelectorAll('.o_wslides_js_course_join')) {
+            proms.push(new CourseJoinWidget(self, options).attachTo(el));
+        }
         return Promise.all(proms);
     },
 });

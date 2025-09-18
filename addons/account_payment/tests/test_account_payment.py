@@ -342,7 +342,7 @@ class TestAccountPayment(AccountPaymentCommon):
         })
 
         payment2.action_post()
-        payment.move_id.button_draft()
+        payment.move_id.action_draft()
         payment.move_id.line_ids.unlink()
         payment.amount = 30
         payment.move_id._compute_name()
@@ -355,10 +355,10 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
         # Now try to change the journal, and check if the name is now updated
-        payment.move_id.button_draft()
+        payment.move_id.action_draft()
         new_journal = journal.copy()
-        new_payment_method_line = new_journal.inbound_payment_method_line_ids[0]
-        new_payment_method_line.write({'payment_account_id': self.company_data['default_account_receivable'].id})
+        new_payment_method_line = new_journal.outbound_payment_method_line_ids[0]
+        new_payment_method_line.write({'payment_account_id': payment.payment_method_line_id.payment_account_id.id})
         payment.write({
             'journal_id': new_journal.id,
             'payment_method_line_id': new_payment_method_line.id,

@@ -1,13 +1,14 @@
 declare module "registries" {
     interface TourStep {
-        content: string;
-        trigger: string;
-        run: string | (() => (void | Promise<void>));
+        content?: string;
+        trigger?: string;
+        run?: string | (() => (void | Promise<void>));
+        [key: string]: any;
     }
 
     export interface ToursRegistryShape {
         test?: boolean;
-        url: string;
+        url?: string;
         steps(): TourStep[];
     }
 

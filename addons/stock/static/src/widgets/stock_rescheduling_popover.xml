@@ -7,6 +7,6 @@
         <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
             <a t-out="late_element.name" t-on-click="openElement" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
         </t>
-        planned on <t t-out="props.delay_alert_date"/>.</p>
+        planned on <t t-out="props.date_delay_alert"/>.</p>
     </div>
 </templates>

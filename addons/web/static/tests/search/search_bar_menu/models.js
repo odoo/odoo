@@ -1,3 +1,5 @@
+// @ts-check
+
 import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
 export class Foo extends models.Model {

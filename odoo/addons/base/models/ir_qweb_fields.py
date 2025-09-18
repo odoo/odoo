@@ -1,51 +1,40 @@
-# -*- coding: utf-8 -*-
 import base64
 import binascii
-from datetime import time
 import logging
-import re
+import math
+from datetime import time
 from io import BytesIO
+from typing import Any
 
-import babel
 import babel.dates
-from markupsafe import Markup, escape, escape_silent
-from PIL import Image
 from lxml import etree, html
+from markupsafe import Markup, escape
+from PIL import Image
 
 from odoo import api, fields, models, tools
-from odoo.tools import posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
+from odoo.libs.filesystem.mimetypes import guess_mimetype
+from odoo.libs.numbers import float_utils
+from odoo.libs.text.html import nl2br
+from odoo.tools import (
+    float_is_zero,
+    format_date,
+    format_duration,
+    posix_to_ldml,
+)
 from odoo.tools.mail import safe_attrs
-from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.translate import _, LazyTranslate
+from odoo.tools.misc import babel_locale_parse, get_lang
+from odoo.tools.translate import LazyTranslate, _
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
-
-def nl2br(string: str) -> Markup:
-    """ Converts newlines to HTML linebreaks in ``string`` after HTML-escaping
-    it.
-    """
-    return escape_silent(string).replace('\n', Markup('<br>\n'))
-
-
-def nl2br_enclose(string: str, enclosure_tag: str = 'div') -> Markup:
-    """ Like nl2br, but returns enclosed Markup allowing to better manipulate
-    trusted and untrusted content. New lines added by use are trusted, other
-    content is escaped. """
-    return Markup('<{enclosure_tag}>{converted}</{enclosure_tag}>').format(
-        enclosure_tag=enclosure_tag,
-        converted=nl2br(string),
-    )
-
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 # QWeb Fields converters
-#--------------------------------------------------------------------
+# --------------------------------------------------------------------
 
 
 class IrQwebField(models.AbstractModel):
-    """ Used to convert a t-field specification into an output HTML field.
+    """Used to convert a t-field specification into an output HTML field.
 
     :meth:`~.to_html` is the entry point of this conversion from QWeb, it:
 
@@ -54,15 +43,16 @@ class IrQwebField(models.AbstractModel):
       result node
     * generates the root result node itself through :meth:`~.render_element`
     """
-    _name = 'ir.qweb.field'
-    _description = 'Qweb Field'
+
+    _name = "ir.qweb.field"
+    _description = "Qweb Field"
 
     @api.model
-    def get_available_options(self):
-        """ Get the available option informations.
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
+        """Get the available option information.
 
         :rtype: dict[str, dict[str, Any]]
-        :return: A dictionnary that maps option names' to their settings.
+        :return: A dictionary that maps option names to their settings.
 
             The settings are dict themselves and have the following keys:
 
@@ -110,8 +100,14 @@ class IrQwebField(models.AbstractModel):
         return {}
 
     @api.model
-    def attributes(self, record, field_name, options, values=None):
-        """ attributes(record, field_name, field, options, values)
+    def attributes(
+        self,
+        record: models.BaseModel,
+        field_name: str,
+        options: dict[str, Any],
+        values: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """attributes(record, field_name, field, options, values)
 
         Generates the metadata attributes (prefixed by ``data-oe-``) for the
         root node of the field conversion.
@@ -132,246 +128,287 @@ class IrQwebField(models.AbstractModel):
         data = {}
         field = record._fields[field_name]
 
-        if not options['inherit_branding'] and not options['translate']:
+        if not options["inherit_branding"] and not options["translate"]:
             return data
 
-        data['data-oe-model'] = record._name
-        data['data-oe-id'] = record.id
-        data['data-oe-field'] = field.name
-        data['data-oe-type'] = options.get('type')
-        data['data-oe-expression'] = options.get('expression')
+        data["data-oe-model"] = record._name
+        data["data-oe-id"] = record.id
+        data["data-oe-field"] = field.name
+        data["data-oe-type"] = options.get("type")
+        data["data-oe-expression"] = options.get("expression")
         if field.readonly:
-            data['data-oe-readonly'] = 1
+            data["data-oe-readonly"] = 1
         return data
 
     @api.model
-    def value_to_html(self, value, options):
-        """ value_to_html(value, field, options=None)
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup:
+        """value_to_html(value, field, options=None)
 
         Converts a single value to its HTML version/output
         :rtype: unicode
         """
         if value is None or value is False:
-            return ''
+            return ""
 
         return escape(value.decode() if isinstance(value, bytes) else value)
 
     @api.model
-    def record_to_html(self, record, field_name, options):
-        """ record_to_html(record, field_name, options)
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup | bool:
+        """record_to_html(record, field_name, options)
 
         Converts the specified field of the ``record`` to HTML
 
-        :rtype: unicode
+        :rtype: str | Markup | bool
         """
         if not record:
             return False
         value = record.with_context(**self.env.context)[field_name]
-        return False if value is False else self.value_to_html(value, options=options)
+        return (
+            False
+            if value is False or value is None
+            else self.value_to_html(value, options=options)
+        )
 
     @api.model
-    def user_lang(self):
-        """ user_lang()
+    def user_lang(self) -> models.BaseModel:
+        """user_lang()
 
         Fetches the res.lang record corresponding to the language code stored
         in the user's context.
 
         :returns: Model[res.lang]
         """
-        return self.env['res.lang'].browse(get_lang(self.env).id)
+        return self.env["res.lang"].browse(get_lang(self.env).id)
 
 
 class IrQwebFieldInteger(models.AbstractModel):
-    _name = 'ir.qweb.field.integer'
-    _description = 'Qweb Field Integer'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.integer"
+    _description = "Qweb Field Integer"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            format_decimalized_number=dict(type='boolean', string=_('Decimalized number')),
-            precision_digits=dict(type='integer', string=_('Precision Digits')),
+            format_decimalized_number={
+                "type": "boolean",
+                "string": _("Decimalized number"),
+            },
+            precision_digits={
+                "type": "integer",
+                "string": _("Precision Digits"),
+            },
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
-        if options.get('format_decimalized_number'):
-            return tools.misc.format_decimalized_number(value, options.get('precision_digits', 1))
-        return self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
+        if options.get("format_decimalized_number"):
+            return tools.misc.format_decimalized_number(
+                value, options.get("precision_digits", 1)
+            )
+        return (
+            self.user_lang()
+            .format("%d", value, grouping=True)
+            .replace("-", "-\N{ZERO WIDTH NO-BREAK SPACE}")
+        )
 
 
 class IrQwebFieldFloat(models.AbstractModel):
-    _name = 'ir.qweb.field.float'
-    _description = 'Qweb Field Float'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.float"
+    _description = "Qweb Field Float"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            precision=dict(type='integer', string=_('Rounding precision')),
+            precision={"type": "integer", "string": _("Rounding precision")},
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
-        if 'decimal_precision' in options:
-            precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
+        min_precision = options.get("min_precision")
+        if "decimal_precision" in options:
+            precision = self.env["decimal.precision"].precision_get(
+                options["decimal_precision"]
+            )
+        elif options.get("precision") is None:
+            int_digits = int(math.log10(abs(value))) + 1 if value != 0 else 1
+            max_dec_digits = max(15 - int_digits, 0)
+            # We display maximum 6 decimal digits or the number of significant decimal digits if it's lower
+            precision = min(6, max_dec_digits)
+            min_precision = min_precision or 1
         else:
-            precision = options['precision']
+            precision = options["precision"]
 
-        if precision is None:
-            fmt = '%f'
-        else:
-            value = float_utils.float_round(value, precision_digits=precision)
-            fmt = '%.{precision}f'.format(precision=precision)
+        fmt = f"%.{precision}f"
+        if min_precision and min_precision < precision:
+            _, dec_part = float_utils.float_split_str(value, precision)
+            digits_count = len(dec_part.rstrip("0"))
+            if digits_count < min_precision:
+                fmt = f"%.{min_precision}f"
+            elif digits_count < precision:
+                fmt = f"%.{digits_count}f"
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-        # %f does not strip trailing zeroes. %g does but its precision causes
-        # it to switch to scientific notation starting at a million *and* to
-        # strip decimals. So use %f and if no precision was specified manually
-        # strip trailing 0.
-        if precision is None:
-            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
-
-        return formatted
+        value = float_utils.float_round(value, precision_digits=precision)
+        return (
+            self.user_lang()
+            .format(fmt, value, grouping=True)
+            .replace("-", "-\N{ZERO WIDTH NO-BREAK SPACE}")
+        )
 
     @api.model
-    def record_to_html(self, record, field_name, options):
-        if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup | bool:
+        field = record._fields[field_name]
+        if "precision" not in options and "decimal_precision" not in options:
+            _, precision = field.get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
+        if "min_precision" not in options and hasattr(field, "get_min_display_digits"):
+            min_precision = field.get_min_display_digits(record.env)
+            options = dict(options, min_precision=min_precision)
         return super().record_to_html(record, field_name, options)
 
 
 class IrQwebFieldDate(models.AbstractModel):
-    _name = 'ir.qweb.field.date'
-    _description = 'Qweb Field Date'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.date"
+    _description = "Qweb Field Date"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
-        options.update(
-            format=dict(type='string', string=_('Date format'))
-        )
+        options.update(format={"type": "string", "string": _("Date format")})
         return options
 
     @api.model
-    def value_to_html(self, value, options):
-        return format_date(self.env, value, date_format=options.get('format'))
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
+        return format_date(self.env, value, date_format=options.get("format"))
 
 
 class IrQwebFieldDatetime(models.AbstractModel):
-    _name = 'ir.qweb.field.datetime'
-    _description = 'Qweb Field Datetime'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.datetime"
+    _description = "Qweb Field Datetime"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            format=dict(type='string', string=_('Pattern to format')),
-            tz_name=dict(type='char', string=_('Optional timezone name')),
-            time_only=dict(type='boolean', string=_('Display only the time')),
-            hide_seconds=dict(type='boolean', string=_('Hide seconds')),
-            date_only=dict(type='boolean', string=_('Display only the date')),
+            format={"type": "string", "string": _("Pattern to format")},
+            tz_name={"type": "char", "string": _("Optional timezone name")},
+            time_only={"type": "boolean", "string": _("Display only the time")},
+            hide_seconds={"type": "boolean", "string": _("Hide seconds")},
+            date_only={"type": "boolean", "string": _("Display only the date")},
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
         if not value:
-            return ''
+            return ""
 
         lang = self.user_lang()
         locale = babel_locale_parse(lang.code)
         if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
-        if options.get('tz_name'):
-            self = self.with_context(tz=options['tz_name'])
-            tzinfo = babel.dates.get_timezone(options['tz_name'])
+        if options.get("tz_name"):
+            self = self.with_context(tz=options["tz_name"])
+            tzinfo = babel.dates.get_timezone(options["tz_name"])
         else:
             tzinfo = None
 
         value = fields.Datetime.context_timestamp(self, value)
 
-        if 'format' in options:
-            pattern = options['format']
+        if "format" in options:
+            pattern = options["format"]
         else:
-            if options.get('time_only'):
+            if options.get("time_only"):
                 strftime_pattern = lang.time_format
-            elif options.get('date_only'):
+            elif options.get("date_only"):
                 strftime_pattern = lang.date_format
             else:
-                strftime_pattern = "%s %s" % (lang.date_format, lang.time_format)
+                strftime_pattern = f"{lang.date_format} {lang.time_format}"
 
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
-        if options.get('hide_seconds'):
+        if options.get("hide_seconds"):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
-        if options.get('time_only'):
-            return babel.dates.format_time(value, format=pattern, tzinfo=tzinfo, locale=locale)
-        elif options.get('date_only'):
+        if options.get("time_only"):
+            return babel.dates.format_time(
+                value, format=pattern, tzinfo=tzinfo, locale=locale
+            )
+        elif options.get("date_only"):
             return babel.dates.format_date(value, format=pattern, locale=locale)
         else:
-            return babel.dates.format_datetime(value, format=pattern, tzinfo=tzinfo, locale=locale)
+            return babel.dates.format_datetime(
+                value, format=pattern, tzinfo=tzinfo, locale=locale
+            )
 
 
 class IrQwebFieldText(models.AbstractModel):
-    _name = 'ir.qweb.field.text'
-    _description = 'Qweb Field Text'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.text"
+    _description = "Qweb Field Text"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
-        """
-        Escapes the value and converts newlines to br. This is bullshit.
-        """
-        return nl2br(value) if value else ''
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup:
+        """Escape the value and convert newlines to HTML line breaks."""
+        return nl2br(value) if value else ""
 
 
 class IrQwebFieldSelection(models.AbstractModel):
-    _name = 'ir.qweb.field.selection'
-    _description = 'Qweb Field Selection'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.selection"
+    _description = "Qweb Field Selection"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field information'), required=True)
-        )
-        options.update(
-            selection=dict(type='json', string=_('Json'), description=_('By default the widget uses the field information'), required=True)
+            selection={
+                "type": "json",
+                "string": _("Json"),
+                "description": _("By default the widget uses the field information"),
+                "required": True,
+            }
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
-        if not value:
-            return ''
-        return escape(options['selection'][value] or '')
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup:
+        if value is None or value is False:
+            return ""
+        return escape(options["selection"].get(value) or "")
 
     @api.model
-    def record_to_html(self, record, field_name, options):
-        if 'selection' not in options:
-            options = dict(options, selection=dict(record._fields[field_name].get_description(self.env)['selection']))
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup | bool:
+        if "selection" not in options:
+            options = dict(
+                options,
+                selection=dict(
+                    record._fields[field_name].get_description(self.env)["selection"]
+                ),
+            )
         return super().record_to_html(record, field_name, options)
 
 
 class IrQwebFieldMany2one(models.AbstractModel):
-    _name = 'ir.qweb.field.many2one'
-    _description = 'Qweb Field Many to One'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.many2one"
+    _description = "Qweb Field Many to One"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup | bool:
         if not value:
             return False
         value = value.sudo().display_name
@@ -381,41 +418,43 @@ class IrQwebFieldMany2one(models.AbstractModel):
 
 
 class IrQwebFieldMany2many(models.AbstractModel):
-    _name = 'ir.qweb.field.many2many'
-    _description = 'Qweb field many2many'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.many2many"
+    _description = "Qweb field many2many"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup | bool:
         if not value:
             return False
-        text = ', '.join(value.sudo().mapped('display_name'))
+        text = ", ".join(value.sudo().mapped("display_name"))
         return nl2br(text)
 
 
 class IrQwebFieldOne2many(models.AbstractModel):
-    _name = 'ir.qweb.field.one2many'
-    _description = 'Qweb field one2many'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.one2many"
+    _description = "Qweb field one2many"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup | bool:
         if not value:
             return False
-        text = ', '.join(value.sudo().mapped('display_name'))
+        text = ", ".join(value.sudo().mapped("display_name"))
         return nl2br(text)
 
 
 class IrQwebFieldHtml(models.AbstractModel):
-    _name = 'ir.qweb.field.html'
-    _description = 'Qweb Field HTML'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.html"
+    _description = "Qweb Field HTML"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
-        irQweb = self.env['ir.qweb']
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> Markup:
+        irQweb = self.env["ir.qweb"]
         # wrap value inside a body and parse it as HTML
-        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
+        body = etree.fromstring(
+            f"<body>{value}</body>", etree.HTMLParser(encoding="utf-8")
+        )[0]
         # use pos processing for all nodes with attributes
         for element in body.iter():
             if element.attrib:
@@ -423,11 +462,11 @@ class IrQwebFieldHtml(models.AbstractModel):
                 attrib = irQweb._post_processing_att(element.tag, attrib)
                 element.attrib.clear()
                 element.attrib.update(attrib)
-        return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
+        return Markup(etree.tostring(body, encoding="unicode", method="html")[6:-7])
 
 
 class IrQwebFieldImage(models.AbstractModel):
-    """ ``image`` widget rendering, inserts a data:uri-using image tag in the
+    """``image`` widget rendering, inserts a data:uri-using image tag in the
     document. May be overridden by e.g. the website module to generate links
     instead.
 
@@ -435,19 +474,21 @@ class IrQwebFieldImage(models.AbstractModel):
               reports may need embedded images or FS links whereas website
               needs website-aware
     """
-    _name = 'ir.qweb.field.image'
-    _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.image"
+    _description = "Qweb Field Image"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def _get_src_data_b64(self, value, options):
+    def _get_src_data_b64(self, value: Any, options: dict[str, Any]) -> str:
         try:
             img_b64 = base64.b64decode(value)
         except binascii.Error:
-            raise ValueError("Invalid image content") from None
+            msg = "Invalid image content"
+            raise ValueError(msg) from None
 
-        mimetype = guess_mimetype(img_b64, '') if img_b64 else None
-        if mimetype == 'image/webp':
+        mimetype = guess_mimetype(img_b64, "") if img_b64 else None
+        if mimetype == "image/webp":
             return self.env["ir.qweb"]._get_converted_image_data_uri(value)
         elif mimetype != "image/svg+xml":
             try:
@@ -455,32 +496,35 @@ class IrQwebFieldImage(models.AbstractModel):
                 image.verify()
                 mimetype = Image.MIME[image.format]
             except OSError as exc:
-                raise ValueError("Non-image binary fields can not be converted to HTML") from exc
-            except Exception as exc:  # noqa: BLE001
-                raise ValueError("Invalid image content") from exc
+                msg = "Non-image binary fields can not be converted to HTML"
+                raise ValueError(msg) from exc
+            except SyntaxError as exc:
+                msg = "Invalid image content"
+                raise ValueError(msg) from exc
 
-        return "data:%s;base64,%s" % (mimetype, value.decode('ascii'))
+        return f"data:{mimetype};base64,{value.decode('ascii')}"
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> Markup:
         return Markup('<img src="%s">') % self._get_src_data_b64(value, options)
 
 
 class IrQwebFieldImage_Url(models.AbstractModel):
-    """ ``image_url`` widget rendering, inserts an image tag in the
+    """``image_url`` widget rendering, inserts an image tag in the
     document.
     """
-    _name = 'ir.qweb.field.image_url'
-    _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field.image']
+
+    _name = "ir.qweb.field.image_url"
+    _description = "Qweb Field Image"
+    _inherit = ["ir.qweb.field.image"]
 
     @api.model
-    def value_to_html(self, value, options):
-        return Markup('<img src="%s">' % (value))
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> Markup:
+        return Markup('<img src="%s">') % value
 
 
 class IrQwebFieldMonetary(models.AbstractModel):
-    """ ``monetary`` converter, has a mandatory option
+    """``monetary`` converter, has a mandatory option
     ``display_currency`` only if field is not of type Monetary.
     Otherwise, if we are in presence of a monetary field, the field definition must
     have a currency_field attribute set.
@@ -493,126 +537,175 @@ class IrQwebFieldMonetary(models.AbstractModel):
               options mapping, so that the context is available to callees.
               It's set under the ``_values`` key.
     """
-    _name = 'ir.qweb.field.monetary'
-    _description = 'Qweb Field Monetary'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.monetary"
+    _description = "Qweb Field Monetary"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            from_currency=dict(type='model', params='res.currency', string=_('Original currency')),
-            display_currency=dict(type='model', params='res.currency', string=_('Display currency'), required="value_to_html"),
-            date=dict(type='date', string=_('Date'), description=_('Date used for the original currency (only used for t-esc). by default use the current date.')),
-            company_id=dict(type='model', params='res.company', string=_('Company'), description=_('Company used for the original currency (only used for t-esc). By default use the user company')),
+            from_currency={
+                "type": "model",
+                "params": "res.currency",
+                "string": _("Original currency"),
+            },
+            display_currency={
+                "type": "model",
+                "params": "res.currency",
+                "string": _("Display currency"),
+                "required": "value_to_html",
+            },
+            date={
+                "type": "date",
+                "string": _("Date"),
+                "description": _(
+                    "Date used for the original currency (only used for t-esc). by default use the current date."
+                ),
+            },
+            company_id={
+                "type": "model",
+                "params": "res.company",
+                "string": _("Company"),
+                "description": _(
+                    "Company used for the original currency (only used for t-esc). By default use the user company"
+                ),
+            },
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
-        display_currency = options['display_currency']
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> Markup:
+        display_currency = options.get("display_currency")
+        if not display_currency:
+            msg = "Missing display_currency option for monetary field rendering."
+            raise ValueError(msg)
 
         if not isinstance(value, (int, float)):
-            raise ValueError(_("The value send to monetary field is not a number."))
+            raise TypeError(_("The value send to monetary field is not a number."))
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
         # provide one either. So we need to generate a precision value
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        fmt = "%.{0}f".format(options.get('decimal_places', display_currency.decimal_places))
+        decimal_places = options.get("decimal_places", display_currency.decimal_places)
+        fmt = f"%.{decimal_places}f"
 
-        if options.get('from_currency'):
-            date = options.get('date') or fields.Date.today()
-            company_id = options.get('company_id')
+        if options.get("from_currency"):
+            date = options.get("date") or fields.Date.today()
+            company_id = options.get("company_id")
             if company_id:
-                company = self.env['res.company'].browse(company_id)
+                company = self.env["res.company"].browse(company_id)
             else:
                 company = self.env.company
-            value = options['from_currency']._convert(value, display_currency, company, date)
+            value = options["from_currency"]._convert(
+                value, display_currency, company, date
+            )
 
         if float_is_zero(value, precision_digits=display_currency.decimal_places):
             value = 0.0
 
         lang = self.user_lang()
-        formatted_amount = lang.format(fmt, display_currency.round(value), grouping=True)\
-            .replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
+        formatted_amount = (
+            lang.format(fmt, display_currency.round(value), grouping=True)
+            .replace(" ", "\N{NO-BREAK SPACE}")
+            .replace("-", "-\N{ZERO WIDTH NO-BREAK SPACE}")
+        )
 
-        pre = post = ''
-        if display_currency.position == 'before':
-            pre = '{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
+        pre = post = ""
+        if display_currency.position == "before":
+            symbol = display_currency.symbol or ""
+            pre = f"{symbol}\N{NO-BREAK SPACE}"
         else:
-            post = '\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
+            symbol = display_currency.symbol or ""
+            post = f"\N{NO-BREAK SPACE}{symbol}"
 
-        if options.get('label_price') and lang.decimal_point in formatted_amount:
+        if options.get("label_price") and lang.decimal_point in formatted_amount:
             sep = lang.decimal_point
             integer_part, decimal_part = formatted_amount.split(sep)
             integer_part += sep
-            return Markup('{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
+            return Markup(
+                '{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}'
+            ).format(integer_part, decimal_part, pre=pre, post=post)
 
-        return Markup('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
+        return Markup('{pre}<span class="oe_currency_value">{0}</span>{post}').format(
+            formatted_amount, pre=pre, post=post
+        )
 
     @api.model
-    def record_to_html(self, record, field_name, options):
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup | bool:
         options = dict(options)
-        #currency should be specified by monetary field
+        # currency should be specified by monetary field
         field = record._fields[field_name]
 
-        if not options.get('display_currency') and field.type == 'monetary' and field.get_currency_field(record):
-            options['display_currency'] = record[field.get_currency_field(record)]
-        if not options.get('display_currency'):
+        if (
+            not options.get("display_currency")
+            and field.type == "monetary"
+            and field.get_currency_field(record)
+        ):
+            options["display_currency"] = record[field.get_currency_field(record)]
+        if not options.get("display_currency"):
             # search on the model if they are a res.currency field to set as default
-            fields = record._fields.items()
-            currency_fields = [k for k, v in fields if v.type == 'many2one' and v.comodel_name == 'res.currency']
+            currency_fields = [
+                k
+                for k, v in record._fields.items()
+                if v.type == "many2one" and v.comodel_name == "res.currency"
+            ]
             if currency_fields:
-                options['display_currency'] = record[currency_fields[0]]
-        if 'date' not in options:
-            options['date'] = record.env.context.get('date')
-        if 'company_id' not in options:
-            options['company_id'] = record.env.context.get('company_id')
+                options["display_currency"] = record[currency_fields[0]]
+        if "date" not in options:
+            options["date"] = record.env.context.get("date")
+        if "company_id" not in options:
+            options["company_id"] = record.env.context.get("company_id")
 
         return super().record_to_html(record, field_name, options)
 
 
 TIMEDELTA_UNITS = (
-    ('year',   _lt('year'),   3600 * 24 * 365),
-    ('month',  _lt('month'),  3600 * 24 * 30),
-    ('week',   _lt('week'),   3600 * 24 * 7),
-    ('day',    _lt('day'),    3600 * 24),
-    ('hour',   _lt('hour'),   3600),
-    ('minute', _lt('minute'), 60),
-    ('second', _lt('second'), 1)
+    ("year", _lt("year"), 3600 * 24 * 365),
+    ("month", _lt("month"), 3600 * 24 * 30),
+    ("week", _lt("week"), 3600 * 24 * 7),
+    ("day", _lt("day"), 3600 * 24),
+    ("hour", _lt("hour"), 3600),
+    ("minute", _lt("minute"), 60),
+    ("second", _lt("second"), 1),
 )
 
 
 class IrQwebFieldFloat_Time(models.AbstractModel):
-    """ ``float_time`` converter, to display integral or fractional values as
+    """``float_time`` converter, to display integral or fractional values as
     human-readable time spans (e.g. 1.5 as "01:30").
 
     Can be used on any numerical field.
     """
-    _name = 'ir.qweb.field.float_time'
-    _description = 'Qweb Field Float Time'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.float_time"
+    _description = "Qweb Field Float Time"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
         return format_duration(value)
 
 
 class IrQwebFieldTime(models.AbstractModel):
-    """ ``time`` converter, to display integer or fractional value as
+    """``time`` converter, to display integer or fractional value as
     human-readable time (e.g. 1.5 as "1:30 AM"). The unit of this value
     is in hours.
 
     Can be used on any numerical field between: 0 <= value < 24
     """
-    _name = 'ir.qweb.field.time'
-    _description = 'QWeb Field Time'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.time"
+    _description = "QWeb Field Time"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
         if value < 0:
             raise ValueError(_("The value (%s) passed should be positive", value))
         hours, minutes = divmod(int(abs(value) * 60), 60)
@@ -621,13 +714,13 @@ class IrQwebFieldTime(models.AbstractModel):
         t = time(hour=hours, minute=minutes)
 
         locale = babel_locale_parse(self.user_lang().code)
-        pattern = options.get('format', 'short')
+        pattern = options.get("format", "short")
 
         return babel.dates.format_time(t, format=pattern, tzinfo=None, locale=locale)
 
 
 class IrQwebFieldDuration(models.AbstractModel):
-    """ ``duration`` converter, to display integral or fractional values as
+    """``duration`` converter, to display integral or fractional values as
     human-readable time spans (e.g. 1.5 as "1 hour 30 minutes").
 
     Can be used on any numerical field.
@@ -642,64 +735,83 @@ class IrQwebFieldDuration(models.AbstractModel):
 
     Sub-second values will be ignored.
     """
-    _name = 'ir.qweb.field.duration'
-    _description = 'Qweb Field Duration'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.duration"
+    _description = "Qweb Field Duration"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         unit = [(value, str(label)) for value, label, ratio in TIMEDELTA_UNITS]
         options.update(
-            digital=dict(type="boolean", string=_('Digital formatting')),
-            unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
-            format=dict(
-                type="selection",
-                params=[
-                    ('long', _('Long')),
-                    ('short', _('Short')),
-                    ('narrow', _('Narrow'))],
-                string=_('Format'),
-                description=_("Formatting: long, short, narrow (not used for digital)"),
-                default_value='long'
-            ),
-            add_direction=dict(
-                type="boolean",
-                string=_("Add direction"),
-                description=_("Add directional information (not used for digital)")
-            ),
+            digital={"type": "boolean", "string": _("Digital formatting")},
+            unit={
+                "type": "selection",
+                "params": unit,
+                "string": _("Date unit"),
+                "description": _("Date unit used for comparison and formatting"),
+                "default_value": "second",
+                "required": True,
+            },
+            round={
+                "type": "selection",
+                "params": unit,
+                "string": _("Rounding unit"),
+                "description": _(
+                    "Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."
+                ),
+                "default_value": "second",
+            },
+            format={
+                "type": "selection",
+                "params": [
+                    ("long", _("Long")),
+                    ("short", _("Short")),
+                    ("narrow", _("Narrow")),
+                ],
+                "string": _("Format"),
+                "description": _(
+                    "Formatting: long, short, narrow (not used for digital)"
+                ),
+                "default_value": "long",
+            },
+            add_direction={
+                "type": "boolean",
+                "string": _("Add direction"),
+                "description": _("Add directional information (not used for digital)"),
+            },
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
         units = {unit: duration for unit, label, duration in TIMEDELTA_UNITS}
 
         locale = babel_locale_parse(self.user_lang().code)
-        factor = units[options.get('unit', 'second')]
-        round_to = units[options.get('round', 'second')]
+        factor = units[options.get("unit", "second")]
+        round_to = units[options.get("round", "second")]
 
-        if options.get('digital') and round_to > 3600:
+        if options.get("digital") and round_to > 3600:
             round_to = 3600
 
         r = round((value * factor) / round_to) * round_to
 
         sections = []
-        sign = ''
+        sign = ""
         if value < 0:
             r = -r
-            sign = '-'
+            sign = "-"
 
-        if options.get('digital'):
+        if options.get("digital"):
             for _unit, _label, secs_per_unit in TIMEDELTA_UNITS:
                 if secs_per_unit > 3600:
                     continue
                 v, r = divmod(r, secs_per_unit)
                 if not v and (secs_per_unit > factor or secs_per_unit < round_to):
                     continue
-                sections.append(u"%02.0f" % int(round(v)))
-            return sign + u':'.join(sections)
+                sections.append("%02.0f" % round(v))
+            return sign + ":".join(sections)
 
         for _unit, _label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
@@ -707,198 +819,290 @@ class IrQwebFieldDuration(models.AbstractModel):
                 continue
             try:
                 section = babel.dates.format_timedelta(
-                    v*secs_per_unit,
+                    v * secs_per_unit,
                     granularity=round_to,
-                    add_direction=options.get('add_direction'),
-                    format=options.get('format', 'long'),
+                    add_direction=options.get("add_direction"),
+                    format=options.get("format", "long"),
                     threshold=1,
-                    locale=locale)
+                    locale=locale,
+                )
             except KeyError:
                 # in case of wrong implementation of babel, try to fallback on en_US locale.
                 # https://github.com/python-babel/babel/pull/827/files
                 # Some bugs already fixed in 2.10 but ubuntu22 is 2.8
-                localeUS = babel_locale_parse('en_US')
+                localeUS = babel_locale_parse("en_US")
                 section = babel.dates.format_timedelta(
-                    v*secs_per_unit,
+                    v * secs_per_unit,
                     granularity=round_to,
-                    add_direction=options.get('add_direction'),
-                    format=options.get('format', 'long'),
+                    add_direction=options.get("add_direction"),
+                    format=options.get("format", "long"),
                     threshold=1,
-                    locale=localeUS)
+                    locale=localeUS,
+                )
             if section:
                 sections.append(section)
 
         if sign:
             sections.insert(0, sign)
-        return u' '.join(sections)
+        return " ".join(sections)
 
 
 class IrQwebFieldRelative(models.AbstractModel):
-    _name = 'ir.qweb.field.relative'
-    _description = 'Qweb Field Relative'
-    _inherit = ['ir.qweb.field']
+    _name = "ir.qweb.field.relative"
+    _description = "Qweb Field Relative"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            now=dict(type='datetime', string=_('Reference date'), description=_('Date to compare with the field value, by default use the current date.'))
+            now={
+                "type": "datetime",
+                "string": _("Reference date"),
+                "description": _(
+                    "Date to compare with the field value, by default use the current date."
+                ),
+            }
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str:
         locale = babel_locale_parse(self.user_lang().code)
 
         if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
-        reference = fields.Datetime.from_string(options['now'])
+        reference = fields.Datetime.from_string(options["now"])
 
-        return babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale)
+        return babel.dates.format_timedelta(
+            value - reference, add_direction=True, locale=locale
+        )
 
     @api.model
-    def record_to_html(self, record, field_name, options):
-        if 'now' not in options:
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup | bool:
+        if "now" not in options:
             options = dict(options, now=record._fields[field_name].now())
         return super().record_to_html(record, field_name, options)
 
 
 class IrQwebFieldBarcode(models.AbstractModel):
-    """ ``barcode`` widget rendering, inserts a data:uri-using image tag in the
+    """``barcode`` widget rendering, inserts a data:uri-using image tag in the
     document. May be overridden by e.g. the website module to generate links
     instead.
     """
-    _name = 'ir.qweb.field.barcode'
-    _description = 'Qweb Field Barcode'
-    _inherit = ['ir.qweb.field']
+
+    _name = "ir.qweb.field.barcode"
+    _description = "Qweb Field Barcode"
+    _inherit = ["ir.qweb.field"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         options.update(
-            symbology=dict(type='string', string=_('Barcode symbology'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
-            width=dict(type='integer', string=_('Width'), default_value=600),
-            height=dict(type='integer', string=_('Height'), default_value=100),
-            humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
-            quiet=dict(type='integer', string='Quiet', default_value=1),
-            mask=dict(type='string', string='Mask', default_value='')
+            symbology={
+                "type": "string",
+                "string": _("Barcode symbology"),
+                "description": _("Barcode type, eg: UPCA, EAN13, Code128"),
+                "default_value": "Code128",
+            },
+            width={
+                "type": "integer",
+                "string": _("Width"),
+                "default_value": 600,
+            },
+            height={
+                "type": "integer",
+                "string": _("Height"),
+                "default_value": 100,
+            },
+            humanreadable={
+                "type": "integer",
+                "string": _("Human Readable"),
+                "default_value": 0,
+            },
+            quiet={"type": "integer", "string": "Quiet", "default_value": 1},
+            mask={"type": "string", "string": "Mask", "default_value": ""},
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options=None):
+    def value_to_html(
+        self, value: Any, options: dict[str, Any] | None = None
+    ) -> str | Markup:
         if not value:
-            return ''
-        if not bool(re.match(r'^[\x00-\x7F]+$', value)):
+            return ""
+        if not value.isascii():
             return nl2br(value)
-        barcode_symbology = options.get('symbology', 'Code128')
-        barcode = self.env['ir.actions.report'].barcode(
+        barcode_symbology = options.get("symbology", "Code128")
+        barcode = self.env["ir.actions.report"].barcode(
             barcode_symbology,
             value,
-            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable', 'quiet', 'mask']})
+            **{
+                key: value
+                for key, value in options.items()
+                if key in ["width", "height", "humanreadable", "quiet", "mask"]
+            },
+        )
 
-        img_element = html.Element('img')
+        img_element = html.Element("img")
         for k, v in options.items():
-            if k.startswith('img_') and k[4:] in safe_attrs:
-                img_element.set(k[4:], v)
-        if not img_element.get('alt'):
-            img_element.set('alt', _('Barcode %s', value))
-        img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
-        return Markup(html.tostring(img_element, encoding='unicode'))
+            if k.startswith("img_") and k.removeprefix("img_") in safe_attrs:
+                img_element.set(k.removeprefix("img_"), v)
+        if not img_element.get("alt"):
+            img_element.set("alt", _("Barcode %s", value))
+        img_element.set(
+            "src", f"data:image/png;base64,{base64.b64encode(barcode).decode()}"
+        )
+        return Markup(html.tostring(img_element, encoding="unicode"))
 
 
 class IrQwebFieldContact(models.AbstractModel):
-    _name = 'ir.qweb.field.contact'
-    _description = 'Qweb Field Contact'
-    _inherit = ['ir.qweb.field.many2one']
+    _name = "ir.qweb.field.contact"
+    _description = "Qweb Field Contact"
+    _inherit = ["ir.qweb.field.many2one"]
 
     @api.model
-    def get_available_options(self):
+    def get_available_options(self) -> dict[str, dict[str, Any]]:
         options = super().get_available_options()
         contact_fields = [
-            {'field_name': 'name', 'label': _('Name'), 'default': True},
-            {'field_name': 'address', 'label': _('Address'), 'default': True},
-            {'field_name': 'phone', 'label': _('Phone'), 'default': True},
-            {'field_name': 'email', 'label': _('Email'), 'default': True},
-            {'field_name': 'vat', 'label': _('VAT')},
+            {"field_name": "name", "label": _("Name"), "default": True},
+            {"field_name": "address", "label": _("Address"), "default": True},
+            {"field_name": "phone", "label": _("Phone"), "default": True},
+            {"field_name": "email", "label": _("Email"), "default": True},
+            {"field_name": "vat", "label": _("VAT")},
         ]
-        separator_params = dict(
-            type='selection',
-            selection=[[" ", _("Space")], [",", _("Comma")], ["-", _("Dash")], ["|", _("Vertical bar")], ["/", _("Slash")]],
-            placeholder=_('Linebreak'),
-        )
+        separator_params = {
+            "type": "selection",
+            "selection": [
+                [" ", _("Space")],
+                [",", _("Comma")],
+                ["-", _("Dash")],
+                ["|", _("Vertical bar")],
+                ["/", _("Slash")],
+            ],
+            "placeholder": _("Linebreak"),
+        }
         options.update(
-            fields=dict(type='array', params=dict(type='selection', params=contact_fields), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=[param.get('field_name') for param in contact_fields if param.get('default')]),
-            separator=dict(type='selection', params=separator_params, string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value=False),
-            no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
-            no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
-            phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
-            country_image=dict(type='boolean', string=_('Display country image'), description=_("Display the country image if the field is present on the record")),
+            fields={
+                "type": "array",
+                "params": {"type": "selection", "params": contact_fields},
+                "string": _("Displayed fields"),
+                "description": _("List of contact fields to display in the widget"),
+                "default_value": [
+                    param.get("field_name")
+                    for param in contact_fields
+                    if param.get("default")
+                ],
+            },
+            separator={
+                "type": "selection",
+                "params": separator_params,
+                "string": _("Address separator"),
+                "description": _(
+                    "Separator use to split the address from the display_name."
+                ),
+                "default_value": False,
+            },
+            no_marker={
+                "type": "boolean",
+                "string": _("Hide badges"),
+                "description": _("Don't display the font awesome marker"),
+            },
+            no_tag_br={
+                "type": "boolean",
+                "string": _("Use comma"),
+                "description": _(
+                    "Use comma instead of the <br> tag to display the address"
+                ),
+            },
+            phone_icons={
+                "type": "boolean",
+                "string": _("Display phone icons"),
+                "description": _("Display the phone icons even if no_marker is True"),
+            },
+            country_image={
+                "type": "boolean",
+                "string": _("Display country image"),
+                "description": _(
+                    "Display the country image if the field is present on the record"
+                ),
+            },
         )
         return options
 
     @api.model
-    def value_to_html(self, value, options):
+    def value_to_html(self, value: Any, options: dict[str, Any]) -> str | Markup:
         if not value:
-            if options.get('null_text'):
+            if options.get("null_text"):
                 val = {
-                    'options': options,
+                    "options": options,
                 }
-                template_options = options.get('template_options', {})
-                return self.env['ir.qweb']._render('base.no_contact', val, **template_options)
-            return ''
+                template_options = options.get("template_options", {})
+                return self.env["ir.qweb"]._render(
+                    "base.no_contact", val, **template_options
+                )
+            return ""
 
-        opf = options.get('fields') or ["name", "address", "phone", "email"]
-        sep = options.get('separator')
+        opf = options.get("fields") or ["name", "address", "phone", "email"]
+        sep = options.get("separator")
         if sep:
             opsep = escape(sep)
-        elif options.get('no_tag_br'):
+        elif options.get("no_tag_br"):
             # escaped joiners will auto-escape joined params
-            opsep = escape(', ')
+            opsep = escape(", ")
         else:
-            opsep = Markup('<br/>')
+            opsep = Markup("<br/>")
 
         value = value.sudo().with_context(show_address=True)
-        display_name = value.display_name or ''
+        display_name = value.display_name or ""
         # Avoid having something like:
         # display_name = 'Foo\n  \n' -> This is a res.partner with a name and no address
         # That would return markup('<br/>') as address. But there is no address set.
         if any(elem.strip() for elem in display_name.split("\n")[1:]):
             address = opsep.join(display_name.split("\n")[1:]).strip()
         else:
-            address = ''
+            address = ""
         val = {
-            'name': display_name.split("\n")[0],
-            'address': address,
-            'phone': value.phone,
-            'city': value.city,
-            'country_id': value.country_id.display_name,
-            'website': value.website,
-            'email': value.email,
-            'vat': value.vat,
-            'vat_label': value.country_id.vat_label or _('VAT'),
-            'fields': opf,
-            'object': value,
-            'options': options
+            "name": display_name.split("\n")[0],
+            "address": address,
+            "phone": value.phone,
+            "city": value.city,
+            "country_id": value.country_id.display_name,
+            "website": value.website,
+            "email": value.email,
+            "vat": value.vat,
+            "vat_label": value.country_id.vat_label or _("VAT"),
+            "fields": opf,
+            "object": value,
+            "options": options,
         }
-        return self.env['ir.qweb']._render('base.contact', val, minimal_qcontext=True)
+        return self.env["ir.qweb"]._render("base.contact", val, minimal_qcontext=True)
 
 
 class IrQwebFieldQweb(models.AbstractModel):
-    _name = 'ir.qweb.field.qweb'
-    _description = 'Qweb Field qweb'
-    _inherit = ['ir.qweb.field.many2one']
+    _name = "ir.qweb.field.qweb"
+    _description = "Qweb Field qweb"
+    _inherit = ["ir.qweb.field.many2one"]
 
     @api.model
-    def record_to_html(self, record, field_name, options):
+    def record_to_html(
+        self, record: models.BaseModel, field_name: str, options: dict[str, Any]
+    ) -> str | Markup:
         view = record[field_name]
         if not view:
-            return ''
+            return ""
 
         if view._name != "ir.ui.view":
-            _logger.warning("%s.%s must be a 'ir.ui.view', got %r.", record, field_name, view._name)
-            return ''
+            _logger.warning(
+                "%s.%s must be a 'ir.ui.view', got %r.",
+                record,
+                field_name,
+                view._name,
+            )
+            return ""
 
-        return self.env['ir.qweb']._render(view.id, options.get('values', {}))
+        return self.env["ir.qweb"]._render(view.id, options.get("values", {}))

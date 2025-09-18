@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import {
     clickSave,
@@ -23,7 +25,9 @@ test("FloatFactorField in form view", async () => {
 
     onRpc("partner", "web_save", ({ args }) => {
         // 2.3 / 0.5 = 4.6
-        expect(args[1].qux).toBe(4.6, { message: "the correct float value should be saved" });
+        expect(args[1].qux).toBe(4.6, {
+            message: "the correct float value should be saved",
+        });
     });
     await mountView({
         type: "form",

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": "Test RPC",
     "version": "1.0",
@@ -7,6 +6,6 @@
     "depends": ["web", "rpc"],
     "installable": True,
     "data": ["ir.model.access.csv"],
-    'author': 'Odoo S.A.',
-    'license': 'LGPL-3',
+    "author": "Odoo S.A.",
+    "license": "LGPL-3",
 }

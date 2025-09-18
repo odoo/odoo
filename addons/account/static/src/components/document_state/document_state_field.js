@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import { SelectionField, selectionField } from "@web/fields/selection/selection/selection_field";
 
 import { Component } from "@odoo/owl";
 

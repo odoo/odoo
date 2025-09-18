@@ -1,12 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { getFieldDomain } from "@web/model/relational_model/utils";
-import { useSpecialData } from "@web/views/fields/relational_utils";
+import { useSpecialData } from "@web/fields/relational/special_data";
 import {
-    badgeSelectionField,
     BadgeSelectionField,
-} from "@web/views/fields/badge_selection/badge_selection_field";
-
+    badgeSelectionField,
+} from "@web/fields/selection/badge_selection/badge_selection_field";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 /**
  * @typedef BadgeSelectionIconsField
  * Overrides the standard BadgeSelectionField and inserts FontAwesome icons before each option's title.

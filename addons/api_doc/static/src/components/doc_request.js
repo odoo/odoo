@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { LANGUAGES, createRequestCode } from "@api_doc/utils/doc_code_gen";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor } from "@web/components/code_editor/code_editor";
 
 class CopyableCodeEditor extends CodeEditor {
     static template = "web.DocRequest.CodeEditor";

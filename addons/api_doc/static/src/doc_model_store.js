@@ -27,7 +27,7 @@ async function tryFetch(input) {
             throw new DocAPIError ({
                 name: response.status === 500
                     ? "Internal Server Error"
-                    : `HTTP $(response.status)`,
+                    : `HTTP ${response.status}`,
                 status: response.status,
                 traceback: responseJson.debug,
             });

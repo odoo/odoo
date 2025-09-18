@@ -1,24 +1,26 @@
+// @ts-check
+
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts, scroll } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
-import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
+import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
+import { getPickerCell } from "@web/../tests/components/datetime/datetime_test_helpers";
+import { SELECTORS } from "@web/../tests/components/domain_selector/domain_selector_helpers";
 import {
-    Country,
-    Partner,
-    Player,
-    Product,
-    Stage,
-    Team,
     addNewRule,
     clearNotSupported,
     clickOnButtonDeleteNode,
+    Country,
     editValue,
     getConditionText,
     getCurrentPath,
     getCurrentValue,
     label,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+    Partner,
+    Player,
+    Product,
+    Stage,
+    Team,
+} from "@web/../tests/components/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     defineModels,
@@ -30,7 +32,6 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -58,7 +59,7 @@ function replaceNotificationService() {
                 };
             },
         },
-        { force: true }
+        { force: true },
     );
 }
 
@@ -125,7 +126,9 @@ test("The domain editor should not crash the view when given a dynamic filter (a
         message: "The widget should show the dynamic filter.",
     });
     expect(".o_field_domain").not.toHaveClass("o_field_invalid");
-    expect.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
+    expect.verifySteps([
+        "The domain involves non-literals. Their evaluation might fail.",
+    ]);
 });
 
 test("The domain editor should not crash the view when given a dynamic filter ( datetime )", async function () {
@@ -231,7 +234,9 @@ test("using binary field in domain widget", async function () {
 
     await addNewRule();
     await contains(".o_model_field_selector").click();
-    await contains(".o_model_field_selector_popover_item[data-name='image'] button").click();
+    await contains(
+        ".o_model_field_selector_popover_item[data-name='image'] button",
+    ).click();
     expect(getCurrentPath()).toBe("Picture");
 });
 
@@ -397,7 +402,9 @@ test("basic domain field: show the selection", async function () {
     // click on a record -> should not open the record
     // we don't actually check that it doesn't open the record because even
     // if it tries to, it will crash as we don't define an arch in this test
-    await contains(".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']").click();
+    await contains(
+        ".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']",
+    ).click();
 });
 
 test.tags("desktop");
@@ -801,7 +808,9 @@ test("domain field: edit through selector (dynamic content)", async function () 
 
     await clearNotSupported();
     rawDomain = `[("date", ">=", "2020-09-05")]`;
-    expect(".o_datetime_input").toHaveCount(1, { message: "there should be a datepicker" });
+    expect(".o_datetime_input").toHaveCount(1, {
+        message: "there should be a datepicker",
+    });
     expect.verifySteps(["search_count"]);
 
     // Open and close the datepicker
@@ -840,14 +849,19 @@ test("domain field without model", async function () {
             </form>`,
     });
 
-    expect('.o_field_widget[name="name"]').toHaveText("Select a model to add a filter.", {
-        message: "should contain an error message saying the model is missing",
-    });
+    expect('.o_field_widget[name="name"]').toHaveText(
+        "Select a model to add a filter.",
+        {
+            message: "should contain an error message saying the model is missing",
+        },
+    );
     expect.verifySteps([]);
 
     await contains(".o_field_widget[name=model_name] input").edit("partner");
     await animationFrame();
-    expect('.o_field_widget[name="name"] .o_field_domain_panel').toHaveText("3 record(s)");
+    expect('.o_field_widget[name="name"] .o_field_domain_panel').toHaveText(
+        "3 record(s)",
+    );
     expect.verifySteps(["partner"]);
 });
 
@@ -928,7 +942,9 @@ test("invalid value in domain field with 'inDialog' options", async function () 
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(SELECTORS.debugArea).edit("[(0, '=', expr)]");
     await contains(".modal-footer .btn-primary").click();
-    expect(".modal").toHaveCount(1, { message: "the domain is invalid: the dialog is not closed" });
+    expect(".modal").toHaveCount(1, {
+        message: "the domain is invalid: the dialog is not closed",
+    });
 });
 
 test("edit domain button is available even while loading records count", async function () {
@@ -971,7 +987,9 @@ test("debug input editing sets the field as dirty even without a focus out", asy
             </form>`,
     });
     await contains(".o_form_button_save").click();
-    await contains(SELECTORS.debugArea).edit("[['id', '=', False]]", { confirm: false });
+    await contains(SELECTORS.debugArea).edit("[['id', '=', False]]", {
+        confirm: false,
+    });
     expect(".o_form_button_save").toHaveCount(1);
     await contains(".o_form_button_save").click();
     expect.verifySteps(["validate domain"]);
@@ -1084,7 +1102,9 @@ test("domain field can be foldable", async function () {
     // Fold domain selector
     await contains(".o_field_domain a i").click();
 
-    expect(".o_field_domain .o_facet_values:contains('Color index = 2')").toHaveCount(1);
+    expect(".o_field_domain .o_facet_values:contains('Color index = 2')").toHaveCount(
+        1,
+    );
 });
 
 test("add condition in empty foldable domain", async function () {
@@ -1142,7 +1162,9 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
     });
     expect(".o_field_domain span").toHaveText("Invalid domain");
     expect(".fa-caret-down").toHaveCount(0);
-    expect(".o_domain_selector_row").toHaveText("This domain is not supported.\nReset domain");
+    expect(".o_domain_selector_row").toHaveText(
+        "This domain is not supported.\nReset domain",
+    );
     await contains(".o_domain_selector_row button").click();
     expect(".o_field_domain span:first").toHaveText("Match all records");
 });
@@ -1210,7 +1232,9 @@ test(`folded domain field with "in range" operator`, async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText(`Datetime ${label("in range")} Today`);
+    expect(`.o_field_domain .o_facet_values`).toHaveText(
+        `Datetime ${label("in range")} Today`,
+    );
 });
 
 test("allow_expressions = true", async function () {
@@ -1239,14 +1263,18 @@ test("allow_expressions = true", async function () {
     await contains(SELECTORS.debugArea).edit(`[("name", "=", [name])]`);
     await animationFrame();
     expect(".o_field_domain").not.toHaveClass("o_field_invalid");
-    expect.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
+    expect.verifySteps([
+        "The domain involves non-literals. Their evaluation might fail.",
+    ]);
 
     await contains(SELECTORS.debugArea).edit(
-        `["&", ("name", "=", "name"), (path, "=", "other name")]`
+        `["&", ("name", "=", "name"), (path, "=", "other name")]`,
     );
     await animationFrame();
     expect(".o_field_domain").not.toHaveClass("o_field_invalid");
-    expect.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
+    expect.verifySteps([
+        "The domain involves non-literals. Their evaluation might fail.",
+    ]);
 });
 
 test("allow_expressions = false (default)", async function () {
@@ -1276,7 +1304,7 @@ test("allow_expressions = false (default)", async function () {
     expect.verifySteps(["The domain should not involve non-literals"]);
 
     await contains(SELECTORS.debugArea).edit(
-        `["&", ("name", "=", "name"), (path, "=", "other name")]`
+        `["&", ("name", "=", "name"), (path, "=", "other name")]`,
     );
     await animationFrame();
     expect(".o_field_domain").toHaveClass("o_field_invalid");

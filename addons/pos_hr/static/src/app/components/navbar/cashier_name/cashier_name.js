@@ -1,7 +1,6 @@
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { patch } from "@web/core/utils/patch";
 import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
-
+import { patch } from "@web/core/utils/patch";
 patch(CashierName.prototype, {
     setup() {
         super.setup(...arguments);

@@ -60,7 +60,7 @@ class AccountMoveLine(models.Model):
             if not orders:
                 continue
             orders = orders.sorted('create_date')
-            in_sale_state_orders = orders.filtered(lambda s: s.state == 'sale')
+            in_sale_state_orders = orders.filtered(lambda s: s.state == 'done')
 
             mapping[move_line.id] = in_sale_state_orders[0] if in_sale_state_orders else orders[0]
 

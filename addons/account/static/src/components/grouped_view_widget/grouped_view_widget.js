@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 class ListItem extends Component {
     static template = "account.GroupedItemTemplate";

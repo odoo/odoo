@@ -9,13 +9,13 @@
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-29 12:48+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-11 16:32+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/es/>\n"
@@ -307,7 +307,8 @@ msgstr "Días para la compra"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,help:purchase_stock.field_res_users__group_rfq
 msgid ""
-"Define if RFQ should be grouped         together based on expected arrival.\n"
+"Define if RFQ should be grouped         together based on expected arrival, "
+"except for dropship operations.\n"
 "         On Order: Replenishment needs will be grouped together except for "
 "MTO.\n"
 "         Daily: Replenishment needs will be grouped if the expected arrival "
@@ -316,15 +317,15 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
-"Define si las solicitudes de presupuesto (sdP) deben agruparse en función de "
-"la fecha de llegada prevista.\n"
-"         Por pedido: las necesidades de reposición se agruparán, excepto en "
-"el caso de MTO.\n"
+"Define si las solicitudes de presupuesto (SdP) deben agruparse         en "
+"función de la fecha prevista, excepto en las operaciones de dropshipping.\n"
+"         Al confirmar el pedido: las necesidades de reposición se agruparán, "
+"excepto en el caso de fabricación bajo pedido (MTO).\n"
 "         Diariamente: las necesidades de reposición se agruparán si la fecha "
-"de llegada prevista es el mismo día.\n"
+"prevista de llegada es el mismo día\n"
 "         Semanalmente: las necesidades de reposición se agruparán si la "
-"fecha de llegada prevista es la misma semana o el mismo día de la semana.\n"
-"         Siempre: las necesidades de reposición siempre se agruparán."
+"fecha prevista de llegada es la misma semana o el mismo día de la semana\n"
+"         Siempre: las necesidades de reposición se agruparán siempre."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -360,7 +361,6 @@ msgstr "Tipo de ubicación de destino"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
@@ -452,7 +452,7 @@ msgstr "Previsto"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
-msgstr "Emisión pronosticada"
+msgstr "Salida prevista"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
@@ -520,7 +520,6 @@ msgstr "Agrupar solicitudes de presupuesto (SdP)"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
@@ -636,7 +635,7 @@ msgstr "Acciones manuales pueden ser necesarias."
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Regla de inventario mínimo"
+msgstr "Regla de stock mínimo"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
@@ -989,12 +988,7 @@ msgstr "Informe de reposición de stock"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Regla de inventario"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Valoración de stock"
+msgstr "Regla de stock"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
@@ -1335,6 +1329,31 @@ msgstr "pedido en lugar de"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "debe reponer este producto manualmente."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Valoración de stock"
+
+#~ msgid ""
+#~ "Define if RFQ should be grouped         together based on expected "
+#~ "arrival.\n"
+#~ "         On Order: Replenishment needs will be grouped together except "
+#~ "for MTO.\n"
+#~ "         Daily: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same day\n"
+#~ "         Weekly: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same week or week day\n"
+#~ "         Always: Replenishment needs will always be grouped."
+#~ msgstr ""
+#~ "Define si las solicitudes de presupuesto (sdP) deben agruparse en función "
+#~ "de la fecha de llegada prevista.\n"
+#~ "         Por pedido: las necesidades de reposición se agruparán, excepto "
+#~ "en el caso de MTO.\n"
+#~ "         Diariamente: las necesidades de reposición se agruparán si la "
+#~ "fecha de llegada prevista es el mismo día.\n"
+#~ "         Semanalmente: las necesidades de reposición se agruparán si la "
+#~ "fecha de llegada prevista es la misma semana o el mismo día de la "
+#~ "semana.\n"
+#~ "         Siempre: las necesidades de reposición siempre se agruparán."
 
 #~ msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
 #~ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">unidades</span>"

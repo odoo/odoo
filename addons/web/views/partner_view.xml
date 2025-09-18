@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Add partner categories to the kanban card footer -->
+    <record id="res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">res.partner.kanban.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer" position="before">
+                <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}" />
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.actions.server" id="download_contact">
         <field name="name">Download (vCard)</field>
         <field name="model_id" ref="model_res_partner"/>

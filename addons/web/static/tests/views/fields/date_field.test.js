@@ -1,11 +1,13 @@
+// @ts-check
+
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     assertDateTimePicker,
     getPickerCell,
     zoomOut,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+} from "@web/../tests/components/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
@@ -411,7 +413,9 @@ test("date field should select its content onclick when there is one", async () 
     expect(".o_datetime_picker").toHaveCount(1);
     const active = document.activeElement;
     expect(active.tagName).toBe("INPUT");
-    expect(active.value.slice(active.selectionStart, active.selectionEnd)).toBe("02/03/2017");
+    expect(active.value.slice(active.selectionStart, active.selectionEnd)).toBe(
+        "02/03/2017",
+    );
 });
 
 test("date field supports custom formats", async () => {

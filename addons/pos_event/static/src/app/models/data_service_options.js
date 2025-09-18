@@ -1,6 +1,6 @@
 import { DataServiceOptions } from "@point_of_sale/app/models/data_service_options";
-import { patch } from "@web/core/utils/patch";
 
+import { patch } from "@web/core/utils/patch";
 patch(DataServiceOptions.prototype, {
     get databaseTable() {
         return {
@@ -8,18 +8,24 @@ patch(DataServiceOptions.prototype, {
             "event.registration": {
                 key: "id",
                 condition: (record) =>
-                    !record.pos_order_line_id || record.pos_order_line_id?.order_id?.finalized,
+                    !record.pos_order_line_id ||
+                    record.pos_order_line_id?.order_id?.finalized,
             },
             "event.registration.answer": {
                 key: "id",
                 condition: (record) =>
                     !record.registration_id ||
-                    record.registration_id?.pos_order_line_id?.order_id?.finalized,
+                    record.registration_id?.pos_order_line_id?.order_id
+                        ?.finalized,
             },
         };
     },
     get dynamicModels() {
-        return [...super.dynamicModels, "event.registration", "event.registration.answer"];
+        return [
+            ...super.dynamicModels,
+            "event.registration",
+            "event.registration.answer",
+        ];
     },
     get pohibitedAutoLoadedModels() {
         return [...super.pohibitedAutoLoadedModels, "event.registration"];

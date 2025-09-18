@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/utils/indexed_db - IndexedDB wrapper with versioned schema, quota management, and mutex locking */
+
 import { Mutex } from "./concurrency";
 
 const VERSION_TABLE = "__DBVersion__";
@@ -7,11 +11,12 @@ export class IDBQuotaExceededError extends Error {}
 
 function formatStorageSize(size) {
     const units = ["b", "Kb", "Mb", "Gb"];
-    while (size >= 1000 && units.length > 1) {
+    let i = 0;
+    while (size >= 1000 && i < units.length - 1) {
         size /= 1000;
-        units.splice(0, 1);
+        i++;
     }
-    return `${size.toFixed(2)}${units[0]}`;
+    return `${size.toFixed(2)}${units[i]}`;
 }
 
 export class IndexedDB {
@@ -62,13 +67,16 @@ export class IndexedDB {
     /**
      * Invalidates a table, or the whole database.
      *
-     * @param {string|Array} [table=null] if not given, the whole database is invalidated
+     * @param {string|string[]|null} [tables=null] if not given, the whole database is invalidated
      * @returns Promise
      */
     async invalidate(tables = null) {
         return this.execute((db) => {
             if (db) {
-                return this._invalidate(db, typeof tables === "string" ? [tables] : tables);
+                return this._invalidate(
+                    db,
+                    typeof tables === "string" ? [tables] : tables,
+                );
             }
         });
     }
@@ -103,7 +111,9 @@ export class IndexedDB {
                 Promise.resolve(callback()).then(resolve);
             };
             request.onerror = (event) => {
-                console.error(`IndexedDB delete error: ${event.target.error?.message}`);
+                console.error(
+                    `IndexedDB delete error: ${/** @type {IDBRequest} */ (event.target).error?.message}`,
+                );
                 Promise.resolve(callback()).then(resolve);
             };
         });
@@ -141,13 +151,13 @@ export class IndexedDB {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.name, idbVersion);
             request.onupgradeneeded = (event) => {
-                const db = event.target.result;
+                const db = /** @type {IDBOpenDBRequest} */ (event.target).result;
                 const dbTables = new Set(db.objectStoreNames);
                 const newTables = this._tables.difference(dbTables);
                 newTables.forEach((table) => db.createObjectStore(table));
             };
             request.onsuccess = (event) => {
-                const db = event.target.result;
+                const db = /** @type {IDBOpenDBRequest} */ (event.target).result;
                 const dbTables = new Set(db.objectStoreNames);
                 const newTables = this._tables.difference(dbTables);
                 if (newTables.size !== 0) {
@@ -162,8 +172,8 @@ export class IndexedDB {
                             const { quota, usage } = await navigator.storage.estimate();
                             console.error(
                                 `IndexedDB error: Quota Exceeded (${formatStorageSize(
-                                    usage
-                                )} out of ${formatStorageSize(quota)} used)`
+                                    usage,
+                                )} out of ${formatStorageSize(quota)} used)`,
                             );
                             reject(new IDBQuotaExceededError());
                         } else {
@@ -173,7 +183,9 @@ export class IndexedDB {
                     .finally(() => db.close());
             };
             request.onerror = (event) => {
-                console.error(`IndexedDB error: ${event.target.error?.message}`);
+                console.error(
+                    `IndexedDB error: ${/** @type {IDBRequest} */ (event.target).error?.message}`,
+                );
                 Promise.resolve(callback()).then(resolve);
             };
         });
@@ -185,7 +197,9 @@ export class IndexedDB {
             // Relaxed durability improves the write performances
             // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
-            const transaction = db.transaction(table, "readwrite", { durability: "relaxed" });
+            const transaction = db.transaction(table, "readwrite", {
+                durability: "relaxed",
+            });
             transaction.objectStore(table).put(record, key); // put to allow updates
             transaction.onerror = (ev) => reject(ev.target.error); // firefox (DOMException)
             transaction.onabort = (ev) => reject(ev.target.error); // chrome (QuotaExceededError)
@@ -200,9 +214,11 @@ export class IndexedDB {
     async _invalidate(db, tables) {
         return new Promise((resolve, reject) => {
             const objectStoreNames = [...db.objectStoreNames].filter(
-                (table) => table !== VERSION_TABLE
+                (table) => table !== VERSION_TABLE,
             );
-            tables = tables ? objectStoreNames.filter((t) => tables.includes(t)) : objectStoreNames;
+            tables = tables
+                ? objectStoreNames.filter((t) => tables.includes(t))
+                : objectStoreNames;
 
             if (tables.length === 0) {
                 return resolve();
@@ -210,14 +226,16 @@ export class IndexedDB {
             // Relaxed durability improves the write performances
             // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
-            const transaction = db.transaction(tables, "readwrite", { durability: "relaxed" });
+            const transaction = db.transaction(tables, "readwrite", {
+                durability: "relaxed",
+            });
             const proms = tables.map(
                 (table) =>
                     new Promise((resolve) => {
                         const objectStore = transaction.objectStore(table);
                         const request = objectStore.clear();
                         request.onsuccess = resolve;
-                    })
+                    }),
             );
             transaction.onerror = () => reject(transaction.error);
             Promise.all(proms).then(resolve);

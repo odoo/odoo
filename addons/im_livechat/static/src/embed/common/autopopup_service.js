@@ -10,7 +10,7 @@ export class AutopopupService {
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
      * "mail.store": import("@mail/core/common/store_service").Store,
-     * ui: typeof import("@web/core/ui/ui_service").uiService.start,
+     * ui: typeof import("@web/ui/block/ui_service").uiService.start,
      * }} services
      */
     constructor(env, { "im_livechat.livechat": livechatService, "mail.store": storeService, ui }) {

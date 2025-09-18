@@ -3,7 +3,6 @@
 from urllib.parse import urlsplit
 import werkzeug
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.wrappers
 import math
 

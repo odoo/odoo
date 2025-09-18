@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_stock_quant_tree_inherit">
+    <record model="ir.ui.view" id="view_stock_quant_list_inherit">
         <field name="name">stock.quant.list.inherit</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree"></field>
+        <field name="inherit_id" ref="stock.view_stock_quant_list"></field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="currency_id" column_invisible="True"/>
@@ -12,10 +12,10 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_stock_quant_tree_editable_inherit">
+    <record model="ir.ui.view" id="view_stock_quant_list_editable_inherit">
         <field name="name">stock.quant.list.editable.inherit</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"></field>
+        <field name="inherit_id" ref="stock.view_stock_quant_list_editable"></field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="currency_id" column_invisible="True"/>
@@ -25,10 +25,10 @@
         </field>
     </record>
 
-    <record id="view_stock_quant_tree_inventory_editable_inherit_stock_account" model="ir.ui.view">
+    <record id="view_stock_quant_list_inventory_editable_inherit_stock_account" model="ir.ui.view">
         <field name="name">stock.quant.inventory.list.editable.inherit.stock.account</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+        <field name="inherit_id" ref="stock.view_stock_quant_list_inventory_editable"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="accounting_date" optional="hide"/>

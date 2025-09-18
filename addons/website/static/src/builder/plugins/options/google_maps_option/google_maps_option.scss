@@ -2,7 +2,7 @@
     z-index: $zindex-modal-backdrop; // > $o-we-zindex
     width: ceil($o-we-sidebar-width * 0.9) !important;
     font-size: $o-we-sidebar-font-size;
-    margin-left: -$o-we-sidebar-width/2;
+    margin-left: calc($o-we-sidebar-width / -2);
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
     border-top: none;
     border-radius: $o-we-item-border-radius;

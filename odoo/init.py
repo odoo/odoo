@@ -1,15 +1,17 @@
-# ruff: noqa: E402, F401
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-""" Odoo initialization. """
+# ruff: noqa: E402
+"""Odoo initialization."""
 
 import gc
 import sys
+
 from .release import MIN_PY_VERSION
-assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
+
+assert (
+    sys.version_info > MIN_PY_VERSION
+), f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
 
 # ----------------------------------------------------------
-# Set gc thresolds if they are default, see `odoo.tools.gc`.
+# Set gc thresolds if they are default, see `odoo.libs.gc`.
 # Defaults changed from (700, 10, 10) to (2000, 10, 10) in 3.13
 # and the last generation was removed in 3.14.
 # ----------------------------------------------------------
@@ -23,9 +25,11 @@ if gc.get_threshold()[0] in (700, 2000):
 # required to do as early as possible for evented and timezone
 # ----------------------------------------------------------
 from . import _monkeypatches
+
 _monkeypatches.patch_init()
 
-from .tools.gc import gc_set_timing
+from .libs.gc import gc_set_timing
+
 gc_set_timing(enable=True)
 
 # ----------------------------------------------------------
@@ -33,8 +37,8 @@ gc_set_timing(enable=True)
 # Expose them at the `odoo` namespace level
 # ----------------------------------------------------------
 import odoo
-from .orm.commands import Command
-from .orm.utils import SUPERUSER_ID
+
+from .orm.primitives import SUPERUSER_ID, Command
 from .tools.translate import _, _lt
 
 odoo.SUPERUSER_ID = SUPERUSER_ID

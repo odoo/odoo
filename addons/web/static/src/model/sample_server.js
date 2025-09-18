@@ -1,57 +1,85 @@
+// @ts-check
+
+/** @module @web/model/sample_server - Fake ORM server generating realistic sample data for empty views */
+
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
-import { cartesian, sortBy as arraySortBy, unique } from "@web/core/utils/arrays";
+import {
+    cartesian,
+    sortBy as arraySortBy,
+    unique,
+} from "@web/core/utils/collections/arrays";
+import { ORM } from "@web/services/orm_service";
+
 import { parseServerValue } from "./relational_model/utils";
+import {
+    DISPLAY_FORMATS,
+    FORMATS,
+    getSampleFromId,
+    INTERVALS,
+    MAIN_RECORDSET_SIZE,
+    MAX_INTEGER,
+    MAX_NUMBER_OPENED_GROUPS,
+    MEASURE_SPEC_REGEX,
+    SEARCH_READ_LIMIT,
+    SUB_RECORDSET_SIZE,
+} from "./sample_data";
+import {
+    generateFieldValue,
+    getRandomInt,
+    sanitizeNumber,
+} from "./sample_field_generators";
+
+/**
+ * @typedef {{
+ *   fieldName: string;
+ *   func: string;
+ *   name: string;
+ * }} MeasureSpec
+ *
+ * @typedef {{
+ *   fields: Record<string, any>;
+ *   records: Record<string, any>[];
+ * }} ModelData
+ *
+ * @typedef {{
+ *   model: string;
+ *   method?: string;
+ *   route?: string;
+ *   args?: any[];
+ *   domain?: any[];
+ *   groupBy?: string[];
+ *   aggregates?: string[];
+ *   specification?: Record<string, any>;
+ *   recordIds?: number[];
+ *   group_by?: string;
+ *   progress_bar?: { field: string; colors: Record<string, string> };
+ *   grouping_sets?: string[][];
+ *   [key: string]: any;
+ * }} MockRpcParams
+ */
 
 class UnimplementedRouteError extends Error {}
 
 /**
- * Helper function returning the value from a list of sample strings
- * corresponding to the given ID.
- * @param {number} id
- * @param {string[]} sampleTexts
- * @returns {string}
+ * @param {any[] | false} range
+ * @param {any} field
+ * @returns {string | false}
  */
-function getSampleFromId(id, sampleTexts) {
-    return sampleTexts[(id - 1) % sampleTexts.length];
-}
-
 function serializeGroupDateValue(range, field) {
     if (!range) {
         return false;
     }
     const dateValue = parseServerValue(field, range[0]);
-    return field.type === "date" ? serializeDate(dateValue) : serializeDateTime(dateValue);
+    return field.type === "date"
+        ? serializeDate(dateValue)
+        : serializeDateTime(dateValue);
 }
-
-/**
- * Helper function returning a regular expression specifically matching
- * a given 'term' in a fieldName. For example `fieldNameRegex('abc')`:
- * will match:
- * - "abc"
- * - "field_abc__def"
- * will not match:
- * - "aabc"
- * - "abcd_ef"
- * @param {...string} term
- * @returns {RegExp}
- */
-function fieldNameRegex(...terms) {
-    return new RegExp(`\\b((\\w+)?_)?(${terms.join("|")})(_(\\w+)?)?\\b`);
-}
-
-const MEASURE_SPEC_REGEX = /(?<fieldName>\w+):(?<func>\w+)/;
-const DESCRIPTION_REGEX = fieldNameRegex("description", "label", "title", "subject", "message");
-const EMAIL_REGEX = fieldNameRegex("email");
-const PHONE_REGEX = fieldNameRegex("phone");
-const URL_REGEX = fieldNameRegex("url");
-const MAX_NUMBER_OPENED_GROUPS = 10;
 
 /**
  * Sample server class
@@ -66,7 +94,7 @@ const MAX_NUMBER_OPENED_GROUPS = 10;
 export class SampleServer {
     /**
      * @param {string} modelName
-     * @param {Object} fields
+     * @param {Record<string, any>} fields
      */
     constructor(modelName, fields) {
         this.mainModel = modelName;
@@ -89,14 +117,7 @@ export class SampleServer {
                 };
             }
         }
-        // On some models, empty grouped Kanban or List view still contain
-        // real (empty) groups. In this case, we re-use the result of the
-        // web_read_group rpc to tweak sample data s.t. those real groups
-        // contain sample records.
         this.existingGroups = null;
-        // Sample records generation is only done if necessary, so we delay
-        // it to the first "mockRPC" call. These flags allow us to know if
-        // the records have been generated or not.
         this.populated = false;
         this.existingGroupsPopulated = false;
     }
@@ -106,10 +127,10 @@ export class SampleServer {
     //---------------------------------------------------------------------
 
     /**
-     * This is the main entry point of the SampleServer. Mocks a request to
-     * the server with sample data.
-     * @param {Object} params
-     * @returns {any} the result obtained with the sample data
+     * Main entry point. Mocks a request to the server with sample data.
+     *
+     * @param {MockRpcParams} params
+     * @returns {any}
      * @throws {Error} If called on a route/method we do not handle
      */
     mockRpc(params) {
@@ -131,27 +152,42 @@ export class SampleServer {
             case "read":
                 return this._mockRead(params);
         }
-        // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
-        // in the registry: either specific for this model (with key 'model/method'), or
-        // global (with key 'method')
         const method = params.method || params.route;
-        // This allows to register mock version of methods or routes,
-        // for all models:
-        // registry.category("sample_server").add('some_route', () => "abcd");
-        // for a specific model (e.g. 'res.partner'):
-        // registry.category("sample_server").add('res.partner/some_method', () => 23);
         const mockFunction =
             registry.category("sample_server").get(`${params.model}/${method}`, null) ||
             registry.category("sample_server").get(method, null);
         if (mockFunction) {
             return mockFunction.call(this, params);
         }
-        console.log(`SampleServer: unimplemented route "${params.method || params.route}"`);
+        console.warn(
+            `SampleServer: unimplemented route "${params.method || params.route}"`,
+        );
         throw new SampleServer.UnimplementedRouteError();
     }
 
+    /**
+     * @param {Record<string, any>[] | null} groups
+     */
     setExistingGroups(groups) {
         this.existingGroups = groups;
+    }
+
+    //---------------------------------------------------------------------
+    // Backward-compatible delegates (used by registry callbacks via .call)
+    //---------------------------------------------------------------------
+
+    /** @deprecated Use standalone generateFieldValue() from sample_field_generators */
+    _generateFieldValue(modelName, fieldName) {
+        const field = this.data[modelName]?.fields[fieldName];
+        if (!field) {
+            return false;
+        }
+        return generateFieldValue(modelName, fieldName, field, 1);
+    }
+
+    /** @deprecated Use standalone getRandomInt() from sample_field_generators */
+    _getRandomInt(max) {
+        return getRandomInt(max);
     }
 
     //---------------------------------------------------------------------
@@ -159,9 +195,9 @@ export class SampleServer {
     //---------------------------------------------------------------------
 
     /**
-     * @param {Object[]} measures, each measure has the form { fieldName, type }
-     * @param {Object[]} records
-     * @returns {Object}
+     * @param {MeasureSpec[]} measures
+     * @param {Record<string, any>[]} records
+     * @returns {Record<string, any>}
      */
     _aggregateFields(measures, records) {
         const group = {};
@@ -175,13 +211,15 @@ export class SampleServer {
                         group[name] += record[fieldName];
                     }
                 }
-                group[name] = this._sanitizeNumber(group[name]);
+                group[name] = sanitizeNumber(group[name]);
             } else if (func === "array_agg") {
                 group[name] = records.map((r) => r[fieldName]);
             } else if (func === "__count") {
                 group[name] = records.length;
             } else if (func === "count_distinct") {
-                group[name] = unique(records.map((r) => r[fieldName])).filter(Boolean).length;
+                group[name] = unique(records.map((r) => r[fieldName])).filter(
+                    Boolean,
+                ).length;
             } else if (func === "bool_or") {
                 group[name] = records.some((r) => Boolean(r[fieldName]));
             } else if (func === "bool_and") {
@@ -197,10 +235,7 @@ export class SampleServer {
 
     /**
      * @param {any} value
-     * @param {Object} options
-     * @param {string} [options.interval]
-     * @param {string} [options.relation]
-     * @param {string} [options.type]
+     * @param {any} options
      * @returns {any}
      */
     _formatValue(value, options) {
@@ -212,7 +247,7 @@ export class SampleServer {
             const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
             const serialize = type === "date" ? serializeDate : serializeDateTime;
             const from = deserialize(value).startOf(interval);
-            const fmt = SampleServer.FORMATS[interval];
+            const fmt = FORMATS[interval];
             return [serialize(from), from.toFormat(fmt)];
         } else if (["many2one", "many2many"].includes(type)) {
             const rec = this.data[relation].records.find(({ id }) => id === value);
@@ -223,157 +258,9 @@ export class SampleServer {
     }
 
     /**
-     * Generates field values based on heuristics according to field types
-     * and names.
-     *
      * @private
-     * @param {string} modelName
-     * @param {string} fieldName
-     * @param {number} id the record id
-     * @returns {any} the field value
-     */
-    _generateFieldValue(modelName, fieldName, id) {
-        const field = this.data[modelName].fields[fieldName];
-        switch (field.type) {
-            case "boolean":
-                return fieldName === "active" ? true : this._getRandomBool();
-            case "char":
-            case "text":
-                if (["display_name", "name"].includes(fieldName)) {
-                    if (SampleServer.PEOPLE_MODELS.includes(modelName)) {
-                        return getSampleFromId(id, SampleServer.SAMPLE_PEOPLE);
-                    } else if (modelName === "res.country") {
-                        return getSampleFromId(id, SampleServer.SAMPLE_COUNTRIES);
-                    }
-                }
-                if (fieldName === "display_name") {
-                    return getSampleFromId(id, SampleServer.SAMPLE_TEXTS);
-                } else if (["name", "reference"].includes(fieldName)) {
-                    return `REF${String(id).padStart(4, "0")}`;
-                } else if (DESCRIPTION_REGEX.test(fieldName)) {
-                    return getSampleFromId(id, SampleServer.SAMPLE_TEXTS);
-                } else if (EMAIL_REGEX.test(fieldName)) {
-                    const emailName = getSampleFromId(id, SampleServer.SAMPLE_PEOPLE)
-                        .replace(/ /, ".")
-                        .toLowerCase();
-                    return `${emailName}@sample.demo`;
-                } else if (PHONE_REGEX.test(fieldName)) {
-                    return `+1 555 754 ${String(id).padStart(4, "0")}`;
-                } else if (URL_REGEX.test(fieldName)) {
-                    return `http://sample${id}.com`;
-                }
-                return false;
-            case "date":
-            case "datetime": {
-                const datetime = this._getRandomDate();
-                return field.type === "date"
-                    ? serializeDate(datetime)
-                    : serializeDateTime(datetime);
-            }
-            case "float":
-                return this._getRandomFloat(SampleServer.MAX_FLOAT);
-            case "integer": {
-                let max = SampleServer.MAX_INTEGER;
-                if (fieldName.includes("color")) {
-                    max = this._getRandomBool() ? SampleServer.MAX_COLOR_INT : 0;
-                }
-                return this._getRandomInt(max);
-            }
-            case "monetary":
-                return this._getRandomInt(SampleServer.MAX_MONETARY);
-            case "many2one":
-                if (field.relation === "res.currency") {
-                    /** @todo return session.company_currency_id */
-                    return 1;
-                }
-                if (field.relation === "ir.attachment") {
-                    return false;
-                }
-                return this._getRandomSubRecordId();
-            case "one2many":
-            case "many2many": {
-                const ids = [this._getRandomSubRecordId(), this._getRandomSubRecordId()];
-                return [...new Set(ids)];
-            }
-            case "selection": {
-                return this._getRandomSelectionValue(modelName, field);
-            }
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * @private
-     * @param {any[]} array
-     * @returns {any}
-     */
-    _getRandomArrayEl(array) {
-        return array[Math.floor(Math.random() * array.length)];
-    }
-
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    _getRandomBool() {
-        return Math.random() < 0.5;
-    }
-
-    /**
-     * @private
-     * @returns {DateTime}
-     */
-    _getRandomDate() {
-        const delta = Math.floor((Math.random() - Math.random()) * SampleServer.DATE_DELTA);
-        return luxon.DateTime.local().plus({ hours: delta });
-    }
-
-    /**
-     * @private
-     * @param {number} max
-     * @returns {number} float in [O, max[
-     */
-    _getRandomFloat(max) {
-        return this._sanitizeNumber(Math.random() * max);
-    }
-
-    /**
-     * @private
-     * @param {number} max
-     * @returns {number} int in [0, max[
-     */
-    _getRandomInt(max) {
-        return Math.floor(Math.random() * max);
-    }
-
-    /**
-     * @private
-     * @returns {string}
-     */
-    _getRandomSelectionValue(modelName, field) {
-        if (field.selection.length > 0) {
-            return this._getRandomArrayEl(field.selection)[0];
-        }
-        return false;
-    }
-
-    /**
-     * @private
-     * @returns {number} id in [1, SUB_RECORDSET_SIZE]
-     */
-    _getRandomSubRecordId() {
-        return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
-    }
-
-    /**
-     * Mocks calls to the read method.
-     * @private
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {Array[]} params.args (args[0] is the list of ids, args[1] is
-     *   the list of fields)
-     * @returns {Object[]}
+     * @param {MockRpcParams} params
+     * @returns {any[]}
      */
     _mockRead(params) {
         const model = this.data[params.model];
@@ -388,11 +275,15 @@ export class SampleServer {
             for (const fieldName of fieldNames) {
                 const field = model.fields[fieldName];
                 if (!field) {
-                    record[fieldName] = false; // unknown field
+                    record[fieldName] = false;
                 } else if (field.type === "many2one") {
                     const relModel = this.data[field.relation];
-                    const relRecord = relModel.records.find((relR) => r[fieldName] === relR.id);
-                    record[fieldName] = relRecord ? [relRecord.id, relRecord.display_name] : false;
+                    const relRecord = relModel.records.find(
+                        (relR) => r[fieldName] === relR.id,
+                    );
+                    record[fieldName] = relRecord
+                        ? [relRecord.id, relRecord.display_name]
+                        : false;
                 } else {
                     record[fieldName] = r[fieldName];
                 }
@@ -403,13 +294,8 @@ export class SampleServer {
     }
 
     /**
-     * Mocks calls to the base method of formatted_read_group method.
-     *
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string[]} params.groupBy
-     * @param {string[]} params.aggregates
-     * @returns {Object[]} Object with keys groups and length
+     * @param {MockRpcParams} params
+     * @returns {any[]}
      */
     _mockFormattedReadGroup(params) {
         const model = params.model;
@@ -422,8 +308,13 @@ export class SampleServer {
             const [fieldName, interval] = groupBySpec.split(":");
             const { type, relation } = fields[fieldName];
             if (type) {
-                const gb = { fieldName, type, interval, relation, alias: groupBySpec };
-                normalizedGroupBys.push(gb);
+                normalizedGroupBys.push({
+                    fieldName,
+                    type,
+                    interval,
+                    relation,
+                    alias: groupBySpec,
+                });
             }
         }
 
@@ -466,12 +357,18 @@ export class SampleServer {
         const measures = [];
         for (const measureSpec of aggregates) {
             if (measureSpec === "__count") {
-                measures.push({ fieldName: "__count", func: "__count", name: measureSpec });
+                measures.push({
+                    fieldName: "__count",
+                    func: "__count",
+                    name: measureSpec,
+                });
                 continue;
             }
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
             if (!matches) {
-                throw new Error(`Invalidate Aggregate "${measureSpec}" in SampleServer`);
+                throw new Error(
+                    `Invalidate Aggregate "${measureSpec}" in SampleServer`,
+                );
             }
             const { fieldName, func } = matches.groups;
             measures.push({ fieldName, func, name: measureSpec });
@@ -510,13 +407,8 @@ export class SampleServer {
     }
 
     /**
-     * Mocks calls to the base method of formatted_read_grouping_sets method.
-     *
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string[][]} params.grouping_sets
-     * @param {string[]} params.aggregates
-     * @returns {Object[]} Object with keys groups and length
+     * @param {MockRpcParams} params
+     * @returns {any[][]}
      */
     _mockFormattedReadGroupingSets(params) {
         const res = [];
@@ -527,13 +419,9 @@ export class SampleServer {
     }
 
     /**
-     * Mocks calls to the read_progress_bar method.
      * @private
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string} params.group_by
-     * @param {Object} params.progress_bar
-     * @return {Object}
+     * @param {MockRpcParams} params
+     * @returns {any}
      */
     _mockReadProgressBar(params) {
         const groupBy = params.group_by;
@@ -550,8 +438,6 @@ export class SampleServer {
             if (Array.isArray(groupByValue)) {
                 groupByValue = groupByValue[0];
             }
-
-            // special case for bool values: rpc call response with capitalized strings
             if (!(groupByValue in data)) {
                 if (groupByValue === true) {
                     groupByValue = "True";
@@ -559,7 +445,6 @@ export class SampleServer {
                     groupByValue = "False";
                 }
             }
-
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
                 for (const key in progressBar.colors) {
@@ -571,21 +456,27 @@ export class SampleServer {
         return data;
     }
 
+    /**
+     * @private
+     * @param {MockRpcParams} params
+     * @returns {{ records: Record<string, any>[]; length: number }}
+     */
     _mockWebSearchReadUnity(params) {
         const fields = Object.keys(params.specification);
         const model = this.data[params.model];
         let rawRecords = model.records;
         if ("recordIds" in params) {
-            rawRecords = model.records.filter((record) => params.recordIds.includes(record.id));
+            rawRecords = model.records.filter((record) =>
+                params.recordIds.includes(record.id),
+            );
         } else {
-            rawRecords = rawRecords.slice(0, SampleServer.SEARCH_READ_LIMIT);
+            rawRecords = rawRecords.slice(0, SEARCH_READ_LIMIT);
         }
         const records = this._mockRead({
             model: params.model,
             args: [rawRecords.map((r) => r.id), fields],
         });
         const result = { records, length: records.length };
-        // populate many2one and x2many values
         for (const fieldName in params.specification) {
             const field = this.data[params.model].fields[fieldName];
             if (field.type === "many2one") {
@@ -599,7 +490,9 @@ export class SampleServer {
                 }
             }
             if (field.type === "one2many" || field.type === "many2many") {
-                const relFields = Object.keys(params.specification[fieldName].fields || {});
+                const relFields = Object.keys(
+                    params.specification[fieldName].fields || {},
+                );
                 if (relFields.length) {
                     const relIds = result.records.map((r) => r[fieldName]).flat();
                     const relRecords = {};
@@ -611,7 +504,9 @@ export class SampleServer {
                         relRecords[relRecord.id] = relRecord;
                     }
                     for (const record of result.records) {
-                        record[fieldName] = record[fieldName].map((resId) => relRecords[resId]);
+                        record[fieldName] = record[fieldName].map(
+                            (resId) => relRecords[resId],
+                        );
                     }
                 }
             }
@@ -620,15 +515,9 @@ export class SampleServer {
     }
 
     /**
-     * Mocks calls to the web_read_group method to return groups populated
-     * with sample records. Only handles the case where the real call to
-     * web_read_group returned groups, but none of these groups contain
-     * records. In this case, we keep the real groups, and populate them
-     * with sample records.
      * @private
-     * @param {Object} params
-     * @param {Object} [result] the result of a real call to web_read_group
-     * @returns {{ groups: Object[], length: number }}
+     * @param {MockRpcParams} params
+     * @returns {{ groups: Record<string, any>[]; length: number }}
      */
     _mockWebReadGroup(params) {
         const aggregates = [...params.aggregates, "__count"];
@@ -642,16 +531,11 @@ export class SampleServer {
         } else {
             groups = this._mockFormattedReadGroup({ ...params, aggregates });
         }
-        // Don't care another params - and no subgroup:
-        // order / opening_info / unfold_read_default_limit / groupby_read_specification
         const openAllGroups = params.auto_unfold && !this.existingGroups;
         let nbOpenedGroup = 0;
         if (params.unfold_read_specification) {
             for (const group of groups) {
                 if (openAllGroups || "__records" in group) {
-                    // if group has a "__records" key, it means that it is an existing group, and
-                    // that the real webReadGroup returned a "__records" key for that group (which
-                    // is empty, otherwise we wouldn't be here), i.e. that group is opened.
                     if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
                         nbOpenedGroup++;
                         group.__records = this._mockWebSearchReadUnity({
@@ -664,7 +548,6 @@ export class SampleServer {
                 delete group["id:array_agg"];
             }
         }
-
         return {
             groups,
             length: groups.length,
@@ -672,14 +555,8 @@ export class SampleServer {
     }
 
     /**
-     * Updates the sample data such that the existing groups (in database)
-     * also exists in the sample, and such that there are sample records in
-     * those groups.
      * @private
-     * @param {Object[]} groups empty groups returned by the server
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string[]} params.groupBy
+     * @param {MockRpcParams} params
      */
     _populateExistingGroups(params) {
         const groups = this.existingGroups;
@@ -687,7 +564,6 @@ export class SampleServer {
         const groupByField = this.data[params.model].fields[groupBy];
         const groupedByM2O = groupByField.type === "many2one";
         if (groupedByM2O) {
-            // re-populate co model with relevant records
             this.data[groupByField.relation].records = groups.map((g) => ({
                 id: g[groupBy][0],
                 display_name: g[groupBy][1],
@@ -696,9 +572,14 @@ export class SampleServer {
         for (const r of this.data[params.model].records) {
             const group = getSampleFromId(r.id, groups);
             if (["date", "datetime"].includes(groupByField.type)) {
-                r[groupBy] = serializeGroupDateValue(group[params.groupBy[0]], groupByField);
+                r[groupBy] = serializeGroupDateValue(
+                    group[params.groupBy[0]],
+                    groupByField,
+                );
             } else if (groupByField.type === "many2one") {
-                r[groupBy] = group[params.groupBy[0]] ? group[params.groupBy[0]][0] : false;
+                r[groupBy] = group[params.groupBy[0]]
+                    ? group[params.groupBy[0]][0]
+                    : false;
             } else {
                 r[groupBy] = group[params.groupBy[0]];
             }
@@ -706,8 +587,7 @@ export class SampleServer {
     }
 
     /**
-     * Generates sample records for the models in this.data. Records will be
-     * generated once, and subsequent calls to this function will be skipped.
+     * Generates sample records for all models in this.data.
      * @private
      */
     _populateModels() {
@@ -717,12 +597,17 @@ export class SampleServer {
                 const fieldNames = Object.keys(model.fields).filter((f) => f !== "id");
                 const size =
                     modelName === this.mainModel
-                        ? SampleServer.MAIN_RECORDSET_SIZE
-                        : SampleServer.SUB_RECORDSET_SIZE;
+                        ? MAIN_RECORDSET_SIZE
+                        : SUB_RECORDSET_SIZE;
                 for (let id = 1; id <= size; id++) {
                     const record = { id };
                     for (const fieldName of fieldNames) {
-                        record[fieldName] = this._generateFieldValue(modelName, fieldName, id);
+                        record[fieldName] = generateFieldValue(
+                            modelName,
+                            fieldName,
+                            model.fields[fieldName],
+                            id,
+                        );
                     }
                     model.records.push(record);
                 }
@@ -732,34 +617,13 @@ export class SampleServer {
     }
 
     /**
-     * Rounds the given number value according to the configured precision.
      * @private
-     * @param {number} value
-     * @returns {number}
-     */
-    _sanitizeNumber(value) {
-        return parseFloat(value.toFixed(SampleServer.FLOAT_PRECISION));
-    }
-
-    /**
-     * A real (web_)read_group call has been done, and it has returned groups,
-     * but they are all empty. This function updates the sample data such
-     * that those group values exist and those groups contain sample records.
-     * @private
-     * @param {Object[]} groups empty groups returned by the server
-     * @param {Object} params
-     * @param {string} params.model
-     * @param {string[]} params.aggregates
-     * @param {string[]} params.groupBy
-     * @returns {Object[]} groups with count and aggregate values updated
-     *
-     * TODO: rename
+     * @param {MockRpcParams} params
      */
     _tweakExistingGroups(params) {
         const groups = this.existingGroups;
         this._populateExistingGroups(params);
 
-        // update count and aggregates for each group
         const fullGroupBy = params.groupBy[0];
         const groupBy = fullGroupBy.split(":")[0];
         const groupByField = this.data[params.model].fields[groupBy];
@@ -767,9 +631,15 @@ export class SampleServer {
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => {
                 if (["date", "datetime"].includes(groupByField.type)) {
-                    return r[groupBy] === serializeGroupDateValue(g[fullGroupBy], groupByField);
+                    return (
+                        r[groupBy] ===
+                        serializeGroupDateValue(g[fullGroupBy], groupByField)
+                    );
                 } else if (groupByField.type === "many2one") {
-                    return (!r[groupBy] && !g[fullGroupBy]) || r[groupBy] === g[fullGroupBy][0];
+                    return (
+                        (!r[groupBy] && !g[fullGroupBy]) ||
+                        r[groupBy] === g[fullGroupBy][0]
+                    );
                 }
                 return r[groupBy] === g[fullGroupBy];
             });
@@ -783,79 +653,56 @@ export class SampleServer {
                     g[aggregateSpec] = recordsInGroup.map((r) => r[fieldName]);
                 } else if (
                     ["integer, float", "monetary"].includes(
-                        this.data[params.model].fields[fieldName].type
+                        this.data[params.model].fields[fieldName].type,
                     )
                 ) {
-                    g[aggregateSpec] = recordsInGroup.reduce((acc, r) => acc + r[fieldName], 0);
+                    g[aggregateSpec] = recordsInGroup.reduce(
+                        (acc, r) => acc + r[fieldName],
+                        0,
+                    );
                 }
             }
         }
     }
 }
 
-SampleServer.FORMATS = {
-    day: "yyyy-MM-dd",
-    week: "'W'WW kkkk",
-    month: "MMMM yyyy",
-    quarter: "'Q'q yyyy",
-    year: "y",
-};
-SampleServer.INTERVALS = {
-    day: (dt) => dt.plus({ days: 1 }),
-    week: (dt) => dt.plus({ weeks: 1 }),
-    month: (dt) => dt.plus({ months: 1 }),
-    quarter: (dt) => dt.plus({ months: 3 }),
-    year: (dt) => dt.plus({ years: 1 }),
-};
-SampleServer.DISPLAY_FORMATS = Object.assign({}, SampleServer.FORMATS, { day: "dd MMM yyyy" });
-
-SampleServer.MAIN_RECORDSET_SIZE = 16;
-SampleServer.SUB_RECORDSET_SIZE = 5;
-SampleServer.SEARCH_READ_LIMIT = 10;
-
-SampleServer.MAX_FLOAT = 100;
-SampleServer.MAX_INTEGER = 50;
-SampleServer.MAX_COLOR_INT = 7;
-SampleServer.MAX_MONETARY = 100000;
-SampleServer.DATE_DELTA = 24 * 60; // in hours -> 60 days
-SampleServer.FLOAT_PRECISION = 2;
-
-SampleServer.SAMPLE_COUNTRIES = ["Belgium", "France", "Portugal", "Singapore", "Australia"];
-SampleServer.SAMPLE_PEOPLE = [
-    "John Miller",
-    "Henry Campbell",
-    "Carrie Helle",
-    "Wendi Baltz",
-    "Thomas Passot",
-];
-SampleServer.SAMPLE_TEXTS = [
-    "Laoreet id",
-    "Volutpat blandit",
-    "Integer vitae",
-    "Viverra nam",
-    "In massa",
-];
-SampleServer.PEOPLE_MODELS = [
-    "res.users",
-    "res.partner",
-    "hr.employee",
-    "mail.followers",
-    "mailing.contact",
-];
-
+// Static properties — re-exported from sample_data for backward compatibility
+SampleServer.FORMATS = FORMATS;
+SampleServer.INTERVALS = INTERVALS;
+SampleServer.DISPLAY_FORMATS = DISPLAY_FORMATS;
+SampleServer.MAIN_RECORDSET_SIZE = MAIN_RECORDSET_SIZE;
+SampleServer.SUB_RECORDSET_SIZE = SUB_RECORDSET_SIZE;
+SampleServer.SEARCH_READ_LIMIT = SEARCH_READ_LIMIT;
+SampleServer.MAX_INTEGER = MAX_INTEGER;
 SampleServer.UnimplementedRouteError = UnimplementedRouteError;
 
+/**
+ * Build an ORM instance backed by a SampleServer for fake data rendering.
+ *
+ * @param {string} resModel
+ * @param {{[key: string]: any}} fields
+ * @param {any} user
+ * @returns {any}
+ */
 export function buildSampleORM(resModel, fields, user) {
     const sampleServer = new SampleServer(resModel, fields);
-    const fakeRPC = async (_, params) => {
+    const fakeRPC = async (/** @type {any} */ _, /** @type {any} */ params) => {
         const { args, kwargs, method, model } = params;
         const { groupby: groupBy } = kwargs;
-        return sampleServer.mockRpc({ method, model, args, ...kwargs, groupBy });
+        return sampleServer.mockRpc({
+            method,
+            model,
+            args,
+            ...kwargs,
+            groupBy,
+        });
     };
-    const sampleORM = new ORM(user);
+    /** @type {any} */
+    const sampleORM = new /** @type {any} */ (ORM)(user);
     sampleORM.rpc = fakeRPC;
     sampleORM.isSample = true;
     sampleORM.cache = () => sampleORM;
-    sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
+    sampleORM.setGroups = (/** @type {any} */ groups) =>
+        sampleServer.setExistingGroups(groups);
     return sampleORM;
 }

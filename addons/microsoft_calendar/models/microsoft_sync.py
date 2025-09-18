@@ -10,7 +10,7 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
-from odoo.sql_db import BaseCursor
+from odoo.db import BaseCursor
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService

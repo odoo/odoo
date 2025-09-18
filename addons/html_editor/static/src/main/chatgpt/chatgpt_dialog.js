@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState, onWillDestroy, status, markup } from "@odoo/owl";

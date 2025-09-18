@@ -1,15 +1,10 @@
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
-
 import { Component, useRef } from "@odoo/owl";
-
-import { usePopover } from "@web/core/popover/popover_hook";
-
 import { formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
-
-
+import { usePopover } from "@web/ui/popover/popover_hook";
 export class ActivityCell extends Component {
     static components = {
         Avatar,
@@ -43,10 +38,14 @@ export class ActivityCell extends Component {
         return formatDate(luxon.DateTime.fromISO(this.props.reportingDate));
     }
     get displayedSummaries() {
-        const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
-        const extras = this.props.summaries.length - summariesWithContent.length
+        const summariesWithContent = this.props.summaries.filter(
+            (textContent) => !!textContent,
+        );
+        const extras = this.props.summaries.length - summariesWithContent.length;
         if (summariesWithContent.length > 0 && extras > 0) {
-            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras } ));
+            summariesWithContent.push(
+                _t("%(extraCount)s more", { extraCount: extras }),
+            );
         }
         return formatList(summariesWithContent);
     }

@@ -10,7 +10,7 @@ $o-frontend-min-contrast-ratio: 2.9 !default;
 $o-webclient-media: screen !default;
 
 // Color-scheme
-$o-webclient-color-scheme: bright !default;
+$o-webclient-color-scheme: light !default;
 
 // Font sizes
 $o-root-font-size: 1rem !default;
@@ -22,12 +22,9 @@ $o-line-height-base: 1.5 !default; // This is BS default
 $o-line-height-sm : 1.25 !default;
 $o-line-height-lg : 2 !default;
 
-// Global sans-serif fonts stack, defined here as we need to process
-// it before actually using it (to add more unicode support with the special
-// Odoo font for example). Adding unicode support is not done directly here as
-// this font can be used by the website where the unicode support is already
-// automatically added.
-$o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
+// Global sans-serif fonts stack. Inter is preferred, with system fonts as fallback.
+// Unicode support is added later via o-add-unicode-support-font().
+$o-system-fonts: ("Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
 
 
 // Font weights
@@ -41,22 +38,23 @@ $o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvet
 
 $o-font-weight-normal: 400 !default;
 $o-font-weight-medium: 500 !default;
+$o-font-weight-semibold: 600 !default;
 $o-font-weight-bold: 700 !default;
 
 // Colors
-// This is BS default
+// Cool slate-tinted gray ramp (Tailwind slate-inspired)
 $o-white: #FFFFFF !default;
 $o-black: #000000 !default;
 
-$o-gray-100: #f8f9fa !default;
-$o-gray-200: #e9ecef !default;
-$o-gray-300: #dee2e6 !default;
-$o-gray-400: #ced4da !default;
-$o-gray-500: #adb5bd !default;
-$o-gray-600: #6c757d !default;
-$o-gray-700: #495057 !default;
-$o-gray-800: #343a40 !default;
-$o-gray-900: #212529 !default;
+$o-gray-100: #F8FAFC !default;
+$o-gray-200: #E2E8F0 !default;
+$o-gray-300: #CBD5E1 !default;
+$o-gray-400: #94A3B8 !default;
+$o-gray-500: #64748B !default;
+$o-gray-600: #475569 !default;
+$o-gray-700: #334155 !default;
+$o-gray-800: #1E293B !default;
+$o-gray-900: #0F172A !default;
 
 $o-grays: (
     100: $o-gray-100,
@@ -70,30 +68,30 @@ $o-grays: (
     900: $o-gray-900,
 ) !default;
 
-$o-community-color: #71639e !default;
-$o-enterprise-color: #714B67 !default;
-$o-enterprise-action-color: #017e84 !default;
+$o-community-color: #6C5CE7 !default;
+$o-enterprise-color: #A855F7 !default;
+$o-enterprise-action-color: #06B6D4 !default;
 
 $o-brand-odoo: $o-community-color !default;
 $o-brand-primary: $o-community-color !default;
 
-$o-brand-secondary: #8f8f8f !default;
+$o-brand-secondary: $o-gray-500 !default;
 $o-brand-lightsecondary: $o-gray-100 !default;
 
 $o-action: $o-brand-primary !default;
-$o-success: #28a745 !default;
-$o-info: #17a2b8 !default;
-$o-warning: #ffac00 !default;
-$o-danger: #dc3545 !default;
+$o-success: #10B981 !default;
+$o-info: #3B82F6 !default;
+$o-warning: #F59E0B !default;
+$o-danger: #EF4444 !default;
 
 // Fine-tune contextual text colors.
 // Overrides $theme-colors generated 'text-x' classes only.
 // Custom colors are set by $o-text-colors-custom
 $o-theme-text-colors: (
-    "success": #008818,
-    "info": #0180a5,
-    "warning": #9a6b01,
-    "danger": #d23f3a,
+    "success": #059669,
+    "info": #2563EB,
+    "warning": #D97706,
+    "danger": #DC2626,
 )!default;
 
 // Opacities
@@ -114,7 +112,7 @@ $o-opacities: (
 $o-font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
 $o-font-family-monospace: o-add-unicode-support-font((SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace)) !default;
 
-$o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system-fonts)) !default;
+$o-headings-font-family: o-add-unicode-support-font(("Inter", "SF Pro Display", $o-system-fonts)) !default;
 
 // Font colors
 $o-main-text-color: $o-gray-900 !default;
@@ -173,14 +171,27 @@ $o-input-border-required: $o-brand-primary !default;
 // Layout
 //
 $o-spacer: 16px !default; // = 1rem
-$o-form-spacing-unit: 5px !default;
+$o-form-spacing-unit: 4px !default;
 $o-horizontal-padding: $o-spacer !default;
 $o-dropdown-hpadding: 20px !default;
-$o-dropdown-vpadding: 3px !default;
+$o-dropdown-vpadding: 4px !default;
 $o-dropdown-max-height: 70vh !default;
 
 $o-statbutton-height: 44px !default;
-$o-statbutton-spacing: 6px !default;
+$o-statbutton-spacing: 8px !default;
+
+// Systematic spacing scale (4px base)
+$o-space-0: 0 !default;
+$o-space-1: 4px !default;
+$o-space-2: 8px !default;
+$o-space-3: 12px !default;
+$o-space-4: 16px !default;
+$o-space-5: 20px !default;
+$o-space-6: 24px !default;
+$o-space-7: 32px !default;
+$o-space-8: 40px !default;
+$o-space-9: 48px !default;
+$o-space-10: 64px !default;
 
 $o-modal-lg: 980px !default;
 $o-modal-md: 650px !default;
@@ -197,7 +208,7 @@ $o-label-font-size-factor: 0.8 !default;
 // == List group
 
 $o-list-group-active-color: $o-black !default;
-$o-list-group-active-bg: lighten(saturate(adjust-hue($o-info, 15), 1.8), 50) !default;
+$o-list-group-active-bg: mix($o-info, $o-white, 10%) !default;
 
 // Breadcrumbs
 
@@ -213,11 +224,13 @@ $o-base-settings-mobile-tabs-height: 40px !default;
 
 $o-card-body-bg-opacity: 0.9 !default;
 
-// Border-radius
-
-$o-border-radius: o-to-rem(4px) !default;
-$o-border-radius-sm: o-to-rem(3px) !default;
-$o-border-radius-lg: o-to-rem(6px) !default;
+// Border-radius scale
+$o-border-radius: o-to-rem(8px) !default;
+$o-border-radius-sm: o-to-rem(6px) !default;
+$o-border-radius-lg: o-to-rem(12px) !default;
+$o-border-radius-xl: o-to-rem(16px) !default;
+$o-border-radius-2xl: o-to-rem(20px) !default;
+$o-border-radius-full: 9999px !default;
 
 // touch
 $o-touch-btn-padding: 7px 14px !default;
@@ -239,9 +252,9 @@ $o-btns-bs-override: map-merge((
         hover-border: darken($o-brand-primary, 20%),
         hover-color: $o-white,
 
-        active-background: mix($o-brand-primary, $o-white, 10%),
-        active-border: $o-brand-primary,
-        active-color: darken($o-brand-primary, 20%),
+        active-background: darken($o-brand-primary, 15%),
+        active-border: darken($o-brand-primary, 15%),
+        active-color: $o-white,
     ),
     "secondary": (
         background: $o-gray-300,
@@ -290,8 +303,41 @@ $o-btns-bs-outline-override: map-merge((
 
 
 // == Easings
-
-// Entering easing
 $o-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1.0) !default;
-// Exit easing
 $o-easing-exit: cubic-bezier(0.3, 0.0, 0.8, 0.15) !default;
+$o-easing-standard: cubic-bezier(0.4, 0.0, 0.2, 1.0) !default;
+$o-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1.0) !default;
+$o-easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1.0) !default;
+
+// == Animation Durations
+$o-duration-instant: 100ms !default;
+$o-duration-fast: 150ms !default;
+$o-duration-normal: 200ms !default;
+$o-duration-slow: 300ms !default;
+$o-duration-slower: 500ms !default;
+
+// == Shadow / Elevation System (slate-tinted)
+$o-shadow-xs: 0 1px 2px 0 rgba($o-gray-900, 0.05) !default;
+$o-shadow-sm: 0 1px 3px 0 rgba($o-gray-900, 0.1), 0 1px 2px -1px rgba($o-gray-900, 0.1) !default;
+$o-shadow-md: 0 4px 6px -1px rgba($o-gray-900, 0.1), 0 2px 4px -2px rgba($o-gray-900, 0.1) !default;
+$o-shadow-lg: 0 10px 15px -3px rgba($o-gray-900, 0.1), 0 4px 6px -4px rgba($o-gray-900, 0.1) !default;
+$o-shadow-xl: 0 20px 25px -5px rgba($o-gray-900, 0.1), 0 8px 10px -6px rgba($o-gray-900, 0.1) !default;
+
+// Glass morphism background (overridden in dark mode for proper translucency)
+$o-glass-bg: $o-white !default;
+
+// Focus ring
+$o-ring-width: 2px !default;
+$o-ring-color: rgba($o-brand-primary, 0.5) !default;
+$o-ring-offset: 2px !default;
+
+// == Z-Index Scale
+$o-zindex-base: 0 !default;
+$o-zindex-dropdown: 1000 !default;
+$o-zindex-sticky: 1020 !default;
+$o-zindex-fixed: 1030 !default;
+$o-zindex-modal-backdrop: 1040 !default;
+$o-zindex-modal: 1050 !default;
+$o-zindex-popover: 1060 !default;
+$o-zindex-tooltip: 1070 !default;
+$o-zindex-toast: 1080 !default;

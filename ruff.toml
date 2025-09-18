@@ -1,83 +1,397 @@
-# automatically generated file by the runbot nightly ruff checks, do not modify
-# for ruff version 0.11.4 (or higher)
-# note: 'E241', 'E272', 'E201', 'E221' are ignored on runbot in test files when formating a table like structure (more than two space)
-# some rules present here are not enabled on runbot (yet) but are still advised to follow when possible : ["B904", "COM812", "E741", "EM101", "I001", "RET", "RUF021", "TRY002", "UP006", "UP007"]
+# Strict ruff configuration for Odoo 19.0 fork
+# Python 3.14+ | ruff 0.15+
 
+target-version = "py314"
+line-length = 88
 
-target-version = "py310"
+exclude = [
+    ".git",
+    ".ruff_cache",
+    "venv",
+    "node_modules",
+    "__pycache__",
+    "*.egg-info",
+    "**/_vendor/**",  # Vendored third-party code — do not lint
+]
 
 [lint]
+# Preview mode enabled for cherry-picked rules only (explicit-preview-rules)
 preview = true
+explicit-preview-rules = true
+
+# External linter codes (flake8 plugins) — suppresses RUF102 for their noqa comments
+external = ["RST"]
+
 select = [
+    # Core Python quality
+    "E",          # pycodestyle errors
+    "F",          # Pyflakes (logic errors, unused imports)
+    "W",          # pycodestyle warnings
+
+    # Bug prevention
+    "B",          # flake8-bugbear (common bugs)
     "BLE",        # flake8-blind-except
-    "C",          # flake8-comprehensions
-    "COM",        # flake8-commas
-    "E",          # pycodestyle Error
-    "EM",         # flake8-errmsg
-    "EXE",        # flake8-executable
-    "F",          # Pyflakes
-    "FA",         # flake8-future-annotations
-    "FLY",        # flynt
-    "G",          # flake8-logging-format
-    "I",          # isort
-    "ICN",        # flake8-import-conventions
-    "INT",        # flake8-gettext
-    "ISC",        # flake8-implicit-str-concat
-    "LOG",        # flake8-logging
-    "PGH",        # pygrep-hooks
-    "PIE",        # flake8-pie
-    "PLC",        # Pylint Convention
-    "PLE",        # Pylint Error
-    "PLW",        # Pylint Warning
-    "PYI",        # flake8-pyi
-    "RET",        # flake8-return
-    "RUF",        # Ruff-specific rules
-    "SIM",        # flake8-simplify
-    "SLOT",       # flake8-slots
-    "T",          # flake8-print
-    "TC",         # flake8-type-checking
-    "TID",        # flake8-tidy-imports
-    "TRY",        # tryceratops
-    "UP",         # pyupgrade
-    "W",          # pycodestyle Warning
+    "PLE",        # Pylint errors
+    "PLW",        # Pylint warnings
+
+    # Modern Python
+    "UP",         # pyupgrade (3.14+ syntax)
     "YTT",        # flake8-2020
+
+    # Code quality
+    "SIM",        # flake8-simplify
+    "C4",         # flake8-comprehensions
+    "C90",        # mccabe (cyclomatic complexity)
+    "RET",        # flake8-return
+    "PIE",        # flake8-pie
+    "FLY",        # flynt (f-string conversion)
+    "SLOT",       # flake8-slots
+    "FURB",       # refurb (modern Python idioms)
+    "PERF",       # Perflint (performance anti-patterns)
+
+    # Import hygiene
+    "I",          # isort
+    "TID",        # flake8-tidy-imports
+    "ICN",        # flake8-import-conventions
+    "TC",         # flake8-type-checking
+
+    # String & logging
+    "G",          # flake8-logging-format
+    "LOG",        # flake8-logging
+    "ISC",        # flake8-implicit-str-concat
+    "EM",         # flake8-errmsg
+    "INT",        # flake8-gettext
+
+    # Pylint (additional)
+    "PLR",        # Pylint refactoring
+    "PLC",        # Pylint convention
+
+    # Naming & builtins
+    "A",          # flake8-builtins (builtin shadowing)
+    "N",          # pep8-naming
+
+    # Datetime safety
+    "DTZ",        # flake8-datetimez (timezone enforcement)
+
+    # Pathlib enforcement
+    "PTH",        # flake8-use-pathlib
+
+    # Code hygiene
+    "T10",        # flake8-debugger (no debugger statements in production)
+    "T20",        # flake8-print (no print statements in production)
+    "ERA",        # eradicate (commented-out code)
+    "RSE",        # flake8-raise
+
+    # Security
+    "S",          # flake8-bandit (security anti-patterns)
+
+    # Ruff-specific
+    "RUF",        # Ruff's own rules
+
+    # Preview rules (cherry-picked — requires explicit-preview-rules)
+    "RUF039",     # unraw-re-pattern (regex missing r"" prefix)
+    "RUF069",     # float-equality-comparison (precision bugs in financial code)
+    "RUF065",     # f-string-in-logging (performance — use lazy %s formatting)
+    "FURB113",    # repeated-append (use .extend() instead)
+    "FURB188",    # slice-to-remove-prefix (use removeprefix()/removesuffix())
+
+    # Misc
+    "EXE",        # flake8-executable
+    "PGH",        # pygrep-hooks
+    "TRY",        # tryceratops
+
+    # Enforced only in pure Python packages (odoo/libs/, odoo/orm/components/)
+    # Suppressed everywhere else via per-file-ignores — see below
+    "D",          # pydocstyle (docstring presence and quality)
+    "ANN",        # flake8-annotations (type signatures)
 ]
+
+unfixable = [
+    "F401",       # unused-import: warn but don't auto-remove (prevents race with multi-step edits)
+    "ERA001",     # commented-out-code: warn but don't auto-remove (needs human review)
+]
+
 ignore = [
-    "C408",       # unnecessary-collection-call
-    "C420",       # unnecessary-dict-comprehension-for-iterable
-    "C901",       # complex-structure
-    "E266",       # multiple-leading-hashes-for-block-comment
+    # --- Formatter-managed (let ruff format handle these) ---
+    "E111",       # indentation-with-invalid-multiple
+    "E114",       # indentation-not-multiple-of-four-comment
+    "E117",       # over-indented
+    "W191",       # tab-indentation
+
+    # --- Line length (formatter handles, allow long lines) ---
     "E501",       # line-too-long
-    "E713",       # not-in-test
-    "EM102",      # f-string-in-exception
-    "FA100",      # future-rewritable-type-annotation
-    "PGH003",     # blanket-type-ignore
-    "PIE790",     # unnecessary-placeholder
-    "PIE808",     # unnecessary-range-start
-    "PLC2701",    # import-private-name
-    "PLW2901",    # redefined-loop-name
-    "RUF001",     # ambiguous-unicode-character-string
+
+    # --- Odoo architecture patterns ---
+    "RUF012",     # mutable-class-default (Odoo models use dicts/lists as class attrs)
+    "PLW0642",    # self-or-cls-assignment (self = self.sudo() / self.with_context())
+    "PLW2901",    # redefined-loop-name (common in Odoo batch processing)
+    "TID252",     # relative-imports (Odoo uses them everywhere)
+    "RUF067",     # non-empty-init-module (Odoo requires __init__.py imports)
+
+    # --- Ambiguous variable names ---
+    "E741",       # ambiguous-variable-name (640 false positives from `lambda l:` — Odoo idiom)
+
+    # --- Formatter conflict ---
+    "ISC001",     # single-line-implicit-string-concatenation (conflicts with ruff format)
+
+    # --- Style preferences ---
+    "SIM102",     # collapsible-if (readability often better uncollapsed)
+    "SIM108",     # if-else-block-instead-of-if-exp (ternary not always clearer)
+    "SIM117",     # multiple-with-statements (explicit is better)
+    "RUF001",     # ambiguous-unicode-character-string (Spanish text is common)
     "RUF005",     # collection-literal-concatenation
-    "RUF012",     # mutable-class-default
-    "RUF100",     # unused-noqa
-    "SIM102",     # collapsible-if
-    "SIM108",     # if-else-block-instead-of-if-exp
-    "SIM117",     # multiple-with-statements
-    "TID252",     # relative-imports
-    "TRY003",     # raise-vanilla-args
+
+    # --- Exception handling preferences ---
+    "BLE001",     # blind-exception-catch (Odoo often catches Exception from external/ORM calls)
+    "TRY003",     # raise-vanilla-args (Odoo's UserError takes messages directly)
     "TRY300",     # try-consider-else
+    "TRY301",     # raise-within-try (UserError/ValidationError raised inside try is intentional)
     "TRY400",     # error-instead-of-exception
-    "UP031",      # printf-string-formatting
-    "UP038",      # non-pep604-isinstance
+    "EM102",      # f-string-in-exception (pragmatic — f-strings in exceptions are fine)
+
+    # --- CLI style ---
+    "PLR1722",    # sys-exit-alias (sys.exit() is idiomatic in CLI commands)
+
+    # --- Pyupgrade preferences ---
+    "UP031",      # printf-string-formatting (% formatting is idiomatic in SQL/logging)
+
+    # --- Other style ---
+    "PIE790",     # unnecessary-placeholder (Odoo uses pass in abstract methods)
+    "RET505",     # superfluous-else-return (readability preference)
+    "B904",       # raise-without-from-inside-except (legacy; new code should use `from`)
+
+    # --- Security adjustments (S / flake8-bandit) ---
+    "S101",       # assert-used (374 in non-test code — Odoo uses assert for ORM invariants)
+    "S104",       # hardcoded-bind-all-interfaces (0.0.0.0 is intentional in server config)
+    "S105",       # hardcoded-password-string (test/demo data contains dummy passwords)
+    "S106",       # hardcoded-password-func-arg (test/demo data)
+    "S107",       # hardcoded-password-default (test/demo data)
+    "S108",       # hardcoded-temp-file (/tmp paths are common in Odoo file handling)
+    "S311",       # suspicious-non-cryptographic-random (random used for non-security purposes)
+    "S324",       # hashlib-insecure-hash (MD5/SHA1 used for checksums, not security)
+    "S603",       # subprocess-without-shell-equals-true (subprocess calls are intentional)
+    "S607",       # start-process-with-partial-path (CLI tool invocations)
+    "S608",       # hardcoded-sql-expression (Odoo ORM builds SQL dynamically — use SQL() wrapper)
+    "S704",       # unsafe-markup-use (Markup() is used intentionally for HTML output)
+
+    # --- FURB adjustments ---
+    "FURB118",    # reimplemented-operator (lambdas often more readable than operator.X)
+
+    # --- D (pydocstyle) — conflicting rule pairs and global noise ---
+    # D and ANN are enforced only in odoo/libs/ and odoo/orm/components/; suppressed
+    # everywhere else via per-file-ignores. These ignores apply even in target dirs.
+    "D203",       # one-blank-line-before-class (conflicts with D211 — D211 preferred)
+    "D213",       # multi-line-summary-second-line (conflicts with D212 — D212 preferred)
+
+    # --- ANN (flake8-annotations) — noise reduction even in pure Python ---
+    "ANN002",     # missing-type-args (*args: use Unpack[...] when needed — not enforced globally)
+    "ANN003",     # missing-type-kwargs (**kwargs: same rationale)
+    "ANN401",     # any-type (Any is sometimes legitimately required)
+
+    # --- PERF adjustments ---
+    "PERF203",    # try-except-in-loop (Odoo processes records individually in try/except)
+
+    # --- PLR adjustments (Odoo models are inherently complex) ---
+    "C901",       # mccabe-complexity (Odoo ORM/QWeb methods are inherently complex; see PLR0912)
+    "PLR0904",    # too-many-public-methods (Odoo models have 50+ methods)
+    "PLR0911",    # too-many-return-statements (dispatch methods)
+    "PLR0912",    # too-many-branches (redundant with C90)
+    "PLR0913",    # too-many-arguments (Odoo API methods)
+    "PLR0915",    # too-many-statements (Odoo has long methods)
+    "PLR0917",    # too-many-positional-arguments (same as PLR0913)
+    "PLR2004",    # magic-value-comparison (numeric constants are common in Odoo)
+
+    # --- PLC adjustments ---
+    "PLC0415",    # import-outside-top-level (Odoo uses lazy imports for circular deps)
+    "PLC1901",    # compare-to-empty-string (explicit == "" is clearer when False != "")
+
+    # --- DTZ adjustments ---
+    # Odoo ORM uses naive datetimes by design, so most DTZ rules are suppressed.
+    # STILL ENFORCED: DTZ003 (utcnow) and DTZ004 (utcfromtimestamp) — these are
+    # deprecated since Python 3.12 and must use datetime.now(UTC) instead.
+    "DTZ001",     # call-datetime-without-tzinfo (ORM requires naive)
+    "DTZ002",     # call-datetime-today (ORM requires naive)
+    "DTZ005",     # call-datetime-now-without-tzinfo (ORM requires naive)
+    "DTZ006",     # call-datetime-fromtimestamp (ORM requires naive)
+    "DTZ007",     # call-datetime-strptime-without-zone (ORM requires naive)
+    "DTZ011",     # call-date-today (standard pattern)
+    "DTZ012",     # call-date-fromtimestamp (standard pattern)
+
+    # --- Naming adjustments (Odoo naming conventions differ from PEP 8) ---
+    "N801",       # invalid-class-name (Odoo has lowercase model classes)
+    "N802",       # invalid-function-name (inherited camelCase API methods)
+    "N803",       # invalid-argument-name (vals, cr, uid are Odoo conventions)
+    "N806",       # non-lowercase-variable-in-function (Model = self.env[...])
+    "N807",       # dunder-function-name
+    "N811",       # constant-imported-as-non-constant
+    "N812",       # lowercase-imported-as-non-lowercase
+    "N813",       # camelcase-imported-as-lowercase
+    "N814",       # camelcase-imported-as-constant
+    "N815",       # mixed-case-variable-in-class-scope
+    "N816",       # mixed-case-variable-in-global-scope
+    "N817",       # camelcase-imported-as-acronym
+    "N999",       # invalid-module-name
 ]
 
 [lint.per-file-ignores]
-"**/__init__.py" = [
-    "F401",       # unused-import
+# __init__.py: Re-exports are the whole point; import ORDER is model load order in Odoo
+"**/__init__.py" = ["F401", "F403", "I001"]
+
+# Tests: More permissive
+"**/tests/**" = [
+    "B017",       # assert-raises-too-broad
+    "RUF015",     # unnecessary-iterable-allocation-for-first-element
+    "PLW0603",    # global-statement (test fixtures)
+    "T201",       # print (debugging output in tests is fine)
+    "PLR6201",    # literal-membership (readability over perf in tests)
+    "S110",       # try-except-pass (test cleanup)
+    "S113",       # request-without-timeout (test HTTP calls)
+    "TRY002",     # raise bare Exception() in test fixtures is fine
+    "TRY203",     # useless try/except in test suites tests exception propagation
+    "EM101",      # string literals in test exceptions are fine
+    "PLR0124",    # self-comparisons test mathematical properties (reflexivity, etc.)
+    "A001",       # builtin shadowing in test helpers (hash, type, etc.)
+    "A002",       # builtin shadowing in test helpers (str, etc.)
+    "ERA001",     # commented-out code: tests use code-example comments and TODO-disabled cases
 ]
 
+# __manifest__.py: Standalone dict expression is the whole file
+"**/__manifest__.py" = ["B018"]
+
+# Migrations: Raw SQL, minimal structure, legacy code
+"**/migrations/**" = [
+    "E501",       # Long SQL lines
+    "UP",         # Don't modernize migration scripts
+    "PTH",        # os.path is fine in migrations
+    "ERA",        # Commented-out SQL is common in migrations
+]
+
+# CLI/scripts — print() is legitimate user output in CLI commands
+"**/odoo-bin" = ["E402", "T201"]
+"setup.py" = ["E402", "D", "ANN"]
+"setup/**" = ["D", "ANN"]
+
+# Security-critical path validation — os.path is intentional
+"**/tools/files.py" = ["PTH"]
+
+# D and ANN: enforced ONLY in pure Python packages that have zero Odoo ORM imports:
+#   odoo/libs/            — utility library (~838 D violations, ~1,076 ANN violations)
+#   odoo/orm/components/  — ORM data structures (same pool, counted together above)
+#
+# The rest of the codebase has 56k+ D and 77k+ ANN violations — suppressed below.
+#
+# core/addons/ — standard Odoo modules (account, mail, website, etc.)
+"addons/**" = ["D", "ANN"]
+# core/tests/, core/doc/ — top-level non-package directories
+"tests/**" = ["D", "ANN"]
+"doc/**" = ["D", "ANN"]
+
+# NOTE: In ruff per-file-ignores, "*" matches path separators just like "**",
+# so "odoo/*.py" would suppress all .py files under odoo/ — not just root-level.
+# Root-level files must be listed explicitly to avoid over-suppression.
+#
+# odoo/ root-level files
+"odoo/exceptions.py" = ["D", "ANN"]
+"odoo/init.py" = ["D", "ANN"]
+"odoo/logutils.py" = ["D", "ANN"]
+"odoo/__main__.py" = ["D", "ANN"]
+"odoo/release.py" = ["D", "ANN"]
+# odoo/ subdirectories (everything except libs/)
+"odoo/addons/**" = ["D", "ANN"]
+"odoo/api/**" = ["D", "ANN"]
+"odoo/cli/**" = ["D", "ANN", "T201"]  # print() is legitimate user output in CLI
+"odoo/db/**" = ["D", "ANN"]
+"odoo/fields/**" = ["D", "ANN"]
+"odoo/http/**" = ["D", "ANN"]
+"odoo/models/**" = ["D", "ANN"]
+"odoo/modules/**" = ["D", "ANN"]
+"odoo/_monkeypatches/**" = ["D", "ANN"]
+"odoo/service/**" = ["D", "ANN"]
+"odoo/tests/**" = ["D", "ANN"]
+"odoo/tools/**" = ["D", "ANN"]
+"odoo/upgrade/**" = ["D", "ANN"]
+"odoo/upgrade_code/**" = ["D", "ANN"]
+# odoo/orm/ root-level files (orm/components/ is a target dir — NOT listed here)
+"odoo/orm/constants.py" = ["D", "ANN"]
+"odoo/orm/decorators.py" = ["D", "ANN"]
+"odoo/orm/helpers.py" = ["D", "ANN"]
+"odoo/orm/__init__.py" = ["D", "ANN"]
+"odoo/orm/parsing.py" = ["D", "ANN"]
+"odoo/orm/primitives.py" = ["D", "ANN"]
+"odoo/orm/protocols.py" = ["D", "ANN"]
+"odoo/orm/registration.py" = ["D", "ANN"]
+"odoo/orm/testing.py" = ["D", "ANN"]
+"odoo/orm/_typing.py" = ["D", "ANN"]
+"odoo/orm/validation.py" = ["D", "ANN"]
+# odoo/orm/ subdirectories (everything except components/)
+"odoo/orm/domain/**" = ["D", "ANN"]
+"odoo/orm/fields/**" = ["D", "ANN"]
+"odoo/orm/models/**" = ["D", "ANN"]
+"odoo/orm/runtime/**" = ["D", "ANN"]
+
 [lint.isort]
-# https://www.odoo.com/documentation/master/contributing/development/coding_guidelines.html#imports
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ["odoo"]
 known-local-folder = ["odoo.addons"]
+
+[lint.flake8-tidy-imports.banned-api]
+# --- Datetime ---
+"datetime.datetime.utcnow".msg = "Use datetime.now(UTC) instead (deprecated since 3.12)"
+"datetime.datetime.utcfromtimestamp".msg = "Use datetime.fromtimestamp(ts, tz=UTC) instead"
+
+# --- Stdlib replacements ---
+"optparse".msg = "Use argparse instead"
+
+# --- Legacy typing (use builtin generics and union syntax, Python 3.10+) ---
+"typing.Optional".msg = "Use X | None instead"
+"typing.Union".msg = "Use X | Y instead"
+"typing.List".msg = "Use list[X] instead"
+"typing.Dict".msg = "Use dict[K, V] instead"
+"typing.Tuple".msg = "Use tuple[X, ...] instead"
+"typing.Set".msg = "Use set[X] instead"
+"typing.FrozenSet".msg = "Use frozenset[X] instead"
+"typing.Type".msg = "Use type[X] instead"
+"typing.Deque".msg = "Use collections.deque[X] instead"
+"typing.DefaultDict".msg = "Use collections.defaultdict[K, V] instead"
+"typing.OrderedDict".msg = "Use collections.OrderedDict[K, V] instead"
+"typing.Counter".msg = "Use collections.Counter[X] instead"
+"typing.ChainMap".msg = "Use collections.ChainMap[K, V] instead"
+
+# Note: os.path.* function calls are handled by PTH rules (more specific guidance per function)
+
+[lint.flake8-bugbear]
+extend-immutable-calls = [
+    "odoo.fields.Command",
+    "odoo.tools.frozendict",         # immutable dict — safe as argument default
+    "odoo.tools.misc.ConstantMapping",  # immutable mapping — safe as argument default
+]
+
+[lint.mccabe]
+max-complexity = 20
+
+[lint.flake8-builtins]
+builtins-ignorelist = [
+    "id",          # Odoo primary key field
+    "type",        # Odoo selection field name
+    "format",      # Common variable name in Odoo
+    "input",       # Field/parameter name
+    "help",        # Field attribute
+    "filter",      # Common variable name
+    "range",       # Occasional shadowing in loops
+    "object",      # Base class references
+    "credits",     # Odoo module metadata
+    "copyright",   # Odoo module metadata
+    "license",     # Odoo module metadata
+    "exit",        # CLI scripts
+    "quit",        # CLI scripts
+    "round",       # Financial calculation parameter (currency._convert, round=True/False)
+    "hash",        # Common variable in cryptographic utilities
+]
+
+[format]
+# Black-compatible defaults
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true

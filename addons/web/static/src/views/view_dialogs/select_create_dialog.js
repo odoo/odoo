@@ -1,21 +1,27 @@
-import { Dialog } from "@web/core/dialog/dialog";
+// @ts-check
+
+/** @module @web/views/view_dialogs/select_create_dialog - Modal with embedded list/kanban for selecting existing records or creating new ones (Many2one/Many2many) */
+
+import { Component, useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { View } from "@web/views/view";
 
 import { FormViewDialog } from "./form_view_dialog";
 
-import { Component, useState } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-
 let _defaultNoContentHelp;
 function getDefaultNoContentHelp() {
     if (!_defaultNoContentHelp) {
-        _defaultNoContentHelp = renderToMarkup("web.SelectCreateDialog.DefaultNoContentHelp");
+        _defaultNoContentHelp = renderToMarkup(
+            "web.SelectCreateDialog.DefaultNoContentHelp",
+        );
     }
     return _defaultNoContentHelp;
 }
 
+/** Modal dialog with an embedded list/kanban view for selecting existing records or creating new ones (Many2one/Many2many popups). */
 export class SelectCreateDialog extends Component {
     static components = { Dialog, View };
     static template = "web.SelectCreateDialog";
@@ -62,6 +68,7 @@ export class SelectCreateDialog extends Component {
 
     get viewProps() {
         const type = this.env.isSmall ? "kanban" : "list";
+        /** @type {Record<string, any>} */
         const props = {
             loadIrFilters: true,
             ...this.baseViewProps,
@@ -82,6 +89,10 @@ export class SelectCreateDialog extends Component {
         return props;
     }
 
+    /**
+     * Guard to ensure the callback runs at most once, then close the dialog.
+     * @param {() => Promise<void>} callback
+     */
     async executeOnceAndClose(callback) {
         if (!this.busy) {
             this.busy = true;
@@ -95,6 +106,7 @@ export class SelectCreateDialog extends Component {
         }
     }
 
+    /** @param {number[]} resIds - confirm selection of the given record IDs */
     async select(resIds) {
         if (this.props.onSelected) {
             this.executeOnceAndClose(() => this.props.onSelected(resIds));
@@ -111,6 +123,7 @@ export class SelectCreateDialog extends Component {
         return this.env.isSmall && !!this.props.onUnselect;
     }
 
+    /** Open a FormViewDialog to create a new record, or delegate to onCreateEdit. */
     async createEditRecord() {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();

@@ -5,9 +5,9 @@ import itertools
 import json
 from datetime import datetime
 
-from werkzeug import urls
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
 from werkzeug.exceptions import Forbidden, NotFound
-from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields
 from odoo.exceptions import ValidationError
@@ -325,6 +325,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
         if attribute_values:
             request.session['attribute_values'] = attribute_values
+            post['attribute_values'] = attribute_values
         else:
             request.session.pop('attribute_values', None)
 
@@ -897,8 +898,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and prev_pricelist != pricelist
         ):
             # Convert prices to the new priceslist currency in the query params of the referrer
-            decoded_url = url_parse(redirect_url)
-            args = url_decode(decoded_url.query)
+            decoded_url = urlsplit(redirect_url)
+            args = dict(parse_qsl(decoded_url.query))
             min_price = args.get('min_price')
             max_price = args.get('max_price')
             if min_price or max_price:
@@ -924,7 +925,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ))
                 except (ValueError, TypeError):
                     pass
-            redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
+            redirect_url = urlunsplit(decoded_url._replace(query=urlencode(args)))
 
         return request.redirect(redirect_url or self._get_shop_path())
 
@@ -1632,7 +1633,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(self._get_shop_path())
 
-        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'sale' else []
+        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'done' else []
         if errors:
             first_error = errors[0]  # only display first error
             error_msg = f"{first_error[0]}\n{first_error[1]}"
@@ -1642,7 +1643,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(self._get_shop_path())
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
+        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'done':
             order_sudo._check_cart_is_ready_to_be_paid()
             # Only confirm the order if it wasn't already confirmed.
             order_sudo._validate_order()
@@ -1725,7 +1726,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect(self._get_shop_path())
 
         # Check that the cart is not empty.
-        if not order_sudo.order_line:
+        if not order_sudo.line_ids:
             return request.redirect('/shop/cart')
 
         # Check that public orders are allowed.
@@ -1868,9 +1869,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'value': order.amount_total,
             'tax': order.amount_tax,
             'currency': order.currency_id.name,
-            'items': self.order_lines_2_google_api(order.order_line),
+            'items': self.order_lines_2_google_api(order.line_ids),
         }
-        delivery_line = order.order_line.filtered('is_delivery')
+        delivery_line = order.line_ids.filtered('is_delivery')
         if delivery_line:
             tracking_cart_dict['shipping'] = delivery_line.price_unit
         return tracking_cart_dict
@@ -1969,10 +1970,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The filtered query string.
         :rtype: str
         """
-        query = urls.url_parse(f'?{query_string}').decode_query()
+        query = dict(parse_qsl(query_string))
         for key in keys_to_remove:
             query.pop(key, False)
-        return urls.url_encode(query)
+        return urlencode(query)
 
     @staticmethod
     def _get_attribute_value_dict(attribute_values):

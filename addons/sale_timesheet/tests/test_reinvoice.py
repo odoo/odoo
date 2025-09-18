@@ -307,7 +307,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'list_price': 90,
             'type': 'service',
             'service_policy': 'delivered_timesheet',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
             'default_code': 'SERV-DELI2',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -363,7 +363,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         })
         refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.refund_moves()['res_id'])
         refund_invoice.action_post()
-        # reversing with action_reverse and then action_post does not reset the invoice_status to 'to invoice' in tests
+        # reversing with action_reverse and then action_post does not reset the invoice_state to 'to invoice' in tests
 
         # Recreate wizard to get the new invoices created
         wizard = self.env['sale.advance.payment.inv'].with_context(context).create({

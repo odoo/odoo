@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/utils/search - Fuzzy text search with consecutive-letter scoring and normalized matching */
+
 import { normalize } from "@web/core/l10n/utils";
 
 /**
@@ -112,12 +116,10 @@ export function fuzzyLevenshteinLookup(pattern, list, errorRatio = 3) {
     const maxNbrCorrection = Math.round(pattern.length / errorRatio);
     const results = [];
     list.forEach((candidate) => {
-        let score = -1;
         if (candidate.includes(pattern)) {
-            score = 0;
-            results.push({ score, elem: pattern });
+            results.push({ score: 0, elem: pattern });
         } else {
-            score = getLevenshteinScore(pattern, candidate);
+            const score = getLevenshteinScore(pattern, candidate);
             if (score >= 0 && score <= maxNbrCorrection) {
                 results.push({ score, elem: candidate });
             }
@@ -127,7 +129,6 @@ export function fuzzyLevenshteinLookup(pattern, list, errorRatio = 3) {
     return results.map((r) => r.elem);
 }
 
-
 /**
  * Computes the Levenshtein distance between two strings.
  *
@@ -136,10 +137,11 @@ export function fuzzyLevenshteinLookup(pattern, list, errorRatio = 3) {
  * @returns {number} The Levenshtein distance between `a` and `b`.
  */
 function getLevenshteinScore(a, b) {
-    let aLength = a.length;
-    let bLength = b.length;
+    const aLength = a.length;
+    const bLength = b.length;
 
-    let distanceMatrix = [];
+    /** @type {number[][]} */
+    const distanceMatrix = [];
     for (let i = 0; i <= aLength; i++) {
         distanceMatrix[i] = [];
         for (let j = 0; j <= bLength; j++) {
@@ -158,7 +160,7 @@ function getLevenshteinScore(a, b) {
                     distanceMatrix[i][j] = Math.min(
                         distanceMatrix[i - 1][j] + 1,
                         distanceMatrix[i][j - 1] + 1,
-                        distanceMatrix[i - 1][j - 1] + 1
+                        distanceMatrix[i - 1][j - 1] + 1,
                     );
                 }
             }

@@ -7,12 +7,12 @@
             <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
         </record>
 
-        <record id="view_stock_move_operations_raw" model="ir.ui.view">
+        <record id="view_stock_move_form_operations_raw" model="ir.ui.view">
             <field name="name">stock.move.operations.raw.form</field>
             <field name="model">stock.move</field>
             <field name="priority">1</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="inherit_id" ref="stock.view_stock_move_form_operations" />
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='product_uom_qty']" position="attributes">
 		            <attribute name="string">Total To Consume</attribute>
@@ -20,12 +20,12 @@
             </field>
         </record>
 
-        <record id="view_stock_move_operations_finished" model="ir.ui.view">
+        <record id="view_stock_move_form_operations_finished" model="ir.ui.view">
             <field name="name">stock.move.operations.finished.form</field>
             <field name="model">stock.move</field>
             <field name="priority">1</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="inherit_id" ref="stock.view_stock_move_form_operations" />
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='product_uom_qty']" position="attributes">
 		            <attribute name="string">To Produce</attribute>
@@ -38,7 +38,7 @@
             <field name="model">stock.move</field>
             <field name="priority">1</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="inherit_id" ref="stock.view_stock_move_form_operations" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='show_lots_m2o']" position="after">
                     <field name="quantity" invisible="1"/>
@@ -62,10 +62,10 @@
             </field>
         </record>
 
-        <record id="stock_move_line_view_search" model="ir.ui.view">
+        <record id="view_stock_move_line_search" model="ir.ui.view">
             <field name="name">stock.move.line.search</field>
             <field name="model">stock.move.line</field>
-            <field name="inherit_id" ref="stock.stock_move_line_view_search" />
+            <field name="inherit_id" ref="stock.view_stock_move_line_search" />
             <field name="arch" type="xml">
                 <filter name="manufacturing" position="attributes">
                     <attribute name="invisible">0</attribute>
@@ -74,10 +74,10 @@
             </field>
         </record>
 
-        <record id="view_move_line_tree" model="ir.ui.view">
+        <record id="view_stock_move_line_list" model="ir.ui.view">
             <field name="name">stock.move.line.list</field>
             <field name="model">stock.move.line</field>
-            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="inherit_id" ref="stock.view_stock_move_line_list"/>
             <field name="arch" type="xml">
                 <field name="reference" position="attributes">
                     <attribute name="decoration-primary">picking_code == 'mrp_operation'</attribute>
@@ -88,7 +88,7 @@
     <menuitem id="menu_mrp_traceability"
           name="Lots/Serial Numbers"
           parent="menu_mrp_bom"
-          action="stock.action_production_lot_form"
+          action="stock.action_stock_lot_form"
           groups="stock.group_production_lot"
           sequence="15"/>
 

@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 
 /**
  * @typedef {typeof import("@odoo/owl").Component} Component
- * @typedef {import("@web/core/dialog/dialog_service").DialogServiceInterfaceAddOptions} DialogServiceInterfaceAddOptions
+ * @typedef {import("@web/ui/dialog/dialog_service").DialogServiceInterfaceAddOptions} DialogServiceInterfaceAddOptions
  */
 
 /**

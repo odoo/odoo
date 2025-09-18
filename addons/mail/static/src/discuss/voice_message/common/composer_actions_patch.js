@@ -1,7 +1,6 @@
 import { registerComposerAction } from "@mail/core/common/composer_actions";
 import { Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-
 registerComposerAction("voice-start", {
     condition: ({ composer, owner }) =>
         composer.targetThread?.model === "discuss.channel" &&
@@ -15,7 +14,8 @@ registerComposerAction("voice-start", {
 });
 registerComposerAction("voice-stop", {
     condition: ({ composer, owner }) =>
-        composer.targetThread?.model === "discuss.channel" && owner.voiceRecorder?.recording,
+        composer.targetThread?.model === "discuss.channel" &&
+        owner.voiceRecorder?.recording,
     icon: "fa fa-circle text-danger o-mail-VoiceRecorder-dot",
     name: _t("Stop Recording"),
     onSelected: ({ owner }) => owner.voiceRecorder.onClick(),
@@ -38,6 +38,7 @@ registerComposerAction("voice-recording", {
     },
     componentProps: ({ composer, owner }) => ({ composer, state: owner.voiceRecorder }),
     condition: ({ composer, owner }) =>
-        composer.targetThread?.model === "discuss.channel" && owner.voiceRecorder?.recording,
+        composer.targetThread?.model === "discuss.channel" &&
+        owner.voiceRecorder?.recording,
     sequenceQuick: 10,
 });

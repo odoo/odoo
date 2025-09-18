@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -9,7 +11,6 @@ import {
     onRpc,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
-
 import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {
@@ -66,14 +67,18 @@ test("can execute server actions from db ID", async () => {
     ]);
     onRpc(
         "/web/action/run",
-        async () => 1 // execute action 1
+        async () => 1, // execute action 1
     );
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2, { additionalContext: { someKey: 44 } });
-    expect(".o_control_panel").toHaveCount(1, { message: "should have rendered a control panel" });
-    expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
+    expect(".o_control_panel").toHaveCount(1, {
+        message: "should have rendered a control panel",
+    });
+    expect(".o_kanban_view").toHaveCount(1, {
+        message: "should have rendered a kanban view",
+    });
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -116,7 +121,9 @@ test("handle server actions returning false", async function (assert) {
     // execute a server action that returns false
     await getService("action").doAction(2);
     await animationFrame();
-    expect(".o_technical_modal").toHaveCount(0, { message: "should have closed the modal" });
+    expect(".o_technical_modal").toHaveCount(0, {
+        message: "should have closed the modal",
+    });
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",

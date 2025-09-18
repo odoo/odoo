@@ -1,29 +1,39 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { Transition } from "@web/core/transition";
-import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { debounce } from "@web/core/utils/timing";
-import { ErrorHandler } from "@web/core/utils/components";
+// @ts-check
+
+/** @module @web/webclient/navbar/navbar - Main navigation bar with app switcher, sub-menus, systray items, and mobile sidebar */
 
 import {
     Component,
     onWillDestroy,
-    useExternalListener,
+    onWillUnmount,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
-    onWillUnmount,
 } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/components/dropdown/dropdown_group";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { Transition } from "@web/components/transition";
+import { registry } from "@web/core/registry";
+import { ErrorHandler } from "@web/core/utils/components";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
 const SWIPE_ACTIVATION_THRESHOLD = 100;
 
+/** Dropdown subclass for navbar sub-menus (enables enterprise/website patching). */
 export class MenuDropdown extends Dropdown {}
 
+/**
+ * Main navigation bar at the top of the webclient.
+ *
+ * Renders the app switcher, current app's sub-menus (with overflow "More" menu),
+ * systray items, and mobile sidebar. Adapts to viewport width via a resize observer.
+ */
 export class NavBar extends Component {
     static template = "web.NavBar";
     static components = {
@@ -40,7 +50,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
-        this.pwa = useService("pwa");
+        this.pwa = useService(/** @type {any} */ ("pwa"));
         this.root = useRef("root");
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
@@ -67,7 +77,7 @@ export class NavBar extends Component {
             () => {
                 this.adapt();
             },
-            () => [adaptCounter]
+            () => [adaptCounter],
         );
 
         this.state = useState({
@@ -76,6 +86,10 @@ export class NavBar extends Component {
         });
     }
 
+    /**
+     * @param {Error} error
+     * @param {Object} item - the systray item that errored
+     */
     handleItemError(error, item) {
         // remove the faulty component
         item.isDisplayed = () => false;
@@ -84,13 +98,16 @@ export class NavBar extends Component {
         });
     }
 
+    /** @returns {Object | undefined} the currently active app menu item */
     get currentApp() {
         return this.menuService.getCurrentApp();
     }
 
+    /** @returns {Object[]} sub-menu tree nodes for the current app */
     get currentAppSections() {
         return (
-            (this.currentApp && this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) ||
+            (this.currentApp &&
+                this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) ||
             []
         );
     }
@@ -103,11 +120,14 @@ export class NavBar extends Component {
         return this.pwa.isScopedApp;
     }
 
+    /** @returns {Object[]} visible systray items in display order */
     get systrayItems() {
         return systrayRegistry
             .getEntries()
             .map(([key, value]) => ({ key, ...value }))
-            .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            .filter((item) =>
+                "isDisplayed" in item ? item.isDisplayed(this.env) : true,
+            )
             .reverse();
     }
 
@@ -143,7 +163,8 @@ export class NavBar extends Component {
         // Save initial state to further check if new render has to be done.
         const initialAppSectionsExtra = this.currentAppSectionsExtra;
         const firstInitialAppSectionExtra = [...initialAppSectionsExtra].shift();
-        const initialAppId = firstInitialAppSectionExtra && firstInitialAppSectionExtra.appID;
+        const initialAppId =
+            firstInitialAppSectionExtra && firstInitialAppSectionExtra.appID;
 
         // Restore (needed to get offset widths)
         const sections = [
@@ -160,7 +181,7 @@ export class NavBar extends Component {
         const sectionsAvailableWidth = getBoundingClientRect.call(sectionsMenu).width;
         const sectionsTotalWidth = sections.reduce(
             (sum, s) => sum + getBoundingClientRect.call(s).width,
-            0
+            0,
         );
         if (sectionsAvailableWidth < sectionsTotalWidth) {
             // Sections are overflowing
@@ -169,16 +190,20 @@ export class NavBar extends Component {
             for (const section of sections) {
                 if (sectionsAvailableWidth < width + section.offsetWidth) {
                     // Last sections are overflowing
-                    const overflowingSections = sections.slice(sections.indexOf(section));
+                    const overflowingSections = sections.slice(
+                        sections.indexOf(section),
+                    );
                     overflowingSections.forEach((s) => {
                         // Hide from normal menu
                         s.classList.add("d-none");
                         // Show inside "more" menu
                         const sectionId =
                             s.dataset.section ||
-                            s.querySelector("[data-section]").getAttribute("data-section");
+                            s
+                                .querySelector("[data-section]")
+                                .getAttribute("data-section");
                         const currentAppSection = this.currentAppSections.find(
-                            (appSection) => appSection.id.toString() === sectionId
+                            (appSection) => appSection.id.toString() === sectionId,
                         );
                         this.currentAppSectionsExtra.push(currentAppSection);
                     });
@@ -190,7 +215,8 @@ export class NavBar extends Component {
 
         // ------- Final rendering -------
         const firstCurrentAppSectionExtra = [...this.currentAppSectionsExtra].shift();
-        const currentAppId = firstCurrentAppSectionExtra && firstCurrentAppSectionExtra.appID;
+        const currentAppId =
+            firstCurrentAppSectionExtra && firstCurrentAppSectionExtra.appID;
         if (
             initialAppSectionsExtra.length === this.currentAppSectionsExtra.length &&
             initialAppId === currentAppId
@@ -201,14 +227,19 @@ export class NavBar extends Component {
         return this.render();
     }
 
+    /** @param {Object} menu - the selected menu descriptor */
     onNavBarDropdownItemSelection(menu) {
         if (menu) {
             this.menuService.selectMenu(menu);
         }
     }
 
+    /**
+     * @param {Object} payload - menu item with actionPath or actionID
+     * @returns {string} the URL path for the menu item
+     */
     getMenuItemHref(payload) {
-        return `/odoo/${payload.actionPath || "action-" + payload.actionID}`;
+        return `/odoo/${payload.actionPath || `action-${payload.actionID}`}`;
     }
 
     _closeAppMenuSidebar() {

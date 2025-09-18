@@ -1,0 +1,48 @@
+/*
+ * CSS Paged Media rules for WeasyPrint PDF rendering.
+ *
+ * This file provides the static CSS declarations that enable WeasyPrint's
+ * CSS Paged Media features for report generation. Dynamic @page rules
+ * (page size, margins) are injected per-report by _prepare_weasyprint_html().
+ *
+ * Running elements: .header and .footer are removed from normal document flow
+ * and placed in @page margin boxes (top/bottom). They repeat on every page,
+ * updating whenever a new running element is encountered in the flow.
+ *
+ * Page counters: .page and .topage spans use CSS counters to display page
+ * numbers, replacing the JavaScript-based substitution that wkhtmltopdf used.
+ */
+
+/* Override report.scss's height: 100% which prevents page flow in paged media.
+ * In CSS Paged Media, height: 100% constrains content to exactly one page.
+ * !important is needed to override inline styles from legacy templates. */
+html, body {
+    height: auto !important;
+}
+
+.header {
+    position: running(page-header);
+}
+
+.footer {
+    position: running(page-footer);
+}
+
+/* When css_margins is enabled, page left/right margins are 0 and horizontal
+ * spacing comes from the body's .o_css_margins padding (8mm). Running elements
+ * are placed in @page margin boxes which don't inherit body padding, so they
+ * need their own horizontal padding to align with body content.
+ * 8mm matches $o-default-report-margins from report.scss. */
+.o_css_margins .header,
+.o_css_margins .footer {
+    padding-left: 8mm;
+    padding-right: 8mm;
+}
+
+span.page::after {
+    content: counter(page);
+}
+
+span.topage::after {
+    content: counter(pages);
+}

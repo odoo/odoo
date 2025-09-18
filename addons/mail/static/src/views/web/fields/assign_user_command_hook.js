@@ -1,12 +1,10 @@
 import { useComponent } from "@odoo/owl";
-
-import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
-
+import { useCommand } from "@web/services/commands/command_hook";
+import { user } from "@web/services/user";
 /**
  * Use this hook to add "Assign to.." and "Assign/Unassign me" to the command palette.
  */
@@ -30,10 +28,12 @@ export function useAssignUserCommand() {
 
     const add = async (record) => {
         if (type === "many2one") {
-            component.props.record.update({ [component.props.name]: {
-                id: record[0],
-                display_name: record[1],
-            } });
+            component.props.record.update({
+                [component.props.name]: {
+                    id: record[0],
+                    display_name: record[1],
+                },
+            });
         } else if (type === "many2many") {
             component.props.record.data[component.props.name].linkTo(record[0], {
                 display_name: record[1],
@@ -54,13 +54,16 @@ export function useAssignUserCommand() {
         let domain = getFieldDomain(
             component.props.record,
             component.props.name,
-            component.props.domain
+            component.props.domain,
         );
         const context = component.props.context;
         if (type === "many2many") {
             const selectedUserIds = getCurrentIds();
             if (selectedUserIds.length) {
-                domain = Domain.and([domain, [["id", "not in", selectedUserIds]]]).toList();
+                domain = Domain.and([
+                    domain,
+                    [["id", "not in", selectedUserIds]],
+                ]).toList();
             }
         }
         component._pendingRpc?.abort(false);
@@ -108,7 +111,7 @@ export function useAssignUserCommand() {
         {
             ...options,
             hotkey: "alt+i",
-        }
+        },
     );
 
     useCommand(
@@ -118,9 +121,10 @@ export function useAssignUserCommand() {
         },
         {
             ...options,
-            isAvailable: () => options.isAvailable() && !getCurrentIds().includes(user.userId),
+            isAvailable: () =>
+                options.isAvailable() && !getCurrentIds().includes(user.userId),
             hotkey: "alt+shift+i",
-        }
+        },
     );
     if (component.props.record.id === component.props.record.model.root.id) {
         // Only Form View
@@ -131,9 +135,10 @@ export function useAssignUserCommand() {
             },
             {
                 ...options,
-                isAvailable: () => options.isAvailable() && getCurrentIds().includes(user.userId),
+                isAvailable: () =>
+                    options.isAvailable() && getCurrentIds().includes(user.userId),
                 hotkey: "alt+shift+i",
-            }
+            },
         );
     } else {
         if (type === "many2one") {
@@ -144,9 +149,10 @@ export function useAssignUserCommand() {
                 },
                 {
                     ...options,
-                    isAvailable: () => options.isAvailable() && getCurrentIds().length > 0,
+                    isAvailable: () =>
+                        options.isAvailable() && getCurrentIds().length > 0,
                     hotkey: "alt+shift+u",
-                }
+                },
             );
         } else {
             useCommand(
@@ -159,7 +165,7 @@ export function useAssignUserCommand() {
                     isAvailable: () =>
                         options.isAvailable() && getCurrentIds().includes(user.userId),
                     hotkey: "alt+shift+u",
-                }
+                },
             );
         }
     }

@@ -1,14 +1,16 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/components/datetime/datetime_test_helpers";
 import {
+    contains,
     defineModels,
     fields,
     models,
     mountView,
     onRpc,
-    contains,
 } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -52,7 +54,7 @@ test("RemainingDaysField on a date field in list view", async () => {
 
     expect(queryOne(".o_field_widget > div", { root: cells[0] })).toHaveAttribute(
         "title",
-        "10/08/2017"
+        "10/08/2017",
     );
     expect(queryOne(".o_field_widget > div", { root: cells[0] })).toHaveClass([
         "fw-bold",
@@ -194,7 +196,9 @@ test("RemainingDaysField on a date field in form view", async () => {
 
     await contains(".o_field_remaining_days button").click();
     await animationFrame();
-    expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
+    expect(".o_datetime_picker").toHaveCount(1, {
+        message: "datepicker should be opened",
+    });
 
     await click(getPickerCell("9"));
     await animationFrame();
@@ -237,9 +241,15 @@ test("RemainingDaysField in form view (readonly)", async () => {
     });
 
     expect(".o_field_widget[name='date']").toHaveText("Today");
-    expect(".o_field_widget[name='date'] > div ").toHaveClass(["fw-bold", "text-warning"]);
+    expect(".o_field_widget[name='date'] > div ").toHaveClass([
+        "fw-bold",
+        "text-warning",
+    ]);
     expect(".o_field_widget[name='datetime']").toHaveText("Today");
-    expect(".o_field_widget[name='datetime'] > div ").toHaveClass(["fw-bold", "text-warning"]);
+    expect(".o_field_widget[name='datetime'] > div ").toHaveClass([
+        "fw-bold",
+        "text-warning",
+    ]);
 });
 
 test("RemainingDaysField on a datetime field in form view", async () => {
@@ -259,7 +269,9 @@ test("RemainingDaysField on a datetime field in form view", async () => {
 
     await contains(".o_field_widget button").click();
     await animationFrame();
-    expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
+    expect(".o_datetime_picker").toHaveCount(1, {
+        message: "datepicker should be opened",
+    });
 
     await click(getPickerCell("9"));
     await animationFrame();
@@ -298,7 +310,10 @@ test("RemainingDaysField on a datetime field in list view in UTC", async () => {
         "",
     ]);
 
-    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/08/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute(
+        "title",
+        "10/08/2017",
+    );
 
     const cells = queryAll(".o_data_cell div div");
     expect(cells[0]).toHaveClass(["fw-bold", "text-warning"]);
@@ -334,7 +349,10 @@ test("RemainingDaysField on a datetime field in list view in UTC+6", async () =>
         "Yesterday",
         "In 2 days",
     ]);
-    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/09/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute(
+        "title",
+        "10/09/2017",
+    );
 });
 
 test("RemainingDaysField on a date field in list view in UTC-6", async () => {
@@ -360,7 +378,10 @@ test("RemainingDaysField on a date field in list view in UTC-6", async () => {
         "In 2 days",
         "3 days ago",
     ]);
-    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/08/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute(
+        "title",
+        "10/08/2017",
+    );
 });
 
 test("RemainingDaysField on a datetime field in list view in UTC-8", async () => {

@@ -1,26 +1,30 @@
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { Layout } from "@web/search/layout";
-import { useModelWithSampleData } from "@web/model/model";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
-import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
-import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
-import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
-import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
-import { browser } from "@web/core/browser/browser";
-import { standardViewProps } from "@web/views/standard_view_props";
-import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
-import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+// @ts-check
+
+/** @module @web/views/calendar/calendar_controller - Calendar view orchestrator: date navigation, event CRUD, quick-create, and multi-selection */
 
 import { Component, reactive, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useModelWithSampleData } from "@web/model/model";
+import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { Layout } from "@web/search/layout";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import {
+    ConfirmationDialog,
+    deleteConfirmationMessage,
+} from "@web/ui/dialog/confirmation_dialog";
+import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
+import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+
+import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
+import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 
 const { DateTime } = luxon;
 
@@ -31,6 +35,7 @@ export const SCALE_LABELS = {
     year: _t("Year"),
 };
 
+/** Dialog hook that auto-closes the previous dialog when opening a new one. */
 function useUniqueDialog() {
     const displayDialog = useOwnedDialogs();
     let close = null;
@@ -42,6 +47,13 @@ function useUniqueDialog() {
     };
 }
 
+/**
+ * Main controller for the calendar view.
+ *
+ * Orchestrates the model, renderer, side panel, search bar, and scale selector.
+ * Handles record CRUD operations (create, edit, delete) including quick-create
+ * dialogs, multi-selection for batch operations, and navigation between dates/scales.
+ */
 export class CalendarController extends Component {
     static components = {
         MobileFilterPanel: CalendarMobileFilterPanel,
@@ -69,21 +81,27 @@ export class CalendarController extends Component {
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
 
+        /** @type {any} */
         this.model = useModelWithSampleData(this.props.Model, this.modelParams);
 
         useSetupAction({
             getLocalState: () => this.model.exportedState,
         });
 
-        const sessionShowSidebar = browser.sessionStorage.getItem("calendar.showSideBar");
+        const sessionShowSidebar =
+            browser.sessionStorage.getItem("calendar.showSideBar");
         this.state = useState({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
-                    ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
+                    ? JSON.parse(
+                          browser.localStorage.getItem("calendar.isWeekendVisible"),
+                      )
                     : true,
             showSideBar:
                 !this.env.isSmall &&
-                Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
+                Boolean(
+                    sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true,
+                ),
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -149,11 +167,11 @@ export class CalendarController extends Component {
 
     get weekHeader() {
         const { rangeStart, rangeEnd } = this.model;
-        if (rangeStart.year != rangeEnd.year) {
+        if (rangeStart.year !== rangeEnd.year) {
             return `${rangeStart.toFormat("MMMM")} ${rangeStart.year} - ${rangeEnd.toFormat(
-                "MMMM"
+                "MMMM",
             )} ${rangeEnd.year}`;
-        } else if (rangeStart.month != rangeEnd.month) {
+        } else if (rangeStart.month !== rangeEnd.month) {
             return `${rangeStart.toFormat("MMMM")} - ${rangeEnd.toFormat("MMMM")} ${
                 rangeStart.year
             }`;
@@ -193,7 +211,10 @@ export class CalendarController extends Component {
 
     toggleSideBar() {
         this.state.showSideBar = !this.state.showSideBar;
-        browser.sessionStorage.setItem("calendar.showSideBar", this.state.showSideBar);
+        browser.sessionStorage.setItem(
+            "calendar.showSideBar",
+            String(this.state.showSideBar),
+        );
     }
 
     get showCalendar() {
@@ -239,11 +260,14 @@ export class CalendarController extends Component {
 
     prepareSelectionFeature() {
         this.selectedCells = null;
-        this.multiSelectionButtonsReactive = this.prepareMultiSelectionButtonsReactive();
+        this.multiSelectionButtonsReactive =
+            this.prepareMultiSelectionButtonsReactive();
         this.callbackRecorder = new CallbackRecorder();
         this._baseRendererProps.callbackRecorder = this.callbackRecorder;
-        this._baseRendererProps.onSquareSelection = this.updateMultiSelection.bind(this);
-        this._baseRendererProps.cleanSquareSelection = this.cleanSquareSelection.bind(this);
+        this._baseRendererProps.onSquareSelection =
+            this.updateMultiSelection.bind(this);
+        this._baseRendererProps.cleanSquareSelection =
+            this.cleanSquareSelection.bind(this);
 
         useBus(this.model.bus, "update", this.cleanSquareSelection.bind(this));
     }
@@ -253,7 +277,7 @@ export class CalendarController extends Component {
             this.selectedCells = selectedCells;
             this.multiSelectionButtonsReactive.visible = true;
             this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
-                this.selectedCells
+                this.selectedCells,
             ).length;
         } else {
             this.selectedCells = null;
@@ -288,6 +312,12 @@ export class CalendarController extends Component {
         };
     }
 
+    /**
+     * Create a new record via quick-create dialog, form dialog, or full form view.
+     *
+     * @param {Object} record - partial record with start, end, isAllDay
+     * @returns {Promise|undefined}
+     */
     createRecord(record) {
         if (!this.model.canCreate) {
             return;
@@ -296,28 +326,35 @@ export class CalendarController extends Component {
             if (this.model.quickCreateFormViewId) {
                 return new Promise((resolve) => {
                     this.displayDialog(
-                        this.constructor.components.QuickCreateFormView,
+                        /** @type {any} */ (this.constructor).components
+                            .QuickCreateFormView,
                         this.getQuickCreateFormViewProps(record),
                         {
                             onClose: () => resolve(),
-                        }
+                        },
                     );
                 });
             }
 
             return new Promise((resolve) => {
                 this.displayDialog(
-                    this.constructor.components.QuickCreate,
+                    /** @type {any} */ (this.constructor).components.QuickCreate,
                     this.getQuickCreateProps(record),
                     {
                         onClose: () => resolve(),
-                    }
+                    },
                 );
             });
         } else {
             return this.editRecordInCreation(record);
         }
     }
+    /**
+     * Open a record for editing in a dialog or navigate to the form view.
+     *
+     * @param {Object} record - record to edit (must have id for existing records)
+     * @param {Object} [context={}] - additional context for the form view
+     */
     async editRecord(record, context = {}) {
         if (this.model.hasEditDialog) {
             return new Promise((resolve) => {
@@ -333,7 +370,7 @@ export class CalendarController extends Component {
                         viewId: this.model.formViewId,
                         onRecordSaved: () => this.model.load(),
                     },
-                    { onClose: () => resolve() }
+                    { onClose: () => resolve() },
                 );
             });
         } else {
@@ -373,14 +410,17 @@ export class CalendarController extends Component {
     }
 
     deleteRecord(record) {
-        this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
+        this.displayDialog(
+            ConfirmationDialog,
+            this.deleteConfirmationDialogProps(record),
+        );
     }
 
     getDates(selectedCells) {
         const dates = [];
         for (const element of selectedCells) {
             const date = luxon.DateTime.fromISO(element.dataset.date);
-            if (!date.invalid) {
+            if (!(/** @type {any} */ (date).invalid)) {
                 dates.push(date);
             }
         }
@@ -407,6 +447,11 @@ export class CalendarController extends Component {
         return this.model.unlinkRecords(ids);
     }
 
+    /**
+     * Navigate the calendar to a different date.
+     *
+     * @param {"next"|"previous"|"today"} move - navigation direction
+     */
     async setDate(move) {
         let date = null;
         switch (move) {
@@ -418,7 +463,7 @@ export class CalendarController extends Component {
                 break;
             case "today":
                 date = luxon.DateTime.local().startOf("day");
-                if (date.ts === this.date.startOf("day").ts) {
+                if (/** @type {any} */ (date).ts === this.date.startOf("day").ts) {
                     this.model.bus.trigger("SCROLL_TO_CURRENT_HOUR", false);
                 }
                 break;
@@ -428,7 +473,7 @@ export class CalendarController extends Component {
 
     get scales() {
         return Object.fromEntries(
-            this.model.scales.map((s) => [s, { description: SCALE_LABELS[s] }])
+            this.model.scales.map((s) => [s, { description: SCALE_LABELS[s] }]),
         );
     }
 
@@ -438,6 +483,9 @@ export class CalendarController extends Component {
 
     toggleWeekendVisibility() {
         this.state.isWeekendVisible = !this.state.isWeekendVisible;
-        browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
+        browser.localStorage.setItem(
+            "calendar.isWeekendVisible",
+            this.state.isWeekendVisible,
+        );
     }
 }

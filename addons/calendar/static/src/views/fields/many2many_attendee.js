@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
-} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
-import { useSpecialData } from "@web/views/fields/relational_utils";
+} from "@web/fields/relational/many2many_tags_avatar/many2many_tags_avatar_field";
+import { useSpecialData } from "@web/fields/relational/special_data";
 import { AttendeeTagsList } from "@calendar/views/fields/attendee_tags_list";
 
 const ICON_BY_STATUS = {

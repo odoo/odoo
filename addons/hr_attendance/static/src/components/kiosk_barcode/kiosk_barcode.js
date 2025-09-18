@@ -1,5 +1,5 @@
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
-import { scanBarcode } from "@web/core/barcode/barcode_dialog";
+import { scanBarcode } from "@web/components/barcode/barcode_dialog";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 export class KioskBarcodeScanner extends BarcodeScanner {

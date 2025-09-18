@@ -1,5 +1,5 @@
 import { Component, onWillStart, markup } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { formatDuration, deserializeDateTime } from "@web/core/l10n/dates";
 

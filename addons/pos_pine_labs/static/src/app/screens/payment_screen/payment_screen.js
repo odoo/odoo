@@ -1,16 +1,17 @@
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 
+import { patch } from "@web/core/utils/patch";
 patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(async () => {
             const waitingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method_id.use_payment_terminal === "pine_labs" &&
+                    paymentLine.payment_method_id.use_payment_terminal ===
+                        "pine_labs" &&
                     !paymentLine.isDone() &&
-                    paymentLine.setPaymentStatus() !== "pending"
+                    paymentLine.setPaymentStatus() !== "pending",
             );
             if (waitingPaymentLine) {
                 waitingPaymentLine.setPaymentStatus("waitingCard");

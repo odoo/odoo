@@ -418,7 +418,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = order.partner_id
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.match'].browse(-order.id)
         move = move_form.save()
         move.action_post()
 
@@ -780,7 +780,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         })
         purchase_order.button_confirm()
 
-        self.assertEqual(purchase_order.state, 'purchase')
+        self.assertEqual(purchase_order.state, 'done')
         picking = purchase_order.picking_ids[0]
         picking.action_assign()
 

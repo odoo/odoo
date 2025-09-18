@@ -1,6 +1,10 @@
-import { Component } from "@odoo/owl";
-import { sortBy } from "@web/core/utils/arrays";
+// @ts-check
 
+/** @module @web/views/form/form_group/form_group - OuterGroup and InnerGroup components for form view column layout */
+
+import { Component } from "@odoo/owl";
+import { sortBy } from "@web/core/utils/collections/arrays";
+/** Base class for form view `<group>` elements, handling slot-based layout. */
 class Group extends Component {
     static template = "";
     static props = ["class?", "slots?", "maxCols?", "style?"];
@@ -9,7 +13,9 @@ class Group extends Component {
     };
 
     _getItems() {
-        const items = Object.entries(this.props.slots || {}).filter(([k, v]) => v.type === "item");
+        const items = Object.entries(this.props.slots || {}).filter(
+            ([k, v]) => v.type === "item",
+        );
         return sortBy(items, (i) => i[1].sequence);
     }
 
@@ -22,6 +28,7 @@ class Group extends Component {
     }
 }
 
+/** Outer `<group>` — distributes items into Bootstrap columns by their `itemSpan`. */
 export class OuterGroup extends Group {
     static template = "web.Form.OuterGroup";
     static defaultProps = {
@@ -30,12 +37,15 @@ export class OuterGroup extends Group {
         hasOuterTemplate: true,
     };
 
+    /** @override @returns {any} */
     getItems() {
         const nbCols = this.props.maxCols;
         const colSize = Math.max(1, Math.round(12 / nbCols));
 
         // Dispatch items across table rows
-        const items = super.getItems().filter(([k, v]) => !("isVisible" in v) || v.isVisible);
+        const items = super
+            .getItems()
+            .filter(([k, v]) => !("isVisible" in v) || v.isVisible);
         return items.map((item) => {
             const [slotName, slot] = item;
             const itemSpan = slot.itemSpan || 1;
@@ -49,10 +59,12 @@ export class OuterGroup extends Group {
     }
 }
 
+/** Inner `<group>` — distributes items into HTML table rows, respecting `maxCols`. */
 export class InnerGroup extends Group {
     static template = "web.Form.InnerGroup";
     getTemplate(subType) {
-        return this.constructor.templates[subType] || this.constructor.templates.default;
+        const templates = /** @type {any} */ (this.constructor).templates;
+        return templates[subType] || templates.default;
     }
     getRows() {
         const maxCols = this.props.maxCols;
@@ -89,7 +101,8 @@ export class InnerGroup extends Group {
             reservedSpace += itemSpan || 1;
 
             // Allows to remove the line if the content is not visible instead of leaving an empty line.
-            currentRow.isVisible = currentRow.isVisible || isVisible;
+            /** @type {any} */ (currentRow).isVisible =
+                /** @type {any} */ (currentRow).isVisible || isVisible;
         }
         rows.push(currentRow);
 

@@ -32,7 +32,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'list_price': 180.0,
             'type': 'service',
             'uom_id': uom_unit.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'expense_policy': 'no',
             'default_code': 'SERV_DEL',
             'service_type': 'manual',
@@ -53,7 +53,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'list_price': 15.0,
             'type': 'service',
             'uom_id': uom_dozen.id,  # different UoM
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'expense_policy': 'no',
             'default_code': 'SERV_ORD',
             'service_type': 'manual',

@@ -2,8 +2,8 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { createElementWithContent } from "@web/core/utils/html";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
+import { createElementWithContent } from "@web/core/utils/dom/html";
 
 export class EnrollEmail extends Interaction {
     static selector = "#wrapwrap";

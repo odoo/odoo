@@ -2,7 +2,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-
 export class OutdatedPageWatcherService {
     constructor(env, services) {
         this.setup(env, services);
@@ -16,7 +15,8 @@ export class OutdatedPageWatcherService {
         this.notification = notification;
         this.multi_tab = multi_tab;
         this.legacy_multi_tab = legacy_multi_tab;
-        this.lastNotificationId = legacy_multi_tab.getSharedValue("last_notification_id");
+        this.lastNotificationId =
+            legacy_multi_tab.getSharedValue("last_notification_id");
         this.closeNotificationFn;
         let wasBusAlreadyConnected;
         bus_service.addEventListener(
@@ -24,12 +24,13 @@ export class OutdatedPageWatcherService {
             ({ detail: state }) => {
                 wasBusAlreadyConnected = state !== "IDLE";
             },
-            { once: true }
+            { once: true },
         );
         bus_service.addEventListener(
             "BUS:DISCONNECT",
             () =>
-                (this.lastNotificationId = legacy_multi_tab.getSharedValue("last_notification_id"))
+                (this.lastNotificationId =
+                    legacy_multi_tab.getSharedValue("last_notification_id")),
         );
         bus_service.addEventListener("BUS:CONNECT", async () => {
             if (wasBusAlreadyConnected) {
@@ -37,12 +38,17 @@ export class OutdatedPageWatcherService {
             }
             wasBusAlreadyConnected = true;
         });
-        bus_service.addEventListener("BUS:RECONNECT", () => this.checkHasMissedNotifications());
-        legacy_multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
-            if (key === "bus.has_missed_notifications") {
-                this.showOutdatedPageNotification();
-            }
-        });
+        bus_service.addEventListener("BUS:RECONNECT", () =>
+            this.checkHasMissedNotifications(),
+        );
+        legacy_multi_tab.bus.addEventListener(
+            "shared_value_updated",
+            ({ detail: { key } }) => {
+                if (key === "bus.has_missed_notifications") {
+                    this.showOutdatedPageNotification();
+                }
+            },
+        );
     }
 
     async checkHasMissedNotifications() {
@@ -52,18 +58,23 @@ export class OutdatedPageWatcherService {
         const hasMissedNotifications = await rpc(
             "/bus/has_missed_notifications",
             { last_notification_id: this.lastNotificationId },
-            { silent: true }
+            { silent: true },
         );
         if (hasMissedNotifications) {
             this.showOutdatedPageNotification();
-            this.legacy_multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
+            this.legacy_multi_tab.setSharedValue(
+                "bus.has_missed_notifications",
+                Date.now(),
+            );
         }
     }
 
     showOutdatedPageNotification() {
         this.closeNotificationFn?.();
         this.closeNotificationFn = this.notification.add(
-            _t("Save your work and refresh to get the latest updates and avoid potential issues."),
+            _t(
+                "Save your work and refresh to get the latest updates and avoid potential issues.",
+            ),
             {
                 title: _t("The page is out of date"),
                 type: "warning",
@@ -75,7 +86,7 @@ export class OutdatedPageWatcherService {
                         onClick: () => browser.location.reload(),
                     },
                 ],
-            }
+            },
         );
     }
 }
@@ -87,4 +98,6 @@ export const outdatedPageWatcherService = {
     },
 };
 
-registry.category("services").add("bus.outdated_page_watcher", outdatedPageWatcherService);
+registry
+    .category("services")
+    .add("bus.outdated_page_watcher", outdatedPageWatcherService);

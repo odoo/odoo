@@ -25,7 +25,7 @@ class MaintenanceEquipment(models.Model):
 
     def action_open_matched_serial(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form', raise_if_not_found=False)
+        action = self.env.ref('stock.action_stock_lot_form', raise_if_not_found=False)
         if not action:
             return True
         action_dict = action._get_action_dict()

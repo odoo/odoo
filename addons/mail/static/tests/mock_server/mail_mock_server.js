@@ -14,8 +14,8 @@ import {
 import { Domain } from "@web/core/domain";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { groupBy } from "@web/core/utils/arrays";
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { groupBy } from "@web/core/utils/collections/arrays";
+import { createDocumentFragmentFromContent } from "@web/core/utils/dom/html";
 
 const mockRpcRegistry = registry.category("mail.mock_rpc");
 export const DISCUSS_ACTION_ID = 104;
@@ -1120,7 +1120,11 @@ function _process_request_for_all(store, name, params, context = {}) {
         });
     }
     if (name === "/discuss/create_group") {
-        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        const channelId = DiscussChannel._create_group(
+            params.partners_to,
+            params.default_display_mode,
+            params.name
+        );
         store.add(channelId).resolve_data_request({
             channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
         });

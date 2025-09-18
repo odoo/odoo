@@ -1,6 +1,5 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
-
 /**
  * @typedef {object} SessionInfo
  * @property {boolean} [isSelfMuted]
@@ -166,7 +165,10 @@ export class RtcSession extends Record {
     }
 
     get mainVideoStream() {
-        return this.isMainVideoStreamActive && this.videoStreams.get(this.mainVideoStreamType);
+        return (
+            this.isMainVideoStreamActive &&
+            this.videoStreams.get(this.mainVideoStreamType)
+        );
     }
 
     get isMainVideoStreamActive() {
@@ -183,7 +185,8 @@ export class RtcSession extends Record {
     }
 
     getStream(type) {
-        const isActive = type === "camera" ? this.is_camera_on : this.is_screen_sharing_on;
+        const isActive =
+            type === "camera" ? this.is_camera_on : this.is_screen_sharing_on;
         return isActive && this.videoStreams.get(type);
     }
 
@@ -228,7 +231,9 @@ export class RtcSession extends Record {
         }
         if (this.store.settings.audioOutputDeviceId) {
             // skipping, it will use the default device.
-            await this.audioElement.setSinkId(this.store.settings.audioOutputDeviceId).catch();
+            await this.audioElement
+                .setSinkId(this.store.settings.audioOutputDeviceId)
+                .catch();
         }
         try {
             await this.audioElement.play();

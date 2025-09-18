@@ -1,9 +1,10 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 
 test("basic ViewScaleSelector component usage", async () => {

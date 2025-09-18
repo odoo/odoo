@@ -114,7 +114,7 @@ const COLORS = {
     },
     light: {
         // Generic colors
-        primary: "#714b67",
+        primary: "#a855f7",
         secondary: "#74b4b9",
         amber: "#f59e0b",
         "amber-900": "#fef3c7",
@@ -139,8 +139,8 @@ const COLORS = {
         text: GRAYS[900],
         "status-bg": GRAYS[300],
         "link-text-hover": "var(--primary)",
-        "btn-bg": "#714b67",
-        "btn-bg-hover": "#624159",
+        "btn-bg": "#a855f7",
+        "btn-bg-hover": "#9333ea",
         "btn-text": "#ffffff",
         "bg-result": "rgba(255, 255, 255, 0.6)",
         "border-result": GRAYS[300],

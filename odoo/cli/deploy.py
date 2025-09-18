@@ -1,8 +1,10 @@
 import os
-import requests
 import sys
 import tempfile
 import zipfile
+from pathlib import Path
+
+import requests
 
 from . import Command
 
@@ -14,60 +16,96 @@ class Deploy(Command):
         super().__init__()
         self.session = requests.session()
 
-    def deploy_module(self, module_path, url, login, password, db='', force=False):
-        url = url.rstrip('/')
+    def deploy_module(self, module_path, url, login, password, db="", force=False):
+        url = url.rstrip("/")
         module_file = self.zip_module(module_path)
         try:
-            return self.login_upload_module(module_file, url, login, password, db, force=force)
+            return self.login_upload_module(
+                module_file, url, login, password, db, force=force
+            )
         finally:
-            os.remove(module_file)
+            Path(module_file).unlink()
 
     def login_upload_module(self, module_file, url, login, password, db, force=False):
         print("Uploading module file...")
-        self.session.get(f'{url}/web/login?db={db}', allow_redirects=False)  # this set the db in the session
-        endpoint = url + '/base_import_module/login_upload'
+        self.session.get(
+            f"{url}/web/login?db={db}", allow_redirects=False
+        )  # this set the db in the session
+        endpoint = url + "/base_import_module/login_upload"
         post_data = {
-            'login': login,
-            'password': password,
-            'db': db,
-            'force': '1' if force else '',
+            "login": login,
+            "password": password,
+            "db": db,
+            "force": "1" if force else "",
         }
-        with open(module_file, 'rb') as f:
-            res = self.session.post(endpoint, files={'mod_file': f}, data=post_data)
+        with Path(module_file).open("rb") as f:
+            res = self.session.post(endpoint, files={"mod_file": f}, data=post_data)
 
         if res.status_code == 404:
-            raise Exception(
-                "The server '%s' does not have the 'base_import_module' installed or is not up-to-date." % url)
+            raise requests.exceptions.HTTPError(
+                f"The server {url!r} does not have the 'base_import_module' installed or is not up-to-date.",
+                response=res,
+            )
         res.raise_for_status()
         return res.text
 
     def zip_module(self, path):
-        path = os.path.abspath(path)
-        if not os.path.isdir(path):
-            raise Exception("Could not find module directory '%s'" % path)
-        container, module_name = os.path.split(path)
-        temp = tempfile.mktemp(suffix='.zip')
+        """Create a zip archive of the module at ``path``.
+
+        Returns the path to the temporary zip file.
+        """
+        module_dir = Path(path).resolve()
+        if not module_dir.is_dir():
+            raise FileNotFoundError(f"Could not find module directory {module_dir!r}")
+        fd, temp = tempfile.mkstemp(suffix=".zip")
+        os.close(fd)
         try:
             print("Zipping module directory...")
-            with zipfile.ZipFile(temp, 'w') as zfile:
-                for root, _dirs, files in os.walk(path):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        zfile.write(file_path, file_path.split(container).pop())
+            with zipfile.ZipFile(temp, "w") as zfile:
+                for filepath in module_dir.rglob("*"):
+                    if filepath.is_file():
+                        zfile.write(filepath, filepath.relative_to(module_dir.parent))
                 return temp
         except Exception:
-            os.remove(temp)
+            Path(temp).unlink()
             raise
 
     def run(self, cmdargs):
         parser = self.parser
-        parser.add_argument('path', help="Path of the module to deploy")
-        parser.add_argument('url', nargs='?', help='Url of the server (default=http://localhost:8069)', default="http://localhost:8069")
-        parser.add_argument('--db', dest='db', help='Database to use if server does not use db-filter.')
-        parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
-        parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
-        parser.add_argument('--verify-ssl', action='store_true', help='Verify SSL certificate')
-        parser.add_argument('--force', action='store_true', help='Force init even if module is already installed. (will update `noupdate="1"` records)')
+        parser.add_argument("path", help="Path of the module to deploy")
+        parser.add_argument(
+            "url",
+            nargs="?",
+            help="Url of the server (default=http://localhost:8069)",
+            default="http://localhost:8069",
+        )
+        parser.add_argument(
+            "--db",
+            dest="db",
+            help="Database to use if server does not use db-filter.",
+        )
+        parser.add_argument(
+            "--login",
+            dest="login",
+            default="admin",
+            help="Login (default=admin)",
+        )
+        parser.add_argument(
+            "--password",
+            dest="password",
+            default="admin",
+            help="Password (default=admin)",
+        )
+        # NOTE: SSL verification is disabled by default — intentional for dev deployment
+        # tooling (default URL is http://localhost:8069). Use --verify-ssl for HTTPS targets.
+        parser.add_argument(
+            "--verify-ssl", action="store_true", help="Verify SSL certificate"
+        )
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help='Force init even if module is already installed. (will update `noupdate="1"` records)',
+        )
         if not cmdargs:
             sys.exit(parser.print_help())
 
@@ -77,9 +115,16 @@ class Deploy(Command):
             self.session.verify = False
 
         try:
-            if not args.url.startswith(('http://', 'https://')):
-                args.url = 'https://%s' % args.url
-            result = self.deploy_module(args.path, args.url, args.login, args.password, args.db, force=args.force)
+            if not args.url.startswith(("http://", "https://")):
+                args.url = f"https://{args.url}"
+            result = self.deploy_module(
+                args.path,
+                args.url,
+                args.login,
+                args.password,
+                args.db,
+                force=args.force,
+            )
             print(result)
         except Exception as e:
-            sys.exit("ERROR: %s" % e)
+            sys.exit(f"ERROR: {e}")

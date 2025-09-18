@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/legacy_tests/helpers/test_utils_fields default=false */
 
     /**
@@ -20,22 +22,15 @@
      * Note that this helper also checks the unicity of the target.
      *
      * Example:
-     *     testUtils.fields.editAndTrigger($('selector'), 'test', ['input', 'change']);
+     *     testUtils.fields.editAndTrigger(el, 'test', ['input', 'change']);
      *
-     * @param {jQuery|EventTarget} el should target an input, textarea or select
+     * @param {EventTarget} el should target an input, textarea or select
      * @param {string|number} value
      * @param {string[]} events
      * @returns {Promise}
      */
     export async function editAndTrigger(el, value, events) {
-        if (el instanceof jQuery) {
-            if (el.length !== 1) {
-                throw new Error(`target ${el.selector} has length ${el.length} instead of 1`);
-            }
-            el.val(value);
-        } else {
-            el.value = value;
-        }
+        el.value = value;
         return testUtilsDom.triggerEvents(el, events);
     }
 
@@ -45,9 +40,9 @@
      * Note that this helper also checks the unicity of the target.
      *
      * Example:
-     *     testUtils.fields.editInput($('selector'), 'somevalue');
+     *     testUtils.fields.editInput(el, 'somevalue');
      *
-     * @param {jQuery|EventTarget} el should target an input, textarea or select
+     * @param {EventTarget} el should target an input, textarea or select
      * @param {string|number} value
      * @returns {Promise}
      */
@@ -59,26 +54,26 @@
      * Helper to trigger a key event on an element.
      *
      * @param {string} type type of key event ('press', 'up' or 'down')
-     * @param {jQuery} $el
+     * @param {EventTarget} el
      * @param {string} key
      * @returns {Promise}
      */
-    function triggerKey(type, $el, key) {
+    function triggerKey(type, el, key) {
         type = 'key' + type;
         const params = {};
         params.key = key;
-        return testUtilsDom.triggerEvent($el, type, params);
+        return testUtilsDom.triggerEvent(el, type, params);
     }
 
     /**
      * Helper to trigger a keydown event on an element.
      *
-     * @param {jQuery} $el
+     * @param {EventTarget} el
      * @param {number|string} key @see triggerKey
      * @returns {Promise}
      */
-    function triggerKeydown($el, key) {
-        return triggerKey('down', $el, key);
+    function triggerKeydown(el, key) {
+        return triggerKey('down', el, key);
     }
 
     export default {

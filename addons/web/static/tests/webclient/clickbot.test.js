@@ -1,5 +1,14 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, mockDate, runAllTimers, tick } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    Deferred,
+    mockDate,
+    runAllTimers,
+    tick,
+} from "@odoo/hoot-mock";
+import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import {
     defineActions,
     defineMenus,
@@ -11,9 +20,6 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
@@ -142,12 +148,14 @@ test("clickbot clickeverywhere test", async () => {
         "Testing app menu: app1",
         "Testing menu App1 app1",
         'Clicking on: menu item "App1"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -156,18 +164,21 @@ test("clickbot clickeverywhere test", async () => {
         "Testing app menu: app2",
         "Testing menu App2 app2",
         'Clicking on: menu item "App2"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Testing menu menu 1 app2_menu1",
         'Clicking on: menu item "menu 1"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Testing menu menu 2 app2_menu2",
         'Clicking on: menu item "menu 2"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -242,12 +253,14 @@ test("only one app", async () => {
         "Testing app menu: app1",
         "Testing menu App1 app1",
         'Clicking on: menu item "App1"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -313,7 +326,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
                 xmlid: "app2",
             },
         ],
-        { mode: "replace" }
+        { mode: "replace" },
     );
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
@@ -329,6 +342,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Testing app menu: app2",
         "Testing menu App2 app2",
         'Clicking on: menu item "App2"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -336,6 +350,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Clicking on: menu toggler",
         "Testing menu menu 1 app2_menu1",
         'Clicking on: menu item "menu 1"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -343,6 +358,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Clicking on: menu toggler",
         "Testing menu menu 2 app2_menu2",
         'Clicking on: menu item "menu 2"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -386,7 +402,7 @@ test("clickbot test waiting rpc after clicking filter", async () => {
                 views: [[false, "list"]],
             },
         ],
-        { mode: "replace" }
+        { mode: "replace" },
     );
     defineMenus([
         {
@@ -442,7 +458,8 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             if (id === 3) {
                 // click on the Second Filter
                 throw makeServerError({
-                    message: "This is a server Error, it should be displayed in an error dialog",
+                    message:
+                        "This is a server Error, it should be displayed in an error dialog",
                     type: "Programming error",
                 });
             }
@@ -519,11 +536,13 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 debug: "traceback",
                 arguments: [],
                 context: {},
-                message: "This is a server Error, it should be displayed in an error dialog",
+                message:
+                    "This is a server Error, it should be displayed in an error dialog",
             },
             exceptionName: "odoo.exceptions.Programming error",
             subType: "server",
-            message: "This is a server Error, it should be displayed in an error dialog",
+            message:
+                "This is a server Error, it should be displayed in an error dialog",
             model: "foo",
             errorEvent: { isTrusted: true },
         },
@@ -681,12 +700,14 @@ test("clickbot clickeverywhere menu modal", async () => {
         "Testing app menu: app1",
         "Testing menu App1 app1",
         'Clicking on: menu item "App1"',
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: search bar menu dropdown",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',

@@ -15,7 +15,7 @@ import {
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
 import { makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
-import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { getOperatorLabel } from "@web/components/tree_editor/tree_editor_operator_editor";
 
 import { defineSpreadsheetModels } from "../helpers/data";
 

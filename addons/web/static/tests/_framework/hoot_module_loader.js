@@ -1,3 +1,5 @@
+// @ts-check
+
 // @odoo-module ignore
 // ! WARNING: this module must be loaded after `module_loader` but cannot have dependencies !
 
@@ -11,7 +13,12 @@
     const name = `${odoo.define.name} (hoot)`;
     odoo.define = {
         [name](name, dependencies, factory) {
-            return odoo.loader.define(name, dependencies, factory, !name.endsWith(".hoot"));
+            return odoo.loader.define(
+                name,
+                dependencies,
+                factory,
+                !name.endsWith(".hoot"),
+            );
         },
     }[name];
-})(globalThis.odoo);
+})(/** @type {any} */ (globalThis).odoo);

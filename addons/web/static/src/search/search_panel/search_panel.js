@@ -1,5 +1,6 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useBus } from "@web/core/utils/hooks";
+// @ts-check
+
+/** @module @web/search/search_panel/search_panel - Sidebar filter panel with category trees and grouped checkbox filters */
 
 import {
     Component,
@@ -11,9 +12,11 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useSetupAction } from "@web/core/action_hook";
 import { browser } from "@web/core/browser/browser";
-import { exprToBoolean } from "@web/core/utils/strings";
-import { useSetupAction } from "@web/search/action_hook";
+import { exprToBoolean } from "@web/core/utils/format/strings";
+import { useBus } from "@web/core/utils/hooks";
 
 //-------------------------------------------------------------------------
 // Helpers
@@ -71,7 +74,9 @@ export class SearchPanel extends Component {
         this.width = "10px";
 
         this.importState(this.env.searchPanelState);
-        const sidebarExpandedPreference = browser.localStorage.getItem(this.keyExpandSidebar);
+        const sidebarExpandedPreference = browser.localStorage.getItem(
+            this.keyExpandSidebar,
+        );
         if (sidebarExpandedPreference !== null) {
             this.state.sidebarExpanded = exprToBoolean(sidebarExpandedPreference);
         }
@@ -89,7 +94,7 @@ export class SearchPanel extends Component {
                     el.scroll({ top: this.scrollTop });
                 }
             },
-            () => [this.root.el]
+            () => [this.root.el],
         );
 
         useSetupAction({
@@ -119,6 +124,7 @@ export class SearchPanel extends Component {
     // Getters
     //---------------------------------------------------------------------
 
+    /** @returns {Object[]} non-empty search panel sections from the search model */
     get sections() {
         return this.env.searchModel.getSections((s) => !s.empty);
     }
@@ -127,6 +133,7 @@ export class SearchPanel extends Component {
     // Public
     //---------------------------------------------------------------------
 
+    /** @returns {string} JSON-serialized panel state (expanded nodes, scroll, width) */
     exportState() {
         const exported = {
             expanded: this.state.expanded,
@@ -137,6 +144,7 @@ export class SearchPanel extends Component {
         return JSON.stringify(exported);
     }
 
+    /** @param {Object|null} state - previously exported panel state, or null */
     importState(state) {
         this.hasImportedState = Boolean(state);
         if (this.hasImportedState) {
@@ -151,6 +159,11 @@ export class SearchPanel extends Component {
     // Protected
     //---------------------------------------------------------------------
 
+    /**
+     * Get or create a reactive dropdown state for a section (mobile mode).
+     * @param {number} sectionId
+     * @returns {{ isOpen: boolean, open: Function, close: Function }}
+     */
     getDropdownState(sectionId) {
         if (!this.dropdownStates[sectionId]) {
             const state = reactive({
@@ -158,7 +171,7 @@ export class SearchPanel extends Component {
                 open: () => (state.isOpen = true),
                 close: () => (state.isOpen = false),
             });
-            this.dropdownStates[sectionId] = reactive(state);
+            this.dropdownStates[sectionId] = state;
         }
         return this.dropdownStates[sectionId];
     }
@@ -170,11 +183,16 @@ export class SearchPanel extends Component {
         if (this.hasImportedState) {
             return;
         }
-        const categories = this.env.searchModel.getSections((s) => s.type === "category");
+        const categories = this.env.searchModel.getSections(
+            (s) => s.type === "category",
+        );
         for (const category of categories) {
             this.state.expanded[category.id] = {};
             if (category.activeValueId) {
-                const ancestorIds = this.getAncestorValueIds(category, category.activeValueId);
+                const ancestorIds = this.getAncestorValueIds(
+                    category,
+                    category.activeValueId,
+                );
                 for (const ancestorId of ancestorIds) {
                     this.state.expanded[category.id][ancestorId] = true;
                 }
@@ -182,11 +200,14 @@ export class SearchPanel extends Component {
         }
     }
 
+    /** Expand category tree nodes up to the configured `depth` level. */
     expandValues() {
         if (this.hasImportedState) {
             return;
         }
-        const categories = this.env.searchModel.getSections((s) => s.type === "category");
+        const categories = this.env.searchModel.getSections(
+            (s) => s.type === "category",
+        );
         for (const category of categories) {
             if (category.depth === 0) {
                 continue;
@@ -219,7 +240,9 @@ export class SearchPanel extends Component {
      */
     getAncestorValueIds(category, categoryValueId) {
         const { parentId } = category.values.get(categoryValueId);
-        return parentId ? [...this.getAncestorValueIds(category, parentId), parentId] : [];
+        return parentId
+            ? [...this.getAncestorValueIds(category, parentId), parentId]
+            : [];
     }
 
     /**
@@ -231,9 +254,12 @@ export class SearchPanel extends Component {
         const activeCategories = this.env.searchModel.getSections(isActiveCategory);
         const selection = [];
         for (const category of activeCategories) {
-            const parentIds = this.getAncestorValueIds(category, category.activeValueId);
+            const parentIds = this.getAncestorValueIds(
+                category,
+                category.activeValueId,
+            );
             const orderedCategoryNames = [...parentIds, category.activeValueId].map(
-                (valueId) => category.values.get(valueId).display_name
+                (valueId) => category.values.get(valueId).display_name,
             );
             selection.push({
                 values: orderedCategoryNames,
@@ -281,7 +307,9 @@ export class SearchPanel extends Component {
             }
             return Boolean(sectionState);
         }
-        return Object.keys(this.state.active).some((key) => this.hasSelection(key));
+        return Object.keys(this.state.active).some((key) =>
+            this.hasSelection(/** @type {any} */ (key)),
+        );
     }
 
     /**
@@ -290,7 +318,9 @@ export class SearchPanel extends Component {
      * @param {Number} sectionId
      */
     clearSelection(sectionId = 0) {
-        const sectionIds = sectionId ? [sectionId] : Object.keys(this.state.active).map(Number);
+        const sectionIds = sectionId
+            ? [sectionId]
+            : Object.keys(this.state.active).map(Number);
         this.env.searchModel.clearSections(sectionIds);
     }
 
@@ -316,9 +346,13 @@ export class SearchPanel extends Component {
         }
     }
 
+    /** Toggle sidebar expanded/collapsed and persist preference to localStorage. */
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
-        browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
+        browser.localStorage.setItem(
+            this.keyExpandSidebar,
+            /** @type {any} */ (this.state.sidebarExpanded),
+        );
     }
 
     /**
@@ -328,7 +362,7 @@ export class SearchPanel extends Component {
     toggleFilterGroup(filterId, { values }) {
         const valueIds = [];
         const checked = [...values.values()].every(
-            (value) => this.state.active[filterId][value.id]
+            (value) => this.state.active[filterId][value.id],
         );
         values.forEach(({ id }) => {
             valueIds.push(id);
@@ -339,9 +373,8 @@ export class SearchPanel extends Component {
 
     /**
      * @param {number} filterId
-     * @param {Object} [group]
      * @param {number} valueId
-     * @param {MouseEvent} ev
+     * @param {{ currentTarget: HTMLInputElement }} event
      */
     toggleFilterValue(filterId, valueId, { currentTarget }) {
         this.state.active[filterId][valueId] = currentTarget.checked;
@@ -349,6 +382,7 @@ export class SearchPanel extends Component {
         this.env.searchModel.toggleFilterValues(filterId, [valueId]);
     }
 
+    /** Sync component state with the SearchModel's current section values. */
     updateActiveValues() {
         if (this.sections.length === 0) {
             this.state.sidebarExpanded = false;
@@ -381,8 +415,12 @@ export class SearchPanel extends Component {
     updateGroupHeadersChecked() {
         const groups = document.querySelectorAll(".o_search_panel_filter_group");
         for (const group of groups) {
-            const header = group.querySelector(":scope .o_search_panel_group_header input");
-            const vals = [...group.querySelectorAll(":scope .o_search_panel_filter_value input")];
+            const header = /** @type {HTMLInputElement} */ (
+                group.querySelector(":scope .o_search_panel_group_header input")
+            );
+            const vals = /** @type {HTMLInputElement[]} */ ([
+                ...group.querySelectorAll(":scope .o_search_panel_filter_value input"),
+            ]);
             header.checked = false;
             header.indeterminate = false;
             if (vals.every((v) => v.checked)) {
@@ -438,7 +476,7 @@ export class SearchPanel extends Component {
             // we remove the focus to make sure that the there is no focus inside
             // the panel. If that is the case, there is some css to darken the whole
             // thead, and it looks quite weird with the small css hover effect.
-            document.activeElement.blur();
+            /** @type {HTMLElement} */ (document.activeElement).blur();
         };
         // We have to listen to several events to properly stop the resizing function. Those are:
         // - pointerdown (e.g. pressing right click)

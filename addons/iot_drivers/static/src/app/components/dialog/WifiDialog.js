@@ -1,8 +1,8 @@
 /* global owl */
 
 import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
 import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import { BootstrapDialog } from "./BootstrapDialog.js";
 
 const { Component, xml, useState } = owl;
 
@@ -35,12 +35,16 @@ export class WifiDialog extends Component {
     isCurrentlyConnectedToWifi() {
         return (
             !this.store.base.is_access_point_up &&
-            this.store.base.network_interfaces.some((netInterface) => netInterface.is_wifi)
+            this.store.base.network_interfaces.some(
+                (netInterface) => netInterface.is_wifi,
+            )
         );
     }
 
     isCurrentlyConnectedToEthernet() {
-        return this.store.base.network_interfaces.some((netInterface) => !netInterface.is_wifi);
+        return this.store.base.network_interfaces.some(
+            (netInterface) => !netInterface.is_wifi,
+        );
     }
 
     async getWiFiNetworks() {

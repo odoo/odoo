@@ -1,13 +1,16 @@
+// @ts-check
+
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { definePreset, defineTags, isHootReady } from "@odoo/hoot";
+
 import { runTests } from "./module_set.hoot";
 
 function beforeFocusRequired(test) {
     if (!document.hasFocus()) {
         console.warn(
             "[FOCUS REQUIRED]",
-            `test "${test.name}" requires focus inside of the browser window and will probably fail without it`
+            `test "${test.name}" requires focus inside of the browser window and will probably fail without it`,
         );
     }
 }
@@ -42,7 +45,7 @@ defineTags(
     {
         name: "focus required",
         before: beforeFocusRequired,
-    }
+    },
 );
 
 // Invoke tests after the interface has finished loading.

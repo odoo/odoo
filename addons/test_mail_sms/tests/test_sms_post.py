@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.sms.tests.common import SMSCommon
@@ -223,7 +223,7 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
     def test_message_sms_schedule(self):
         """ Test delaying notifications through scheduled_date usage """
         cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
-        now = datetime.utcnow().replace(second=0, microsecond=0)
+        now = datetime.now(UTC).replace(second=0, microsecond=0)
         scheduled_datetime = now + timedelta(days=5)
 
         with self.mock_datetime_and_now(now), \

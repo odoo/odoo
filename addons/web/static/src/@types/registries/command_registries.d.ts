@@ -1,6 +1,6 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
-    import { Provider } from "@web/core/commands/command_palette";
+    import { Provider } from "@web/services/commands/command_palette";
 
     export interface CommandCategoriesRegistryItemShape {
         name?: string;

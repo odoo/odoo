@@ -1,10 +1,11 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { queryRect, queryOne } from "@odoo/hoot-dom";
+import { queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
-import { useAutoresize } from "@web/core/utils/autoresize";
+import { useAutoresize } from "@web/core/utils/dom/autoresize";
 
 test(`resizable input`, async () => {
     class ResizableInput extends Component {

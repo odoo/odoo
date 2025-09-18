@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="web_tour.TourPointer">
         <div
-            t-if="props.pointerState.isVisible"
+            t-if="this.isVisible"
             t-ref="pointer"
             t-attf-class="
                 o_tour_pointer

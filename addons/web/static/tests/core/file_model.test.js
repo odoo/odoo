@@ -1,6 +1,35 @@
-import { expect, test } from "@odoo/hoot";
+// @ts-check
 
-import { FileModel } from "@web/core/file_viewer/file_model";
+import { expect, test } from "@odoo/hoot";
+import { FileModel } from "@web/components/file_viewer/file_model";
+
+test("isUrlYoutube returns false when url is a boolean false (binary attachment)", () => {
+    // ir.attachment.url is False in Python for binary files → false in JS
+    const fileModel = Object.assign(new FileModel(), { url: false, type: "binary" });
+    expect(fileModel.isUrlYoutube).toBe(false);
+});
+
+test("isUrlYoutube returns false when url is null or undefined", () => {
+    const fileModel = new FileModel();
+    expect(fileModel.isUrlYoutube).toBe(false);
+
+    const fileModelNull = Object.assign(new FileModel(), { url: null });
+    expect(fileModelNull.isUrlYoutube).toBe(false);
+});
+
+test("isUrlYoutube returns true for YouTube URLs", () => {
+    const fileModel = Object.assign(new FileModel(), {
+        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        type: "url",
+    });
+    expect(fileModel.isUrlYoutube).toBe(true);
+
+    const fileModelShort = Object.assign(new FileModel(), {
+        url: "https://youtu.be/dQw4w9WgXcQ",
+        type: "url",
+    });
+    expect(fileModelShort.isUrlYoutube).toBe(true);
+});
 
 test("url query params of FileModel returns proper params", () => {
     const attachmentData = {

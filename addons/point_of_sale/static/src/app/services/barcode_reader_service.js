@@ -1,14 +1,20 @@
+import { BarcodeParser } from "@barcodes/js/barcode_parser";
+import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { BarcodeParser } from "@barcodes/js/barcode_parser";
-import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 export class BarcodeReader {
-    static serviceDependencies = ["dialog", "hardware_proxy", "notification", "action", "orm"];
+    static serviceDependencies = [
+        "dialog",
+        "hardware_proxy",
+        "notification",
+        "action",
+        "orm",
+    ];
     constructor(parser, { dialog, hardware_proxy, notification, action, orm }) {
         this.parser = parser;
         this.dialog = dialog;
@@ -89,12 +95,12 @@ export class BarcodeReader {
     showNotFoundNotification(code) {
         this.notification.add(
             _t(
-                "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+                "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode.",
             ),
             {
                 type: "warning",
                 title: _t(`Unknown Barcode`) + " " + this.codeRepr(code),
-            }
+            },
         );
     }
 
@@ -109,12 +115,12 @@ export class BarcodeReader {
     showGS1IncompatibleBarcodeWarning() {
         this.notification.add(
             _t(
-                "This barcode is not compatible with the GS1 standard. Consider configuring a fallback barcode parser from the PoS settings."
+                "This barcode is not compatible with the GS1 standard. Consider configuring a fallback barcode parser from the PoS settings.",
             ),
             {
                 type: "warning",
                 title: _t("Unsupported Barcode Format"),
-            }
+            },
         );
     }
 
@@ -155,7 +161,7 @@ export const barcodeReaderService = {
             if (session.nomenclature_id) {
                 const nomenclature = await BarcodeParser.fetchNomenclature(
                     orm,
-                    session.nomenclature_id
+                    session.nomenclature_id,
                 );
                 const parser = new BarcodeParser({ nomenclature });
                 barcodeReader = new BarcodeReader(parser, deps);
@@ -164,7 +170,7 @@ export const barcodeReaderService = {
             if (session.fallback_nomenclature_id && barcodeReader) {
                 const fallbackNomenclature = await BarcodeParser.fetchNomenclature(
                     orm,
-                    session.fallback_nomenclature_id
+                    session.fallback_nomenclature_id,
                 );
                 barcodeReader.fallbackParser = new BarcodeParser({
                     nomenclature: fallbackNomenclature,
@@ -176,7 +182,7 @@ export const barcodeReaderService = {
                 "start",
                 "Failed to start barcode reader",
                 false,
-                [error]
+                [error],
             );
         }
 
@@ -187,7 +193,7 @@ export const barcodeReaderService = {
                 dialog.add(AlertDialog, {
                     title: _t("Unable to parse barcode"),
                     body: _t(
-                        "No barcode nomenclature has been configured. This can be changed in the configuration settings."
+                        "No barcode nomenclature has been configured. This can be changed in the configuration settings.",
                     ),
                 });
             }

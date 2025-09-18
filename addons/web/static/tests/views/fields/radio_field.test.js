@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { check, click, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -122,7 +124,9 @@ test("radio field on a selection in a new record", async () => {
     });
 
     expect("div.o_radio_item").toHaveCount(2);
-    expect("input.o_radio_input").toHaveCount(2, { message: "should have 2 possible choices" });
+    expect("input.o_radio_input").toHaveCount(2, {
+        message: "should have 2 possible choices",
+    });
     expect(".o_field_radio").toHaveText("Red\nBlack");
 
     // click on 2nd option

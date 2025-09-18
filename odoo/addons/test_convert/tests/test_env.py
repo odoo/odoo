@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Tests the ability to update environmental information on various nodes (e.g.
 change user, add context keys, ...)
 """
-import os.path
+
+from pathlib import Path
 
 from lxml import etree
 from lxml.builder import E
@@ -18,16 +18,15 @@ record = E.record
 field = E.field
 function = E.function
 
+
 class TestEnv(common.TransactionCase):
     def setUp(self):
         super().setUp()
-        self._importer = xml_import(self.env, 'test_convert', None, 'init')
+        self._importer = xml_import(self.env, "test_convert", None, "init")
 
     def importer(self, doc):
         etree.RelaxNG(
-            etree.parse(
-                os.path.join(config.root_path, 'import_xml.rng')
-            )
+            etree.parse(str(Path(config.root_path, "import_xml.rng")))
         ).assert_(doc)
         self._importer.parse(doc)
 
@@ -37,16 +36,16 @@ class TestEnv(common.TransactionCase):
                 record(
                     field("a", name="name"),
                     model="test_convert.usered",
-                    id="test_convert.testing"
+                    id="test_convert.testing",
                 ),
-                uid="base.user_admin"
+                uid="base.user_admin",
             )
         )
 
-        r = self.env.ref('test_convert.testing')
-        self.assertEqual(r.name, 'a')
-        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
-        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+        r = self.env.ref("test_convert.testing")
+        self.assertEqual(r.name, "a")
+        self.assertEqual(r.create_uid, self.env.ref("base.user_admin"))
+        self.assertEqual(r.user_id, self.env.ref("base.user_admin"))
 
     def test_uid_data_function(self):
         self.importer(
@@ -56,33 +55,32 @@ class TestEnv(common.TransactionCase):
                     name="create",
                     eval="[[{'name': 'b'}]]",
                 ),
-                uid="base.user_admin"
+                uid="base.user_admin",
             )
         )
 
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'b')
-        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
-        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "b")
+        self.assertEqual(r.create_uid, self.env.ref("base.user_admin"))
+        self.assertEqual(r.user_id, self.env.ref("base.user_admin"))
 
     def test_uid_record(self):
         self.importer(
             odoo(
                 record(
-                    field('c', name="name"),
+                    field("c", name="name"),
                     model="test_convert.usered",
                     id="test_convert.testing",
-                    uid="base.user_admin"
+                    uid="base.user_admin",
                 ),
-                uid="base.user_root"
+                uid="base.user_root",
             )
         )
 
-        r = self.env.ref('test_convert.testing')
-        self.assertEqual(r.name, 'c')
-        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
-        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
-
+        r = self.env.ref("test_convert.testing")
+        self.assertEqual(r.name, "c")
+        self.assertEqual(r.create_uid, self.env.ref("base.user_admin"))
+        self.assertEqual(r.user_id, self.env.ref("base.user_admin"))
 
     def test_uid_function(self):
         self.importer(
@@ -91,18 +89,18 @@ class TestEnv(common.TransactionCase):
                     model="test_convert.usered",
                     name="create",
                     uid="base.user_admin",
-                    eval="[[{'name': 'd'}]]"
+                    eval="[[{'name': 'd'}]]",
                 ),
-                uid="base.user_root"
+                uid="base.user_root",
             )
         )
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'd')
-        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
-        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "d")
+        self.assertEqual(r.create_uid, self.env.ref("base.user_admin"))
+        self.assertEqual(r.user_id, self.env.ref("base.user_admin"))
 
     def test_context_data_function(self):
-        self.env.user.tz = 'UTC'
+        self.env.user.tz = "UTC"
         self.importer(
             odoo(
                 function(
@@ -113,12 +111,12 @@ class TestEnv(common.TransactionCase):
                 context="{'tz': 'Asia/Kabul'}",
             )
         )
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'e')
-        self.assertEqual(r.tz, 'Asia/Kabul')
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "e")
+        self.assertEqual(r.tz, "Asia/Kabul")
 
     def test_context_function(self):
-        self.env.user.tz = 'UTC'
+        self.env.user.tz = "UTC"
         self.importer(
             odoo(
                 function(
@@ -130,27 +128,27 @@ class TestEnv(common.TransactionCase):
                 context="{'tz': 'Asia/Kabul'}",
             )
         )
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'e')
-        self.assertEqual(r.tz, 'Pacific/Apia')
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "e")
+        self.assertEqual(r.tz, "Pacific/Apia")
 
     def test_context_data_record(self):
-        self.env.user.tz = 'UTC'
+        self.env.user.tz = "UTC"
         self.importer(
             odoo(
                 record(
                     field("f", name="name"),
                     model="test_convert.usered",
                 ),
-                context="{'tz': 'America/Knox_IN'}"
+                context="{'tz': 'America/Knox_IN'}",
             )
         )
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'f')
-        self.assertEqual(r.tz, 'America/Knox_IN')
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "f")
+        self.assertEqual(r.tz, "America/Knox_IN")
 
     def test_context_record(self):
-        self.env.user.tz = 'UTC'
+        self.env.user.tz = "UTC"
         self.importer(
             odoo(
                 record(
@@ -158,9 +156,9 @@ class TestEnv(common.TransactionCase):
                     model="test_convert.usered",
                     context="{'tz': 'America/Adak'}",
                 ),
-                context="{'tz': 'America/Knox_IN'}"
+                context="{'tz': 'America/Knox_IN'}",
             )
         )
-        r = self.env['test_convert.usered'].search([])
-        self.assertEqual(r.name, 'f')
-        self.assertEqual(r.tz, 'America/Adak')
+        r = self.env["test_convert.usered"].search([])
+        self.assertEqual(r.name, "f")
+        self.assertEqual(r.tz, "America/Adak")

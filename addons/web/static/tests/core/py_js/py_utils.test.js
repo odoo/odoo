@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import { evaluateExpr, formatAST, parseExpr } from "@web/core/py_js/py";
 import { PyDate, PyDateTime } from "@web/core/py_js/py_date";
 import { toPyValue } from "@web/core/py_js/py_utils";
@@ -63,7 +64,9 @@ describe("formatAST", () => {
     test("boolean operators", () => {
         expect(checkAST("True and False", "boolean operator")).toBe(true);
         expect(checkAST("True or False", "boolean operator or")).toBe(true);
-        expect(checkAST("(True or False) and False", "boolean operators and and or")).toBe(true);
+        expect(
+            checkAST("(True or False) and False", "boolean operators and and or"),
+        ).toBe(true);
         expect(checkAST("not False", "not prefix")).toBe(true);
         expect(checkAST("not foo", "not prefix with variable")).toBe(true);
         expect(checkAST("not a in b", "not prefix with expression")).toBe(true);
@@ -90,12 +93,18 @@ describe("formatAST", () => {
 
     test("strftime", () => {
         expect(checkAST(`time.strftime("%Y")`, "strftime with year")).toBe(true);
-        expect(checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year")).toBe(true);
-        expect(checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year")).toBe(true);
+        expect(checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year")).toBe(
+            true,
+        );
+        expect(
+            checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year"),
+        ).toBe(true);
     });
 
     test("context_today", () => {
-        expect(checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call")).toBe(true);
+        expect(
+            checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call"),
+        ).toBe(true);
     });
 
     test("function call", () => {

@@ -17,7 +17,7 @@ threadCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 20 }
+    { sequence: 20 },
 );
 
 threadCompareRegistry.add(
@@ -36,5 +36,5 @@ threadCompareRegistry.add(
             }
         }
     },
-    { sequence: 30 }
+    { sequence: 30 },
 );

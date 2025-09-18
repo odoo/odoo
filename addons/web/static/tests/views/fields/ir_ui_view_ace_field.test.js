@@ -1,5 +1,6 @@
-import { expect, test, describe } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import {
     defineModels,
     fields,

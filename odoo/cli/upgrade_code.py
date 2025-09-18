@@ -31,41 +31,60 @@ bullets.
 
 import argparse
 import functools
+import importlib.util
 import sys
-
-from importlib.machinery import SourceFileLoader
+from collections.abc import Iterator  # noqa: TC003 — runtime import required (PEP 649)
 from pathlib import Path
-from types import ModuleType
-from typing import Iterator
+from types import ModuleType  # noqa: TC003 — runtime import required (PEP 649)
 
 ROOT = Path(__file__).parent.parent
-UPGRADE = ROOT / 'upgrade_code'
-AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv', '.po', '.pot')
+UPGRADE = ROOT / "upgrade_code"
+AVAILABLE_EXT = (".py", ".js", ".css", ".scss", ".xml", ".csv", ".po", ".pot")
+
+
+def _load_module_from_file(name: str, path: str | Path) -> ModuleType:
+    """Load a Python module from a file path using importlib.
+
+    Replaces the deprecated ``SourceFileLoader.load_module()`` (removed in 3.15).
+    """
+    spec = importlib.util.spec_from_file_location(name, str(path))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 try:
+    from odoo import release
+    from odoo.libs.parse_version import parse_version
+    from odoo.modules import initialize_sys_path
+    from odoo.tools import config
+
     import odoo.addons
     from . import Command
-    from odoo import release
-    from odoo.modules import initialize_sys_path
-    from odoo.tools import config, parse_version
 except ImportError:
-    # Assume the script is directy executed (by opposition to be
+    # Assume the script is directly executed (by opposition to be
     # executed via odoo-bin), happily release/parse_version are
     # standalone so we can hack our way there without importing odoo
     sys.path.insert(0, str(ROOT))
-    sys.path.insert(0, str(ROOT / 'tools'))
     import release
-    from parse_version import parse_version
+
+    # Import parse_version directly from file to avoid shadowing stdlib with libs/
+    _parse_version_module = _load_module_from_file(
+        "parse_version", ROOT / "libs" / "parse_version.py"
+    )
+    parse_version = _parse_version_module.parse_version
+
     class Command:
-        """ Simplified version of the one in command.py, for standalone execution """
+        """Simplified version of the one in command.py, for standalone execution"""
+
         @property
         def parser(self):
             return argparse.ArgumentParser(
                 prog=Path(sys.argv[0]).name,
-                description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
+                description=__doc__.replace("/odoo/upgrade_code", str(UPGRADE)),
                 formatter_class=argparse.RawDescriptionHelpFormatter,
             )
+
     config = None
     initialize_sys_path = None
 
@@ -98,14 +117,14 @@ class FileManager:
     addons_path: list[str]
     glob: str
 
-    def __init__(self, addons_path: list[str], glob: str = '**/*') -> None:
+    def __init__(self, addons_path: list[str], glob: str = "**/*") -> None:
         self.addons_path = addons_path
         self.glob = glob
         self._files = {
             str(path): FileAccessor(path, Path(addon_path))
             for addon_path in addons_path
             for path in Path(addon_path).glob(glob)
-            if '__pycache__' not in path.parts
+            if "__pycache__" not in path.parts
             if path.suffix in AVAILABLE_EXT
             if path.is_file()
         }
@@ -120,20 +139,39 @@ class FileManager:
         return self._files.get(str(path))
 
     if sys.stdout.isatty():
-        def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
+
+        def print_progress(
+            self,
+            current: int,
+            total: int | None = None,
+            file_name: str | Path = "",
+        ):
             total = total or len(self) or 1
-            print(f'\033[K{current / total:>4.0%} \033[37m{file_name}\033[0m', end='\r', file=sys.stderr)  # noqa: T201
+            print(
+                f"\033[K{current / total:>4.0%} \033[37m{file_name}\033[0m",
+                end="\r",
+                file=sys.stderr,
+            )
+
     else:
-        def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
+
+        def print_progress(
+            self,
+            current: int,
+            total: int | None = None,
+            file_name: str | Path = "",
+        ):
             pass
 
 
-def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[int, ...]) -> list[tuple[str, ModuleType]]:
+def get_upgrade_code_scripts(
+    from_version: tuple[int, ...], to_version: tuple[int, ...]
+) -> list[tuple[str, ModuleType]]:
     modules: list[tuple[str, ModuleType]] = []
-    for script_path in sorted(UPGRADE.glob('*.py')):
-        version = parse_version(script_path.name.partition('-')[0])
+    for script_path in sorted(UPGRADE.glob("*.py")):
+        version = parse_version(script_path.name.partition("-")[0])
         if from_version <= version <= to_version:
-            module = SourceFileLoader(script_path.name, str(script_path)).load_module()
+            module = _load_module_from_file(script_path.name, script_path)
             modules.append((script_path.name, module))
     return modules
 
@@ -147,24 +185,24 @@ def migrate(
     dry_run: bool = False,
 ):
     if script:
-        script_path = next(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'), None)
+        script_path = next(UPGRADE.glob(f"*{script.removesuffix('.py')}*.py"), None)
         if not script_path:
             raise FileNotFoundError(script)
         script_path.relative_to(UPGRADE)  # safeguard, prevent going up
-        module = SourceFileLoader(script_path.name, str(script_path)).load_module()
+        module = _load_module_from_file(script_path.name, script_path)
         modules = [(script_path.name, module)]
     else:
         modules = get_upgrade_code_scripts(from_version, to_version)
 
     file_manager = FileManager(addons_path, glob)
-    for (name, module) in modules:
+    for _name, module in modules:
         file_manager.print_progress(0)  # 0%
         module.upgrade(file_manager)
         file_manager.print_progress(len(file_manager))  # 100%
 
     for file in file_manager:
         if file.dirty:
-            print(file.path)  # noqa: T201
+            print(file.path)
             if not dry_run:
                 with file.path.open("w") as f:
                     f.write(file.content)
@@ -173,62 +211,64 @@ def migrate(
 
 
 class UpgradeCode(Command):
-    """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
-    name = 'upgrade_code'
+    """Rewrite the entire source code using the scripts found at /odoo/upgrade_code"""
+
+    name = "upgrade_code"
 
     def __init__(self):
         group = self.parser.add_mutually_exclusive_group(required=True)
+        group.add_argument("--script", metavar="NAME", help="run this single script")
         group.add_argument(
-            '--script',
-            metavar='NAME',
-            help="run this single script")
-        group.add_argument(
-            '--from',
-            dest='from_version',
+            "--from",
+            dest="from_version",
             type=parse_version,
-            metavar='VERSION',
-            help="run all scripts starting from this version, inclusive")
+            metavar="VERSION",
+            help="run all scripts starting from this version, inclusive",
+        )
         self.parser.add_argument(
-            '--to',
-            dest='to_version',
+            "--to",
+            dest="to_version",
             type=parse_version,
             default=parse_version(release.version),
-            metavar='VERSION',
-            help=f"run all scripts until this version, inclusive (default: {release.version})")
+            metavar="VERSION",
+            help=f"run all scripts until this version, inclusive (default: {release.version})",
+        )
         self.parser.add_argument(
-            '--glob',
-            default='**/*',
-            help="select the files to rewrite (default: %(default)s)")
+            "--glob",
+            default="**/*",
+            help="select the files to rewrite (default: %(default)s)",
+        )
         self.parser.add_argument(
-            '--dry-run',
-            action='store_true',
-            help="list the files that would be re-written, but rewrite none")
+            "--dry-run",
+            action="store_true",
+            help="list the files that would be re-written, but rewrite none",
+        )
         self.parser.add_argument(
-            '--addons-path',
+            "--addons-path",
             type=(
-                functools.partial(config.parse, 'addons_path')
-                if config else
+                functools.partial(config.parse, "addons_path")
+                if config
                 # the paths must be resolved already
-                functools.partial(str.split, sep=',')
+                else functools.partial(str.split, sep=",")
             ),
-            default=config['addons_path'] if config else [],
-            metavar='PATH,...',
+            default=config["addons_path"] if config else [],
+            metavar="PATH,...",
             help="specify additional addons paths (separated by commas)",
         )
 
     def run(self, cmdargs):
         options = self.parser.parse_args(cmdargs)
         if initialize_sys_path:
-            config['addons_path'] = options.addons_path
+            config["addons_path"] = options.addons_path
             initialize_sys_path()
             options.addons_path = odoo.addons.__path__
         else:
-            options.addons_path = [p for p in options.addons_path.split(',') if p]
+            options.addons_path = [p for p in options.addons_path.split(",") if p]
         if not options.addons_path:
             self.parser.error("--addons-path is required when used standalone")
         is_dirty = migrate(**vars(options))
         sys.exit(int(is_dirty))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     UpgradeCode().run(sys.argv[1:])

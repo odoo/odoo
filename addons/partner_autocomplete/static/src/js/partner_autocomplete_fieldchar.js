@@ -1,8 +1,8 @@
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField, charField } from "@web/views/fields/char/char_field";
-import { useInputField } from "@web/views/fields/input_field_hook";
+import { CharField, charField } from "@web/fields/basic/char/char_field";
+import { useInputField } from "@web/fields/input_field_hook";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
 import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
@@ -65,9 +65,10 @@ export class PartnerAutoCompleteCharField extends CharField {
             data.company[logoField] = data.logo;
         }
 
-        // Save UNSPSC codes (tags)
-        const unspsc_codes = data.company.unspsc_codes
-
+        const additionalData = {
+            entity_type : data.company.entity_type,
+            unspsc_codes : data.company.unspsc_codes,
+        };
         // Delete useless fields before updating record
         data.company = this.partnerAutocomplete.removeUselessFields(data.company, Object.keys(this.props.record.fields));
 
@@ -75,15 +76,16 @@ export class PartnerAutoCompleteCharField extends CharField {
         if (data.company.name) {
             await this.props.record.update({name: data.company.name});  // Needed otherwise name it is not saved
         }
-
-        // Add UNSPSC codes (tags)
-        if (this.props.record.resModel === 'res.partner' && unspsc_codes && unspsc_codes.length !== 0) {
-            // category id is fetched and then tags are created (many2many)
-            const category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_get_tag_ids", [this.props.record.resId, unspsc_codes]);
-            data.company['category_id'] = [[6, 0, category_id]];
-        }
         await this.props.record.update(data.company);
 
+        // Post message with company info card
+        if (this.props.record.resModel === 'res.partner') {
+            const saved = await this.props.record.save();
+            if (saved && data.isEnrichAccessible) {
+                await this.orm.call("res.partner", "enrich_company_message_post", [this.props.record.resId, additionalData]);
+                this.props.record.load();
+            }
+        }
         if (this.props.setDirty) {
             this.props.setDirty(false);
         }

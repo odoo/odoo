@@ -16,7 +16,7 @@ import {
     status,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollableY } from "@web/core/utils/dom/scrolling";
 
 export const cropperAspectRatios = {
     "0/0": { label: _t("Flexible"), value: 0 },

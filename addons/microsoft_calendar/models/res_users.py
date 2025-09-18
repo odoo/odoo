@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
-from odoo.loglevels import exception_to_unicode
 from odoo.addons.microsoft_account.models import microsoft_service
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 from odoo.tools import str2bool
@@ -121,7 +120,7 @@ class ResUsers(models.Model):
                 user.with_user(user).sudo()._sync_microsoft_calendar()
                 self.env.cr.commit()
             except Exception as e:
-                _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
+                _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, str(e))
                 self.env.cr.rollback()
 
     def stop_microsoft_synchronization(self):

@@ -2,7 +2,7 @@ import { LocationList } from '@delivery/js/location_selector/location_list/locat
 import { MapContainer } from '@delivery/js/location_selector/map_container/map_container';
 import { Component, onMounted, onWillUnmount, useEffect, useState } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
-import { Dialog } from '@web/core/dialog/dialog';
+import { Dialog } from '@web/ui/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { useDebounced } from '@web/core/utils/timing';

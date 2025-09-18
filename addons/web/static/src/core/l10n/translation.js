@@ -1,18 +1,21 @@
-import { formatList } from "@web/core/l10n/utils";
-import { isIterable } from "@web/core/utils/arrays";
-import { Deferred } from "@web/core/utils/concurrency";
-import { htmlSprintf, isMarkup } from "@web/core/utils/html";
-import { mapSubstitutions, sprintf } from "@web/core/utils/strings";
+// @ts-check
 
-/**
- * @typedef {ReturnType<markup>} Markup
- */
+/** @module @web/core/l10n/translation - Runtime i18n: _t() tagged-template translator with markup-safe interpolation */
+
+import { formatList } from "@web/core/l10n/utils";
+import { isIterable } from "@web/core/utils/collections/arrays";
+import { Deferred } from "@web/core/utils/concurrency";
+import { htmlSprintf, isMarkup } from "@web/core/utils/dom/html";
+import { mapSubstitutions, sprintf } from "@web/core/utils/format/strings";
+
+/** @typedef {any} Markup */
 
 /**
  * Returns true if the given value is a non-empty string, i.e. it contains other
  * characters than white spaces and zero-width spaces.
  *
  * @param {unknown} value
+ * @returns {boolean}
  */
 function isNotBlank(value) {
     return typeof value === "string" && !R_BLANK.test(value);
@@ -58,7 +61,7 @@ function translationSprintf(str, substitutions) {
 
 /**
  * @template [T=unknown]
- * @typedef {import("@web/core/utils/strings").Substitutions<T>} Substitutions
+ * @typedef {import("@web/core/utils/format/strings").Substitutions<T>} Substitutions
  */
 
 const DEFAULT_MODULE = "base";
@@ -125,9 +128,12 @@ export function appTranslateFn(source, moduleName, ...substitutions) {
  * @param {import("services").ServiceFactories["orm"]} orm
  */
 export async function loadLanguages(orm) {
+    // @ts-expect-error — property on function (valid JS, not modelable in TS)
     if (!loadLanguages.installedLanguages) {
+        // @ts-expect-error — property on function
         loadLanguages.installedLanguages = await orm.call("res.lang", "get_installed");
     }
+    // @ts-expect-error — property on function
     return loadLanguages.installedLanguages;
 }
 
@@ -148,6 +154,7 @@ export class TranslatedString extends String {
         super(value);
 
         if (!isNotBlank(value)) {
+            // @ts-expect-error — valid JS: constructor returning plain String to skip translation
             return new String(value);
         }
 
@@ -156,19 +163,25 @@ export class TranslatedString extends String {
         this.context = context || DEFAULT_MODULE;
     }
 
+    /** @returns {string} */
     toString() {
         return this.valueOf();
     }
 
+    /** @returns {string} */
     valueOf() {
         const source = super.valueOf();
         if (this.lazy && !translatedTerms[translationLoaded]) {
             // Evaluate lazy translated string while translations are not loaded
             // -> error
-            throw new Error(`Cannot translate string: translations have not been loaded`);
+            throw new Error(
+                `Cannot translate string: translations have not been loaded`,
+            );
         }
         const translation =
-            translatedTerms[this.context]?.[source] ?? translatedTermsGlobal[source] ?? source;
+            translatedTerms[this.context]?.[source] ??
+            translatedTermsGlobal[source] ??
+            source;
         if (this.substitutions.length) {
             return translationSprintf(translation, this.substitutions);
         } else {
@@ -177,8 +190,9 @@ export class TranslatedString extends String {
     }
 }
 
+/** @type {symbol} */
 export const translationLoaded = Symbol("translationLoaded");
-/** @type {Record<string, string>} */
+/** @type {Record<string | symbol, any>} */
 export const translatedTerms = {
     [translationLoaded]: false,
 };
@@ -187,5 +201,7 @@ export const translatedTerms = {
  * "namespacing" by module. It is used as a fallback when no translation is
  * found within the module's context, or when the context is not known.
  */
+/** @type {Record<string, string>} */
 export const translatedTermsGlobal = Object.create(null);
+/** @type {Deferred} */
 export const translationIsReady = new Deferred();

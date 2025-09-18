@@ -1,12 +1,12 @@
 import { registry } from "@web/core/registry";
-import { createElement, append } from "@web/core/utils/xml";
-import { Notebook } from "@web/core/notebook/notebook";
+import { createElement, append } from "@web/core/utils/dom/xml";
+import { Notebook } from "@web/components/notebook/notebook";
 import { formView } from "@web/views/form/form_view";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormController } from '@web/views/form/form_controller';
 import { useService } from "@web/core/utils/hooks";
-import { deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { deleteConfirmationMessage } from "@web/ui/dialog/confirmation_dialog";
 import {_t} from "@web/core/l10n/translation";
 
 

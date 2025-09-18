@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/fields/relational/many2one/many2one_field";
 
 export class SoLineField extends Component {
     static template = "sale_timesheet.SoLineField";

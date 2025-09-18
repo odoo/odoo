@@ -585,10 +585,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         bank1 = self.env['res.partner.bank'].create({
             'acc_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
         })
         bank2 = self.env['res.partner.bank'].create({
             'acc_number': 'BE85812541345906',
             'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
         })
 
         self.in_invoice_1.with_context(skip_readonly_check=True).partner_bank_id = bank1
@@ -1978,7 +1980,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         # PART 2: Test the same cases with different receivable accounts for each branch
         # An error should be raised as the receivable account doesn't belong to the wizard's company, except for the case where we register payment only for one branch
-        branch_invoices.button_draft()
+        branch_invoices.action_draft()
         for branch in branches:
             receivable_account = self.company_data['default_account_receivable'].with_company(branch).copy({'company_ids': branch.ids})
             branch_invoice = branch_invoices.filtered(lambda inv: inv.company_id == branch)
@@ -2079,7 +2081,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
     def test_payment_register_wizard_without_receivable_line_due_date(self):
         """Test creating the payment register wizard when a receivable line has no due date."""
         invoice = self.out_invoice_1
-        invoice.button_draft()
+        invoice.action_draft()
         invoice.invoice_payment_term_id = self.term_0_5_10_days
         receivable_lines = invoice.line_ids.filtered(lambda x: x.account_type == 'asset_receivable')
         self.assertEqual(len(receivable_lines), 3)

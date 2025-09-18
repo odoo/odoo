@@ -1,3 +1,5 @@
+// @ts-check
+
 import { serverState } from "../../mock_server_state.hoot";
 import * as fields from "../mock_fields";
 import { ServerModel } from "../mock_model";

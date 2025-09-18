@@ -254,7 +254,7 @@ class PosConfig(models.Model):
             delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
             # Cancelled orders must be forced deleted from the user interface.
             if model == "pos.order":
-                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
+                delete_record_ids[model] += browsed.exists().filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -712,7 +712,7 @@ class PosConfig(models.Model):
         return new_vals
 
     def _get_forbidden_change_fields(self):
-        return ['module_pos_restaurant', 'payment_method_ids']
+        return ['module_pos_restaurant', 'payment_method_ids', 'active']
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them

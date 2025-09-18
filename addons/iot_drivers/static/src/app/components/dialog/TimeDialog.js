@@ -37,7 +37,8 @@ export class TimeDialog extends Component {
         const minutes = Math.floor(periodInSeconds / 60);
         const seconds = Math.floor(periodInSeconds % 60);
 
-        const formatAmount = (amount, name) => `${amount} ${name}${amount === 1 ? "" : "s"}`;
+        const formatAmount = (amount, name) =>
+            `${amount} ${name}${amount === 1 ? "" : "s"}`;
         const timeParts = [
             formatAmount(days, "day"),
             formatAmount(hours, "hour"),

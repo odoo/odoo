@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:37+0000\n"
-"PO-Revision-Date: 2026-01-07 13:26+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 18:18+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "link_tracker/pl/>\n"
@@ -44,8 +44,8 @@ msgstr "# Kliknięcia"
 msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Kliknięcia\" role=\"img\""
-"/>"
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Kliknięcia\" "
+"role=\"img\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -101,8 +101,8 @@ msgid ""
 "The following combinations are already used: \n"
 "- %(error_lines)s"
 msgstr ""
-"Kombinacje wartości trackera linków "
-"(URL, kampania, medium, źródło i etykieta) muszą być unikatowe.\n"
+"Kombinacje wartości trackera linków (URL, kampania, medium, źródło i "
+"etykieta) muszą być unikatowe.\n"
 "Następująca kombinacja jest już w użyciu: \n"
 "- %(error_lines)s"
 
@@ -265,6 +265,12 @@ msgstr "Liczba kliknięć wygenerowanych przez kampanię"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__title
 msgid "Page Title"
 msgstr "Tytuł strony"
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "Please enter valid short URL code."
+msgstr "Wprowadź prawidłowy skrócony kod URL."
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url

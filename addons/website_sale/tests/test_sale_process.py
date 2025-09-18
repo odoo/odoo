@@ -115,7 +115,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'standard_price': 70.0,
             'list_price': 79.0,
             'website_published': True,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         self.product_product_7.taxes_id = [tax.id]
         self.env['res.config.settings'].create({

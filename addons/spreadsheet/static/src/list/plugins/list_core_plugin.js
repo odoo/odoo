@@ -1,7 +1,7 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { helpers } from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
-import { deepCopy } from "@web/core/utils/objects";
+import { deepCopy } from "@web/core/utils/collections/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 const { getMaxObjectId } = helpers;

@@ -1,8 +1,8 @@
-import { patch } from "@web/core/utils/patch";
-import { DiscussSidebarCategory } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
+import { DiscussSidebarCategory } from "../public_web/discuss_sidebar_categories";
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
     setup() {

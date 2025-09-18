@@ -1,14 +1,13 @@
-import { _t } from "@web/core/l10n/translation";
-import { useChildRef, useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { Component, useEffect, useState } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
+import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
     static template = "point_of_sale.PartnerList";
@@ -57,7 +56,7 @@ export class PartnerList extends Component {
                     this.modalContent.removeEventListener("scroll", scrollMethod);
                 };
             },
-            () => [this.modalRef.el]
+            () => [this.modalRef.el],
         );
     }
     get globalState() {
@@ -89,10 +88,12 @@ export class PartnerList extends Component {
         if (result.length > 0) {
             this.notification.add(
                 _t('%s customer(s) found for "%s".', result.length, this.state.query),
-                3000
+                3000,
             );
         } else {
-            this.notification.add(_t('No more customer found for "%s".', this.state.query));
+            this.notification.add(
+                _t('No more customer found for "%s".', this.state.query),
+            );
         }
     }
 
@@ -118,7 +119,9 @@ export class PartnerList extends Component {
     }
     getPartners(partners) {
         const searchWord = normalize(this.state.query?.trim() ?? "");
-        const exactMatches = partners.filter((partner) => partner.exactMatch(searchWord));
+        const exactMatches = partners.filter((partner) =>
+            partner.exactMatch(searchWord),
+        );
 
         if (exactMatches.length > 0) {
             return exactMatches;
@@ -134,7 +137,7 @@ export class PartnerList extends Component {
         const regex = new RegExp(
             patternBase
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // escape regex special characters
-                .replace(/%/g, ".*") // convert SQL wildcard to regex wildcard
+                .replace(/%/g, ".*"), // convert SQL wildcard to regex wildcard
         );
 
         const availablePartners = searchWord
@@ -145,8 +148,8 @@ export class PartnerList extends Component {
                       this.props.partner?.id === a.id
                           ? -1
                           : this.props.partner?.id === b.id
-                          ? 1
-                          : (a.name || "").localeCompare(b.name || "")
+                            ? 1
+                            : (a.name || "").localeCompare(b.name || ""),
                   );
 
         return availablePartners;
@@ -184,18 +187,22 @@ export class PartnerList extends Component {
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
+                ...search_fields.map((field) => [
+                    field,
+                    "ilike",
+                    this.state.query + "%",
+                ]),
             ];
         }
 
         try {
             this.state.loading = true;
 
-            const result = await this.pos.data.callRelated("res.partner", "get_new_partner", [
-                this.pos.config.id,
-                domain,
-                offset,
-            ]);
+            const result = await this.pos.data.callRelated(
+                "res.partner",
+                "get_new_partner",
+                [this.pos.config.id, domain, offset],
+            );
 
             this.globalState.offsetBySearch[this.state.query] =
                 offset + (result["res.partner"].length || 100);

@@ -165,6 +165,8 @@ class PeppolConfigWizard(models.TransientModel):
 
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
+        else:
+            self.company_id._reset_peppol_configuration()
         return True
 
     def button_peppol_reset_to_sender(self):

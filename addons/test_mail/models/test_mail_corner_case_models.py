@@ -231,9 +231,9 @@ class MailTestMultiCompany(models.Model):
 class MailTestMultiCompanyRead(models.Model):
     """ Just mail.test.simple, but multi company and supporting posting
     even if the user has no write access. """
-    _description = 'Simple Chatter Model'
-    _name = "mail.test.multi.company.read"
-    _inherit = ['mail.test.multi.company']
+    _description = 'Simple Chatter Model '
+    _name = 'mail.test.multi.company.read'
+    _inherit = ['mail.test.multi.company', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
 

@@ -25,7 +25,7 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 200.0})]
         })
         account_move.action_post()
-        account_move.button_draft()
+        account_move.action_draft()
         old_value = account_move.invoice_line_ids.account_id
 
         with Form(account_move) as account_move_form:

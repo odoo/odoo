@@ -1,48 +1,73 @@
 import { markup } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { _t } from '@web/core/l10n/translation';
-import { setElementContent } from '@web/core/utils/html';
+import { setElementContent } from '@web/core/utils/dom/html';
 
-function animateClone($cart, $elem, offsetTop, offsetLeft) {
-    if (!$cart.length) {
+/**
+ * Animates a clone of the product image flying to the cart icon.
+ *
+ * @param {HTMLElement} cart - the cart icon element
+ * @param {HTMLElement} elem - the product element containing the image
+ * @param {number} offsetTop
+ * @param {number} offsetLeft
+ * @returns {Promise}
+ */
+function animateClone(cart, elem, offsetTop, offsetLeft) {
+    if (!cart) {
         return Promise.resolve();
     }
-    $cart.removeClass('d-none').find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
-        $(this).removeClass("o_shadow_animation").dequeue();
-    }).delay(2000).queue(function () {
-        $(this).removeClass("o_red_highlight").dequeue();
-    });
-    return new Promise(function (resolve, reject) {
-        if(!$elem) resolve();
-        var $imgtodrag = $elem.find('img').eq(0);
-        if ($imgtodrag.length) {
-            var $imgclone = $imgtodrag.clone()
-                .offset({
-                    top: $imgtodrag.offset().top,
-                    left: $imgtodrag.offset().left
-                })
-                .removeClass()
-                .addClass('o_website_sale_animate')
-                .appendTo(document.body)
-                .css({
-                    // Keep the same size on cloned img.
-                    width: $imgtodrag.width(),
-                    height: $imgtodrag.height(),
-                })
-                .animate({
-                    top: $cart.offset().top + offsetTop,
-                    left: $cart.offset().left + offsetLeft,
-                    width: 75,
-                    height: 75,
-                }, 500);
-
-            $imgclone.animate({
-                width: 0,
-                height: 0,
-            }, function () {
-                resolve();
-                $(this).detach();
+    cart.classList.remove('d-none');
+    const blinkEl = cart.querySelector('.o_animate_blink');
+    if (blinkEl) {
+        blinkEl.classList.add('o_red_highlight', 'o_shadow_animation');
+        setTimeout(() => blinkEl.classList.remove('o_shadow_animation'), 500);
+        setTimeout(() => blinkEl.classList.remove('o_red_highlight'), 2500);
+    }
+    return new Promise(function (resolve) {
+        if (!elem) {
+            resolve();
+            return;
+        }
+        const imgToDrag = elem.querySelector('img');
+        if (imgToDrag) {
+            const imgRect = imgToDrag.getBoundingClientRect();
+            const cartRect = cart.getBoundingClientRect();
+            const imgClone = imgToDrag.cloneNode(true);
+            imgClone.className = 'o_website_sale_animate';
+            Object.assign(imgClone.style, {
+                position: 'fixed',
+                top: imgRect.top + 'px',
+                left: imgRect.left + 'px',
+                width: imgRect.width + 'px',
+                height: imgRect.height + 'px',
+                zIndex: '9999',
+                transition: 'all 0.5s ease',
             });
+            document.body.appendChild(imgClone);
+
+            // Trigger reflow then animate
+            imgClone.offsetHeight;
+            Object.assign(imgClone.style, {
+                top: (cartRect.top + offsetTop) + 'px',
+                left: (cartRect.left + offsetLeft) + 'px',
+                width: '75px',
+                height: '75px',
+            });
+
+            imgClone.addEventListener('transitionend', function onEnd() {
+                imgClone.removeEventListener('transitionend', onEnd);
+                // Shrink to 0
+                Object.assign(imgClone.style, {
+                    width: '0px',
+                    height: '0px',
+                    transition: 'all 0.3s ease',
+                });
+                imgClone.addEventListener('transitionend', function onShrinkEnd() {
+                    imgClone.removeEventListener('transitionend', onShrinkEnd);
+                    imgClone.remove();
+                    resolve();
+                }, { once: true });
+            }, { once: true });
         } else {
             resolve();
         }
@@ -51,7 +76,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
 
 /**
  * Returns the closest product form to a given element if exists.
- * Required for product pages with full-width or no images where the "Add to cart" button can be 
+ * Required for product pages with full-width or no images where the "Add to cart" button can be
  * outside of the form.
  *
  * @param { HTMLElement } element - Reference to an HTML element in the DOM.
@@ -85,14 +110,19 @@ function updateCartNavBar(data) {
         }
     }
 
-    $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
+    const cartLinesEl = document.querySelector(".js_cart_lines");
+    if (cartLinesEl && data['website_sale.cart_lines']) {
+        const temp = document.createElement('div');
+        temp.innerHTML = data['website_sale.cart_lines'];
+        cartLinesEl.replaceWith(...temp.childNodes);
+    }
 
     updateCartSummary(data);
 
     // Adjust the cart's left column width to accommodate the cart summary (right column). The left
-    // column of an empty cart initially takes the full width, but adding products (e.g. via quick 
+    // column of an empty cart initially takes the full width, but adding products (e.g. via quick
     // reorder) enables the cart summary on the right.
-    document.querySelector('.oe_cart').classList.toggle('col-lg-7', !!data.cart_quantity);
+    document.querySelector('.oe_cart')?.classList.toggle('col-lg-7', !!data.cart_quantity);
 
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
@@ -151,16 +181,21 @@ function showWarning(message) {
     if (!message) {
         return;
     }
-    var $page = $('.oe_website_sale');
-    var cart_alert = $page.children('#data_warning');
-    if (!cart_alert.length) {
-        cart_alert = $(
-            '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
-                '<span></span>' +
-            '</div>').prependTo($page);
+    const page = document.querySelector('.oe_website_sale');
+    if (!page) return;
+    let cartAlert = page.querySelector('#data_warning');
+    if (!cartAlert) {
+        cartAlert = document.createElement('div');
+        cartAlert.className = 'alert alert-danger alert-dismissible';
+        cartAlert.setAttribute('role', 'alert');
+        cartAlert.id = 'data_warning';
+        cartAlert.innerHTML =
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
+            '<span></span>';
+        page.prepend(cartAlert);
     }
-    cart_alert.children('span:last-child').text(message);
+    const span = cartAlert.querySelector('span:last-child');
+    if (span) span.textContent = message;
 }
 
 /**

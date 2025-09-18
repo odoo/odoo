@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
 
 import contextlib
 import dataclasses
@@ -139,7 +138,6 @@ class DocController(http.Controller):
                     field.name: {'string': field.field_description}
                     for field in ir_model.field_id
                     # sorted(ir_model.field_id, key=partial(sort_key_field, modules, Model))
-                    if field.name in Model._fields  # band-aid, see task 5172546
                     if Model._has_field_access(Model._fields[field.name], 'read')
                 },
                 'methods': [
@@ -367,8 +365,12 @@ def parse_signature(method) -> Signature:
         break
 
     # replace BaseModel and such by list[int], see /json/2
-    if isign.return_annotation in (Self, 'Self', models.BaseModel, models.Model):
-        isign = isign.replace(return_annotation=list[int])
+    if isign.return_annotation in (
+        Self, 'Self',
+        models.BaseModel, 'models.BaseModel',
+        models.Model, 'models.Model'
+    ):
+        isign = isign.replace(return_annotation='list[int]')
 
     # parse the signature
     parameters = {
@@ -474,6 +476,8 @@ def stringify_annotation(annotation) -> str | None:
         return None
     if isinstance(annotation, str):
         return annotation
+    if hasattr(annotation, '__origin__'):
+        return str(annotation)
     if isinstance(annotation, type):
         return annotation.__name__
     return str(annotation)

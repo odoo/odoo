@@ -1,46 +1,45 @@
 // @ts-check
 
+/** @module @web/model/relational_model/relational_model - Top-level data model orchestrating records, groups, and lists with ORM loading and onchange */
+
 import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
-import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { rpcBus } from "@web/core/network/rpc";
-import { shallowEqual } from "@web/core/utils/arrays";
-import { deepCopy, pick } from "@web/core/utils/objects";
+import { deepCopy, pick, shallowEqual } from "@web/core/utils/collections/objects";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
-import { orderByToString } from "@web/search/utils/order_by";
-import { Model } from "../model";
+import { orderByToString } from "@web/core/utils/order_by";
+import { Model } from "@web/model/model";
+
 import { DynamicGroupList } from "./dynamic_group_list";
 import { DynamicRecordList } from "./dynamic_record_list";
-import { Group } from "./group";
-import { Record as RelationalRecord } from "./record";
-import { StaticList } from "./static_list";
+import { FetchRecordError } from "./errors";
+import { getBasicEvalContext, getId } from "./field_context";
+import { makeActiveField } from "./field_metadata";
+import { getFieldsSpec } from "./field_spec";
 import {
     extractInfoFromGroupData,
     getAggregateSpecifications,
-    getBasicEvalContext,
-    getFieldsSpec,
     getGroupServerValue,
-    getId,
-    makeActiveField,
-} from "./utils";
-import { FetchRecordError } from "./errors";
+} from "./field_values";
+import { Group } from "./group";
+import { RelationalRecord } from "./record";
+import { StaticList } from "./static_list";
+
+/** @import { Context } from "@web/core/context" */
+/** @import { DomainListRepr } from "@web/core/domain" */
+/** @import { Field, FieldInfo, SearchParams } from "@web/search/search_model" */
+/** @import { ServiceFactories as Services } from "services" */
+/** @import { DataPoint } from "./datapoint" */
 
 /**
- * @typedef {import("@web/core/context").Context} Context
- * @typedef {import("./datapoint").DataPoint} DataPoint
- * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
- * @typedef {import("@web/search/search_model").Field} Field
- * @typedef {import("@web/search/search_model").FieldInfo} FieldInfo
- * @typedef {import("@web/search/search_model").SearchParams} SearchParams
- * @typedef {import("services").ServiceFactories} Services
- *
  * @typedef {{
- *  changes?: Record<string, unknown>;
+ *  changes?: Record<string, any>;
  *  fieldNames?: string[];
- *  evalContext?: Context;
+ *  evalContext?: any;
  *  onError?: (error: unknown) => unknown;
  *  cache?: Object;
+ *  [key: string]: any;
  * }} OnChangeParams
  *
  * @typedef {SearchParams & {
@@ -57,8 +56,12 @@ import { FetchRecordError } from "./errors";
  *  countLimit?: number;
  *  groupsLimit?: number;
  *  groups?: Record<string, unknown>;
- *  currentGroups?: Record<string, unknown>; // FIXME: could be cleaned: Object
+ *  currentGroups?: Record<string, unknown>;
  *  openGroupsByDefault?: boolean;
+ *  extraDomain?: import("@web/core/domain").DomainListRepr;
+ *  isFolded?: boolean;
+ *  rawContext?: Record<string, unknown>;
+ *  [key: string]: any;
  * }} RelationalModelConfig
  *
  * @typedef {{
@@ -68,7 +71,7 @@ import { FetchRecordError } from "./errors";
  *  limit?: number;
  *  countLimit?: number;
  *  groupsLimit?: number;
- *  defaultOrderBy?: string[];
+ *  defaultOrderBy?: import("@web/core/utils/order_by").OrderTerm[];
  *  maxGroupByDepth?: number;
  *  multiEdit?: boolean;
  *  groupByInfo?: Record<string, unknown>;
@@ -87,9 +90,9 @@ const DEFAULT_HOOKS = {
     onWillLoadRoot: () => {},
     /** @type {(root: DataPoint) => any} */
     onRootLoaded: () => {},
-    /** @type {(record: RelationalRecord) => any} */
+    /** @type {(record: RelationalRecord, changes: Record<string, unknown>) => any} */
     onWillSaveRecord: () => {},
-    /** @type {(record: RelationalRecord) => any} */
+    /** @type {(record: RelationalRecord, changes: Record<string, unknown>) => any} */
     onRecordSaved: () => {},
     /** @type {(record: RelationalRecord, changes: Object) => any} */
     onWillSaveMulti: () => {},
@@ -97,22 +100,47 @@ const DEFAULT_HOOKS = {
     onSavedMulti: () => {},
     /** @type {(record: RelationalRecord, fieldName: string) => any} */
     onWillSetInvalidField: () => {},
-    /** @type {(record: RelationalRecord) => any} */
+    /** @type {(record: RelationalRecord, changes: Record<string, unknown>) => any} */
     onRecordChanged: () => {},
     /** @type {(warning: Object) => any} */
     onWillDisplayOnchangeWarning: () => {},
     /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
     onAskMultiSaveConfirmation: () => true,
+
+    // UI hooks — controllers provide implementations via makeModelUIHooks()
+    /** @type {(warning: {type: string, title: string, message: string, className?: string, sticky?: boolean}) => void} */
+    onDisplayOnchangeWarning: () => {},
+    /** @type {() => (() => void)} */
+    onDisplayInvalidFields: () => () => {},
+    /** @type {(message: string) => (() => void)} */
+    onDisplayUrgentSave: () => () => {},
+    /** @type {(message: string) => void} */
+    onDisplayPropertyWarning: () => {},
+    /** @type {(action: Object, reload: () => Promise<any>) => any} */
+    onDisplayArchiveAction: (_action, reload) => reload(),
+    /** @type {(isSelected: boolean, archiveFn: Function, unarchiveFn: Function, dialogProps?: Object) => void} */
+    onConfirmArchive: (_isSelected, archiveFn) => archiveFn(),
+    /** @type {(resIds: number[], copyFn: Function) => void} */
+    onConfirmDuplicate: (resIds, copyFn) => copyFn(resIds),
+    /** @type {(msg: string) => void} */
+    onDisplayLimitNotification: () => {},
 };
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
     if (ev.detail.data.params?.method === "unlink") {
-        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
+        rpcBus.trigger("CLEAR-CACHES", {
+            tables: ["web_read", "web_search_read", "web_read_group"],
+            model: ev.detail.data.params.model,
+        });
     }
 });
 
 export class RelationalModel extends Model {
-    static services = ["action", "dialog", "notification", "orm"];
+    // "action", "dialog", "notification" are deprecated shims kept for
+    // external consumers (enterprise). New code should use controller
+    // services directly via useControllerServices() and model hooks
+    // via makeModelUIHooks(). Only "orm" is used by the model itself.
+    static services = ["orm"];
     static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -121,18 +149,19 @@ export class RelationalModel extends Model {
     static DEFAULT_LIMIT = 80;
     static DEFAULT_COUNT_LIMIT = 10000;
     static DEFAULT_GROUP_LIMIT = 80;
-    static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
+    static DEFAULT_OPEN_GROUP_LIMIT = 10;
     static withCache = true;
+
+    /** @returns {typeof RelationalModel} */
+    get Class() {
+        return /** @type {typeof RelationalModel} */ (this.constructor);
+    }
 
     /**
      * @param {RelationalModelParams} params
-     * @param {Services} services
+     * @param {Object} _services
      */
-    setup(params, { action, dialog, notification }) {
-        this.action = action;
-        this.dialog = dialog;
-        this.notification = notification;
-
+    setup(params, _services) {
         this.bus = new EventBus();
 
         this.keepLast = markRaw(new KeepLast());
@@ -147,11 +176,11 @@ export class RelationalModel extends Model {
             isRoot: true,
         };
 
-        this.hooks = Object.assign({}, DEFAULT_HOOKS, params.hooks);
+        this.hooks = { ...DEFAULT_HOOKS, ...params.hooks };
 
-        this.initialLimit = params.limit || this.constructor.DEFAULT_LIMIT;
+        this.initialLimit = params.limit || this.Class.DEFAULT_LIMIT;
         this.initialGroupsLimit = params.groupsLimit;
-        this.initialCountLimit = params.countLimit || this.constructor.DEFAULT_COUNT_LIMIT;
+        this.initialCountLimit = params.countLimit || this.Class.DEFAULT_COUNT_LIMIT;
         this.defaultOrderBy = params.defaultOrderBy;
         this.maxGroupByDepth = params.maxGroupByDepth;
         this.groupByInfo = params.groupByInfo || {};
@@ -159,10 +188,13 @@ export class RelationalModel extends Model {
         this.activeIdsLimit = params.activeIdsLimit || Number.MAX_SAFE_INTEGER;
         this.specialDataCaches = markRaw(params.state?.specialDataCaches || {});
         this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
-        this.withCache = this.constructor.withCache && this.env.config?.cache;
+        this.withCache = this.Class.withCache && this.env.config?.cache;
         this.initialSampleGroups = undefined; // real groups to populate with sample records
 
+        /** @type {boolean} */
         this._urgentSave = false;
+        /** @type {(() => void) | null} */
+        this._closeUrgentSaveNotification = null;
     }
 
     // -------------------------------------------------------------------------
@@ -207,7 +239,9 @@ export class RelationalModel extends Model {
         this.hooks.onWillLoadRoot(config);
         const rootLoadDef = new Deferred();
         const cache = this._getCacheParams(config, rootLoadDef);
+        performance.mark("model:loadData:start");
         const data = await this.keepLast.add(this._loadData(config, cache));
+        performance.measure("model:loadData", "model:loadData:start");
         this.root = this._createRoot(config, data);
         rootLoadDef.resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
@@ -230,7 +264,7 @@ export class RelationalModel extends Model {
             config.resModel,
             "get_property_definition",
             [propertyFullName],
-            { context: config.context }
+            { context: config.context },
         );
         if (!result) {
             // the property might have been removed
@@ -239,7 +273,9 @@ export class RelationalModel extends Model {
             result.propertyName = result.name;
             result.name = propertyFullName; // "xxxxx" -> "property.xxxxx"
             // needed for _applyChanges
-            result.relatedPropertyField = { fieldName: propertyFullName.split(".")[0] };
+            result.relatedPropertyField = {
+                fieldName: propertyFullName.split(".")[0],
+            };
             result.relation = result.comodel; // match name on field
             config.fields[propertyFullName] = result;
         }
@@ -270,16 +306,16 @@ export class RelationalModel extends Model {
     /**
      * @param {RelationalModelConfig} config
      * @param {Record<string, unknown>} data
-     * @returns {DataPoint}
+     * @returns {any}
      */
     _createRoot(config, data) {
         if (config.isMonoRecord) {
-            return new this.constructor.Record(this, config, data);
+            return new this.Class.Record(this, config, data);
         }
         if (config.groupBy.length) {
-            return new this.constructor.DynamicGroupList(this, config, data);
+            return new this.Class.DynamicGroupList(this, config, data);
         }
-        return new this.constructor.DynamicRecordList(this, config, data);
+        return new this.Class.DynamicRecordList(this, config, data);
     }
 
     _getCacheParams(config, rootLoadDef) {
@@ -289,7 +325,8 @@ export class RelationalModel extends Model {
         if (
             !this.isReady || // first load of the model
             // monorecord, loading a different id, or creating a new record (onchange)
-            (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
+            (config.isMonoRecord &&
+                (this.root.config.resId !== config.resId || !config.resId))
         ) {
             return {
                 type: "disk",
@@ -311,7 +348,10 @@ export class RelationalModel extends Model {
                             this.useSampleModel = false;
                             if (this.root.config.groupBy.length) {
                                 delete this.root.config.currentGroups;
-                                result = await this._postprocessReadGroup(this.root.config, result);
+                                result = await this._postprocessReadGroup(
+                                    this.root.config,
+                                    result,
+                                );
                             }
                             this.root._setData(result);
                         }
@@ -324,7 +364,9 @@ export class RelationalModel extends Model {
                     if (root.config.isMonoRecord) {
                         if (!root.config.resId) {
                             // result is the response of the onchange rpc
-                            return root._setData(result.value, { keepChanges: true });
+                            return root._setData(result.value, {
+                                keepChanges: true,
+                            });
                         }
                         // result is the response of a web_read rpc
                         if (!result.length) {
@@ -355,7 +397,7 @@ export class RelationalModel extends Model {
      */
     _getNextConfig(currentConfig, params) {
         const currentGroupBy = currentConfig.groupBy;
-        const config = Object.assign({}, currentConfig);
+        const config = { ...currentConfig };
 
         config.context = "context" in params ? params.context : config.context;
         config.context = { ...config.context };
@@ -380,7 +422,10 @@ export class RelationalModel extends Model {
             // apply month granularity if none explicitly given
             // TODO: accept only explicit granularity
             config.groupBy = config.groupBy.map((g) => {
-                if (g in config.fields && ["date", "datetime"].includes(config.fields[g].type)) {
+                if (
+                    g in config.fields &&
+                    ["date", "datetime"].includes(config.fields[g].type)
+                ) {
                     return `${g}:month`;
                 }
                 return g;
@@ -402,7 +447,9 @@ export class RelationalModel extends Model {
                 delete config.groups;
             }
             if (!config.groupBy.length) {
-                config.orderBy = config.orderBy.filter((order) => order.name !== "__count");
+                config.orderBy = config.orderBy.filter(
+                    (order) => order.name !== "__count",
+                );
             }
         }
         if (!config.isMonoRecord && params.domain) {
@@ -442,7 +489,10 @@ export class RelationalModel extends Model {
         }
         if (config.resIds) {
             // static list
-            const resIds = config.resIds.slice(config.offset, config.offset + config.limit);
+            const resIds = config.resIds.slice(
+                config.offset,
+                config.offset + config.limit,
+            );
             return this._loadRecords({ ...config, resIds });
         }
         if (config.groupBy.length) {
@@ -450,11 +500,15 @@ export class RelationalModel extends Model {
         }
         Object.assign(config, {
             limit: config.limit || this.initialLimit,
-            countLimit: "countLimit" in config ? config.countLimit : this.initialCountLimit,
+            countLimit:
+                "countLimit" in config ? config.countLimit : this.initialCountLimit,
             offset: config.offset || 0,
         });
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
-            config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
+            config.countLimit = Math.max(
+                config.countLimit,
+                config.offset + config.limit,
+            );
         }
         const { records, length } = await this._loadUngroupedList(config, cache);
         if (config.offset && !records.length) {
@@ -473,8 +527,8 @@ export class RelationalModel extends Model {
         config.limit = config.limit || this.initialGroupsLimit;
         if (!config.limit) {
             config.limit = config.openGroupsByDefault
-                ? this.constructor.DEFAULT_OPEN_GROUP_LIMIT
-                : this.constructor.DEFAULT_GROUP_LIMIT;
+                ? this.Class.DEFAULT_OPEN_GROUP_LIMIT
+                : this.Class.DEFAULT_GROUP_LIMIT;
         }
         config.groups = config.groups || {};
 
@@ -509,7 +563,7 @@ export class RelationalModel extends Model {
             let groupRecordConfig;
             if (this.groupByInfo[groupByFieldName]) {
                 groupRecordConfig = {
-                    ...this.groupByInfo[groupByFieldName],
+                    .../** @type {Object} */ (this.groupByInfo[groupByFieldName]),
                     resModel: currentConfig.fields[groupByFieldName].relation,
                     context: {},
                 };
@@ -520,7 +574,7 @@ export class RelationalModel extends Model {
                     groupData,
                     currentConfig.groupBy,
                     currentConfig.fields,
-                    currentConfig.domain
+                    currentConfig.domain,
                 );
                 if (!currentConfig.groups[group.value]) {
                     currentConfig.groups[group.value] = {
@@ -536,7 +590,7 @@ export class RelationalModel extends Model {
                                 nextLevelGroupBy.length === 0
                                     ? this.initialLimit
                                     : this.initialGroupsLimit ||
-                                      this.constructor.DEFAULT_GROUP_LIMIT,
+                                      this.Class.DEFAULT_GROUP_LIMIT,
                         },
                     };
                 }
@@ -605,18 +659,22 @@ export class RelationalModel extends Model {
             currentGroups.forEach((group, index) => {
                 if (
                     config.groups[group.value] &&
-                    !groups.some((g) => JSON.stringify(g.value) === JSON.stringify(group.value))
+                    !groups.some(
+                        (g) => JSON.stringify(g.value) === JSON.stringify(group.value),
+                    )
                 ) {
-                    const aggregates = Object.assign({}, group.aggregates);
+                    const aggregates = { ...group.aggregates };
                     for (const key in aggregates) {
                         // the `array_agg_distinct` aggregator's value is an array
                         aggregates[key] = Array.isArray(aggregates[key]) ? [] : 0;
                     }
-                    groups.splice(
-                        index,
-                        0,
-                        Object.assign({}, group, { count: 0, length: 0, records: [], aggregates })
-                    );
+                    groups.splice(index, 0, {
+                        ...group,
+                        count: 0,
+                        length: 0,
+                        records: [],
+                        aggregates,
+                    });
                 }
             });
         }
@@ -627,8 +685,8 @@ export class RelationalModel extends Model {
 
     /**
      * @param {RelationalModelConfig} config
-     * @param {Partial<RelationalModelParams>} [params={}]
-     * @returns {Promise<Record<string, unknown>>}
+     * @param {OnChangeParams} [params={}]
+     * @returns {Promise<Record<string, any>>}
      */
     async _loadNewRecord(config, params = {}) {
         return this._onchange(config, params);
@@ -673,13 +731,19 @@ export class RelationalModel extends Model {
     async _loadUngroupedList(config, cache) {
         const orderBy = config.orderBy.filter((o) => o.name !== "__count");
         const kwargs = {
-            specification: getFieldsSpec(config.activeFields, config.fields, config.context),
+            specification: getFieldsSpec(
+                config.activeFields,
+                config.fields,
+                config.context,
+            ),
             offset: config.offset,
             order: orderByToString(orderBy),
             limit: config.limit,
             context: { bin_size: true, ...config.context },
             count_limit:
-                config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
+                config.countLimit !== Number.MAX_SAFE_INTEGER
+                    ? config.countLimit + 1
+                    : undefined,
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
         return orm.webSearchRead(config.resModel, config.domain, kwargs);
@@ -692,7 +756,7 @@ export class RelationalModel extends Model {
      */
     async _onchange(
         config,
-        { changes = {}, fieldNames = [], evalContext = config.context, onError, cache }
+        { changes = {}, fieldNames = [], evalContext = config.context, onError, cache },
     ) {
         const { fields, activeFields, resModel, resId } = config;
         let context = config.context;
@@ -700,7 +764,9 @@ export class RelationalModel extends Model {
             const fieldContext = config.activeFields[fieldNames[0]].context;
             context = makeContext([context, fieldContext], evalContext);
         }
-        const spec = getFieldsSpec(activeFields, fields, evalContext, { withInvisible: true });
+        const spec = getFieldsSpec(activeFields, fields, evalContext, {
+            withInvisible: true,
+        });
         const args = [resId ? [resId] : [], changes, fieldNames, spec];
         let response;
         try {
@@ -713,18 +779,10 @@ export class RelationalModel extends Model {
             throw e;
         }
         if (response.warning) {
-            Promise.resolve(this.hooks.onWillDisplayOnchangeWarning(response.warning)).then(() => {
-                const { type, title, message, className, sticky } = response.warning;
-                if (type === "dialog") {
-                    this.dialog.add(WarningDialog, { title, message });
-                } else {
-                    this.notification.add(message, {
-                        className,
-                        sticky,
-                        title,
-                        type: "warning",
-                    });
-                }
+            Promise.resolve(
+                this.hooks.onWillDisplayOnchangeWarning(response.warning),
+            ).then(() => {
+                this.hooks.onDisplayOnchangeWarning(response.warning);
             });
         }
         return response.value;
@@ -766,7 +824,9 @@ export class RelationalModel extends Model {
      */
     async _updateCount(config) {
         const count = await this.keepLast.add(
-            this.orm.searchCount(config.resModel, config.domain, { context: config.context })
+            this.orm.searchCount(config.resModel, config.domain, {
+                context: config.context,
+            }),
         );
         config.countLimit = Number.MAX_SAFE_INTEGER;
         return count;
@@ -823,22 +883,26 @@ export class RelationalModel extends Model {
             });
         }
         const aggregates = getAggregateSpecifications(
-            pick(config.fields, ...config.fieldsToAggregate)
+            pick(config.fields, ...config.fieldsToAggregate),
         );
         const currentGroupInfos = getGroupInfo(config.groups);
         const { activeFields, fields } = config;
         const evalContext = getBasicEvalContext(config);
-        const unfoldReadSpecification = getFieldsSpec(activeFields, fields, evalContext);
+        const unfoldReadSpecification = getFieldsSpec(
+            activeFields,
+            fields,
+            evalContext,
+        );
 
         const groupByReadSpecification = {};
         for (const groupBy of config.groupBy) {
-            const groupInfo = this.groupByInfo[groupBy];
+            const groupInfo = /** @type {any} */ (this.groupByInfo[groupBy]);
             if (groupInfo) {
-                const { activeFields, fields } = this.groupByInfo[groupBy];
+                const { activeFields, fields } = groupInfo;
                 groupByReadSpecification[groupBy] = getFieldsSpec(
                     activeFields,
                     fields,
-                    evalContext
+                    evalContext,
                 );
             }
         }
@@ -860,7 +924,7 @@ export class RelationalModel extends Model {
             config.domain,
             config.groupBy,
             aggregates,
-            params
+            params,
         );
         if (!this.initialSampleGroups) {
             this.initialSampleGroups = deepCopy(result.groups);

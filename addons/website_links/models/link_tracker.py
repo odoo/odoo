@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
-from odoo.tools import urls
+from odoo.libs.web import urls
 
 
 class LinkTracker(models.Model):

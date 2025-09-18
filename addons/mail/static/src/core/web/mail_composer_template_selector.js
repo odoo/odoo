@@ -1,15 +1,12 @@
+import { Component, onWillStart, useState } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-
-import { Component, useState, onWillStart } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { user } from "@web/services/user";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-
-
 export class MailComposerTemplateSelector extends Component {
     static template = "mail.MailComposerTemplateSelector";
     static components = { Dropdown, DropdownItem };
@@ -22,7 +19,8 @@ export class MailComposerTemplateSelector extends Component {
 
         const { context } = this.props.record.evalContext;
         this.state = useState({
-            hideMailTemplateManagementOptions: context?.hide_mail_template_management_options,
+            hideMailTemplateManagementOptions:
+                context?.hide_mail_template_management_options,
         });
 
         onWillStart(() => {
@@ -32,15 +30,27 @@ export class MailComposerTemplateSelector extends Component {
 
     async fetchTemplates() {
         const fields = ["display_name"];
-        const templates = await this.orm.searchRead("mail.template", [
-            ["model", "=", this.props.record.data.render_model],
-            ["user_id", "=", user.userId]
-        ], fields, { limit: this.limit });
-        if (templates.length < this.limit) {
-            templates.push(...await this.orm.searchRead("mail.template", [
+        const templates = await this.orm.searchRead(
+            "mail.template",
+            [
                 ["model", "=", this.props.record.data.render_model],
-                ["user_id", "=", false]
-            ], fields, { limit: this.limit - templates.length }));
+                ["user_id", "=", user.userId],
+            ],
+            fields,
+            { limit: this.limit },
+        );
+        if (templates.length < this.limit) {
+            templates.push(
+                ...(await this.orm.searchRead(
+                    "mail.template",
+                    [
+                        ["model", "=", this.props.record.data.render_model],
+                        ["user_id", "=", false],
+                    ],
+                    fields,
+                    { limit: this.limit - templates.length },
+                )),
+            );
         }
         this.state.templates = templates;
     }
@@ -64,12 +74,14 @@ export class MailComposerTemplateSelector extends Component {
             type: "object",
             name: "open_template_creation_wizard",
             resId: this.props.record.resId,
-            resModel: this.props.record.resModel
+            resModel: this.props.record.resModel,
         });
     }
 
     async onManageTemplateBtnClick() {
-        const action = await this.action.loadAction("mail.action_email_template_tree_all");
+        const action = await this.action.loadAction(
+            "mail.action_email_template_tree_all",
+        );
         action.context = {
             search_default_my_templates: 1,
             search_default_model: this.props.record.data.model,
@@ -86,7 +98,7 @@ export class MailComposerTemplateSelector extends Component {
             multiSelect: false,
             noCreate: true,
             domain: [["model", "=", this.props.record.data.render_model]],
-            onSelected: async templateIds => {
+            onSelected: async (templateIds) => {
                 await this.props.record.update({
                     template_id: { id: templateIds[0] },
                 });
@@ -103,4 +115,6 @@ export const mailComposerTemplateSelector = {
     ],
 };
 
-registry.category("fields").add("mail_composer_template_selector", mailComposerTemplateSelector);
+registry
+    .category("fields")
+    .add("mail_composer_template_selector", mailComposerTemplateSelector);

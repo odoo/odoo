@@ -1,10 +1,9 @@
-import { registry } from "@web/core/registry";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { _t } from "@web/core/l10n/translation";
-
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 export class LoginScreen extends Component {
     static template = "point_of_sale.LoginScreen";
     static props = {};
@@ -33,7 +32,9 @@ export class LoginScreen extends Component {
             this.pos.addNewOrder();
         }
         const params =
-            selectedScreen.page === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
+            selectedScreen.page === "ProductScreen"
+                ? { orderUuid: this.pos.getOrder().uuid }
+                : {};
         this.pos.navigate(selectedScreen.page, params);
         this.pos.hasLoggedIn = true;
     }

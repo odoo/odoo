@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { GraphModel } from "@web/views/graph/graph_model";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/collections/arrays";
 
 export class HrHolidaysGraphModel extends GraphModel {
     async load(searchParams) {

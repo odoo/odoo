@@ -1,10 +1,9 @@
+import { onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
-import { onWillDestroy } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-
 const USER_DEVICES_MODEL = "mail.push.device";
 
 patch(WebClient.prototype, {
@@ -16,9 +15,13 @@ patch(WebClient.prototype, {
         this.orm = useService("orm");
         this.notification = useService("notification");
         if (this._canSendNativeNotification) {
-            this.env.bus.addEventListener("WEB_CLIENT_READY", () => this._subscribePush(), {
-                once: true,
-            });
+            this.env.bus.addEventListener(
+                "WEB_CLIENT_READY",
+                () => this._subscribePush(),
+                {
+                    once: true,
+                },
+            );
         }
         if (browser.navigator.permissions) {
             let notificationPerm;
@@ -29,10 +32,12 @@ patch(WebClient.prototype, {
                     this._unsubscribePush();
                 }
             };
-            browser.navigator.permissions.query({ name: "notifications" }).then((perm) => {
-                notificationPerm = perm;
-                notificationPerm.addEventListener("change", onPermissionChange);
-            });
+            browser.navigator.permissions
+                .query({ name: "notifications" })
+                .then((perm) => {
+                    notificationPerm = perm;
+                    notificationPerm.addEventListener("change", onPermissionChange);
+                });
             onWillDestroy(() => {
                 notificationPerm?.removeEventListener("change", onPermissionChange);
             });
@@ -60,7 +65,9 @@ patch(WebClient.prototype, {
             return;
         }
         let subscription = await pushManager.getSubscription();
-        const previousEndpoint = browser.localStorage.getItem(`${USER_DEVICES_MODEL}_endpoint`);
+        const previousEndpoint = browser.localStorage.getItem(
+            `${USER_DEVICES_MODEL}_endpoint`,
+        );
         // This may occur if the subscription was refreshed by the browser,
         // but it may also happen if the subscription has been revoked or lost.
         if (!subscription) {
@@ -79,17 +86,20 @@ patch(WebClient.prototype, {
                 if (await navigator.brave?.isBrave()) {
                     this.notification.add(
                         _t(
-                            "Brave: enable 'Google Services for Push Messaging' to enable push notifications"
+                            "Brave: enable 'Google Services for Push Messaging' to enable push notifications",
                         ),
                         {
                             type: "warning",
                             sticky: true,
-                        }
+                        },
                     );
                 }
                 return;
             }
-            browser.localStorage.setItem(`${USER_DEVICES_MODEL}_endpoint`, subscription.endpoint);
+            browser.localStorage.setItem(
+                `${USER_DEVICES_MODEL}_endpoint`,
+                subscription.endpoint,
+            );
         }
         const kwargs = subscription.toJSON();
         if (previousEndpoint && subscription.endpoint !== previousEndpoint) {
@@ -97,12 +107,14 @@ patch(WebClient.prototype, {
         }
         try {
             kwargs.vapid_public_key = this._arrayBufferToBase64(
-                subscription.options.applicationServerKey
+                subscription.options.applicationServerKey,
             );
             await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
         } catch (e) {
-            const invalidVapidErrorClass = "odoo.addons.mail.tools.jwt.InvalidVapidError";
-            const warningMessage = "Error sending subscription information to the server";
+            const invalidVapidErrorClass =
+                "odoo.addons.mail.tools.jwt.InvalidVapidError";
+            const warningMessage =
+                "Error sending subscription information to the server";
             if (e.data?.name === invalidVapidErrorClass) {
                 const MAX_TRIES = 2;
                 if (numberTry < MAX_TRIES) {
@@ -163,10 +175,12 @@ patch(WebClient.prototype, {
     async _getApplicationServerKey() {
         const vapid_public_key_base64 = await this.orm.call(
             USER_DEVICES_MODEL,
-            "get_web_push_vapid_public_key"
+            "get_web_push_vapid_public_key",
         );
         const padding = "=".repeat((4 - (vapid_public_key_base64.length % 4)) % 4);
-        const base64 = (vapid_public_key_base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
+        const base64 = (vapid_public_key_base64 + padding)
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
         const rawData = atob(base64);
         const outputArray = new Uint8Array(rawData.length);
         for (let i = 0; i < rawData.length; ++i) {
@@ -187,6 +201,10 @@ patch(WebClient.prototype, {
         for (let i = 0; i < bytes.byteLength; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
-        return window.btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+        return window
+            .btoa(binary)
+            .replaceAll("+", "-")
+            .replaceAll("/", "_")
+            .replaceAll("=", "");
     },
 });

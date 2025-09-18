@@ -1,13 +1,17 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { Component, useRef, xml } from "@odoo/owl";
-
+import {
+    contains,
+    mockService,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { registry } from "@web/core/registry";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 test("action can be prevented", async () => {
     registry.category("services").add(
@@ -21,7 +25,7 @@ test("action can be prevented", async () => {
                 };
             },
         },
-        { force: true }
+        { force: true },
     );
 
     let executeInHook;
@@ -64,7 +68,10 @@ test("action can be prevented", async () => {
 
     executeInHook = false;
     await contains(".myComponent").click();
-    expect.verifySteps(["beforeExecuteAction on handler", "beforeExecuteAction in hook"]);
+    expect.verifySteps([
+        "beforeExecuteAction on handler",
+        "beforeExecuteAction in hook",
+    ]);
 
     executeInHandler = false;
     await contains(".myComponent").click();
@@ -83,7 +90,7 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
                 };
             },
         },
-        { force: true }
+        { force: true },
     );
 
     class MyComponent extends Component {

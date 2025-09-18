@@ -1,17 +1,14 @@
-import { _t } from "@web/core/l10n/translation";
-
 import { Component, useState } from "@odoo/owl";
-
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useModel } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
-import { SearchBar } from "@web/search/search_bar/search_bar";
 import { usePager } from "@web/search/pager_hook";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-
 export class ActivityController extends Component {
     static components = { Layout, SearchBar, CogMenu };
     static props = {
@@ -47,14 +44,19 @@ export class ActivityController extends Component {
                         this.model.fetchActivityData(params),
                     ]);
                 },
-                updateTotal: hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
+                updateTotal: hasLimitedCount
+                    ? () => this.model.root.fetchCount()
+                    : undefined,
             };
         });
     }
 
     get modelParams() {
         const { archInfo, resModel } = this.props;
-        const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            archInfo,
+            this.props.fields,
+        );
         return {
             config: {
                 activeFields,
@@ -109,7 +111,7 @@ export class ActivityController extends Component {
             },
             {
                 onClose: () => this.model.load(this.getSearchProps()),
-            }
+            },
         );
     }
 
@@ -123,7 +125,12 @@ export class ActivityController extends Component {
                 resIds.push(parseInt(resId));
             }
         }
-        this.model.orm.call(this.props.resModel, "activity_send_mail", [resIds, templateID], {});
+        this.model.orm.call(
+            this.props.resModel,
+            "activity_send_mail",
+            [resIds, templateID],
+            {},
+        );
     }
 
     async openRecord(record, { newWindow } = {}) {

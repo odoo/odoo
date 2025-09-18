@@ -12,6 +12,9 @@
     padding-bottom: $o-navbar-padding-v;
     border-bottom: $o-navbar-border-bottom;
     background: $o-navbar-background;
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    box-shadow: $o-shadow-sm;
     font-size: $o-navbar-font-size;
 
     @include media-breakpoint-up(md) {

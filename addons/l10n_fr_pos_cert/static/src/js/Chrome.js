@@ -1,9 +1,8 @@
-import { Chrome } from "@point_of_sale/app/pos_app";
-import { patch } from "@web/core/utils/patch";
-import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { onMounted } from "@odoo/owl";
+import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
+import { Chrome } from "@point_of_sale/app/pos_app";
 import { useService } from "@web/core/utils/hooks";
-
+import { patch } from "@web/core/utils/patch";
 patch(Chrome.prototype, {
     setup() {
         super.setup(...arguments);

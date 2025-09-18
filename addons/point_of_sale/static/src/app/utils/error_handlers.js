@@ -1,9 +1,8 @@
-import { registry } from "@web/core/registry";
-import { odooExceptionTitleMap, ErrorDialog } from "@web/core/errors/error_dialogs";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ErrorDialog, odooExceptionTitleMap } from "@web/components/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
-
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 export function handleRPCError(error, dialog) {
     const { data } = error;
     if (odooExceptionTitleMap.has(error.exceptionName)) {
@@ -37,7 +36,7 @@ export function offlineErrorHandler(env, error, originalError) {
             env.services.dialog.add(AlertDialog, {
                 title: _t("Connection Lost"),
                 body: _t(
-                    "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality."
+                    "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality.",
                 ),
                 confirmLabel: _t("Continue with limited functionality"),
             });

@@ -1,7 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
-
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { session } from "@web/session";
 
 describe.current.tags("headless");

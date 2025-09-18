@@ -1,17 +1,20 @@
-import { _t } from "@web/core/l10n/translation";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { download } from "@web/core/network/download";
-import { rpc } from "@web/core/network/rpc";
-import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+// @ts-check
+
+/** @module @web/views/view_hook - Hooks for action links, record export, and record deletion in views */
 
 import { useComponent, useEffect } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
+import { download } from "@web/core/network/download";
+import { rpc } from "@web/core/network/rpc";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
+import {
+    ConfirmationDialog,
+    deleteConfirmationMessage,
+} from "@web/ui/dialog/confirmation_dialog";
+import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 /**
  * Allows for a component (usually a View component) to handle links with
@@ -59,7 +62,8 @@ export function useActionLinks({ resModel, reload }) {
             keepLast.add(doAction(target.getAttribute("name"), options));
         } else {
             let views;
-            const resId = data.resid ? parseInt(data.resid, 10) : null;
+            const parsedId = data.resid ? parseInt(data.resid, 10) : null;
+            const resId = Number.isNaN(parsedId) ? null : parsedId;
             if (data.views) {
                 views = evaluateExpr(data.views);
             } else {
@@ -98,6 +102,13 @@ export function useActionLinks({ resModel, reload }) {
     };
 }
 
+/**
+ * Applies a brief CSS bounce animation to a `[data-bounce-button]` element
+ * whenever a click occurs inside `containerRef` and `shouldBounce` returns true.
+ *
+ * @param {{ el: HTMLElement | null }} containerRef - OWL ref wrapping the click zone
+ * @param {(target: HTMLElement) => boolean} shouldBounce - predicate checked on every click
+ */
 export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
@@ -117,14 +128,29 @@ export function useBounceButton(containerRef, shouldBounce) {
                 }
             };
             containerEl.addEventListener("click", handler);
-            return () => containerEl.removeEventListener("click", handler);
+            return () => {
+                browser.clearTimeout(timeout);
+                containerEl.removeEventListener("click", handler);
+            };
         },
-        () => [containerRef.el]
+        () => [containerRef.el],
     );
 }
 
+/**
+ * Hook that wires up the export-records flow (dialog + direct download).
+ *
+ * Listens for `direct-export-data` on the searchModel bus and opens the
+ * ExportDataDialog when the returned callback is invoked.
+ *
+ * @param {Object} env - OWL component environment (must have `model` and `searchModel`)
+ * @param {Object} context - action context
+ * @param {() => Object[]} getDefaultExportList - returns default fields for export
+ * @returns {() => void} callback that opens the export dialog
+ */
 export function useExportRecords(env, context, getDefaultExportList) {
     const { model, searchModel } = env;
+    const dialog = useService("dialog");
     useBus(searchModel, "direct-export-data", async () => {
         _downloadExport(getDefaultExportList(), false, "xlsx");
     });
@@ -178,7 +204,7 @@ export function useExportRecords(env, context, getDefaultExportList) {
 
     return () => {
         const root = model.root;
-        model.dialog.add(ExportDataDialog, {
+        dialog.add(ExportDataDialog, {
             context: root.context,
             defaultExportList: getDefaultExportList(),
             download: _downloadExport,
@@ -188,17 +214,28 @@ export function useExportRecords(env, context, getDefaultExportList) {
     };
 }
 
+/**
+ * Hook that returns a callback for deleting records with a confirmation dialog.
+ *
+ * Handles both single-record (form) and multi-record (list/kanban) deletion,
+ * adjusting the dialog body text and confirm callback accordingly.
+ *
+ * @param {Object} model - the view's relational model instance
+ * @returns {(dialogProps?: Object, records?: Object[]) => void} opens a confirmation dialog then deletes
+ */
 export function useDeleteRecords(model) {
+    const dialog = useService("dialog");
     function getDefaultDialogProps(records) {
         const isDynamicList = model.root instanceof DynamicList;
         let body = deleteConfirmationMessage;
         if (
             records?.length > 1 ||
-            (isDynamicList && (model.root.isDomainSelected || model.root.selection.length > 1))
+            (isDynamicList &&
+                (model.root.isDomainSelected || model.root.selection.length > 1))
         ) {
             body = _t("Are you sure you want to delete these records?");
         }
-        let confirm = () => records.forEach((r) => r.delete());
+        let confirm = () => Promise.all(records.map((r) => r.delete()));
         if (isDynamicList) {
             confirm = () => model.root.deleteRecords(records);
         }
@@ -213,6 +250,6 @@ export function useDeleteRecords(model) {
     }
     return (dialogProps, records) => {
         const defaultProps = getDefaultDialogProps(records);
-        model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
+        dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
     };
 }

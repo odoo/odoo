@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_picking_type_form_inherit" model="ir.ui.view">
+    <record id="view_stock_picking_type_form_inherit" model="ir.ui.view">
         <field name="name">stock.picking.type.form.inherit</field>
         <field name="model">stock.picking.type</field>
-        <field name="inherit_id" ref="stock_picking_batch.view_picking_type_form_inherit"/>
+        <field name="inherit_id" ref="stock_picking_batch.view_stock_picking_type_form_inherit"/>
         <field name="arch" type="xml">
             <div name="batch_contact" position="after">
                 <span invisible="not auto_batch"/>

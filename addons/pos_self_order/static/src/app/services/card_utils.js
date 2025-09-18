@@ -14,7 +14,7 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
         "",
         {},
         {},
-        comboValues
+        comboValues,
     );
     const order = baseLineValues.order_id;
 
@@ -31,28 +31,36 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
     });
 
     const taxDetails = order.getPriceWithOptions({ lines: transientLines }).taxDetails;
-    return selfOrder.isTaxesIncludedInPrice() ? taxDetails.total_amount : taxDetails.base_amount;
+    return selfOrder.isTaxesIncludedInPrice()
+        ? taxDetails.total_amount
+        : taxDetails.base_amount;
 }
 
-export function getProductVariantByAttributes(models, productTemplate, selectedAttributes) {
+export function getProductVariantByAttributes(
+    models,
+    productTemplate,
+    selectedAttributes,
+) {
     return models["product.product"].find(
         (prd) =>
             prd.product_tmpl_id.id === productTemplate.id &&
             prd.product_template_variant_value_ids.length &&
             prd.product_template_variant_value_ids.every((ptav) =>
-                Object.values(selectedAttributes).some((value) => ptav.id == value)
-            )
+                Object.values(selectedAttributes).some((value) => ptav.id == value),
+            ),
     );
 }
 
 export function getAttributeValues(selectedValues, models) {
     return Object.entries(selectedValues).reduce((acc, [, options]) => {
         const optionEntries = Object.entries(
-            typeof options === "object" ? options : { [options]: true }
+            typeof options === "object" ? options : { [options]: true },
         ).filter(([, isSelected]) => isSelected); // Only true values
 
         optionEntries.forEach(([optionId]) => {
-            const attrVal = models["product.template.attribute.value"].get(Number(optionId));
+            const attrVal = models["product.template.attribute.value"].get(
+                Number(optionId),
+            );
             acc.push(attrVal);
         });
         return acc;
@@ -75,7 +83,7 @@ export function getOrderLineValues(
     customer_note,
     selectedValues = {},
     customValues = {},
-    comboValues = {}
+    comboValues = {},
 ) {
     const product = productTemplate.product_variant_ids[0];
     const productPrice = selfOrder.getProductPriceInfo(productTemplate, product);
@@ -96,13 +104,13 @@ export function getOrderLineValues(
         const productVariant = getProductVariantByAttributes(
             models,
             productTemplate,
-            selectedValues
+            selectedValues,
         );
 
         if (productVariant) {
             const productVariantPrice = selfOrder.getProductPriceInfo(
                 productTemplate,
-                productVariant
+                productVariant,
             );
 
             Object.assign(values, {
@@ -165,7 +173,7 @@ export function getOrderLineValues(
             models["decimal.precision"].getAll(),
             models["product.template.attribute.value"].getAllBy("id"),
             extraItems,
-            selfOrder.currency
+            selfOrder.currency,
         );
 
         values.price_unit = 0;
@@ -184,9 +192,9 @@ export function getOrderLineValues(
                 attribute_value_ids: comboItem.attribute_value_ids
                     ? [...comboItem.attribute_value_ids]
                     : [],
-                custom_attribute_value_ids: Object.entries(comboItem.attribute_custom_values).map(
-                    ([id, cus]) => ["create", cus]
-                ),
+                custom_attribute_value_ids: Object.entries(
+                    comboItem.attribute_custom_values,
+                ).map(([id, cus]) => ["create", cus]),
             },
         ]);
     }
@@ -197,7 +205,7 @@ export function getOrderLineValues(
             values.qty,
             values.price_extra,
             false,
-            values.product_id
+            values.product_id,
         );
 
         values.price_unit = price;

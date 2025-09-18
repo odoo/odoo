@@ -2,7 +2,7 @@ import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
+from odoo.libs.barcode import check_barcode_encoding, get_barcode_check_digit
 
 
 UPC_EAN_CONVERSIONS = [

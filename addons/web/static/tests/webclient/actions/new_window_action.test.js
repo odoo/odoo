@@ -1,6 +1,7 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { browser } from "@web/core/browser/browser";
-import { WebClient } from "@web/webclient/webclient";
+import { Component, xml } from "@odoo/owl";
 import {
     defineActions,
     defineModels,
@@ -10,8 +11,9 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { Component, xml } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { WebClient } from "@web/webclient/webclient";
 
 class TestClientAction extends Component {
     static template = xml`
@@ -133,7 +135,7 @@ test("can execute dynamic act_window actions in a new window", async () => {
         },
         {
             newWindow: true,
-        }
+        },
     );
     expect.verifySteps(["open: /odoo/m-partner/22"]);
 });
@@ -151,7 +153,7 @@ test("can execute an actions in a new window and preserve the breadcrumb", async
         },
         {
             newWindow: true,
-        }
+        },
     );
     expect.verifySteps(["open: /odoo/action-1/m-partner/22"]);
 });
@@ -168,7 +170,7 @@ test("can execute client actions in a new window", async () => {
         },
         {
             newWindow: true,
-        }
+        },
     );
     expect.verifySteps(["open: /odoo/__test__client__action__"]);
 });

@@ -1,6 +1,6 @@
 import { ListController } from "@web/views/list/list_controller";
 import { onWillStart } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 

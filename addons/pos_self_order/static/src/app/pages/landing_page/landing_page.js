@@ -1,9 +1,9 @@
 /* global Carousel */
 
 import { Component, onMounted, onWillStart, onWillUnmount, useRef } from "@odoo/owl";
+import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
 import { session } from "@web/session";
 
 export class LandingPage extends Component {
@@ -39,7 +39,7 @@ export class LandingPage extends Component {
                     () => {
                         carousel.next();
                     },
-                    session.test_mode ? 100 : 5000
+                    session.test_mode ? 100 : 5000,
                 );
             }
         });
@@ -67,7 +67,7 @@ export class LandingPage extends Component {
 
     get draftOrder() {
         return this.selfOrder.models["pos.order"].filter(
-            (o) => o.access_token && o.state === "draft"
+            (o) => o.access_token && o.state === "draft",
         );
     }
 
@@ -80,7 +80,8 @@ export class LandingPage extends Component {
         }
 
         return (
-            this.draftOrder.length > 0 && this.selfOrder.config.self_ordering_pay_after === "each"
+            this.draftOrder.length > 0 &&
+            this.selfOrder.config.self_ordering_pay_after === "each"
         );
     }
 
@@ -119,7 +120,9 @@ export class LandingPage extends Component {
     }
 
     showMyOrderBtn() {
-        const ordersNotDraft = this.selfOrder.models["pos.order"].find((o) => o.access_token);
+        const ordersNotDraft = this.selfOrder.models["pos.order"].find(
+            (o) => o.access_token,
+        );
         return this.selfOrder.ordering && ordersNotDraft;
     }
 }

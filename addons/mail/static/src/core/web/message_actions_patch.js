@@ -1,9 +1,8 @@
-import { getNonEditableMentions, parseEmail } from "@mail/utils/common/format";
 import { registerMessageAction } from "@mail/core/common/message_actions";
+import { getNonEditableMentions, parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
-import { renderToMarkup } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
-
+import { renderToMarkup } from "@web/core/utils/render";
 export function messageActionOpenFullComposer(title, context, component) {
     const message = component.props.message;
     const thread = component.props.thread;
@@ -86,7 +85,7 @@ registerMessageAction("forward", {
             [attachmentIds],
             {
                 default: { res_model: "mail.compose.message", res_id: 0 },
-            }
+            },
         );
         const context = {
             default_attachment_ids: newAttachmentIds,

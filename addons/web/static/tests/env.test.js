@@ -1,8 +1,13 @@
+// @ts-check
+
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { clearRegistry, makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
-
+import {
+    allowTranslations,
+    clearRegistry,
+    makeMockEnv,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { makeEnv, mountComponent, startServices } from "@web/env";
 
@@ -157,7 +162,7 @@ test(`startServices: throws if all dependencies are not met in the same microtic
 
     const serviceStartingPromise = startServices(env);
     await expect(serviceStartingPromise).rejects.toThrow(
-        "Some services could not be started: b. Missing dependencies: a"
+        "Some services could not be started: b. Missing dependencies: a",
     );
     expect(env.services).toEqual({});
 

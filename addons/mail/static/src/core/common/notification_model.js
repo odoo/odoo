@@ -1,7 +1,5 @@
 import { fields, Record } from "@mail/core/common/record";
-
 import { _t } from "@web/core/l10n/translation";
-
 export class Notification extends Record {
     static _name = "mail.notification";
     static id = "id";
@@ -30,7 +28,7 @@ export class Notification extends Record {
                 (f) =>
                     f.resModel === thread?.model &&
                     f.type === this.notification_type &&
-                    (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
+                    (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id)),
             );
             return this.isFailure
                 ? {
@@ -100,7 +98,7 @@ export class Notification extends Record {
 
     get isFollowerNotification() {
         return this.mail_message_id.thread.followers.some(
-            (follower) => follower.partner_id.id === this.res_partner_id.id
+            (follower) => follower.partner_id.id === this.res_partner_id.id,
         );
     }
 

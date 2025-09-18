@@ -1,14 +1,13 @@
-import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Stripe, StripeError } from "@pos_self_order_stripe/app/stripe";
-
+import { patch } from "@web/core/utils/patch";
 patch(SelfOrder.prototype, {
     async setup() {
         await super.setup(...arguments);
         this.stripeState = "not_connected";
 
         const stripePaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "stripe"
+            (p) => p.use_payment_terminal === "stripe",
         );
 
         if (stripePaymentMethod) {
@@ -18,7 +17,7 @@ patch(SelfOrder.prototype, {
                 this.access_token,
                 this.config,
                 this.handleStripeError.bind(this),
-                this.handleReaderConnection.bind(this)
+                this.handleReaderConnection.bind(this),
             );
         }
     },

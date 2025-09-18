@@ -17,7 +17,7 @@ import { useService } from "@web/core/utils/hooks";
 import { setupEditor } from "./_helpers/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
-import { closestScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY } from "@web/core/utils/dom/scrolling";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { insertText } from "./_helpers/user_actions";
 import { getScrollContainer } from "@html_editor/core/overlay";

@@ -1,3 +1,5 @@
+// @ts-check
+
 import publicWidget from "@web/legacy/js/public/public_widget";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
@@ -87,17 +89,17 @@ QUnit.module('core', {}, function () {
 
         var widget = new (Widget.extend({ }))();
 
-        assert.strictEqual(widget.$el, undefined, "should not have a root element");
+        assert.strictEqual(widget.el, undefined, "should not have a root element");
 
         widget.renderElement();
 
-        assert.ok(widget.$el, "should have generated a root element");
-        assert.strictEqual(widget.$el, widget.$el, "should provide $el alias");
-        assert.ok(widget.$el.is(widget.el), "should provide raw DOM alias");
+        assert.ok(widget.el, "should have generated a root element");
+        assert.strictEqual(widget.$el, widget.el, "should provide $el alias");
+        assert.ok(widget.$el === widget.el, "$el and el should be the same element");
 
         assert.strictEqual(widget.el.nodeName, 'DIV', "should have generated the default element");
         assert.strictEqual(widget.el.attributes.length, 0, "should not have generated any attribute");
-        assert.ok(Object.keys(widget.$el.html() || {}).length === 0, "should not have generated any content");
+        assert.strictEqual(widget.el.innerHTML, "", "should not have generated any content");
         widget.destroy();
     });
 
@@ -165,7 +167,7 @@ QUnit.module('core', {}, function () {
         assert.hasAttrValue(widget.$el, 'class', 'some_class');
 
         assert.hasAttrValue(widget.$el, 'data-foo', 'data attribute');
-        assert.strictEqual(widget.$el.data('foo'), 'data attribute');
+        assert.strictEqual(widget.el.dataset.foo, 'data attribute');
 
         assert.hasAttrValue(widget.$el, 'clark', 'gable');
         assert.hasAttrValue(widget.$el, 'spoiler', 'snape kills dumbledore');
@@ -191,14 +193,14 @@ QUnit.module('core', {}, function () {
         widget.renderElement();
 
         assert.strictEqual(widget.el.nodeName, 'OL');
-        assert.strictEqual(widget.$el.children().length, 5);
+        assert.strictEqual(widget.el.children.length, 5);
         assert.strictEqual(widget.el.textContent, '01234');
         widget.destroy();
     });
 
     QUnit.test('repeated', async function (assert) {
         assert.expect(4);
-        var $fix = $( "#qunit-fixture");
+        var fix = document.getElementById("qunit-fixture");
 
         renderToString.app.addTemplate(
             "test.widget.template.2",
@@ -211,14 +213,14 @@ QUnit.module('core', {}, function () {
         }))();
         widget.value = 42;
 
-        await widget.appendTo($fix)
+        await widget.appendTo(fix)
             .then(function () {
-                assert.strictEqual($fix.find('p').text(), '42', "DOM fixture should contain initial value");
-                assert.strictEqual(widget.$el.text(), '42', "should set initial value");
+                assert.strictEqual(fix.querySelector('p').textContent, '42', "DOM fixture should contain initial value");
+                assert.strictEqual(widget.el.textContent, '42', "should set initial value");
                 widget.value = 36;
                 widget.renderElement();
-                assert.strictEqual($fix.find('p').text(), '36', "DOM fixture should use new value");
-                assert.strictEqual(widget.$el.text(), '36', "should set new value");
+                assert.strictEqual(fix.querySelector('p').textContent, '36', "DOM fixture should use new value");
+                assert.strictEqual(widget.el.textContent, '36', "should set new value");
             });
         widget.destroy();
     });
@@ -244,7 +246,8 @@ QUnit.module('core', {}, function () {
         }))();
         widget.renderElement();
 
-        assert.ok(widget.$('li:eq(3)').is(widget.$el.find('li:eq(3)')),
+        const allLi = widget.el.querySelectorAll('li');
+        assert.ok(allLi[3] === widget.el.querySelectorAll('li')[3],
             "should do the same thing as calling find on the widget root");
         widget.destroy();
     });
@@ -278,9 +281,10 @@ QUnit.module('core', {}, function () {
         }))();
         widget.renderElement();
 
-        await testUtils.dom.click(widget.$el, {allowInvisible: true});
-        await testUtils.dom.click(widget.$('li:eq(3)'), {allowInvisible: true});
-        await testUtils.fields.editAndTrigger(widget.$('input:last'), 'foo', 'change');
+        await testUtils.dom.click(widget.el, {allowInvisible: true});
+        await testUtils.dom.click(widget.el.querySelectorAll('li')[3], {allowInvisible: true});
+        const inputs = widget.el.querySelectorAll('input');
+        await testUtils.fields.editAndTrigger(inputs[inputs.length - 1], 'foo', 'change');
 
         for(var i=0; i<3; ++i) {
             assert.ok(a[i], "should pass test " + i);
@@ -310,15 +314,19 @@ QUnit.module('core', {}, function () {
         }))();
 
         widget.renderElement();
-        widget.$el.on('click', 'li', function () { newclicked = true; });
+        widget.el.addEventListener('click', function (ev) {
+            if (ev.target.closest('li')) {
+                newclicked = true;
+            }
+        });
 
-        await testUtils.dom.clickFirst(widget.$('li'), {allowInvisible: true});
+        await testUtils.dom.clickFirst(widget.el.querySelectorAll('li'), {allowInvisible: true});
         assert.ok(clicked, "should trigger bound events");
         assert.ok(newclicked, "should trigger bound events");
 
         clicked = newclicked = false;
         widget._undelegateEvents();
-        await testUtils.dom.clickFirst(widget.$('li'), {allowInvisible: true});
+        await testUtils.dom.clickFirst(widget.el.querySelectorAll('li'), {allowInvisible: true});
         assert.ok(!clicked, "undelegate should unbind events delegated");
         assert.ok(newclicked, "undelegate should only unbind events it created");
         widget.destroy();
@@ -328,7 +336,7 @@ QUnit.module('core', {}, function () {
 
     QUnit.test('start is not called when widget is destroyed', function (assert) {
         assert.expect(0);
-        const $fix = $("#qunit-fixture");
+        const fix = document.getElementById("qunit-fixture");
 
         // Note: willStart is always async
         const MyWidget = Widget.extend({
@@ -338,11 +346,11 @@ QUnit.module('core', {}, function () {
         });
 
         const widget = new MyWidget();
-        widget.appendTo($fix);
+        widget.appendTo(fix);
         widget.destroy();
 
         const divEl = document.createElement('div');
-        $fix[0].appendChild(divEl);
+        fix.appendChild(divEl);
         const widget2 = new MyWidget();
         widget2.attachTo(divEl);
         widget2.destroy();

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryText } from "@odoo/hoot-dom";
 import {

@@ -53,8 +53,8 @@ class MailingList(models.Model):
             self.env.cr.execute('''
                 SELECT mailing_list_id, count(*)
                 FROM mail_mass_mailing_list_rel
-                WHERE mailing_list_id IN %s
-                GROUP BY mailing_list_id''', (tuple(self.ids),))
+                WHERE mailing_list_id = ANY(%s)
+                GROUP BY mailing_list_id''', (list(self.ids),))
             data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.mailing_count = data.get(mailing_list._origin.id, 0)
@@ -83,7 +83,7 @@ class MailingList(models.Model):
                 LEFT OUTER JOIN mailing_subscription list_sub
                 ON mc.id = list_sub.contact_id
                 WHERE mc.message_bounce > 0
-                AND list_sub.list_id in %s
+                AND list_sub.list_id = ANY(%s)
                 GROUP BY list_sub.list_id
             '''
             self.env.cr.execute(sql, (tuple(self.ids),))
@@ -208,7 +208,7 @@ class MailingList(models.Model):
         """
         # Explanation of the SQL query with an example. There are the following lists
         # A (id=4): yti@odoo.com; yti@example.com
-        # B (id=5): yti@odoo.com; yti@openerp.com
+        # B (id=5): yti@odoo.com; yti@example.com
         # C (id=6): nothing
         # To merge the mailing lists A and B into C, we build the view st that looks
         # like this with our example:
@@ -218,7 +218,7 @@ class MailingList(models.Model):
         #           4 | yti@odoo.com              |          1 |        4 |
         #           6 | yti@odoo.com              |          2 |        5 |
         #           5 | yti@example.com           |          1 |        4 |
-        #           7 | yti@openerp.com           |          1 |        5 |
+        #           7 | yti@example.com           |          1 |        5 |
         #
         # The row_column is kind of an occurrence counter for the email address.
         # Then we create the Many2many relation between the destination list and the contacts
@@ -246,7 +246,7 @@ class MailingList(models.Model):
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
                 AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
                 AND list.id=contact_list_rel.list_id
-                AND list.id IN %s
+                AND list.id = ANY(%s)
                 AND NOT EXISTS
                     (
                     SELECT 1
@@ -391,10 +391,10 @@ class MailingList(models.Model):
                 FROM
                     mailing_subscription r
                     {self._get_contact_statistics_joins()}
-                WHERE list_id IN %s
+                WHERE list_id = ANY(%s)
                 GROUP BY
                     list_id;
-            ''', (tuple(self.ids), ))
+            ''', (list(self.ids), ))
             res = self.env.cr.dictfetchall()
 
         contact_counts = {}

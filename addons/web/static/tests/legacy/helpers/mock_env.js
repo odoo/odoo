@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/helpers/mock_env default=false */
 
 import { SERVICES_METADATA } from "@web/core/utils/hooks";

@@ -1,9 +1,15 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { contains, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
-import { DEFAULT_DATE, FAKE_MODEL } from "./calendar_test_helpers";
-
+import {
+    contains,
+    mountWithCleanup,
+    preloadBundle,
+} from "@web/../tests/web_test_helpers";
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
+
+import { DEFAULT_DATE, FAKE_MODEL } from "./calendar_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -99,7 +105,7 @@ test(`group records`, async () => {
         "July 15-19, 2021\nR5",
     ]);
     expect(`.o_cw_body`).toHaveText(
-        "July 16, 2021\nR1\n14:00\nR2\nJuly 13-17, 2021\nR4\nJuly 15-17, 2021\nR3\nJuly 15-19, 2021\nR5\n Create"
+        "July 16, 2021\nR1\n14:00\nR2\nJuly 13-17, 2021\nR4\nJuly 15-17, 2021\nR3\nJuly 15-19, 2021\nR5\n Create",
     );
 });
 

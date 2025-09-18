@@ -22,7 +22,7 @@ test("should apply font-size to completely selected list item (1)", async () => 
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
-        contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
+        contentAfter: `<ol style="padding-inline-start: 66px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
     });
 });
 
@@ -42,9 +42,9 @@ test("should apply font-size to completely selected list item (2)", async () => 
         `),
         stepFunction: setFontSize("64px"),
         contentAfter: unformat(`
-            <ol style="padding-inline-start: 69px;">
+            <ol style="padding-inline-start: 76px;">
                 <li style="font-size: 64px;"><p>[abc</p>
-                    <ol class="o_default_font_size" style="padding-inline-start: 68px;">
+                    <ol class="o_default_font_size" style="padding-inline-start: 70px;">
                         <li style="font-size: 64px;">def</li>
                     </ol>
                 </li>

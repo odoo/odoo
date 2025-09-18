@@ -1,5 +1,4 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 export function makeAwaitable(dialog, comp, props, options) {
     return new Promise((resolve) => {
         dialog.add(
@@ -13,7 +12,7 @@ export function makeAwaitable(dialog, comp, props, options) {
             {
                 ...options,
                 onClose: () => resolve(),
-            }
+            },
         );
     });
 }
@@ -47,7 +46,7 @@ export function ask(dialog, props, options, comp = ConfirmationDialog) {
             {
                 ...options,
                 onClose: () => resolve(false),
-            }
+            },
         );
     });
 }

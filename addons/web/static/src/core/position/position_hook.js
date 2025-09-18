@@ -1,6 +1,7 @@
-import { reposition } from "@web/core/position/utils";
-import { omit } from "@web/core/utils/objects";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
+// @ts-check
+
+/** @module @web/core/position/position_hook - OWL hook for auto-repositioning a popper element relative to a target */
+
 import {
     EventBus,
     onWillDestroy,
@@ -9,11 +10,13 @@ import {
     useEffect,
     useRef,
 } from "@odoo/owl";
+import { reposition } from "@web/core/position/utils";
+import { omit } from "@web/core/utils/collections/objects";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+
+/** @import { ComputePositionOptions, PositioningSolution } from "@web/core/position/utils" */
 
 /**
- * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
- * @typedef {import("@web/core/position/utils").PositioningSolution} PositioningSolution
- *
  * @typedef {Object} UsePositionOptionsExtensionType
  * @property {(popperElement: HTMLElement, solution: PositioningSolution) => void} [onPositioned]
  *  callback called when the positioning is done.
@@ -114,14 +117,22 @@ export function usePosition(refName, getTarget, options = {}) {
                 }
             }
             for (const document of documents) {
-                document.addEventListener("scroll", scrollListener, { capture: true });
-                document.addEventListener("load", throttledUpdate, { capture: true });
+                document.addEventListener("scroll", scrollListener, {
+                    capture: true,
+                });
+                document.addEventListener("load", throttledUpdate, {
+                    capture: true,
+                });
             }
             window.addEventListener("resize", throttledUpdate);
             return () => {
                 for (const document of documents) {
-                    document.removeEventListener("scroll", scrollListener, { capture: true });
-                    document.removeEventListener("load", throttledUpdate, { capture: true });
+                    document.removeEventListener("scroll", scrollListener, {
+                        capture: true,
+                    });
+                    document.removeEventListener("load", throttledUpdate, {
+                        capture: true,
+                    });
                 }
                 window.removeEventListener("resize", throttledUpdate);
             };

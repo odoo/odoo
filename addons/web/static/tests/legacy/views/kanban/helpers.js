@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/views/kanban/helpers default=false */
 
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";

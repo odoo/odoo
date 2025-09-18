@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 
 from odoo import Command, tools
 from odoo.addons.mail_group.tests.data import GROUP_TEMPLATE
@@ -25,7 +25,7 @@ class TestMailGroupModeration(TestMailListCommon):
             'name': 'Test group 2',
         })
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     @users('employee')
     def test_constraints(self):
         mail_group = self.env['mail.group'].browse(self.test_group.ids)

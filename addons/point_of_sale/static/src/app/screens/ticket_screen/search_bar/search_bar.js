@@ -1,6 +1,5 @@
-import { Component, useExternalListener, useState, useEffect } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-
 /**
  * This is a simple configurable search bar component. It has search fields
  * and selection filter. Search fields allow the users to specify the type
@@ -39,21 +38,23 @@ export class SearchBar extends Component {
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
         this.searchFieldsList = [...this.props.config.searchFields.keys()];
         const defaultSearchFieldId = this.searchFieldsList.indexOf(
-            this.props.config.defaultSearchDetails.fieldName
+            this.props.config.defaultSearchDetails.fieldName,
         );
         this.state = useState({
             searchInput: this.props.config.defaultSearchDetails.searchTerm || "",
-            selectedSearchFieldId: defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
+            selectedSearchFieldId:
+                defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
             showSearchFields: false,
             showFilterOptions: false,
-            selectedFilter: this.props.config.defaultFilter || this.filterOptionsList[0],
+            selectedFilter:
+                this.props.config.defaultFilter || this.filterOptionsList[0],
         });
         useEffect(
             () => {
                 this.state.selectedFilter =
                     this.props.config.defaultFilter || this.filterOptionsList[0];
             },
-            () => [this.props.config.defaultFilter]
+            () => [this.props.config.defaultFilter],
         );
     }
     _onSelectFilter(key) {
@@ -76,9 +77,14 @@ export class SearchBar extends Component {
         if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             this.state.selectedSearchFieldId = this._fieldIdToSelect(event.key);
         } else if (event.key === "Enter" || this.state.searchInput == "") {
-            this._onClickSearchField(this.searchFieldsList[this.state.selectedSearchFieldId]);
+            this._onClickSearchField(
+                this.searchFieldsList[this.state.selectedSearchFieldId],
+            );
         } else {
-            if (this.state.selectedSearchFieldId === -1 && this.searchFieldsList.length) {
+            if (
+                this.state.selectedSearchFieldId === -1 &&
+                this.searchFieldsList.length
+            ) {
                 this.state.selectedSearchFieldId = 0;
             }
             this.state.showSearchFields = true;

@@ -1,4 +1,4 @@
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { UploadDropZone } from "@account/components/upload_drop_zone/upload_drop_zone";
 import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";

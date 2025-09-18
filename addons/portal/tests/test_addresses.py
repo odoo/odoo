@@ -3,7 +3,8 @@
 from odoo.http import Request
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
-from odoo.tools import mute_logger, urls
+from odoo.tools import mute_logger
+from odoo.libs.web import urls
 
 from odoo.addons.base.tests.common import BaseCommon
 

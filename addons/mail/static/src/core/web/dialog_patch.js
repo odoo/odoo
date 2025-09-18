@@ -1,6 +1,5 @@
-import { Dialog } from "@web/core/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 patch(Dialog.prototype, {
     /**
      * @override

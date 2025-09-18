@@ -1,6 +1,6 @@
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 import { useService } from "@web/core/utils/hooks";
 import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { TimeOffCalendarFilterSection } from "../filter_section/calendar_filter_section";

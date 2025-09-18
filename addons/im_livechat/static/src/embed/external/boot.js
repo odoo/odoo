@@ -5,7 +5,7 @@ import { mount, whenReady } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
 import { appTranslateFn } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { MainComponentsContainer } from "@web/components/main_components_container";
 import { getTemplate } from "@web/core/templates";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";

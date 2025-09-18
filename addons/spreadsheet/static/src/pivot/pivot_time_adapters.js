@@ -3,7 +3,7 @@
 import { registries, helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 const { pivotTimeAdapterRegistry } = registries;
 const { toNumber, toJsDate, toString } = helpers;

@@ -6,7 +6,7 @@ import { clickDate } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { click, waitFor } from "@odoo/hoot-dom";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 describe.current.tags("desktop");
 defineHrHolidaysModels();

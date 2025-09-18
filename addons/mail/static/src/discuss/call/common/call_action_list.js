@@ -1,15 +1,13 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
+import { ActionList } from "@mail/core/common/action_list";
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 import { Component, onWillRender, toRaw, useRef } from "@odoo/owl";
-
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { Tooltip } from "@web/core/tooltip/tooltip";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
-import { ActionList } from "@mail/core/common/action_list";
-import { ACTION_TAGS } from "@mail/core/common/action";
-
+import { usePopover } from "@web/ui/popover/popover_hook";
+import { Tooltip } from "@web/ui/tooltip/tooltip";
 export class CallActionList extends Component {
     static components = { ActionList };
     static props = ["thread", "compact?"];
@@ -28,11 +26,13 @@ export class CallActionList extends Component {
         });
         onWillRender(() => {
             const partition = toRaw(this.callActions).partition;
-            const other = partition.other.filter((a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT));
+            const other = partition.other.filter(
+                (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT),
+            );
             const group2 = [];
             for (const groupActions of partition.group) {
                 const filtered = groupActions.filter(
-                    (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
+                    (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT),
                 );
                 const sequenceGroup = filtered[0].sequenceGroup;
                 const maxQuickActions = sequenceGroup === 200 ? 1 : 4;
@@ -48,7 +48,7 @@ export class CallActionList extends Component {
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
                               },
-                              sequenceGroup
+                              sequenceGroup,
                           ),
                       ]
                     : quickActions;
@@ -62,7 +62,7 @@ export class CallActionList extends Component {
     get isPromotingFullscreen() {
         return Boolean(
             !this.env.pipWindow &&
-                this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+            this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE,
         );
     }
 

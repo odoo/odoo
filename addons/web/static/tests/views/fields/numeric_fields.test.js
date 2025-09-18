@@ -1,6 +1,9 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, keyDown, pointerDown, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { Component, useState, xml } from "@odoo/owl";
 import {
     defineModels,
     defineParams,
@@ -9,9 +12,7 @@ import {
     mountView,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, useState, xml } from "@odoo/owl";
-import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
+import { useNumpadDecimal } from "@web/fields/numpad_decimal_hook";
 
 class Partner extends models.Model {
     int_field = fields.Integer();

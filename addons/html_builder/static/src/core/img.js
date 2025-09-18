@@ -7,7 +7,7 @@ import {
     useState,
     xml,
 } from "@odoo/owl";
-import { Cache } from "@web/core/utils/cache";
+import { Cache } from "@web/core/utils/collections/cache";
 
 const svgCache = new Cache(async (src) => {
     let text;

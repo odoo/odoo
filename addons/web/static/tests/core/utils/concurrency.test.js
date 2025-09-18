@@ -1,7 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
-
-import { Deferred, Mutex, KeepLast, Race } from "@web/core/utils/concurrency";
+import { Deferred, KeepLast, Mutex, Race } from "@web/core/utils/concurrency";
 
 describe.current.tags("headless");
 

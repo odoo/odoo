@@ -787,7 +787,7 @@ class MrpBomLine(models.Model):
                     </p>'''),
             'limit': 80,
             'context': context,
-            'search_view_id': self.env.ref('product.product_document_search').ids
+            'search_view_id': self.env.ref('product.view_product_document_search').ids
         }
 
     # -------------------------------------------------------------------------

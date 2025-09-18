@@ -1,27 +1,32 @@
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
-import { deepCopy, pick } from "@web/core/utils/objects";
-import { nbsp } from "@web/core/utils/strings";
-import { parseXML } from "@web/core/utils/xml";
-import { extractLayoutComponents } from "@web/search/layout";
-import { WithSearch } from "@web/search/with_search/with_search";
-import { useActionLinks } from "@web/views/view_hook";
-import { computeViewClassName } from "./utils";
-import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
+// @ts-check
+
+/** @module @web/views/view - Generic view loader: resolves arch, fields, and compiler then renders the appropriate view component */
+
 import {
     Component,
     markRaw,
-    onWillUpdateProps,
     onWillStart,
+    onWillUpdateProps,
+    reactive,
     toRaw,
     useSubEnv,
-    reactive,
 } from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
+import { cookie } from "@web/core/browser/cookie";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { deepCopy, pick } from "@web/core/utils/collections/objects";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { parseXML } from "@web/core/utils/dom/xml";
+import { nbsp } from "@web/core/utils/format/strings";
+import { useService } from "@web/core/utils/hooks";
+import { extractLayoutComponents } from "@web/search/layout";
+import { WithSearch } from "@web/search/with_search/with_search";
+import { useDebugCategory } from "@web/services/debug/debug_context";
 import { session } from "@web/session";
+import { useActionLinks } from "@web/views/view_hook";
+
+import { computeViewClassName } from "./view_utils";
 
 /**
  * @typedef Config
@@ -29,14 +34,14 @@ import { session } from "@web/session";
  * @property {string | false} actionType
  * @property {() => []} breadcrumbs
  * @property {() => string} getDisplayName
- * @property {(string) => any} setDisplayName
- * @property {() => Record<string, any>} getPagerProps
- * @property {Record<string, any>[]} viewSwitcherEntry
- * @property {typeof Component} Banner
+ * @property {(name: string) => any} setDisplayName
+ * @property {() => Record<string, any>} [getPagerProps]
+ * @property {Record<string, any>[]} [viewSwitcherEntry]
+ * @property {typeof Component} [Banner]
  *
  * @typedef {import("@web/core/context").Context} Context
  * @typedef {import("@web/env").OdooEnv} OdooEnv
- * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
+ * @typedef {import("@web/core/utils/order_by").OrderTerm} OrderTerm
  *
  * @typedef ViewProps
  * @property {string} resModel
@@ -44,7 +49,9 @@ import { session } from "@web/session";
  *
  * @property {string} [arch] if given, fields must be given too /\ no post processing is done (evaluation of "groups" attribute,...)
  * @property {Record<string, any>} [fields] if given, arch must be given too
+ * @property {Record<string, any>} [relatedModels]
  * @property {number|false} [viewId]
+ * @property {[number|false, string][]} [views]
  * @property {Record<string, any>} [actionMenus]
  * @property {boolean} [loadActionMenus=false]
  *
@@ -56,12 +63,15 @@ import { session } from "@web/session";
  *
  * @property {Record<string, any>} [comparison]
  * @property {Context} [context={}]
- * @property {DomainRepr} [domain]
+ * @property {any} [domain]
  * @property {string[]} [groupBy]
  * @property {OrderTerm[]} [orderBy]
  *
  * @property {boolean} [useSampleModel]
  * @property {string} [noContentHelp]
+ * @property {string} [className]
+ * @property {string} [jsClass]
+ * @property {boolean} [noBreadcrumbs]
  *
  * @property {Record<string, any>} [display={}] to rework
  *
@@ -99,7 +109,6 @@ viewRegistry.addValidation({
 /**
  * Returns the default config to use if no config, or an incomplete config has
  * been provided in the env, which can happen with standalone views.
- * @returns {Config}
  */
 export function getDefaultConfig() {
     let displayName;
@@ -187,7 +196,14 @@ const STANDARD_PROPS = [
     "searchModel",
 ];
 
-const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
+const ACTIONS = [
+    "create",
+    "delete",
+    "edit",
+    "group_create",
+    "group_delete",
+    "group_edit",
+];
 
 /** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
 export class View extends Component {
@@ -208,7 +224,8 @@ export class View extends Component {
     };
 
     setup() {
-        const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
+        const { arch, fields, resModel, searchViewArch, searchViewFields, type } =
+            this.props;
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
         }
@@ -218,8 +235,13 @@ export class View extends Component {
         if ((arch && !fields) || (!arch && fields)) {
             throw new Error(`"arch" and "fields" props must be given together`);
         }
-        if ((searchViewArch && !searchViewFields) || (!searchViewArch && searchViewFields)) {
-            throw new Error(`"searchViewArch" and "searchViewFields" props must be given together`);
+        if (
+            (searchViewArch && !searchViewFields) ||
+            (!searchViewArch && searchViewFields)
+        ) {
+            throw new Error(
+                `"searchViewArch" and "searchViewFields" props must be given together`,
+            );
         }
 
         this.viewService = useService("view");
@@ -232,7 +254,7 @@ export class View extends Component {
                 ...this.env.config,
             },
             ...Object.fromEntries(
-                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props[name] || null])
+                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props[name] || null]),
             ),
         });
 
@@ -290,7 +312,8 @@ export class View extends Component {
 
         const loadView = !arch || (!actionMenus && loadActionMenus);
         const loadSearchView =
-            (searchViewId !== undefined && !searchViewArch) || (!irFilters && loadIrFilters);
+            (searchViewId !== undefined && !searchViewArch) ||
+            (!irFilters && loadIrFilters);
 
         let viewDescription = { viewId, resModel, type };
         let searchViewDescription;
@@ -306,12 +329,15 @@ export class View extends Component {
                 options.embeddedActionId = this.env.config.currentEmbeddedActionId;
                 options.embeddedParentResId = context.active_id;
             }
-            const result = await this.viewService.loadViews({ context, resModel, views }, options);
+            const result = await this.viewService.loadViews(
+                { context, resModel, views },
+                options,
+            );
             // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as
             // before)
             viewDescription = result.views[type];
-            searchViewDescription = result.views.search;
+            searchViewDescription = /** @type {any} */ (result.views).search;
             if (loadSearchView) {
                 searchViewId = searchViewId || searchViewDescription.id;
                 if (!searchViewArch) {
@@ -334,7 +360,7 @@ export class View extends Component {
             actionMenus = viewDescription.actionMenus;
         }
 
-        const archXmlDoc = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
+        const archXmlDoc = parseXML(arch.replaceAll("&amp;nbsp;", nbsp));
         for (const action of ACTIONS) {
             if (action in this.props.context && !this.props.context[action]) {
                 archXmlDoc.setAttribute(action, "0");
@@ -348,10 +374,10 @@ export class View extends Component {
             await loadBundle(
                 cookie.get("color_scheme") === "dark"
                     ? "web.assets_backend_lazy_dark"
-                    : "web.assets_backend_lazy"
+                    : "web.assets_backend_lazy",
             );
         }
-        const descr = viewRegistry.get(jsClass);
+        const descr = /** @type {any} */ (viewRegistry.get(jsClass));
 
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [
@@ -413,17 +439,24 @@ export class View extends Component {
         }
 
         const searchMenuTypes =
-            props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
+            props.searchMenuTypes ||
+            descr.searchMenuTypes ||
+            /** @type {any} */ (this.constructor).searchMenuTypes;
         const defaultGroupBy = archXmlDoc.hasAttribute("default_group_by")
             ? archXmlDoc.getAttribute("default_group_by").split(",")
             : null;
         viewProps.searchMenuTypes = searchMenuTypes;
-        const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
+        const canOrderByCount =
+            descr.canOrderByCount ||
+            /** @type {any} */ (this.constructor).canOrderByCount;
 
-        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
+        const finalProps = descr.props
+            ? descr.props(viewProps, descr, this.env.config)
+            : viewProps;
         // prepare the WithSearch component props
         this.Controller = descr.Controller;
         this.componentProps = finalProps;
+        /** @type {Record<string, any>} */
         this.withSearchProps = {
             ...toRaw(props),
             hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
@@ -482,6 +515,11 @@ export class View extends Component {
         // we assume that nextProps can only vary in the search keys:
         // context, domain, groupBy, orderBy
         const { context, domain, groupBy, orderBy } = nextProps;
-        Object.assign(this.withSearchProps, { context, domain, groupBy, orderBy });
+        Object.assign(this.withSearchProps, {
+            context,
+            domain,
+            groupBy,
+            orderBy,
+        });
     }
 }

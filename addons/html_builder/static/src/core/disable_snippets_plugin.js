@@ -1,4 +1,4 @@
-import { omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/collections/objects";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 

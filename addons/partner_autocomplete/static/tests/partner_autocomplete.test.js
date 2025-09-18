@@ -137,6 +137,7 @@ onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
     },
 }));
 onRpc("/v1/companies/suggest", () => clearbitSuggestions);
+onRpc("enrich_company_message_post", () => true);
 
 preloadBundle("web.jsvat_lib");
 

@@ -1,7 +1,16 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
-import { followRelation } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
-import { contains, defineModels, fields, models, mountView } from "../../web_test_helpers";
+import { followRelation } from "@web/../tests/components/tree_editor/condition_tree_editor_test_helpers";
+
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "../../web_test_helpers";
 
 class Contact extends models.Model {
     email = fields.Char();
@@ -41,7 +50,7 @@ test("readonly", async () => {
     });
     expect(".o_field_widget[name='update_path']").toHaveText("non_searchable");
     expect(".o_field_widget[name='update_path']").toHaveClass(
-        "o_field_widget o_readonly_modifier o_field_field_selector"
+        "o_field_widget o_readonly_modifier o_field_field_selector",
     );
     expect(".o_field_widget[name='update_path'] .o_input").toHaveCount(0);
 });
@@ -67,7 +76,7 @@ test("no specified options", async () => {
             "Non searchable",
             "Update path",
         ],
-        { message: "should display fields from same model by default" }
+        { message: "should display fields from same model by default" },
     );
 });
 
@@ -83,8 +92,15 @@ test("only_searchable option", async () => {
     });
     await contains(".o_field_widget[name='update_path'] .o_input").click();
     expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
-        ["Created on", "Display name", "Id", "Last Modified on", "Model", "Update path"],
-        { message: "should not display non searchable fields" }
+        [
+            "Created on",
+            "Display name",
+            "Id",
+            "Last Modified on",
+            "Model",
+            "Update path",
+        ],
+        { message: "should not display non searchable fields" },
     );
 });
 
@@ -110,13 +126,21 @@ test("model option", async () => {
             "Non searchable",
             "Update path",
         ],
-        { message: "should display fields from same model by default" }
+        { message: "should display fields from same model by default" },
     );
     await contains(".o_field_widget[name='model'] .o_input").edit("lead");
     await contains(".o_field_widget[name='update_path'] .o_input").click();
     expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
-        ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
-        { message: "should display fields of the specified model" }
+        [
+            "Contact",
+            "Created on",
+            "Display name",
+            "Id",
+            "Last Modified on",
+            "Note",
+            "Salesperson",
+        ],
+        { message: "should display fields of the specified model" },
     );
     expect(".o_model_field_selector_popover_item_relation").toHaveCount(2, {
         message: "following relations is supported by default",
@@ -125,7 +149,7 @@ test("model option", async () => {
     await animationFrame();
     expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
         ["Childs", "Created on", "Display name", "Email", "Id", "Last Modified on"],
-        { message: "should display fields of the selected relation" }
+        { message: "should display fields of the selected relation" },
     );
 });
 
@@ -146,8 +170,16 @@ test("follow_relations option", async () => {
     await contains(".o_field_widget[name='model'] .o_input").edit("lead");
     await contains(".o_field_widget[name='update_path'] .o_input").click();
     expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
-        ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
-        { message: "should display fields of the specified model" }
+        [
+            "Contact",
+            "Created on",
+            "Display name",
+            "Id",
+            "Last Modified on",
+            "Note",
+            "Salesperson",
+        ],
+        { message: "should display fields of the specified model" },
     );
     expect(".o_model_field_selector_popover_item_relation").toHaveCount(0, {
         message: "should not allow to follow relations",

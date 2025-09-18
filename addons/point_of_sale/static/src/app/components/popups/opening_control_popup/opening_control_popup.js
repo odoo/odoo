@@ -1,13 +1,12 @@
-import { useService } from "@web/core/utils/hooks";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { Component, useState } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { parseFloat } from "@web/views/fields/parsers";
-import { Dialog } from "@web/core/dialog/dialog";
+import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
-
+import { useService } from "@web/core/utils/hooks";
+import { parseFloat } from "@web/fields/parsers";
+import { Dialog } from "@web/ui/dialog/dialog";
 class CustomDialog extends Dialog {
     onEscape() {}
 }
@@ -27,24 +26,29 @@ export class OpeningControlPopup extends Component {
             notes: "",
             openingCash: this.env.utils.formatCurrency(
                 this.pos.session.cash_register_balance_start || 0,
-                false
+                false,
             ),
         });
         this.hardwareProxy = useService("hardware_proxy");
         this.ui = useService("ui");
     }
     get orderCount() {
-        return this.pos.models["pos.order"].filter((o) => o.lines.length > 0 && o.state === "draft")
-            .length;
+        return this.pos.models["pos.order"].filter(
+            (o) => o.lines.length > 0 && o.state === "draft",
+        ).length;
     }
     async confirm() {
         try {
             await this.pos.data.call(
                 "pos.session",
                 "set_opening_control",
-                [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+                [
+                    this.pos.session.id,
+                    parseFloat(this.state.openingCash),
+                    this.state.notes,
+                ],
                 {},
-                true
+                true,
             );
         } catch (error) {
             if (
@@ -68,7 +72,10 @@ export class OpeningControlPopup extends Component {
             getPayload: (payload) => {
                 if (payload) {
                     const { total, moneyDetails, moneyDetailsNotes } = payload;
-                    this.state.openingCash = this.env.utils.formatCurrency(total, false);
+                    this.state.openingCash = this.env.utils.formatCurrency(
+                        total,
+                        false,
+                    );
                     if (moneyDetailsNotes) {
                         this.state.notes = moneyDetailsNotes;
                     }
@@ -85,6 +92,7 @@ export class OpeningControlPopup extends Component {
         this.state.notes = "";
     }
     get cashMethodCount() {
-        return this.pos.config.payment_method_ids.filter((pm) => pm.is_cash_count).length;
+        return this.pos.config.payment_method_ids.filter((pm) => pm.is_cash_count)
+            .length;
     }
 }

@@ -3,6 +3,12 @@ Contributing to Odoo
 
 [Full contribution guidelines](https://github.com/odoo/odoo/wiki/Contributing)
 
+Coding Guidelines
+-----------------
+
+See [doc/coding_guidelines.rst](doc/coding_guidelines.rst) for the full coding
+standards (Python, XML, JavaScript, CSS/SCSS, Git).
+
 TL;DR
 
 * If you [make a pull request](https://github.com/odoo/odoo/wiki/Contributing#making-pull-requests),

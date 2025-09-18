@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         trigger: '.oe_login_form input[name="redirect"]:hidden',
         run() {
             const orderId = browser.localStorage.getItem(orderIdKey);
-            const url = "/odoo/action-sale.action_orders/" + orderId;
+            const url = "/odoo/action-sale.action_sale_order/" + orderId;
             this.anchor.value = url;
         }
     },

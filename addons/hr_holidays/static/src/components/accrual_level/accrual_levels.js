@@ -1,13 +1,13 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 export class AccrualLevels extends Component {
     static template = "hr_holidays.AccrualLevels";

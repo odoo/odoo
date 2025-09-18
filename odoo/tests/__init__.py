@@ -1,8 +1,8 @@
 """
 Odoo unit testing framework, based on Python unittest.
 
-Some files as case.py, resut.py, suite.py are higly modified versions of unitest
-See https://github.com/python/cpython/tree/3.10/Lib/unittest for reference files.
+Some files as case.py, result.py, suite.py are highly modified versions of unittest.
+See https://github.com/python/cpython/tree/3.14/Lib/unittest for reference files.
 """
 
 from . import common

@@ -1,6 +1,6 @@
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { useService } from "@web/core/utils/hooks"
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/ui/block/ui_service";
 
 export class LunchSearchPanel extends SearchPanel {
     setup() {

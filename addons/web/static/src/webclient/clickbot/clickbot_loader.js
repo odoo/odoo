@@ -1,11 +1,19 @@
-import { _t } from "@web/core/l10n/translation";
-import { loadBundle } from "@web/core/assets";
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+// @ts-check
 
+/** @module @web/webclient/clickbot/clickbot_loader - Debug menu item that loads and runs the click-everywhere automated test bot */
+
+/**
+ * @param {string} [xmlId]
+ * @param {boolean} [light]
+ * @param {any} [currentState]
+ */
+import { loadBundle } from "@web/core/assets";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 export async function startClickEverywhere(xmlId, light, currentState) {
     await loadBundle("web.assets_clickbot");
-    window.clickEverywhere(xmlId, light, currentState);
+    /** @type {any} */ (window).clickEverywhere(xmlId, light, currentState);
 }
 
 export function runClickTestItem({ env }) {
@@ -30,4 +38,7 @@ export default {
     runClickTestItem,
 };
 
-registry.category("debug").category("default").add("runClickTestItem", runClickTestItem);
+registry
+    .category("debug")
+    .category("default")
+    .add("runClickTestItem", /** @type {any} */ (runClickTestItem));

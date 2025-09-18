@@ -95,7 +95,7 @@ class TestProductCombo(ProductCommon):
                 ],
             })
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_nested_combos_raises(self):
         combo = self.env['product.combo'].create({
             'name': "Test combo",

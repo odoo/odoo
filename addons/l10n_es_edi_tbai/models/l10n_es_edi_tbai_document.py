@@ -21,7 +21,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
 )
 from odoo.exceptions import UserError
 from odoo.tools import get_lang
-from odoo.tools.float_utils import float_repr, float_round
+from odoo.libs.numbers.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node
 
 CRC8_TABLE = [

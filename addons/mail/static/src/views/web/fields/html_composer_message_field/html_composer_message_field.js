@@ -1,13 +1,13 @@
 import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
+import { fillEmpty } from "@html_editor/utils/dom";
 import { isEmpty } from "@html_editor/utils/dom_info";
+import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MentionPlugin } from "./mention_plugin";
-import { ContentExpandablePlugin } from "./content_expandable_plugin";
-import { fillEmpty } from "@html_editor/utils/dom";
-import { markup } from "@odoo/owl";
 
+import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
+import { ContentExpandablePlugin } from "./content_expandable_plugin";
+import { MentionPlugin } from "./mention_plugin";
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
         super.setup();
@@ -18,14 +18,14 @@ export class HtmlComposerMessageField extends HtmlMailField {
             });
             useBus(this.env.fullComposerBus, "SAVE_CONTENT", (ev) => {
                 const emailAddSignature = Boolean(
-                    this.editor.editable.querySelector(".o-signature-container")
+                    this.editor.editable.querySelector(".o-signature-container"),
                 );
                 const composerHtml = markup(this.getNoSignatureElContent().innerHTML);
                 ev.detail.onSaveContent({ composerHtml, emailAddSignature });
             });
             useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
                 const attachmentElements = this.editor.editable.querySelectorAll(
-                    `[data-attachment-id="${ev.detail.id}"]`
+                    `[data-attachment-id="${ev.detail.id}"]`,
                 );
                 attachmentElements.forEach((element) => {
                     const parent = element.parentElement;
@@ -45,7 +45,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
         }
         if (!this.props.record.data.composition_batch) {
             config.Plugins = config.Plugins.filter(
-                (plugin) => !DYNAMIC_PLACEHOLDER_PLUGINS.includes(plugin)
+                (plugin) => !DYNAMIC_PLACEHOLDER_PLUGINS.includes(plugin),
             );
         }
         config.onAttachmentChange = (attachment) => {
@@ -60,6 +60,10 @@ export class HtmlComposerMessageField extends HtmlMailField {
             }
             this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
+        config.thread = this.env.services["mail.store"]?.Thread.get({
+            model: this.props.record.data.model,
+            id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
+        });
         return config;
     }
 
@@ -74,7 +78,11 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
 export const htmlComposerMessageField = {
     ...htmlMailField,
-    additionalClasses: [...htmlMailField.additionalClasses, "ps-0", "o_mail_composer_message"],
+    additionalClasses: [
+        ...htmlMailField.additionalClasses,
+        "ps-0",
+        "o_mail_composer_message",
+    ],
     component: HtmlComposerMessageField,
 };
 

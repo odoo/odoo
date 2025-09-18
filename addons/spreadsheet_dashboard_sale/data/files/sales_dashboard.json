@@ -84,7 +84,7 @@
       },
       "merges": [],
       "cells": {
-        "A6": "[Monthly Sales](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+        "A6": "[Monthly Sales](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[\"date_order:month\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date_order:month\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
         "A22": "[Top Quotations](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[[\"state\",\"in\",[\"draft\",\"sent\"]]],\"context\":{\"group_by\":[]},\"modelName\":\"sale.order\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Quotations\"})",
         "A23": "=ODOO.LIST.HEADER(1, \"partner_id\")",
         "A24": "=ODOO.LIST(1,1,\"partner_id\")",
@@ -420,7 +420,7 @@
             "background": "#FFFFFF",
             "legendPosition": "none",
             "metaData": {
-              "groupBy": ["date:month"],
+              "groupBy": ["date_order:month"],
               "measure": "price_subtotal",
               "order": null,
               "resModel": "sale.report",
@@ -439,7 +439,7 @@
                   ["draft", "cancel", "sent"]
                 ]
               ],
-              "groupBy": ["date:month"],
+              "groupBy": ["date_order:month"],
               "orderBy": []
             },
             "type": "odoo_line",
@@ -457,11 +457,11 @@
             "fillArea": true,
             "chartId": "a527960b-0812-4291-baba-f6b4b5280a0d",
             "fieldMatching": {
-              "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+              "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
               "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
               "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
               "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-              "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+              "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
               "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
               "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
               "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -502,7 +502,7 @@
                   "orderBy": []
                 },
                 "type": "odoo_geo",
-                "actionXmlId": "sale.action_order_report_all",
+                "actionXmlId": "sale.action_sale_report_all",
                 "dataSets": [
                   {}
                 ],
@@ -521,11 +521,11 @@
             },
             "fieldMatching": {
               "0ce069db-1c2a": {
-                "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime" },
+                "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime" },
                 "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
                 "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
                 "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-                "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+                "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
                 "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
                 "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
                 "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -549,7 +549,7 @@
                 "background": "#FFFFFF",
                 "legendPosition": "top",
                 "metaData": {
-                  "groupBy": ["categ_id"],
+                  "groupBy": ["product_category_id"],
                   "measure": "price_subtotal",
                   "order": null,
                   "resModel": "sale.report",
@@ -560,11 +560,11 @@
                     "group_by": []
                   },
                   "domain": "[\"&\", (\"state\", \"!=\", \"cancel\"), (\"state\", \"not in\", (\"draft\", \"cancel\", \"sent\"))]",
-                  "groupBy": ["categ_id"],
+                  "groupBy": ["product_category_id"],
                   "orderBy": []
                 },
                 "type": "odoo_treemap",
-                "actionXmlId": "sale.action_order_report_all",
+                "actionXmlId": "sale.action_sale_report_all",
                 "dataSets": [
                   {}
                 ]
@@ -582,11 +582,11 @@
             },
             "fieldMatching": {
               "3104b1c2-c3b3": {
-                "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime" },
+                "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime" },
                 "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
                 "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
                 "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-                "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+                "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
                 "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
                 "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
                 "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -911,11 +911,11 @@
     "3": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -933,7 +933,7 @@
       },
       "domain": [
         "&",
-        ["categ_id", "!=", false],
+        ["product_category_id", "!=", false],
         [
           "state",
           "not in",
@@ -963,17 +963,17 @@
       "formulaId": "3",
       "columns": [],
       "rows": [
-        { "fieldName": "categ_id" }
+        { "fieldName": "product_category_id" }
       ]
     },
     "4": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1027,11 +1027,11 @@
     "5": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1085,11 +1085,11 @@
     "6": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1143,11 +1143,11 @@
     "7": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1194,11 +1194,11 @@
     "8": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1245,11 +1245,11 @@
     "9": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1296,11 +1296,11 @@
     "10": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "product_category_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1347,7 +1347,7 @@
     "11": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": 0 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
@@ -1362,7 +1362,7 @@
         [
           "state",
           "in",
-          ["draft", "sent", "sale"]
+          ["draft", "sale"]
         ]
       ],
       "id": "11",
@@ -1382,7 +1382,7 @@
     "12": {
       "type": "ODOO",
       "fieldMatching": {
-        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date", "type": "datetime", "offset": -1 },
+        "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": -1 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
         "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
@@ -1397,7 +1397,7 @@
         [
           "state",
           "in",
-          ["draft", "sent", "sale"]
+          ["draft", "sale"]
         ]
       ],
       "id": "12",
@@ -1499,9 +1499,9 @@
       "fieldMatching": {
         "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
-        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "order_line.product_id", "type": "many2one" },
+        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "line_ids.product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "order_line.product_id.categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "line_ids.product_id.categ_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1521,16 +1521,16 @@
       "context": {},
       "orderBy": [
         { "name": "amount_untaxed", "asc": false },
-        { "name": "invoice_status", "asc": true }
+        { "name": "invoice_state", "asc": true }
       ],
       "id": "2",
       "name": "Sales Orders by Untaxed Amount",
       "fieldMatching": {
         "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
-        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "order_line.product_id", "type": "many2one" },
+        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "line_ids.product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "order_line.product_id.categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "line_ids.product_id.categ_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },

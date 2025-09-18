@@ -15,8 +15,7 @@ import werkzeug.routing
 
 from collections import defaultdict
 from lxml import etree, html
-from urllib.parse import urlparse
-from werkzeug import urls
+from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -1801,7 +1800,7 @@ class Website(models.Model):
         if (self.env.user.has_group('base.group_system')
                 or self.env.user.has_group('website.group_website_designer')):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
-        return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
+        raise AccessError(_("You don't have the necessary access rights to access this dashboard."))
 
     def get_client_action_url(self, url, mode_edit=False, mode_debug=0):
         action_params = {
@@ -1811,7 +1810,7 @@ class Website(models.Model):
             action_params["enable_editor"] = 1
         if mode_debug:
             action_params["debug"] = mode_debug
-        return "/odoo/action-website.website_preview?" + urls.url_encode(action_params)
+        return "/odoo/action-website.website_preview?" + urlencode(action_params)
 
     def get_client_action(self, url, mode_edit=False, website_id=False):
         action = self.env["ir.actions.actions"]._for_xml_id("website.website_preview")
@@ -1892,8 +1891,8 @@ class Website(models.Model):
                AND f.store = true
                AND m.transient = false
                AND f.model NOT LIKE 'ir.actions%%'
-               AND f.model NOT IN %s
-        """, ([self._get_html_fields_blacklist()]))
+               AND f.model != ALL(%s)
+        """, ([list(self._get_html_fields_blacklist())]))
         for model_name, field_name, in cr.fetchall():
             try:
                 model = self.env[model_name]

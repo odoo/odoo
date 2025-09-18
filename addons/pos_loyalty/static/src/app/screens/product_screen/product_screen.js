@@ -1,8 +1,7 @@
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
-import { patch } from "@web/core/utils/patch";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
-
+import { patch } from "@web/core/utils/patch";
 patch(ProductScreen.prototype, {
     setup() {
         super.setup(...arguments);

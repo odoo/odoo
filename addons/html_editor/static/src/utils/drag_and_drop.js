@@ -1,12 +1,12 @@
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
-import { pick } from "@web/core/utils/objects";
+import { makeDraggableHook } from "@web/core/utils/dnd/draggable_hook_builder";
+import { pick } from "@web/core/utils/collections/objects";
 import { reactive } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { closest, touching } from "@web/core/utils/ui";
+import { closest, touching } from "@web/core/utils/dom/ui";
 
-/** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
-/** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableBuilderParams} DraggableBuilderParams */
-/** @typedef {import("@web/core/utils/draggable").DraggableParams} DraggableParams */
+/** @typedef {import("@web/core/utils/dnd/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
+/** @typedef {import("@web/core/utils/dnd/draggable_hook_builder").DraggableBuilderParams} DraggableBuilderParams */
+/** @typedef {import("@web/core/utils/dnd/draggable").DraggableParams} DraggableParams */
 
 /** @typedef {DraggableHandlerParams & { dropzone: HTMLElement | null, helper: HTMLElement }} DragAndDropHandlerParams */
 /** @typedef {DraggableHandlerParams & { helper: HTMLElement }} DragAndDropStartParams */
@@ -38,7 +38,7 @@ import { closest, touching } from "@web/core/utils/ui";
  * @typedef NativeDraggableState
  * @property {(params: DraggableParams) => any} update
  * method to update the params of the draggable
- * @property {import("@web/core/utils/draggable").DraggableState} state
+ * @property {import("@web/core/utils/dnd/draggable").DraggableState} state
  * state of the draggable component
  * @property {() => any} destroy
  * method to destroy and unbind the draggable component

@@ -1,17 +1,17 @@
 
 .s_alert[data-vcss='001'] {
-    margin: $grid-gutter-width/2 0;
+    margin: calc($grid-gutter-width / 2) 0;
     p, ul, ol {
         &:last-child {
             margin-bottom: 0;
         }
     }
     &.s_alert_sm {
-        padding: $grid-gutter-width/3;
+        padding: calc($grid-gutter-width / 3);
         @include font-size($font-size-sm);
     }
     &.s_alert_md {
-        padding: $grid-gutter-width/2;
+        padding: calc($grid-gutter-width / 2);
         @include font-size($font-size-base);
     }
     &.s_alert_lg {

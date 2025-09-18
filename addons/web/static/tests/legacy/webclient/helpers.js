@@ -1,14 +1,16 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/webclient/helpers default=false */
 
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { notificationService } from "@web/core/notifications/notification_service";
-import { ormService } from "@web/core/orm_service";
-import { popoverService } from "@web/core/popover/popover_service";
+import { dialogService } from "@web/ui/dialog/dialog_service";
+import { notificationService } from "@web/ui/notification/notification_service";
+import { ormService } from "@web/services/orm_service";
+import { popoverService } from "@web/ui/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { effectService } from "@web/core/effects/effect_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { effectService } from "@web/ui/effects/effect_service";
+import { hotkeyService } from "@web/services/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { registerCleanup } from "../helpers/cleanup";
@@ -21,16 +23,16 @@ import {
     makeFakeBarcodeService,
 } from "../helpers/mock_services";
 import { getFixture, mount, nextTick } from "../helpers/utils";
-import { uiService } from "@web/core/ui/ui_service";
-import { commandService } from "@web/core/commands/command_service";
+import { uiService } from "@web/ui/block/ui_service";
+import { commandService } from "@web/services/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
-import { overlayService } from "@web/core/overlay/overlay_service";
+import { overlayService } from "@web/ui/overlay/overlay_service";
 
 import { Component, onMounted, xml } from "@odoo/owl";
-import { fieldService } from "@web/core/field_service";
-import { nameService } from "@web/core/name_service";
-import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
-import { treeProcessorService } from "@web/core/tree_editor/tree_processor";
+import { fieldService } from "@web/services/field_service";
+import { nameService } from "@web/services/name_service";
+import { datetimePickerService } from "@web/components/datetime/datetime_picker_service";
+import { treeProcessorService } from "@web/services/tree_processor_service";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");

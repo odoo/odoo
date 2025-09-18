@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export class TOTPDisable extends Interaction {
     static selector = "#auth_totp_portal_disable";

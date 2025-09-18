@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/legacy_tests/helpers/test_utils_mock default=false */
 
 /**

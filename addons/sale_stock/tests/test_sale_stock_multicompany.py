@@ -41,10 +41,10 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_shipping_id': partner.id,
             'user_id': False,
             'company_id': self.env.company.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
                 'price_unit': product.list_price})],
         }
         sale_order = self.env['sale.order']
@@ -58,10 +58,10 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
             'company_id': self.env.company.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
                 'price_unit': product.list_price})],
         }
         so_company_A = sale_order.with_company(self.env.company).create(sale_order_vals2)
@@ -72,10 +72,10 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
             'company_id': self.company_data_2['company'].id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
                 'price_unit': product.list_price})],
         }
         so_company_B = sale_order.with_company(self.company_data_2['company']).create(sale_order_vals3)
@@ -96,10 +96,10 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
 
         sale_order = self.env['sale.order'].with_company(branch_company).create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
-                'product_uom_qty': 1,
+                'product_qty': 1,
             })],
         })
 
@@ -112,10 +112,10 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
 
         so = self.env['sale.order'].create({
             'partner_id': company2.partner_id.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
-                'product_uom_qty': 5.0,
+                'product_qty': 5.0,
                 'product_uom_id': self.product_a.uom_id.id,
                 'price_unit': self.product_a.list_price})],
         })
@@ -143,7 +143,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         picking.button_validate()
 
         # make sure an order line is created for the new stock move
-        self.assertEqual(len(picking.sale_id.order_line), 2)
+        self.assertEqual(len(picking.sale_id.line_ids), 2)
 
     def test_intercompany_show_lot_on_invoice(self):
         """
@@ -154,17 +154,17 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         self.product_a.write({
             'is_storable': 'True',
             'tracking': 'serial',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         self.product_a.tracking = 'serial'
         sn = self.env['stock.lot'].create({'name': 'SN0012', 'product_id': self.product_a.id})
         self.env['stock.quant']._update_available_quantity(self.product_a, self.warehouse_A.lot_stock_id, 1.0, lot_id=sn)
         so = self.env['sale.order'].create({
             'partner_id': company2.partner_id.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
-                'product_uom_qty': 1.0,
+                'product_qty': 1.0,
                 'price_unit': self.product_a.list_price})],
         })
         so.action_confirm()

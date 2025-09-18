@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="product_document_form" model="ir.ui.view">
+    <record id="view_product_document_form" model="ir.ui.view">
         <field name="name">product.document.form.sale</field>
         <field name="model">product.document</field>
-        <field name="inherit_id" ref="product.product_document_form"/>
+        <field name="inherit_id" ref="product.view_product_document_form"/>
         <field name="arch" type="xml">
             <field name="datas" position="after">
                 <button

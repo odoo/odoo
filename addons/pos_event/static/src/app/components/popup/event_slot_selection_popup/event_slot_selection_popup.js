@@ -1,13 +1,13 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { Component, useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 
 const { DateTime } = luxon;
 
@@ -27,7 +27,9 @@ export class EventSlotSelectionPopup extends Component {
         });
     }
     get dialogTitle() {
-        return _t("Select a slot for %(event)s", { event: this.props.event.name });
+        return _t("Select a slot for %(event)s", {
+            event: this.props.event.name,
+        });
     }
     get slots() {
         const slots = {};
@@ -43,7 +45,7 @@ export class EventSlotSelectionPopup extends Component {
                 availability: this.props.availabilityPerSlot[slot.id],
                 slotId: slot.id,
                 startDatetime: slot.start_datetime.toFormat(
-                    localization.timeFormat.replace(":ss", "")
+                    localization.timeFormat.replace(":ss", ""),
                 ),
             });
         });
@@ -62,7 +64,7 @@ export class EventSlotSelectionPopup extends Component {
         });
         ev.currentTarget.classList.replace("btn-secondary", "btn-primary");
         this.state.selectedSlotDisplay = selectedSlot.start_datetime.toFormat(
-            "MMM dd yyyy, EEEE, h:mm a"
+            "MMM dd yyyy, EEEE, h:mm a",
         );
     }
     confirm() {

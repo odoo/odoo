@@ -54,14 +54,14 @@ class TestReInvoice(TestSaleCommon):
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_cost'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
+            'product_qty': 2,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_cost'].id,
-            'product_uom_qty': 4,
-            'qty_delivered': 1,
+            'product_qty': 4,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
 
@@ -81,19 +81,19 @@ class TestReInvoice(TestSaleCommon):
         invoice_a = move_form.save()
         invoice_a.action_post()
 
-        sale_order_line3 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_order_cost'])
-        sale_order_line4 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_delivery_cost'])
+        sale_order_line3 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_order_cost'])
+        sale_order_line4 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_delivery_cost'])
 
         self.assertTrue(sale_order_line3, "A new sale line should have been created with ordered product")
         self.assertTrue(sale_order_line4, "A new sale line should have been created with delivered product")
-        self.assertEqual(len(self.sale_order.order_line), 4, "There should be 4 lines on the SO (2 vendor bill lines created)")
-        self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 2, "There should be 4 lines on the SO (2 vendor bill lines created)")
+        self.assertEqual(len(self.sale_order.line_ids), 4, "There should be 4 lines on the SO (2 vendor bill lines created)")
+        self.assertEqual(len(self.sale_order.line_ids.filtered(lambda sol: sol.is_expense)), 2, "There should be 4 lines on the SO (2 vendor bill lines created)")
 
-        self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_delivered, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
-        self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_delivered, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
+        self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_transferred, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
+        self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_transferred, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
 
-        self.assertEqual(sale_order_line3.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
-        self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
+        self.assertEqual(sale_order_line3.qty_transferred_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
+        self.assertEqual(sale_order_line4.qty_transferred_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
 
         # create second invoice lines and validate it
         move_form = Form(self.AccountMove)
@@ -109,17 +109,17 @@ class TestReInvoice(TestSaleCommon):
         invoice_b = move_form.save()
         invoice_b.action_post()
 
-        sale_order_line5 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_order_cost'])
-        sale_order_line6 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_delivery_cost'])
+        sale_order_line5 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_order_cost'])
+        sale_order_line6 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_delivery_cost'])
 
         self.assertTrue(sale_order_line5, "A new sale line should have been created with ordered product")
         self.assertTrue(sale_order_line6, "A new sale line should have been created with delivered product")
 
-        self.assertEqual(len(self.sale_order.order_line), 6, "There should be still 4 lines on the SO, no new created")
-        self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 4, "There should be still 2 expenses lines on the SO")
+        self.assertEqual(len(self.sale_order.line_ids), 6, "There should be still 4 lines on the SO, no new created")
+        self.assertEqual(len(self.sale_order.line_ids.filtered(lambda sol: sol.is_expense)), 4, "There should be still 2 expenses lines on the SO")
 
-        self.assertEqual((sale_order_line5.price_unit, sale_order_line5.qty_delivered, sale_order_line5.product_uom_qty, sale_order_line5.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 2, 2, 0), 'Sale line 5 is wrong after confirming 2e vendor invoice')
-        self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_delivered, sale_order_line6.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 2, 2, 0), 'Sale line 6 is wrong after confirming 2e vendor invoice')
+        self.assertEqual((sale_order_line5.price_unit, sale_order_line5.qty_transferred, sale_order_line5.product_uom_qty, sale_order_line5.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 2, 2, 0), 'Sale line 5 is wrong after confirming 2e vendor invoice')
+        self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_transferred, sale_order_line6.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 2, 2, 0), 'Sale line 6 is wrong after confirming 2e vendor invoice')
 
     @freeze_time('2020-01-15')
     def test_sales_team_invoiced(self):
@@ -166,14 +166,14 @@ class TestReInvoice(TestSaleCommon):
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_sales_price'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
+            'product_qty': 2,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_sales_price'].id,
-            'product_uom_qty': 3,
-            'qty_delivered': 1,
+            'product_qty': 3,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
         self.sale_order.action_confirm()
@@ -192,19 +192,19 @@ class TestReInvoice(TestSaleCommon):
         invoice_a = move_form.save()
         invoice_a.action_post()
 
-        sale_order_line3 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_delivery_sales_price'])
-        sale_order_line4 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_order_sales_price'])
+        sale_order_line3 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_delivery_sales_price'])
+        sale_order_line4 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_order_sales_price'])
 
         self.assertTrue(sale_order_line3, "A new sale line should have been created with ordered product")
         self.assertTrue(sale_order_line4, "A new sale line should have been created with delivered product")
-        self.assertEqual(len(self.sale_order.order_line), 4, "There should be 4 lines on the SO (2 vendor bill lines created)")
-        self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 2, "There should be 4 lines on the SO (2 vendor bill lines created)")
+        self.assertEqual(len(self.sale_order.line_ids), 4, "There should be 4 lines on the SO (2 vendor bill lines created)")
+        self.assertEqual(len(self.sale_order.line_ids.filtered(lambda sol: sol.is_expense)), 2, "There should be 4 lines on the SO (2 vendor bill lines created)")
 
-        self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_delivered, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_delivery_sales_price'].list_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
-        self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_delivered, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_order_sales_price'].list_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
+        self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_transferred, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_delivery_sales_price'].list_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
+        self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_transferred, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_order_sales_price'].list_price, 3, 3, 0), 'Sale line is wrong after confirming vendor invoice')
 
-        self.assertEqual(sale_order_line3.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line 3 should be computed by analytic amount")
-        self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line 4 should be computed by analytic amount")
+        self.assertEqual(sale_order_line3.qty_transferred_method, 'analytic', "Delivered quantity of 'expense' SO line 3 should be computed by analytic amount")
+        self.assertEqual(sale_order_line4.qty_transferred_method, 'analytic', "Delivered quantity of 'expense' SO line 4 should be computed by analytic amount")
 
         # create second invoice lines and validate it
         move_form = Form(self.AccountMove)
@@ -220,16 +220,16 @@ class TestReInvoice(TestSaleCommon):
         invoice_b = move_form.save()
         invoice_b.action_post()
 
-        sale_order_line5 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_delivery_sales_price'])
-        sale_order_line6 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_order_sales_price'])
+        sale_order_line5 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_delivery_sales_price'])
+        sale_order_line6 = self.sale_order.line_ids.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_order_sales_price'])
 
         self.assertFalse(sale_order_line5, "No new sale line should have been created with delivered product !!")
         self.assertTrue(sale_order_line6, "A new sale line should have been created with ordered product")
 
-        self.assertEqual(len(self.sale_order.order_line), 5, "There should be 5 lines on the SO, 1 new created and 1 incremented")
-        self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 3, "There should be 3 expenses lines on the SO")
+        self.assertEqual(len(self.sale_order.line_ids), 5, "There should be 5 lines on the SO, 1 new created and 1 incremented")
+        self.assertEqual(len(self.sale_order.line_ids.filtered(lambda sol: sol.is_expense)), 3, "There should be 3 expenses lines on the SO")
 
-        self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_delivered, sale_order_line4.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_order_sales_price'].list_price, 2, 3, 0), 'Sale line is wrong after confirming 2e vendor invoice')
+        self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_transferred, sale_order_line4.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_order_sales_price'].list_price, 2, 3, 0), 'Sale line is wrong after confirming 2e vendor invoice')
 
     def test_no_expense(self):
         """ Test invoicing vendor bill with no policy. Check nothing happen. """
@@ -238,8 +238,8 @@ class TestReInvoice(TestSaleCommon):
         # confirm SO
         self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_no'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
+            'product_qty': 2,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
         self.sale_order.action_confirm()
@@ -254,7 +254,7 @@ class TestReInvoice(TestSaleCommon):
         invoice_a = move_form.save()
         invoice_a.action_post()
 
-        self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
+        self.assertEqual(len(self.sale_order.line_ids), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
 
     def test_not_reinvoicing_invoiced_so_lines(self):
@@ -272,19 +272,19 @@ class TestReInvoice(TestSaleCommon):
 
         self.sale_order.action_confirm()
 
-        for line in self.sale_order.order_line:
-            line.qty_delivered = 1
+        for line in self.sale_order.line_ids:
+            line.qty_transferred = 1
         # create invoice and validate it
         invoice = self.sale_order._create_invoices()
         invoice.action_post()
 
-        so_line3 = self.sale_order.order_line.filtered(lambda sol: sol != so_line1 and sol.product_id == self.company_data['product_delivery_cost'])
-        so_line4 = self.sale_order.order_line.filtered(lambda sol: sol != so_line2 and sol.product_id == self.company_data['product_delivery_sales_price'])
+        so_line3 = self.sale_order.line_ids.filtered(lambda sol: sol != so_line1 and sol.product_id == self.company_data['product_delivery_cost'])
+        so_line4 = self.sale_order.line_ids.filtered(lambda sol: sol != so_line2 and sol.product_id == self.company_data['product_delivery_sales_price'])
 
         self.assertFalse(so_line3, "No re-invoicing should have created a new sale line with product #1")
         self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
-        self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
-        self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")
+        self.assertEqual(so_line1.qty_transferred, 1, "No re-invoicing should have impacted exising SO line 1")
+        self.assertEqual(so_line2.qty_transferred, 1, "No re-invoicing should have impacted exising SO line 2")
 
     def test_not_recomputing_unit_price_for_expensed_so_lines(self):
         # Required for `analytic_distribution` to be visible in the view
@@ -293,8 +293,8 @@ class TestReInvoice(TestSaleCommon):
         # create SO line and confirm SO (with only one line)
         sol_1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_cost'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
+            'product_qty': 2,
+            'qty_transferred': 1,
             'order_id': self.sale_order.id,
         })
         self.sale_order.action_confirm()
@@ -310,7 +310,7 @@ class TestReInvoice(TestSaleCommon):
         invoice.action_post()
 
         # update the quantity of the expensed line
-        sol_2 = self.sale_order.order_line.filtered(lambda sol: sol != sol_1 and sol.product_id == self.company_data['product_order_cost'])
+        sol_2 = self.sale_order.line_ids.filtered(lambda sol: sol != sol_1 and sol.product_id == self.company_data['product_order_cost'])
 
         sol_2_subtotal_before = sol_2.price_unit
         sol_2.product_uom_qty = 3.0
@@ -325,7 +325,7 @@ class TestReInvoice(TestSaleCommon):
             'standard_price': 160,
             'list_price': 180,
             'type': 'consu',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'expense_policy': 'cost',
             'default_code': 'PROD_COST',
             'service_type': 'manual',
@@ -337,9 +337,9 @@ class TestReInvoice(TestSaleCommon):
 
         self.sale_order.write({
             'project_id': project.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': prod_gap.id,
-                'product_uom_qty': 2,
+                'product_qty': 2,
                 'price_unit': prod_gap.list_price,
             })],
         })
@@ -360,10 +360,10 @@ class TestReInvoice(TestSaleCommon):
             ],
         })
         inv.action_post()
-        sol = self.sale_order.order_line.filtered(lambda l: l.product_id == serv_cost)
+        sol = self.sale_order.line_ids.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertEqual(
-            (sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced),
+            (sol.price_unit, sol.qty_transferred, sol.product_uom_qty, sol.qty_invoiced),
             (160, 2, 2, 0),
             'Sale: line is wrong after confirming vendor invoice')
 
@@ -390,9 +390,9 @@ class TestReInvoice(TestSaleCommon):
         so_form.partner_id = self.partner_a
         so_form.project_id = project
 
-        with so_form.order_line.new() as sol:
+        with so_form.line_ids.new() as sol:
             sol.product_id = self.product_a
-            sol.product_uom_qty = 1
+            sol.product_qty = 1
 
         so = so_form.save()
         so.action_confirm()

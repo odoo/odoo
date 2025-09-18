@@ -1,8 +1,8 @@
 /* global owl */
 
 import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
 import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import { BootstrapDialog } from "./BootstrapDialog.js";
 
 const { Component, xml, useState, toRaw } = owl;
 

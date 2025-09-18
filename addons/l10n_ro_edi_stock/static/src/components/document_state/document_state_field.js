@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
-import { selectionField } from "@web/views/fields/selection/selection_field";
+import { selectionField } from "@web/fields/selection/selection/selection_field";
 import { DocumentState } from "@account/components/document_state/document_state_field";
 
 export class RoDocumentState extends DocumentState {

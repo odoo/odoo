@@ -1050,3 +1050,14 @@ export function openCartMobile() {
         },
     ];
 }
+
+export function saveOrder() {
+    return [
+        clickReview(),
+        {
+            content: "save order",
+            trigger: ".pads .fa-upload",
+            run: "click",
+        },
+    ];
+}

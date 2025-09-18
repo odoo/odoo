@@ -1,5 +1,4 @@
 import base64
-from importlib import metadata
 
 from cryptography import x509
 from cryptography.hazmat.primitives import constant_time, serialization
@@ -8,7 +7,6 @@ from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 from odoo import _, api, fields, models
 from .key import STR_TO_HASH, _get_formatted_value
 from odoo.exceptions import UserError
-from odoo.tools import parse_version
 
 
 class CertificateCertificate(models.Model):
@@ -192,12 +190,8 @@ class CertificateCertificate(models.Model):
                 # Extract certificate data
                 certificate.pem_certificate = base64.b64encode(cert.public_bytes(Encoding.PEM))
                 certificate.serial_number = cert.serial_number
-                if parse_version(metadata.version('cryptography')) < parse_version('42.0.0'):
-                    certificate.date_start = cert.not_valid_before
-                    certificate.date_end = cert.not_valid_after
-                else:
-                    certificate.date_start = cert.not_valid_before_utc.replace(tzinfo=None)
-                    certificate.date_end = cert.not_valid_after_utc.replace(tzinfo=None)
+                certificate.date_start = cert.not_valid_before_utc.replace(tzinfo=None)
+                certificate.date_end = cert.not_valid_after_utc.replace(tzinfo=None)
 
     @api.depends('date_start', 'date_end', 'loading_error')
     def _compute_is_valid(self):

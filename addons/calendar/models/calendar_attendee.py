@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
-from odoo.tools import split_every
+from itertools import batched
 
 _logger = logging.getLogger(__name__)
 
@@ -156,7 +156,7 @@ class CalendarAttendee(models.Model):
 
             # Map attendees to their respective attachments
             template_attachment_count = len(mail_template.attachment_ids)
-            attendee_id_attachment_id_map = dict(zip(self.ids, split_every(template_attachment_count, attendee_attachment_ids, list)))
+            attendee_id_attachment_id_map = dict(zip(self.ids, (list(b) for b in batched(attendee_attachment_ids, template_attachment_count))))
 
         mail_messages = self.env['mail.message']
         for attendee in notified_attendees:

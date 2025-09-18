@@ -1,5 +1,12 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAllAttributes, queryAllTexts, queryFirst, runAllTimers } from "@odoo/hoot-dom";
+import {
+    queryAllAttributes,
+    queryAllTexts,
+    queryFirst,
+    runAllTimers,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
@@ -11,24 +18,23 @@ import {
     getService,
     makeMockEnv,
     models,
-    mountWithCleanup,
     mountWebClient,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    serverState,
     stepAllNetworkCalls,
     toggleMenuItem,
     toggleSearchBarMenu,
-    serverState,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { WebClient } from "@web/webclient/webclient";
 import { router, routerBus, startRouter } from "@web/core/browser/router";
+import { _t as basic_t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { _t as basic_t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
+import { WebClient } from "@web/webclient/webclient";
 
 function _t() {
     odoo.translationContext = "web";
@@ -51,8 +57,8 @@ function logHistoryInteractions() {
             if (browser.location.href === url) {
                 expect.step(
                     `Update the state without updating URL, nextState: ${Object.keys(
-                        state?.nextState
-                    )}`
+                        state?.nextState,
+                    )}`,
                 );
             } else {
                 expect.step(`replaceState ${url}`);
@@ -301,7 +307,10 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWithCleanup(WebClient, { env });
         expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
@@ -323,7 +332,10 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWithCleanup(WebClient, { env });
         user.updateContext({ an_extra_context: 22 });
@@ -334,7 +346,13 @@ describe(`new urls`, () => {
         await animationFrame();
         expect.verifySteps([
             "/web/action/load",
-            { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1], an_extra_context: 22 },
+            {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+                allowed_company_ids: [1],
+                an_extra_context: 22,
+            },
         ]);
     });
 
@@ -344,12 +362,18 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWithCleanup(WebClient, { env });
-        expect(browser.location.href).toBe("http://example.com/odoo/__test__client__action__", {
-            message: "url did not change",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/__test__client__action__",
+            {
+                message: "url did not change",
+            },
+        );
         expect.verifySteps([]);
     });
 
@@ -405,7 +429,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe(
             // FIXME should we canonicalize the URL? If yes, shouldn't we use the client action tag instead? {
             "http://example.com/odoo/action-1099",
-            { message: "url did not change" }
+            { message: "url did not change" },
         );
         expect.verifySteps(["pushState http://example.com/odoo/action-1099"]);
     });
@@ -422,7 +446,7 @@ describe(`new urls`, () => {
                     params: { description: "xmlId" },
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
         // FIXME this is super weird: we open an action in target new from the url?
         redirect("/odoo/action-wowl.client_action");
@@ -432,9 +456,12 @@ describe(`new urls`, () => {
         expect(`.test_client_action`).toHaveCount(1);
         expect(`.modal .test_client_action`).toHaveCount(1);
         expect(`.o_menu_brand`).toHaveCount(0);
-        expect(browser.location.href).toBe("http://example.com/odoo/action-wowl.client_action", {
-            message: "action in target new doesn't affect the URL",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-wowl.client_action",
+            {
+                message: "action in target new doesn't affect the URL",
+            },
+        );
         expect.verifySteps([]);
     });
 
@@ -444,11 +471,19 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         await mountWebClient();
-        expect(`.o_action_manager`).toHaveText("", { message: "should display nothing" });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
-        expect(browser.location.href).toBe("http://example.com/odoo/m-partner?view_type=list", {
-            message: "the url did not change",
+        expect(`.o_action_manager`).toHaveText("", {
+            message: "should display nothing",
         });
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/m-partner?view_type=list",
+            {
+                message: "the url did not change",
+            },
+        );
         // No default action was found, no action controller was mounted: pushState not called
         expect.verifySteps([]);
     });
@@ -532,9 +567,12 @@ describe(`new urls`, () => {
         expect(`.o_client_action_test`).toHaveText("Hello World", {
             message: "should have correctly rendered the client action",
         });
-        expect(browser.location.href).toBe("http://example.com/odoo/HelloWorldTest/12", {
-            message: "the url did not change",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/HelloWorldTest/12",
+            {
+                message: "the url did not change",
+            },
+        );
         // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Client Action DisplayName",
@@ -570,9 +608,12 @@ describe(`new urls`, () => {
         expect(`.o_client_action_test`).toHaveText("Hello World", {
             message: "should have correctly rendered the client action",
         });
-        expect(browser.location.href).toBe("http://example.com/odoo/HelloWorldTest/12", {
-            message: "the url did change (the resId was added)",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/HelloWorldTest/12",
+            {
+                message: "the url did change (the resId was added)",
+            },
+        );
         // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Client Action DisplayName",
@@ -716,7 +757,9 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/m-partner/2", {
             message: "the url did not change",
         });
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Second record",
+        ]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -736,7 +779,9 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
         expect(`.o_menu_brand`).toHaveCount(0);
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Second record",
+        ]);
         expect(browser.location.href).toBe("http://example.com/odoo/m-partner/2", {
             message: "the url did not change",
         });
@@ -777,9 +822,12 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(0);
         expect(`.o_kanban_view`).toHaveCount(1);
-        expect(browser.location.href).toBe("http://example.com/odoo/action-3?view_type=kanban", {
-            message: "the url did not change",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-3?view_type=kanban",
+            {
+                message: "the url did not change",
+            },
+        );
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -850,7 +898,9 @@ describe(`new urls`, () => {
         ]);
 
         await animationFrame(); // pushState is debounced
-        expect(browser.location.href).toBe("http://example.com/odoo/action-4/action-3/2");
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-4/action-3/2",
+        );
         // pushState was called only once
         expect.verifySteps([
             "Update the state without updating URL, nextState: actionStack,action,globalState",
@@ -954,7 +1004,9 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         await mountWebClient();
-        expect(`.o_kanban_view`).toHaveCount(1, { message: "should display a kanban view" });
+        expect(`.o_kanban_view`).toHaveCount(1, {
+            message: "should display a kanban view",
+        });
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Partners Action 1",
         ]);
@@ -989,7 +1041,10 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Partner", "New"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Partner",
+            "New",
+        ]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -1022,7 +1077,9 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(1);
-        expect(`.o_notification_body`).toHaveCount(1, { message: "should have a notification" });
+        expect(`.o_notification_body`).toHaveCount(1, {
+            message: "should have a notification",
+        });
         expect(browser.location.href).toBe("http://example.com/odoo/action-1000", {
             message: "url reflects that we are not on the record",
         });
@@ -1116,9 +1173,12 @@ describe(`new urls`, () => {
         });
 
         await mountWebClient();
-        expect(browser.location.href).toBe("http://example.com/odoo/action-2?active_ids=3", {
-            message: "url did not change",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-2?active_ids=3",
+            {
+                message: "url did not change",
+            },
+        );
         // pushState was not called
         expect.verifySteps([{ action: 2, active_ids: [3] }]);
     });
@@ -1156,7 +1216,9 @@ describe(`new urls`, () => {
     test(`initial action crashes`, async () => {
         expect.errors(1);
 
-        const ClientAction = registry.category("actions").get("__test__client__action__");
+        const ClientAction = registry
+            .category("actions")
+            .get("__test__client__action__");
         class Override extends ClientAction {
             setup() {
                 super.setup();
@@ -1164,7 +1226,9 @@ describe(`new urls`, () => {
                 throw new Error("my error");
             }
         }
-        registry.category("actions").add("__test__client__action__", Override, { force: true });
+        registry
+            .category("actions")
+            .add("__test__client__action__", Override, { force: true });
 
         redirect("/odoo/__test__client__action__?menu_id=1");
         logHistoryInteractions();
@@ -1175,7 +1239,7 @@ describe(`new urls`, () => {
             "http://example.com/odoo/__test__client__action__?menu_id=1",
             {
                 message: "url did not change",
-            }
+            },
         );
 
         await animationFrame();
@@ -1203,7 +1267,7 @@ describe(`new urls`, () => {
             "http://example.com/odoo/__test__client__action__?menu_id=1",
             {
                 message: "url did not change",
-            }
+            },
         );
         // pushState was not called
         expect.verifySteps([]);
@@ -1256,7 +1320,7 @@ describe(`new urls`, () => {
                     ],
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
 
         redirect("/odoo/partners/2/action-28/1");
@@ -1264,15 +1328,21 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWithCleanup(WebClient, { env });
         await animationFrame();
         await animationFrame();
 
-        expect(browser.location.href).toBe("http://example.com/odoo/partners/2/action-28/1", {
-            message: "url did not change",
-        });
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/partners/2/action-28/1",
+            {
+                message: "url did not change",
+            },
+        );
         expect.verifySteps([
             "/web/action/load_breadcrumbs",
             "/web/action/load",
@@ -1291,12 +1361,11 @@ describe(`new urls`, () => {
         ]);
         expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
             "data-tooltip",
-            "Back to “Partners Action 27”"
+            "Back to “Partners Action 27”",
         );
-        expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
-            'Back to "Second record" form',
-            'Back to "Partners Action 28"',
-        ]);
+        expect(
+            queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip"),
+        ).toEqual(['Back to "Second record" form', 'Back to "Partners Action 28"']);
     });
 
     test(`don't load controllers when load action new`, async () => {
@@ -1428,7 +1497,9 @@ describe(`new urls`, () => {
             "set current_lang-en",
         ]);
 
-        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1/m-partner");
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/m-partner/1/m-partner",
+        );
 
         // Emulate a Reload
         routerBus.trigger("ROUTE_CHANGE");
@@ -1505,7 +1576,9 @@ describe(`new urls`, () => {
             "set current_lang-en",
         ]);
 
-        expect(browser.location.href).toBe("http://example.com/odoo/action-100/1/action-200");
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-100/1/action-200",
+        );
 
         // Emulate a Reload
         startRouter(); // Emulate a full reload. Update the current state of the router with the URL (as is done on reload)
@@ -1657,7 +1730,7 @@ describe(`new urls`, () => {
         await animationFrame();
         expect(`.o_form_view`).toHaveCount(1);
         expect(browser.location.href).toBe(
-            "http://example.com/odoo/action-200/5/action-300/action-100/1"
+            "http://example.com/odoo/action-200/5/action-300/action-100/1",
         );
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Kanban Partners",
@@ -1745,7 +1818,7 @@ describe(`new urls`, () => {
             },
         ]);
         expect(browser.location.href).toBe(
-            "http://example.com/odoo/action-200/5/action-300/action-100/1"
+            "http://example.com/odoo/action-200/5/action-300/action-100/1",
         );
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Kanban Partners",
@@ -1927,7 +2000,10 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWebClient({ env });
         expect.verifySteps(["/web/action/load"]);
@@ -1938,7 +2014,10 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
 
         await mountWebClient({ env });
         expect.verifySteps([]);
@@ -1986,7 +2065,7 @@ describe(`legacy urls`, () => {
                     params: { description: "xmlId" },
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
         redirect("/web#action=wowl.client_action");
 
@@ -2001,8 +2080,13 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         await mountWebClient();
-        expect(`.o_action_manager`).toHaveText("", { message: "should display nothing" });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect(`.o_action_manager`).toHaveText("", {
+            message: "should display nothing",
+        });
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
     });
 
     test(`properly load client actions`, async () => {
@@ -2019,7 +2103,10 @@ describe(`legacy urls`, () => {
         expect(`.o_client_action_test`).toHaveText("Hello World", {
             message: "should have correctly rendered the client action",
         });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+        ]);
     });
 
     test(`properly load act window actions`, async () => {
@@ -2045,7 +2132,9 @@ describe(`legacy urls`, () => {
 
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Second record",
+        ]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -2063,7 +2152,9 @@ describe(`legacy urls`, () => {
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
         expect(`.o_menu_brand`).toHaveCount(0);
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Second record",
+        ]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -2209,7 +2300,9 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         await mountWebClient();
-        expect(`.o_kanban_view`).toHaveCount(1, { message: "should display a kanban view" });
+        expect(`.o_kanban_view`).toHaveCount(1, {
+            message: "should display a kanban view",
+        });
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "Partners Action 1",
         ]);
@@ -2236,7 +2329,7 @@ describe(`legacy urls`, () => {
                     ],
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
 
         redirect("/web#action=999&view_type=form&id=");
@@ -2245,7 +2338,10 @@ describe(`legacy urls`, () => {
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
         expect(`.o_form_view .o_form_editable`).toHaveCount(1);
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Partner", "New"]);
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Partner",
+            "New",
+        ]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -2270,14 +2366,16 @@ describe(`legacy urls`, () => {
                     ],
                 },
             ],
-            { mode: "replace" }
+            { mode: "replace" },
         );
 
         redirect("/web#action=1000&view_type=form&id=999");
 
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(1);
-        expect(`.o_notification_body`).toHaveCount(1, { message: "should have a notification" });
+        expect(`.o_notification_body`).toHaveCount(1, {
+            message: "should have a notification",
+        });
         expect.verifyErrors([
             /It seems the records with IDs 999 cannot be found. They might have been deleted./,
         ]);
@@ -2318,7 +2416,9 @@ describe(`legacy urls`, () => {
     test(`initial action crashes`, async () => {
         expect.errors(1);
 
-        const ClientAction = registry.category("actions").get("__test__client__action__");
+        const ClientAction = registry
+            .category("actions")
+            .get("__test__client__action__");
         class Override extends ClientAction {
             setup() {
                 super.setup();
@@ -2326,7 +2426,9 @@ describe(`legacy urls`, () => {
                 throw new Error("my error");
             }
         }
-        registry.category("actions").add("__test__client__action__", Override, { force: true });
+        registry
+            .category("actions")
+            .add("__test__client__action__", Override, { force: true });
 
         redirect("/web#action=__test__client__action__&menu_id=1");
 

@@ -1,27 +1,25 @@
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
-import { isDisplayStandalone } from "@web/core/browser/feature_detection";
-
+import { barcodeService } from "@barcodes/barcode_service";
+import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
-import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
-    SaleDetailsButton,
     handleSaleDetails,
+    SaleDetailsButton,
 } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
-import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
-import { barcodeService } from "@barcodes/barcode_service";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
-import { _t } from "@web/core/l10n/translation";
-import { uuidv4 } from "@point_of_sale/utils";
+import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
-
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { uuidv4 } from "@point_of_sale/utils";
+import { isBarcodeScannerSupported } from "@web/components/barcode/barcode_video_scanner";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { isDisplayStandalone } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
     static components = {
@@ -49,16 +47,24 @@ export class Navbar extends Component {
         this.timeout = null;
         this.bufferedInput = "";
         onMounted(async () => {
-            this.isSystemUser = await user.hasGroup("base.group_system");
+            this.hasProductCreationAccess = await this.pos.allowProductCreation();
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 
+    openLnaPopup() {
+        this.dialog.add(AlertDialog, {
+            title: _t("LNA Permission status"),
+            body: this.pos.lnaState.message,
+        });
+    }
+
     handleKeydown(event) {
         const isEndCharacter = event.key?.match(/(Enter|Tab)/);
         const isSpecialKey =
-            !["Control", "Alt"].includes(event.key) && (event.key?.length > 1 || event.metaKey);
+            !["Control", "Alt"].includes(event.key) &&
+            (event.key?.length > 1 || event.metaKey);
 
         clearTimeout(this.timeout);
         if (isEndCharacter) {
@@ -112,7 +118,9 @@ export class Navbar extends Component {
             const screenName = this.pos.router.state.current;
             if (["ProductScreen", "TicketScreen"].includes(screenName)) {
                 const params =
-                    screenName === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
+                    screenName === "ProductScreen"
+                        ? { orderUuid: this.pos.getOrder().uuid }
+                        : {};
                 this.pos.navigate(screenName, params);
             }
         }
@@ -129,7 +137,7 @@ export class Navbar extends Component {
 
     get appUrl() {
         return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
-            this.pos.config.display_name
+            this.pos.config.display_name,
         )}&path=${encodeURIComponent(`pos/ui/${this.pos.config.id}`)}`;
     }
 
@@ -157,7 +165,7 @@ export class Navbar extends Component {
     }
 
     get showCreateProductButton() {
-        return this.isSystemUser;
+        return this.hasProductCreationAccess;
     }
 
     get shouldDisplayPresetTime() {
@@ -173,7 +181,12 @@ export class Navbar extends Component {
     }
 
     get mainButton() {
-        const screens = ["ProductScreen", "PaymentScreen", "ReceiptScreen", "TipScreen"];
+        const screens = [
+            "ProductScreen",
+            "PaymentScreen",
+            "ReceiptScreen",
+            "TipScreen",
+        ];
         return screens.includes(this.pos.router.state.current) ? "register" : "order";
     }
 }

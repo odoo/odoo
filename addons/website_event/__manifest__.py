@@ -10,10 +10,8 @@
     'website': 'https://www.odoo.com/app/events',
     'depends': [
         'event',
-        'website',
         'website_partner',
         'website_mail',
-        'html_builder',
     ],
     'data': [
         'data/event_data.xml',

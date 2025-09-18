@@ -4,7 +4,7 @@
 MAIL_TEMPLATE = """Return-Path: {return_path}
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -46,7 +46,7 @@ Content-Transfer-Encoding: quoted-printable
 MAIL_TEMPLATE_EXTRA_HTML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -89,7 +89,7 @@ Content-Transfer-Encoding: quoted-printable
 
 MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -108,7 +108,7 @@ Sylvie
 MAIL_TEMPLATE_HTML = """Return-Path: {return_path}
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -138,7 +138,7 @@ Message-ID: {msg_id}
 MAIL_TEMPLATE_SHORT = """Return-Path: {return_path}
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -178,7 +178,7 @@ X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
     HTML_MESSAGE,RCVD_IN_DNSWL_LOW autolearn=unavailable version=3.3.1
 Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com [209.85.223.173])
     by mail1.grosbedon.com (Postfix) with ESMTPS id 9BBD7BFAAA
-    for <raoul@openerp.fr>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
+    for <raoul@odoo.com>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
 Received: by mail-ie0-f173.google.com with SMTP id qd12so575130ieb.4
         for <raoul@grosbedon.fr>; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
@@ -341,7 +341,7 @@ SGVsbG8gd29ybGQK
 MAIL_MULTIPART_INVALID_ENCODING = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -391,7 +391,7 @@ Q2hhdXNz77+977+9ZSBkZSBCcnV4ZWxsZXM8L2NiYzpTdHJlZXROYW1lPg0KPC9JbnZvaWNlPg0K
 MAIL_MULTIPART_OMITTED_CHARSET_XML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -435,7 +435,7 @@ PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
 MAIL_MULTIPART_OMITTED_CHARSET_CSV = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -477,7 +477,7 @@ Content-Type: text/csv; name="bis3.csv"
 MAIL_MULTIPART_OMITTED_CHARSET_TXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -713,7 +713,7 @@ Content-Transfer-Encoding: 8bit
 Content-Disposition: attachment;
  filename="original_msg.eml"
 
-Delivered-To: anon2@gmail1.openerp.com
+Delivered-To: anon2@gmail1.odoo.com
 Received: by 10.46.1.170 with SMTP id f42csp2379722lji;
         Mon, 5 Mar 2018 01:19:23 -0800 (PST)
 X-Google-Smtp-Source: AG47ELsYTlAcblMxfnaEENQuF+MFoac5Q07wieyw0cybq/qOX4+DmayqoQILkiWT+NiTOcnr/ACO
@@ -869,7 +869,7 @@ Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
 Content-Type: multipart/mixed; boundary="===============3600759226158551994=="
 MIME-Version: 1.0
 Message-Id: {msg_id}
-references: <1571814481.189281940460205.799582441238467-openerp-19177-account.invoice@mycompany.example.com>
+references: <1571814481.189281940460205.799582441238467-odoo-19177-account.invoice@mycompany.example.com>
 Subject: Test
 From: "Test" <noreply+srglvrz-gmail.com@mycompany.example.com>
 Reply-To: "MY COMPANY" <info@mycompany.example.com>
@@ -958,9 +958,9 @@ To: generic@mydomain.com
 Subject: Re: xxxx (Ref PO1)
 Date: Sat, 14 Apr 2018 02:11:42 +0000
 Message-Id: <em67f5c44a-xxxx-xxxx-xxxx-69f56d618a94@wswin7hg4n4l1ce>
-In-Reply-To: <829228111124527.1111111602.256611118262939-openerp-129-xxxx.xxxx@ip-1-1-1-1>
-References: <867911111953277.1523671337.187951111160400-openerp-129-xxxx.xxxx@ip-1-1-1-1>
- <867911111953277.1523671337.256611118262939-openerp-129-xxxx.xxxx@ip-1-1-1-1>
+In-Reply-To: <829228111124527.1111111602.256611118262939-odoo-129-xxxx.xxxx@ip-1-1-1-1>
+References: <867911111953277.1523671337.187951111160400-odoo-129-xxxx.xxxx@ip-1-1-1-1>
+ <867911111953277.1523671337.256611118262939-odoo-129-xxxx.xxxx@ip-1-1-1-1>
 Reply-To: "xxxx xxxx" <xxxx@xxxx.com>
 User-Agent: eM_Client/7.0.26687.0
 Mime-Version: 1.0
@@ -1017,7 +1017,7 @@ xxxx@xxxx.com</a>&gt;</div>
 <div>Subject: xxxx</div><div><br /></div=
 >
 <div id=3D"x00b4101ba6e64ce"><blockquote cite=3D"829228972724527.1523671602=
-.256660938262939-openerp-129-xxxx.xxxx@ip-1-1-1-1" type=3D"cite"=
+.256660938262939-odoo-129-xxxx.xxxx@ip-1-1-1-1" type=3D"cite"=
  class=3D"cite2">
 <table border=3D"0" width=3D"100%" cellpadding=3D"0" bgcolor=3D"#ededed"=
  style=3D"padding: 20px; background-color: #ededed" summary=3D"o_mail_notif=
@@ -1190,7 +1190,7 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=test.ironsky; s=mail;
 Content-Type: multipart/mixed; boundary="===============7355787381227985247=="
 MIME-Version: 1.0
 Message-Id: {extra}
-references: <670034078674109.1555335454.587288856506348-openerp-32-project.task@aaa>
+references: <670034078674109.1555335454.587288856506348-odoo-32-project.task@aaa>
 Subject: Re: Test
 From: Mitchell Admin <admin@yourcompany.example.com>
 Reply-To: YourCompany Research & Development <aaa+catchall@test.ironsky>
@@ -1302,10 +1302,10 @@ DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Dsimple/simple; d=3Dxxx.be;
         b=3DCMqh7mUvpgUw+JpCeGluv1+MZ3y6EsXd0acmsfzpYBjcoy1InvD6FLT1/lQCcgetf
          cGyL/8R4vvDKATyE0AtOIpoYDsbpnMoiYWqaSXnDVuLTrEZzyrK/2j10ZTnHZ2uDTC
          b7wPjFfQ9pted/t6CAUhVT1XydDNalSwEZovy/QI=3D
-Message-Id: <368396033905967.1673346177.695352554321289-openerp-11-sale.o=
+Message-Id: <368396033905967.1673346177.695352554321289-odoo-11-sale.o=
 rder@eupp00>
-references: <792105153140463.1673746527.352018594741821-openerp-11-sale.o=
-rder@xxx.odoo.com> <368396033905967.1673346177.695352554321289-openerp-11=
+references: <792105153140463.1673746527.352018594741821-odoo-11-sale.o=
+rder@xxx.odoo.com> <368396033905967.1673346177.695352554321289-odoo-11=
 -sale.order@eupp00>
 Subject: Thi is a SO (Ref SO/11)
 From: info@xxx.odoo.com

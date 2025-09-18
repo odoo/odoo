@@ -67,7 +67,7 @@ class MailPresence(models.Model):
         try:
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
             # The errors are supposed from presence.write(...) call only
-            with tools.mute_logger("odoo.sql_db"):
+            with tools.mute_logger("odoo.db"):
                 self._update_presence(user_or_guest, inactivity_period)
                 # commit on success
                 self.env.cr.commit()

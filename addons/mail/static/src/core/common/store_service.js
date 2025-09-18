@@ -1,4 +1,9 @@
-import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
+import {
+    fields,
+    makeStore,
+    Store as BaseStore,
+    storeInsertFns,
+} from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import {
     attClassObjectToString,
@@ -7,23 +12,21 @@ import {
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
-
 import { reactive } from "@odoo/owl";
-
+import { loader } from "@web/components/emoji_picker/emoji_picker";
+import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { patch } from "@web/core/utils/patch";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
-import { session } from "@web/session";
-import { browser } from "@web/core/browser/browser";
-import { loader } from "@web/core/emoji_picker/emoji_picker";
-import { patch } from "@web/core/utils/patch";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
-import { cookie } from "@web/core/browser/cookie";
+import { user } from "@web/services/user";
+import { session } from "@web/session";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -54,7 +57,7 @@ patch(storeInsertFns, {
         }
         if (ctx.pyModels.includes(pyOrJsModelName)) {
             console.warn(
-                `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
+                `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`,
             );
         }
         return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
@@ -142,8 +145,9 @@ export class Store extends BaseStore {
     isNotificationPermissionDismissed = fields.Attr(false, {
         compute() {
             return (
-                browser.localStorage.getItem("mail.user_setting.push_notification_dismissed") ===
-                "true"
+                browser.localStorage.getItem(
+                    "mail.user_setting.push_notification_dismissed",
+                ) === "true"
             );
         },
         /** @this {import("models").DiscussApp} */
@@ -151,10 +155,12 @@ export class Store extends BaseStore {
             if (this.isNotificationPermissionDismissed) {
                 browser.localStorage.setItem(
                     "mail.user_setting.push_notification_dismissed",
-                    "true"
+                    "true",
                 );
             } else {
-                browser.localStorage.removeItem("mail.user_setting.push_notification_dismissed");
+                browser.localStorage.removeItem(
+                    "mail.user_setting.push_notification_dismissed",
+                );
             }
         },
     });
@@ -169,19 +175,20 @@ export class Store extends BaseStore {
             let threads = Object.values(this.Thread.records).filter(
                 (thread) =>
                     (thread.displayToSelf ||
-                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
-                    cleanTerm(thread.displayName).includes(searchTerm)
+                        (thread.needactionMessages.length > 0 &&
+                            thread.model !== "mail.box")) &&
+                    cleanTerm(thread.displayName).includes(searchTerm),
             );
             const tab = this.discuss.activeTab;
             if (tab === "inbox") {
                 threads = threads.filter(({ channel_type }) =>
-                    this.tabToThreadType("mailbox").includes(channel_type)
+                    this.tabToThreadType("mailbox").includes(channel_type),
                 );
             } else if (tab === "starred") {
                 threads = [this.starred];
             } else if (tab !== "notification") {
                 threads = threads.filter(({ channel_type }) =>
-                    this.tabToThreadType(tab).includes(channel_type)
+                    this.tabToThreadType(tab).includes(channel_type),
                 );
             }
             return threads;
@@ -226,9 +233,11 @@ export class Store extends BaseStore {
 
     standaloneInboxMessages = fields.Many("mail.message", {
         compute() {
-            const messages = (this.store.inbox?.messages ?? []).filter((m) => !m.thread);
+            const messages = (this.store.inbox?.messages ?? []).filter(
+                (m) => !m.thread,
+            );
             return messages.sort(
-                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
+                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id,
             );
         },
     });
@@ -274,7 +283,7 @@ export class Store extends BaseStore {
     async fetchStoreData(
         name,
         params,
-        { requestData = false, readonly = true, silent = true } = {}
+        { requestData = false, readonly = true, silent = true } = {},
     ) {
         const dataRequest = this.DataResponse.createRequest();
         dataRequest._autoResolve = !requestData;
@@ -322,7 +331,7 @@ export class Store extends BaseStore {
                     (error) => {
                         r.status = "not_fetched";
                         def.reject(error);
-                    }
+                    },
                 );
                 return def;
             },
@@ -349,7 +358,7 @@ export class Store extends BaseStore {
                 } else {
                     return [name, params, dataRequest.id];
                 }
-            })
+            }),
         ).then(
             (data) => {
                 this.insert(data);
@@ -363,7 +372,7 @@ export class Store extends BaseStore {
                 for (const [, , dataRequest] of fetchParams) {
                     dataRequest._resultDef.reject(error);
                 }
-            }
+            },
         );
         this.fetchParams = [];
         this.fetchReadonly = true;
@@ -374,7 +383,7 @@ export class Store extends BaseStore {
         return rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
             { fetch_params: fetchParams, context: user.context },
-            { silent: this.fetchSilent }
+            { silent: this.fetchSilent },
         );
     }
 
@@ -412,9 +421,12 @@ export class Store extends BaseStore {
                 if (thread) {
                     thread.open({ focus: true });
                 } else {
-                    this.env.services.notification.add(_t("This thread is no longer available."), {
-                        type: "danger",
-                    });
+                    this.env.services.notification.add(
+                        _t("This thread is no longer available."),
+                        {
+                            type: "danger",
+                        },
+                    );
                 }
             });
             return true;
@@ -426,16 +438,22 @@ export class Store extends BaseStore {
             const message = this["mail.message"].get(id);
             const targetThread = message?.thread;
             const showAccessError = () =>
-                this.env.services.notification.add(_t("This conversation isn’t available."), {
-                    type: "danger",
-                });
+                this.env.services.notification.add(
+                    _t("This conversation isn’t available."),
+                    {
+                        type: "danger",
+                    },
+                );
             if (targetThread) {
                 targetThread.checkReadAccess().then((hasAccess) => {
                     if (hasAccess) {
                         targetThread.highlightMessage = message;
                         let isOpen = targetThread.eq(thread);
                         if (!isOpen) {
-                            isOpen = targetThread.open({ focus: true, swapOpened: false });
+                            isOpen = targetThread.open({
+                                focus: true,
+                                swapOpened: false,
+                            });
                         }
                         if (!isOpen) {
                             window.open(link.href);
@@ -482,13 +500,14 @@ export class Store extends BaseStore {
         super.setup();
         this._fetchStoreDataDebounced = debounce(
             this._fetchStoreDataDebounced,
-            Store.FETCH_DATA_DEBOUNCE_DELAY
+            Store.FETCH_DATA_DEBOUNCE_DELAY,
         );
     }
 
     /** Provides an override point for when the store service has started. */
     onStarted() {
-        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
+        this.isOdooWhiteTheme =
+            cookie.get("color_scheme") !== "dark" || this.inPublicPage;
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {
@@ -544,7 +563,7 @@ export class Store extends BaseStore {
         if (!chat) {
             this.env.services.notification.add(
                 _t("An unexpected error occurred during the creation of the chat."),
-                { type: "warning" }
+                { type: "warning" },
             );
             return;
         }
@@ -565,19 +584,21 @@ export class Store extends BaseStore {
     getLastMessageId() {
         return Object.values(this["mail.message"].records).reduce(
             (lastMessageId, message) => Math.max(lastMessageId, message.id),
-            0
+            0,
         );
     }
 
     handleValidChannelMention(channelLinks) {
         for (const linkEl of channelLinks.filter(
-            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag")
+            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag"),
         )) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
             const icon = linkEl.classList.contains("o_channel_redirect_asThread")
                 ? "fa fa-comments-o"
                 : "fa fa-hashtag";
-            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", {
+                icon,
+            });
             linkEl.replaceChildren(iconEl);
             linkEl.insertAdjacentText("beforeend", ` ${text}`);
         }
@@ -585,21 +606,28 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
+        {
+            mentionedChannels = [],
+            mentionedPartners = [],
+            mentionedRoles = [],
+            thread,
+        } = {},
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
             if (thread.parent_channel_id) {
                 return body.includes(
-                    `#${thread.parent_channel_id.displayName} > ${thread.displayName}`
+                    `#${thread.parent_channel_id.displayName} > ${thread.displayName}`,
                 );
             }
             return body.includes(`#${thread.displayName}`);
         });
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
+            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`),
         );
-        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
+        validMentions.roles = mentionedRoles.filter((role) =>
+            body.includes(`@${role.name}`),
+        );
         validMentions.specialMentions = this.specialMentions
             .filter((special) => body.includes(`@${special.label}`))
             .map((special) => special.label);
@@ -630,7 +658,10 @@ export class Store extends BaseStore {
         const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
-            const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
+            const allRecipients = [
+                ...thread.suggestedRecipients,
+                ...thread.additionalRecipients,
+            ];
             const recipientIds = allRecipients
                 .filter((recipient) => recipient.persona)
                 .map((recipient) => recipient.persona.id);
@@ -657,12 +688,15 @@ export class Store extends BaseStore {
         if (role_ids.length) {
             Object.assign(postData, { role_ids });
         }
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
+        if (
+            thread.model === "discuss.channel" &&
+            validMentions?.specialMentions.length
+        ) {
             postData.special_mentions = validMentions.specialMentions;
         }
         if (attachments.length) {
             postData.attachment_tokens = attachments.map(
-                (attachment) => attachment.ownership_token
+                (attachment) => attachment.ownership_token,
             );
         }
         if (recipientEmails.length) {
@@ -710,16 +744,19 @@ export class Store extends BaseStore {
                     "res.users",
                     [user.id],
                     ["partner_id"],
-                    { context: { active_test: false } }
+                    { context: { active_test: false } },
                 );
                 if (userData) {
                     user.partner_id = userData.partner_id[0];
                 }
             }
             if (!user.partner_id) {
-                this.env.services.notification.add(_t("You can only chat with existing users."), {
-                    type: "warning",
-                });
+                this.env.services.notification.add(
+                    _t("You can only chat with existing users."),
+                    {
+                        type: "warning",
+                    },
+                );
                 return;
             }
             partnerId = user.partner_id;
@@ -730,12 +767,14 @@ export class Store extends BaseStore {
                 const [userId] = await this.env.services.orm.silent.search(
                     "res.users",
                     [["partner_id", "=", partnerId]],
-                    { context: { active_test: false } }
+                    { context: { active_test: false } },
                 );
                 if (!userId) {
                     this.env.services.notification.add(
-                        _t("You can only chat with partners that have a dedicated user."),
-                        { type: "info" }
+                        _t(
+                            "You can only chat with partners that have a dedicated user.",
+                        ),
+                        { type: "info" },
                     );
                     return;
                 }
@@ -751,7 +790,7 @@ export class Store extends BaseStore {
         const { channel } = await this.fetchStoreData(
             "/discuss/get_or_create_chat",
             { partners_to: [id] },
-            { readonly: false, requestData: true }
+            { readonly: false, requestData: true },
         );
         if (forceOpen) {
             await channel.open({ focus: true });

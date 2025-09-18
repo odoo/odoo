@@ -1,127 +1,63 @@
-import { _t } from "@web/core/l10n/translation";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeContext } from "@web/core/context";
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_service";
-import { user } from "@web/core/user";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { omit } from "@web/core/utils/objects";
-import { createElement, parseXML } from "@web/core/utils/xml";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { useSetupAction } from "@web/search/action_hook";
-import { Layout } from "@web/search/layout";
-import { usePager } from "@web/search/pager_hook";
-import { standardViewProps } from "@web/views/standard_view_props";
-import { isX2Many } from "@web/views/utils";
-import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { Field } from "@web/views/fields/field";
-import { useModel } from "@web/model/model";
-import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { useViewCompiler } from "@web/views/view_compiler";
-import { useDeleteRecords } from "@web/views/view_hook";
-import { Widget } from "@web/views/widgets/widget";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+// @ts-check
 
-import { ButtonBox } from "./button_box/button_box";
-import { FormCompiler } from "./form_compiler";
-import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
-import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
+/** @module @web/views/form/form_controller - Form view lifecycle: record save, discard, duplicate, archive, pager navigation, and error recovery */
 
 import {
     Component,
     onError,
     onMounted,
     onRendered,
-    onWillUnmount,
     status,
-    useComponent,
     useEffect,
     useRef,
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { FetchRecordError } from "@web/model/relational_model/errors";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { createElement } from "@web/core/utils/dom/xml";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
+import { Field } from "@web/fields/field";
+import { useModel } from "@web/model/model";
+import { FetchRecordError } from "@web/model/relational_model/errors";
+import {
+    addFieldDependencies,
+    extractFieldsFromArchInfo,
+} from "@web/model/relational_model/utils";
+import { useSetupAction } from "@web/search/action_hook";
+import { Layout } from "@web/search/layout";
+import { usePager } from "@web/search/pager_hook";
+import { useDebugCategory } from "@web/services/debug/debug_context";
+import { user } from "@web/services/user";
+import { SIZES } from "@web/ui/block/ui_service";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { ViewButton } from "@web/views/view_button/view_button";
+import {
+    executeButtonCallback,
+    useViewButtons,
+} from "@web/views/view_button/view_button_hook";
+import { useViewCompiler } from "@web/views/view_compiler";
+import { useDeleteRecords } from "@web/views/view_hook";
+import { buildActionMenuItems, useControllerServices } from "@web/views/view_utils";
+import { Widget } from "@web/views/widgets/widget";
 
-const viewRegistry = registry.category("views");
+import { ButtonBox } from "./button_box/button_box";
+import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
+import { FormCompiler } from "./form_compiler";
+import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
+import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { loadSubViews, useFormViewInDialog } from "./form_utils";
 
-export async function loadSubViews(fieldNodes, fields, context, resModel, viewService, isSmall) {
-    for (const fieldInfo of Object.values(fieldNodes)) {
-        const fieldName = fieldInfo.name;
-        const field = fields[fieldName];
-        if (!isX2Many(field)) {
-            continue; // what follows only concerns x2many fields
-        }
-        if (fieldInfo.invisible === "True" || fieldInfo.invisible === "1") {
-            continue; // no need to fetch the sub view if the field is always invisible
-        }
-        if (!fieldInfo.field.useSubView) {
-            continue; // the FieldComponent used to render the field doesn't need a sub view
-        }
-
-        fieldInfo.views = fieldInfo.views || {};
-        let viewType = fieldInfo.viewMode || "list,kanban";
-        if (viewType.includes(",")) {
-            viewType = isSmall ? "kanban" : "list";
-        }
-        fieldInfo.viewMode = viewType;
-        if (fieldInfo.views[viewType]) {
-            continue; // the sub view is inline in the main form view
-        }
-
-        // extract *_view_ref keys from field context, to fetch the adequate view
-        const fieldContext = {};
-        const regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
-        let matches;
-        while ((matches = regex.exec(fieldInfo.context)) !== null) {
-            fieldContext[matches[1]] = matches[2];
-        }
-        // filter out *_view_ref keys from general context
-        const refinedContext = {};
-        for (const key in context) {
-            if (key.indexOf("_view_ref") === -1) {
-                refinedContext[key] = context[key];
-            }
-        }
-
-        const comodel = field.relation;
-        const {
-            fields: comodelFields,
-            relatedModels,
-            views,
-        } = await viewService.loadViews({
-            resModel: comodel,
-            views: [[false, viewType]],
-            context: makeContext([fieldContext, user.context, refinedContext]),
-        });
-        const { ArchParser } = viewRegistry.get(viewType);
-        const xmlDoc = parseXML(views[viewType].arch);
-        const archInfo = new ArchParser().parse(xmlDoc, relatedModels, comodel);
-        fieldInfo.views[viewType] = {
-            ...archInfo,
-            limit: archInfo.limit || 40,
-            fields: comodelFields,
-        };
-        fieldInfo.relatedFields = comodelFields;
-    }
-}
-
-export function useFormViewInDialog() {
-    const component = useComponent();
-    onMounted(() => {
-        component.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD");
-    });
-
-    onWillUnmount(() => {
-        component.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE");
-    });
-}
-// -----------------------------------------------------------------------------
-
+/**
+ * Controller for the form view.
+ *
+ * Manages a single record: loading, saving, discarding, duplicating, archiving,
+ * deleting, pager navigation, and error recovery (including company-switching
+ * on AccessError). Sub-views for x2many fields are loaded on first render.
+ */
 export class FormController extends Component {
     static template = `web.FormView`;
     static components = {
@@ -158,12 +94,15 @@ export class FormController extends Component {
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
-        this.actionService = useService("action");
-        this.dialogService = useService("dialog");
-        this.orm = useService("orm");
+        const { action, dialog, notification, orm, uiHooks } = useControllerServices();
+        this.actionService = action;
+        this.dialogService = dialog;
+        this.notification = notification;
+        this.orm = orm;
+        this._uiHooks = uiHooks;
         this.viewService = useService("view");
         this.ui = useService("ui");
-        useBus(this.ui.bus, "resize", this.render);
+        useBus(this.ui.bus, "resize", /** @type {any} */ (this.render));
 
         this.archInfo = this.props.archInfo;
         const { create, edit } = this.archInfo.activeActions;
@@ -177,15 +116,23 @@ export class FormController extends Component {
         }
 
         this.formInDialog = 0;
-        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
-        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
+        useBus(
+            this.env.bus,
+            "FORM-CONTROLLER:FORM-IN-DIALOG:ADD",
+            () => this.formInDialog++,
+        );
+        useBus(
+            this.env.bus,
+            "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE",
+            () => this.formInDialog--,
+        );
 
         // Wait to be mounted before displaying dialog/notification for onchange warnings returned
         // by the first onchange, for 2 reasons:
         //  1) we don't want to show twice the warning if the component is destroyed before being
         //     mounted and re-created
         //  2) for form views in dialogs, this causes an infinite loop if willStart calls dialog.add
-        const mountedProm = new Promise((r) => onMounted(r));
+        const mountedProm = new Promise((r) => onMounted(/** @type {any} */ (r)));
         this.onWillDisplayOnchangeWarning = () => mountedProm;
 
         const beforeFirstLoad = async () => {
@@ -195,11 +142,11 @@ export class FormController extends Component {
                 this.props.context,
                 this.props.resModel,
                 this.viewService,
-                this.env.isSmall
+                this.env.isSmall,
             );
             const { activeFields, fields } = extractFieldsFromArchInfo(
                 this.archInfo,
-                this.props.fields
+                this.props.fields,
             );
             if (this.display.controlPanel) {
                 addFieldDependencies(activeFields, fields, [
@@ -209,16 +156,20 @@ export class FormController extends Component {
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
-        this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model = useState(
+            useModel(this.props.Model, this.modelParams, { beforeFirstLoad }),
+        );
         useSubEnv({ model: this.model });
         onMounted(() => {
             effect(
                 (model) => {
                     if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
+                        this.props.updateActionState({
+                            resId: model.root.resId,
+                        });
                     }
                 },
-                [this.model]
+                [this.model],
             );
         });
 
@@ -240,9 +191,11 @@ export class FormController extends Component {
 
         // select footers that are not in subviews and move them to another arch
         // that will be moved to the dialog's footer (if we are in a dialog)
-        const footers = [...this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer)")];
+        const footers = [
+            ...this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer)"),
+        ];
         if (footers.length) {
-            this.footerArchInfo = Object.assign({}, this.archInfo);
+            this.footerArchInfo = { ...this.archInfo };
             this.footerArchInfo.xmlDoc = createElement("t");
             this.footerArchInfo.xmlDoc.append(...footers);
             this.footerArchInfo.arch = this.footerArchInfo.xmlDoc.outerHTML;
@@ -250,13 +203,13 @@ export class FormController extends Component {
         }
 
         const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector(
-            "div[name='button_box']:not(field div)"
+            "div[name='button_box']:not(field div)",
         );
         if (xmlDocButtonBox) {
             const buttonBoxTemplates = useViewCompiler(
                 this.props.Compiler || FormCompiler,
                 { ButtonBox: xmlDocButtonBox },
-                { isSubView: true }
+                { isSubView: true },
             );
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
         }
@@ -283,7 +236,7 @@ export class FormController extends Component {
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => ({
                 activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
-                modelState: this.model.exportState(),
+                modelState: /** @type {any} */ (this.model).exportState(),
                 resId: this.model.root.resId,
             }),
         });
@@ -316,14 +269,14 @@ export class FormController extends Component {
                             .contains(document.activeElement)
                     ) {
                         const elementToFocus = this.rootRef.el.querySelector(
-                            ".o_content button.btn-primary"
+                            ".o_content button.btn-primary",
                         );
                         if (elementToFocus) {
                             elementToFocus.focus();
                         }
                     }
                 },
-                () => [this.model.root.isInEdition]
+                () => [this.model.root.isInEdition],
             );
         }
 
@@ -342,7 +295,7 @@ export class FormController extends Component {
             isDomainSelected: this.model.root.isDomainSelected,
             resModel: this.model.root.resModel,
             domain: this.props.domain,
-            onActionExecuted: ({ noReload } = {}) => {
+            onActionExecuted: ({ noReload } = /** @type {any} */ ({})) => {
                 if (!noReload) {
                     const { resId, resIds } = this.model.root;
                     return this.model.load({ resId: resId, resIds: resIds });
@@ -357,7 +310,8 @@ export class FormController extends Component {
             config: {
                 resModel: this.props.resModel,
                 resId: this.props.resId || false,
-                resIds: this.props.resIds || (this.props.resId ? [this.props.resId] : []),
+                resIds:
+                    this.props.resIds || (this.props.resId ? [this.props.resId] : []),
                 fields: this.props.fields,
                 activeFields: {}, // will be generated after loading sub views (see willStart)
                 isMonoRecord: true,
@@ -366,10 +320,12 @@ export class FormController extends Component {
             },
             state: this.props.state?.modelState,
             hooks: {
+                ...this._uiHooks,
                 onWillLoadRoot: this.onWillLoadRoot.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
-                onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
+                onWillDisplayOnchangeWarning:
+                    this.onWillDisplayOnchangeWarning.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -389,7 +345,7 @@ export class FormController extends Component {
      * if it was done. It will therefore not be executed if the record
      * is invalid, if a server error is thrown, or if there are no
      * changes to save.
-     * @param {Record} record
+     * @param {any} record
      */
     async onRecordSaved(record, changes) {
         if (this.duplicateId === record.id) {
@@ -400,22 +356,32 @@ export class FormController extends Component {
                 }
             }
             if (Object.keys(translationChanges).length) {
-                await this.orm.call(this.model.root.resModel, "web_override_translations", [
-                    [this.model.root.resId],
-                    translationChanges,
-                ]);
+                await this.orm.call(
+                    this.model.root.resModel,
+                    "web_override_translations",
+                    [[this.model.root.resId], translationChanges],
+                );
             }
         }
     }
 
     /**
-     * onWillSaveRecord is a callBack that will be executed before the
-     * record save if the record is valid if the record is valid.
+     * onWillSaveRecord is a callback that will be executed before the
+     * record save if the record is valid.
      * If it returns false, it will prevent the save.
-     * @param {Record} record
      */
     async onWillSaveRecord() {}
 
+    /**
+     * Handle save errors. Shows a FormErrorDialog when leaving, or re-throws
+     * the error otherwise. Handles AccessError with suggested_company by
+     * activating the missing company and retrying.
+     *
+     * @param {Object} error - the RPC error
+     * @param {{ discard: Function, retry: Function }} callbacks
+     * @param {boolean} leaving - whether the user is navigating away
+     * @returns {Promise<boolean>} whether to proceed with leaving
+     */
     async onSaveError(error, { discard, retry }, leaving) {
         const suggestedCompany = error.data?.context?.suggested_company;
         const activeCompanyIds = user.activeCompanies.map((c) => c.id);
@@ -433,7 +399,7 @@ export class FormController extends Component {
         }
         if (leaving) {
             const proceed = await new Promise((resolve) => {
-                this.model.dialog.add(FormErrorDialog, {
+                this.dialogService.add(FormErrorDialog, {
                     message: error.data.message,
                     data: error.data,
                     onDiscard: () => {
@@ -458,10 +424,20 @@ export class FormController extends Component {
         throw error;
     }
 
+    /** @returns {string} the display name for the breadcrumb (record name or "New") */
     displayName() {
-        return this.model.root.data.display_name || (this.model.root.isNew && _t("New")) || "";
+        const displayName = this.model.root.data.display_name;
+        if (displayName) {
+            return displayName;
+        }
+        return (this.model.root.isNew && _t("New")) || "";
     }
 
+    /**
+     * Navigate to a different record via the pager. Saves dirty records first.
+     *
+     * @param {{ offset: number, resIds: number[] }} params
+     */
     async onPagerUpdate({ offset, resIds }) {
         const dirty = await this.model.root.isDirty();
         try {
@@ -476,7 +452,9 @@ export class FormController extends Component {
         } catch (e) {
             if (e instanceof FetchRecordError) {
                 this.model.load({
-                    resIds: this.model.config.resIds.filter((id) => !e.resIds.includes(id)),
+                    resIds: this.model.config.resIds.filter(
+                        (id) => !e.resIds.includes(id),
+                    ),
                 });
             }
             throw e;
@@ -485,11 +463,11 @@ export class FormController extends Component {
 
     beforeVisibilityChange() {
         if (document.visibilityState === "hidden" && this.formInDialog === 0) {
-            return this.model.root.save();
+            return this.model.root.save().catch(() => {});
         }
     }
 
-    async beforeLeave({ forceLeave } = {}) {
+    async beforeLeave({ forceLeave } = /** @type {any} */ ({})) {
         if (this.model.root.dirty && !forceLeave) {
             return this.save({
                 reload: false,
@@ -561,29 +539,22 @@ export class FormController extends Component {
     }
 
     get actionMenuItems() {
-        const { actionMenus } = this.props.info;
-        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
-            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
-            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
-            .map(([key, item]) =>
-                Object.assign({ key }, omit(item, "isAvailable", "sequence"), {
-                    groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
-                })
-            );
-
-        return {
-            action: [...staticActionItems, ...(actionMenus.action || [])],
-            print: actionMenus.print,
-        };
+        return buildActionMenuItems(
+            this.getStaticActionMenuItems(),
+            this.props.info.actionMenus,
+        );
     }
 
     // enable the archive feature in Actions menu only if the active field is in the view
     get archiveEnabled() {
-        return "active" in this.model.root.activeFields
-            ? !this.props.fields.active.readonly
-            : "x_active" in this.model.root.activeFields
-            ? !this.props.fields.x_active.readonly
-            : false;
+        const activeFields = this.model.root.activeFields;
+        if ("active" in activeFields) {
+            return !this.props.fields.active.readonly;
+        }
+        if ("x_active" in activeFields) {
+            return !this.props.fields.x_active.readonly;
+        }
+        return false;
     }
 
     async shouldExecuteAction(item) {
@@ -618,17 +589,21 @@ export class FormController extends Component {
     }
 
     async deleteRecord() {
-        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [this.model.root]);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [
+            this.model.root,
+        ]);
     }
 
     async beforeExecuteActionButton(clickParams) {
         const record = this.model.root;
         if (clickParams.special !== "cancel") {
-            let saved = false;
+            let saved;
             if (clickParams.special === "save" && this.props.saveRecord) {
                 saved = await this.props.saveRecord(record, clickParams);
             } else {
-                const params = { reload: !(this.env.inDialog && clickParams.close) };
+                const params = {
+                    reload: !(this.env.inDialog && clickParams.close),
+                };
                 saved = await record.save(params);
             }
             if (saved !== false && this.props.onSave) {
@@ -649,14 +624,21 @@ export class FormController extends Component {
         // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
             await executeButtonCallback(this.ui.activeElement, () =>
-                this.model.load({ resId: false })
+                this.model.load({ resId: false }),
             );
         }
     }
 
+    /**
+     * Save the current record. Delegates to `props.saveRecord` if provided,
+     * otherwise calls `record.save()` directly.
+     *
+     * @param {Object} [params] - save options (e.g. { reload: false })
+     * @returns {Promise<boolean>} whether the save succeeded
+     */
     async save(params) {
         const record = this.model.root;
-        let saved = false;
+        let saved;
         if (this.props.saveRecord) {
             saved = await this.props.saveRecord(record, params);
         } else {

@@ -1,6 +1,7 @@
-import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
-import { deepImmutable, clone, RAW_SYMBOL } from "./utils";
 import { toRaw } from "@odoo/owl";
+import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+
+import { clone, deepImmutable, RAW_SYMBOL } from "./utils";
 const { DateTime } = luxon;
 
 export class Base extends WithLazyGetterTrap {
@@ -54,10 +55,17 @@ export class Base extends WithLazyGetterTrap {
     }
 
     formatDateOrTime(field, type = "datetime") {
-        if (type === "date") {
-            return this[field].toLocaleString(DateTime.DATE_SHORT);
+        let value = this[field];
+        if (typeof value === "string") {
+            value = DateTime.fromISO(value);
         }
-        return this[field].toLocaleString(DateTime.DATETIME_SHORT);
+        if (!value) {
+            return "";
+        }
+        if (type === "date") {
+            return value.toLocaleString(DateTime.DATE_SHORT);
+        }
+        return value.toLocaleString(DateTime.DATETIME_SHORT);
     }
 
     isEqual(other) {

@@ -16,13 +16,13 @@ class PurchaseOrder(models.Model):
         compute='_compute_sale_order_count',
         groups='sales_team.group_sale_salesman')
 
-    @api.depends('order_line.sale_order_id')
+    @api.depends('line_ids.sale_order_id')
     def _compute_sale_order_count(self):
         for purchase in self:
             purchase.sale_order_count = len(purchase._get_sale_orders())
             purchase.has_sale_order = bool(purchase.sale_order_count)
 
-    @api.depends('order_line.sale_order_id.partner_shipping_id')
+    @api.depends('line_ids.sale_order_id.partner_shipping_id')
     def _compute_dest_address_id(self):
         super()._compute_dest_address_id()
         po_with_address = self.filtered(lambda po: po.dest_address_id and len(po._get_sale_orders().partner_shipping_id) == 1)
@@ -49,13 +49,13 @@ class PurchaseOrder(models.Model):
             })
         return action
 
-    def button_cancel(self):
-        result = super(PurchaseOrder, self).button_cancel()
+    def action_cancel(self):
+        result = super().action_cancel()
         self.sudo()._activity_cancel_on_sale()
         return result
 
     def _get_sale_orders(self):
-        return self.order_line.sale_order_id
+        return self.line_ids.sale_order_id
 
     def _activity_cancel_on_sale(self):
         """ If some PO are cancelled, we need to put an activity on their origin SO (only the open ones). Since a PO can have
@@ -63,7 +63,7 @@ class PurchaseOrder(models.Model):
         """
         sale_to_notify_map = {}  # map SO -> recordset of PO as {sale.order: set(purchase.order.line)}
         for order in self:
-            for purchase_line in order.order_line:
+            for purchase_line in order.line_ids:
                 if purchase_line.sale_line_id:
                     sale_order = purchase_line.sale_line_id.order_id
                     sale_to_notify_map.setdefault(sale_order, self.env['purchase.order.line'])

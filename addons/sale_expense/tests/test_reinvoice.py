@@ -55,7 +55,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'weight': 0.01,
                 'uom_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_99991',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'expense_policy': 'sales_price',
                 'taxes_id': [Command.set([new_sale_tax.id])],
                 'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
@@ -70,7 +70,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'weight': 0.01,
                 'uom_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_99992',
-                'invoice_policy': 'delivery',
+                'invoice_policy': 'transfered',
                 'expense_policy': 'sales_price',
                 'taxes_id': [Command.set([new_sale_tax.id])],
                 'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
@@ -85,7 +85,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'weight': 0.01,
                 'uom_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_99993',
-                'invoice_policy': 'delivery',
+                'invoice_policy': 'transfered',
                 'expense_policy': 'cost',
                 'taxes_id': [Command.set([new_sale_tax.id])],
                 'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
@@ -100,7 +100,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'weight': 0.01,
                 'uom_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'FURN_99994',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'expense_policy': 'cost',
                 'taxes_id': [Command.set([new_sale_tax.id])],
                 'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
@@ -207,7 +207,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         self.post_expenses_with_wizard(self.sale_expense_all)
 
         # CASE 2 steps
-        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.action_draft()
         self.sale_expense_all.account_move_id.unlink()
         self.sale_expense_all.action_reset()
 
@@ -231,7 +231,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         self.post_expenses_with_wizard(self.sale_expense_all)
 
         # CASE 2 steps
-        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.action_draft()
         self.sale_expense_all.account_move_id.unlink()
         self.sale_expense_all.action_reset()
 
@@ -267,7 +267,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         self.post_expenses_with_wizard(self.sale_expense_all)
 
         # CASE 4 steps
-        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.action_draft()
 
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # [0] Line not created from a re-invoiced, should never be changed
@@ -289,7 +289,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         self.post_expenses_with_wizard(self.sale_expense_all)
 
         # CASE 4 steps
-        self.sale_expense_all.account_move_id.button_draft()
+        self.sale_expense_all.account_move_id.action_draft()
 
         # CASE 5 steps
         self.sale_expense_all.account_move_id.action_post()
@@ -386,7 +386,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         ])
 
         # Reset the six expenses to draft and check that only them are unlinked
-        sale_expense_original_all.account_move_id.button_draft()
+        sale_expense_original_all.account_move_id.action_draft()
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # [0] Line not created from a re-invoiced, should never be changed
             {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'expense_ids': []},

@@ -1,6 +1,19 @@
 // = Search Bar
 // ============================================================================
 
+// Search container pill shape and focus state
+.o_searchview {
+    border-radius: $o-border-radius-full;
+    background: $o-gray-100;
+    transition: all $o-duration-fast $o-easing-standard;
+
+    &:focus-within {
+        background: $o-white;
+        border-color: $o-brand-primary;
+        box-shadow: $o-shadow-sm;
+    }
+}
+
 .o_searchview_facet {
     @keyframes animate {
         from {
@@ -10,6 +23,8 @@
     }
 
     animation: animate .25s ease-out;
+    border-radius: $o-border-radius-full;
+    background: rgba($o-brand-primary, 0.08);
 
     .btn, .btn:focus {
         // Boostrap plays around with the z-index of buttons, but this is not needed here
@@ -21,7 +36,7 @@
         max-width: $o-search-bar-facet-value-width;
 
         @include media-breakpoint-down(md) {
-            max-width: $o-search-bar-facet-value-width / 2;
+            max-width: calc($o-search-bar-facet-value-width / 2);
         }
     }
 }

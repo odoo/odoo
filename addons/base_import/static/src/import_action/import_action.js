@@ -1,6 +1,6 @@
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
-import { FileInput } from "@web/core/file_input/file_input";
+import { useDropzone } from "@web/components/dropzone/dropzone_hook";
+import { FileInput } from "@web/components/file_input/file_input";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
@@ -67,11 +67,10 @@ export class ImportAction extends Component {
                 const file = files[0];
                 const isValidFile =
                     file.name.endsWith(".csv") ||
-                    file.name.endsWith(".xls") ||
                     file.name.endsWith(".xlsx");
                 if (!isValidFile) {
                     this.notification.add(
-                        _t("Please upload an Excel (.xls or .xlsx) or .csv file to import."),
+                        _t("Please upload an Excel (.xlsx) or .csv file to import."),
                         {
                             type: "danger",
                         }

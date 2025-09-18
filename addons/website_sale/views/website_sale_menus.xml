@@ -40,25 +40,25 @@
                 sequence="1"/>
             <menuitem id="menu_catalog_pricelists"
                 name="Pricelists"
-                action="product.product_pricelist_action2"
+                action="product.action_product_pricelist_2"
                 groups="product.group_product_pricelist"
                 sequence="3"/>
             <menuitem id="menu_catalog_categories"
                 action="product_public_category_action"
                 sequence="4"/>
             <menuitem id="menu_product_attribute_action"
-                action="product.attribute_action"
+                action="product.action_product_attribute"
                 groups="product.group_product_variant"
                 sequence="5"/>
             <menuitem
                 id="menu_product_combos"
                 name="Combo Choices"
-                action="product.product_combo_action"
+                action="product.action_product_combo"
                 sequence="6"
             />
             <menuitem id="product_catalog_product_tags"
                 name="Product Tags"
-                action="product.product_tag_action"/>
+                action="product.action_product_tag"/>
             <menuitem
                 id="product_catalog_product_ribbons"
                 name="Product Ribbons"
@@ -122,4 +122,7 @@
         parent="website.menu_content"
         sequence="30"/>
 
+    <record id="website.menu_website_dashboard" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
+    </record>
 </odoo>

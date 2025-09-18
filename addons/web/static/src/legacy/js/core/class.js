@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/legacy/js/core/class - Legacy class inheritance system based on John Resig's simple JavaScript inheritance */
+
 /**
  * Improved John Resig's inheritance, based on:
  *
@@ -46,21 +50,29 @@
  *
  * @class Class
  */
-function OdooClass(){}
+function OdooClass() {}
 
-var initializing = false;
-// eslint-disable-next-line no-undef
-var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
+let initializing = false;
+
+const fnTest = /xyz/.test(
+    function () {
+        // @ts-expect-error -- function body is only stringified via toString(); xyz is never executed
+        xyz();
+    }.toString(),
+)
+    ? /\b_super\b/
+    : /.*/;
 
 /**
- * Subclass an existing class
+ * Subclass an existing class. Accepts one or more mixin objects as arguments.
  *
- * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
+ * @param {...Record<string, any>} mixins class-level properties and instance methods
+ * @returns {Function} the new subclass constructor
  */
-OdooClass.extend = function() {
-    var _super = this.prototype;
+OdooClass.extend = function () {
+    const _super = this.prototype;
     // Support mixins arguments
-    var args = [...arguments];
+    const args = [...arguments];
     args.unshift({});
 
     const prop = {};
@@ -71,75 +83,91 @@ OdooClass.extend = function() {
     // Instantiate a web class (but only create the instance,
     // don't run the init constructor)
     initializing = true;
-    var This = this;
-    var prototype = new This();
+    const This = this;
+    const prototype = new This();
     initializing = false;
 
     // Copy the properties over onto the new prototype
-    Object.keys(prop).forEach((name) => {
+    for (const name of Object.keys(prop)) {
         // Check if we're overwriting an existing function
-        prototype[name] = typeof prop[name] == "function" &&
-                          fnTest.test(prop[name]) ?
-                (function(name, fn) {
-                    return function() {
-                        var tmp = this._super;
+        prototype[name] =
+            typeof prop[name] == "function" && fnTest.test(prop[name])
+                ? (function (name, fn) {
+                      return function () {
+                          const tmp = this._super;
 
-                        // Add a new ._super() method that is the same
-                        // method but on the super-class
-                        this._super = _super[name];
+                          // Add a new ._super() method that is the same
+                          // method but on the super-class
+                          this._super = _super[name];
 
-                        // The method only need to be bound temporarily, so
-                        // we remove it when we're done executing
-                        var ret = fn.apply(this, arguments);
-                        this._super = tmp;
+                          // The method only need to be bound temporarily, so
+                          // we remove it when we're done executing
+                          const ret = fn.apply(this, arguments);
+                          this._super = tmp;
 
-                        return ret;
-                    };
-                })(name, prop[name]) :
-                prop[name];
-    });
+                          return ret;
+                      };
+                  })(name, prop[name])
+                : prop[name];
+    }
 
     // The dummy class constructor
     function Class() {
-        if(this.constructor !== OdooClass){
-            throw new Error("You can only instanciate objects with the 'new' operator");
+        if (this.constructor !== OdooClass) {
+            throw new Error(
+                "You can only instanciate objects with the 'new' operator",
+            );
         }
         // All construction is actually done in the init method
         this._super = null;
-        if (!initializing && this.init) {
-            var ret = this.init.apply(this, arguments);
-            if (ret) { return ret; }
+        // Cast to any: init() is injected dynamically by the mixin system
+        const self = /** @type {any} */ (this);
+        if (!initializing && self.init) {
+            const ret = self.init.apply(self, arguments);
+            if (ret) {
+                return ret;
+            }
         }
         return this;
     }
+    /**
+     * Adds or overrides methods on an existing class without creating a subclass.
+     *
+     * @param {Record<string, any>} properties
+     * @returns {void}
+     */
     Class.include = function (properties) {
-        Object.keys(properties).forEach((name) => {
-            if (typeof properties[name] !== 'function'
-                    || !fnTest.test(properties[name])) {
+        for (const name of Object.keys(properties)) {
+            if (
+                typeof properties[name] !== "function" ||
+                !fnTest.test(properties[name])
+            ) {
                 prototype[name] = properties[name];
-            } else if (typeof prototype[name] === 'function'
-                       && prototype.hasOwnProperty(name)) {
+            } else if (
+                typeof prototype[name] === "function" &&
+                Object.hasOwn(prototype, name)
+            ) {
                 prototype[name] = (function (name, fn, previous) {
                     return function () {
-                        var tmp = this._super;
+                        const tmp = this._super;
                         this._super = previous;
-                        var ret = fn.apply(this, arguments);
+                        const ret = fn.apply(this, arguments);
                         this._super = tmp;
                         return ret;
                     };
                 })(name, properties[name], prototype[name]);
-            } else if (typeof _super[name] === 'function') {
+            } else if (typeof _super[name] === "function") {
                 prototype[name] = (function (name, fn) {
                     return function () {
-                        var tmp = this._super;
+                        const tmp = this._super;
                         this._super = _super[name];
-                        var ret = fn.apply(this, arguments);
+                        const ret = fn.apply(this, arguments);
                         this._super = tmp;
                         return ret;
                     };
                 })(name, properties[name]);
             }
-        });
+        }
     };
 
     // Populate our constructed prototype object

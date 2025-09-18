@@ -4,7 +4,7 @@ import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/docume
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { listView } from "@web/views/list/list_view";
 
 import { ListController } from "@web/views/list/list_controller";

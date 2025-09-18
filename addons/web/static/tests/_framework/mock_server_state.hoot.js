@@ -1,10 +1,12 @@
+// @ts-check
+
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
 import { validateType } from "@odoo/owl";
 
-const { view_info } = odoo.__session_info__ || {};
-delete odoo.__session_info__;
+const { view_info } = /** @type {any} */ (odoo).__session_info__ || {};
+delete (/** @type {any} */ (odoo).__session_info__);
 
 const { Settings } = luxon;
 
@@ -34,6 +36,7 @@ const DEFAULT_LUXON_SETTINGS = {
     defaultWeekSettings: Settings.defaultWeekSettings,
 };
 const SERVER_STATE_VALUES = {
+    /** @type {{ id: number; name: string; currency_id?: number; [key: string]: any }[]} */
     companies: [
         {
             id: 1,
@@ -41,6 +44,7 @@ const SERVER_STATE_VALUES = {
             currency_id: 1,
         },
     ],
+    /** @type {{ id: number; name: string; position: string; symbol: string; [key: string]: any }[]} */
     currencies: [
         {
             id: 1,
@@ -100,7 +104,7 @@ const getServerStateValues = createJobScopedGetter(
         ...JSON.parse(JSON.stringify(SERVER_STATE_VALUES)),
         ...previousValues,
     }),
-    applyDefaults
+    applyDefaults,
 );
 
 /** @type {Map<any, (state: ServerState) => any>} */
@@ -137,21 +141,33 @@ export function onServerStateChange(target, callback) {
 
 export const serverState = new Proxy(SERVER_STATE_VALUES, {
     deleteProperty(_target, p) {
+        // @ts-ignore — createJobScopedGetter return type inference
         return Reflect.deleteProperty(getServerStateValues(), p);
     },
     get(_target, p) {
+        // @ts-ignore — createJobScopedGetter return type inference
         return Reflect.get(getServerStateValues(), p);
     },
     has(_target, p) {
+        // @ts-ignore — createJobScopedGetter return type inference
         return Reflect.has(getServerStateValues(), p);
     },
     set(_target, p, newValue) {
-        if (p in SERVER_STATE_VALUES_SCHEMA && newValue !== null && newValue !== undefined) {
-            const errorMessage = validateType(p, newValue, SERVER_STATE_VALUES_SCHEMA[p]);
+        if (
+            /** @type {any} */ (p) in SERVER_STATE_VALUES_SCHEMA &&
+            newValue !== null &&
+            newValue !== undefined
+        ) {
+            const errorMessage = validateType(
+                /** @type {string} */ (p),
+                newValue,
+                /** @type {any} */ (SERVER_STATE_VALUES_SCHEMA)[p],
+            );
             if (errorMessage) {
                 throw new TypeError(errorMessage);
             }
         }
+        // @ts-ignore — createJobScopedGetter return type inference
         const result = Reflect.set(getServerStateValues(), p, newValue);
         if (result) {
             notifySubscribers();
@@ -160,4 +176,4 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
     },
 });
 
-beforeEach(applyDefaults, { global: true });
+beforeEach(applyDefaults, /** @type {any} */ ({ global: true }));

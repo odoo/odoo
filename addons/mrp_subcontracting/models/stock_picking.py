@@ -6,7 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools.float_utils import float_compare
+from odoo.libs.numbers.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
 
 

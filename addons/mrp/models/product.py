@@ -257,7 +257,7 @@ class ProductProduct(models.Model):
                 continue
             product.mrp_product_qty = product.uom_id.round(mapped_data.get(product.id, 0))
 
-    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+    def _prepare_quantities_vals(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         """ When the product is a kit, this override computes the fields :
          - 'virtual_available'
          - 'qty_available'
@@ -272,7 +272,7 @@ class ProductProduct(models.Model):
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
         res = (
-            super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+            super(ProductProduct, regular_products)._prepare_quantities_vals(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
             if regular_products
             else {}
         )

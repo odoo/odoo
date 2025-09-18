@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
@@ -15,9 +17,8 @@ import {
     stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
 import { registry } from "@web/core/registry";
-import { BooleanField } from "@web/views/fields/boolean/boolean_field";
+import { BooleanField } from "@web/fields/basic/boolean/boolean_field";
 import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -75,7 +76,10 @@ test("error in a client action (at rendering)", async () => {
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_breadcrumb").toHaveText("Partners Action 1");
-    expect(queryAllTexts(".o_kanban_record span")).toEqual(["First record", "Second record"]);
+    expect(queryAllTexts(".o_kanban_record span")).toEqual([
+        "First record",
+        "Second record",
+    ]);
     expect.verifySteps(["web_search_read"]);
 
     try {
@@ -86,7 +90,10 @@ test("error in a client action (at rendering)", async () => {
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_breadcrumb").toHaveText("Partners Action 1");
-    expect(queryAllTexts(".o_kanban_record span")).toEqual(["First record", "Second record"]);
+    expect(queryAllTexts(".o_kanban_record span")).toEqual([
+        "First record",
+        "Second record",
+    ]);
     expect.verifySteps(["web_search_read"]);
 });
 
@@ -187,7 +194,7 @@ test("connection lost when coming back to kanban from form", async () => {
                 throw new Error(); // simulate a ConnectionLost error
             }
         },
-        { pure: true }
+        { pure: true },
     );
 
     await mountWithCleanup(WebClient);

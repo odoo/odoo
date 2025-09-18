@@ -1154,7 +1154,7 @@ class TestMailMailRace(MailCommon):
         bounce_deferred = []
         @api.model
         def send_email(self, message, *args, **kwargs):
-            with this.registry.cursor() as cr, mute_logger('odoo.sql_db'):
+            with this.registry.cursor() as cr, mute_logger('odoo.db'):
                 try:
                     # try ro aquire lock (no wait) on notification (should fail)
                     notif.with_env(notif.env(cr=cr)).lock_for_update()
@@ -1162,7 +1162,7 @@ class TestMailMailRace(MailCommon):
                     # record already locked by send, all good
                     bounce_deferred.append(True)
                 else:
-                    # this should trigger psycopg2.extensions.TransactionRollbackError in send().
+                    # this should trigger psycopg.errors.SerializationFailure in send().
                     # Only here to simulate the initial use case
                     # If the record is lock, this line would create a deadlock since we are in the same thread
                     # In practice, the update will wait the end of the send() transaction and set the notif as bounce, as expeced

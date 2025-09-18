@@ -1,14 +1,13 @@
-import { useService } from "@web/core/utils/hooks";
-import { renderToElement } from "@web/core/utils/render";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-
+import { useService } from "@web/core/utils/hooks";
+import { renderToElement } from "@web/core/utils/render";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 export async function handleSaleDetails(pos, hardwareProxy, dialog) {
     const saleDetails = await pos.data.call(
         "report.point_of_sale.report_saledetails",
         "get_sale_details",
-        [false, false, false, [pos.session.id]]
+        [false, false, false, [pos.session.id]],
     );
     const report = renderToElement(
         "point_of_sale.SaleDetailsReport",
@@ -16,7 +15,7 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
             date: new Date().toLocaleString(),
             pos: pos,
             formatCurrency: pos.env.utils.formatCurrency,
-        })
+        }),
     );
     const { successful, message } = await hardwareProxy.printer.printReceipt(report);
     if (!successful) {

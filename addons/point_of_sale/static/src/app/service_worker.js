@@ -1,6 +1,4 @@
 // @odoo-module ignore
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-undef */
 
 const cacheName = "odoo-pos-cache";
 

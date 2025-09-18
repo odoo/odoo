@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -62,8 +64,9 @@ test("field contains a color input", async () => {
     expect(".o_field_color div").toHaveStyle(
         { backgroundColor: "rgba(0, 0, 0, 0)" },
         {
-            message: "field has the transparent background if no color value has been selected",
-        }
+            message:
+                "field has the transparent background if no color value has been selected",
+        },
     );
     expect(".o_field_color input").toHaveValue("#000000");
 
@@ -127,8 +130,9 @@ test("color field change via anoter field's onchange", async () => {
     expect(".o_field_color div").toHaveStyle(
         { backgroundColor: "rgba(0, 0, 0, 0)" },
         {
-            message: "field has the transparent background if no color value has been selected",
-        }
+            message:
+                "field has the transparent background if no color value has been selected",
+        },
     );
     expect(".o_field_color input").toHaveValue("#000000");
     await fieldInput("text").edit("someValue");
@@ -170,7 +174,9 @@ test(`color field in list view => automatic save by default`, async () => {
             </list>`,
     });
 
-    await contains(`.o_data_row:eq(0) input[type=color]`, { visible: false }).edit("#fefefe");
+    await contains(`.o_data_row:eq(0) input[type=color]`, { visible: false }).edit(
+        "#fefefe",
+    );
 
     expect.verifySteps([
         "/web/webclient/translations",
@@ -195,7 +201,9 @@ test(`color field in list view => no save if autosave is false`, async () => {
             </list>`,
     });
 
-    await contains(`.o_data_row:eq(0) input[type=color]`, { visible: false }).edit("#fefefe");
+    await contains(`.o_data_row:eq(0) input[type=color]`, { visible: false }).edit(
+        "#fefefe",
+    );
 
     expect.verifySteps([
         "/web/webclient/translations",

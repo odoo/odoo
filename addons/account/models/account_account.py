@@ -220,7 +220,7 @@ class AccountAccount(models.Model):
             WHERE journal.currency_id IS NOT NULL
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
-            AND account.id IN %(accounts)s
+            AND account.id = ANY(%(accounts)s)
 
             UNION ALL
 
@@ -236,7 +236,7 @@ class AccountAccount(models.Model):
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
             AND apm.payment_type = 'inbound'
-            AND account.id IN %(accounts)s
+            AND account.id = ANY(%(accounts)s)
 
             UNION ALL
 
@@ -252,9 +252,9 @@ class AccountAccount(models.Model):
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
             AND apm.payment_type = 'outbound'
-            AND account.id IN %(accounts)s
+            AND account.id = ANY(%(accounts)s)
         ''', {
-            'accounts': tuple(self.ids)
+            'accounts': list(self.ids)
         })
         res = self.env.cr.fetchone()
         if res:
@@ -298,11 +298,11 @@ class AccountAccount(models.Model):
             SELECT account.id
             FROM account_account account
             JOIN account_journal journal ON journal.default_account_id = account.id
-            WHERE account.id IN %s
+            WHERE account.id = ANY(%s)
             AND account.account_type IN ('asset_receivable', 'liability_payable')
             AND journal.type IN ('sale', 'purchase')
             LIMIT 1;
-        ''', [tuple(self.ids)])
+        ''', [list(self.ids)])
 
         if self.env.cr.fetchone():
             raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
@@ -324,9 +324,9 @@ class AccountAccount(models.Model):
               FROM account_journal journal
               JOIN account_account account ON journal.default_account_id = account.id
              WHERE account.account_type IN ('asset_receivable', 'liability_payable')
-               AND account.id IN %s
+               AND account.id = ANY(%s)
              LIMIT 1;
-        ''', [tuple(self.ids)])
+        ''', [list(self.ids)])
 
         if self.env.cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
@@ -370,7 +370,7 @@ class AccountAccount(models.Model):
         query = Query(self.env, 'account_account')
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
         if operator == 'in':
-            query.add_where(SQL("%s IN %s", placeholder_code_sql, tuple(value)))
+            query.add_where(SQL("%s = ANY(%s)", placeholder_code_sql, list(value)))
         else:
             query.add_where(SQL("%s ILIKE %s", placeholder_code_sql, value))
         return [('id', 'in', query)]
@@ -953,9 +953,9 @@ class AccountAccount(models.Model):
                     THEN true ELSE false END,
                 amount_residual = (debit-credit),
                 amount_residual_currency = amount_currency
-            WHERE full_reconcile_id IS NULL and account_id IN %s
+            WHERE full_reconcile_id IS NULL and account_id = ANY(%s)
         """
-        self.env.cr.execute(query, [tuple(self.ids)])
+        self.env.cr.execute(query, [list(self.ids)])
 
     def _toggle_reconcile_to_false(self):
         '''Toggle the `reconcile´ boolean from True -> False
@@ -979,9 +979,9 @@ class AccountAccount(models.Model):
         query = """
             UPDATE account_move_line
                 SET amount_residual = 0, amount_residual_currency = 0
-            WHERE full_reconcile_id IS NULL AND account_id IN %s
+            WHERE full_reconcile_id IS NULL AND account_id = ANY(%s)
         """
-        self.env.cr.execute(query, [tuple(self.ids)])
+        self.env.cr.execute(query, [list(self.ids)])
 
     @api.model
     def name_create(self, name):
@@ -1099,7 +1099,7 @@ class AccountAccount(models.Model):
                 duplicate_codes = [code for code, accounts in accounts_by_code.items() if len(accounts) > 1]
 
             # Check 2.2: Check that there are no duplicates in database
-            elif duplicates := self.with_company(company).sudo().search_fetch(
+            elif duplicates := self.with_company(company).sudo().with_context(active_test=False).search_fetch(
                 [
                     ('code', 'in', list(accounts_by_code)),
                     ('id', 'not in', self.ids),
@@ -1427,7 +1427,7 @@ class AccountAccount(models.Model):
             table=SQL.identifier(self._table),
             fields_drop_company_ids=SQL(', ').join(
                 SQL(
-                    "%(field)s = NULLIF(%(field)s - %(company_ids)s, '{}'::jsonb)",
+                    "%(field)s = NULLIF(%(field)s - %(company_ids)s::text[], '{}'::jsonb)",
                     field=SQL.identifier(field_name),
                     company_ids=list(new_account_id_by_company_id)
                 )
@@ -1459,6 +1459,10 @@ class AccountAccount(models.Model):
 
         # Clear ir.model.data ormcache
         self.env.registry.clear_cache()
+
+        # Invalidate record cache after direct SQL updates to company-dependent
+        # fields (code_store, etc.) so subsequent reads fetch fresh DB values.
+        self.env.invalidate_all()
 
         # Step 4: Change check_company fields to only keep values compatible with the account's company, and update company_ids on account.
         write_vals = {'company_ids': [Command.set(base_company.ids)]}
@@ -1547,9 +1551,9 @@ class AccountGroup(models.Model):
                 OR
                 other.code_prefix_start >= this.code_prefix_start AND this.code_prefix_end >= other.code_prefix_start
             )
-            WHERE this.id IN %(ids)s
+            WHERE this.id = ANY(%(ids)s)
         """
-        self.env.cr.execute(query, {'ids': tuple(self.ids)})
+        self.env.cr.execute(query, {'ids': list(self.ids)})
         res = self.env.cr.fetchall()
         if res:
             raise ValidationError(_('Account Groups with the same granularity can\'t overlap'))
@@ -1611,7 +1615,7 @@ class AccountGroup(models.Model):
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
                    AND parent.id != child.id
                    AND parent.company_id = child.company_id
-                 WHERE child.company_id IN %s
+                 WHERE child.company_id = ANY(%s)
               ORDER BY child.id, char_length(parent.code_prefix_start) DESC
             )
             UPDATE account_group child
@@ -1620,7 +1624,7 @@ class AccountGroup(models.Model):
              WHERE child.id = relation.child_id
                AND child.parent_id IS DISTINCT FROM relation.parent_id
          RETURNING child.id
-        """, tuple(company_ids))
+        """, list(company_ids))
         self.env.cr.execute(query)
 
         updated_rows = self.env.cr.fetchall()

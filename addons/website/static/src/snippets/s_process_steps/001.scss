@@ -25,7 +25,7 @@
         }
 
         .s_process_step_content {
-            padding: 0 $grid-gutter-width/2;
+            padding: 0 calc($grid-gutter-width / 2);
             text-align: center;
         }
 
@@ -34,7 +34,7 @@
             z-index: 1;
             height: $process-step-icon-size;
             width: calc(100% - #{$process-step-icon-size});
-            left: calc(50% + #{$process-step-icon-size / 2});
+            left: calc(50% + #{calc($process-step-icon-size / 2)});
             margin: $grid-gutter-width 0;
             pointer-events: none;
 

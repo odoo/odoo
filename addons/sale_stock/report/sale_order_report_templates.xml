@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <odoo>
-    <template id="report_saleorder_document_inherit_sale_stock" inherit_id="sale.report_saleorder_document">
+
+    <template id="report_saleorder_document_inherit_sale_stock"
+        inherit_id="sale.report_saleorder_document">
         <xpath expr="//div[@name='expiration_date']" position="after">
-            <div class="col" t-if="doc.incoterm">
+            <div class="col" t-if="doc.incoterm_id">
                 <strong>Incoterm</strong>
                 <div t-if="doc.incoterm_location">
-                    <span t-field="doc.incoterm.code"/> <br/>
-                    <span t-field="doc.incoterm_location"/>
+                    <span t-field="doc.incoterm_id.code" />
+                    <br />
+                    <span t-field="doc.incoterm_location" />
                 </div>
-                <div t-else="" t-field="doc.incoterm.code"/>
+                <div t-else="" t-field="doc.incoterm_id.code" />
             </div>
         </xpath>
     </template>
+
 </odoo>

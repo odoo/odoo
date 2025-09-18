@@ -14,10 +14,10 @@ $-mini-nav-size: 40px;
     &::before {
         content: "";
         @include o-position-absolute(0, auto, auto, 0);
-        border-top: $-mini-nav-size/2 solid $o-enterprise-color;
-        border-left: $-mini-nav-size/2 solid $o-enterprise-color;
-        border-bottom: $-mini-nav-size/2 solid transparent;
-        border-right: $-mini-nav-size/2 solid transparent;
+        border-top: calc($-mini-nav-size / 2) solid $o-enterprise-color;
+        border-left: calc($-mini-nav-size / 2) solid $o-enterprise-color;
+        border-bottom: calc($-mini-nav-size / 2) solid transparent;
+        border-right: calc($-mini-nav-size / 2) solid transparent;
         cursor: pointer;
     }
 

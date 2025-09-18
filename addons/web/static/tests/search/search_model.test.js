@@ -1,7 +1,14 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
-import { defineModels, fields, models, mountWithSearch } from "@web/../tests/web_test_helpers";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
+import {
+    defineModels,
+    fields,
+    models,
+    mountWithSearch,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
@@ -18,7 +25,7 @@ async function createSearchModel(searchProps = {}, config = {}) {
             searchViewId: false,
             ...searchProps,
         },
-        config
+        config,
     );
     return component.env.searchModel;
 }
@@ -460,7 +467,7 @@ test("parsing a searchpanel tag", async () => {
                 </search>
             `,
         },
-        { viewType: "kanban" }
+        { viewType: "kanban" },
     );
     expect(model.getSections()).toEqual([]);
 });
@@ -477,7 +484,7 @@ test("parsing a searchpanel field select one", async () => {
             `,
             resModel: "partner",
         },
-        { viewType: "kanban" }
+        { viewType: "kanban" },
     );
     const sections = model.getSections();
     for (const section of sections) {
@@ -548,7 +555,7 @@ test("parsing a searchpanel field select multi", async () => {
             `,
             resModel: "partner",
         },
-        { viewType: "kanban" }
+        { viewType: "kanban" },
     );
     const sections = model.getSections();
     for (const section of sections) {
@@ -1018,7 +1025,9 @@ test("field tags with invisible attribute", async () => {
         `,
         context: { abc: true },
     });
-    const fields = model.getSearchItems((f) => f.type === "field").map((item) => item.fieldName);
+    const fields = model
+        .getSearchItems((f) => f.type === "field")
+        .map((item) => item.fieldName);
     expect(fields).toEqual(["bar"]);
 });
 
@@ -1052,7 +1061,7 @@ test("no search items created for search panel sections", async () => {
             `,
             resModel: "partner",
         },
-        { viewType: "kanban" }
+        { viewType: "kanban" },
     );
     const sections = model.getSections();
     expect(sections).toHaveLength(2);

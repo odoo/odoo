@@ -1,6 +1,8 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
@@ -16,7 +18,6 @@ import {
     patchWithCleanup,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
@@ -245,7 +246,7 @@ test(`actions can push state`, async () => {
     await contains(`.test_client_action`).click();
     await animationFrame();
     expect(browser.location.href).toBe(
-        "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed"
+        "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed",
     );
     expect(browser.history.length).toBe(3);
     expect(router.current.action).toBe("client_action_pushes");
@@ -277,7 +278,7 @@ test(`actions override previous state`, async () => {
     await contains(`.test_client_action`).click();
     await animationFrame();
     expect(browser.location.href).toBe(
-        "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed"
+        "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed",
     );
     expect(browser.history.length).toBe(3); // Two history entries
     expect(router.current.action).toBe("client_action_pushes");
@@ -286,7 +287,8 @@ test(`actions override previous state`, async () => {
     await getService("action").doAction(1001);
     await animationFrame();
     expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
-        message: "client_action_pushes removed from url because action 1001 is in target main",
+        message:
+            "client_action_pushes removed from url because action 1001 is in target main",
     });
     expect(browser.history.length).toBe(4);
     expect(router.current.action).toBe(1001);
@@ -350,7 +352,9 @@ test(`action in target new do not push state`, async () => {
     expect(browser.location.href).toBe("http://example.com/odoo", {
         message: "url did not change",
     });
-    expect(browser.history.length).toBe(1, { message: "did not create a history entry" });
+    expect(browser.history.length).toBe(1, {
+        message: "did not create a history entry",
+    });
     expect(router.current).toEqual({});
 });
 
@@ -521,7 +525,9 @@ test(`view_type is in url when not the default one`, async () => {
 
     await getService("action").doAction(3, { viewType: "kanban" });
     await animationFrame();
-    expect(browser.location.href).toBe("http://example.com/odoo/action-3?view_type=kanban");
+    expect(browser.location.href).toBe(
+        "http://example.com/odoo/action-3?view_type=kanban",
+    );
     expect(browser.history.length).toBe(3, { message: "created a history entry" });
     expect(`.breadcrumb`).toHaveCount(1, {
         message: "created a breadcrumb entry",
@@ -567,9 +573,13 @@ test(`switchView pushes the stat but doesn't add to the breadcrumbs`, async () =
 
     await getService("action").switchView("kanban");
     await animationFrame();
-    expect(browser.location.href).toBe("http://example.com/odoo/action-3?view_type=kanban");
+    expect(browser.location.href).toBe(
+        "http://example.com/odoo/action-3?view_type=kanban",
+    );
     expect(browser.history.length).toBe(3, { message: "created a history entry" });
-    expect(`.breadcrumb`).toHaveCount(0, { message: "didn't create a breadcrumb entry" });
+    expect(`.breadcrumb`).toHaveCount(0, {
+        message: "didn't create a breadcrumb entry",
+    });
     expect(router.current).toEqual({
         action: 3,
         view_type: "kanban", // view_type is on the state when it's not the default one

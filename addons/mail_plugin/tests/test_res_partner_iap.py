@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
+import psycopg
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tools import mute_logger
@@ -9,14 +9,14 @@ from odoo.tools import mute_logger
 
 class TestResPartnerIap(MailCommon):
 
-    @mute_logger("odoo.sql_db")
+    @mute_logger("odoo.db")
     def test_res_partner_iap_constraint(self):
         partner = self.partner_employee
 
         self.env["res.partner.iap"].search([("partner_id", "=", partner.id)]).unlink()
         self.env["res.partner.iap"].create({"partner_id": partner.id, "iap_enrich_info": "test info"})
 
-        with self.assertRaises(psycopg2.IntegrityError, msg="Can create only one partner IAP per partner"):
+        with self.assertRaises(psycopg.IntegrityError, msg="Can create only one partner IAP per partner"):
             self.env["res.partner.iap"].create({"partner_id": partner.id, "iap_enrich_info": "test info"})
 
     def test_res_partner_iap_compute_iap_enrich_info(self):

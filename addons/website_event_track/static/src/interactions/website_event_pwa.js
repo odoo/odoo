@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils } from "@web/ui/block/ui_service";
 
 export class WebsiteEventPWA extends Interaction {
     static selector = "#wrapwrap.event";

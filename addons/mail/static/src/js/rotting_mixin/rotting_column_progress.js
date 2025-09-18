@@ -1,5 +1,4 @@
 import { ColumnProgress } from "@web/views/view_components/column_progress";
-
 export class RottingColumnProgress extends ColumnProgress {
     static template = "mail.RottingColumnProgress";
     static props = {

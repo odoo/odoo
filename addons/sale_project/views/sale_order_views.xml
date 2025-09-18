@@ -4,7 +4,7 @@
     <record id="view_order_form_inherit_sale_project" model="ir.ui.view">
         <field name="name">sale.order.form.sale.project</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale.view_sale_order_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <button name="action_view_invoice" position="before">
@@ -49,12 +49,12 @@
         </field>
     </record>
 
-    <record id="view_sales_order_filter_inherit_sale_project" model="ir.ui.view">
+    <record id="view_sale_order_search_inherit_sale_project" model="ir.ui.view">
         <field name="name">sale.order.list.select.inherit.sale_project</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="inherit_id" ref="sale.view_sale_order_search"/>
         <field name="arch" type="xml">
-            <field name="order_line" position="after">
+            <field name="line_ids" position="after">
                 <field name="project_id" groups="project.group_project_user"/>
             </field>
         </field>
@@ -72,7 +72,7 @@
     <record id="view_order_simple_form" model="ir.ui.view">
         <field name="name">sale.order.form.from.task</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale.view_sale_order_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <header position="replace"/>

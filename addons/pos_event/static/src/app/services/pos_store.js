@@ -1,7 +1,7 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
-import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
+import { patch } from "@web/core/utils/patch";
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
@@ -15,14 +15,18 @@ patch(PosStore.prototype, {
                 }
 
                 for (const ticket of ev.event_ticket_ids) {
-                    const eventTicket = this.models["event.event.ticket"].get(ticket.ticket_id);
+                    const eventTicket = this.models["event.event.ticket"].get(
+                        ticket.ticket_id,
+                    );
                     if (eventTicket) {
                         eventTicket.seats_available = ticket.seats_available;
                     }
                 }
 
                 for (const slot of ev.event_slot_ids) {
-                    const eventSlot = this.models["event.slot"].get(slot.slot_id);
+                    const eventSlot = this.models["event.slot"].get(
+                        slot.slot_id,
+                    );
                     if (eventSlot) {
                         eventSlot.seats_available = slot.seats_available;
                     }
@@ -36,18 +40,22 @@ patch(PosStore.prototype, {
     createDummyProductForEvents() {
         for (const event of this.models["event.event"].getAll()) {
             const eventTicketWithProduct = event.event_ticket_ids.filter(
-                (ticket) => ticket.product_id
+                (ticket) => ticket.product_id,
             );
 
             if (!eventTicketWithProduct.length) {
                 continue;
             }
 
-            const lowestPrice = eventTicketWithProduct.sort((a, b) => a.price - b.price)[0];
+            const lowestPrice = eventTicketWithProduct.sort(
+                (a, b) => a.price - b.price,
+            )[0];
             const categIds = eventTicketWithProduct.flatMap(
-                (ticket) => ticket.product_id.pos_categ_ids
+                (ticket) => ticket.product_id.pos_categ_ids,
             );
-            const taxeIds = eventTicketWithProduct.flatMap((ticket) => ticket.product_id.taxes_id);
+            const taxeIds = eventTicketWithProduct.flatMap(
+                (ticket) => ticket.product_id.taxes_id,
+            );
             this.models["product.template"].create({
                 id: `dummy_${event.id}`,
                 available_in_pos: true,

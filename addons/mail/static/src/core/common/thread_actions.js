@@ -1,13 +1,11 @@
-import { useSubEnv, useComponent, useState } from "@odoo/owl";
-
+import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
+import { useComponent, useState, useSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
-import { markEventHandled } from "@web/core/utils/misc";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
-import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
+import { markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
-
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -38,7 +36,8 @@ export function registerThreadAction(id, definition) {
 }
 
 registerThreadAction("fold-chat-window", {
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ owner }) =>
+        owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-minus",
     name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
     open: ({ owner }) => owner.toggleFold(),
@@ -59,7 +58,8 @@ registerThreadAction("rename-thread", {
     sequenceGroup: 20,
 });
 registerThreadAction("close", {
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ owner }) =>
+        owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi fa-fw oi-close",
     name: _t("Close Chat Window (ESC)"),
     open: ({ owner }) => owner.close(),
@@ -75,7 +75,8 @@ registerThreadAction("search-messages", {
     hotkey: "f",
     panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     icon: "oi oi-fw oi-search",
-    name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
+    name: ({ action }) =>
+        action.isActive ? _t("Close Search") : _t("Search Messages"),
     sequence: 20,
     sequenceGroup: 20,
     setup: ({ action }) =>
@@ -137,7 +138,12 @@ export class ThreadAction extends Action {
 
     /** Condition to display the action panel component of this action. */
     get actionPanelComponentCondition() {
-        return this.isActive && this.actionPanelComponent && this.condition && !this.popover;
+        return (
+            this.isActive &&
+            this.actionPanelComponent &&
+            this.condition &&
+            !this.popover
+        );
     }
 
     /** Props to pass to the action panel component of this action. */
@@ -148,9 +154,13 @@ export class ThreadAction extends Action {
     /** Closes this action. */
     close({ nextActiveAction } = {}) {
         if (this.toggle) {
-            this.owner.threadActions.activeAction = this.owner.threadActions.actionStack.pop();
+            this.owner.threadActions.activeAction =
+                this.owner.threadActions.actionStack.pop();
         }
-        this.definition.close?.call(this, Object.assign(this.params, { nextActiveAction }));
+        this.definition.close?.call(
+            this,
+            Object.assign(this.params, { nextActiveAction }),
+        );
     }
 
     /** States whether this action is currently active. */
@@ -197,10 +207,12 @@ export class ThreadAction extends Action {
             if (this.owner.threadActions.activeAction) {
                 if (keepPrevious) {
                     this.owner.threadActions.actionStack.push(
-                        this.owner.threadActions.activeAction
+                        this.owner.threadActions.activeAction,
                     );
                 } else {
-                    this.owner.threadActions.activeAction.close({ nextActiveAction: this });
+                    this.owner.threadActions.activeAction.close({
+                        nextActiveAction: this,
+                    });
                 }
             }
             this.owner.threadActions.activeAction = this;
@@ -234,9 +246,14 @@ export function useThreadActions({ thread } = {}) {
     const component = useComponent();
     const transformedActions = threadActionsRegistry
         .getEntries()
-        .map(([id, definition]) => new ThreadAction({ owner: component, id, definition, thread }));
+        .map(
+            ([id, definition]) =>
+                new ThreadAction({ owner: component, id, definition, thread }),
+        );
     for (const action of transformedActions) {
         action.setup();
     }
-    return useState(new UseThreadActions(component, transformedActions, useService("mail.store")));
+    return useState(
+        new UseThreadActions(component, transformedActions, useService("mail.store")),
+    );
 }

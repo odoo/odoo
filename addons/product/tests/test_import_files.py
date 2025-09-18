@@ -10,7 +10,7 @@ from odoo.tools.misc import file_open
 class TestImportFiles(TransactionCase):
 
     @unittest.skipUnless(
-        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available"
+        can_import("openpyxl"), "openpyxl not available"
     )
     def test_import_product_demo_xls(self):
         if not loaded_demo_data(self.env):

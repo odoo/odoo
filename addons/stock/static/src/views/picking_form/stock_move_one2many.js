@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
 import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { patch } from "@web/core/utils/patch";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -42,7 +42,7 @@ export class MovesListRenderer extends ListRenderer {
             resModel: "stock.package",
             domain,
             context: {
-                list_view_ref: "stock.stock_package_view_add_list",
+                list_view_ref: "stock.view_stock_package_list_add",
             },
             onSelected: async (resIds) => {
                 if (resIds.length) {

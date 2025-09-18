@@ -1,7 +1,7 @@
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { BuilderButtonGroup } from "./building_blocks/builder_button_group";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/components/dropdown/dropdown";
 import { BuilderDateTimePicker } from "./building_blocks/builder_datetimepicker";
 import { BuilderRow } from "./building_blocks/builder_row";
 import { BuilderButton } from "./building_blocks/builder_button";

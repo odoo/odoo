@@ -8,7 +8,7 @@
 The module adds google user in res user.
 ========================================
 """,
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

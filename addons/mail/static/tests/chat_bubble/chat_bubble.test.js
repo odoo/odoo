@@ -19,7 +19,7 @@ import {
 } from "../mail_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
-import { range } from "@web/core/utils/numbers";
+import { range } from "@web/core/utils/format/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();

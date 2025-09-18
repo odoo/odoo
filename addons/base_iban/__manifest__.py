@@ -10,7 +10,7 @@ This module installs the base for IBAN (International Bank Account Number) bank 
 The ability to extract the correctly represented local accounts from IBAN accounts
 with a single statement.
     """,
-    'depends': ['account', 'web'],
+    'depends': ['account'],
     'data': [
         'views/partner_view.xml',
         'views/setup_wizards_view.xml'

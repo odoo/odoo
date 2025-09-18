@@ -1,10 +1,20 @@
-import { shallowEqual } from "@web/core/utils/arrays";
+// @ts-check
+
+/** @module @web/core/domain - Domain expression AST: parsing, combining, evaluation, and conversion to string */
+
+import { shallowEqual } from "@web/core/utils/collections/arrays";
+import { escapeRegExp } from "@web/core/utils/format/strings";
+
 import { evaluate, formatAST, parseExpr } from "./py_js/py";
 import { toPyValue } from "./py_js/py_utils";
-import { escapeRegExp } from "@web/core/utils/strings";
 
 /**
- * @typedef {import("./py_js/py_parser").AST} AST
+ * Domain uses AST nodes pervasively via .value/.type without discriminated
+ * union narrowing. Using `any` here avoids 15+ casts on every AST access.
+ * @typedef {any} AST
+ */
+
+/**
  * @typedef {[string | 0 | 1, string, any]} Condition
  * @typedef {("&" | "|" | "!" | Condition)[]} DomainListRepr
  * @typedef {DomainListRepr | string | Domain} DomainRepr
@@ -26,7 +36,8 @@ export class Domain {
         if (domains.length === 0) {
             return new Domain([]);
         }
-        const domain1 = domains[0] instanceof Domain ? domains[0] : new Domain(domains[0]);
+        const domain1 =
+            domains[0] instanceof Domain ? domains[0] : new Domain(domains[0]);
         if (domains.length === 1) {
             return domain1;
         }
@@ -35,7 +46,10 @@ export class Domain {
         const astValues1 = domain1.ast.value;
         const astValues2 = domain2.ast.value;
         const op = operator === "AND" ? "&" : "|";
-        const combinedAST = { type: 4 /* List */, value: astValues1.concat(astValues2) };
+        const combinedAST = {
+            type: 4 /* List */,
+            value: [...astValues1, ...astValues2],
+        };
         result.ast = normalizeDomainAST(combinedAST, op);
         return result;
     }
@@ -60,6 +74,7 @@ export class Domain {
 
     /**
      * Return the negation of the domain
+     * @param {DomainRepr} domain
      * @returns {Domain}
      */
     static not(domain) {
@@ -105,12 +120,17 @@ export class Domain {
                 if (leaf.value === "!") {
                     return 1 + processLeaf(elements, idx + 1, "&", newDomain);
                 }
-                const firstLeafSkip = processLeaf(elements, idx + 1, leaf.value, newDomain);
+                const firstLeafSkip = processLeaf(
+                    elements,
+                    idx + 1,
+                    leaf.value,
+                    newDomain,
+                );
                 const secondLeafSkip = processLeaf(
                     elements,
                     idx + 1 + firstLeafSkip,
                     leaf.value,
-                    newDomain
+                    newDomain,
                 );
                 return 1 + firstLeafSkip + secondLeafSkip;
             }
@@ -131,16 +151,18 @@ export class Domain {
      */
     constructor(descr = []) {
         if (descr instanceof Domain) {
-            /** @type {AST} */
             return new Domain(descr.toString());
         } else {
             let rawAST;
             try {
                 rawAST = typeof descr === "string" ? parseExpr(descr) : toAST(descr);
             } catch (error) {
-                throw new InvalidDomainError(`Invalid domain representation: ${descr.toString()}`, {
-                    cause: error,
-                });
+                throw new InvalidDomainError(
+                    `Invalid domain representation: ${descr.toString()}`,
+                    {
+                        cause: error,
+                    },
+                );
             }
             this.ast = normalizeDomainAST(rawAST);
         }
@@ -166,7 +188,7 @@ export class Domain {
     }
 
     /**
-     * @param {Object} context
+     * @param {Object} [context]
      * @returns {DomainListRepr}
      */
     toList(context) {
@@ -247,7 +269,7 @@ function normalizeDomainAST(domain, op = "&") {
             const value = domain.value;
             /* Tuple contains at least one Tuple and optionally string */
             if (
-                value.findIndex((e) => e.type === 10) === -1 ||
+                !value.some((e) => e.type === 10) ||
                 !value.every((e) => e.type === 10 || e.type === 1)
             ) {
                 throw new InvalidDomainError("Invalid domain AST");
@@ -287,7 +309,7 @@ function normalizeDomainAST(domain, op = "&") {
     }
     if (expected > 0) {
         throw new InvalidDomainError(
-            `invalid domain ${formatAST(domain)} (missing ${expected} segment(s))`
+            `invalid domain ${formatAST(domain)} (missing ${expected} segment(s))`,
         );
     }
     return { type: 4 /* List */, value: values };
@@ -307,22 +329,34 @@ function matchCondition(record, condition) {
     if (typeof field === "string") {
         const names = field.split(".");
         if (names.length >= 2) {
-            return matchCondition(record[names[0]], [names.slice(1).join("."), operator, value]);
+            return matchCondition(record[names[0]], [
+                names.slice(1).join("."),
+                operator,
+                value,
+            ]);
         }
     }
     let likeRegexp, ilikeRegexp;
     if (["like", "not like", "ilike", "not ilike"].includes(operator)) {
-        likeRegexp = new RegExp(`(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`, "g");
-        ilikeRegexp = new RegExp(`(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`, "gi");
+        likeRegexp = new RegExp(
+            `(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`,
+            "g",
+        );
+        ilikeRegexp = new RegExp(
+            `(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`,
+            "gi",
+        );
     }
     const fieldValue = typeof field === "number" ? field : record[field];
     const isNot = operator.startsWith("not ");
     switch (operator) {
         case "=?":
+            // When value is false or null the condition is always true;
+            // otherwise =? behaves identically to =.
             if ([false, null].includes(value)) {
                 return true;
             }
-        // eslint-disable-next-line no-fallthrough
+            return matchCondition(record, [field, "=", value]);
         case "=":
         case "==":
             if (Array.isArray(fieldValue) && Array.isArray(value)) {
@@ -344,29 +378,32 @@ function matchCondition(record, condition) {
         case "not in": {
             const val = Array.isArray(value) ? value : [value];
             const fieldVal = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
-            return Boolean(fieldVal.some((fv) => val.includes(fv))) != isNot;
+            return Boolean(fieldVal.some((fv) => val.includes(fv))) !== isNot;
         }
         case "like":
         case "not like":
             if (fieldValue === false) {
                 return isNot;
             }
-            return Boolean(fieldValue.match(likeRegexp)) != isNot;
+            return Boolean(fieldValue.match(likeRegexp)) !== isNot;
         case "=like":
         case "not =like":
             if (fieldValue === false) {
                 return isNot;
             }
             return (
-                Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*")).test(fieldValue)) !=
-                isNot
+                Boolean(
+                    new RegExp(
+                        "^" + escapeRegExp(value).replaceAll("%", ".*") + "$",
+                    ).test(fieldValue),
+                ) !== isNot
             );
         case "ilike":
         case "not ilike":
             if (fieldValue === false) {
                 return isNot;
             }
-            return Boolean(fieldValue.match(ilikeRegexp)) != isNot;
+            return Boolean(fieldValue.match(ilikeRegexp)) !== isNot;
         case "=ilike":
         case "not =ilike":
             if (fieldValue === false) {
@@ -374,8 +411,11 @@ function matchCondition(record, condition) {
             }
             return (
                 Boolean(
-                    new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue)
-                ) != isNot
+                    new RegExp(
+                        "^" + escapeRegExp(value).replaceAll("%", ".*") + "$",
+                        "i",
+                    ).test(fieldValue),
+                ) !== isNot
             );
         case "any":
         case "not any":
@@ -386,6 +426,13 @@ function matchCondition(record, condition) {
     }
     throw new InvalidDomainError("could not match domain");
 }
+
+/**
+ * Number of stack operands consumed by each prefix operator.
+ * Keeping arity explicit decouples the stack machine from Function.length,
+ * which changes with default parameters and rest params.
+ */
+const OPERATOR_ARITY = { "!": 1, "&": 2, "|": 2 };
 
 /**
  * @param {Object} record
@@ -411,12 +458,12 @@ function matchDomain(record, domain) {
         return true;
     }
     const operators = makeOperators(record);
-    const reversedDomain = Array.from(domain).reverse();
+    const reversedDomain = Array.from(domain).toReversed();
     const condStack = [];
     for (const item of reversedDomain) {
         const operator = typeof item === "string" && operators[item];
         if (operator) {
-            const operands = condStack.splice(-operator.length);
+            const operands = condStack.splice(-OPERATOR_ARITY[item]);
             condStack.push(operator(...operands));
         } else {
             condStack.push(item);

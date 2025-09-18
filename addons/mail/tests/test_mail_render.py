@@ -446,8 +446,6 @@ class TestRegexRendering(common.MailCommon):
                     Default
                     </p>''', '<p>Default</p>'),
             ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
-            ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
-            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
@@ -473,6 +471,10 @@ class TestRegexRendering(common.MailCommon):
             ('''<p t-out="object.name"><img/></p>''', '<p>Alice</p>'),
             ('''<p t-out="object.parent_id.name"><img/></p>''', '<p><img/></p>'),
             ('''<p t-out="'<h1>test</h1>'"/>''', '<p>&lt;h1&gt;test&lt;/h1&gt;</p>'),
+            # lxml 6 parses <div/aa as <div aa=""> (attribute, not malformed tag name),
+            # extra attributes on t-out elements trigger full QWeb rendering
+            ('''<div/aa t-out="object.name"></div/aa>''', '<div aa="">Alice</div>'),
+            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div aa="x">Alice</div>'),
         )
         for template, expected in non_static_templates:
             with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,

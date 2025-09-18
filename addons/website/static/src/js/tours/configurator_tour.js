@@ -13,14 +13,16 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThemeHomepageTour("configurator_tour", () => {
     let titleSelector = "#wrap > section:first-child";
-    let title = $(titleSelector).find("h1, h2").first();
-    if (!title.length) {
+    let titleContainer = document.querySelector(titleSelector);
+    let title = titleContainer?.querySelector("h1, h2");
+    if (!title) {
         titleSelector = titleSelector.replace("section:first-child", "section:nth-child(2)");
-        title = $(titleSelector).find("h1, h2").first();
+        titleContainer = document.querySelector(titleSelector);
+        title = titleContainer?.querySelector("h1, h2");
     }
 
-    const isTitleTextImage = $(titleSelector).hasClass("s_text_image");
-    titleSelector = titleSelector.concat(` ${title.is("h1") ? "h1" : "h2"}`);
+    const isTitleTextImage = titleContainer?.classList.contains("s_text_image");
+    titleSelector = titleSelector + ` ${title?.tagName === "H1" ? "h1" : "h2"}`;
 
     const shapeSelector = "#wrap > section[data-oe-shape-data]";
     const backgroundSelector = "#wrap > section:nth-child(2)";
@@ -35,8 +37,9 @@ registerThemeHomepageTour("configurator_tour", () => {
     }
 
     const shapeStep = [];
-    if ($(shapeSelector).first().length) {
-        if (!$(backgroundSelector).is($(shapeSelector))) {
+    const shapeEl = document.querySelector(shapeSelector);
+    if (shapeEl) {
+        if (document.querySelector(backgroundSelector) !== shapeEl) {
             shapeStep.push(...clickOnSnippet(shapeSelector));
         }
         shapeStep.push(changeOption("BackgroundShape", "we-toggler", _t("Background Shape")));

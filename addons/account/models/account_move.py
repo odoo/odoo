@@ -11,7 +11,7 @@ from json import dumps
 import logging
 from markupsafe import Markup
 import re
-import os
+from pathlib import PurePosixPath
 from textwrap import shorten
 
 from odoo import api, fields, models, _, modules
@@ -27,6 +27,7 @@ from odoo.tools import (
     float_repr,
     format_amount,
     format_date,
+    format_list,
     formatLang,
     frozendict,
     get_lang,
@@ -222,7 +223,7 @@ class AccountMove(models.Model):
         search='_search_reconciled_payment_ids',
         help='Payments that have been reconciled with this invoice.'
     )
-    payment_count = fields.Integer(compute='_compute_payment_count')
+    payment_count = fields.Integer(compute='_compute_payment_count', compute_sudo=True)
 
     # === Statement fields === #
     statement_line_id = fields.Many2one(
@@ -543,50 +544,50 @@ class AccountMove(models.Model):
     )
     amount_untaxed = fields.Monetary(
         string='Untaxed Amount',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         tracking=True,
     )
     amount_tax = fields.Monetary(
         string='Tax',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
     )
     amount_total = fields.Monetary(
         string='Total',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         inverse='_inverse_amount_total',
     )
     amount_residual = fields.Monetary(
         string='Amount Due',
-        compute='_compute_amount', store=True,
+        compute='_compute_amounts', store=True,
     )
     amount_untaxed_signed = fields.Monetary(
         string='Untaxed Amount Signed',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         currency_field='company_currency_id',
     )
     amount_untaxed_in_currency_signed = fields.Monetary(
         string="Untaxed Amount Signed Currency",
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         currency_field='currency_id',
     )
     amount_tax_signed = fields.Monetary(
         string='Tax Signed',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         currency_field='company_currency_id',
     )
     amount_total_signed = fields.Monetary(
         string='Total Signed',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         currency_field='company_currency_id',
     )
     amount_total_in_currency_signed = fields.Monetary(
         string='Total in Currency Signed',
-        compute='_compute_amount', store=True, readonly=True,
+        compute='_compute_amounts', store=True, readonly=True,
         currency_field='currency_id',
     )
     amount_residual_signed = fields.Monetary(
         string='Amount Due Signed',
-        compute='_compute_amount', store=True,
+        compute='_compute_amounts', store=True,
         currency_field='company_currency_id',
     )
     tax_totals = fields.Binary(
@@ -679,7 +680,7 @@ class AccountMove(models.Model):
         comodel_name='res.users',
         copy=False,
         tracking=True,
-        compute='_compute_invoice_default_sale_person',
+        compute='_compute_invoice_default_user',
         store=True,
         readonly=False,
     )
@@ -797,19 +798,16 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_type', 'partner_id')
-    def _compute_invoice_default_sale_person(self):
-        # We want to modify the sale person only when we don't have one and if the move type corresponds to this condition
-        # If the move doesn't correspond, we remove the sale person
+    @api.depends('move_type')
+    def _compute_invoice_default_user(self):
+        """Compute the default responsible user for invoices.
+
+        Base implementation sets current user for invoice documents.
+        Extended by sale module for salesperson and purchase module for buyer.
+        """
         for move in self:
-            if move.is_sale_document(include_receipts=True):
-                if move.partner_id:
-                    move.invoice_user_id = (
-                        move.invoice_user_id
-                        or move.partner_id.user_id
-                        or move.partner_id.commercial_partner_id.user_id
-                        or self.env.user
-                    )
+            if move.is_invoice(include_receipts=True):
+                move.invoice_user_id = move.invoice_user_id or self.env.user
             else:
                 move.invoice_user_id = False
 
@@ -1048,13 +1046,12 @@ class AccountMove(models.Model):
             """Sorting priority:
             0. Same currency as the move or no currency
             1. Different currency
-            Then: prefer banks allowing outgoing payments (trusted ones)
             """
             if bank.currency_id == move.currency_id or not bank.currency_id:
                 currency_priority = 0
             else:
                 currency_priority = 1
-            return (currency_priority, not bank.allow_out_payment)
+            return currency_priority
 
         for move in self:
             if move.is_inbound() and (
@@ -1062,12 +1059,12 @@ class AccountMove(models.Model):
                     move.preferred_payment_method_line_id
                     or move.bank_partner_id.property_inbound_payment_method_line_id
                 )
-            ) and payment_method.journal_id:
+            ) and payment_method.journal_id and payment_method.journal_id.bank_account_id.allow_out_payment:
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
                 continue
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id
+                lambda bank: (not bank.company_id or bank.company_id == move.company_id) and bank.allow_out_payment
             ).sorted(key=_bank_selection_key)[:1]
 
     @api.depends('partner_id')
@@ -1170,7 +1167,7 @@ class AccountMove(models.Model):
         'line_ids.payment_id.state',
         'line_ids.full_reconcile_id',
         'state')
-    def _compute_amount(self):
+    def _compute_amounts(self):
         self.line_ids.fetch([
             'debit',
             'balance',
@@ -1241,7 +1238,7 @@ class AccountMove(models.Model):
         groups.get('unpaid', self.browse()).payment_state = 'not_paid'
         invoices = groups.get('invoices', self.browse())
 
-        stored_ids = tuple(invoices.ids)
+        stored_ids = list(invoices.ids)
         if stored_ids:
             self.env['account.partial.reconcile'].flush_model()
             self.env['account.payment'].flush_model(['is_matched'])
@@ -1267,7 +1264,7 @@ class AccountMove(models.Model):
                     JOIN account_move_line counterpart_line ON counterpart_line.id = part.%s
                     JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
                     LEFT JOIN account_payment pay ON pay.id = counterpart_move.origin_payment_id
-                    WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
+                    WHERE source_line.move_id = ANY(%s) AND counterpart_line.move_id != source_line.move_id
                     GROUP BY source_line.id, source_line.move_id, account.account_type
                 ''', SQL.identifier(source_field), SQL.identifier(counterpart_field), stored_ids))
 
@@ -2541,7 +2538,7 @@ class AccountMove(models.Model):
 
                             if not move.currency_id.is_zero(delta_amount):
                                 first_tax_line.amount_currency -= delta_amount * sign
-            self._compute_amount()
+            self._compute_amounts()
 
     def _inverse_amount_total(self):
         for move in self:
@@ -2648,11 +2645,12 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        self = self.with_company((self.journal_id.company_id or self.env.company)._accessible_branches()[:1])
+        company = (self.journal_id.company_id or self.env.company)._accessible_branches()[:1]
+        self = self.with_company(company)
 
         if self.partner_id:
-            rec_account = self.partner_id.property_account_receivable_id
-            pay_account = self.partner_id.property_account_payable_id
+            rec_account = self.partner_id.property_account_receivable_id or company.partner_id.property_account_receivable_id
+            pay_account = self.partner_id.property_account_payable_id or company.partner_id.property_account_payable_id
             if not rec_account and not pay_account:
                 action = self.env.ref('account.action_account_config')
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
@@ -2782,10 +2780,10 @@ class AccountMove(models.Model):
               JOIN account_move move ON move.id = line.move_id
               JOIN res_company company ON company.id = move.company_id
               JOIN res_currency currency ON currency.id = company.currency_id
-             WHERE line.move_id IN %s
+             WHERE line.move_id = ANY(%s)
           GROUP BY line.move_id, currency.decimal_places
             HAVING ROUND(SUM(line.balance), currency.decimal_places) != 0
-        ''', tuple(moves.ids)))
+        ''', list(moves.ids)))
 
     def _check_fiscal_lock_dates(self):
         if self.env.context.get('bypass_lock_check') is BYPASS_LOCK_CHECK:
@@ -2925,7 +2923,7 @@ class AccountMove(models.Model):
             )
         for line in self.line_ids:
             if (
-                line.get_parent_section_line().id == section_id
+                line.get_line_parent_section().id == section_id
                 and line.display_type == 'product'
                 and line.product_id.id in product_ids
             ):
@@ -2946,7 +2944,7 @@ class AccountMove(models.Model):
         """
         move_line = self.line_ids.filtered(
             lambda line: line.product_id.id == product_id
-            and line.get_parent_section_line().id == section_id,
+            and line.get_line_parent_section().id == section_id,
         )
         if move_line:
             if quantity != 0:
@@ -4795,11 +4793,14 @@ class AccountMove(models.Model):
         if new_lines := (self.invoice_line_ids - existing_lines):
             new_lines.is_imported = True
             if not existing_lines:
-                self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+                try:
+                    self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+                except (UserError, ValueError):
+                    _logger.exception("Failed to link bill to purchase order")
 
         if new and res:
             try:
-                attachments = self._from_files_data(files_data + self._unwrap_attachments(files_data))
+                attachments = set(self.attachment_ids + self._from_files_data(files_data + self._unwrap_attachments(files_data)))
                 self.journal_id._notify_invoice_subscribers(
                     invoice=self,
                     mail_params={
@@ -5465,9 +5466,9 @@ class AccountMove(models.Model):
                 to_cancel += move
             else:
                 to_unlink += move
-        to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
+        to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).action_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
-        to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
+        to_cancel.filtered(lambda m: m.state != 'cancel').action_cancel()
         return to_reverse._reverse_moves(cancel=True)
 
     def _post(self, soft=True):
@@ -5509,6 +5510,10 @@ class AccountMove(models.Model):
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
                 ))
+            if invoice.partner_bank_id and invoice.is_inbound() and not invoice.partner_bank_id.allow_out_payment:
+                raise UserError(_(
+                    "The company bank account linked to this invoice is not trusted, please double-check and trust it before confirming, or remove it"
+                ))
             if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
                 validation_msgs.add(_(
                     "You cannot validate an invoice with a negative total amount. "
@@ -5536,6 +5541,7 @@ class AccountMove(models.Model):
                     validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
+            move.line_ids._check_constrains_account_id_journal_id()
             if move.state in ['posted', 'cancel']:
                 validation_msgs.add(_('The entry %(name)s (id %(id)s) must be in draft.', name=move.name, id=move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note')):
@@ -5556,6 +5562,14 @@ class AccountMove(models.Model):
 
             if move.line_ids.account_id.filtered(lambda account: not account.active) and not self.env.context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
+
+            move_company_and_parents = move.company_id.sudo().parent_ids
+            mismatched_accounts = move.line_ids.mapped('account_id').filtered(lambda account: not move_company_and_parents & account.sudo().company_ids)
+            if mismatched_accounts:
+                validation_msgs.add(self.env._(
+                    "The entry is using accounts (%(accounts_codes_names)s) from a different company.",
+                    accounts_codes_names=format_list(self.env, mismatched_accounts.mapped('display_name'))
+                ))
 
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
@@ -5766,7 +5780,7 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
-    def action_open_business_doc(self):
+    def action_view_business_doc(self):
         self.ensure_one()
         if self.origin_payment_id:
             name = _("Payment")
@@ -5832,8 +5846,8 @@ class AccountMove(models.Model):
         return self.adjusting_entry_origin_move_ids._get_records_action(name=label)
 
     def action_switch_move_type(self):
-        if any(move.posted_before for move in self):
-            raise ValidationError(_("Once a document has been posted once, its type is set in stone and you can't change it anymore."))
+        if any((move.posted_before and move.name) for move in self):
+            raise ValidationError(_("You cannot switch the type of a document with an existing sequence number."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
@@ -6040,7 +6054,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.state == 'posted'):
             move.checked = is_checked
 
-    def button_draft(self):
+    def action_draft(self):
         if any(move.state not in ('cancel', 'posted') for move in self):
             raise UserError(_("Only posted/cancelled journal entries can be reset to draft."))
         if any(move.need_cancel_request for move in self):
@@ -6063,7 +6077,7 @@ class AccountMove(models.Model):
 
     def _detach_attachments(self):
         """
-        Called by button_draft to detach specific attachments for the current journal entries to allow regeneration.
+        Called by action_draft to detach specific attachments for the current journal entries to allow regeneration.
         """
         files_to_detach = self.sudo().env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
@@ -6074,7 +6088,8 @@ class AccountMove(models.Model):
             files_to_detach.res_field = False
             today = format_date(self.env, fields.Date.context_today(self))
             for attachment in files_to_detach:
-                attachment_name, attachment_extension = os.path.splitext(attachment.name)
+                attachment_path = PurePosixPath(attachment.name)
+                attachment_name, attachment_extension = attachment_path.stem, attachment_path.suffix
                 attachment.name = _(
                     '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
                     attachment_name=attachment_name,
@@ -6091,9 +6106,9 @@ class AccountMove(models.Model):
                 """
                     SELECT DISTINCT exchange_move_id
                     FROM account_partial_reconcile
-                    WHERE exchange_move_id IN %s
+                    WHERE exchange_move_id = ANY(%s)
                 """,
-                tuple(self.ids),
+                list(self.ids),
             )
             exchange_move_ids = {id_ for id_, in self.env.execute_query(sql)}
 
@@ -6119,12 +6134,12 @@ class AccountMove(models.Model):
         if not self.need_cancel_request:
             raise UserError(_("You can only request a cancellation for invoice sent to the government."))
 
-    def button_cancel(self):
+    def action_cancel(self):
         # Shortcut to move from posted to cancelled directly. This is useful for E-invoices that must not be changed
         # when sent to the government.
         moves_to_reset_draft = self.filtered(lambda x: x.state == 'posted')
         if moves_to_reset_draft:
-            moves_to_reset_draft.button_draft()
+            moves_to_reset_draft.action_draft()
 
         if any(move.state != 'draft' for move in self):
             raise UserError(_("Only draft journal entries can be cancelled."))

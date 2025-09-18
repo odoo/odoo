@@ -1,4 +1,4 @@
-define("ace/mode/qweb_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/xml_highlight_rules"], function (require, exports, module) {
+ace.define("ace/mode/qweb_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/xml_highlight_rules"], function (require, exports, module) {
     "use strict";
 
     var oop = require("../lib/oop");
@@ -96,7 +96,7 @@ define("ace/mode/qweb_highlight_rules", ["require", "exports", "module", "ace/li
     exports.QWebHighlightRules = QWebHighlightRules;
 });
 
-define("ace/mode/qweb",["require","exports","module","ace/lib/oop","ace/lib/lang","ace/mode/text","ace/mode/qweb_highlight_rules","ace/mode/behaviour/xml","ace/mode/folding/xml","ace/worker/worker_client"], function(require, exports, module) {
+ace.define("ace/mode/qweb",["require","exports","module","ace/lib/oop","ace/lib/lang","ace/mode/text","ace/mode/qweb_highlight_rules","ace/mode/behaviour/xml","ace/mode/folding/xml","ace/worker/worker_client"], function(require, exports, module) {
     "use strict";
 
     var oop = require("../lib/oop");

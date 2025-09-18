@@ -1,6 +1,8 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { EventBus, reactive } from "@odoo/owl";
-import { Reactive, effect, withComputedProperties } from "@web/core/utils/reactive";
+import { effect, Reactive, withComputedProperties } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
 
@@ -59,7 +61,7 @@ describe("effect", () => {
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
-            [state]
+            [state],
         );
         expect.verifySteps(["counter: 0"]);
     });
@@ -71,7 +73,7 @@ describe("effect", () => {
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
-            [state]
+            [state],
         );
         // effect runs immediately
         expect.verifySteps(["counter: 0"]);
@@ -91,7 +93,7 @@ describe("effect", () => {
             {
                 counter: 0,
             },
-            () => reactiveCallCount++
+            () => reactiveCallCount++,
         );
         expect.verifySteps([]);
         expect(reactiveCallCount).toBe(0);
@@ -99,7 +101,7 @@ describe("effect", () => {
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
-            [state]
+            [state],
         );
         expect.verifySteps(["counter: 0"]);
         expect(reactiveCallCount).toBe(0, {
@@ -114,7 +116,8 @@ describe("effect", () => {
         state.counter = 2;
         expect.verifySteps(["counter: 2"]);
         expect(reactiveCallCount).toBe(1, {
-            message: "the original callback was called because it is subscribed independently",
+            message:
+                "the original callback was called because it is subscribed independently",
         });
     });
 
@@ -124,7 +127,7 @@ describe("effect", () => {
             (state) => {
                 expect.step(`counter: ${state.counter}`);
             },
-            [state]
+            [state],
         );
 
         expect.verifySteps(["counter: 0"]);

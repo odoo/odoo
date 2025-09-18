@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { useSelectCreate, useOpenMany2XRecord} from "@web/views/fields/relational_utils";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
+import { useSelectCreate, useOpenMany2XRecord} from "@web/fields/relational/many2x_autocomplete";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 
@@ -43,7 +43,7 @@ export class SMLX2ManyField extends X2ManyField {
         context = {
             ...context,
             single_product: true,
-            list_view_ref: "stock.view_stock_quant_tree_simple",
+            list_view_ref: "stock.view_stock_quant_list_simple",
         };
         const productName = this.props.record.data.product_id.display_name;
         const title = _t("Add line: %s", productName);

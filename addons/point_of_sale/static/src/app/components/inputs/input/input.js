@@ -1,7 +1,7 @@
-import { useRef, useState, onPatched } from "@odoo/owl";
+import { onPatched, useRef, useState } from "@odoo/owl";
+import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
 /**
  *   This component is meant to provide a "batteries included" api for working
  *   with inputs. It is well suited to work as a search bar or as a monetary input.
@@ -48,7 +48,10 @@ export class Input extends TModelInput {
         this.setValue = debounce(this.setValue.bind(this), this.props.debounceMillis);
         const ref =
             (this.props.autofocus &&
-                useAutofocus({ refName: "input", mobile: this.props.autofocusMobile })) ||
+                useAutofocus({
+                    refName: "input",
+                    mobile: this.props.autofocusMobile,
+                })) ||
             useRef("input");
         this.props.getRef?.(ref);
         onPatched(() => {

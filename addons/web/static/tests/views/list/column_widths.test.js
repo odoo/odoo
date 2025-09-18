@@ -1,5 +1,13 @@
+// @ts-check
+
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { queryAllProperties, queryAllTexts, queryOne, queryRect, resize } from "@odoo/hoot-dom";
+import {
+    queryAllProperties,
+    queryAllTexts,
+    queryOne,
+    queryRect,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -16,7 +24,6 @@ import {
     toggleSearchBarMenu,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
 import { registry } from "@web/core/registry";
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
@@ -137,7 +144,7 @@ function getColumnWidths() {
 
 function expectedColumnWidthsToBeCloseTo(expectedColumnWidths) {
     getColumnWidths().forEach((width, index) =>
-        expect(width).toBeCloseTo(expectedColumnWidths[index], { margin: 3 })
+        expect(width).toBeCloseTo(expectedColumnWidths[index], { margin: 3 }),
     );
 }
 
@@ -307,7 +314,8 @@ test(`width computation: with records, very long text field`, async () => {
 test(`width computation: with records, lot of fields, long texts`, async () => {
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt";
-    Foo._records[1].foo = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
+    Foo._records[1].foo =
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
 
     await mountView({
         type: "list",
@@ -828,7 +836,9 @@ test(`freeze widths: edit a record`, async () => {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
         "ipsum purus bibendum est.";
-    await contains(`.o_field_widget[name=text] .o_input`).edit(longVal, { confirm: false });
+    await contains(`.o_field_widget[name=text] .o_input`).edit(longVal, {
+        confirm: false,
+    });
     await contains(`.o_list_button_save`).click();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(getColumnWidths()).toEqual(initialWidths);
@@ -883,14 +893,16 @@ test(`freeze widths: switch mode`, async () => {
     const readonlyWidths = getColumnWidths();
     const readonlyWidth = queryRect(`table`).width;
     expect(editionWidth).toBe(startWidth, {
-        message: "table should have kept the same width when switching from readonly to edit mode",
+        message:
+            "table should have kept the same width when switching from readonly to edit mode",
     });
     expect(editionWidths).toEqual(startWidths, {
         message:
             "width of columns should remain unchanged when switching from readonly to edit mode",
     });
     expect(readonlyWidth).toBe(editionWidth, {
-        message: "table should have kept the same width when switching from edit to readonly mode",
+        message:
+            "table should have kept the same width when switching from edit to readonly mode",
     });
     expect(readonlyWidths).toEqual(editionWidths, {
         message:
@@ -1102,7 +1114,9 @@ test(`freeze widths: add a record in empty list`, async () => {
         `,
         noContentHelp: '<p class="hello">click to add a foo</p>',
     });
-    expect(`.o_view_nocontent`).toHaveCount(1, { message: "should have no content help" });
+    expect(`.o_view_nocontent`).toHaveCount(1, {
+        message: "should have no content help",
+    });
     const initialWidths = getColumnWidths();
 
     // click on create button
@@ -1112,7 +1126,7 @@ test(`freeze widths: add a record in empty list`, async () => {
     // creating one record
     await contains(`.o_selected_row [name='foo'] input`).edit(
         "Some very very long value for a char field",
-        { confirm: false }
+        { confirm: false },
     );
     await contains(`.o_list_button_save`).click();
     expect(getColumnWidths()).toEqual(initialWidths);
@@ -1132,7 +1146,9 @@ test(`freeze widths: add a record in empty list with handle widget`, async () =>
         `,
         noContentHelp: '<p class="hello">click to add a foo</p>',
     });
-    expect(`.o_view_nocontent`).toHaveCount(1, { message: "should have no content help" });
+    expect(`.o_view_nocontent`).toHaveCount(1, {
+        message: "should have no content help",
+    });
     const initialWidths = getColumnWidths();
 
     // click on create button
@@ -1140,7 +1156,9 @@ test(`freeze widths: add a record in empty list with handle widget`, async () =>
     expect(getColumnWidths()).toEqual(initialWidths);
 
     // creating one record
-    await contains(`.o_selected_row [name='foo'] input`).edit("test_foo", { confirm: false });
+    await contains(`.o_selected_row [name='foo'] input`).edit("test_foo", {
+        confirm: false,
+    });
     await contains(`.o_list_button_save`).click();
     expect(getColumnWidths()).toEqual(initialWidths);
 });
@@ -1340,7 +1358,9 @@ test(`resize, reorder, resize again`, async () => {
     expect(widthsAfterResize[1]).toBe(widthsAfterReorder[1]);
 
     // 3. Resize again, this time check sizes while dragging and after drop.
-    const { moveTo, drop } = await contains(`th:eq(1) .o_resize`, { visible: false }).drag();
+    const { moveTo, drop } = await contains(`th:eq(1) .o_resize`, {
+        visible: false,
+    }).drag();
     await moveTo(`th:eq(2)`);
     widthsAfterResize = getColumnWidths();
     expect(widthsAfterResize[1]).toBeGreaterThan(widthsAfterReorder[1]);
@@ -1471,10 +1491,13 @@ test("resize column headers in editable list (2)", async () => {
 
     const originalWidths = getColumnWidths();
 
-    await contains(".o_resize:first", { visible: false }).dragAndDrop("th[data-name=foo]", {
-        position: { x: 100 },
-        relative: true,
-    });
+    await contains(".o_resize:first", { visible: false }).dragAndDrop(
+        "th[data-name=foo]",
+        {
+            position: { x: 100 },
+            relative: true,
+        },
+    );
 
     const finalWidths = getColumnWidths();
     expect(finalWidths[0]).toBe(originalWidths[0]);
@@ -1522,13 +1545,14 @@ test(`resize column with several x2many lists in form group`, async () => {
         { width: initialWidth0 },
         {
             message: "first o2m table is resized and width of table has changed",
-        }
+        },
     );
     expect(`.o_field_x2many_list table:eq(1)`).toHaveRect(
         { width: initialWidth1 },
         {
-            message: "second o2m table should not be impacted on first o2m in group resized",
-        }
+            message:
+                "second o2m table should not be impacted on first o2m in group resized",
+        },
     );
 });
 
@@ -1567,7 +1591,7 @@ test(`resize column with x2many list with several fields in form notebook`, asyn
         { width: listInitialWidth },
         {
             message: "resizing the column should not impact the width of list",
-        }
+        },
     );
 });
 
@@ -1595,8 +1619,9 @@ test(`resize: unnamed columns cannot be resized`, async () => {
     expect(Math.floor(queryRect(`.o_field_one2many th:eq(0)`).right)).toBe(
         Math.floor(queryRect(`.o_field_one2many th:eq(0) .o_resize`).right),
         {
-            message: "First resize handle should be attached at the end of the first header",
-        }
+            message:
+                "First resize handle should be attached at the end of the first header",
+        },
     );
     expect(`.o_field_one2many th:eq(1) .o_resize`).toHaveCount(0, {
         message: "Columns without name should not have a resize handle",

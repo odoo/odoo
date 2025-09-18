@@ -1,8 +1,7 @@
 import { Component, useRef } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
-import { formatCurrency } from "@web/core/currency";
-import { TagsList } from "@web/core/tags_list/tags_list";
-
+import { TagsList } from "@web/components/tags_list/tags_list";
+import { formatCurrency } from "@web/services/currency";
 export class Orderline extends Component {
     static components = { TagsList };
     static template = "point_of_sale.Orderline";
@@ -84,7 +83,12 @@ export class Orderline extends Component {
         if (props.mode === "receipt") {
             return "";
         }
-        if (line.customer_note || line.note || line.discount || line.packLotLines?.length) {
+        if (
+            line.customer_note ||
+            line.note ||
+            line.discount ||
+            line.packLotLines?.length
+        ) {
             return "gap-2 mt-1";
         }
         return "";
@@ -115,24 +119,37 @@ export class Orderline extends Component {
             ...new Set(
                 this.line.product_id.taxes_id
                     ?.map((tax) => tax.tax_group_id.pos_receipt_label)
-                    .filter((label) => label)
+                    .filter((label) => label),
             ),
         ].join(" ");
         const showPrice =
             !basic &&
             line.getQuantityStr() != 1 &&
-            (mode === "receipt" || (line.price_type !== "original" && !line.combo_parent_id));
+            (mode === "receipt" ||
+                (line.price_type !== "original" && !line.combo_parent_id));
         const priceUnit = `${line.currencyDisplayPriceUnit} / ${
             line.product_id?.uom_id?.name || ""
         }`;
         return {
-            name: mode === "receipt" ? line.full_product_name : line.orderDisplayProductName.name,
+            name:
+                mode === "receipt"
+                    ? line.full_product_name
+                    : line.orderDisplayProductName.name,
             attributeString: mode === "display" && attributeStr && `- ${attributeStr}`,
-            internalNote: mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
+            internalNote:
+                mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
             isReceipt: mode === "receipt",
             isDisplay: mode === "display",
-            discount: !basic && discount && discount !== "0" && !line.combo_parent_id && discount,
-            noDiscountPrice: formatCurrency(line.displayPriceNoDiscount, line.currency.id),
+            discount:
+                !basic &&
+                discount &&
+                discount !== "0" &&
+                !line.combo_parent_id &&
+                discount,
+            noDiscountPrice: formatCurrency(
+                line.displayPriceNoDiscount,
+                line.currency.id,
+            ),
             displayPriceUnit: showPrice && line.price !== 0 && priceUnit,
             unitPart: unitPart,
             decimalPart: decimalPart && `${decimalPoint}${decimalPart}`,

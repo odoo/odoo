@@ -1,6 +1,5 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
@@ -17,7 +16,7 @@ patch(PosOrder.prototype, {
         return this.lines.filter(
             (l) =>
                 !Object.keys(this.uiState.lineChanges).includes(l.uuid) ||
-                this.uiState.lineChanges[l.uuid].qty !== l.qty
+                this.uiState.lineChanges[l.uuid].qty !== l.qty,
         );
     },
     get changes() {
@@ -48,10 +47,10 @@ patch(PosOrder.prototype, {
                 qty: line.qty,
                 customer_note: line.customer_note,
                 attribute_value_ids: JSON.stringify(
-                    line.attribute_value_ids.map((a) => a.id).sort()
+                    line.attribute_value_ids.map((a) => a.id).sort(),
                 ),
                 custom_attribute_value_ids: JSON.stringify(
-                    line.custom_attribute_value_ids.map((a) => a.id).sort()
+                    line.custom_attribute_value_ids.map((a) => a.id).sort(),
                 ),
             };
         }

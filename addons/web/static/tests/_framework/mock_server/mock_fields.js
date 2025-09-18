@@ -1,4 +1,7 @@
-import { deepCopy } from "@web/core/utils/objects";
+// @ts-check
+
+import { deepCopy } from "@web/core/utils/collections/objects";
+
 import { MockServerError } from "./mock_server_utils";
 
 /**
@@ -22,7 +25,8 @@ import { MockServerError } from "./mock_server_utils";
  */
 function camelToPascal(name) {
     return (
-        name[0].toUpperCase() + name.slice(1).replace(R_CAMEL_CASE, (_, char) => char.toUpperCase())
+        name[0].toUpperCase() +
+        name.slice(1).replace(R_CAMEL_CASE, (_, char) => char.toUpperCase())
     );
 }
 
@@ -47,6 +51,7 @@ function camelToPascal(name) {
  */
 function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
     const constructorFnName = camelToPascal(type);
+    /** @type {any} */
     const defaultDef = { ...DEFAULT_FIELD_PROPERTIES };
     if (aggregator) {
         defaultDef.aggregator = aggregator;
@@ -68,10 +73,10 @@ function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
                 [S_FIELD]: true,
             };
 
-            for (const key of requiredKeys) {
+            for (const key of /** @type {string[]} */ (requiredKeys)) {
                 if (!(key in field)) {
                     throw new MockServerError(
-                        `Missing key "${key}" in ${type || "generic"} field definition`
+                        `Missing key "${key}" in ${type || "generic"} field definition`,
                     );
                 }
             }
@@ -83,7 +88,7 @@ function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
                 field.store = properties.store ?? false;
             }
 
-            return field;
+            return /** @type {any} */ (field);
         },
     }[constructorFnName];
 }

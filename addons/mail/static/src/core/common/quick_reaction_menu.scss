@@ -26,8 +26,8 @@ $quick-reaction-menu-slide-in-duration: 0.20s;
 
 .o-mail-QuickReactionMenu {
     gap: 1px;
-    padding-top: map-get($spacers, 1) / 2;
-    padding-bottom: map-get($spacers, 1) / 2;
+    padding-top: calc(map-get($spacers, 1) / 2);
+    padding-bottom: calc(map-get($spacers, 1) / 2);
     transform: scaleX(0.3);
     transform-origin: left;
     animation: qrm-menuSlideInAnimation $quick-reaction-menu-slide-in-duration cubic-bezier(0.6, 0, 0.4, 1) forwards;
@@ -46,7 +46,7 @@ $quick-reaction-menu-slide-in-duration: 0.20s;
 }
 
 .o-mail-QuickReactionMenu-emojiPicker {
-    padding: map-get($spacers, 3) / 2;
+    padding: calc(map-get($spacers, 3) / 2);
 }
 
 
@@ -87,7 +87,7 @@ $quick-reaction-menu-emoji-pop-out-duration: 0.15s;
 
 @for $i from 0 through $quick-reaction-menu-total-buttons {
     .o-mail-QuickReactionMenu-popEffect:nth-child(#{$i + 1}) {
-        animation-delay: #{$quick-reaction-menu-slide-in-duration / 3 + $i * $quick-reaction-menu-emoji-delay-increment};
+        animation-delay: #{calc($quick-reaction-menu-slide-in-duration / 3 + $i * $quick-reaction-menu-emoji-delay-increment)};
     }
 }
 

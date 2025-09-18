@@ -2,12 +2,12 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart } from "@odoo/owl";
-import { FileUploader } from "@web/views/fields/file_handler";
+import { FileUploader } from "@web/fields/file_handler";
 import { ListController } from "@web/views/list/list_controller";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { StockListView } from "@stock/views/stock_empty_list_help";
 
 export class L10nTrEreceiptUploader extends Component {

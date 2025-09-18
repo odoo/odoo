@@ -5,7 +5,7 @@ import {
     registerWebsitePreviewTour,
     clickToolbarButton,
 } from "@website/js/tours/tour_utils";
-import { rgbToHex } from "@web/core/utils/colors";
+import { rgbToHex } from "@web/core/utils/format/colors";
 
 const WEBSITE_MAIN_COLOR = "#ABCDEF";
 

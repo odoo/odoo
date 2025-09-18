@@ -1,13 +1,13 @@
-import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Razorpay, RazorpayError } from "@pos_self_order_razorpay/app/razorpay";
 
+import { patch } from "@web/core/utils/patch";
 patch(SelfOrder.prototype, {
     async setup() {
         await super.setup(...arguments);
 
         const razorpayPaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "razorpay"
+            (p) => p.use_payment_terminal === "razorpay",
         );
 
         if (razorpayPaymentMethod) {
@@ -16,14 +16,16 @@ patch(SelfOrder.prototype, {
                 razorpayPaymentMethod,
                 this.access_token,
                 this.config,
-                this.handleRazorpayError.bind(this)
+                this.handleRazorpayError.bind(this),
             );
         }
     },
 
     filterPaymentMethods(pms) {
         const pm = super.filterPaymentMethods(...arguments);
-        const razorpay_pm = pms.filter((rec) => rec.use_payment_terminal === "razorpay");
+        const razorpay_pm = pms.filter(
+            (rec) => rec.use_payment_terminal === "razorpay",
+        );
         return [...new Set([...pm, ...razorpay_pm])];
     },
 

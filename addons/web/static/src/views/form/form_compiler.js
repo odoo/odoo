@@ -1,22 +1,26 @@
+// @ts-check
+
+/** @module @web/views/form/form_compiler - Compiles form view XML arch into OWL template AST with layout, notebook, and field handling */
+
 import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_service";
 import {
     append,
     combineAttributes,
     createElement,
     createTextNode,
     getTag,
-} from "@web/core/utils/xml";
-import { toStringExpression } from "@web/views/utils";
+} from "@web/core/utils/dom/xml";
+import { exprToBoolean } from "@web/core/utils/format/strings";
+import { SIZES } from "@web/ui/block/ui_service";
 import {
     copyAttributes,
     getModifier,
     isComponentNode,
     isTextNode,
     makeSeparator,
+    ViewCompiler,
 } from "@web/views/view_compiler";
-import { ViewCompiler } from "../view_compiler";
-import { exprToBoolean } from "@web/core/utils/strings";
+import { toStringExpression } from "@web/views/view_utils";
 
 const compilersRegistry = registry.category("form_compilers");
 
@@ -52,19 +56,27 @@ export class FormCompiler extends ViewCompiler {
             ...compilersRegistry.getAll(),
             { selector: "div[name='button_box']", fn: this.compileButtonBox },
             { selector: "footer", fn: this.compileFooter },
-            { selector: "form", fn: this.compileForm, doNotCopyAttributes: true },
+            {
+                selector: "form",
+                fn: this.compileForm,
+                doNotCopyAttributes: true,
+            },
             { selector: "group", fn: this.compileGroup },
             { selector: "header", fn: this.compileHeader },
-            { selector: "label", fn: this.compileLabel, doNotCopyAttributes: true },
+            {
+                selector: "label",
+                fn: this.compileLabel,
+                doNotCopyAttributes: true,
+            },
             { selector: "notebook", fn: this.compileNotebook },
             { selector: "setting", fn: this.compileSetting },
             { selector: "separator", fn: this.compileSeparator },
-            { selector: "sheet", fn: this.compileSheet }
+            { selector: "sheet", fn: this.compileSheet },
         );
     }
 
     compile(key, params = {}) {
-        const compiled = super.compile(...arguments);
+        const compiled = super.compile(/** @type {any} */ (key), params);
         if (!params.isSubView) {
             compiled.children[0].setAttribute("t-ref", "compiled_view_root");
         }
@@ -135,7 +147,10 @@ export class FormCompiler extends ViewCompiler {
         let hasContent = false;
         for (const child of el.children) {
             const invisible = getModifier(child, "invisible");
-            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
+            if (
+                !params.compileInvisibleNodes &&
+                (invisible === "True" || invisible === "1")
+            ) {
                 continue;
             }
             hasContent = true;
@@ -146,20 +161,23 @@ export class FormCompiler extends ViewCompiler {
                 isVisibleExpr = "false";
             } else {
                 isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
-                    invisible
+                    invisible,
                 )},__comp__.props.record.evalContextWithVirtualIds)`;
             }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
                 isVisible: isVisibleExpr,
             });
-            if (child.tagName === "button" || child.children.tagName === "button") {
+            if (
+                child.tagName === "button" ||
+                (child.children.length === 1 && child.children[0].tagName === "button")
+            ) {
                 child.classList.add(
                     "oe_stat_button",
                     "btn",
                     "btn-outline-secondary",
                     "flex-grow-1",
-                    "flex-lg-grow-0"
+                    "flex-lg-grow-0",
                 );
             }
             if (child.tagName === "field") {
@@ -169,7 +187,7 @@ export class FormCompiler extends ViewCompiler {
             append(buttonBox, mainSlot);
         }
 
-        return hasContent ? buttonBox : "";
+        return hasContent ? buttonBox : /** @type {any} */ ("");
     }
 
     compileButton(el, params) {
@@ -189,10 +207,16 @@ export class FormCompiler extends ViewCompiler {
         const labelsForAttr = el.getAttribute("id") || fieldName;
         const labels = this.getLabels(labelsForAttr);
         const dynamicLabel = (label) => {
-            const formLabel = this.createLabelFromField(fieldId, fieldName, fieldString, label, {
-                ...params,
-                currentFieldArchNode: el,
-            });
+            const formLabel = this.createLabelFromField(
+                fieldId,
+                fieldName,
+                fieldString,
+                label,
+                {
+                    ...params,
+                    currentFieldArchNode: el,
+                },
+            );
             if (formLabel) {
                 label.replaceWith(formLabel);
             } else {
@@ -234,7 +258,9 @@ export class FormCompiler extends ViewCompiler {
             for (const child of el.childNodes) {
                 // ButtonBox are already compiled for the control panel and should not
                 // be recompiled for the renderer of the view
-                if (child.attributes?.name?.value !== "button_box") {
+                if (
+                    /** @type {any} */ (child).attributes?.name?.value !== "button_box"
+                ) {
                     append(form, this.compileNode(child, params));
                 }
             }
@@ -245,7 +271,7 @@ export class FormCompiler extends ViewCompiler {
                 const compiled = this.compileNode(child, params);
                 if (getTag(child, true) === "sheet") {
                     append(form, compiled);
-                    compiled.prepend(...compiledList);
+                    /** @type {Element} */ (compiled).prepend(...compiledList);
                     compiledList = [];
                 } else if (compiled) {
                     compiledList.push(compiled);
@@ -269,7 +295,7 @@ export class FormCompiler extends ViewCompiler {
                 createElement("t", {
                     "t-call": "web.DefaultButtonsSlot",
                     "t-call-context": "{ props: __comp__.props }",
-                })
+                }),
             );
         }
         copyAttributes(el, footer);
@@ -313,7 +339,10 @@ export class FormCompiler extends ViewCompiler {
             }
 
             const invisible = getModifier(child, "invisible");
-            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
+            if (
+                !params.compileInvisibleNodes &&
+                (invisible === "True" || invisible === "1")
+            ) {
                 continue;
             }
 
@@ -326,16 +355,16 @@ export class FormCompiler extends ViewCompiler {
             let itemSpan = parseInt(child.getAttribute("colspan") || "1", 10);
 
             if (forceNewline) {
-                mainSlot.setAttribute("newline", true);
+                mainSlot.setAttribute("newline", "true");
                 forceNewline = false;
             }
 
             if (getTag(child, true) === "separator") {
-                itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
+                itemSpan = parseInt(formGroup.getAttribute("maxCols") || "2", 10);
             }
 
             if (child.matches("div[class='clearfix']:empty")) {
-                itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
+                itemSpan = parseInt(formGroup.getAttribute("maxCols") || "2", 10);
             }
 
             let slotContent;
@@ -343,11 +372,24 @@ export class FormCompiler extends ViewCompiler {
                 const addLabel = child.hasAttribute("nolabel")
                     ? child.getAttribute("nolabel") !== "1"
                     : true;
-                slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
-                if (slotContent && addLabel && !isOuterGroup && !isTextNode(slotContent)) {
+                slotContent = this.compileNode(
+                    child,
+                    { ...params, currentSlot: mainSlot },
+                    false,
+                );
+                if (
+                    slotContent &&
+                    addLabel &&
+                    !isOuterGroup &&
+                    !isTextNode(slotContent)
+                ) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
-                    const fieldName = child.getAttribute("name");
-                    const fieldId = slotContent.getAttribute("id") || fieldName;
+                    const fieldName = /** @type {Element} */ (child).getAttribute(
+                        "name",
+                    );
+                    const fieldId =
+                        /** @type {Element} */ (slotContent).getAttribute("id") ||
+                        fieldName;
                     const props = {
                         id: `${fieldId}`,
                         fieldName: `'${fieldName}'`,
@@ -358,7 +400,10 @@ export class FormCompiler extends ViewCompiler {
                         fieldInfo: `__comp__.props.archInfo.fieldNodes[${fieldId}]`,
                     };
                     mainSlot.setAttribute("props", objectToString(props));
-                    mainSlot.setAttribute("Component", "__comp__.constructor.components.FormLabel");
+                    mainSlot.setAttribute(
+                        "Component",
+                        "__comp__.constructor.components.FormLabel",
+                    );
                     mainSlot.setAttribute("subType", "'item_component'");
                 }
             } else {
@@ -371,7 +416,11 @@ export class FormCompiler extends ViewCompiler {
                     mainSlot.setAttribute("subType", "'label'");
                     child.classList.remove("o_wrap_label");
                 }
-                slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
+                slotContent = this.compileNode(
+                    child,
+                    { ...params, currentSlot: mainSlot },
+                    false,
+                );
             }
 
             if (slotContent && !isTextNode(slotContent)) {
@@ -382,7 +431,7 @@ export class FormCompiler extends ViewCompiler {
                     isVisibleExpr = "false";
                 } else {
                     isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
-                        invisible
+                        invisible,
                     )},__comp__.props.record.evalContextWithVirtualIds)`;
                 }
                 mainSlot.setAttribute("isVisible", isVisibleExpr);
@@ -391,36 +440,41 @@ export class FormCompiler extends ViewCompiler {
                 }
 
                 const groupClassExpr = `scope && scope.className`;
-                if (isComponentNode(slotContent)) {
-                    if (getTag(slotContent) === "FormLabel") {
+                if (isComponentNode(/** @type {Element} */ (slotContent))) {
+                    if (getTag(/** @type {Element} */ (slotContent)) === "FormLabel") {
                         mainSlot.prepend(
                             createElement("t", {
                                 "t-set": "addClass",
                                 "t-value": groupClassExpr,
-                            })
+                            }),
                         );
                         combineAttributes(
-                            slotContent,
+                            /** @type {Element} */ (slotContent),
                             "className",
                             `(addClass ? " " + addClass : "")`,
-                            `+`
+                            `+`,
                         );
                     } else if (getTag(child, true) !== "button") {
-                        if (slotContent.hasAttribute("class")) {
+                        if (
+                            /** @type {Element} */ (slotContent).hasAttribute("class")
+                        ) {
                             mainSlot.prepend(
                                 createElement("t", {
                                     "t-set": "addClass",
                                     "t-value": groupClassExpr,
-                                })
+                                }),
                             );
                             combineAttributes(
-                                slotContent,
+                                /** @type {Element} */ (slotContent),
                                 "class",
                                 `(addClass ? " " + addClass : "")`,
-                                `+`
+                                `+`,
                             );
                         } else {
-                            slotContent.setAttribute("class", groupClassExpr);
+                            /** @type {Element} */ (slotContent).setAttribute(
+                                "class",
+                                groupClassExpr,
+                            );
                         }
                     }
                 } else {
@@ -450,12 +504,18 @@ export class FormCompiler extends ViewCompiler {
             if (!compiled || isTextNode(compiled)) {
                 continue;
             }
-            if (getTag(child, true) === "field" && !child.classList.contains("btn")) {
-                compiled.setAttribute("showTooltip", true);
+            if (
+                getTag(child, true) === "field" &&
+                !(/** @type {Element} */ (child).classList.contains("btn"))
+            ) {
+                /** @type {Element} */ (compiled).setAttribute("showTooltip", "true");
                 others.push(compiled);
             } else {
-                if (compiled.tagName === "ViewButton") {
-                    compiled.setAttribute("defaultRank", "'btn-secondary'");
+                if (/** @type {Element} */ (compiled).tagName === "ViewButton") {
+                    /** @type {Element} */ (compiled).setAttribute(
+                        "defaultRank",
+                        "'btn-secondary'",
+                    );
                 }
                 buttons.push(compiled);
             }
@@ -465,7 +525,8 @@ export class FormCompiler extends ViewCompiler {
         for (const button of buttons) {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
-                isVisible: button.getAttribute("t-if") || true,
+                isVisible:
+                    /** @type {Element} */ (button).getAttribute("t-if") || "true",
             });
             append(slot, button);
             append(statusBarButtons, slot);
@@ -516,17 +577,20 @@ export class FormCompiler extends ViewCompiler {
         const noteBook = createElement("Notebook");
 
         if (el.hasAttribute("class")) {
-            noteBook.setAttribute("className", toStringExpression(el.getAttribute("class")));
+            noteBook.setAttribute(
+                "className",
+                toStringExpression(el.getAttribute("class")),
+            );
             el.removeAttribute("class");
         }
 
         noteBook.setAttribute(
             "defaultPage",
-            `__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[${noteBookId}]`
+            `__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[${noteBookId}]`,
         );
         noteBook.setAttribute(
             "onPageUpdate",
-            `(page) => __comp__.props.onNotebookPageChange(${noteBookId}, page)`
+            `(page) => __comp__.props.onNotebookPageChange(${noteBookId}, page)`,
         );
 
         for (const child of el.children) {
@@ -534,7 +598,10 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             const invisible = getModifier(child, "invisible");
-            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
+            if (
+                !params.compileInvisibleNodes &&
+                (invisible === "True" || invisible === "1")
+            ) {
                 continue;
             }
 
@@ -543,7 +610,7 @@ export class FormCompiler extends ViewCompiler {
 
             const pageId = `page_${this.id++}`;
             const pageTitle = toStringExpression(
-                child.getAttribute("string") || child.getAttribute("name") || ""
+                child.getAttribute("string") || child.getAttribute("name") || "",
             );
             const pageNodeName = toStringExpression(child.getAttribute("name") || "");
 
@@ -557,7 +624,7 @@ export class FormCompiler extends ViewCompiler {
             if (child.getAttribute("autofocus") === "autofocus") {
                 noteBook.setAttribute(
                     "defaultPage",
-                    `__comp__.props.record.isNew ? "${pageId}" : (__comp__.props.activeNotebookPages[${noteBookId}] || "${pageId}")`
+                    `__comp__.props.record.isNew ? "${pageId}" : (__comp__.props.activeNotebookPages[${noteBookId}] || "${pageId}")`,
                 );
             }
 
@@ -568,16 +635,25 @@ export class FormCompiler extends ViewCompiler {
                 isVisibleExpr = "false";
             } else {
                 isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
-                    invisible
+                    invisible,
                 )},__comp__.props.record.evalContextWithVirtualIds)`;
             }
             pageSlot.setAttribute("isVisible", isVisibleExpr);
 
             params.notebookPageFields = [];
             for (const contents of child.children) {
-                append(pageSlot, this.compileNode(contents, { ...params, currentSlot: pageSlot }));
+                append(
+                    pageSlot,
+                    this.compileNode(contents, {
+                        ...params,
+                        currentSlot: pageSlot,
+                    }),
+                );
             }
-            pageSlot.setAttribute("fieldNames", `${JSON.stringify(params.notebookPageFields)}`);
+            pageSlot.setAttribute(
+                "fieldNames",
+                `${JSON.stringify(params.notebookPageFields)}`,
+            );
         }
 
         return noteBook;
@@ -604,11 +680,16 @@ export class FormCompiler extends ViewCompiler {
         let addLabel = true;
         Array.from(el.children).forEach((child, index) => {
             if (getTag(child, true) === "field" && index === 0) {
-                const fieldSlot = createElement("t", { "t-set-slot": "fieldSlot" });
+                const fieldSlot = createElement("t", {
+                    "t-set-slot": "fieldSlot",
+                });
                 const field = this.compileNode(child, params);
                 if (field) {
                     append(fieldSlot, field);
-                    setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
+                    setting.setAttribute(
+                        "fieldInfo",
+                        /** @type {Element} */ (field).getAttribute("fieldInfo"),
+                    );
 
                     addLabel = child.hasAttribute("nolabel")
                         ? child.getAttribute("nolabel") !== "1"
@@ -620,7 +701,7 @@ export class FormCompiler extends ViewCompiler {
                     setting.setAttribute("fieldName", toStringExpression(fieldName));
                     setting.setAttribute(
                         "fieldId",
-                        toStringExpression(child.getAttribute("field_id"))
+                        toStringExpression(child.getAttribute("field_id")),
                     );
                 }
                 append(setting, fieldSlot);
@@ -629,7 +710,7 @@ export class FormCompiler extends ViewCompiler {
             }
         });
         setting.setAttribute("string", string);
-        setting.setAttribute("addLabel", addLabel);
+        setting.setAttribute("addLabel", String(addLabel));
         return setting;
     }
 
@@ -670,7 +751,7 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             if (getTag(child, true) === "field") {
-                compiled.setAttribute("showTooltip", true);
+                /** @type {Element} */ (compiled).setAttribute("showTooltip", "true");
             }
             append(sheetFG, compiled);
         }

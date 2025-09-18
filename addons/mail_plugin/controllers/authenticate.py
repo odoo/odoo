@@ -6,8 +6,9 @@ import datetime
 import hmac
 import json
 import logging
+from urllib.parse import urlsplit, urlunsplit, urlencode, parse_qsl
+
 import odoo
-import werkzeug
 
 from odoo import _, http
 from odoo.http import request
@@ -42,18 +43,17 @@ class Authenticate(http.Controller):
         old route name "/mail_client_extension/auth/confirm is deprecated as of saas-14.3,it is not needed for newer
         versions of the mail plugin but necessary for supporting older versions
         """
-        parsed_redirect = werkzeug.urls.url_parse(redirect)
-        params = parsed_redirect.decode_query()
+        parsed_redirect = urlsplit(redirect)
+        params = dict(parse_qsl(parsed_redirect.query))
         if do:
             name = friendlyname if not info else f'{friendlyname}: {info}'
             auth_code = self._generate_auth_code(scope, name)
-            # params is a MultiDict which does not support .update() with kwargs
             # the state attribute is needed for the gmail connector
             params.update({'success': 1, 'auth_code': auth_code, 'state': kw.get('state', '')})
         else:
             params.update({'success': 0, 'state': kw.get('state', '')})
-        updated_redirect = parsed_redirect.replace(query=werkzeug.urls.url_encode(params))
-        return request.redirect(updated_redirect.to_url(), local=False)
+        updated_redirect = parsed_redirect._replace(query=urlencode(params))
+        return request.redirect(urlunsplit(updated_redirect), local=False)
 
     @http.route(['/mail_plugin/auth/check_version'], type='jsonrpc', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])
@@ -96,7 +96,7 @@ class Authenticate(http.Controller):
 
         auth_message = json.loads(data)
         # Check the expiration
-        if datetime.datetime.utcnow() - datetime.datetime.fromtimestamp(auth_message['timestamp']) > datetime.timedelta(
+        if datetime.datetime.now(datetime.UTC) - datetime.datetime.fromtimestamp(auth_message['timestamp'], tz=datetime.UTC) > datetime.timedelta(
                 minutes=3):
             return None
 
@@ -110,7 +110,7 @@ class Authenticate(http.Controller):
         auth_dict = {
             'scope': scope,
             'name': name,
-            'timestamp': int(datetime.datetime.utcnow().timestamp()),
+            'timestamp': int(datetime.datetime.now(datetime.UTC).timestamp()),
             # <- elapsed time should be < 3 mins when verifying
             'uid': request.env.uid,
         }

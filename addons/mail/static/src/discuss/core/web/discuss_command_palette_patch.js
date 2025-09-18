@@ -2,7 +2,6 @@ import { DiscussCommandPalette } from "@mail/discuss/core/public_web/discuss_com
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-
 const commandCategoryRegistry = registry.category("command_categories");
 
 const DISCUSS_MENTIONED = "DISCUSS_MENTIONED";
@@ -33,7 +32,7 @@ patch(DiscussCommandPalette.prototype, {
                 .filter(
                     (channel) =>
                         !mentionedSet.has(channel) &&
-                        !mentionedSet.has(channel.correspondent?.persona)
+                        !mentionedSet.has(channel.correspondent?.persona),
                 )
                 .slice(0, CATEGORY_LIMIT);
             for (const channel of limitedRecent) {

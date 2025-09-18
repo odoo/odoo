@@ -4,8 +4,9 @@ import logging
 
 import lxml
 import requests
+from urllib.parse import unquote_plus
+
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.wrappers
 
 from odoo import _, http, tools
@@ -122,7 +123,7 @@ class WebsiteForum(WebsiteProfile):
             # check that sorting is valid
             # retro-compatibility for V8 and google links
             try:
-                sorting = werkzeug.urls.url_unquote_plus(sorting)
+                sorting = unquote_plus(sorting)
                 Post._order_to_sql(sorting, Post._search([], bypass_access=True))
             except (UserError, ValueError):
                 sorting = False

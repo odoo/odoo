@@ -1112,7 +1112,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         self.assertTrue(invoice.is_move_sent)
         # Revert move to draft
-        invoice.button_draft()
+        invoice.action_draft()
         self.assertTrue(invoice.is_move_sent)
         # Unlink PDF
         pdf_report = invoice.invoice_pdf_report_id

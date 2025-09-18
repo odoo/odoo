@@ -1,6 +1,6 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
 import { useKEProxy } from "./ke_proxy_hook";
 import { Component } from "@odoo/owl";
 

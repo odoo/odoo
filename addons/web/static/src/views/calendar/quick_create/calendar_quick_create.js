@@ -1,9 +1,13 @@
-import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
+// @ts-check
+
+/** @module @web/views/calendar/quick_create/calendar_quick_create - Lightweight dialog for creating a calendar event with just a title */
 
 import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/ui/dialog/dialog";
 
+/** Lightweight dialog for quickly creating a calendar event with just a title. */
 export class CalendarQuickCreate extends Component {
     static template = "web.CalendarQuickCreate";
     static components = {
@@ -28,7 +32,7 @@ export class CalendarQuickCreate extends Component {
     }
 
     get recordTitle() {
-        return this.titleRef.el.value.trim();
+        return /** @type {HTMLInputElement} */ (this.titleRef.el).value.trim();
     }
     get record() {
         return {

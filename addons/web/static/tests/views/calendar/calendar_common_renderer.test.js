@@ -1,17 +1,23 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
-    DEFAULT_DATE,
-    FAKE_MODEL,
+    mockService,
+    mountWithCleanup,
+    preloadBundle,
+} from "@web/../tests/web_test_helpers";
+import { CallbackRecorder } from "@web/search/action_hook";
+import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
+
+import {
     clickAllDaySlot,
     clickEvent,
+    DEFAULT_DATE,
+    FAKE_MODEL,
     selectTimeRange,
 } from "./calendar_test_helpers";
-
-import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
-import { CallbackRecorder } from "@web/search/action_hook";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
@@ -88,8 +94,12 @@ test(`Day: select range`, async () => {
         createRecord(record) {
             expect.step("create");
             expect(record.isAllDay).toBe(false);
-            expect(record.start.valueOf()).toBe(luxon.DateTime.local(2021, 7, 16, 8, 0).valueOf());
-            expect(record.end.valueOf()).toBe(luxon.DateTime.local(2021, 7, 16, 10, 0).valueOf());
+            expect(record.start.valueOf()).toBe(
+                luxon.DateTime.local(2021, 7, 16, 8, 0).valueOf(),
+            );
+            expect(record.end.valueOf()).toBe(
+                luxon.DateTime.local(2021, 7, 16, 10, 0).valueOf(),
+            );
         },
     });
     await selectTimeRange("2021-07-16 08:00:00", "2021-07-16 10:00:00");
@@ -120,7 +130,9 @@ test(`Day: click on event`, async () => {
 test(`Week: check week number`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "week" } });
     expect(`.fc-scrollgrid-section-header .fc-timegrid-axis-cushion`).toHaveCount(1);
-    expect(`.fc-scrollgrid-section-header .fc-timegrid-axis-cushion`).toHaveText(/(Week )?28/);
+    expect(`.fc-scrollgrid-section-header .fc-timegrid-axis-cushion`).toHaveText(
+        /(Week )?28/,
+    );
 });
 
 test(`Week: check dates`, async () => {
@@ -151,7 +163,9 @@ test(`Day: automatically scroll to 6am`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } }, queryFirst(`.scrollable`));
 
     const containerDimensions = queryRect(`.fc-scrollgrid-section-liquid .fc-scroller`);
-    const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
+    const dayStartDimensions = queryRect(
+        `.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`,
+    );
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
 });
 
@@ -160,7 +174,9 @@ test(`Week: automatically scroll to 6am`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "week" } }, queryFirst(`.scrollable`));
 
     const containerDimensions = queryRect(`.fc-scrollgrid-section-liquid .fc-scroller`);
-    const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
+    const dayStartDimensions = queryRect(
+        `.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`,
+    );
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
 });
 

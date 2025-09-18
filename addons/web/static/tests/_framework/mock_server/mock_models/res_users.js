@@ -1,3 +1,5 @@
+// @ts-check
+
 import { serverState } from "../../mock_server_state.hoot";
 import { ServerModel } from "../mock_model";
 
@@ -43,10 +45,12 @@ export class ResUsers extends ServerModel {
      * @type {ServerModel["create"]}
      */
     create() {
-        const userId = super.create(...arguments);
+        const userId = /** @type {Function} */ (super.create).apply(this, arguments);
         const [user] = this.env["res.users"].browse(userId);
         if (user && !user.partner_id) {
-            this.env["res.users"].write(userId, { partner_id: this.env["res.partner"].create({}) });
+            this.env["res.users"].write(userId, {
+                partner_id: this.env["res.partner"].create({}),
+            });
         }
         return userId;
     }

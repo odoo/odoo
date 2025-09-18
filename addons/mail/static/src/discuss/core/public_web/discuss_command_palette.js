@@ -1,12 +1,11 @@
+import { ImStatus } from "@mail/core/common/im_status";
 import { cleanTerm } from "@mail/utils/common/format";
-
 import { Component, useState } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/ui/dialog/dialog";
+
 import { ChannelInvitation } from "../common/channel_invitation";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -38,7 +37,9 @@ class CreateChatDialog extends Component {
     }
 
     onClickConfirm() {
-        const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
+        const selectedPartnersId = this.invitePeopleState.selectedPartners.map(
+            (p) => p.id,
+        );
         const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
         if (partners_to.length === 1) {
             this.store.createGroupChat({ partners_to });
@@ -123,7 +124,7 @@ async function makeNewChannel(name, store) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
         { name, group_id: store.internalUserGroupId },
-        { readonly: false, requestData: true }
+        { readonly: false, requestData: true },
     );
     await channel.open({ focus: true, bypassCompact: true });
 }
@@ -162,7 +163,7 @@ export class DiscussCommandPalette {
                 (partner) =>
                     partner.main_user_id?.share === false &&
                     cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(partner))
+                    (!filtered || !filtered.has(partner)),
             );
             partners = this.suggestion
                 .sortPartnerSuggestions(partners, this.cleanedTerm)
@@ -181,7 +182,7 @@ export class DiscussCommandPalette {
                     thread.channel_type &&
                     thread.channel_type !== "chat" &&
                     cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(thread))
+                    (!filtered || !filtered.has(thread)),
             )
             .sort((c1, c2) => {
                 if (c1.self_member_id && !c2.self_member_id) {
@@ -239,7 +240,9 @@ export class DiscussCommandPalette {
                     imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
                     channel: thread.channel_type !== "chat" ? thread : undefined,
                     persona:
-                        thread.channel_type === "chat" ? thread.correspondent.persona : undefined,
+                        thread.channel_type === "chat"
+                            ? thread.correspondent.persona
+                            : undefined,
                     counter: thread.importantCounter,
                 },
             };
@@ -275,7 +278,9 @@ export class DiscussCommandPalette {
                 },
                 name: _t("Create Channel"),
                 className: "o-mail-DiscussCommand-createChannel d-flex",
-                props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
+                props: {
+                    action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true },
+                },
             };
         }
         if (threadOrPersona === NEW_GROUP_CHAT) {

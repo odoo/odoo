@@ -1,7 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-
+import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class SelectionPopup extends Component {
     static template = "point_of_sale.SelectionPopup";
     static components = { Dialog };
@@ -33,14 +32,18 @@ export class SelectionPopup extends Component {
      *      }
      */
     setup() {
-        this.state = useState({ selectedId: this.props.list.find((item) => item.isSelected) });
+        this.state = useState({
+            selectedId: this.props.list.find((item) => item.isSelected),
+        });
     }
     selectItem(itemId) {
         this.state.selectedId = itemId;
         this.confirm();
     }
     computePayload() {
-        const selected = this.props.list.find((item) => this.state.selectedId === item.id);
+        const selected = this.props.list.find(
+            (item) => this.state.selectedId === item.id,
+        );
         return selected && selected.item;
     }
     confirm() {

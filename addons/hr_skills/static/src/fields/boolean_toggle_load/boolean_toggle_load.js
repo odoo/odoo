@@ -1,5 +1,5 @@
 import { registry } from '@web/core/registry';
-import { ListBooleanToggleField, listBooleanToggleField } from "@web/views/fields/boolean_toggle/list_boolean_toggle_field";
+import { ListBooleanToggleField, listBooleanToggleField } from "@web/fields/basic/boolean_toggle/list_boolean_toggle_field";
 
 export class ListBooleanToggleLoadField extends ListBooleanToggleField {
     async onChange(newValue) {

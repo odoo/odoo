@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { ProductNameAndDescriptionField } from "@product/product_name_and_description/product_name_and_description";
-import { many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { many2OneField } from "@web/fields/relational/many2one/many2one_field";
 
 export class MoveProductLabelField extends ProductNameAndDescriptionField {
     static template = "stock.MoveProductLabelField";
@@ -14,6 +14,12 @@ export class MoveProductLabelField extends ProductNameAndDescriptionField {
             label = "";
         }
         return label.trim();
+    }
+    get isDescriptionReadonly() {
+        return this.props.readonly && ["done", "cancel"].includes(this.props.record.evalContext.parent.state);
+    }
+    get showLabelVisibilityToggler() {
+        return !this.isDescriptionReadonly && this.columnIsProductAndLabel.value && !this.label;
     }
     parseLabel(value) {
         return value;

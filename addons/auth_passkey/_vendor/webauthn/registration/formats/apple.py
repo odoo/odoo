@@ -3,7 +3,6 @@ from typing import List
 
 import cbor2
 from cryptography import x509
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from cryptography.x509 import (
     Extension,
@@ -76,7 +75,7 @@ def verify_apple(
     # Verify that nonce equals the value of the extension with
     # OID 1.2.840.113635.100.8.2 in credCert.
     attestation_cert_bytes = attestation_statement.x5c[0]
-    attestation_cert = x509.load_der_x509_certificate(attestation_cert_bytes, default_backend())
+    attestation_cert = x509.load_der_x509_certificate(attestation_cert_bytes)
     cert_extensions = attestation_cert.extensions
 
     # Still no documented name for this OID...

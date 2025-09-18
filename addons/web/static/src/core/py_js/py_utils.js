@@ -1,5 +1,9 @@
-import { bp } from "./py_parser";
+// @ts-check
+
+/** @module @web/core/py_js/py_utils - AST-to-value conversion and AST-to-string formatting for Python expressions */
+
 import { PyDate, PyDateTime } from "./py_date";
+import { bp } from "./py_parser";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -33,10 +37,14 @@ export function toPyValue(value) {
             } else if (value === null) {
                 return { type: 3 /* None */ };
             } else if (value instanceof Date) {
-                return { type: 1, value: PyDateTime.convertDate(value) };
+                return {
+                    type: 1,
+                    value: /** @type {any} */ (PyDateTime.convertDate(value)),
+                };
             } else if (value instanceof PyDate || value instanceof PyDateTime) {
-                return { type: 1, value };
+                return { type: 1, value: /** @type {any} */ (value) };
             } else {
+                /** @type {Record<string, any>} */
                 const content = {};
                 for (const key in value) {
                     content[key] = toPyValue(value[key]);
@@ -106,11 +114,11 @@ export function formatAST(ast, lbp = 0) {
             for (const kwarg in ast.kwargs) {
                 kwargs.push(`${kwarg} = ${formatAST(ast.kwargs[kwarg])}`);
             }
-            const argStr = args.concat(kwargs).join(", ");
+            const argStr = [...args, ...kwargs].join(", ");
             return `${formatAST(ast.fn)}(${argStr})`;
         }
     }
-    throw new Error("invalid expression: " + ast);
+    throw new Error(`invalid expression: ${ast}`);
 }
 
 export const PY_DICT = Object.create(null);

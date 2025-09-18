@@ -1,9 +1,8 @@
 import { useSequential } from "@mail/utils/common/hooks";
-import { useState, onWillUnmount, markup } from "@odoo/owl";
+import { markup, onWillUnmount, useState } from "@odoo/owl";
+import { createDocumentFragmentFromContent } from "@web/core/utils/dom/html";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { useService } from "@web/core/utils/hooks";
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
-import { escapeRegExp } from "@web/core/utils/strings";
-
 export const HIGHLIGHT_CLASS = "o-mail-Message-searchHighlight";
 
 /**
@@ -30,7 +29,7 @@ export function searchHighlight(searchTerm, target) {
             `//*[text()[contains(translate(., ${uppercase}, ${lowercase}), ${lowercase})]]`, // Equivalent to `.toLowerCase()` on all searched chars
             htmlDoc,
             null,
-            XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+            XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
         );
         for (let i = 0; i < matchs.snapshotLength; i++) {
             const element = matchs.snapshotItem(i);
@@ -41,7 +40,7 @@ export function searchHighlight(searchTerm, target) {
                     let curIndex = 0;
                     for (const match of node.textContent.matchAll(regexp)) {
                         const start = htmlDoc.createTextNode(
-                            node.textContent.slice(curIndex, match.index)
+                            node.textContent.slice(curIndex, match.index),
                         );
                         newNode.push(start);
                         const span = htmlDoc.createElement("span");
@@ -50,7 +49,9 @@ export function searchHighlight(searchTerm, target) {
                         newNode.push(span);
                         curIndex = match.index + match[0].length;
                     }
-                    const end = htmlDoc.createTextNode(node.textContent.slice(curIndex));
+                    const end = htmlDoc.createTextNode(
+                        node.textContent.slice(curIndex),
+                    );
                     newNode.push(end);
                 } else {
                     newNode.push(node);
@@ -76,8 +77,8 @@ export function useMessageSearch(thread) {
                         this.searchTerm,
                         this.thread,
                         before,
-                        this.is_notification
-                    )
+                        this.is_notification,
+                    ),
                 );
                 if (!data) {
                     return;

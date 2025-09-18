@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
@@ -20,14 +22,13 @@ import {
     switchView,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import { router } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 import { listView } from "@web/views/list/list_view";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { WebClient } from "@web/webclient/webclient";
-import { redirect } from "@web/core/utils/urls";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 
@@ -198,7 +199,7 @@ test("action doesn't exists", async () => {
         });
     } catch (e) {
         expect(e.message).toBe(
-            "The ActionManager service can't handle actions of type ir.not_action.error"
+            "The ActionManager service can't handle actions of type ir.not_action.error",
         );
     }
 });
@@ -278,7 +279,7 @@ test("getCurrentAction (virtual controller)", async () => {
 test("action in handler registry", async () => {
     await makeMockEnv();
     actionHandlersRegistry.add("ir.action_in_handler_registry", ({ action }) =>
-        expect.step(action.type)
+        expect.step(action.type),
     );
     await getService("action").doAction({
         tag: "this_is_a_tag",
@@ -305,7 +306,9 @@ test("properly handle case when action path does not exist", async () => {
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
-    expect(".o_error_dialog .modal-body").toHaveText('The action "plop" does not exist');
+    expect(".o_error_dialog .modal-body").toHaveText(
+        'The action "plop" does not exist',
+    );
 });
 
 test("properly handle case when action xmlId does not exist", async () => {
@@ -316,7 +319,7 @@ test("properly handle case when action xmlId does not exist", async () => {
     expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText(
-        'The action "not.found.action" does not exist'
+        'The action "not.found.action" does not exist',
     );
 });
 
@@ -677,7 +680,7 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
                 tz: "not_taht",
                 uid: 42,
             },
-        })
+        }),
     );
 
     // Prepare the URL hash to make sure the stored action will get executed.
@@ -722,7 +725,7 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
                 tz: "not_taht",
                 uid: 42,
             },
-        })
+        }),
     );
 
     // Prepare the URL hash to make sure the stored action will get executed.
@@ -774,6 +777,9 @@ test("action is removed while waiting for another action with selectMenu", async
     ]);
 
     await mountWithCleanup(WebClient);
+    // Let loadRouterState/_loadDefaultApp complete (doAction(1001) via selectMenu).
+    // Without this, _loadDefaultApp's doAction races with ours and cancels it via KeepLast.
+    await animationFrame();
     // starting point: a kanban view
     await getService("action").doAction(4);
     expect(".o_kanban_view").toHaveCount(1);

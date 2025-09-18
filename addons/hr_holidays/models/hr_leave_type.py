@@ -15,7 +15,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_date, frozendict
 from odoo.tools.translate import _
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 

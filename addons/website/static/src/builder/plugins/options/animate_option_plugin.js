@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { getScrollingElement } from "@web/core/utils/scrolling";
+import { getScrollingElement } from "@web/core/utils/dom/scrolling";
 import { AnimateOption } from "./animate_option";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";

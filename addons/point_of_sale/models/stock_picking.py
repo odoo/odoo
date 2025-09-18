@@ -158,14 +158,15 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super()._get_new_picking_values()
-        order = self.reference_ids.pos_order_ids
-        if order:
+        orders = self.reference_ids.pos_order_ids
+        if orders:
+            order = orders.filtered(lambda o: o.is_refund and o.state == 'paid')[:1] or orders[:1]
             vals['pos_session_id'] = order.session_id.id
             vals['pos_order_id'] = order.id
         return vals
 
     def _key_assign_picking(self):
-        keys = super(StockMove, self)._key_assign_picking()
+        keys = super()._key_assign_picking()
         return keys + (self.reference_ids.pos_order_ids,)
 
     @api.model

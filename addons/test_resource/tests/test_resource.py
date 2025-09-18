@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import utc
 
 from odoo.tools.date_utils import sum_intervals
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 

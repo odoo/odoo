@@ -18,8 +18,8 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_stock_moves(self, picking):
-        res = super()._prepare_stock_moves(picking)
+    def _prepare_stock_move_vals_list(self, picking):
+        res = super()._prepare_stock_move_vals_list(picking)
         for re in res:
             if self.sale_line_id and re.get('location_final_id'):
                 final_loc = self.env['stock.location'].browse(re.get('location_final_id'))
@@ -32,13 +32,13 @@ class PurchaseOrderLine(models.Model):
     def _get_sale_order_line_product(self):
         return self.sale_line_id.product_id
 
-    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+    def _get_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         # if this is defined, this is a dropshipping line, so no
         # this is to correctly map delivered quantities to the so lines
         if not values.get('move_dest_ids') and values.get('sale_line_id'):
             lines = self.filtered(lambda po_line: po_line.sale_line_id.id == values['sale_line_id'])
-            return super(PurchaseOrderLine, lines)._find_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
-        return super()._find_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+            return super(PurchaseOrderLine, lines)._get_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+        return super()._get_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):

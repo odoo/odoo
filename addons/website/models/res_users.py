@@ -25,12 +25,12 @@ class ResUsers(models.Model):
         self.env.cr.execute(
             """SELECT login
                  FROM res_users
-                WHERE login IN (SELECT login FROM res_users WHERE id IN %s AND website_id IS NULL)
+                WHERE login IN (SELECT login FROM res_users WHERE id = ANY(%s) AND website_id IS NULL)
                   AND website_id IS NULL
              GROUP BY login
                HAVING COUNT(*) > 1
             """,
-            (tuple(self.ids),)
+            (list(self.ids),)
         )
         if self.env.cr.rowcount:
             raise ValidationError(_('You can not have two users with the same login!'))

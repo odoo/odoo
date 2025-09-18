@@ -1,6 +1,6 @@
 import { Component, useRef } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDateTimePicker } from "@web/components/datetime/datetime_picker_hook";
 
 export class StockValuationReportFilters extends Component {
     static template = "stock_account.StockValuationReport.Filters";

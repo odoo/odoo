@@ -1,13 +1,13 @@
-import {
-    RELATION_TYPES,
-    DATE_TIME_TYPE,
-    X2MANY_TYPES,
-    RAW_SYMBOL,
-    convertRawToDateTime,
-    convertRawToDate,
-    STORE_SYMBOL,
-} from "./utils";
 import { Base } from "./base";
+import {
+    convertRawToDate,
+    convertRawToDateTime,
+    DATE_TIME_TYPE,
+    RAW_SYMBOL,
+    RELATION_TYPES,
+    STORE_SYMBOL,
+    X2MANY_TYPES,
+} from "./utils";
 
 // It allows us to track which fields have been dynamically added to the model.
 // This is usefull to avoid conflicts during Hoot tests, where the model class prototype
@@ -27,7 +27,8 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
         }
 
         const fields = modelDefs[modelName];
-        const ModelRecordClass = modelClasses[modelName] || class ModelRecord extends Base {};
+        const ModelRecordClass =
+            modelClasses[modelName] || class ModelRecord extends Base {};
         const excludedLazyGetters = [];
 
         if (modelClasses[modelName]) {
@@ -43,10 +44,11 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
             }
             if (fieldName in ModelRecordClass.prototype) {
                 throw new Error(
-                    `The property "${fieldName}" defined in the class "${ModelRecordClass.name}" matches an existing model "${modelName}" property. Please use a different property name.`
+                    `The property "${fieldName}" defined in the class "${ModelRecordClass.name}" matches an existing model "${modelName}" property. Please use a different property name.`,
                 );
             }
-            const isRelationNotInModelDef = field.relation && !modelNames.has(field.relation);
+            const isRelationNotInModelDef =
+                field.relation && !modelNames.has(field.relation);
             if (!RELATION_TYPES.has(field.type) || isRelationNotInModelDef) {
                 if (!DATE_TIME_TYPE.has(field.type)) {
                     excludedLazyGetters.push(fieldName);
@@ -61,7 +63,7 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
                         } else if (isRelationNotInModelDef && value instanceof Set) {
                             return unmodifiableArray(
                                 [...value],
-                                `The '${fieldName}' array cannot be modified.`
+                                `The '${fieldName}' array cannot be modified.`,
                             );
                         }
                         return value;
@@ -78,10 +80,15 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
                     Object.defineProperty(ModelRecordClass.prototype, fieldName, {
                         get: function () {
                             return unmodifiableArray(
-                                Array.from(this[RAW_SYMBOL][fieldName] || new Set(), (recordID) =>
-                                    this[STORE_SYMBOL].getById(relationModel, recordID)
+                                Array.from(
+                                    this[RAW_SYMBOL][fieldName] || new Set(),
+                                    (recordID) =>
+                                        this[STORE_SYMBOL].getById(
+                                            relationModel,
+                                            recordID,
+                                        ),
                                 ).filter((s) => s), //avoid empty records,
-                                updateErrorMessage
+                                updateErrorMessage,
                             );
                         },
                         set: function (values) {
@@ -136,7 +143,10 @@ export function createExtraField(record, extraFields, serverData, vals) {
             get: function () {
                 const value = this[RAW_SYMBOL][fieldName];
                 if (Array.isArray(value)) {
-                    return unmodifiableArray(value, `The '${fieldName}' array cannot be modified`);
+                    return unmodifiableArray(
+                        value,
+                        `The '${fieldName}' array cannot be modified`,
+                    );
                 }
                 return value;
             },

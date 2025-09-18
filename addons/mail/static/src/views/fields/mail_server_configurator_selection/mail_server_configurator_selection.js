@@ -1,10 +1,12 @@
+import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { useState } from "@odoo/owl";
-
+import {
+    SelectionField,
+    selectionField,
+} from "@web/fields/selection/selection/selection_field";
+import { user } from "@web/services/user";
 export class MailServerConfiguratorSelection extends SelectionField {
     static template = "mail.MailServerConfiguratorSelection";
 
@@ -39,9 +41,11 @@ export class MailServerConfiguratorSelection extends SelectionField {
         this.state.value = value;
         await this.props.record.model.root.save();
         try {
-            const action = await this.orm.call("res.users", "action_setup_outgoing_mail_server", [
-                value,
-            ]);
+            const action = await this.orm.call(
+                "res.users",
+                "action_setup_outgoing_mail_server",
+                [value],
+            );
             if (action) {
                 this.action.doAction(action);
             }
@@ -56,7 +60,10 @@ export class MailServerConfiguratorSelection extends SelectionField {
     async onTestConnection() {
         await this.props.record.model.root.save();
         try {
-            const action = await this.orm.call("res.users", "action_test_outgoing_mail_server");
+            const action = await this.orm.call(
+                "res.users",
+                "action_test_outgoing_mail_server",
+            );
             this.state.connectionFailed = false;
             this.action.doAction(action);
         } catch (error) {

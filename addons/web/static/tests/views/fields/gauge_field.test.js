@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { onMounted } from "@odoo/owl";
@@ -8,7 +10,8 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { GaugeField } from "@web/views/fields/gauge/gauge_field";
+import { GaugeField } from "@web/fields/display/gauge/gauge_field";
+
 import { setupChartJsForTests } from "../graph/graph_test_helpers";
 
 class Partner extends models.Model {
@@ -57,9 +60,9 @@ test("GaugeValue supports max_value option", async () => {
             super.setup();
             onMounted(() => {
                 expect.step("gauge mounted");
-                expect(this.chart.config.options.plugins.tooltip.callbacks.label({})).toBe(
-                    "Max: 120"
-                );
+                expect(
+                    this.chart.config.options.plugins.tooltip.callbacks.label({}),
+                ).toBe("Max: 120");
             });
         },
     });

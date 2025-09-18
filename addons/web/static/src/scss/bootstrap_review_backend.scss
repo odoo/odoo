@@ -10,6 +10,33 @@
 
 .btn {
     --#{$variable-prefix}btn-disabled-border-color: transparent;
+    font-weight: $o-font-weight-medium;
+    transition: color $o-duration-fast $o-easing-standard,
+                background-color $o-duration-fast $o-easing-standard,
+                border-color $o-duration-fast $o-easing-standard,
+                box-shadow $o-duration-fast $o-easing-standard,
+                transform $o-duration-fast $o-easing-standard;
+
+    &:focus-visible {
+        outline: $o-ring-width solid $o-ring-color;
+        outline-offset: $o-ring-offset;
+    }
+}
+
+.btn-primary {
+    box-shadow: $o-shadow-xs;
+
+    @media (hover: hover) {
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: $o-shadow-sm;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: $o-shadow-xs;
+    }
 }
 
 // 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
@@ -317,10 +344,21 @@ $-o-bg-colors-custom: null;
     }
 }
 
-// Switches
+// Tables
 // ============================================================================
 .table {
     > :not(caption) > * > * {
         color: unset;
     }
+}
+
+// Consistent focus ring for all interactive elements
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: $o-ring-width solid $o-ring-color;
+    outline-offset: $o-ring-offset;
 }

@@ -17,7 +17,7 @@ import {
     isZWS,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { isColorGradient, rgbaToHex } from "@web/core/utils/format/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";

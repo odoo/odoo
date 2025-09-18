@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
-import { MessageCardList } from "./message_card_list";
 import { _t } from "@web/core/l10n/translation";
 
+import { MessageCardList } from "./message_card_list";
 /**
  * @typedef {Object} Props
  * @property {import("@mail/core/common/thread_model").Thread} thread
@@ -23,7 +23,9 @@ export class SearchMessageResult extends Component {
 
     onLoadMoreVisible() {
         const before = this.props.messageSearch?.messages
-            ? Math.min(...this.props.messageSearch.messages.map((message) => message.id))
+            ? Math.min(
+                  ...this.props.messageSearch.messages.map((message) => message.id),
+              )
             : false;
         this.props.messageSearch.search(before);
     }

@@ -47,7 +47,7 @@ class ProjectProject(models.Model):
         'product.product', string='Timesheet Product',
         domain="""[
             ('type', '=', 'service'),
-            ('invoice_policy', '=', 'delivery'),
+            ('invoice_policy', '=', 'transfered'),
             ('service_type', '=', 'timesheet'),
         ]""",
         help='Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.',
@@ -145,7 +145,7 @@ class ProjectProject(models.Model):
                 continue
             if project.allow_billable and project.allow_timesheets and project.pricing_type != 'task_rate':
                 sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
-                project.partner_id = sol.order_partner_id
+                project.partner_id = sol.partner_id
         super(ProjectProject, self - billable_projects)._compute_partner_id()
 
     @api.depends('partner_id')
@@ -156,7 +156,7 @@ class ProjectProject(models.Model):
             SaleOrderLine = self.env['sale.order.line']
             sol = SaleOrderLine.search(Domain.AND([
                 SaleOrderLine._domain_sale_line_service(),
-                [('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id), ('remaining_hours', '>', 0)],
+                [('partner_id', 'child_of', project.partner_id.commercial_partner_id.id), ('remaining_hours', '>', 0)],
             ]), limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
@@ -340,21 +340,21 @@ class ProjectProject(models.Model):
             ],
             'billable_fixed': [
                 ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'order')
+                ('product_id.invoice_policy', '=', 'ordered')
             ],
             'billable_milestones': [
                 ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.invoice_policy', '=', 'transfered'),
                 ('product_id.service_type', '=', 'milestones'),
             ],
             'billable_time': [
                 ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.invoice_policy', '=', 'transfered'),
                 ('product_id.service_type', '=', 'timesheet'),
             ],
             'billable_manual': [
                 ('product_id.type', '=', 'service'),
-                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.invoice_policy', '=', 'transfered'),
                 ('product_id.service_type', '=', 'manual'),
             ],
         }

@@ -242,7 +242,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         moves[:8].action_post()  # Only post 8 moves and keep 2 draft moves
         self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning, and draft moves shouldn't trigger the warning
 
-        moves[2:4].button_draft()
+        moves[2:4].action_draft()
         self.assertTrue(journal._query_has_sequence_holes())  # gap due to draft moves using sequence numbers, gap warning
         moves[3].unlink()
         self.assertTrue(journal._query_has_sequence_holes())  # gap due to missing sequence, gap warning
@@ -251,8 +251,8 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.company_data['company'].write({'fiscalyear_lock_date': gap_date + relativedelta(days=1)})
         self.assertFalse(journal._query_has_sequence_holes())  # gap but prior to lock-date, no gap warning
 
-        moves[6].button_draft()
-        moves[6].button_cancel()
+        moves[6].action_draft()
+        moves[6].action_cancel()
         self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, gap warning
 
     def test_bank_journal_with_default_account_as_outstanding_account_payments(self):

@@ -1,6 +1,6 @@
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from psycopg2 import OperationalError
+from psycopg import OperationalError
 
 from odoo import SUPERUSER_ID, api
 from odoo.modules.registry import Registry
@@ -85,20 +85,20 @@ class TestConcurrencyPromoCode(BaseCase):
                     DELETE FROM loyalty_rule WHERE program_id = %(program_id)s;
                     DELETE FROM loyalty_reward WHERE program_id = %(program_id)s;
                     DELETE FROM loyalty_program WHERE id = %(program_id)s;
-                    DELETE FROM sale_order_line WHERE id IN %(sol_ids)s;
-                    DELETE FROM sale_order WHERE id IN %(so_ids)s;
-                    DELETE FROM res_partner WHERE id IN %(partner_ids)s;
+                    DELETE FROM sale_order_line WHERE id = ANY(%(sol_ids)s);
+                    DELETE FROM sale_order WHERE id = ANY(%(so_ids)s);
+                    DELETE FROM res_partner WHERE id = ANY(%(partner_ids)s);
                     DELETE FROM product_product WHERE id = %(product_id)s;
                 """, {
                     'program_id': cls.promo_code_program.id,
-                    'sol_ids': tuple(cls.order_lines.ids),
-                    'so_ids': (cls.order_partner_1.id, cls.order_partner_2.id),
-                    'partner_ids': (cls.partner_1.id, cls.partner_2.id),
+                    'sol_ids': list(cls.order_lines.ids),
+                    'so_ids': [cls.order_partner_1.id, cls.order_partner_2.id],
+                    'partner_ids': [cls.partner_1.id, cls.partner_2.id],
                     'product_id': cls.product.id,
                 })
         cls.addClassCleanup(reset)
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     def test_lock_concurrent_promo_code(self):
         """ Test that two cursors cannot lock the same row simultaneously """
 

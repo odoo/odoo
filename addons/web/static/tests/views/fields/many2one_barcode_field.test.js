@@ -1,6 +1,7 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { mockUserAgent, mockVibrate, runAllTimers } from "@odoo/hoot-mock";
-
 import {
     clickSave,
     contains,
@@ -12,8 +13,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
+import * as BarcodeScanner from "@web/components/barcode/barcode_dialog";
 
 class Product extends models.Model {
     _name = "product.product";
@@ -167,11 +167,11 @@ test("barcode button with multiple results on desktop", async () => {
     expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
 
     expect(
-        ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item.ui-menu-item:not(.o_m2o_dropdown_option)"
+        ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item.ui-menu-item:not(.o_m2o_dropdown_option)",
     ).toHaveCount(2);
 
     await contains(
-        ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item:nth-child(1)"
+        ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item:nth-child(1)",
     ).click();
     await clickSave();
     expect.verifySteps(["vibrate:100"]);
@@ -209,9 +209,12 @@ test("barcode button with multiple results on mobile", async () => {
     expect(".modal-dialog.modal-lg").toHaveCount(1, {
         message: "there should be one modal opened in full screen",
     });
-    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2, {
-        message: "there should be 2 records displayed",
-    });
+    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(
+        2,
+        {
+            message: "there should be 2 records displayed",
+        },
+    );
 
     await contains(".o_kanban_record:nth-child(1)").click();
     await clickSave();
@@ -242,8 +245,11 @@ test("many2one with barcode show all records", async () => {
     expect(".modal-dialog.modal-lg").toHaveCount(1, {
         message: "there should be one modal opened in full screen",
     });
-    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3, {
-        message: "there should be 3 records displayed",
-    });
+    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(
+        3,
+        {
+            message: "there should be 3 records displayed",
+        },
+    );
     expect.verifySteps(["vibrate:100"]);
 });

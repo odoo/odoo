@@ -12,7 +12,7 @@
 # Then the following command should run:
 #   $ gunicorn odoo.http:root --pythonpath . -c odoo-wsgi.py
 
-from odoo.http import root as application  # noqa: F401
+from odoo.http import root as application
 from odoo.tools import config as conf  # noqa: F401
 
 # ----------------------------------------------------------

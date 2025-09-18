@@ -1,11 +1,14 @@
 import { Discuss } from "@mail/core/public_web/discuss";
-
-import { Component, onMounted, onWillStart, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
-
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    onWillUpdateProps,
+} from "@odoo/owl";
+import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { router } from "@web/core/browser/router";
-
 /**
  * @typedef {Object} Props
  * @property {Object} action
@@ -79,7 +82,8 @@ export class DiscussClientAction extends Component {
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             const highlight_message_id =
-                props.action?.params?.highlight_message_id || router.current.highlight_message_id;
+                props.action?.params?.highlight_message_id ||
+                router.current.highlight_message_id;
             if (highlight_message_id) {
                 activeThread.highlightMessage = highlight_message_id;
                 delete props.action?.params?.highlight_message_id;

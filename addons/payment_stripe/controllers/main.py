@@ -3,7 +3,7 @@
 import hashlib
 import hmac
 import pprint
-from datetime import datetime
+from datetime import UTC, datetime
 
 from werkzeug.exceptions import Forbidden
 
@@ -85,6 +85,10 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
                     'stripe', data
                 )
+
+                if not tx_sudo:
+                    return request.make_json_response('')
+
                 self._verify_signature(tx_sudo)
 
                 if event['type'].startswith('payment_intent'):  # Payment operation.
@@ -202,7 +206,7 @@ class StripeController(http.Controller):
             raise Forbidden()
 
         # Check if the timestamp is not too old
-        if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
+        if datetime.now(UTC).timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("Received payment data with outdated timestamp: %s", event_timestamp)
             raise Forbidden()
 

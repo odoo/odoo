@@ -1,0 +1,58 @@
+// Skeleton View — shimmer placeholders during view transitions
+// Uses the existing o-skeleton mixin from utils.scss
+
+.o_skeleton_view {
+    .o_skeleton_cp {
+        min-height: 52px;
+    }
+
+    // Staggered fade-in for rows/cards — feels alive, not static
+    .o_skeleton_row,
+    .o_skeleton_kanban_card,
+    .o_skeleton_form .col-6 {
+        animation: o-skeletonFadeIn 300ms ease-out both;
+    }
+
+    // List skeleton
+    .o_skeleton_list {
+        th {
+            background: var(--o-list-thead-bg-color, #{$o-gray-200});
+            padding: 8px 12px;
+            border-bottom: 2px solid $o-gray-300;
+        }
+
+        td {
+            padding: 6px 12px;
+            border-bottom: 1px solid $o-gray-200;
+        }
+
+        .o_skeleton_checkbox {
+            text-align: center;
+        }
+    }
+
+    // Kanban skeleton
+    .o_skeleton_kanban_group {
+        min-width: 280px;
+    }
+
+    .o_skeleton_kanban_card {
+        border-color: $o-gray-200;
+    }
+
+    // Form skeleton
+    .o_skeleton_form {
+        background: $o-gray-100;
+    }
+}
+
+@keyframes o-skeletonFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

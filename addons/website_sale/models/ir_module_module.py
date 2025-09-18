@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools import SQL, split_every
+from itertools import batched
+
+from odoo.tools import SQL
 
 
 class IrModuleModule(models.Model):
@@ -19,11 +21,13 @@ class IrModuleModule(models.Model):
 
         def set_field(fname):
             lang_items = (
-                SQL('%(lang)s, o_step.%(fname)s->>%(lang)s', lang=lang, fname=fname)
+                # lang must be a SQL literal (not a bound parameter) because
+                # psycopg3 can't infer the type for jsonb->>$N operators.
+                SQL('%(lang)s, o_step.%(fname)s->>%(lang)s', lang=SQL("'%s'" % lang), fname=fname)  # pylint: disable=E8501
                 for lang in to_langs
             )
             # PSQL functions take 100 args max, and we're generating 2 per lang
-            batched_lang_items = split_every(50, lang_items)
+            batched_lang_items = batched(lang_items, 50)
             update_jsonb = SQL(' || ').join(
                 SQL('jsonb_build_object(%s)', SQL(', ').join(batch))
                 for batch in batched_lang_items

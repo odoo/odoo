@@ -512,7 +512,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -749,7 +749,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1051,7 +1051,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1115,7 +1115,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1197,7 +1197,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1227,7 +1227,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1281,7 +1281,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();
@@ -1358,7 +1358,7 @@ describe("Import view", () => {
         await getService("action").doAction(1);
 
         // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
         await contains(".o_control_panel_main_buttons .o_import_file").click();
         await setInputFiles([file]);
         await animationFrame();

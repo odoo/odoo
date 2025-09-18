@@ -1,11 +1,16 @@
+// @ts-check
+
 import { serverState } from "../../mock_server_state.hoot";
-import { ServerModel } from "../mock_model";
 import * as fields from "../mock_fields";
+import { ServerModel } from "../mock_model";
 
 export class ResPartner extends ServerModel {
     _name = "res.partner";
 
-    main_user_id = fields.Many2one({ compute: "_compute_main_user_id", relation: "res.users" });
+    main_user_id = fields.Many2one({
+        compute: "_compute_main_user_id",
+        relation: "res.users",
+    });
 
     _compute_main_user_id() {
         /** @type {import("mock_models").ResUsers} */

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_order_line_tree_with_create" model="ir.ui.view">
+    <record id="view_sale_order_line_list_with_create" model="ir.ui.view">
         <field name="name">sale.order.line.list.with.create</field>
         <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="inherit_id" ref="sale.view_sale_order_line_list"/>
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
@@ -16,7 +16,7 @@
     <record id="sale_order_line_view_form_editable" model="ir.ui.view">
         <field name="name">sale.order.line.view.form.editable</field>
         <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.sale_order_line_view_form_readonly"/>
+        <field name="inherit_id" ref="sale.view_sale_order_line_form_readonly"/>
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">

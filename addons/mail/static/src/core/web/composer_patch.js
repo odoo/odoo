@@ -1,14 +1,10 @@
 import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { childNodes } from "@html_editor/utils/dom_traversal";
-
 import { Composer } from "@mail/core/common/composer";
-
 import { markup } from "@odoo/owl";
-
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { createDocumentFragmentFromContent } from "@web/core/utils/dom/html";
 import { patch } from "@web/core/utils/patch";
 import { renderToElement } from "@web/core/utils/render";
-
 patch(Composer.prototype, {
     /**
      * Construct an editor friendly html representation of the body.

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { middleClick, rightClick } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";

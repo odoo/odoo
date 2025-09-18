@@ -70,7 +70,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         self.website.salesperson_id = salesperson
         self.cart.user_id = False
         self.tx._set_pending()
-        with patch.object(self.env.registry['sale.order'], '_send_order_notification_mail') as mock:
+        with patch.object(self.env.registry['sale.order'], '_send_mail_order_notification') as mock:
             self.tx._post_process()
             self.assertEqual(mock.call_count, 1, "One payment confirmation mail should be sent")
             self.assertEqual(

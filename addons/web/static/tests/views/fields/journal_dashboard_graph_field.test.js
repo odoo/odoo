@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -141,7 +143,10 @@ test("rendering of a JournalDashboardGraphField in an updated grouped kanban vie
             </kanban>`,
         domain: [["id", "in", [1, 2]]],
     });
-    const kanban = findComponent(view, (component) => component instanceof KanbanController);
+    const kanban = findComponent(
+        view,
+        (component) => component instanceof KanbanController,
+    );
     expect(".o_dashboard_graph canvas").toHaveCount(2, {
         message: "there should be two graph rendered",
     });

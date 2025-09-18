@@ -1,7 +1,6 @@
-import { patch } from "@web/core/utils/patch";
 import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-
+import { patch } from "@web/core/utils/patch";
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
@@ -20,10 +19,11 @@ patch(PosStore.prototype, {
             return false;
         }
         try {
-            const opData = await this.data.call("pos.order", "get_and_set_online_payments_data", [
-                order.id,
-                next_online_payment_amount,
-            ]);
+            const opData = await this.data.call(
+                "pos.order",
+                "get_and_set_online_payments_data",
+                [order.id, next_online_payment_amount],
+            );
             return this.processOnlinePaymentsDataFromServer(order, opData);
         } catch (ex) {
             logPosMessage(
@@ -31,7 +31,7 @@ patch(PosStore.prototype, {
                 "updateOnlinePaymentsDataWithServer",
                 "Error while updating online payments data",
                 CONSOLE_COLOR,
-                [ex]
+                [ex],
             );
             return null;
         }
@@ -45,7 +45,7 @@ patch(PosStore.prototype, {
                 "Store",
                 "processOnlinePaymentsDataFromServer",
                 "Called processOnlinePaymentsDataFromServer on the wrong order.",
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
         }
         if ("paid_order" in opData) {
@@ -59,7 +59,7 @@ patch(PosStore.prototype, {
 
         if (opData["deleted"] === true) {
             const onlinePm = order.payment_ids.filter(
-                (line) => line.payment_method_id.is_online_payment
+                (line) => line.payment_method_id.is_online_payment,
             );
 
             for (const line of onlinePm) {
@@ -74,13 +74,13 @@ patch(PosStore.prototype, {
         const opLinesToUpdate = order.payment_ids.filter(
             (line) =>
                 line.payment_method_id.is_online_payment &&
-                ["waiting", "done"].includes(line.getPaymentStatus())
+                ["waiting", "done"].includes(line.getPaymentStatus()),
         );
         for (const op of opData.online_payments) {
             const matchingLineIndex = opLinesToUpdate.findIndex(
                 (pl) =>
                     pl.payment_method_id.id === op.payment_method_id &&
-                    this.currency.isZero(pl.amount - op.amount)
+                    this.currency.isZero(pl.amount - op.amount),
             );
             let opLine = null;
             if (matchingLineIndex > -1) {
@@ -106,7 +106,7 @@ patch(PosStore.prototype, {
         for (const missingInServerLine of opLinesToUpdate) {
             if (missingInServerLine.getPaymentStatus() === "done") {
                 this.paymentlines = order.payment_ids.filter(
-                    (l) => l.uuid !== missingInServerLine.uuid
+                    (l) => l.uuid !== missingInServerLine.uuid,
                 );
 
                 opData["modified_payment_lines"] = true;

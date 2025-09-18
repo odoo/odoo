@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 
 export class PaymentMercadoPago extends PaymentInterface {
@@ -20,7 +20,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_payment_intent_create",
-            [[line.payment_method_id.id], infos]
+            [[line.payment_method_id.id], infos],
         );
     }
     async getLastStatusPaymentIntent() {
@@ -29,7 +29,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_payment_intent_get",
-            [[line.payment_method_id.id], this.payment_intent.id]
+            [[line.payment_method_id.id], this.payment_intent.id],
         );
     }
 
@@ -39,7 +39,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_payment_intent_cancel",
-            [[line.payment_method_id.id], this.payment_intent.id]
+            [[line.payment_method_id.id], this.payment_intent.id],
         );
     }
 
@@ -49,7 +49,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_get_payment_status",
-            [[line.payment_method_id.id], payment_id]
+            [[line.payment_method_id.id], payment_id],
         );
     }
 
@@ -118,14 +118,26 @@ export class PaymentMercadoPago extends PaymentInterface {
 
         const handleFinishedPayment = async (paymentIntent) => {
             if (paymentIntent.state === "CANCELED") {
-                return showMessageAndResolve(_t("Payment has been canceled"), "info", false);
+                return showMessageAndResolve(
+                    _t("Payment has been canceled"),
+                    "info",
+                    false,
+                );
             }
             if (["FINISHED", "PROCESSED"].includes(paymentIntent.state)) {
                 const payment = await this.getPayment(paymentIntent.payment.id);
                 if (payment.status === "approved") {
-                    return showMessageAndResolve(_t("Payment has been processed"), "info", true);
+                    return showMessageAndResolve(
+                        _t("Payment has been processed"),
+                        "info",
+                        true,
+                    );
                 }
-                return showMessageAndResolve(_t("Payment has been rejected"), "info", false);
+                return showMessageAndResolve(
+                    _t("Payment has been rejected"),
+                    "info",
+                    false,
+                );
             }
         };
 
@@ -133,14 +145,19 @@ export class PaymentMercadoPago extends PaymentInterface {
         // it is an old webhook -> trash
         if ("id" in this.payment_intent) {
             // Call Mercado Pago to get the payment intent status
-            let last_status_payment_intent = await this.getLastStatusPaymentIntent();
+            let last_status_payment_intent =
+                await this.getLastStatusPaymentIntent();
             // Bad payment intent id, then it's an old webhook not related with the
             // current payment intent -> trash
             if (this.payment_intent.id == last_status_payment_intent.id) {
                 if (
-                    ["FINISHED", "PROCESSED", "CANCELED"].includes(last_status_payment_intent.state)
+                    ["FINISHED", "PROCESSED", "CANCELED"].includes(
+                        last_status_payment_intent.state,
+                    )
                 ) {
-                    return await handleFinishedPayment(last_status_payment_intent);
+                    return await handleFinishedPayment(
+                        last_status_payment_intent,
+                    );
                 }
                 // BUG Sometimes the Mercado Pago webhook return ON_TERMINAL
                 // instead of CANCELED/FINISHED when we requested a payment status
@@ -148,36 +165,49 @@ export class PaymentMercadoPago extends PaymentInterface {
                 // Then the strategy here is to ask Mercado Pago MAX_RETRY times the
                 // payment intent status, hoping going out of this status
                 if (
-                    ["OPEN", "ON_TERMINAL", "PROCESSING"].includes(last_status_payment_intent.state)
+                    ["OPEN", "ON_TERMINAL", "PROCESSING"].includes(
+                        last_status_payment_intent.state,
+                    )
                 ) {
                     return await new Promise((resolve) => {
                         let retry_cnt = 0;
                         const s = setInterval(async () => {
-                            last_status_payment_intent = await this.getLastStatusPaymentIntent();
+                            last_status_payment_intent =
+                                await this.getLastStatusPaymentIntent();
                             if (
                                 ["FINISHED", "PROCESSED", "CANCELED"].includes(
-                                    last_status_payment_intent.state
+                                    last_status_payment_intent.state,
                                 )
                             ) {
                                 clearInterval(s);
-                                resolve(await handleFinishedPayment(last_status_payment_intent));
+                                resolve(
+                                    await handleFinishedPayment(
+                                        last_status_payment_intent,
+                                    ),
+                                );
                             }
                             retry_cnt += 1;
                             if (retry_cnt >= MAX_RETRY) {
                                 clearInterval(s);
                                 resolve(
                                     showMessageAndResolve(
-                                        _t("Payment status could not be confirmed"),
+                                        _t(
+                                            "Payment status could not be confirmed",
+                                        ),
                                         "error",
-                                        false
-                                    )
+                                        false,
+                                    ),
                                 );
                             }
                         }, RETRY_DELAY);
                     });
                 }
                 // If the state does not match any of the expected values
-                return showMessageAndResolve(_t("Unknown payment status"), "error", false);
+                return showMessageAndResolve(
+                    _t("Unknown payment status"),
+                    "error",
+                    false,
+                );
             }
         }
     }

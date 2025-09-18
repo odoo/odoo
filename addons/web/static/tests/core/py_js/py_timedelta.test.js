@@ -1,11 +1,14 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { PyTimeDelta } from "@web/core/py_js/py_date";
 
 const expectDelta = (expr, res) => {
     const timedelta = evaluateExpr(expr, { td: PyTimeDelta });
-    expect(`${timedelta.days}, ${timedelta.seconds}, ${timedelta.microseconds}`).toBe(res);
+    expect(`${timedelta.days}, ${timedelta.seconds}, ${timedelta.microseconds}`).toBe(
+        res,
+    );
 };
 
 const expectEquality = (expr1, expr2, ctx) => {
@@ -32,7 +35,7 @@ test("create", () => {
 
     expectEquality(
         "td()",
-        "td(weeks=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0, microseconds=0)"
+        "td(weeks=0, days=0, hours=0, minutes=0, seconds=0, milliseconds=0, microseconds=0)",
     );
     expectEquality("td(1)", "td(days=1)");
     expectEquality("td(0, 1)", "td(seconds=1)");
@@ -110,7 +113,10 @@ test("basic operations: +, -, *, //", () => {
     expectEquality("c//1000", "td(0, 0, 1)", ctx);
     expectEquality("a//10", "td(0, 7*24*360)", ctx);
     expectEquality("a//3600000", "td(0, 0, 7*24*1000)", ctx);
-    expectEquality("td(999999999, 86399, 999999) - td(999999999, 86399, 999998)", "td(0, 0, 1)");
+    expectEquality(
+        "td(999999999, 86399, 999999) - td(999999999, 86399, 999998)",
+        "td(0, 0, 1)",
+    );
     expectEquality("td(999999999, 1, 1) - td(999999999, 1, 0)", "td(0, 0, 1)");
 });
 
@@ -120,8 +126,12 @@ test("total_seconds", () => {
     const ctx = { td: PyTimeDelta };
 
     expect(evaluateExpr("td(365).total_seconds()", ctx)).toBe(31536000);
-    expect(evaluateExpr("td(seconds=123456.789012).total_seconds()", ctx)).toBe(123456.789012);
-    expect(evaluateExpr("td(seconds=-123456.789012).total_seconds()", ctx)).toBe(-123456.789012);
+    expect(evaluateExpr("td(seconds=123456.789012).total_seconds()", ctx)).toBe(
+        123456.789012,
+    );
+    expect(evaluateExpr("td(seconds=-123456.789012).total_seconds()", ctx)).toBe(
+        -123456.789012,
+    );
     expect(evaluateExpr("td(seconds=0.123456).total_seconds()", ctx)).toBe(0.123456);
     expect(evaluateExpr("td().total_seconds()", ctx)).toBe(0);
     expect(evaluateExpr("td(seconds=1000000).total_seconds()", ctx)).toBe(1e6);

@@ -8,7 +8,6 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.addons.google_account.models import google_service
 from odoo.exceptions import LockError
-from odoo.loglevels import exception_to_unicode
 from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
@@ -131,7 +130,12 @@ class ResUsers(models.Model):
     @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].sudo().search([('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)])
+        domain = [('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)]
+        # google_calendar_token_validity is not stored on res.users
+        if not self:
+            users = self.env['res.users'].sudo().search(domain).sorted('google_calendar_token_validity')
+        else:
+            users = self.filtered_domain(domain).sorted('google_calendar_token_validity')
         google = GoogleCalendarService(self.env['google.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
@@ -139,7 +143,7 @@ class ResUsers(models.Model):
                 user.with_user(user).sudo()._sync_google_calendar(google)
                 self.env.cr.commit()
             except Exception as e:
-                _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
+                _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, str(e))
                 self.env.cr.rollback()
 
     def is_google_calendar_synced(self):

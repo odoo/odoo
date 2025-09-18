@@ -1,4 +1,7 @@
+// @ts-check
+
 import { advanceTime, queryFirst } from "@odoo/hoot";
+
 import { contains } from "./dom_test_helpers";
 
 /**

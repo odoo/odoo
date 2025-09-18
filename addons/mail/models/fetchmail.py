@@ -13,7 +13,6 @@ from ssl import SSLError
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 MAIL_TIMEOUT = 60
@@ -215,16 +214,16 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                 connection = server._connect__(allow_archived=True)
                 server.write({'state': 'done'})
             except UnicodeError as e:
-                raise UserError(_("Invalid server name!\n %s", tools.exception_to_unicode(e)))
+                raise UserError(_("Invalid server name!\n %s", str(e)))
             except (gaierror, timeout, IMAP4.abort) as e:
-                raise UserError(_("No response received. Check server information.\n %s", tools.exception_to_unicode(e)))
+                raise UserError(_("No response received. Check server information.\n %s", str(e)))
             except (IMAP4.error, poplib.error_proto) as err:
-                raise UserError(_("Server replied with following exception:\n %s", tools.exception_to_unicode(err)))
+                raise UserError(_("Server replied with following exception:\n %s", str(err)))
             except SSLError as e:
-                raise UserError(_("An SSL exception occurred. Check SSL/TLS configuration on server port.\n %s", tools.exception_to_unicode(e)))
+                raise UserError(_("An SSL exception occurred. Check SSL/TLS configuration on server port.\n %s", str(e)))
             except (OSError, Exception) as err:
                 _logger.info("Failed to connect to %s server %s.", server.server_type, server.name, exc_info=True)
-                raise UserError(_("Connection test failed: %s", tools.exception_to_unicode(err)))
+                raise UserError(_("Connection test failed: %s", str(err)))
             finally:
                 try:
                     if connection:
@@ -307,7 +306,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                 _logger.info("General failure when trying to fetch mail from %s server %s.", *server_type_and_name, exc_info=True)
                 if not server.error_date:
                     server.error_date = fields.Datetime.now()
-                    server.error_message = exception_to_unicode(e)
+                    server.error_message = str(e)
                 elif server.error_date < fields.Datetime.now() - MAIL_SERVER_DEACTIVATE_TIME:
                     message = "Deactivating fetchmail %s server %s (too many failures)" % server_type_and_name
                     server.set_draft()

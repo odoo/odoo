@@ -4,7 +4,7 @@ import logging
 import re
 
 from collections import defaultdict
-from psycopg2 import errors as pgerrors
+from psycopg import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -380,13 +380,13 @@ class ResPartner(models.Model):
             FROM %s
             LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
             WHERE a.account_type IN ('asset_receivable','liability_payable')
-            AND account_move_line.partner_id IN %s
+            AND account_move_line.partner_id = ANY(%s)
             AND account_move_line.reconciled IS NOT TRUE
             AND %s
             GROUP BY account_move_line.partner_id, a.account_type
             """,
             query.from_clause,
-            tuple(self.ids),
+            list(self.ids),
             query.where_clause or SQL("TRUE"),
         )
         treated = self.browse()
@@ -610,14 +610,14 @@ class ResPartner(models.Model):
         comodel_name='account.payment.method.line',
         check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     def _compute_bank_count(self):
@@ -1055,7 +1055,7 @@ class ResPartner(models.Model):
                     partner.account_move_count += count
                 partner = partner.parent_id
 
-    def action_open_business_doc(self):
+    def action_view_business_doc(self):
         return self._get_records_action()
 
     @api.model
@@ -1070,7 +1070,7 @@ class ResPartner(models.Model):
             UPDATE res_partner
             SET invoice_edi_format_store = invoice_edi_format_store - res_company.id::char
             FROM res_company
-            WHERE res_partner.invoice_edi_format_store ->> res_company.id::char IN %s
+            WHERE res_partner.invoice_edi_format_store ->> res_company.id::char = ANY(%s)
             """,
-            (formats,),
+            (list(formats),),
         )

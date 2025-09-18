@@ -1,3 +1,8 @@
+// @ts-check
+
+import { expect, test } from "@odoo/hoot";
+import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -7,10 +12,7 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { getNextTabableElement } from "@web/core/utils/ui";
-import { animationFrame } from "@odoo/hoot-mock";
+import { getNextTabableElement } from "@web/core/utils/dom/ui";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });
@@ -134,7 +136,10 @@ test("phone field with placeholder", async () => {
                 </sheet>
             </form>`,
     });
-    expect(".o_field_widget[name='foo'] input").toHaveProperty("placeholder", "Placeholder");
+    expect(".o_field_widget[name='foo'] input").toHaveProperty(
+        "placeholder",
+        "Placeholder",
+    );
 });
 
 test("placeholder_field shows as placeholder", async () => {

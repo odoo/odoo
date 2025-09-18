@@ -4,7 +4,6 @@ from odoo.tests.common import TransactionCase
 
 
 class TestNum2WordsAr(TransactionCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -17,9 +16,13 @@ class TestNum2WordsAr(TransactionCase):
 
         self.assertEqual(thousand, "ألف و مئتان و أربعة و ثلاثون")
         self.assertEqual(
-            million, "مليون و مئتان و أربعة و ثلاثون ألفاً و خمسمائة و سبعة و ستون")
+            million,
+            "مليون و مئتان و أربعة و ثلاثون ألفاً و خمسمائة و سبعة و ستون",
+        )
         self.assertEqual(
-            billion, "مليار و مئتان و أربعة و ثلاثون مليوناً و خمسمائة و سبعة و ستون ألفاً و ثمانمائة و تسعون")
+            billion,
+            "مليار و مئتان و أربعة و ثلاثون مليوناً و خمسمائة و سبعة و ستون ألفاً و ثمانمائة و تسعون",
+        )
 
     def test_decimal_multiple_of_thousands(self):
         """Test num2words function with a multiple of thousands number."""
@@ -29,6 +32,10 @@ class TestNum2WordsAr(TransactionCase):
 
         self.assertEqual(thousand, "ألف و مئتان و أربعة و ثلاثون  , عشر")
         self.assertEqual(
-            million, "مليون و مئتان و أربعة و ثلاثون ألفاً و خمسمائة و سبعة و ستون  , ثلاث و عشرون")
+            million,
+            "مليون و مئتان و أربعة و ثلاثون ألفاً و خمسمائة و سبعة و ستون  , ثلاث و عشرون",
+        )
         self.assertEqual(
-            billion, "مليار و مئتان و أربعة و ثلاثون مليوناً و خمسمائة و سبعة و ستون ألفاً و ثمانمائة و تسعون  , تسعون")
+            billion,
+            "مليار و مئتان و أربعة و ثلاثون مليوناً و خمسمائة و سبعة و ستون ألفاً و ثمانمائة و تسعون  , تسعون",
+        )

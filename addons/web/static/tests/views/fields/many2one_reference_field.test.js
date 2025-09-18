@@ -1,7 +1,8 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-
 import {
     clickFieldDropdownItem,
     clickSave,
@@ -70,7 +71,9 @@ test("Many2OneReferenceField in form view", async () => {
     expect(".o_field_widget input").toHaveValue("gold");
     expect(".o_field_widget[name=res_id] .o_external_button").toHaveCount(1);
 
-    await contains(".o_field_widget[name=res_id] .o_external_button", { visible: false }).click();
+    await contains(".o_field_widget[name=res_id] .o_external_button", {
+        visible: false,
+    }).click();
     expect.verifySteps(["opening partner.type 10", "doAction"]);
 });
 
@@ -202,10 +205,12 @@ test("Many2OneReferenceField: quick create a value", async () => {
 
     expect(".o_field_widget input").toHaveValue("gold");
 
-    await contains(".o_field_widget[name='res_id'] input").edit("new value", { confirm: false });
+    await contains(".o_field_widget[name='res_id'] input").edit("new value", {
+        confirm: false,
+    });
     await runAllTimers();
     expect(
-        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
+        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create",
     ).toHaveCount(1);
     await clickFieldDropdownItem("res_id", `Create "new value"`);
     expect(".o_field_widget input").toHaveValue("new value");
@@ -224,9 +229,11 @@ test("Many2OneReferenceField with no_create option", async () => {
             </form>`,
     });
 
-    await contains(".o_field_widget[name='res_id'] input").edit("new value", { confirm: false });
+    await contains(".o_field_widget[name='res_id'] input").edit("new value", {
+        confirm: false,
+    });
     await runAllTimers();
     expect(
-        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
+        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create",
     ).toHaveCount(0);
 });

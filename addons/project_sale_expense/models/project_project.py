@@ -38,20 +38,20 @@ class ProjectProject(models.Model):
                 ('state', '=', 'sale'),
             ],
             ['order_id', 'product_id', 'currency_id'],
-            ['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
+            ['amount_taxexc_to_invoice:sum', 'amount_taxexc_invoiced:sum'],
         )
 
         total_amount_expense_invoiced = total_amount_expense_to_invoice = 0.0
         reinvoice_expense_ids = []
         dict_invoices_amount_per_currency = defaultdict(lambda: {'to_invoice': 0.0, 'invoiced': 0.0})
         set_currency_ids = {self.currency_id.id}
-        for order, product, currency, untaxed_amount_to_invoice_sum, untaxed_amount_invoiced_sum in sol_read_group:
+        for order, product, currency, amount_taxexc_to_invoice_sum, amount_taxexc_invoiced_sum in sol_read_group:
             expense_data_per_product_id = expenses_per_so_id[order.id]
             set_currency_ids.add(currency.id)
             product_id = product.id
             if product_id in expense_data_per_product_id:
-                dict_invoices_amount_per_currency[currency]['to_invoice'] += untaxed_amount_to_invoice_sum
-                dict_invoices_amount_per_currency[currency]['invoiced'] += untaxed_amount_invoiced_sum
+                dict_invoices_amount_per_currency[currency]['to_invoice'] += amount_taxexc_to_invoice_sum
+                dict_invoices_amount_per_currency[currency]['invoiced'] += amount_taxexc_invoiced_sum
                 reinvoice_expense_ids += expense_data_per_product_id[product_id]
         for currency, revenues in dict_invoices_amount_per_currency.items():
             total_amount_expense_to_invoice += currency._convert(revenues['to_invoice'], self.currency_id, self.company_id)

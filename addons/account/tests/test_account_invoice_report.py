@@ -200,28 +200,29 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         product = self.product_a.copy()
         invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
-                'partner_id': self.partner_a.id,
-                'invoice_date': fields.Date.from_string('2016-01-01'),
-                'currency_id': self.env.company.currency_id.id,
-                'invoice_line_ids': [
-                    (0, None, {
-                        'product_id': product.id,
-                        'quantity': 10,
-                        'price_unit': 10,
-                    }),
-                    (0, None, {
-                        'product_id': product.id,
-                        'quantity': 5,
-                        'price_unit': 5,
-                    }),
-                    (0, None, {
-                        'product_id': product.id,
-                        'quantity': 20,
-                        'price_unit': 2,
-                    }),
-                ]
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'currency_id': self.env.company.currency_id.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'product_id': product.id,
+                    'quantity': 10,
+                    'price_unit': 10,
+                }),
+                (0, None, {
+                    'product_id': product.id,
+                    'quantity': 5,
+                    'price_unit': 5,
+                }),
+                (0, None, {
+                    'product_id': product.id,
+                    'quantity': 20,
+                    'price_unit': 2,
+                }),
+            ]
         })
         invoice.action_post()
+        self.env.flush_all()
 
         report = self.env['account.invoice.report'].formatted_read_group(
             [('product_id', '=', product.id)],

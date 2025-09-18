@@ -9,8 +9,10 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules import Manifest
-from odoo.tools import escape_psql, split_every, SQL
-from odoo.tools.constants import PREFETCH_MAX
+from itertools import batched
+
+from odoo.tools import escape_psql, SQL
+from odoo.libs.constants import PREFETCH_MAX
 
 _logger = logging.getLogger(__name__)
 
@@ -545,8 +547,11 @@ class IrModuleModule(models.Model):
         if not default_menu:
             return res
 
-        lang_value_list = [SQL("%(lang)s, o_menu.name->>%(lang)s", lang=lang) for lang in langs if lang != 'en_US']
-        update_jsonb_list = [SQL('jsonb_build_object(%s)', SQL(', ').join(items)) for items in split_every(50, lang_value_list)]
+        # lang must be a SQL literal (not a bound parameter) because
+        # psycopg3 can't infer the type for jsonb_build_object($N, ...)
+        # and name->>$N operators (IndeterminateDatatype error).
+        lang_value_list = [SQL("%(lang)s, o_menu.name->>%(lang)s", lang=SQL("'%s'" % lang)) for lang in langs if lang != 'en_US']  # pylint: disable=sql-injection
+        update_jsonb_list = [SQL('jsonb_build_object(%s)', SQL(', ').join(items)) for items in batched(lang_value_list, 50)]
         update_jsonb = SQL(' || ').join(update_jsonb_list)
         o_menu_name = SQL('menu.name || %s' if overwrite else '%s || menu.name', update_jsonb)
         self.env.cr.execute(SQL(

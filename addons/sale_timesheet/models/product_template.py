@@ -63,8 +63,8 @@ class ProductTemplate(models.Model):
     def _get_service_to_general_map(self):
         return {
             **super()._get_service_to_general_map(),
-            'delivered_timesheet': ('delivery', 'timesheet'),
-            'ordered_prepaid': ('order', 'timesheet'),
+            'delivered_timesheet': ('transferred', 'timesheet'),
+            'ordered_prepaid': ('ordered', 'timesheet'),
         }
 
     @api.model

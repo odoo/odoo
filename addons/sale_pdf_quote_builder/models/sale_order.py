@@ -51,14 +51,14 @@ class SaleOrder(models.Model):
 
     @api.depends(
         'available_quotation_document_ids',
-        'order_line',
-        'order_line.available_product_document_ids',
+        'line_ids',
+        'line_ids.available_product_document_ids',
     )
     def _compute_is_pdf_quote_builder_available(self):
         for order in self:
             order.is_pdf_quote_builder_available = bool(
                 order.available_quotation_document_ids
-                or order.order_line.available_product_document_ids
+                or order.line_ids.available_product_document_ids
             )
 
     # === ONCHANGE METHODS === #
@@ -102,7 +102,7 @@ class SaleOrder(models.Model):
         selected_headers = selected_documents.filtered(lambda doc: doc.document_type == 'header')
         selected_footers = selected_documents - selected_headers
         lines_params = []
-        for line in self.order_line:
+        for line in self.line_ids:
             if line.available_product_document_ids:
                 lines_params.append({
                     'name': _("Product") + " > " + line.name.splitlines()[0],

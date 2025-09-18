@@ -7,7 +7,7 @@ import {
     formatDate,
     deserializeDate,
 } from "@web/core/l10n/dates";
-import { orderByToString } from "@web/search/utils/order_by";
+import { orderByToString } from "@web/core/utils/order_by";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";

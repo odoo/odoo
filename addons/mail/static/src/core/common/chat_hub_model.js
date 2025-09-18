@@ -1,10 +1,9 @@
 import { browser } from "@web/core/browser/browser";
-import { fields, Record } from "./record";
-
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
+import { fields, Record } from "./record";
 export const CHAT_HUB_KEY = "mail.ChatHub";
-const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
+export const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 export class ChatHub extends Record {
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
@@ -26,7 +25,7 @@ export class ChatHub extends Record {
                 chatHub.load();
             }
             if (ev.key === CHAT_HUB_COMPACT_LS) {
-                chatHub.compact = ev.newValue === "true";
+                chatHub._recomputeCompact++;
             }
         });
         chatHub
@@ -34,18 +33,11 @@ export class ChatHub extends Record {
             .then(() => chatHub.initPromise.resolve());
         return chatHub;
     }
-
+    _recomputeCompact = 0;
     compact = fields.Attr(false, {
         compute() {
+            void this._recomputeCompact;
             return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
-        },
-        /** @this {import("models").Chathub} */
-        onUpdate() {
-            if (this.compact) {
-                browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, this.compact.toString());
-            } else {
-                browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
-            }
         },
     });
     canShowOpened = fields.Many("ChatWindow");
@@ -78,7 +70,8 @@ export class ChatHub extends Record {
         for (const cw of this.opened) {
             cw.bypassCompact = false;
         }
-        this.compact = true;
+        browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, true);
+        this._recomputeCompact++;
     }
 
     onRecompute() {
@@ -103,7 +96,8 @@ export class ChatHub extends Record {
             folded.length = 0;
             browser.localStorage.removeItem(CHAT_HUB_KEY);
         }
-        const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
+        const getThread = (data) =>
+            this.store.Thread.getOrFetch(data, ["display_name"]);
         const openPromises = opened.map(getThread);
         const foldPromises = folded.map(getThread);
         this.preFirstFetchPromise.resolve();
@@ -128,29 +122,39 @@ export class ChatHub extends Record {
     }
 
     get maxOpened() {
-        const chatBubblesWidth = this.BUBBLE_START + this.BUBBLE + this.BUBBLE_OUTER * 2;
+        const chatBubblesWidth =
+            this.BUBBLE_START + this.BUBBLE + this.BUBBLE_OUTER * 2;
         const startGap = this.store.env.services.ui.isSmall ? 0 : this.WINDOW_GAP;
         const endGap = this.store.env.services.ui.isSmall ? 0 : this.WINDOW_GAP;
         const available = browser.innerWidth - startGap - endGap - chatBubblesWidth;
         const maxAmountWithoutHidden = Math.max(
             1,
-            Math.floor(available / (this.WINDOW + this.WINDOW_INBETWEEN))
+            Math.floor(available / (this.WINDOW + this.WINDOW_INBETWEEN)),
         );
         return maxAmountWithoutHidden;
     }
 
     get maxFolded() {
         const chatBubbleSpace = this.BUBBLE_START + this.BUBBLE + this.BUBBLE_OUTER * 2;
-        return Math.min(this.BUBBLE_LIMIT, Math.floor(browser.innerHeight / chatBubbleSpace));
+        return Math.min(
+            this.BUBBLE_LIMIT,
+            Math.floor(browser.innerHeight / chatBubbleSpace),
+        );
     }
 
     save() {
         browser.localStorage.setItem(
             CHAT_HUB_KEY,
             JSON.stringify({
-                opened: this.opened.map((cw) => ({ id: cw.thread.id, model: cw.thread.model })),
-                folded: this.folded.map((cw) => ({ id: cw.thread.id, model: cw.thread.model })),
-            })
+                opened: this.opened.map((cw) => ({
+                    id: cw.thread.id,
+                    model: cw.thread.model,
+                })),
+                folded: this.folded.map((cw) => ({
+                    id: cw.thread.id,
+                    model: cw.thread.model,
+                })),
+            }),
         );
     }
 

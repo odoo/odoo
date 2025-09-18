@@ -112,9 +112,9 @@
     @for $max-height from 800 through 600 {
         @if $max-height % 25 == 0 {
             $scale: 0.0016 * $max-height - 0.37;
-            $adjusted-radius: 3.5vh / $scale;
+            $adjusted-radius: calc(3.5vh / $scale);
             @media (max-height: #{$max-height}px) {
-                height: (90 / $scale) * 1%;
+                height: calc(90 / $scale * 1%);
                 transform: translate(-50%, -50%) scale($scale);
                 border-radius: $adjusted-radius;
                 // Add min-height for 600px only.

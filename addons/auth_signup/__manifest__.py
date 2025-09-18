@@ -11,9 +11,7 @@ Allow users to sign up and reset their password
     'category': 'Hidden/Tools',
     'auto_install': True,
     'depends': [
-        'base_setup',
         'mail',
-        'web',
     ],
     'data': [
         'data/ir_config_parameter_data.xml',

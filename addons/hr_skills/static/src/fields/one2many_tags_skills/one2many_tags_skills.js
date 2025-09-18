@@ -1,8 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { useX2ManyCrud, useOpenX2ManyRecord } from "@web/views/fields/relational_utils";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
+import { useX2ManyCrud } from "@web/fields/relational/x2many_crud";
+import { useOpenX2ManyRecord } from "@web/fields/relational/x2many_dialog";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { TagsList } from "@web/components/tags_list/tags_list";
 
 export class One2ManyTagsSkillsField extends X2ManyField {
     static components = {

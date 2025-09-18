@@ -1,11 +1,21 @@
+// @ts-check
+
+/** @module @web/webclient/debug/profiling/profiling_qweb - Field widget visualizing QWeb template profiling data as a flamegraph */
+
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { loadBundle } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-import { Component, useState, useRef, onWillStart, onMounted, onWillUnmount } from "@odoo/owl";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 class MenuItem extends Component {
     static template = "web.ProfilingQwebView.menuitem";
@@ -17,7 +27,9 @@ class MenuItem extends Component {
 function processValue(value) {
     const data = JSON.parse(value);
     for (const line of data[0].results.data) {
-        line.xpath = line.xpath.replace(/([^\]])\//g, "$1[1]/").replace(/([^\]])$/g, "$1[1]");
+        line.xpath = line.xpath
+            .replace(/([^\]])\//g, "$1[1]/")
+            .replace(/([^\]])$/g, "$1[1]");
     }
     return data;
 }
@@ -44,12 +56,17 @@ export class ProfilingQwebView extends Component {
             view: null,
         });
 
-        this.renderProfilingInformation = useDebounced(this.renderProfilingInformation, 100);
+        this.renderProfilingInformation = useDebounced(
+            this.renderProfilingInformation,
+            100,
+        );
 
         onWillStart(async () => {
             await loadBundle("web.ace_lib");
             await this._fetchViewData();
-            this.state.view = this.viewObjects.find((view) => view.id === this.state.viewID);
+            this.state.view = this.viewObjects.find(
+                (view) => view.id === this.state.viewID,
+            );
         });
         onMounted(() => {
             this._startAce(this.ace.el);
@@ -66,7 +83,7 @@ export class ProfilingQwebView extends Component {
     /**
      * Return JSON values to render the view
      *
-     * @returns {archs, data: {template, xpath, directive, time, duration, query }[]}
+     * @returns {{ archs: Object, data: Array<{template: string, xpath: string, directive: string, time: number, duration: number, query: number, view_id?: any, delay?: number}> }}
      */
     get profile() {
         return this.value ? this.value[0].results : { archs: {}, data: [] };
@@ -83,7 +100,9 @@ export class ProfilingQwebView extends Component {
      * @returns {Promise<viewObjects>}
      */
     async _fetchViewData() {
-        const viewIDs = Array.from(new Set(this.profile.data.map((line) => line.view_id)));
+        const viewIDs = Array.from(
+            new Set(this.profile.data.map((line) => line.view_id)),
+        );
         const viewObjects = await this.orm.call("ir.ui.view", "search_read", [], {
             fields: ["id", "display_name", "key"],
             domain: [["id", "in", viewIDs]],
@@ -148,7 +167,10 @@ export class ProfilingQwebView extends Component {
         });
 
         // Ace render 3 times when change the value and 1 time per click.
-        this.aceEditor.renderer.on("afterRender", this.renderProfilingInformation.bind(this));
+        this.aceEditor.renderer.on(
+            "afterRender",
+            this.renderProfilingInformation.bind(this),
+        );
     }
 
     renderProfilingInformation() {
@@ -158,27 +180,29 @@ export class ProfilingQwebView extends Component {
         const arch = [{ xpath: "", children: [] }];
         const rows = this.ace.el.querySelectorAll(".ace_gutter .ace_gutter-cell");
         const elems = this.ace.el.querySelectorAll(
-            ".ace_tag-open, .ace_end-tag-close, .ace_end-tag-open, .ace_qweb"
+            ".ace_tag-open, .ace_end-tag-close, .ace_end-tag-open, .ace_qweb",
         );
         elems.forEach((node) => {
-            const parent = arch[arch.length - 1];
+            const parent = arch.at(-1);
             let xpath = parent.xpath;
             if (node.classList.contains("ace_end-tag-close")) {
                 // Close tag.
                 let previous = node;
-                while ((previous = previous.previousElementSibling)) {
+                while (
+                    (previous = /** @type {any} */ (previous.previousElementSibling))
+                ) {
                     if (previous && previous.classList.contains("ace_tag-name")) {
                         break;
                     }
                 }
-                const tag = previous && previous.textContent;
+                const tag = previous?.textContent;
                 if (parent.tag === tag) {
                     // can be different when scroll because ace does not display the previous lines.
                     arch.pop();
                 }
             } else if (node.classList.contains("ace_end-tag-open")) {
                 // Auto close tag.
-                const tag = node.nextElementSibling && node.nextElementSibling.textContent;
+                const tag = node.nextElementSibling?.textContent;
                 if (parent.tag === tag) {
                     // can be different when scroll because ace does not display the previous lines.
                     arch.pop();
@@ -213,16 +237,18 @@ export class ProfilingQwebView extends Component {
                 // Open tag.
                 const nodeTagName = node.nextElementSibling;
                 const aceLine = nodeTagName.parentNode;
-                const index = [].indexOf.call(aceLine.parentNode.children, aceLine);
+                const index = [...aceLine.parentNode.children].indexOf(
+                    /** @type {Element} */ (aceLine),
+                );
                 const row = rows[index];
 
                 // Add a children to the arch and compute the xpath.
-                xpath += "/" + nodeTagName.textContent;
+                xpath += `/${nodeTagName.textContent}`;
                 let i = 1;
-                while (flat[xpath + "[" + i + "]"]) {
+                while (flat[`${xpath}[${i}]`]) {
                     i++;
                 }
-                xpath += "[" + i + "]";
+                xpath += `[${i}]`;
                 flat[xpath] = {
                     xpath: xpath,
                     tag: nodeTagName.textContent,
@@ -285,12 +311,12 @@ export class ProfilingQwebView extends Component {
         this.state.view = view;
     }
     _unmoutInfo() {
-        if (this.hover) {
+        if (/** @type {any} */ (this).hover) {
             if (this.ace.el.querySelector(".o_ace_hover")) {
                 this.ace.el.querySelector(".o_ace_hover").remove();
             }
         }
-        if (this.info) {
+        if (/** @type {any} */ (this).info) {
             if (this.ace.el.querySelector(".o_ace_info")) {
                 this.ace.el.querySelector(".o_ace_info").remove();
             }
@@ -301,7 +327,9 @@ export class ProfilingQwebView extends Component {
             delay: this._formatDelay(delay),
             query: query,
         });
-        const div = new DOMParser().parseFromString(xml, "text/html").querySelector("div");
+        const div = new DOMParser()
+            .parseFromString(xml, "text/html")
+            .querySelector("div");
         node.appendChild(div);
     }
     _renderInfo(delays, querys, displayDetail, groups, node) {
@@ -311,7 +339,9 @@ export class ProfilingQwebView extends Component {
             displayDetail: displayDetail,
             groups: groups,
         });
-        const div = new DOMParser().parseFromString(xml, "text/html").querySelector("div");
+        const div = new DOMParser()
+            .parseFromString(xml, "text/html")
+            .querySelector("div");
         node.appendChild(div);
     }
 
@@ -324,7 +354,7 @@ export class ProfilingQwebView extends Component {
      * @param {MouseEvent} ev
      */
     _onSelectView(ev) {
-        this.state.viewID = +ev.currentTarget.dataset.id;
+        this.state.viewID = +(/** @type {HTMLElement} */ (ev.currentTarget).dataset.id);
         this._renderView();
     }
 }

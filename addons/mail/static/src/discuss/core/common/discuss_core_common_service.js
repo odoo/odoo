@@ -1,7 +1,5 @@
 import { markup, reactive } from "@odoo/owl";
-
 import { registry } from "@web/core/registry";
-
 export class DiscussCoreCommon {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -24,13 +22,16 @@ export class DiscussCoreCommon {
             });
             this._handleNotificationChannelDelete(thread, metadata);
         });
-        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
-            // Insert should always be done before any async operation. Indeed,
-            // awaiting before the insertion could lead to overwritting newer
-            // state coming from more recent `mail.record/insert` notifications.
-            this.store.insert(payload.data);
-            this._handleNotificationNewMessage(payload, metadata);
-        });
+        this.busService.subscribe(
+            "discuss.channel/new_message",
+            (payload, metadata) => {
+                // Insert should always be done before any async operation. Indeed,
+                // awaiting before the insertion could lead to overwritting newer
+                // state coming from more recent `mail.record/insert` notifications.
+                this.store.insert(payload.data);
+                this._handleNotificationNewMessage(payload, metadata);
+            },
+        );
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
@@ -54,17 +55,20 @@ export class DiscussCoreCommon {
                 thread: { id: channel_id, model: "discuss.channel" },
             });
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.thread) {
-                const { self_member_id } = message.thread;
-                if (
-                    message.id > self_member_id?.seen_message_id.id &&
-                    notifId > self_member_id.message_unread_counter_bus_id
-                ) {
-                    self_member_id.message_unread_counter--;
+        this.env.bus.addEventListener(
+            "mail.message/delete",
+            ({ detail: { message, notifId } }) => {
+                if (message.thread) {
+                    const { self_member_id } = message.thread;
+                    if (
+                        message.id > self_member_id?.seen_message_id.id &&
+                        notifId > self_member_id.message_unread_counter_bus_id
+                    ) {
+                        self_member_id.message_unread_counter--;
+                    }
                 }
-            }
-        });
+            },
+        );
     }
 
     /**
@@ -92,14 +96,20 @@ export class DiscussCoreCommon {
         }
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
-                channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
+                channel.addOrReplaceMessage(
+                    message,
+                    this.store["mail.message"].get(temporary_id),
+                );
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
                 channel.onNewSelfMessage(message);
             } else {
-                if (channel.isDisplayed && channel.self_member_id?.new_message_separator_ui === 0) {
+                if (
+                    channel.isDisplayed &&
+                    channel.self_member_id?.new_message_separator_ui === 0
+                ) {
                     channel.self_member_id.new_message_separator_ui = message.id;
                 }
                 if (!channel.isDisplayed && channel.self_member_id) {
@@ -132,9 +142,13 @@ export class DiscussCoreCommon {
         ) {
             channel.markAsRead();
         }
-        this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
+        this.env.bus.trigger("discuss.channel/new_message", {
+            channel,
+            message,
+            silent,
+        });
         const authorMember = channel.channel_member_ids.find((member) =>
-            member.persona?.eq(message.author)
+            member.persona?.eq(message.author),
         );
         if (authorMember) {
             authorMember.seen_message_id = message;

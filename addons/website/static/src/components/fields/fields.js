@@ -1,6 +1,6 @@
 import { PageDependencies } from "@website/components/dialog/page_properties";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { UrlField, urlField } from "@web/views/fields/url/url_field";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { UrlField, urlField } from "@web/fields/basic/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";

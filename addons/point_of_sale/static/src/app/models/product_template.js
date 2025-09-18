@@ -1,8 +1,7 @@
-import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
-import { ProductTemplateAccounting } from "./accounting/product_template_accounting";
 import { normalize } from "@web/core/l10n/utils";
-
+import { registry } from "@web/core/registry";
+import { ProductTemplateAccounting } from "./accounting/product_template_accounting";
 /**
  * ProductProduct, shadow of product.product in python.
  * To works properly, this model needs to be registered in the registry
@@ -34,7 +33,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return this.attribute_line_ids.find(
             (l) =>
                 l.product_template_value_ids.length > 1 ||
-                l.product_template_value_ids.some((v) => v.is_custom)
+                l.product_template_value_ids.some((v) => v.is_custom),
         );
     }
 
@@ -42,7 +41,9 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return (
             this.isConfigurable() &&
             this.attribute_line_ids.length > 0 &&
-            this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant")
+            this.attribute_line_ids.some(
+                (l) => l.attribute_id.create_variant === "no_variant",
+            )
         );
     }
 
@@ -97,7 +98,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
         let isCombinationArchived = false;
         for (const archivedCombination of this._archived_combinations) {
             const ptavCommon = archivedCombination.filter((ptav) =>
-                attributeValueIds.includes(ptav)
+                attributeValueIds.includes(ptav),
             );
             if (ptavCommon.length === attributeValueIds.length) {
                 // all attributes must be disabled from each other
@@ -105,7 +106,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
             } else if (ptavCommon.length === attributeValueIds.length - 1) {
                 // In this case we only need to disable the remaining ptav
                 const disablePTAV = archivedCombination.find(
-                    (ptav) => !attributeValueIds.includes(ptav)
+                    (ptav) => !attributeValueIds.includes(ptav),
                 );
                 excludedPTAV.add(disablePTAV);
             }
@@ -137,9 +138,13 @@ export class ProductTemplate extends ProductTemplateAccounting {
             .join(" ");
 
         const templateContent = normalize(raw);
-        const variantContent = this.product_variant_ids.map((v) => v.searchString).join(" ");
+        const variantContent = this.product_variant_ids
+            .map((v) => v.searchString)
+            .join(" ");
 
-        return variantContent ? templateContent + " " + variantContent : templateContent;
+        return variantContent
+            ? templateContent + " " + variantContent
+            : templateContent;
     }
 
     get normalizedName() {
@@ -152,4 +157,6 @@ export class ProductTemplate extends ProductTemplateAccounting {
             : this.display_name;
     }
 }
-registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
+registry
+    .category("pos_available_models")
+    .add(ProductTemplate.pythonModel, ProductTemplate);

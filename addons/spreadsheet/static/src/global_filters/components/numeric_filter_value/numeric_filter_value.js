@@ -1,8 +1,8 @@
 /** @ts-check */
 
 import { Component, useRef } from "@odoo/owl";
-import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
-import { parseFloat } from "@web/views/fields/parsers";
+import { useNumpadDecimal } from "@web/fields/numpad_decimal_hook";
+import { parseFloat } from "@web/fields/parsers";
 
 export class NumericFilterValue extends Component {
     static template = "spreadsheet.NumericFilterValue";

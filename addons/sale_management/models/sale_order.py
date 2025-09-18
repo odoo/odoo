@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         string="Quotation Template",
         compute='_compute_sale_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('company_id', 'in', [False, company_id])]")
 
     #=== COMPUTE METHODS ===#
 
@@ -58,12 +58,12 @@ class SaleOrder(models.Model):
                 order.prepayment_percent = order.sale_order_template_id.prepayment_percent
 
     @api.depends('sale_order_template_id')
-    def _compute_validity_date(self):
-        super()._compute_validity_date()
+    def _compute_date_validity(self):
+        super()._compute_date_validity()
         for order in self.filtered('sale_order_template_id'):
             validity_days = order.sale_order_template_id.number_of_days
             if validity_days > 0:
-                order.validity_date = fields.Date.context_today(order) + timedelta(validity_days)
+                order.date_validity = fields.Date.context_today(order) + timedelta(validity_days)
 
     @api.depends('sale_order_template_id')
     def _compute_journal_id(self):
@@ -99,7 +99,7 @@ class SaleOrder(models.Model):
         if len(order_lines_data) >= 2:
             order_lines_data[1][2]['sequence'] = -99
 
-        self.order_line = order_lines_data
+        self.line_ids = order_lines_data
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
                 for fname in ['product_id', 'product_uom_id', 'product_uom_qty', 'display_type']
             )
 
-        lines = self.order_line
+        lines = self.line_ids
         t_lines = self.sale_order_template_id.sale_order_template_line_ids
 
         if all(starmap(line_eqv, zip_longest(lines, t_lines))):
@@ -136,5 +136,5 @@ class SaleOrder(models.Model):
         # a specified mail template, send it as it's probably meant to share additional information.
         for order in self:
             if order.sale_order_template_id.mail_template_id:
-                order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
+                order._send_mail_order_notification(order.sale_order_template_id.mail_template_id)
         return res

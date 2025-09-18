@@ -1,5 +1,5 @@
 import { registry } from '@web/core/registry';
-import { exprToBoolean } from "@web/core/utils/strings";
+import { exprToBoolean } from "@web/core/utils/format/strings";
 import { DocumentFileUploader } from '@account/components/document_file_uploader/document_file_uploader';
 
 const cogMenuRegistry = registry.category('cogMenu');

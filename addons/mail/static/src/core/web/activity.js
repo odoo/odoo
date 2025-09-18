@@ -1,17 +1,14 @@
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
-import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-
+import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
-
+import { FileUploader } from "@web/fields/file_handler";
+import { usePopover } from "@web/ui/popover/popover_hook";
 /**
  * @typedef {Object} Props
  * @property {import("models").Activity} activity
@@ -48,7 +45,7 @@ export class Activity extends Component {
         browser.clearTimeout(this.updateDelayMidnightTimeout);
         this.updateDelayMidnightTimeout = browser.setTimeout(
             () => this.render(),
-            getMsToTomorrow() + 100
+            getMsToTomorrow() + 100,
         ); // Make sure there is no race condition
     }
 

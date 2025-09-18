@@ -4,26 +4,24 @@
     <template id="report_stock_inventory_print">
         <t t-call="web.html_container">
             <t t-set="head_start">
-                <base t-att-href="base_url"/>
+                <base t-att-href="base_url" />
             </t>
             <t t-set="head_end">
-                <t t-call-assets="stock.assets_stock_print_report" t-js="False" t-autoprefix="true"/>
+                <t t-call-assets="stock.assets_stock_print_report" t-js="False" t-autoprefix="true" />
             </t>
-            <t t-call='stock.report_stock_body_print'/>
+            <t t-call='stock.report_stock_body_print' />
         </t>
     </template>
 
     <template id="report_stock_body_print">
         <div class="container o_stock_reports_page o_stock_reports_no_print">
             <span class="text-start">
-                <h3>
-                    Traceability Report
-                    <span t-if="reference" style="margin-left:28%">
-                        Reference: <t t-esc="reference"/>
+                <h3> Traceability Report <span t-if="reference" style="margin-left:28%"> Reference: <t
+                            t-esc="reference" />
                     </span>
                 </h3>
             </span>
-            <hr/>
+            <hr />
             <div class="o_stock_reports_table table-responsive">
                 <table class="table" style="border-spacing:10px">
                     <thead>
@@ -38,15 +36,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="space_td" t-value="'margin-left: 0'"/>
+                        <t t-set="space_td" t-value="'margin-left: 0'" />
                         <t t-foreach="lines" t-as="a">
-                            <t t-set="space_td" t-value="'margin-left: '+ str(a['level']) + 'px;'"/>
-                            <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
-                            <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+                            <t t-set="space_td" t-value="'margin-left: '+ str(a['level']) + 'px;'" />
+                            <t t-set="trclass" t-value="'o_stock_reports_default_style'" />
+                            <t t-if="a.get('model') == 'stock.move.line'">
+                                <t t-set="trclass" t-value="'o_stock_reports_level0'" />
+                            </t>
                             <t t-set="column" t-value="0" />
-                            <tr t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
+                            <tr t-att-data-id="a['id']" t-att-data-model="a['model']"
+                                t-att-class="trclass">
                                 <t t-set="tdclass" t-value="''" />
-                                <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
+                                <t t-if="a.get('unfoldable')">
+                                    <t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" />
+                                </t>
                                 <t t-set="column" t-value="0" />
                                 <t t-foreach="a['columns']" t-as="c">
                                     <t t-set="column" t-value="column + 1" />
@@ -63,8 +66,9 @@
                         </t>
                     </tbody>
                 </table>
-                <br/>
+                <br />
             </div>
         </div>
     </template>
+
 </odoo>

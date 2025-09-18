@@ -4,10 +4,10 @@ from odoo import fields, models
 
 
 class ProjectRole(models.Model):
-    _name = 'project.role'
-    _description = 'Project Role'
+    _name = "project.role"
+    _description = "Project Role"
 
-    def _get_default_color(self):
+    def _get_default_color(self) -> int:
         return randint(1, 11)
 
     active = fields.Boolean(default=True)
@@ -15,6 +15,9 @@ class ProjectRole(models.Model):
     color = fields.Integer(default=_get_default_color)
     sequence = fields.Integer(export_string_translation=False)
 
-    def copy_data(self, default=None):
+    def copy_data(self, default: dict | None = None) -> list[dict]:
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._('%s (copy)', role.name)) for role, vals in zip(self, vals_list)]
+        return [
+            dict(vals, name=self.env._("%s (copy)", role.name))
+            for role, vals in zip(self, vals_list, strict=True)
+        ]

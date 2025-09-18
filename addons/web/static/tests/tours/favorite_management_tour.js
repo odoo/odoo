@@ -1,3 +1,5 @@
+// @ts-check
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_favorite_management", {
@@ -12,7 +14,8 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_kanban_renderer:has(.o_kanban_record:contains(France - Localizations))",
+            trigger:
+                ".o_kanban_renderer:has(.o_kanban_record:contains(France - Localizations))",
         },
         {
             trigger: ".o_searchview_dropdown_toggler",
@@ -52,7 +55,8 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps2)",
         },
         {
-            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
+            trigger:
+                ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
             run: "click",
         },
         {
@@ -89,7 +93,8 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_kanban_record:not(.o_kanban_ghost):only",
         },
         {
-            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
+            trigger:
+                ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
             run: "click",
         },
         {
@@ -117,7 +122,8 @@ registry.category("web_tour.tours").add("test_favorite_management", {
         },
         {
             content: "The Apps1 filter should be deleted",
-            trigger: "body:not(:has(.o_favorite_menu .o-dropdown-item:contains(Apps1)))",
+            trigger:
+                "body:not(:has(.o_favorite_menu .o-dropdown-item:contains(Apps1)))",
         },
     ],
 });

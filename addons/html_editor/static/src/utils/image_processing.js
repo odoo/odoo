@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 import { loadBundle } from "@web/core/assets";
 import { getImageSrc } from "./image";
 

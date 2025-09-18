@@ -1,12 +1,20 @@
-import { registry } from "@web/core/registry";
-import { ProfilingItem } from "./profiling_item";
-import { session } from "@web/session";
-import { profilingSystrayItem } from "./profiling_systray_item";
+// @ts-check
+
+/** @module @web/webclient/debug/profiling/profiling_service - Service managing Python profiling session state, collector toggles, and systray indicator */
 
 import { EventBus, reactive } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+
+import { ProfilingItem } from "./profiling_item";
+import { profilingSystrayItem } from "./profiling_systray_item";
 
 const systrayRegistry = registry.category("systray");
 
+/**
+ * Service for toggling Python profiling (sql, traces) from the debug menu.
+ * Manages profiling session state, collector toggles, and the systray indicator.
+ */
 export const profilingService = {
     dependencies: ["orm"],
     start(env, { orm }) {
@@ -16,11 +24,19 @@ export const profilingService = {
         }
 
         function notify() {
-            if (systrayRegistry.contains("web.profiling") && state.isEnabled === false) {
+            if (
+                systrayRegistry.contains("web.profiling") &&
+                state.isEnabled === false
+            ) {
                 systrayRegistry.remove("web.profiling");
             }
-            if (!systrayRegistry.contains("web.profiling") && state.isEnabled === true) {
-                systrayRegistry.add("web.profiling", profilingSystrayItem, { sequence: 99 });
+            if (
+                !systrayRegistry.contains("web.profiling") &&
+                state.isEnabled === true
+            ) {
+                systrayRegistry.add("web.profiling", profilingSystrayItem, {
+                    sequence: 99,
+                });
             }
             bus.trigger("UPDATE");
         }
@@ -34,7 +50,7 @@ export const profilingService = {
                     return Boolean(state.session);
                 },
             },
-            notify
+            notify,
         );
 
         const bus = new EventBus();
@@ -47,7 +63,7 @@ export const profilingService = {
                     params: state.params,
                     profile: state.isEnabled,
                 },
-                params
+                params,
             );
             const resp = await orm.call("ir.profile", "set_profiling", [], kwargs);
             if (resp.type) {
@@ -70,7 +86,10 @@ export const profilingService = {
             };
         }
 
-        registry.category("debug").category("default").add("profilingItem", profilingItem);
+        registry
+            .category("debug")
+            .category("default")
+            .add("profilingItem", /** @type {any} */ (profilingItem));
 
         return {
             state,
@@ -88,7 +107,7 @@ export const profilingService = {
                 await setProfiling({ collectors: nextCollectors });
             },
             async setParam(key, value) {
-                const nextParams = Object.assign({}, state.params);
+                const nextParams = { ...state.params };
                 nextParams[key] = value;
                 await setProfiling({ params: nextParams });
             },

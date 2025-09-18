@@ -1,5 +1,5 @@
-import { FloatField, floatField } from "@web/views/fields/float/float_field";
-import { formatFloat } from "@web/views/fields/formatters";
+import { FloatField, floatField } from "@web/fields/basic/float/float_field";
+import { formatFloat } from "@web/fields/formatters";
 import { registry } from "@web/core/registry";
 import { useRef, onPatched, onMounted, useState } from "@odoo/owl";
 

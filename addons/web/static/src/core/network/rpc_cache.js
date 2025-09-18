@@ -1,6 +1,10 @@
+// @ts-check
+
+/** @module @web/core/network/rpc_cache - Encrypted RAM/IndexedDB cache for RPC responses */
+
+import { deepCopy } from "@web/core/utils/collections/objects";
 import { Deferred } from "@web/core/utils/concurrency";
 import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
-import { deepCopy } from "../utils/objects";
 
 /**
  * @typedef {{
@@ -35,10 +39,10 @@ class Crypto {
                 new Uint8Array(secret.match(/../g).map((h) => parseInt(h, 16))).buffer,
                 CRYPTO_ALGO,
                 false,
-                ["encrypt", "decrypt"]
+                ["encrypt", "decrypt"],
             )
-            .then((encryptedKey) => {
-                this._cryptoKey = encryptedKey;
+            .then((cryptoKey) => {
+                this._cryptoKey = cryptoKey;
             });
     }
 
@@ -50,10 +54,9 @@ class Crypto {
             {
                 name: CRYPTO_ALGO,
                 iv,
-                length: 64, // length of the counter in bits
             },
             this._cryptoKey,
-            new TextEncoder().encode(JSON.stringify(value)) // encoded Data
+            new TextEncoder().encode(JSON.stringify(value)), // encoded Data
         );
         return { ciphertext, iv };
     }
@@ -64,10 +67,9 @@ class Crypto {
             {
                 name: CRYPTO_ALGO,
                 iv,
-                length: 64,
             },
             this._cryptoKey,
-            ciphertext
+            ciphertext,
         );
         return JSON.parse(new TextDecoder().decode(decrypted));
     }
@@ -105,6 +107,30 @@ class RamCache {
             this.ram = {};
         }
     }
+
+    /**
+     * Remove only cache entries whose RPC params reference a specific Odoo model.
+     * Each entry key is a JSON-stringified request object containing `params.model`.
+     *
+     * @param {string[]} tables
+     * @param {string} model - Odoo model name, e.g. "res.partner"
+     */
+    invalidateByModel(tables, model) {
+        for (const table of tables) {
+            if (!(table in this.ram)) {
+                continue;
+            }
+            for (const key of Object.keys(this.ram[table])) {
+                try {
+                    if (JSON.parse(key)?.params?.model === model) {
+                        delete this.ram[table][key];
+                    }
+                } catch {
+                    // malformed key — skip
+                }
+            }
+        }
+    }
 }
 
 export class RPCCache {
@@ -119,7 +145,9 @@ export class RPCCache {
     async checkSize() {
         const { usage } = await navigator.storage.estimate();
         if (usage > MAX_STORAGE_SIZE) {
-            console.log(`Deleting indexedDB database as maximum storage size is reached`);
+            console.warn(
+                `Deleting indexedDB database as maximum storage size is reached`,
+            );
             return this.indexedDB.deleteDatabase();
         }
     }
@@ -130,7 +158,12 @@ export class RPCCache {
      * @param {function} fallback
      * @param {RPCCacheSettings} settings
      */
-    read(table, key, fallback, { callback = () => {}, type = "ram", update = "once" } = {}) {
+    read(
+        table,
+        key,
+        fallback,
+        { callback = () => {}, type = "ram", update = "once" } = {},
+    ) {
         validateSettings({ type, update });
 
         let ramValue = this.ramCache.read(table, key);
@@ -155,7 +188,8 @@ export class RPCCache {
                 const onFullfilled = (result) => {
                     resolve(result);
                     // call the pending request callbacks with the result
-                    const hasChanged = !!fromCacheValue && !jsonEqual(fromCacheValue, result);
+                    const hasChanged =
+                        !!fromCacheValue && !jsonEqual(fromCacheValue, result);
                     request.callbacks.forEach((cb) => cb(deepCopy(result), hasChanged));
                     if (request.invalidated) {
                         return result;
@@ -165,13 +199,15 @@ export class RPCCache {
                     this.ramCache.write(table, key, Promise.resolve(result));
                     if (type === "disk") {
                         this.crypto.encrypt(result).then((encryptedResult) => {
-                            this.indexedDB.write(table, key, encryptedResult).catch((e) => {
-                                if (e instanceof IDBQuotaExceededError) {
-                                    this.indexedDB.deleteDatabase();
-                                } else {
-                                    throw e;
-                                }
-                            });
+                            this.indexedDB
+                                .write(table, key, encryptedResult)
+                                .catch((e) => {
+                                    if (e instanceof IDBQuotaExceededError) {
+                                        this.indexedDB.deleteDatabase();
+                                    } else {
+                                        throw e;
+                                    }
+                                });
                         });
                     }
                     return result;
@@ -240,5 +276,35 @@ export class RPCCache {
             this.pendingRequests[key].invalidated = true;
         }
         this.pendingRequests = {};
+    }
+
+    /**
+     * Selectively remove cache entries for a specific Odoo model.
+     * RAM cache entries are filtered by model; IndexedDB falls back to full table
+     * invalidation (safe over-invalidation, avoids complex async key iteration).
+     * In-flight requests matching the model are also cancelled.
+     *
+     * @param {string[]} tables
+     * @param {string} model - Odoo model name, e.g. "res.partner"
+     */
+    invalidateByModel(tables, model) {
+        this.ramCache.invalidateByModel(tables, model);
+        // IndexedDB: fall back to full table clear — over-invalidates disk cache but
+        // never serves stale data, and avoids async key-iteration complexity.
+        this.indexedDB.invalidate(tables);
+        // Cancel in-flight requests whose key includes this model.
+        // requestKey format is "${table}/${JSON.stringify({url, params})}" —
+        // slice past the first "/" to recover the JSON portion.
+        for (const requestKey of Object.keys(this.pendingRequests)) {
+            const jsonPart = requestKey.slice(requestKey.indexOf("/") + 1);
+            try {
+                if (JSON.parse(jsonPart)?.params?.model === model) {
+                    this.pendingRequests[requestKey].invalidated = true;
+                    delete this.pendingRequests[requestKey];
+                }
+            } catch {
+                // malformed key — skip
+            }
+        }
     }
 }

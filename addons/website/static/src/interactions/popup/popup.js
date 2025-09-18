@@ -3,8 +3,8 @@ import { registry } from "@web/core/registry";
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
-import { getTabableElements } from "@web/core/utils/ui";
+import { utils as uiUtils, SIZES } from "@web/ui/block/ui_service";
+import { getTabableElements } from "@web/core/utils/dom/ui";
 
 export class Popup extends Interaction {
     static selector = ".s_popup:not(#website_cookies_bar)";

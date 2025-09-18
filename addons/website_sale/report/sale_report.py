@@ -13,25 +13,28 @@ class SaleReport(models.Model):
         related='product_tmpl_id.public_categ_ids',
     )
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        res['website_id'] = "s.website_id"
-        res['is_abandoned_cart'] = """
-            s.date_order <= (timezone('utc', now()) - ((COALESCE(w.cart_abandoned_delay, '1.0') || ' hour')::INTERVAL))
-            AND s.website_id IS NOT NULL
-            AND s.state = 'draft'
-            AND s.partner_id != %s""" % self.env.ref('base.public_partner').id
-        return res
+    def _get_select_fields(self):
+        """Add website_id and is_abandoned_cart to SELECT fields."""
+        fields = super()._get_select_fields()
+        fields['website_id'] = "o.website_id"
+        fields['is_abandoned_cart'] = f"""
+            o.date_order <= (timezone('utc', now()) - ((COALESCE(w.cart_abandoned_delay, '1.0') || ' hour')::INTERVAL))
+            AND o.website_id IS NOT NULL
+            AND o.state = 'draft'
+            AND o.partner_id != {self.env.ref('base.public_partner').id}"""
+        return fields
 
-    def _from_sale(self):
-        res = super()._from_sale()
-        res += """
-            LEFT JOIN website w ON w.id = s.website_id"""
-        return res
+    def _get_from_tables(self):
+        """Add website table JOIN to FROM clause."""
+        tables = super()._get_from_tables()
+        tables.append(("website", "w", "LEFT JOIN", "w.id = o.website_id"))
+        return tables
 
-    def _group_by_sale(self):
-        res = super()._group_by_sale()
-        res += """,
-            s.website_id,
-            w.cart_abandoned_delay"""
-        return res
+    def _get_group_by_fields(self):
+        """Add website_id and cart_abandoned_delay to GROUP BY fields."""
+        fields = super()._get_group_by_fields()
+        fields.extend([
+            "o.website_id",
+            "w.cart_abandoned_delay",
+        ])
+        return fields

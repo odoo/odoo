@@ -10,9 +10,10 @@ import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
+
+describe.current.tags("desktop");
 
 test("Do not set contenteditable to true on elements inside o_not_editable", async () => {
     class TestPlugin extends Plugin {

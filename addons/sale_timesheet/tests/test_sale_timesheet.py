@@ -102,7 +102,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.assertEqual(so_line_ordered_global_project.qty_delivered, 10.5, 'Timesheet directly on project does not increase delivered quantity on so line')
-        self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_state of the so')
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
 
@@ -114,7 +114,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.assertEqual(so_line_ordered_global_project.qty_delivered, 50, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
-        self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_state of the so')
         self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
@@ -136,7 +136,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 5,
             'employee_id': self.employee_user.id,
         })
-        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'upselling', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_state of the so')
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
         # add so line with produdct "create task in new project".
@@ -146,7 +146,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'order_id': sale_order.id,
         })
 
-        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: Adding a new service line (so line) should put the SO in "to invocie" state.')
+        self.assertEqual(sale_order.invoice_state, 'to invoice', 'Sale Timesheet: Adding a new service line (so line) should put the SO in "to invocie" state.')
         self.assertEqual(sale_order.tasks_count, 2, "Two tasks (1 per SO line) should have been created on SO confirmation")
         self.assertEqual(len(sale_order.project_ids), 2, "No new project should have been created by the SO, when selling 'new task in new project' product, since it reuse the one from 'project only'.")
 
@@ -218,7 +218,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(task_serv1.project_id, self.project_global, "Sale Timesheet: task should be created in global project")
         self.assertTrue(task_serv1, "Sale Timesheet: on SO confirmation, a task should have been created in global project")
         self.assertTrue(task_serv2, "Sale Timesheet: on SO confirmation, a task should have been created in a new project")
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
+        self.assertEqual(sale_order.invoice_state, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
         self.assertEqual(sale_order.project_account_id, task_serv2.project_id.account_id, "SO should have create a project")
         self.assertEqual(sale_order.tasks_count, 2, "Two tasks (1 per SO line) should have been created on SO confirmation")
         self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one from SO line 1 'task in global project'")
@@ -232,9 +232,9 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 10.5,
             'employee_id': self.employee_manager.id,
         })
-        self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
-        self.assertEqual(so_line_deliver_task_project.invoice_status, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
-        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so in "to invoice" status when logged')
+        self.assertEqual(so_line_deliver_global_project.invoice_state, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
+        self.assertEqual(so_line_deliver_task_project.invoice_state, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
+        self.assertEqual(sale_order.invoice_state, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so in "to invoice" status when logged')
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice yet")
 
@@ -253,17 +253,17 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 39.5,
             'employee_id': self.employee_user.id,
         })
-        self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
-        self.assertEqual(so_line_deliver_task_project.invoice_status, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
-        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(so_line_deliver_global_project.invoice_state, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
+        self.assertEqual(so_line_deliver_task_project.invoice_state, 'no', 'Sale Timesheet: so line invoice status should not change when no timesheet linked to the line')
+        self.assertEqual(sale_order.invoice_state, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_state of the so')
         self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice yet")
 
         # create a second invoice
         invoice2 = sale_order._create_invoices()[0]
         self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
-        self.assertEqual(so_line_deliver_global_project.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" timesheets should be invoiced completely by now')
+        self.assertEqual(so_line_deliver_global_project.invoice_state, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
+        self.assertEqual(sale_order.invoice_state, 'no', 'Sale Timesheet: "invoice on delivery" timesheets should be invoiced completely by now')
         self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "The timesheet2 should not be linked to the invoice 2")
         with self.assertRaises(UserError):  # We can not modify timesheet linked to invoice (even draft ones)
             timesheet2.write({'unit_amount': 42})
@@ -284,7 +284,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.assertTrue(float_is_zero(so_line_deliver_only_project.qty_delivered, precision_digits=2), "Timesheeting on project should not incremented the delivered quantity on the SO line")
-        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should have quantity to invoice')
+        self.assertEqual(sale_order.invoice_state, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should have quantity to invoice')
         self.assertEqual(timesheet3.timesheet_invoice_type, 'billable_time', "Timesheets with an amount > 0 should be 'billable time'")
         self.assertFalse(timesheet3.timesheet_invoice_id, "The timesheet3 should not be linked to the invoice yet")
 
@@ -334,7 +334,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # confirm SO
         sale_order.action_confirm()
         self.assertTrue(sale_order.project_ids, "Sales Order should have create a project")
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: manually product should not need to be invoiced on so confirmation')
+        self.assertEqual(sale_order.invoice_state, 'no', 'Sale Timesheet: manually product should not need to be invoiced on so confirmation')
 
         project_serv2 = so_line_manual_only_project.project_id
         self.assertTrue(project_serv2, "A second project is created when selling 'project only' after SO confirmation.")
@@ -362,7 +362,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertTrue(float_is_zero(so_line_manual_global_project.qty_delivered, precision_digits=2), "Milestone Timesheeting should not incremented the delivered quantity on the SO line")
         self.assertEqual(so_line_manual_global_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created task.")
         self.assertEqual(so_line_manual_only_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created project.")
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
+        self.assertEqual(sale_order.invoice_state, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
 
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_manual', "Timesheets linked to SO line with ordered product shoulbe be billable fixed since it is a prepaid product.")
         self.assertEqual(timesheet2.timesheet_invoice_type, 'non_billable', "Timesheets without SO should be be 'non-billable'")
@@ -478,9 +478,9 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'so_line': so_line_deliver_timesheet.id,
         })
 
-        self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice')
-        self.assertEqual(so_line_deliver_task_project.invoice_status, 'to invoice')
-        self.assertEqual(sale_order.invoice_status, 'to invoice')
+        self.assertEqual(so_line_deliver_global_project.invoice_state, 'to invoice')
+        self.assertEqual(so_line_deliver_task_project.invoice_state, 'to invoice')
+        self.assertEqual(sale_order.invoice_state, 'to invoice')
 
         # Context for sale.advance.payment.inv wizard
         self.context = {
@@ -511,7 +511,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         wizard.create_invoices()
 
         self.assertTrue(sale_order.invoice_ids, 'One invoice should be created because the timesheet logged is between the period defined in wizard')
-        self.assertTrue(all(line.invoice_status == "to invoice" for line in sale_order.order_line if line.qty_delivered != line.qty_invoiced),
+        self.assertTrue(all(line.invoice_state == "to invoice" for line in sale_order.order_line if line.qty_delivered != line.qty_invoiced),
                         "All lines that still have some quantity to be invoiced should have an invoice status of 'to invoice', regardless if they were considered for previous invoicing, but didn't belong to the timesheet domain")
 
         invoice = sale_order.invoice_ids[0]
@@ -720,7 +720,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
 
-        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_state of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
             ('subject', 'like', 'To-Do'),
@@ -784,7 +784,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
 
-        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_state of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
             ('subject', 'like', 'To-Do'),
@@ -833,7 +833,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
 
-        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(sale_order.invoice_state, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_state of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
             ('subject', 'like', 'To-Do'),
@@ -937,7 +937,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 'standard_price': 10,
                 'list_price': 20,
                 'type': 'service',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'uom_id': self.uom_hour.id,
                 'default_code': 'c1',
                 'service_tracking': 'task_in_project',
@@ -948,7 +948,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 'standard_price': 10,
                 'list_price': 20,
                 'type': 'service',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'uom_id': self.uom_hour.id,
                 'default_code': 'c2',
                 'service_tracking': 'task_in_project',
@@ -1026,7 +1026,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'standard_price': 10,
             'list_price': 20,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': self.uom_hour.id,
             'default_code': 'c1',
             'service_tracking': 'task_in_project',

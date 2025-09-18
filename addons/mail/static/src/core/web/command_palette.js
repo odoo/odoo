@@ -1,7 +1,6 @@
+// Add an activity category for the command palette
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
-// Add an activity category for the command palette
 registry.category("command_categories").add("activity", {}, { sequence: 45 });
 
 const commandProviderRegistry = registry.category("command_provider");

@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/templates - Template registry: parses, inherits, caches, and retrieves QWeb templates */
+
 import {
     applyContextToTextNode,
     applyInheritance,
@@ -5,10 +9,11 @@ import {
 } from "@web/core/template_inheritance";
 
 /**
- * @param {Node} template
+ * @param {Element} template
+ * @returns {Element}
  */
 function getClone(template) {
-    const c = deepClone(template);
+    const c = /** @type {Element} */ (deepClone(template));
     new Document().append(c); // => c is the documentElement of its ownerDocument
     return c;
 }
@@ -28,7 +33,7 @@ function getParsedTemplate(templateString) {
     for (const processor of templateProcessors) {
         processor(doc);
     }
-    return doc.firstChild;
+    return /** @type {Element} */ (doc.firstChild);
 }
 
 /**
@@ -55,11 +60,15 @@ function _getTemplate(name, blockId = null) {
         const parentTemplate = _getTemplate(inheritFrom, blockId || info[name].blockId);
         if (!parentTemplate) {
             throw new Error(
-                `Constructing template ${name}: template parent ${inheritFrom} not found`
+                `Constructing template ${name}: template parent ${inheritFrom} not found`,
             );
         }
         const element = getClone(processedTemplate);
-        processedTemplate = applyInheritance(getClone(parentTemplate), element, info[name].url);
+        processedTemplate = applyInheritance(
+            getClone(parentTemplate),
+            element,
+            info[name].url,
+        );
         if (processedTemplate.tagName !== element.tagName) {
             const temp = processedTemplate;
             processedTemplate = new Document().createElement(element.tagName);
@@ -74,7 +83,7 @@ function _getTemplate(name, blockId = null) {
 
     let cloned = false;
     for (const otherBlockId in templateExtensions[name] || {}) {
-        if (blockId && otherBlockId > blockId) {
+        if (blockId && Number(otherBlockId) > blockId) {
             break;
         }
         if (!(name in parsedTemplateExtensions)) {
@@ -82,7 +91,9 @@ function _getTemplate(name, blockId = null) {
         }
         if (!(otherBlockId in parsedTemplateExtensions[name])) {
             parsedTemplateExtensions[name][otherBlockId] = [];
-            for (const { templateString, url } of templateExtensions[name][otherBlockId]) {
+            for (const { templateString, url } of templateExtensions[name][
+                otherBlockId
+            ]) {
                 parsedTemplateExtensions[name][otherBlockId].push({
                     template: getParsedTemplate(templateString),
                     url,
@@ -97,7 +108,11 @@ function _getTemplate(name, blockId = null) {
                 cloned = true;
                 processedTemplate = getClone(processedTemplate);
             }
-            processedTemplate = applyInheritance(processedTemplate, getClone(template), url);
+            processedTemplate = applyInheritance(
+                processedTemplate,
+                getClone(template),
+                url,
+            );
         }
     }
 
@@ -106,10 +121,10 @@ function _getTemplate(name, blockId = null) {
 
 const info = Object.create(null);
 const parsedTemplateExtensions = Object.create(null);
-/** @type {Record<string, Element>} */
+/** @type {Record<string, Element | null>} */
 const parsedTemplates = Object.create(null);
 const parser = new DOMParser();
-/** @type {Map<string, Element>} */
+/** @type {Map<string, Element | null>} */
 const processedTemplates = new Map();
 const registered = new Set();
 /** @type {Record<string, Record<number, ({ templateString: string, url: string })[]>>} */
@@ -122,16 +137,6 @@ let blockType = null;
 let blockId = 0;
 /** @type {((url: string) => boolean)[]} */
 let urlFilters = [];
-
-/**
- * @param {string[]} namesToCheck
- */
-export function checkPrimaryTemplateParents(namesToCheck) {
-    const missing = new Set(namesToCheck.filter((name) => !(name in templates)));
-    if (missing.size) {
-        console.error(`Missing (primary) parent templates: ${[...missing].join(", ")}`);
-    }
-}
 
 export function clearProcessedTemplates() {
     processedTemplates.clear();
@@ -163,7 +168,10 @@ export function registerTemplate(name, url, templateString) {
         blockType = "templates";
         blockId++;
     }
-    if (name in templates && (info[name].url !== url || templates[name] !== templateString)) {
+    if (
+        name in templates &&
+        (info[name].url !== url || templates[name] !== templateString)
+    ) {
         throw new Error(`Template ${name} already exists`);
     }
     templates[name] = templateString;
@@ -207,7 +215,7 @@ export function registerTemplateExtension(inheritFrom, url, templateString) {
 
     return function unregisterTemplateExtension() {
         const index = templateExtensions[inheritFrom]?.[blockId]?.findIndex(
-            (ext) => ext.templateString === templateString && ext.url === url
+            (ext) => ext.templateString === templateString && ext.url === url,
         );
         if (Number.isInteger(index) && index > -1) {
             templateExtensions[inheritFrom][blockId].splice(index, 1);
@@ -221,6 +229,18 @@ export function registerTemplateExtension(inheritFrom, url, templateString) {
  */
 export function registerTemplateProcessor(processor) {
     templateProcessors.push(processor);
+}
+
+/**
+ * Check that primary template parents exist (called from generated bundle.xml code).
+ *
+ * @param {string[]} namesToCheck
+ */
+export function checkPrimaryTemplateParents(namesToCheck) {
+    const missing = new Set(namesToCheck.filter((name) => !(name in templates)));
+    if (missing.size) {
+        console.error(`Missing (primary) parent templates: ${[...missing].join(", ")}`);
+    }
 }
 
 /**

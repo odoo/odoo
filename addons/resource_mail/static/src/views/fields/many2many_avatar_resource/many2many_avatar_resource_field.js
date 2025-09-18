@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
 import {
     KanbanMany2ManyTagsAvatarUserField,
@@ -10,10 +10,10 @@ import {
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete } from "@web/fields/relational/many2x_autocomplete";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { Domain } from "@web/core/domain";
-import { KanbanMany2ManyTagsAvatarFieldTagsList } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+import { KanbanMany2ManyTagsAvatarFieldTagsList } from "@web/fields/relational/many2many_tags_avatar/many2many_tags_avatar_field";
 
 
 export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {

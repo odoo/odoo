@@ -1,5 +1,5 @@
 /* eslint-env serviceworker */
-/* eslint-disable no-restricted-globals */
+
 /* global idbKeyval */
 importScripts("/mail/static/lib/idb-keyval/idb-keyval.js");
 
@@ -28,7 +28,10 @@ async function openDatabase() {
         request.onupgradeneeded = function (event) {
             const db = event.target.result;
             if (!db.objectStoreNames.contains("logs")) {
-                const store = db.createObjectStore("logs", { keyPath: "id", autoIncrement: true });
+                const store = db.createObjectStore("logs", {
+                    keyPath: "id",
+                    autoIncrement: true,
+                });
                 store.createIndex("timestamp", "timestamp", { unique: false });
             }
         };
@@ -128,12 +131,15 @@ async function storeLogs(logs, { download = false } = {}) {
  * @param {boolean} [param1.joinCall] whether we want to join a call on that channel
  * @param {Client | ServiceWorker | MessagePort} [source] if set, will not open the channel on the source
  */
-async function openDiscussChannel(channelId, { action, joinCall = false, source } = {}) {
+async function openDiscussChannel(
+    channelId,
+    { action, joinCall = false, source } = {},
+) {
     const discussURLRegexes = [new RegExp("/odoo/discuss")];
     if (action) {
         discussURLRegexes.push(
             new RegExp(`/odoo/\\d+/action-${action}`),
-            new RegExp(`/odoo/action-${action}`)
+            new RegExp(`/odoo/action-${action}`),
         );
     }
     let targetClient;
@@ -144,12 +150,18 @@ async function openDiscussChannel(channelId, { action, joinCall = false, source 
         if (source && source.id === client.id) {
             continue;
         }
-        if (!targetClient || discussURLRegexes.some((r) => r.test(new URL(client.url).pathname))) {
+        if (
+            !targetClient ||
+            discussURLRegexes.some((r) => r.test(new URL(client.url).pathname))
+        ) {
             targetClient = client;
         }
     }
     if (targetClient) {
-        targetClient.postMessage({ action: "OPEN_CHANNEL", data: { id: channelId, joinCall } });
+        targetClient.postMessage({
+            action: "OPEN_CHANNEL",
+            data: { id: channelId, joinCall },
+        });
         targetClient.focus().catch();
         return;
     }
@@ -181,7 +193,7 @@ self.addEventListener("notificationclick", (event) => {
                         method: "POST",
                         mode: "cors",
                         credentials: "include",
-                    })
+                    }),
                 );
                 return;
             }
@@ -189,7 +201,7 @@ self.addEventListener("notificationclick", (event) => {
                 openDiscussChannel(res_id, {
                     action,
                     joinCall: event.action === PUSH_NOTIFICATION_ACTION.ACCEPT,
-                })
+                }),
             );
         } else {
             const modelPath = model.includes(".") ? model : `m-${model}`;
@@ -201,12 +213,18 @@ self.addEventListener("push", async (event) => {
     const notification = event.data.json();
     switch (notification.options?.data?.type) {
         case PUSH_NOTIFICATION_TYPE.CALL:
-            if (notification.options.actions && navigator.userAgent.includes("Android")) {
+            if (
+                notification.options.actions &&
+                navigator.userAgent.includes("Android")
+            ) {
                 // action "accept" is disabled on mobile until: https://issues.chromium.org/issues/40286493 is fixed.
                 delete notification.options.actions.accept;
             }
             event.waitUntil(
-                self.registration.showNotification(notification.title, notification.options || {})
+                self.registration.showNotification(
+                    notification.title,
+                    notification.options || {},
+                ),
             );
             return;
         case PUSH_NOTIFICATION_TYPE.CANCEL: {
@@ -250,7 +268,10 @@ async function handlePushEvent(notification) {
     let promResolve;
     const onHandlePushEventMessage = ({ data = {} }) => {
         const { type, payload } = data;
-        if (type === "notification-display-response" && payload.correlationId === correlationId) {
+        if (
+            type === "notification-display-response" &&
+            payload.correlationId === correlationId
+        ) {
             clearTimeout(timeoutId);
             promResolve?.();
         }
@@ -258,25 +279,34 @@ async function handlePushEvent(notification) {
     return new Promise((resolve) => {
         promResolve = resolve;
         self.handlePushEventMessageFns.set(correlationId, onHandlePushEventMessage);
-        self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
-            clients.forEach((client) =>
-                client.postMessage({
-                    type: "notification-display-request",
-                    payload: { correlationId, model, res_id },
-                })
-            );
-        });
-        timeoutId = setTimeout(async () => {
-            await incrementUnread();
-            self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
+        self.clients
+            .matchAll({ includeUncontrolled: true, type: "window" })
+            .then((clients) => {
                 clients.forEach((client) =>
                     client.postMessage({
-                        type: "notification-displayed",
-                        payload: { model, res_id },
-                    })
+                        type: "notification-display-request",
+                        payload: { correlationId, model, res_id },
+                    }),
                 );
             });
-            resolve(self.registration.showNotification(notification.title, notification.options));
+        timeoutId = setTimeout(async () => {
+            await incrementUnread();
+            self.clients
+                .matchAll({ includeUncontrolled: true, type: "window" })
+                .then((clients) => {
+                    clients.forEach((client) =>
+                        client.postMessage({
+                            type: "notification-displayed",
+                            payload: { model, res_id },
+                        }),
+                    );
+                });
+            resolve(
+                self.registration.showNotification(
+                    notification.title,
+                    notification.options,
+                ),
+            );
         }, 500);
     });
 }
@@ -285,7 +315,7 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
         return;
     }
     const subscription = await self.registration.pushManager.subscribe(
-        event.oldSubscription.options
+        event.oldSubscription.options,
     );
     await fetch("/web/dataset/call_kw/mail.push.device/register_devices", {
         headers: {

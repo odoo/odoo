@@ -33,10 +33,10 @@ class ResPartner(models.Model):
             meeting_data = self.env.execute_query(SQL("""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
-                 WHERE res_partner_id IN %s AND calendar_event_id IN %s
+                 WHERE res_partner_id = ANY(%s) AND calendar_event_id IN %s
               GROUP BY res_partner_id, calendar_event_id
                 """,
-                all_partners._ids,
+                list(all_partners._ids),
                 query.subselect(),
             ))
 

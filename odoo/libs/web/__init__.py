@@ -1,0 +1,77 @@
+"""Odoo-agnostic web utilities.
+
+Pure Python web helpers with no Odoo dependencies.
+"""
+
+from . import urls
+from .js_transpiler import (
+    transpile_javascript,
+    url_to_module_path,
+    is_odoo_module,
+    get_aliased_odoo_define_content,
+    relative_path_to_module_path,
+    # Import/export conversion functions
+    convert_basic_import,
+    convert_legacy_default_import,
+    convert_default_import,
+    convert_default_and_named_import,
+    convert_default_and_star_import,
+    convert_star_import,
+    convert_unnamed_relative_import,
+    convert_relative_require,
+    convert_export_function,
+    convert_export_class,
+    convert_export_function_default,
+    convert_export_class_default,
+    convert_variable_export,
+    convert_variable_export_default,
+    convert_object_export,
+    convert_from_export,
+    convert_star_from_export,
+    convert_default_export,
+    convert_t,
+    wrap_with_qunit_module,
+    wrap_with_odoo_define,
+    remove_index,
+    convert_as,
+    remove_as,
+    # Regex patterns
+    URL_RE,
+    ODOO_MODULE_RE,
+)
+
+__all__ = [
+    "ODOO_MODULE_RE",
+    "URL_RE",
+    "convert_as",
+    "convert_basic_import",
+    "convert_default_and_named_import",
+    "convert_default_and_star_import",
+    "convert_default_export",
+    "convert_default_import",
+    "convert_export_class",
+    "convert_export_class_default",
+    "convert_export_function",
+    "convert_export_function_default",
+    "convert_from_export",
+    "convert_legacy_default_import",
+    "convert_object_export",
+    "convert_relative_require",
+    "convert_star_from_export",
+    "convert_star_import",
+    "convert_t",
+    "convert_unnamed_relative_import",
+    "convert_variable_export",
+    "convert_variable_export_default",
+    "get_aliased_odoo_define_content",
+    "is_odoo_module",
+    "relative_path_to_module_path",
+    "remove_as",
+    "remove_index",
+    # js_transpiler
+    "transpile_javascript",
+    "url_to_module_path",
+    "urls",
+    "wrap_with_odoo_define",
+    "wrap_with_qunit_module",
+]

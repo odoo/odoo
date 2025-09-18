@@ -153,7 +153,7 @@ class AccountMoveSend(models.AbstractModel):
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
 
-        # during tests, no wkhtmltopdf, create the attachment for test purposes
+        # during tests, PDF rendering is skipped — create the attachment directly
         if tools.config['test_enable']:
             self.env['ir.attachment'].sudo().create({
                 'name': 'factur-x.xml',
@@ -171,9 +171,9 @@ class AccountMoveSend(models.AbstractModel):
 
         # Post-process.
         writer = OdooPdfFileWriter()
-        writer.cloneReaderDocumentRoot(reader)
+        writer.clone_reader_document_root(reader)
 
-        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
+        writer.add_attachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
         if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \

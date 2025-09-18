@@ -2,11 +2,11 @@ import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_service";
-import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { x2ManyCommands } from "@web/services/orm_service";
+import { useTagNavigation } from "@web/components/record_selectors/tag_navigation_hook";
+import { TagsList } from "@web/components/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete } from "@web/fields/relational/many2x_autocomplete";
 
 /**
  * @typedef {Object} Props

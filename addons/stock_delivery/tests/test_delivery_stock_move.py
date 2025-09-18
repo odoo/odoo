@@ -25,12 +25,12 @@ class TestStockMoveInvoice(TestSaleCommon):
         cls.product_cable_management_box = cls.env['product.product'].create({
             'name': 'Another product to deliver',
             'weight': 1.0,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
         })
         cls.product_uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product_delivery_normal = cls.env['product.product'].create({
             'name': 'Normal Delivery Charges',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'type': 'service',
             'list_price': 10.0,
             'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
@@ -86,7 +86,7 @@ class TestStockMoveInvoice(TestSaleCommon):
 
         # Check the SO after paying the invoice
         self.assertNotEqual(self.sale_prepaid.invoice_count, 0, 'order not invoiced')
-        self.assertTrue(self.sale_prepaid.invoice_status == 'invoiced', 'order is not invoiced')
+        self.assertTrue(self.sale_prepaid.invoice_state == 'invoiced', 'order is not invoiced')
         self.assertEqual(len(self.sale_prepaid.picking_ids), 1, 'pickings not generated')
 
         # Check the stock moves
@@ -142,11 +142,11 @@ class TestStockMoveInvoice(TestSaleCommon):
     def test_03_invoiced_status(self):
         super_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         great_product = self.env['product.product'].create({
             'name': 'Great Product',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
 
         so = self.env['sale.order'].create({
@@ -172,7 +172,7 @@ class TestStockMoveInvoice(TestSaleCommon):
         # Invoice the delivered product
         invoice = so._create_invoices()
         invoice.action_post()
-        self.assertEqual(so.invoice_status, 'no')
+        self.assertEqual(so.invoice_state, 'no')
 
         # Add delivery fee
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
@@ -182,7 +182,7 @@ class TestStockMoveInvoice(TestSaleCommon):
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
 
-        self.assertEqual(so.invoice_status, 'no', 'The status should still be "Nothing To Invoice"')
+        self.assertEqual(so.invoice_state, 'no', 'The status should still be "Nothing To Invoice"')
 
     def test_delivery_carrier_from_confirmed_so(self):
         """Test if adding shipping method in sale order after confirmation
@@ -259,7 +259,7 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.assertEqual(picking.weight, 2.0, "The weight of the picking should be 2.0")
 
     @freeze_time("2024-06-06 11:00")
-    def test_picking_change_scheduled_date(self):
+    def test_picking_change_date_planned(self):
         """
         Check that changing the scheduled date of a move can affect the scheduled date
         of the picking but not its sibling moves.
@@ -286,11 +286,11 @@ class TestStockMoveInvoice(TestSaleCommon):
         })
         receipt.action_confirm()
         today, yesterday = fields.Datetime.now(), fields.Datetime.now() - datetime.timedelta(days=1)
-        self.assertEqual(receipt.scheduled_date, today)
+        self.assertEqual(receipt.date_planned, today)
         with Form(receipt) as picking_form:
             with picking_form.move_ids.edit(0) as move:
                 move.date = yesterday
-        self.assertEqual(receipt.scheduled_date, yesterday)
+        self.assertEqual(receipt.date_planned, yesterday)
         self.assertRecordValues(receipt.move_ids, [
             {'date': yesterday},
             {'date': today},

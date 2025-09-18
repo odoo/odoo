@@ -34,7 +34,7 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot"
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { localization } from "@web/core/l10n/localization";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { Model } from "@odoo/o-spreadsheet";
 

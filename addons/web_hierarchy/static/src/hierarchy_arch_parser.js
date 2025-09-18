@@ -1,8 +1,8 @@
-import { visitXML } from "@web/core/utils/xml";
-import { stringToOrderBy } from "@web/search/utils/order_by";
-import { Field } from "@web/views/fields/field";
-import { getActiveActions } from "@web/views/utils";
-import { exprToBoolean } from "@web/core/utils/strings";
+import { visitXML } from "@web/core/utils/dom/xml";
+import { stringToOrderBy } from "@web/core/utils/order_by";
+import { Field } from "@web/fields/field";
+import { getActiveActions } from "@web/views/view_utils";
+import { exprToBoolean } from "@web/core/utils/format/strings";
 
 export class HierarchyArchParser {
     parse(xmlDoc, models, modelName) {

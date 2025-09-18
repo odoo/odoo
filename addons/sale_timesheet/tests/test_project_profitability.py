@@ -496,7 +496,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'standard_price': 10,
             'list_price': 20,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': self.uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_tracking': 'task_global_project',

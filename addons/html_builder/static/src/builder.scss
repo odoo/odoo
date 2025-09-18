@@ -32,7 +32,7 @@
         --border-color: #{$o-we-color-accent};
         --bg-color: #{rgba($o-we-color-accent, .15)};
 
-        width: percentage(1/3);
+        width: calc(100% / 3);
         transition: all .5s, transform .25s;
         border-bottom: #{$o-we-sidebar-tabs-active-border-width} solid var(--border-color);
         background-color: var(--bg-color);
@@ -70,7 +70,7 @@
         --nav-underline-link-active-color: #{$o-we-fg-light};
 
         .nav-item {
-            width:  percentage(1/3);
+            width:  calc(100% / 3);
         }
 
         .nav-link {

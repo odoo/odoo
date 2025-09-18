@@ -1094,7 +1094,7 @@ $_wsale_products_roundness_map: (
 // ==== Card Opacity Overlay
 @for $i from 0 through 10 {
     .o_wsale_products_opt_overlay_opacity_#{$i} {
-        --o-wsale-card-overlay-opacity: #{$i / 10};
+        --o-wsale-card-overlay-opacity: #{calc($i / 10)};
     }
 }
 

@@ -204,7 +204,7 @@ class WebsiteVisitor(models.Model):
             `inserted` or `updated).
         """
         create_values = {
-            'access_token': access_token,
+            'access_token': str(access_token),
             'lang_id': request.lang.id,
             # Note that it's possible for the GEOIP database to return a country
             # code which is unknown in Odoo
@@ -219,24 +219,27 @@ class WebsiteVisitor(models.Model):
             'partner_id': None if len(str(access_token)) == 32 else access_token,
         }
         query = SQL("""
-            INSERT INTO website_visitor (
-                partner_id, access_token, last_connection_datetime, visit_count, lang_id,
-                website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
-            VALUES (
-                %(partner_id)s, %(access_token)s, now() at time zone 'UTC', 1, %(lang_id)s,
+            MERGE INTO website_visitor t
+            USING (VALUES (
+                %(partner_id)s::integer, %(access_token)s, %(lang_id)s,
                 %(website_id)s, %(timezone)s, %(create_uid)s, %(write_uid)s,
-                now() at time zone 'UTC', now() at time zone 'UTC', (
-                    SELECT id FROM res_country WHERE code = %(country_code)s
-                )
-            )
-            ON CONFLICT (access_token)
-            DO UPDATE SET
-                last_connection_datetime=excluded.last_connection_datetime,
-                visit_count = CASE WHEN website_visitor.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
-                                    THEN website_visitor.visit_count + 1
-                                    ELSE website_visitor.visit_count
-                                END
-            RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
+                (SELECT id FROM res_country WHERE code = %(country_code)s)
+            )) AS s(partner_id, access_token, lang_id, website_id, timezone, create_uid, write_uid, country_id)
+            ON t.access_token = s.access_token
+            WHEN MATCHED THEN
+                UPDATE SET
+                    last_connection_datetime = now() at time zone 'UTC',
+                    visit_count = CASE WHEN t.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
+                                        THEN t.visit_count + 1
+                                        ELSE t.visit_count
+                                    END
+            WHEN NOT MATCHED THEN
+                INSERT (partner_id, access_token, last_connection_datetime, visit_count, lang_id,
+                        website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
+                VALUES (s.partner_id, s.access_token, now() at time zone 'UTC', 1, s.lang_id,
+                        s.website_id, s.timezone, s.create_uid, s.write_uid,
+                        now() at time zone 'UTC', now() at time zone 'UTC', s.country_id)
+            RETURNING NEW.id, merge_action() AS upsert
         """, **create_values)
 
         if force_track_values:

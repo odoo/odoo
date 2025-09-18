@@ -6,13 +6,13 @@ from datetime import datetime, time, timedelta
 from itertools import chain
 
 import pytz
-from psycopg2 import OperationalError
+from psycopg import OperationalError
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_compare
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 
 class HrWorkEntry(models.Model):
@@ -93,17 +93,9 @@ class HrWorkEntry(models.Model):
     @api.model
     def _set_current_contract(self, vals):
         if not vals.get('version_id') and vals.get('date') and vals.get('employee_id'):
-            contract_start = fields.Datetime.to_datetime(vals.get('date'))
-            contract_end = contract_start
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
-            contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
-            if not contracts:
-                raise ValidationError(_(
-                    "%(employee)s does not have a contract on %(date)s.",
-                    employee=employee.name,
-                    date=contract_start,
-                ))
-            return dict(vals, version_id=contracts[0].id)
+            active_version = employee._get_version(vals['date'])
+            return dict(vals, version_id=active_version.id)
         return vals
 
     @api.model
@@ -166,7 +158,7 @@ class HrWorkEntry(models.Model):
                 FROM hr_work_entry
                 WHERE active = TRUE
                   AND date BETWEEN %(start)s AND %(stop)s
-                  AND employee_id IN %(employee_ids)s
+                  AND employee_id = ANY(%(employee_ids)s)
                 GROUP BY employee_id, date
                 HAVING 0 >= SUM(duration) OR SUM(duration) > 24
             )
@@ -180,7 +172,7 @@ class HrWorkEntry(models.Model):
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
-            'employee_ids': tuple(self.employee_id.ids),
+            'employee_ids': list(self.employee_id.ids),
         })
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
         self.browse(conflict_ids).write({'state': 'conflict'})

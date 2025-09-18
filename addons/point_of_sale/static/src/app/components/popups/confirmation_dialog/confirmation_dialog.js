@@ -1,10 +1,9 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { patch } from "@web/core/utils/patch";
-import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { _t } from "@web/core/l10n/translation";
-
+import { patch } from "@web/core/utils/patch";
+import { AlertDialog, ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 patch(ConfirmationDialog.prototype, {
     setup() {
         super.setup();

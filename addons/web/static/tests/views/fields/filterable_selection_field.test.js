@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import {
@@ -75,7 +77,11 @@ test(`FilterableSelectionField test with invalid value`, async () => {
     });
     await contains(".o_field_widget[name='type'] input").click();
     expect(`.o_select_menu_item`).toHaveCount(3);
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Coupons", "Promotion", "Gift card"]);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "Coupons",
+        "Promotion",
+        "Gift card",
+    ]);
     await editSelectMenu(".o_field_widget[name='type'] input", { value: "Coupons" });
     await contains(".o_field_widget[name='type'] input").click();
     expect(`.o_select_menu_item`).toHaveCount(2);

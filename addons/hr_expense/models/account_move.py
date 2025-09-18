@@ -86,7 +86,7 @@ class AccountMove(models.Model):
                     ): {
                         "balance": -sum(term_lines.mapped("balance")),
                         "amount_currency": -sum(term_lines.mapped("amount_currency")),
-                        "name": "",
+                        "name": move.payment_reference or "",
                         "account_id": move.expense_ids._get_expense_account_destination(),
                     }
                 }
@@ -103,10 +103,10 @@ class AccountMove(models.Model):
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    def button_cancel(self):
+    def action_cancel(self):
         # EXTENDS account
         # We need to override this method to remove the link with the move, else we cannot reimburse them anymore.
         # And cancelling the move != cancelling the expense
-        res = super().button_cancel()
+        res = super().action_cancel()
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return res

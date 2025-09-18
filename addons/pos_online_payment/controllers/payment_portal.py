@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode as url_encode
 
 from odoo import _, http, tools
 from odoo.http import request

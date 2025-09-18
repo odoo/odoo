@@ -3,7 +3,7 @@
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
-from odoo.tools.float_utils import float_repr, float_round
+from odoo.libs.numbers.float_utils import float_repr, float_round
 
 SII_VAT = '60805000-0'
 

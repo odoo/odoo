@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
@@ -120,18 +122,27 @@ test("Many2ManyCheckBoxesField does not read added record", async () => {
     });
 
     expect("div.o_field_widget div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(0);
 
     await contains("div.o_field_widget div.form-check input").click();
     await runAllTimers();
     expect("div.o_field_widget div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(1);
 
     await clickSave();
     expect("div.o_field_widget div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(1);
 
     expect.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
@@ -233,14 +244,18 @@ test("Many2ManyCheckBoxesField with 40+ values", async () => {
             </form>`,
     });
 
-    expect(".o_field_widget[name='timmy'] input[type='checkbox']:checked").toHaveCount(90);
+    expect(".o_field_widget[name='timmy'] input[type='checkbox']:checked").toHaveCount(
+        90,
+    );
 
     // toggle the last value
     await contains(".o_field_widget[name='timmy'] input[type='checkbox']:last").click();
     await runAllTimers();
 
     await clickSave();
-    expect(".o_field_widget[name='timmy'] input[type='checkbox']:last").not.toBeChecked();
+    expect(
+        ".o_field_widget[name='timmy'] input[type='checkbox']:last",
+    ).not.toBeChecked();
 });
 
 test("Many2ManyCheckBoxesField with 100+ values", async () => {
@@ -286,7 +301,9 @@ test("Many2ManyCheckBoxesField with 100+ values", async () => {
     await runAllTimers();
 
     await clickSave();
-    expect(".o_field_widget[name='timmy'] input[type='checkbox']:first").not.toBeChecked();
+    expect(
+        ".o_field_widget[name='timmy'] input[type='checkbox']:first",
+    ).not.toBeChecked();
     expect.verifySteps(["name_search", "web_save"]);
 });
 
@@ -404,7 +421,10 @@ test("Many2ManyCheckBoxesField batches successive changes", async () => {
     });
 
     expect("div.o_field_widget div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(0);
 
     await contains("div.o_field_widget div.form-check input:eq(0)").click();
@@ -440,7 +460,10 @@ test("Many2ManyCheckBoxesField sends batched changes on save", async () => {
     });
 
     expect("div.o_field_widget div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(0);
 
     await contains("div.o_field_widget div.form-check input:eq(0)").click();
@@ -479,8 +502,13 @@ test("Many2ManyCheckBoxesField in a notebook tab", async () => {
 
     expect("div.o_field_widget[name=timmy]").toHaveCount(1);
     expect("div.o_field_widget[name=timmy] div.form-check").toHaveCount(2);
-    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
-    expect("div.o_field_widget[name=timmy] div.form-check input:checked").toHaveCount(0);
+    expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual([
+        "gold",
+        "silver",
+    ]);
+    expect("div.o_field_widget[name=timmy] div.form-check input:checked").toHaveCount(
+        0,
+    );
 
     await contains("div.o_field_widget div.form-check input:eq(0)").click();
     await contains("div.o_field_widget div.form-check input:eq(1)").click();

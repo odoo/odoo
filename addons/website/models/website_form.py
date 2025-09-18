@@ -195,7 +195,7 @@ class IrModelFields(models.Model):
         self.env.cr.execute(
             "UPDATE ir_model_fields"
             " SET website_form_blacklisted=false"
-            " WHERE model=%s AND name in %s", (model, tuple(fields)))
+            " WHERE model=%s AND name = ANY(%s)", (model, list(fields)))
         return True
 
     website_form_blacklisted = fields.Boolean(

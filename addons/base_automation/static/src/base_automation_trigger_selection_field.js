@@ -1,8 +1,8 @@
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
+import { selectionField, SelectionField } from "@web/fields/selection/selection/selection_field";
 import { TRIGGER_FILTERS } from "./utils";
 import { useService } from "@web/core/utils/hooks";
 
@@ -29,7 +29,7 @@ const OPT_GROUPS = [
     },
     {
         group: { sequence: 40, key: "custom", label: _t("Custom") },
-        triggers: ["on_create", "on_create_or_write", "on_unlink", "on_change"],
+        triggers: ["on_create", "on_create_or_write", "on_unlink", "on_change", "on_hand"],
     },
     {
         group: { sequence: 50, key: "external", label: _t("External") },

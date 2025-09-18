@@ -1,9 +1,13 @@
+// @ts-check
+
+/** @module @web/views/widgets/notification_alert/notification_alert - Widget displaying a warning banner when browser push notifications are blocked */
+
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component } from "@odoo/owl";
-
+/** Widget that displays a warning banner when browser push notifications are blocked. */
 export class NotificationAlert extends Component {
     static props = standardWidgetProps;
     static template = "web.NotificationAlert";

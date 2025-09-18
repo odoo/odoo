@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Component, xml } from "@odoo/owl";
 

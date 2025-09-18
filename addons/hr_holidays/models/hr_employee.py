@@ -9,7 +9,7 @@ import pytz
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 
 
 class HrEmployee(models.Model):

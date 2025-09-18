@@ -7,15 +7,13 @@ import {
     nearestGreaterThanOrEqual,
 } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
-
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { createElementWithContent } from "@web/core/utils/html";
+import { createElementWithContent } from "@web/core/utils/dom/html";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
-
 const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {typeof Thread} */
@@ -48,7 +46,9 @@ const threadStaticPatch = {
         if (thread?.fetchChannelInfoState === "fetched") {
             return Promise.resolve(thread);
         }
-        const fetchChannelInfoDeferred = this.store.channelIdsFetchingDeferred.get(data.id);
+        const fetchChannelInfoDeferred = this.store.channelIdsFetchingDeferred.get(
+            data.id,
+        );
         if (fetchChannelInfoDeferred) {
             return fetchChannelInfoDeferred;
         }
@@ -57,7 +57,10 @@ const threadStaticPatch = {
         this.store.fetchChannel(data.id).then(
             () => {
                 this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store.Thread.get({ id: data.id, model: data.model });
+                const thread = this.store.Thread.get({
+                    id: data.id,
+                    model: data.model,
+                });
                 if (thread?.exists()) {
                     thread.fetchChannelInfoState = "fetched";
                     def.resolve(thread);
@@ -67,13 +70,16 @@ const threadStaticPatch = {
             },
             () => {
                 this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store.Thread.get({ id: data.id, model: data.model });
+                const thread = this.store.Thread.get({
+                    id: data.id,
+                    model: data.model,
+                });
                 if (thread?.exists()) {
                     def.reject(thread);
                 } else {
                     def.reject();
                 }
-            }
+            },
         );
         return def;
     },
@@ -117,7 +123,9 @@ const threadPatch = {
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
-                return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+                return this.store.channel_types_with_seen_infos.includes(
+                    this.channel_type,
+                );
             },
         });
         this.firstUnreadMessage = fields.One("mail.message", {
@@ -131,13 +139,21 @@ const threadPatch = {
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
                 }
-                if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
+                if (
+                    !separator ||
+                    messages.length === 0 ||
+                    messages.at(-1).id < separator
+                ) {
                     return null;
                 }
                 // try to find a perfect match according to the member's separator
                 let message = this.store["mail.message"].get({ id: separator });
                 if (!message || this.notEq(message.thread)) {
-                    message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
+                    message = nearestGreaterThanOrEqual(
+                        messages,
+                        separator,
+                        (msg) => msg.id,
+                    );
                 }
                 return message;
             },
@@ -161,15 +177,21 @@ const threadPatch = {
                 if (!this.hasSeenFeature) {
                     return;
                 }
-                return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.notEq(this.selfMember) && member.seen_message_id) {
-                        return lastMessageSeenByAllId
-                            ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
-                            : member.seen_message_id.id;
-                    } else {
-                        return lastMessageSeenByAllId;
-                    }
-                }, undefined);
+                return this.channel_member_ids.reduce(
+                    (lastMessageSeenByAllId, member) => {
+                        if (member.notEq(this.selfMember) && member.seen_message_id) {
+                            return lastMessageSeenByAllId
+                                ? Math.min(
+                                      lastMessageSeenByAllId,
+                                      member.seen_message_id.id,
+                                  )
+                                : member.seen_message_id.id;
+                        } else {
+                            return lastMessageSeenByAllId;
+                        }
+                    },
+                    undefined,
+                );
             },
         });
         this.lastSelfMessageSeenByEveryone = fields.One("mail.message", {
@@ -205,21 +227,25 @@ const threadPatch = {
             /** @this {import("models").Thread} */
             compute() {
                 return this.channel_member_ids
-                    .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
+                    .filter((member) =>
+                        this.store.onlineMemberStatuses.includes(member.im_status),
+                    )
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
         this.offlineMembers = fields.Many("discuss.channel.member", {
             compute() {
                 return this._computeOfflineMembers().sort(
-                    (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
+                    (m1, m2) => this.store.sortMembers(m1, m2), // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
                 );
             },
         });
         this.otherTypingMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
+                return this.typingMembers.filter(
+                    (member) => !member.persona?.eq(this.store.self),
+                );
             },
         });
         this.self_member_id = fields.One("discuss.channel.member", {
@@ -240,12 +266,14 @@ const threadPatch = {
                 this.store.updateBusSubscription();
             },
         });
-        this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
+        this.typingMembers = fields.Many("discuss.channel.member", {
+            inverse: "threadAsTyping",
+        });
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
         return this.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
+            (member) => !this.store.onlineMemberStatuses.includes(member.im_status),
         );
     },
     /** Equivalent to DiscussChannel._allow_invite_by_email */
@@ -299,10 +327,15 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
-        return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
+        return this.channel_member_ids.filter(({ persona }) =>
+            persona?.notEq(this.store.self),
+        );
     },
     get displayName() {
-        if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
+        if (
+            this.supportsCustomChannelName &&
+            this.self_member_id?.custom_channel_name
+        ) {
             return this.self_member_id.custom_channel_name;
         }
         if (this.channel_type === "chat" && this.correspondent) {
@@ -315,7 +348,9 @@ const threadPatch = {
                 .map((member) => member.name);
             if (this.member_count > 3) {
                 const remaining = this.member_count - 3;
-                nameParts.push(remaining === 1 ? _t("1 other") : _t("%s others", remaining));
+                nameParts.push(
+                    remaining === 1 ? _t("1 other") : _t("%s others", remaining),
+                );
             }
             return formatList(nameParts);
         }
@@ -330,7 +365,9 @@ const threadPatch = {
         }
         const previousState = this.fetchMembersState;
         this.fetchMembersState = "pending";
-        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
+        const known_member_ids = this.channel_member_ids.map(
+            (channelMember) => channelMember.id,
+        );
         let data;
         try {
             data = await rpc("/discuss/channel/members", {
@@ -426,7 +463,7 @@ const threadPatch = {
                     channel_id: this.id,
                     last_message_id: newestPersistentMessage.id,
                 },
-                { silent: true }
+                { silent: true },
             ).catch((e) => {
                 if (e.code !== 404) {
                     throw e;
@@ -446,17 +483,21 @@ const threadPatch = {
     /** @override */
     get needactionCounter() {
         return this.isChatChannel
-            ? this.self_member_id?.message_unread_counter ?? 0
+            ? (this.self_member_id?.message_unread_counter ?? 0)
             : super.needactionCounter;
     },
     /** @override */
     onNewSelfMessage(message) {
-        if (!this.self_member_id || message.id < this.self_member_id.seen_message_id?.id) {
+        if (
+            !this.self_member_id ||
+            message.id < this.self_member_id.seen_message_id?.id
+        ) {
             return;
         }
         this.self_member_id.seen_message_id = message;
         this.self_member_id.new_message_separator = message.id + 1;
-        this.self_member_id.new_message_separator_ui = this.self_member_id.new_message_separator;
+        this.self_member_id.new_message_separator_ui =
+            this.self_member_id.new_message_separator;
         this.markedAsUnread = false;
     },
     /** @override */
@@ -485,7 +526,10 @@ const threadPatch = {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
-                (!command.channel_types || command.channel_types.includes(this.channel_type))
+                (!command.condition ||
+                    command.condition({ store: this.store, thread: this })) &&
+                (!command.channel_types ||
+                    command.channel_types.includes(this.channel_type))
             ) {
                 await this.executeCommand(command, textContent);
                 return;
@@ -496,9 +540,9 @@ const threadPatch = {
     get shouldSubscribeToBusChannel() {
         return Boolean(
             this.model === "discuss.channel" &&
-                !this.isTransient &&
-                !this.self_member_id &&
-                (this.isLocallyPinned || this.chat_window?.isOpen)
+            !this.isTransient &&
+            !this.self_member_id &&
+            (this.isLocallyPinned || this.chat_window?.isOpen),
         );
     },
     get showUnreadBanner() {

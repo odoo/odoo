@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from . import test_barcode
 from . import test_common
 from . import test_import_files
@@ -13,3 +11,4 @@ from . import test_seller
 from . import test_update_pav_wizard
 from . import test_variants
 from . import test_product_rounding
+from . import test_robustness

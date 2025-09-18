@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_hr_project_form_view" model="ir.ui.view">
+        <field name="name">project.project.form.project_hr</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <!--
+                Replace the user_id project manager field with:
+                1. user_id invisible — keeps "My Projects" filter and downstream
+                   code that reads user_id working without changes.
+                2. employee_id as the visible primary input.
+            -->
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="user_id"
+                    string="Project Manager"
+                    widget="many2one_avatar_user"
+                    invisible="1" />
+                <field name="employee_id"
+                    string="Project Manager"
+                    domain="[('company_id', '=', company_id)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_hr_project_search_view" model="ir.ui.view">
+        <field name="name">project.project.search.project_hr</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter" />
+        <field name="arch" type="xml">
+            <!-- Add employee search field alongside the existing user_id field. -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="employee_id" string="Project Manager (Employee)" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

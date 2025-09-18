@@ -5,7 +5,7 @@ import uuid
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import fields, sql_db, tools, Command
+from odoo import db, fields, tools, Command
 from odoo.exceptions import ValidationError
 from odoo.tests import new_test_user, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
@@ -244,7 +244,7 @@ class TestItEdiImport(TestItEdi):
 
         filename = 'IT01234567890_FPR02.xml'
         with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=self.fake_test_content),
-              patch.object(sql_db.Cursor, "commit", mock_commit),
+              patch.object(db.Cursor, "commit", mock_commit),
               patch.object(self.env.registry['account.move'], 'create', mock_create),
               freeze_time('2019-01-01')):
             self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads({
@@ -317,7 +317,7 @@ class TestItEdiImport(TestItEdi):
         })
 
         with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=self.fake_test_content),
-              patch.object(sql_db.Cursor, "commit", mock_commit)):
+              patch.object(db.Cursor, "commit", mock_commit)):
             self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads(
                 {'999999999': {
                     'filename': filename,
@@ -355,7 +355,7 @@ class TestItEdiImport(TestItEdi):
             pass
 
         with (patch.object(proxy_user.__class__, '_decrypt_data', return_value=self.fake_test_content),
-              patch.object(sql_db.Cursor, "commit", mock_commit),
+              patch.object(db.Cursor, "commit", mock_commit),
               tools.mute_logger("odoo.addons.l10n_it_edi.models.account_move")):
             for _dummy in range(2):
                 processed = self.env['account.move']._l10n_it_edi_process_downloads({

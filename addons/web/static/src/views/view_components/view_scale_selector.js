@@ -1,7 +1,11 @@
-import { Component } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+// @ts-check
 
+/** @module @web/views/view_components/view_scale_selector - Dropdown for switching between time scales (day/week/month/year) in calendar and gantt views */
+
+import { Component } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+/** Dropdown for switching between time scales (day/week/month/year) in calendar and gantt views. */
 export class ViewScaleSelector extends Component {
     static components = {
         Dropdown,
@@ -17,6 +21,9 @@ export class ViewScaleSelector extends Component {
         dropdownClass: { type: String, optional: true },
     };
     get scales() {
-        return Object.entries(this.props.scales).map(([key, value]) => ({ key, ...value }));
+        return Object.entries(this.props.scales).map(([key, value]) => ({
+            key,
+            ...value,
+        }));
     }
 }

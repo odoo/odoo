@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import json
-import os
 
 from io import BytesIO
+from pathlib import Path
 from zipfile import ZipFile
 
 import odoo.tests
@@ -114,7 +114,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         for path, data in files:
             if path.split('/')[1] == 'static':
                 static_attachment = self.env['ir.attachment'].search([('url', '=', '/%s' % path)])
-                self.assertEqual(static_attachment.name, os.path.basename(path))
+                self.assertEqual(static_attachment.name, Path(path).name)
                 self.assertEqual(static_attachment.datas, base64.b64encode(data))
 
         self.assertEqual(
@@ -257,9 +257,9 @@ class TestImportModule(odoo.tests.TransactionCase):
         origin_import_module = type(self.env['ir.module.module'])._import_module
         def _import_module(self, *args, **kwargs):
             _module, path = args
-            for root, _dirs, files in os.walk(path):
+            for root, _dirs, files in Path(path).walk():
                 for file in files:
-                    extracted_files.append(os.path.relpath(os.path.join(root, file), path))
+                    extracted_files.append(str((root / file).relative_to(path)))
             addons_path.extend(__addons_path__)
             return origin_import_module(self, *args, **kwargs)
         with patch.object(type(self.env['ir.module.module']), '_import_module', _import_module):

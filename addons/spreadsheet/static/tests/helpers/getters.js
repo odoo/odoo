@@ -1,5 +1,5 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { range } from "@web/core/utils/numbers";
+import { range } from "@web/core/utils/format/numbers";
 
 const { toCartesian, toZone, toXC } = spreadsheet.helpers;
 

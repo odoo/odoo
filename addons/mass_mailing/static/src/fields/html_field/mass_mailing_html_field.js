@@ -14,6 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -237,6 +238,7 @@ export class MassMailingHtmlField extends HtmlField {
         delete config.Plugins;
         return {
             ...config,
+            allowChecklist: false,
             record: this.props.record,
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",
@@ -260,7 +262,8 @@ export class MassMailingHtmlField extends HtmlField {
                 ...MAIN_EDITOR_PLUGINS,
                 ...DYNAMIC_PLACEHOLDER_PLUGINS,
                 ...registry.category("basic-editor-plugins").getAll(),
-            ],
+                PowerButtonsPlugin,
+            ].filter((P) => !["banner", "prompt"].includes(P.id)),
         };
     }
 
@@ -332,7 +335,12 @@ export class MassMailingHtmlField extends HtmlField {
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
         // d-none must be removed for style computation.
         this.iframeRef.el.classList.remove("d-none");
-        this.iframeRef.el.style.width = "1320px";
+        // The browser resets the size of the `iframe` inside `toInline`
+        // if we just set `width`. So as a workaround we set both `min-width`
+        // and `max-width` to force the size of the `iframe` for a proper
+        // inline conversion.
+        this.iframeRef.el.style.setProperty("min-width", "1320px", "important");
+        this.iframeRef.el.style.setProperty("max-width", "1320px", "important");
         const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
         processingEl.append(parseHTML(this.iframeRef.el.contentDocument, value));
         const processingContainer = this.iframeRef.el.contentDocument.querySelector(
@@ -346,7 +354,8 @@ export class MassMailingHtmlField extends HtmlField {
         const inlineValue = processingEl.innerHTML;
         processingEl.remove();
         bundleControls["mass_mailing.assets_inside_builder_iframe"]?.toggle(true);
-        this.iframeRef.el.style.width = "";
+        this.iframeRef.el.style.minWidth = "";
+        this.iframeRef.el.style.maxWidth = "";
         if (shouldRestoreDisplayNone) {
             this.iframeRef.el.classList.add("d-none");
         }

@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("test_catalog_vendor_uom", {
         }),
 
         // Open the PO for the vendor selling product as liter.
-        { trigger: "a[href='/odoo/purchase']", run: "click" },
+        { trigger: "a[href='/odoo/purchases']", run: "click" },
         { trigger: "td[data-tooltip='PO/TEST/00001']", run: "click" },
         ...purchaseForm.openCatalog(),
         ...productCatalog.checkProductPrice("Crab Juice", "$ 1.55"),

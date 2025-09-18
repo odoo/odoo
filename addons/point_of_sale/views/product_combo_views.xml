@@ -3,7 +3,7 @@
     <record id="point_of_sale.product_combo_view_form" model="ir.ui.view">
         <field name="name">product.combo.form.inherit.point.of.sale</field>
         <field name="model">product.combo</field>
-        <field name="inherit_id" ref="product.product_combo_view_form"/>
+        <field name="inherit_id" ref="product.view_product_combo_form"/>
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
                 <attribute name="context">{'default_available_in_pos': True}</attribute>
@@ -19,7 +19,7 @@
                     <span class="o_form_label oe_inline fw-bolder">Includes</span>
                     <div>
                         <field name="qty_free" class="text-center" style="width:50px;"/>
-                        <label for="qty_free" string="free" class="fw-bolder ps-3" />
+                        <label for="qty_free" string="items" class="fw-bolder ps-3" />
                     </div>
                 </group>
                 <group>

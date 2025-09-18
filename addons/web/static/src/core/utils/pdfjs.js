@@ -1,5 +1,9 @@
-import { isMobileOS } from "@web/core/browser/feature_detection";
+// @ts-check
+
+/** @module @web/core/utils/pdfjs - PDF.js viewer button visibility control and library lazy-loading */
+
 import { loadJS } from "@web/core/assets";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * Until we have our own implementation of the /web/static/lib/pdfjs/web/viewer.{html,js,css}
@@ -15,11 +19,11 @@ import { loadJS } from "@web/core/assets";
  * @link https://mozilla.github.io/pdf.js/getting_started/
  *
  * @param {Element} rootElement IFRAME DOM element of PDF.js viewer
- * @param {Object} options options to hide additional buttons
- * @param {boolean} options.hideDownload hide download button
- * @param {boolean} options.hidePrint hide print button
- * @param {boolean} options.hidePresentation hide presentation button
- * @param {boolean} options.hideRotation hide rotation button
+ * @param {Object} [options] options to hide additional buttons
+ * @param {boolean} [options.hideDownload] hide download button
+ * @param {boolean} [options.hidePrint] hide print button
+ * @param {boolean} [options.hidePresentation] hide presentation button
+ * @param {boolean} [options.hideRotation] hide rotation button
  */
 export function hidePDFJSButtons(rootElement, options = {}) {
     const hiddenElements = [
@@ -30,10 +34,10 @@ export function hidePDFJSButtons(rootElement, options = {}) {
         "a#secondaryViewBookmark",
     ];
     if (options.hideDownload || isMobileOS()) {
-        hiddenElements.push(["button#downloadButton", "button#secondaryDownload"]);
+        hiddenElements.push("button#downloadButton", "button#secondaryDownload");
     }
     if (options.hidePrint || isMobileOS()) {
-        hiddenElements.push(["button#printButton", "button#secondaryPrint"]);
+        hiddenElements.push("button#printButton", "button#secondaryPrint");
     }
     if (options.hidePresentation) {
         hiddenElements.push("button#presentationMode");
@@ -43,12 +47,14 @@ export function hidePDFJSButtons(rootElement, options = {}) {
         hiddenElements.push("button#pageRotateCcw");
     }
     const cssStyle = document.createElement("style");
-    cssStyle.rel = "stylesheet";
     cssStyle.textContent = `${hiddenElements.join(", ")} {
     display: none !important;
 }`;
-    const iframe =
-        rootElement.tagName === "IFRAME" ? rootElement : rootElement.querySelector("iframe");
+    const iframe = /** @type {HTMLIFrameElement | null} */ (
+        rootElement.tagName === "IFRAME"
+            ? rootElement
+            : rootElement.querySelector("iframe")
+    );
     if (iframe) {
         if (!iframe.dataset.hideButtons) {
             iframe.dataset.hideButtons = "true";

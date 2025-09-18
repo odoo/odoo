@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/fields/relational/many2many_tags/many2many_tags_field";
 
 const fieldRegistry = registry.category("fields");
 

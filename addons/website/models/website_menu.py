@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
-import werkzeug.urls
 
-from werkzeug.urls import url_parse
+from urllib.parse import urlsplit, parse_qsl
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -232,10 +231,10 @@ class WebsiteMenu(models.Model):
             # Also, mega menu are never considered active.
             return False
 
-        request_url = url_parse(request.httprequest.url)
+        request_url = urlsplit(request.httprequest.url)
 
         if not self.child_id:
-            menu_url = url_parse(self._clean_url())
+            menu_url = urlsplit(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
                 # By default we compare the unslug version of the current URL
@@ -244,8 +243,8 @@ class WebsiteMenu(models.Model):
                 if self.page_id and menu_url.path != request_url.path:
                     return False
                 if not (
-                    set(menu_url.decode_query().items(multi=True))
-                    <= set(request_url.decode_query().items(multi=True))
+                    set(parse_qsl(menu_url.query, keep_blank_values=True))
+                    <= set(parse_qsl(request_url.query, keep_blank_values=True))
                 ):
                     # correct path but query arguments does not match
                     return False
@@ -318,7 +317,7 @@ class WebsiteMenu(models.Model):
                     menu_id.page_id = None
                 if request and menu['url'].startswith('#') and len(menu['url']) > 1:
                     # Working on case 2.: prefix anchor with referer URL
-                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    referer_url = urlsplit(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].browse(website_id).website_domain() & (

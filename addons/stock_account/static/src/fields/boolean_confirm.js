@@ -2,12 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { useService } from "@web/core/utils/hooks";
 
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { CheckBox } from "@web/components/checkbox/checkbox";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import {
     BooleanToggleField,
     booleanToggleField,
-} from "@web/views/fields/boolean_toggle/boolean_toggle_field";
+} from "@web/fields/basic/boolean_toggle/boolean_toggle_field";
 
 export class ConfirmCheckBox extends CheckBox {
     onClick(ev) {

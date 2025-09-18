@@ -11,7 +11,7 @@ from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache, float_is_zero
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 
 class HrVersion(models.Model):
@@ -442,8 +442,6 @@ class HrVersion(models.Model):
                 version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
                 version_stop = tz.localize(datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
                                                  datetime.max.time())).astimezone(pytz.utc).replace(tzinfo=None)
-                if version_stop < date_start:
-                    continue
                 if version_stop < date_stop:
                     if version.date_generated_from != version.date_generated_to:
                         domain_to_nullify |= Domain([

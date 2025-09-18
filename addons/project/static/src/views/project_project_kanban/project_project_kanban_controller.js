@@ -1,6 +1,6 @@
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { onWillStart } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 

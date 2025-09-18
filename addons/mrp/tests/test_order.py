@@ -205,11 +205,11 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 2
         details_operation_form.save()
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 11
         details_operation_form.save()
@@ -241,11 +241,11 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 0
         details_operation_form.save()
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 5
         details_operation_form.save()
@@ -292,7 +292,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 1
         mo = mo_form.save()
 
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = lot_1
             ml.quantity = 21
@@ -611,7 +611,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
 
         # change the quantity done in one line
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 1
         details_operation_form.save()
@@ -655,7 +655,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
 
         # get the proposed lot
-        details_operation_form = Form(mo.move_raw_ids.filtered(lambda move: move.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids.filtered(lambda move: move.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
         self.assertEqual(len(details_operation_form.move_line_ids), 1)
         with details_operation_form.move_line_ids.edit(0) as ml:
             consumed_lots = ml.lot_id
@@ -674,7 +674,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo_backorder)
         mo_form.qty_producing = 1
         mo_backorder = mo_form.save()
-        details_operation_form = Form(mo_backorder.move_raw_ids.filtered(lambda move: move.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo_backorder.move_raw_ids.filtered(lambda move: move.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
         self.assertEqual(len(details_operation_form.move_line_ids), 1)
         with details_operation_form.move_line_ids.edit(0) as ml:
             self.assertEqual(ml.lot_id, remaining_lot)
@@ -717,13 +717,13 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.lot_producing_ids.set(final_product_lot)
         mo = mo_form.save()
         # p2
-        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as line:
             line.quantity = 1
         details_operation_form.save()
 
         # p1
-        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as line:
             line.quantity = 2
             line.lot_id = first_lot_for_p1
@@ -862,7 +862,7 @@ class TestMrpOrder(TestMrpCommon):
         with mo_form.move_raw_ids.new() as line:
             line.product_id = p1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
             ml.picked = True
@@ -900,7 +900,7 @@ class TestMrpOrder(TestMrpCommon):
         with mo_form.move_raw_ids.new() as line:
             line.product_id = p1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
             ml.picked = True
@@ -940,7 +940,7 @@ class TestMrpOrder(TestMrpCommon):
         with mo_form.move_raw_ids.new() as line:
             line.product_id = p1
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
         details_operation_form.save()
@@ -971,7 +971,7 @@ class TestMrpOrder(TestMrpCommon):
         with mo_form.move_raw_ids.new() as line:
             line.product_id = add_product
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
         details_operation_form.save()
@@ -1082,11 +1082,11 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
 
-        details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = self.serial_1
         details_operation_form.save()
-        details_operation_form = Form(move_byproduct_2, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct_2, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = self.lot_1
         details_operation_form.save()
@@ -1117,16 +1117,16 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(move_byproduct_3.picked)
         self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
 
-        details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = self.serial_2
             ml.quantity = 1
         details_operation_form.save()
-        details_operation_form = Form(move_byproduct_2, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct_2, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = self.lot_2
         details_operation_form.save()
-        details_operation_form = Form(move_byproduct_3, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct_3, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 3
         details_operation_form.save()
@@ -1173,7 +1173,7 @@ class TestMrpOrder(TestMrpCommon):
         with mo_form.move_raw_ids.new() as move:
             move.product_id = self.product_4
         mo = mo_form.save()
-        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 10
         details_operation_form.save()
@@ -1278,7 +1278,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo1)
         mo_form.qty_producing = 1
         mo1 = mo_form.save()
-        details_operation_form = Form(mo1.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo1.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1295,7 +1295,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo2)
         mo_form.qty_producing = 1
         mo2 = mo_form.save()
-        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1337,7 +1337,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 1
         mo = mo_form.save()
         move_byproduct = mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id)
-        details_operation_form = Form(move_byproduct, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1354,7 +1354,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 1
         mo2 = mo_form.save()
         move_byproduct = mo2.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id)
-        details_operation_form = Form(move_byproduct, view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(move_byproduct, view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1372,7 +1372,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo1)
         mo_form.qty_producing = 1
         mo1 = mo_form.save()
-        details_operation_form = Form(mo1.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo1.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1397,7 +1397,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo2)
         mo_form.qty_producing = 1
         mo2 = mo_form.save()
-        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = sn
         details_operation_form.save()
@@ -1455,7 +1455,7 @@ class TestMrpOrder(TestMrpCommon):
         finished_good_mo.action_generate_serial()
         finished_good_detailed_operations_form = Form(
             finished_good_mo.move_raw_ids[0],
-            view=self.env.ref("stock.view_stock_move_operations"),
+            view=self.env.ref("stock.view_stock_move_form_operations"),
         )
         with finished_good_detailed_operations_form.move_line_ids.edit(0) as ml:
             ml.quantity = 1
@@ -3809,6 +3809,17 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(len(mo.workorder_ids), 2)
 
+    def test_unlink_update_workcenter_productivity(self):
+        """ Test that workcenter_productivity entries for deleted work order has end date set
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.workorder_ids[0].button_start()
+        time_log = mo.workorder_ids[0].time_ids[0]
+        mo.workorder_ids[0].unlink()
+        self.assertIsNot(time_log.date_end, False)
+
     def test_consumption_action_set_qty_and_validate(self):
         """
         Check `To Consume` and `Consumed` qty are correctly updated to match the consumption warning values
@@ -4869,6 +4880,14 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(fields.Datetime.now(), production.workorder_ids.date_start)
         self.assertEqual(fields.Datetime.now() + timedelta(hours=6), production.workorder_ids.date_finished, "The time difference should be 6 hours: 6 for the shift and 0 for the lunch pause")
 
+        production.workorder_ids.workcenter_id = self.workcenter_2.id
+        workcenter_5.time_efficiency = 50
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=7), "The time difference should be 7 hours: 6 for the shift and 1 for the lunch pause")
+        production.workorder_ids.workcenter_id = workcenter_5
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=12), "The time difference should be 12 hours: 6 / 0.5 for the shift and 0 for the lunch pause")
+        production.workorder_ids.workcenter_id = self.workcenter_2.id
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=7), "The time difference should be 7 hours: 6 for the shift and 1 for the lunch pause")
+
     def test_compute_tracked_time_3(self):
         """
         Checks that the expected duration calculation is correct when the BoM has a different UoM than the product.
@@ -5400,13 +5419,13 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
 
-    def test_mrp_multi_step_product_catalog_component_transfer(self):
+    def test_mrp_multi_step_draft_mo_creates_component_transfer(self):
         '''
-        Ensure a transfer to pre-prod is created for components added through
-        the catalog.
+        Ensure a transfer to pre-prod is created for components even when the MO
+        is in draft.
         '''
         # Enable storage locations
-        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         # Set WH manufacture to 2-step
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.manufacture_steps = 'pbm'
@@ -5420,9 +5439,22 @@ class TestTourMrpOrder(HttpCase):
             'warehouse_id': warehouse.id,
         })
         self.assertEqual(len(mo.move_raw_ids), 0)
+        self.assertEqual(mo.state, 'draft')
 
-        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
-        self.start_tour(url, 'test_mrp_multi_step_product_catalog_component_transfer', login='admin')
+        self.authenticate('admin', 'admin')
+        self.opener.post(
+            url=self.base_url() + '/product/catalog/update_order_line_info',
+            json={
+                "params": {
+                    'res_model': 'mrp.production',
+                    'order_id': mo.id,
+                    'product_id': component.id,
+                    'quantity': 2,
+                    'child_field': 'move_raw_ids',
+                },
+            },
+        )
+
         self.assertEqual(len(mo.move_raw_ids), 1)
 
         mo.action_confirm()

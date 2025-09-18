@@ -8,7 +8,7 @@ export function showProductColumn() {
         },
         {
             content: "Show product column",
-            trigger: '.o-dropdown-item input[name="product_id"]',
+            trigger: '.o-dropdown-item input[name="product_id"], .o-dropdown-item input[name="product_template_id"]',
             run: function (actions) {
                 if (!this.anchor.checked) {
                     actions.click();
@@ -69,13 +69,14 @@ export function addSectionFromProductCatalog() {
             trigger: '.o-kanban-button-back',
             run: 'click',
         },
+        ...showProductColumn(),
         {
             content: "Ensure Section is first row",
             trigger: '.o_section_and_note_list_view tr:nth-child(1).o_is_line_section',
         },
         {
             content: "Ensure Product is second row",
-            trigger: 'tbody tr:nth-child(2) .o_field_product_label_section_and_note_cell:contains("Test Product")',
+            trigger: '.o_section_and_note_list_view tbody tr:nth-child(2):contains("Test Product")',
         },
     ];
 }

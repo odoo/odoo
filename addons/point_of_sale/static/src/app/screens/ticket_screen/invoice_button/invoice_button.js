@@ -1,9 +1,9 @@
+import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component } from "@odoo/owl";
-import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { PartnerList } from "../../partner_list/partner_list";
 
 export class InvoiceButton extends Component {
@@ -86,7 +86,9 @@ export class InvoiceButton extends Component {
                 return;
             }
 
-            await this.pos.data.ormWrite("pos.order", [orderId], { partner_id: partner.id });
+            await this.pos.data.ormWrite("pos.order", [orderId], {
+                partner_id: partner.id,
+            });
         }
 
         const confirmed = await this.onWillInvoiceOrder(order, partner);
@@ -96,7 +98,9 @@ export class InvoiceButton extends Component {
 
         // Part 2: Invoice the order.
         // FIXME POSREF timeout
-        await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [orderId]);
+        await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [
+            orderId,
+        ]);
 
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);

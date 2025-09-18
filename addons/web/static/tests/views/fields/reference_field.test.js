@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllValues, queryFirst, select } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
@@ -173,7 +175,7 @@ test("ReferenceField respects no_quick_create", async () => {
         message: "Dropdown should be opened and have one item",
     });
     expect(".ui-autocomplete .o_m2o_dropdown_option:eq(0)").toHaveClass(
-        "o_m2o_dropdown_option_create_edit"
+        "o_m2o_dropdown_option_create_edit",
     );
 });
 
@@ -258,19 +260,27 @@ test("ReferenceField in modal write mode", async () => {
     expect(".o_field_widget[name=reference] option:checked").toHaveText("Product", {
         message: "The reference field's model should be Product",
     });
-    expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xphone", {
-        message: "The reference field's record should be xphone",
-    });
+    expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue(
+        "xphone",
+        {
+            message: "The reference field's record should be xphone",
+        },
+    );
 
     await click(".o_data_cell");
     await animationFrame();
 
     // In modal
     expect(".modal-lg").toHaveCount(1, { message: "there should be one modal opened" });
-    expect(".modal-lg .o_field_widget[name=reference] option:checked").toHaveText("Product", {
-        message: "The reference field's model should be Product",
-    });
-    expect(".modal-lg .o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xpad", {
+    expect(".modal-lg .o_field_widget[name=reference] option:checked").toHaveText(
+        "Product",
+        {
+            message: "The reference field's model should be Product",
+        },
+    );
+    expect(
+        ".modal-lg .o_field_widget[name=reference] .o-autocomplete--input",
+    ).toHaveValue("xpad", {
         message: "The reference field's record should be xpad",
     });
 });
@@ -308,7 +318,9 @@ test("reference in form view", async () => {
             });
         }
         if (method === "web_save") {
-            expect(model).toBe("partner", { message: "should write on the current model" });
+            expect(model).toBe("partner", {
+                message: "should write on the current model",
+            });
             expect(args).toEqual([[1], { reference: "partner.type,12" }], {
                 message: "should write the correct value",
             });
@@ -352,15 +364,18 @@ test("reference in form view", async () => {
         ["", "product", "partner.type", "partner"],
         {
             message: "the options should be correctly set",
-        }
+        },
     );
 
     await click(".o_external_button");
     await animationFrame();
 
-    expect(".o_dialog:not(.o_inactive_modal) .modal-title").toHaveText("Open: custom label", {
-        message: "dialog title should display the custom string label",
-    });
+    expect(".o_dialog:not(.o_inactive_modal) .modal-title").toHaveText(
+        "Open: custom label",
+        {
+            message: "dialog title should display the custom string label",
+        },
+    );
 
     await click(".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
     await animationFrame();
@@ -385,7 +400,8 @@ test("reference in form view", async () => {
 test("Many2One 'Search more...' updates on resModel change", async () => {
     onRpc("has_group", () => true);
 
-    Product._views[["list", false]] = /* xml */ `<list><field name="display_name"/></list>`;
+    Product._views[["list", false]] =
+        /* xml */ `<list><field name="display_name"/></list>`;
     Product._views[["search", false]] = /* xml */ `<search/>`;
 
     await mountView({
@@ -864,7 +880,7 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
     await animationFrame();
     //Select the "Partner" option, different from original "Product"
     await click(
-        ".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item:contains(Partner)"
+        ".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item:contains(Partner)",
     );
     await runAllTimers();
     await animationFrame();
@@ -916,7 +932,8 @@ test("model selector is displayed only when it should be", async () => {
             "the selection list of the reference field should not exist when model_field is specified and hide_model=True.",
     });
     expect(".o_inner_group:eq(2) select").toHaveCount(0, {
-        message: "the selection list of the reference field should not exist when hide_model=True.",
+        message:
+            "the selection list of the reference field should not exist when hide_model=True.",
     });
     expect(".o_inner_group:eq(3) select").toHaveCount(1, {
         message:

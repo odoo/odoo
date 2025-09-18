@@ -2,17 +2,18 @@ import re
 
 
 def upgrade(file_manager):
-    """ Use double quote for redacted text and single quote for strings. """
+    """Use double quote for redacted text and single quote for strings."""
     # Don't use this script in production, it is broken and only serve
     # as an example.
 
     # List all the files that might need to be upgraded, here we list
     # all python models.
     files = [
-        file for file in file_manager
-        if 'models' in file.path.parts
-        if file.path.suffix == '.py'
-        if file.path.name != '__init__.py'
+        file
+        for file in file_manager
+        if "models" in file.path.parts
+        if file.path.suffix == ".py"
+        if file.path.name != "__init__.py"
     ]
 
     # Early return if case there are no file, so we don't compile
@@ -43,7 +44,8 @@ def upgrade(file_manager):
     # - Have multiples words
     # - End with a dot
     # This assumption is wrong for many cases, don't use this script!
-    redacted_text_re = re.compile(r"""
+    redacted_text_re = re.compile(
+        r"""
         '           # Opening single quote
         (?P<text>
             [A-Z][^'\s]*?\   # First word
@@ -51,7 +53,9 @@ def upgrade(file_manager):
             [^'\s]*?\.       # Final word
         )
         '           # Closing single quote
-    """, re.VERBOSE)
+    """,
+        re.VERBOSE,
+    )
 
     # Assume that all strings:
     # - Are fully lowercase

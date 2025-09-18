@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor, hexToRGBA, darkenColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
-import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
+import { JournalDashboardGraphField } from "@web/fields/specialized/journal_dashboard_graph/journal_dashboard_graph_field";
 
 export class WorkcenterDashboardGraphField extends JournalDashboardGraphField{
     getBarChartConfig() {

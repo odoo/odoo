@@ -1,6 +1,6 @@
 import publicRootData from "@web/legacy/js/public/public_root";
-import "@website/libs/zoomodoo/zoomodoo";
-import { pick } from "@web/core/utils/objects";
+import { initZoomOdoo } from "@website/libs/zoomodoo/zoomodoo";
+import { pick } from "@web/core/utils/collections/objects";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend({
     events: Object.assign({}, publicRootData.PublicRoot.prototype.events || {}, {
@@ -30,8 +30,10 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @override
      */
     start: function () {
-        // Enable magnify on zommable img
-        this.$(".zoomable img[data-zoom]").zoomOdoo();
+        // Enable magnify on zoomable img
+        for (const img of this.el.querySelectorAll(".zoomable img[data-zoom]")) {
+            initZoomOdoo(img);
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -59,7 +61,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         var html = document.documentElement;
         return Object.assign(
             {
-                editable: !!(html.dataset.editable || $("[data-oe-model]").length), // temporary hack, this should be done in python
+                editable: !!(html.dataset.editable || document.querySelectorAll("[data-oe-model]").length), // temporary hack, this should be done in python
                 translatable: !!html.dataset.translatable,
                 edit_translations: !!html.dataset.edit_translations,
             },
@@ -94,7 +96,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         this._super.apply(this, arguments);
     },
     /**
-     * @todo review
      * @private
      */
     _onLangChangeClick: function (ev) {
@@ -104,12 +105,12 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         if (document.body.classList.contains("editor_enable")) {
             return;
         }
-        var $target = $(ev.currentTarget);
+        const target = ev.currentTarget;
         // retrieve the hash before the redirect
         var redirect = {
-            lang: encodeURIComponent($target.data("url_code")),
+            lang: encodeURIComponent(target.dataset.urlCode),
             url: encodeURIComponent(
-                $target.attr("href").replace(/[&?]edit_translations[^&?]+/, "")
+                target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, "")
             ),
             hash: encodeURIComponent(window.location.hash),
         };
@@ -134,7 +135,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         ev.data.onSuccess(apiKey);
     },
     /**
-    /**
      * Checks information about the page SEO object.
      *
      * @private
@@ -153,7 +153,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * if not found
      */
     _unslugHtmlDataObject: function (dataAttr) {
-        var repr = $("html").data(dataAttr);
+        var repr = document.documentElement.dataset[dataAttr];
         var match = repr && repr.match(/(.+)\((-?\d+),(.*)\)/);
         if (!match) {
             return null;
@@ -164,7 +164,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         };
     },
     /**
-     * @todo review
      * @private
      */
     _onPublishBtnClick: function (ev) {
@@ -192,7 +191,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @param {Event} ev
      */
     _onModalShown: function (ev) {
-        $(ev.target).addClass("modal_shown");
+        ev.target.classList.add("modal_shown");
     },
 });
 

@@ -1,13 +1,13 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
     Many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/fields/relational/many2one/many2one_field";
 import { getProductRelatedModel, Many2XUomTagsAutocomplete } from "../many2x_uom_tags/many2x_uom_tags";
 
 // @todo: this extension will be removed in the future

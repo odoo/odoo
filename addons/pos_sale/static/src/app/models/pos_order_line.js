@@ -1,7 +1,6 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
-
 patch(PosOrderline.prototype, {
     setup(_defaultObj) {
         super.setup(...arguments);
@@ -41,7 +40,7 @@ patch(PosOrderline.prototype, {
         } else {
             this.setQuantity(
                 saleOrderLine.product_uom_qty -
-                    Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced)
+                    Math.max(saleOrderLine.qty_transferred, saleOrderLine.qty_invoiced),
             );
         }
     },

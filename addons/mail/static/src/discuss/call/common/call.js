@@ -1,20 +1,25 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
+import { ActionList } from "@mail/core/common/action_list";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
-
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, useRef, useState } from "@odoo/owl";
-
+import { inDiscussCallViewProps, useInDiscussCallView } from "@mail/utils/common/hooks";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    toRaw,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { isEventHandled, markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { ActionList } from "@mail/core/common/action_list";
-import { ACTION_TAGS } from "@mail/core/common/action";
-import { inDiscussCallViewProps, useInDiscussCallView } from "@mail/utils/common/hooks";
-
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
 /**
  * @typedef CardData
  * @property {string} key
@@ -82,7 +87,7 @@ export class Call extends Component {
             return [];
         }
         return this.callActions.actions.filter((action) =>
-            action.tags.includes(ACTION_TAGS.CALL_LAYOUT)
+            action.tags.includes(ACTION_TAGS.CALL_LAYOUT),
         );
     }
 
@@ -95,7 +100,11 @@ export class Call extends Component {
     }
 
     get minimized() {
-        if (this.rtc.state.isFullscreen || !this.channel || this.channel.activeRtcSession) {
+        if (
+            this.rtc.state.isFullscreen ||
+            !this.channel ||
+            this.channel.activeRtcSession
+        ) {
             return false;
         }
         if (!this.isActiveCall || this.channel.videoCount === 0 || this.props.compact) {
@@ -153,21 +162,24 @@ export class Call extends Component {
     get hasCallNotifications() {
         return Boolean(
             (!this.props.compact || this.rtc.state.isFullscreen) &&
-                this.isActiveCall &&
-                this.rtc.notifications.size
+            this.isActiveCall &&
+            this.rtc.notifications.size,
         );
     }
 
     get hasSidebarButton() {
         return Boolean(
             this.channel.activeRtcSession &&
-                this.state.overlay &&
-                (!this.props.compact || this.rtc.state.isFullscreen)
+            this.state.overlay &&
+            (!this.props.compact || this.rtc.state.isFullscreen),
         );
     }
 
     get isControllerFloating() {
-        return this.rtc.state.isFullscreen || (this.channel.activeRtcSession && !this.ui.isSmall);
+        return (
+            this.rtc.state.isFullscreen ||
+            (this.channel.activeRtcSession && !this.ui.isSmall)
+        );
     }
 
     onMouseleaveMain(ev) {

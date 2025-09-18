@@ -1,6 +1,7 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
 import { getDataURLFromFile, getOrigin, redirect, url } from "@web/core/utils/urls";
 
@@ -83,7 +84,9 @@ test("redirect", () => {
     expect(testRedirect("../abc/def")).toBe("http://www.test.com/abc/def");
     expect(testRedirect("/abc/def")).toBe("http://www.test.com/abc/def");
     expect(testRedirect("/abc/def?x=y")).toBe("http://www.test.com/abc/def?x=y");
-    expect(testRedirect("/abc?x=y#a=1&b=2")).toBe("http://www.test.com/abc?x=y#a=1&b=2");
+    expect(testRedirect("/abc?x=y#a=1&b=2")).toBe(
+        "http://www.test.com/abc?x=y#a=1&b=2",
+    );
 
     expect(() => testRedirect("https://www.odoo.com")).toThrow(/Can't redirect/);
     expect(() => testRedirect("javascript:alert('boom');")).toThrow(/Can't redirect/);

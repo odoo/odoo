@@ -8,7 +8,7 @@
 Enable management of UTM trackers: campaign, medium, source.
 """,
     'version': '1.1',
-    'depends': ['base', 'web'],
+    'depends': ['web'],
     'data': [
         'data/utm_medium_data.xml',
         'data/utm_source_data.xml',

@@ -1,15 +1,17 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+// @ts-check
 
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
-import { currencies } from "@web/core/currency";
+import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import {
+    formatDate,
+    formatDateTime,
     formatFloat,
     formatFloatFactor,
     formatFloatTime,
-    formatJson,
     formatInteger,
+    formatJson,
     formatMany2one,
     formatMany2oneReference,
     formatMonetary,
@@ -17,9 +19,8 @@ import {
     formatReference,
     formatText,
     formatX2many,
-    formatDate,
-    formatDateTime,
-} from "@web/views/fields/formatters";
+} from "@web/fields/formatters";
+import { currencies } from "@web/services/currency";
 
 const { DateTime } = luxon;
 
@@ -55,12 +56,22 @@ test("formatFloatTime", () => {
     expect(formatFloatTime(0.25)).toBe("00:15");
     expect(formatFloatTime(0.58)).toBe("00:35");
     expect(formatFloatTime(2 / 60, { displaySeconds: true })).toBe("00:02:00");
-    expect(formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true })).toBe("00:02:01");
-    expect(formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true })).toBe("00:02:02");
-    expect(formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true })).toBe("00:02:03");
+    expect(formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true })).toBe(
+        "00:02:01",
+    );
+    expect(formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true })).toBe(
+        "00:02:02",
+    );
+    expect(formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true })).toBe(
+        "00:02:03",
+    );
     expect(formatFloatTime(0.25, { displaySeconds: true })).toBe("00:15:00");
-    expect(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true })).toBe("00:15:15");
-    expect(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true })).toBe("00:15:45");
+    expect(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true })).toBe(
+        "00:15:15",
+    );
+    expect(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true })).toBe(
+        "00:15:45",
+    );
     expect(formatFloatTime(56 / 3600, { displaySeconds: true })).toBe("00:00:56");
     expect(formatFloatTime(-0.5)).toBe("-00:30");
 
@@ -68,9 +79,15 @@ test("formatFloatTime", () => {
     expect(formatFloatTime(2, options)).toBe("2:00");
     expect(formatFloatTime(3.5, options)).toBe("3:30");
     expect(formatFloatTime(3.5, { ...options, displaySeconds: true })).toBe("3:30:00");
-    expect(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true })).toBe("3:30:15");
-    expect(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true })).toBe("3:30:45");
-    expect(formatFloatTime(56 / 3600, { ...options, displaySeconds: true })).toBe("0:00:56");
+    expect(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true })).toBe(
+        "3:30:15",
+    );
+    expect(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true })).toBe(
+        "3:30:45",
+    );
+    expect(formatFloatTime(56 / 3600, { ...options, displaySeconds: true })).toBe(
+        "0:00:56",
+    );
     expect(formatFloatTime(-0.5, options)).toBe("-0:30");
 });
 
@@ -108,7 +125,7 @@ test("formatMany2one", () => {
     expect(formatMany2one({ id: 1, display_name: false })).toBe("Unnamed");
     expect(formatMany2one({ id: 1, display_name: "M2O value" })).toBe("M2O value");
     expect(formatMany2one({ id: 1, display_name: "M2O value" }, { escape: true })).toBe(
-        "M2O%20value"
+        "M2O%20value",
     );
 });
 
@@ -159,11 +176,13 @@ test("formatMonetary", () => {
         c_y: 12,
     };
     expect(formatMonetary(200, { field, currencyId: 10, data })).toBe("200.00\u00a0€");
-    expect(formatMonetary(200, { field, currencyId: 10, data, trailingZeros: false })).toBe(
-        "200\u00a0€"
-    );
+    expect(
+        formatMonetary(200, { field, currencyId: 10, data, trailingZeros: false }),
+    ).toBe("200\u00a0€");
     expect(formatMonetary(200, { field, data })).toBe("$\u00a0200.00");
-    expect(formatMonetary(200, { field, currencyField: "c_y", data })).toBe("200.00\u00a0&");
+    expect(formatMonetary(200, { field, currencyField: "c_y", data })).toBe(
+        "200.00\u00a0&",
+    );
 
     const floatField = { type: "float" };
     data = {
@@ -189,7 +208,11 @@ test("formatPercentage", () => {
     expect(formatPercentage(50, { humanReadable: true })).toBe("5k%");
     expect(formatPercentage(0.5, { noSymbol: true })).toBe("50");
 
-    patchWithCleanup(localization, { grouping: [3, 0], decimalPoint: ",", thousandsSep: "." });
+    patchWithCleanup(localization, {
+        grouping: [3, 0],
+        decimalPoint: ",",
+        thousandsSep: ".",
+    });
     expect(formatPercentage(0.125)).toBe("12,5%");
     expect(formatPercentage(0.666666)).toBe("66,67%");
 });
@@ -207,9 +230,13 @@ test("formatMany2oneReference", () => {
 
 test("formatDate", () => {
     expect(formatDate(false)).toBe("");
-    expect(formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }))).toBe("Jan 22, 1990");
+    expect(formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }))).toBe(
+        "Jan 22, 1990",
+    );
     expect(
-        formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }), { numeric: true })
+        formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }), {
+            numeric: true,
+        }),
     ).toBe("01/22/1990");
     expect(formatDate(DateTime.fromObject({ day: 22, month: 1 }))).toBe("Jan 22");
 });
@@ -226,10 +253,14 @@ test("formatDateTime", () => {
     expect(formatDateTime(false)).toBe("");
     expect(formatDateTime(datetime)).toBe("Jan 22, 1990, 10:30 AM");
     expect(formatDateTime(datetime, { showDate: false })).toBe("10:30 AM");
-    expect(formatDateTime(datetime, { showSeconds: true })).toBe("Jan 22, 1990, 10:30:45 AM");
+    expect(formatDateTime(datetime, { showSeconds: true })).toBe(
+        "Jan 22, 1990, 10:30:45 AM",
+    );
     expect(formatDateTime(datetime, { showTime: false })).toBe("Jan 22, 1990");
     expect(formatDateTime(datetime, { numeric: true })).toBe("01/22/1990 10:30:45");
-    expect(formatDateTime(DateTime.fromObject({ day: 22, month: 1, hour: 10, minute: 30 }))).toBe(
-        "Jan 22, 10:30 AM"
-    );
+    expect(
+        formatDateTime(
+            DateTime.fromObject({ day: 22, month: 1, hour: 10, minute: 30 }),
+        ),
+    ).toBe("Jan 22, 10:30 AM");
 });

@@ -1,21 +1,23 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/setup default=false */
 
 import { assets } from "@web/core/assets";
-import { user, _makeUser } from "@web/core/user";
+import { user, _makeUser } from "@web/services/user";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
-import { config as transitionConfig } from "@web/core/transition";
+import { config as transitionConfig } from "@web/components/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
 
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
 import { App, EventBus, whenReady } from "@odoo/owl";
-import { currencies } from "@web/core/currency";
+import { currencies } from "@web/services/currency";
 import { cookie } from "@web/core/browser/cookie";
 import { router } from "@web/core/browser/router";
 import { registerTemplateProcessor } from "@web/core/templates";

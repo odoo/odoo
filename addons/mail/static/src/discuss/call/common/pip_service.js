@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
 import { reactive } from "@odoo/owl";
-import { Meeting } from "./meeting";
+import { registry } from "@web/core/registry";
 
+import { Meeting } from "./meeting";
 export const callPipService = {
     dependencies: ["mail.popout"],
 
@@ -21,7 +21,7 @@ export const callPipService = {
             () => {
                 state.active = false;
                 env.services["discuss.rtc"]?.channel?.openChatWindow();
-            }
+            },
         );
         function closePip() {
             state.active = false;

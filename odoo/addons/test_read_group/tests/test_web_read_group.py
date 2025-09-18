@@ -1,5 +1,6 @@
-from odoo.tests import common
 from unittest.mock import patch
+
+from odoo.tests import common
 
 
 class TestWebReadGroup(common.TransactionCase):
@@ -92,7 +93,10 @@ class TestWebReadGroup(common.TransactionCase):
         with self.assertQueryCount(1):
             self.assertEqual(
                 Model.web_read_group(
-                    domain=[], groupby=["key"], aggregates=["value:sum"], offset=1
+                    domain=[],
+                    groupby=["key"],
+                    aggregates=["value:sum"],
+                    offset=1,
                 ),
                 {
                     "groups": [
@@ -142,7 +146,7 @@ class TestWebReadGroup(common.TransactionCase):
                 },
             )
 
-    @patch("odoo.addons.web.models.models.MAX_NUMBER_OPENED_GROUPS", 2)
+    @patch("odoo.addons.web.models.web_read_group.MAX_NUMBER_OPENED_GROUPS", 2)
     def test_auto_unfold_limit(self):
         Model = self.env["test_read_group.aggregate"]
         records = Model.create(
@@ -731,7 +735,7 @@ class TestWebReadGroup(common.TransactionCase):
             )
 
     # The patch exists to test that MAX_NUMBER_OPENED_GROUPS is ignored in case of forced opened groups
-    @patch("odoo.addons.web.models.models.MAX_NUMBER_OPENED_GROUPS", 1)
+    @patch("odoo.addons.web.models.web_read_group.MAX_NUMBER_OPENED_GROUPS", 1)
     def test_specific_opened_group_and_unfold_limit(self):
         Model = self.env["test_read_group.aggregate"]
         records = Model.create(

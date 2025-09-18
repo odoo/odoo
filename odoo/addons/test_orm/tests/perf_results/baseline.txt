@@ -1,0 +1,87 @@
+bool(100_records)                                        n= 180  p50=       0.5µs  p95=       1.0µs  mean=       0.6µs  cv=0.36 
+bool(empty)                                              n= 180  p50=       0.4µs  p95=       1.0µs  mean=       0.5µs  cv=0.41 
+browse(100_ids)                                          n= 181  p50=       1.4µs  p95=       1.6µs  mean=       1.4µs  cv=0.05 
+browse(100_tuple)                                        n= 180  p50=       1.3µs  p95=       1.4µs  mean=       1.3µs  cv=0.08 
+browse(single_int)                                       n= 180  p50=       1.0µs  p95=       1.3µs  mean=       1.0µs  cv=0.12 
+concat(50+50)                                            n= 180  p50=       2.1µs  p95=       2.5µs  mean=       2.1µs  cv=0.09 
+__contains__(100)                                        n= 180  p50=       1.5µs  p95=       1.7µs  mean=       1.5µs  cv=0.05 
+convert_to_cache(binary:small)                           n= 181  p50=       0.6µs  p95=       1.0µs  mean=       0.7µs  cv=0.25 
+convert_to_cache(boolean:f_boolean)                      n= 180  p50=       0.2µs  p95=       0.2µs  mean=       0.2µs  cv=0.06 
+convert_to_cache(boolean:f_boolean)                      n= 183  p50=       0.2µs  p95=       0.3µs  mean=       0.2µs  cv=0.09 
+convert_to_cache(boolean:from_int)                       n= 181  p50=       0.2µs  p95=       0.2µs  mean=       0.2µs  cv=0.04 
+convert_to_cache(char:255)                               n= 180  p50=       0.9µs  p95=       1.0µs  mean=       0.9µs  cv=0.06 
+convert_to_cache(char:False)                             n= 183  p50=       0.3µs  p95=       0.4µs  mean=       0.4µs  cv=0.06 
+convert_to_cache(char:f_char)                            n= 180  p50=       0.8µs  p95=       1.0µs  mean=       0.9µs  cv=0.07 
+convert_to_cache(char:None)                              n= 180  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.14 
+convert_to_cache(date:False)                             n= 184  p50=       0.2µs  p95=       0.3µs  mean=       0.2µs  cv=0.06 
+convert_to_cache(date:f_date)                            n= 180  p50=      12.2µs  p95=      16.5µs  mean=      12.3µs  cv=0.18 
+convert_to_cache(date:obj)                               n= 182  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.06 
+convert_to_cache(datetime:False)                         n= 182  p50=       0.3µs  p95=       0.3µs  mean=       0.3µs  cv=0.06 
+convert_to_cache(datetime:f_datetime)                    n= 180  p50=      13.2µs  p95=      17.4µs  mean=      13.8µs  cv=0.15 
+convert_to_cache(datetime:obj)                           n= 180  p50=       0.4µs  p95=       0.4µs  mean=       0.4µs  cv=0.06 
+convert_to_cache(float:f_float)                          n= 180  p50=       1.3µs  p95=       1.4µs  mean=       1.3µs  cv=0.06 
+convert_to_cache(float:f_float)                          n= 181  p50=       2.8µs  p95=       3.2µs  mean=       2.8µs  cv=0.07 
+convert_to_cache(html:small)                             n= 180  p50=     126.2µs  p95=     156.5µs  mean=     131.7µs  cv=0.08 
+convert_to_cache(integer:f_integer)                      n= 180  p50=       1.0µs  p95=       1.3µs  mean=       1.0µs  cv=0.13 
+convert_to_cache(integer:f_integer)                      n= 182  p50=       0.7µs  p95=       1.1µs  mean=       0.8µs  cv=0.20 
+convert_to_cache(integer:None)                           n= 181  p50=       0.6µs  p95=       0.7µs  mean=       0.6µs  cv=0.06 
+convert_to_cache(json:large)                             n= 181  p50=      19.2µs  p95=      26.8µs  mean=      20.8µs  cv=0.14 
+convert_to_cache(json:None)                              n= 180  p50=       0.2µs  p95=       0.3µs  mean=       0.2µs  cv=0.11 
+convert_to_cache(json:small)                             n= 180  p50=       2.3µs  p95=       2.5µs  mean=       2.3µs  cv=0.05 
+convert_to_cache(many2one:int)                           n= 181  p50=       0.7µs  p95=       0.9µs  mean=       0.8µs  cv=0.07 
+convert_to_cache(many2one:None)                          n= 180  p50=       0.8µs  p95=       0.9µs  mean=       0.8µs  cv=0.05 
+convert_to_cache(many2one:record)                        n= 180  p50=       0.9µs  p95=       1.0µs  mean=       0.9µs  cv=0.08 
+convert_to_cache(many2one:tuple)                         n= 180  p50=       0.7µs  p95=       0.7µs  mean=       0.7µs  cv=0.06 
+convert_to_cache(monetary:f_monetary)                    n= 180  p50=      17.3µs  p95=      20.7µs  mean=      17.6µs  cv=0.08 
+convert_to_cache(selection:False)                        n= 181  p50=       0.4µs  p95=       0.5µs  mean=       0.5µs  cv=0.04 
+convert_to_cache(selection:f_selection)                  n= 180  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.06 
+convert_to_cache(selection:f_selection)                  n= 183  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.07 
+convert_to_cache(text:10k)                               n= 181  p50=       0.9µs  p95=       1.4µs  mean=       0.9µs  cv=0.21 
+convert_to_cache(text:f_text)                            n= 178  p50=       0.9µs  p95=       1.1µs  mean=       0.9µs  cv=0.07 
+convert_to_read(boolean)                                 n= 181  p50=       0.3µs  p95=       0.3µs  mean=       0.3µs  cv=0.08 
+convert_to_read(char)                                    n= 182  p50=       0.3µs  p95=       0.4µs  mean=       0.3µs  cv=0.09 
+convert_to_read(integer)                                 n= 180  p50=       0.3µs  p95=       0.4µs  mean=       0.4µs  cv=0.08 
+convert_to_read(selection)                               n= 181  p50=       0.3µs  p95=       0.3µs  mean=       0.3µs  cv=0.08 
+convert_to_record(boolean)                               n= 180  p50=       0.5µs  p95=       0.6µs  mean=       0.5µs  cv=0.11 
+convert_to_record(char)                                  n= 180  p50=       1.0µs  p95=       1.6µs  mean=       1.1µs  cv=0.17 
+convert_to_record(date)                                  n= 185  p50=       0.5µs  p95=       0.5µs  mean=       0.5µs  cv=0.05 
+convert_to_record(integer)                               n= 180  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.09 
+convert_to_record(many2one)                              n= 180  p50=       1.6µs  p95=       1.8µs  mean=       1.6µs  cv=0.06 
+create(all_types)                                        n=  26  p50=    1205.8µs  p95=    1370.5µs  mean=    1201.0µs  cv=0.08 
+Domain(3_leaves)                                         n= 180  p50=      21.0µs  p95=      30.5µs  mean=      20.9µs  cv=0.19 
+Domain AND (&)                                           n= 180  p50=       2.6µs  p95=       2.9µs  mean=       2.7µs  cv=0.05 
+Domain(False)                                            n= 180  p50=       1.0µs  p95=       1.2µs  mean=       1.0µs  cv=0.10 
+Domain(nested_or_and)                                    n= 180  p50=      19.8µs  p95=      43.8µs  mean=      22.9µs  cv=0.36 
+Domain NOT (~)                                           n= 180  p50=       2.9µs  p95=       3.1µs  mean=       2.9µs  cv=0.03 
+Domain OR (|)                                            n= 180  p50=       3.4µs  p95=       3.7µs  mean=       3.4µs  cv=0.04 
+Domain(simple_leaf)                                      n= 180  p50=       7.1µs  p95=       8.1µs  mean=       7.1µs  cv=0.08 
+Domain(True)                                             n= 180  p50=       0.8µs  p95=       0.9µs  mean=       0.8µs  cv=0.08 
+__eq__(diff_100v50)                                      n= 180  p50=       3.8µs  p95=       4.1µs  mean=       3.8µs  cv=0.03 
+__eq__(same_100)                                         n= 180  p50=       7.6µs  p95=       7.9µs  mean=       7.6µs  cv=0.03 
+Field._get_cache()                                       n= 181  p50=       0.5µs  p95=       0.7µs  mean=       0.6µs  cv=0.10 
+Field._update_cache(1)                                   n= 181  p50=       1.3µs  p95=       1.4µs  mean=       1.3µs  cv=0.05 
+flush_all(clean)                                         n= 180  p50=       3.4µs  p95=       4.1µs  mean=       3.4µs  cv=0.10 
+flush_model(1_dirty)                                     n=  44  p50=     983.2µs  p95=    1206.3µs  mean=     995.4µs  cv=0.14 
+flush_model(clean)                                       n= 180  p50=       6.7µs  p95=       7.1µs  mean=       6.7µs  cv=0.02 
+__hash__(100)                                            n= 180  p50=       5.2µs  p95=       5.7µs  mean=       5.2µs  cv=0.05 
+__hash__(single)                                         n= 180  p50=       1.0µs  p95=       1.1µs  mean=       1.0µs  cv=0.06 
+.ids(100)                                                n= 181  p50=       3.6µs  p95=       3.8µs  mean=       3.6µs  cv=0.03 
+invalidate_all()                                         n= 180  p50=       8.9µs  p95=       9.5µs  mean=       9.0µs  cv=0.03 
+invalidate_recordset(100)                                n= 180  p50=      21.3µs  p95=      25.4µs  mean=      22.1µs  cv=0.08 
+__iter__(1000 records)                                   n=  44  p50=     254.4µs  p95=     263.5µs  mean=     255.0µs  cv=0.03 
+__iter__(100 records)                                    n= 180  p50=      25.6µs  p95=      26.3µs  mean=      25.6µs  cv=0.01 
+__iter__(10 records)                                     n= 180  p50=       4.3µs  p95=       4.7µs  mean=       4.2µs  cv=0.08 
+__iter__(1 records)                                      n= 180  p50=       0.4µs  p95=       0.5µs  mean=       0.4µs  cv=0.10 
+len(100)                                                 n= 181  p50=       0.5µs  p95=       0.7µs  mean=       0.5µs  cv=0.11 
+modified(computed_chain)                                 n= 180  p50=      23.3µs  p95=      33.6µs  mean=      25.0µs  cv=0.17 
+modified(scalar_field)                                   n= 180  p50=      24.3µs  p95=      36.0µs  mean=      25.8µs  cv=0.15 
+read(9_fields)                                           n=  44  p50=     739.0µs  p95=     812.0µs  mean=     725.4µs  cv=0.09 
+_read_group(domain+group)                                n=  44  p50=     575.0µs  p95=     663.9µs  mean=     582.9µs  cv=0.11 
+_read_group(group_by_value)                              n=  44  p50=     581.9µs  p95=     717.5µs  mean=     580.1µs  cv=0.15 
+_read_group(multi_agg)                                   n=  44  p50=     624.7µs  p95=     682.9µs  mean=     607.4µs  cv=0.11 
+_search(2_leaf_domain)                                   n=  90  p50=      84.7µs  p95=      91.3µs  mean=      84.9µs  cv=0.04 
+_search(complex_domain)                                  n=  90  p50=     194.2µs  p95=     244.9µs  mean=     206.6µs  cv=0.11 
+search_fetch(3_fields)                                   n=  44  p50=     797.5µs  p95=     955.8µs  mean=     800.2µs  cv=0.12 
+unlink(batch_10)                                         n=  26  p50=    5533.0µs  p95=    6290.8µs  mean=    5591.5µs  cv=0.07 
+unlink(single)                                           n=  44  p50=    3790.9µs  p95=    4355.5µs  mean=    3783.3µs  cv=0.09 
+write(4_mixed_fields)                                    n=  44  p50=     101.8µs  p95=     113.1µs  mean=     103.3µs  cv=0.05 

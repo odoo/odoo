@@ -1,6 +1,6 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { Domain } from "@web/core/domain";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
+import { DomainSelectorDialog } from "@web/components/domain_selector_dialog/domain_selector_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -37,7 +37,7 @@ export class SnippetVisibilityOption extends BaseOptionComponent {
 
     /**
      *
-     * @param {import("@web/core/tree_editor/condition_tree").Tree} tree
+     * @param {import("@web/components/tree_editor/condition_tree").Tree} tree
      */
     async parseTree(domain) {
         const resModel = this.getModel();

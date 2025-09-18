@@ -1,9 +1,8 @@
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { patch } from "@web/core/utils/patch";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useService } from "@web/core/utils/hooks";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-
+import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 patch(QRPopup.prototype, {
     setup() {
         super.setup(...arguments);
@@ -19,10 +18,11 @@ patch(QRPopup.prototype, {
         let result;
 
         try {
-            result = await this.orm.call("pos.payment.method", "l10n_id_verify_qris_status", [
-                [pm_line.payment_method_id.id],
-                pm_line.pos_order_id.uuid,
-            ]);
+            result = await this.orm.call(
+                "pos.payment.method",
+                "l10n_id_verify_qris_status",
+                [[pm_line.payment_method_id.id], pm_line.pos_order_id.uuid],
+            );
         } catch {
             this.env.services.dialog.add(AlertDialog, {
                 title: _t("Failure"),

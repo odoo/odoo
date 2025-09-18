@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/services/http_service";
 import { Component, markup } from "@odoo/owl";
 import { rpc, RPCError } from "@web/core/network/rpc";
 

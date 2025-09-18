@@ -1,17 +1,17 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { Notebook } from "@web/core/notebook/notebook";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { Notebook } from "@web/components/notebook/notebook";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { memoize } from "@web/core/utils/functions";
 import { Component, onMounted, useState, markup, onWillStart, onWillDestroy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { loadBundle } from "@web/core/assets";
-import { htmlReplaceAll } from "@web/core/utils/html";
+import { htmlReplaceAll } from "@web/core/utils/dom/html";
 
 const { DateTime } = luxon;
 

@@ -171,17 +171,17 @@ class ProductProduct(models.Model):
                  cr.company_id = i.company_id and
                  cr.date_start <= COALESCE(i.invoice_date, NOW()) and
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(i.invoice_date, NOW())))
-                WHERE l.product_id IN %s
-                AND i.state IN %s
-                AND i.payment_state IN %s
-                AND i.move_type IN %s
+                WHERE l.product_id = ANY(%s)
+                AND i.state = ANY(%s)
+                AND i.payment_state = ANY(%s)
+                AND i.move_type = ANY(%s)
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type = 'product'
                 GROUP BY l.product_id
                 """.format(self.env['res.currency']._select_companies_rates())
         invoice_types = ('out_invoice', 'out_refund')
-        self.env.cr.execute(sqlstr, (tuple(self.ids), states, payment_states, invoice_types, date_from, date_to, company_id))
+        self.env.cr.execute(sqlstr, (list(self.ids), list(states), list(payment_states), list(invoice_types), date_from, date_to, company_id))
         for product_id, avg, qty, total, sale in self.env.cr.fetchall():
             res[product_id]['sale_avg_price'] = avg and avg or 0.0
             res[product_id]['sale_num_invoiced'] = qty and qty or 0.0
@@ -196,7 +196,7 @@ class ProductProduct(models.Model):
         ctx = self.env.context.copy()
         ctx['force_company'] = company_id
         invoice_types = ('in_invoice', 'in_refund')
-        self.env.cr.execute(sqlstr, (tuple(self.ids), states, payment_states, invoice_types, date_from, date_to, company_id))
+        self.env.cr.execute(sqlstr, (list(self.ids), list(states), list(payment_states), list(invoice_types), date_from, date_to, company_id))
         for product_id, avg, qty, total, _dummy in self.env.cr.fetchall():
             res[product_id]['purchase_avg_price'] = avg and avg or 0.0
             res[product_id]['purchase_num_invoiced'] = qty and qty or 0.0

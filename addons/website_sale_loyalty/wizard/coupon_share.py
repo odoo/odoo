@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -54,7 +54,7 @@ class CouponShare(models.TransientModel):
             target_url = '{base}/coupon/{code}?{query}'.format(
                 base=record.website_id.get_base_url(),
                 code=record.promo_code,
-                query=url_encode({'r': record.redirect}),
+                query=urlencode({'r': record.redirect}),
             )
 
             if record.env.context.get('use_short_link'):

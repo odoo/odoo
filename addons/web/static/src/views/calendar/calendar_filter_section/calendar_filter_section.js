@@ -1,13 +1,18 @@
-import { _t } from "@web/core/l10n/translation";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { Transition } from "@web/core/transition";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { getColor } from "../utils";
+// @ts-check
+
+/** @module @web/views/calendar/calendar_filter_section/calendar_filter_section - Collapsible sidebar filter section for a calendar filter field (attendees, resources) */
+
 import { Component, useState } from "@odoo/owl";
+import { AutoComplete } from "@web/components/autocomplete/autocomplete";
+import { Transition } from "@web/components/transition";
+import { _t } from "@web/core/l10n/translation";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { getColor } from "@web/views/calendar/calendar_utils";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 let nextId = 1;
 
+/** Collapsible sidebar section for a single calendar filter field (e.g. attendees, resources). */
 export class CalendarFilterSection extends Component {
     static components = {
         AutoComplete,
@@ -49,7 +54,10 @@ export class CalendarFilterSection extends Component {
     }
 
     get isAllActive() {
-        return this.section.filters.length && this.section.filters.every((filter) => filter.active);
+        return (
+            this.section.filters.length &&
+            this.section.filters.every((filter) => filter.active)
+        );
     }
 
     get nextFilterId() {
@@ -62,12 +70,15 @@ export class CalendarFilterSection extends Component {
     }
 
     getFilterColor(filter) {
-        return filter.colorIndex !== null ? "o_cw_filter_color_" + getColor(filter.colorIndex) : "";
+        return filter.colorIndex !== null
+            ? `o_cw_filter_color_${getColor(filter.colorIndex)}`
+            : "";
     }
 
+    /** @returns {Object[]} filters sorted by type priority (user, record, dynamic) then label */
     getSortedFilters() {
         const types = ["user", "record", "dynamic"];
-        return this.section.filters.slice().sort((a, b) => {
+        return this.section.filters.toSorted((a, b) => {
             if (a.type === b.type) {
                 const va = a.value ? -1 : 0;
                 const vb = b.value ? -1 : 0;
@@ -86,6 +97,12 @@ export class CalendarFilterSection extends Component {
         });
     }
 
+    /**
+     * Search for matching records to populate the autocomplete dropdown.
+     *
+     * @param {string} request - user search input text
+     * @returns {Promise<Object[]>} autocomplete option objects
+     */
     async loadSource(request) {
         const resModel = this.props.model.fields[this.section.fieldName].relation;
         const activeIds = this.section.filters.map((f) => f.value);
@@ -103,9 +120,8 @@ export class CalendarFilterSection extends Component {
                 id: result[0],
             },
             label: result[1],
-            onSelect: () => {
-                return this.props.model.createFilter(this.section.fieldName, result[0]);
-            },
+            onSelect: () =>
+                this.props.model.createFilter(this.section.fieldName, result[0]),
         }));
 
         if (records.length > 7) {
@@ -131,7 +147,11 @@ export class CalendarFilterSection extends Component {
     }
 
     onFilterInputChange(filter, ev) {
-        this.props.model.updateFilters(this.section.fieldName, [filter], ev.target.checked);
+        this.props.model.updateFilters(
+            this.section.fieldName,
+            [filter],
+            ev.target.checked,
+        );
         this.render();
     }
 
@@ -170,7 +190,8 @@ export class CalendarFilterSection extends Component {
             resModel,
             context: this.section.context,
             domain,
-            onSelected: (resId) => this.props.model.createFilter(this.section.fieldName, resId),
+            onSelected: (resId) =>
+                this.props.model.createFilter(this.section.fieldName, resId),
             dynamicFilters,
         });
     }

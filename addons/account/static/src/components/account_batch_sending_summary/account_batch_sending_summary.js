@@ -1,6 +1,6 @@
 import {Component} from "@odoo/owl";
 import {registry} from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 
 export class AccountBatchSendingSummary extends Component {
     static template = "account.BatchSendingSummary";

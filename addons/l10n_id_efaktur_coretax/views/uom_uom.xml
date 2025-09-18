@@ -3,7 +3,7 @@
     <record id="product_uom_form_view_inherit_coretax" model="ir.ui.view">
         <field name="name">uom.uom.form.inherit.coretax</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.view_uom_uom_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='relative_factor']" position="after">
                 <field name="l10n_id_uom_code"/>

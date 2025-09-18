@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller"
 import { serializeDate} from "@web/core/l10n/dates";
 

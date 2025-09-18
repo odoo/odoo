@@ -105,8 +105,8 @@ class MailFollowers(models.Model):
               JOIN mail_followers follower ON message.model = follower.res_model
                AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
-             WHERE mail.id IN %(mail_ids)s
-        """, {'mail_ids': tuple(mail_ids)})
+             WHERE mail.id = ANY(%(mail_ids)s)
+        """, {'mail_ids': list(mail_ids)})
         res = defaultdict(list)
         for model, doc_id, partner_id in self.env.cr.fetchall():
             res[(model, doc_id)].append(partner_id)
@@ -177,7 +177,7 @@ class MailFollowers(models.Model):
              WHERE m.mail_followers_id = fol.id AND m.mail_message_subtype_id = %s
             ) subrel ON TRUE
          WHERE fol.res_model = %s
-               AND fol.res_id IN %s
+               AND fol.res_id = ANY(%s)
 
      UNION ALL
 
@@ -222,7 +222,7 @@ class MailFollowers(models.Model):
 
      WHERE sub_followers.subtype_follower OR partner.id = ANY(%s)
 """
-            params = [subtype_id, records._name, tuple(records.ids), list(pids or []), list(pids or [])]
+            params = [subtype_id, records._name, list(records.ids), list(pids or []), list(pids or [])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         # partner_ids and records: no sub query for followers but check for follower status
@@ -243,7 +243,7 @@ class MailFollowers(models.Model):
       FROM res_partner partner
  LEFT JOIN mail_followers fol ON fol.partner_id = partner.id
                               AND fol.res_model = %s
-                              AND fol.res_id IN %s
+                              AND fol.res_id = ANY(%s)
  LEFT JOIN LATERAL (
         SELECT users.id AS uid,
                users.share AS share,
@@ -259,14 +259,14 @@ class MailFollowers(models.Model):
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
-     WHERE partner.id IN %s
+     WHERE partner.id = ANY(%s)
   GROUP BY partner.id,
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
 """
-            params = [records._name, tuple(records.ids), tuple(pids)]
+            params = [records._name, list(records.ids), list(pids)]
             self.env.cr.execute(query, tuple(params))
             simplified_res = self.env.cr.fetchall()
             # simplified query contains res_ids -> flatten it by making it a list
@@ -311,14 +311,14 @@ class MailFollowers(models.Model):
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
-     WHERE partner.id IN %s
+     WHERE partner.id = ANY(%s)
   GROUP BY partner.id,
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
 """
-            params = [tuple(pids)]
+            params = [list(pids)]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         else:
@@ -384,14 +384,14 @@ class MailFollowers(models.Model):
         self.env['mail.followers'].flush_model(['partner_id', 'res_id', 'res_model', 'subtype_ids'])
         self.env['res.partner'].flush_model(['active', 'partner_share'])
         # base query: fetch followers of given documents
-        where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
-        where_params = list(itertools.chain.from_iterable((rm, tuple(rids)) for rm, rids in doc_data))
+        where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id = ANY(%s)'] * len(doc_data))
+        where_params = list(itertools.chain.from_iterable((rm, list(rids)) for rm, rids in doc_data))
 
         # additional: filter on optional pids
         sub_where = []
         if pids:
-            sub_where += ["fol.partner_id IN %s"]
-            where_params.append(tuple(pids))
+            sub_where += ["fol.partner_id = ANY(%s)"]
+            where_params.append(list(pids))
         elif pids is not None:
             sub_where += ["fol.partner_id IS NULL"]
         if sub_where:

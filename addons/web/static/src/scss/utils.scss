@@ -409,3 +409,77 @@
         -moz-appearance: textfield;
     }
 };
+
+// ----------------------------------------------------------------------------
+// Elevation System
+// ----------------------------------------------------------------------------
+
+@mixin o-elevation($level: 1) {
+    @if $level == 0 {
+        box-shadow: none;
+    } @else if $level == 1 {
+        box-shadow: $o-shadow-xs;
+    } @else if $level == 2 {
+        box-shadow: $o-shadow-sm;
+    } @else if $level == 3 {
+        box-shadow: $o-shadow-md;
+    } @else if $level == 4 {
+        box-shadow: $o-shadow-lg;
+    } @else if $level >= 5 {
+        box-shadow: $o-shadow-xl;
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Focus Ring
+// ----------------------------------------------------------------------------
+
+@mixin o-focus-ring($color: $o-ring-color, $width: $o-ring-width, $offset: $o-ring-offset) {
+    outline: $width solid $color;
+    outline-offset: $offset;
+}
+
+// ----------------------------------------------------------------------------
+// Glass Morphism
+// ----------------------------------------------------------------------------
+
+@mixin o-glass($opacity: 0.8, $blur: 12px, $saturate: 1.5) {
+    background-color: rgba($o-glass-bg, $opacity);
+    backdrop-filter: blur($blur) saturate($saturate);
+    -webkit-backdrop-filter: blur($blur) saturate($saturate);
+}
+
+@mixin o-glass-subtle() {
+    @include o-glass(0.85, 10px, 1.2);
+}
+
+// ----------------------------------------------------------------------------
+// Skeleton Loading Placeholder
+// ----------------------------------------------------------------------------
+
+// ------------------------------------------------------------------
+// OWL transition helpers
+// ------------------------------------------------------------------
+// Generates CSS classes for OWL t-transition fade animations.
+// Usage:
+//   scss: @include owl-fade(0.5s, 'o_notification')
+//   xml:  <tag t-transition="o_notification_fade" />
+@mixin owl-fade($time, $name) {
+    .#{$name}_fade {
+        transition: all $time;
+    }
+
+    .#{$name}_fade-enter {
+        opacity: 0;
+    }
+}
+
+@mixin o-skeleton($width: 100%, $height: 1em, $radius: $o-border-radius-sm) {
+    display: inline-block;
+    width: $width;
+    height: $height;
+    border-radius: $radius;
+    background: linear-gradient(90deg, $o-gray-300 25%, $o-gray-200 50%, $o-gray-300 75%);
+    background-size: 200% 100%;
+    animation: o-shimmer 1.5s ease-in-out infinite;
+}

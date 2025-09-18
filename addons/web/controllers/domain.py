@@ -1,23 +1,20 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import http, _
-from odoo.http import Controller, request
+from odoo import _, http
 from odoo.exceptions import ValidationError
+from odoo.http import Controller, request
 from odoo.tools import SQL
 from odoo.tools.misc import mute_logger
 
 
 class Domain(Controller):
-
-    @http.route('/web/domain/validate', type='jsonrpc', auth="user")
-    def validate(self, model, domain):
-        """ Parse `domain` and verify that it can be used to search on `model`
+    @http.route("/web/domain/validate", type="jsonrpc", auth="user", readonly=True)
+    def validate(self, model: str, domain: list) -> bool:
+        """Parse `domain` and verify that it can be used to search on `model`
         :return: True when the domain is valid, otherwise False
         :raises ValidationError: if `model` is invalid
         """
         Model = request.env.get(model)
         if Model is None:
-            raise ValidationError(_('Invalid model: %s', model))
+            raise ValidationError(_("Invalid model: %s", model))
         try:
             # go through the motions of preparing the final SQL for the domain,
             # so that anything invalid will raise an exception.
@@ -28,7 +25,7 @@ class Domain(Controller):
             # An alternative to EXPLAIN would be a LIMIT 0 clause, but the semantics
             # of a falsy `limit` parameter when calling _search() do not permit it.
             sql = SQL("EXPLAIN %s", query.select())
-            with mute_logger('odoo.sql_db'):
+            with mute_logger("odoo.db"):
                 request.env.cr.execute(sql)
             return True
         except Exception:  # pylint: disable=broad-except

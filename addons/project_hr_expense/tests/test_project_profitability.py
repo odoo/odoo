@@ -100,7 +100,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         )
 
         # Reset to approved the expense of the main company. Only the total from the foreign company should be computed
-        expense.account_move_id.button_draft()
+        expense.account_move_id.action_draft()
         expense.account_move_id.unlink()
         self.assertEqual(expense.state, 'approved')
         self.assertDictEqual(
@@ -115,7 +115,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         )
 
         # Reset to approved the expense of the foreign company. No data should be computed now.
-        expense_foreign.account_move_id.button_draft()
+        expense_foreign.account_move_id.action_draft()
         expense_foreign.account_move_id.unlink()
         self.assertEqual(expense_foreign.state, 'approved')
         self.assertDictEqual(

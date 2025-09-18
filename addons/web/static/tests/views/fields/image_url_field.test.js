@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
@@ -8,7 +10,6 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 
 const FR_FLAG_URL = "/base/static/img/country_flags/fr.png";
@@ -105,7 +106,9 @@ test("ImageUrlField in subviews are loaded correctly", async () => {
     expect(`img[data-src="${FR_FLAG_URL}"]`).toHaveCount(1, {
         message: "The view's image is in the DOM",
     });
-    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(1, {
+    expect(
+        ".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)",
+    ).toHaveCount(1, {
         message: "There should be one record in the many2many",
     });
 

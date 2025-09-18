@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import { scanBarcode } from "@web/core/barcode/barcode_dialog";
-import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+import { scanBarcode } from "@web/components/barcode/barcode_dialog";
+import { isBarcodeScannerSupported } from "@web/components/barcode/barcode_video_scanner";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

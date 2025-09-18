@@ -1,8 +1,7 @@
 import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
-import { createElement, append, createTextNode } from "@web/core/utils/xml";
-
+import { append, createElement, createTextNode } from "@web/core/utils/dom/xml";
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
 const ERROR_CODE_PRINTER_NOT_REACHABLE = "PRINTER_NOT_REACHABLE";
@@ -47,7 +46,7 @@ export class EpsonPrinter extends BasePrinter {
                     height: canvas.height,
                     align: "center",
                 },
-                [createTextNode(encodedData)]
+                [createTextNode(encodedData)],
             ),
             createElement("cut", { type: "feed" }),
         ]);
@@ -101,7 +100,9 @@ export class EpsonPrinter extends BasePrinter {
      * We will use Floyd-Steinberg dithering.
      */
     canvasToRaster(canvas) {
-        const imageData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
+        const imageData = canvas
+            .getContext("2d")
+            .getImageData(0, 0, canvas.width, canvas.height);
         const pixels = imageData.data;
         const width = imageData.width;
         const height = imageData.height;
@@ -116,7 +117,10 @@ export class EpsonPrinter extends BasePrinter {
                 // as R, G and B have different impacts on the darkness
                 // perception (e.g. pure blue is darker than red or green).
                 const idx = (y * width + x) * 4;
-                oldColor = pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114;
+                oldColor =
+                    pixels[idx] * 0.299 +
+                    pixels[idx + 1] * 0.587 +
+                    pixels[idx + 2] * 0.114;
 
                 // Propagate the error from neighbor pixels
                 oldColor += errors[x][y];
@@ -179,7 +183,7 @@ export class EpsonPrinter extends BasePrinter {
         if (window.location.protocol === "https:") {
             printRes.message.body += _t(
                 "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s. ",
-                this.url
+                this.url,
             );
         }
         return printRes;
@@ -200,7 +204,7 @@ export class EpsonPrinter extends BasePrinter {
         // https://download4.epson.biz/sec_pubs/pos/reference_en/epos_print/ref_epos_print_xml_en_xmlforcontrollingprinter_response.html
         if (errorCode === "DeviceNotFound") {
             message = _t(
-                "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: local_printer"
+                "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: local_printer",
             );
         } else if (errorCode === ERROR_CODE_PRINTER_NOT_REACHABLE) {
             message = _t("The printer is not reachable.");
@@ -215,7 +219,7 @@ export class EpsonPrinter extends BasePrinter {
             message = _t(
                 "The following error code was given by the printer: %s \nTo find more details on the error reason, please search online for: Epson Server Direct Print %s ",
                 errorCode,
-                errorCode
+                errorCode,
             );
         }
         return {

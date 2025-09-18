@@ -1,7 +1,6 @@
-import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message";
 import { onWillUnmount } from "@odoo/owl";
-
+import { patch } from "@web/core/utils/patch";
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
@@ -21,7 +20,9 @@ patch(Message.prototype, {
             return;
         }
         super.prepareMessageBody(...arguments);
-        Array.from(bodyEl.querySelectorAll(".o-mail-ellipsis")).forEach((el) => el.remove());
+        Array.from(bodyEl.querySelectorAll(".o-mail-ellipsis")).forEach((el) =>
+            el.remove(),
+        );
         this.insertEllipsisbtn(bodyEl);
     },
 
@@ -95,7 +96,7 @@ patch(Message.prototype, {
                     childEl.nodeType === ELEMENT_NODE ||
                     (childEl.nodeType === TEXT_NODE && childEl.nodeValue.trim())
                 );
-            }
+            },
         );
         for (const childEl of childrenEl) {
             // Hide Text nodes if "stopSpelling"
@@ -111,7 +112,8 @@ patch(Message.prototype, {
             }
             // Create array for each 'read more' with nodes to toggle
             if (
-                (childEl.nodeType === ELEMENT_NODE && childEl.getAttribute("data-o-mail-quote")) ||
+                (childEl.nodeType === ELEMENT_NODE &&
+                    childEl.getAttribute("data-o-mail-quote")) ||
                 (childEl.nodeName === "BR" && prev(childEl, '[data-o-mail-quote="1"]'))
             ) {
                 if (!ellipsisNodes) {
@@ -129,7 +131,8 @@ patch(Message.prototype, {
         for (const group of groups) {
             const index = this.state.lastReadMoreIndex++;
             const ellipsisbtnEl = document.createElement("button");
-            ellipsisbtnEl.className = "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
+            ellipsisbtnEl.className =
+                "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
             const iconellipsisEl = document.createElement("i");
             iconellipsisEl.className = "oi oi-ellipsis-h oi-large";
             ellipsisbtnEl.append(iconellipsisEl);
@@ -147,7 +150,10 @@ patch(Message.prototype, {
             };
             ellipsisbtnEl.addEventListener("click", (e) => {
                 e.preventDefault();
-                this.state.isReadMoreByIndex.set(index, !this.state.isReadMoreByIndex.get(index));
+                this.state.isReadMoreByIndex.set(
+                    index,
+                    !this.state.isReadMoreByIndex.get(index),
+                );
                 updateFromState();
             });
             updateFromState();

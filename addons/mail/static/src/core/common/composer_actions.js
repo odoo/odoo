@@ -1,12 +1,10 @@
+import { Action, UseActions } from "@mail/core/common/action";
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-
+import { useEmojiPicker } from "@web/components/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "@mail/core/common/action";
+import { markEventHandled } from "@web/core/utils/dom/events";
 import { useService } from "@web/core/utils/hooks";
-
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -62,9 +60,11 @@ export function pickerSetup(action, func) {
 }
 
 registerComposerAction("send-message", {
-    btnClass: ({ action }) => (action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : ""),
+    btnClass: ({ action }) =>
+        action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : "",
     condition: ({ composer, owner, store }) =>
-        (store.env.isSmall && composer.message) || (!owner.env.inChatter && !composer.message),
+        (store.env.isSmall && composer.message) ||
+        (!owner.env.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     icon: "fa fa-paper-plane-o",
     isActive: ({ owner }) => owner.sendMessageState.active,
@@ -72,10 +72,10 @@ registerComposerAction("send-message", {
         composer.message
             ? _t("Save editing")
             : composer.targetThread?.model === "discuss.channel"
-            ? _t("Send")
-            : owner.props.type === "note"
-            ? _t("Log")
-            : _t("Send"),
+              ? _t("Send")
+              : owner.props.type === "note"
+                ? _t("Log")
+                : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
     setup: ({ owner }) => {
         owner.sendMessageState = useState({ active: false });
@@ -83,7 +83,7 @@ registerComposerAction("send-message", {
             () => {
                 owner.sendMessageState.active = !owner.isSendButtonDisabled;
             },
-            () => [owner.isSendButtonDisabled]
+            () => [owner.isSendButtonDisabled],
         );
     },
     sequenceQuick: 30,
@@ -105,8 +105,8 @@ registerComposerAction("add-emoji", {
                     onSelect: (emoji) => owner.addEmoji(emoji),
                     onClose: () => owner.setActivePicker(null),
                 },
-                { arrow: false }
-            )
+                { arrow: false },
+            ),
         );
     },
     sequenceQuick: 20,
@@ -184,7 +184,7 @@ class UseComposerActions extends UseActions {
         const actions = this.transformedActions.filter((action) => action.condition);
         const groupedPickers = Object.groupBy(
             actions.filter((a) => a.isPicker),
-            (a) => (a.sequenceQuick ? "quick" : "other")
+            (a) => (a.sequenceQuick ? "quick" : "other"),
         );
         groupedPickers.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
         groupedPickers.other?.sort((a1, a2) => a1.sequence - a2.sequence);
@@ -202,15 +202,17 @@ export function useComposerActions({ composer } = {}) {
     const transformedActions = composerActionsRegistry
         .getEntries()
         .map(
-            ([id, definition]) => new ComposerAction({ owner: component, id, definition, composer })
+            ([id, definition]) =>
+                new ComposerAction({ owner: component, id, definition, composer }),
         );
     for (const action of transformedActions) {
         action.setup();
     }
     const state = useState(
-        new UseComposerActions(component, transformedActions, useService("mail.store"))
+        new UseComposerActions(component, transformedActions, useService("mail.store")),
     );
     component.getActivePicker = () => state.activePicker;
-    component.setActivePicker = (newActivePicker) => (state.activePicker = newActivePicker);
+    component.setActivePicker = (newActivePicker) =>
+        (state.activePicker = newActivePicker);
     return state;
 }

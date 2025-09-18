@@ -1,4 +1,4 @@
-import { rgbToHex, rgbaToHex, blendColors } from "@web/core/utils/colors";
+import { rgbToHex, rgbaToHex, blendColors } from "@web/core/utils/format/colors";
 import { expect, getFixture, test } from "@odoo/hoot";
 
 test("should convert an rgb and rgba color to hexadecimal", async () => {

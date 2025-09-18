@@ -10,7 +10,7 @@ import lxml
 import random
 import re
 import requests
-import werkzeug.urls
+from urllib.parse import urlencode
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
@@ -20,7 +20,7 @@ from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime, Domain
-from odoo.tools.float_utils import float_round
+from odoo.libs.numbers.float_utils import float_round
 from odoo.tools.image import ImageProcess
 
 _logger = logging.getLogger(__name__)
@@ -295,10 +295,10 @@ class MailingMailing(models.Model):
             SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_id AS id
             FROM mailing_trace AS stats
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
-            WHERE stats.mass_mailing_id IN %s
+            WHERE stats.mass_mailing_id = ANY(%s)
             AND stats.trace_status not in ('bounce', 'cancel', 'error')
             GROUP BY stats.mass_mailing_id
-        """, [tuple(self.ids) or (None,)])
+        """, [list(self.ids) or [0]])
         mass_mailing_data = self.env.cr.dictfetchall()
         mapped_data = dict([(m['id'], float_round(100 * m['nb_clicks'] / m['nb_mails'], precision_digits=2)) for m in mass_mailing_data])
         for mass_mailing in self:
@@ -1051,7 +1051,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
@@ -1064,7 +1064,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
@@ -1077,7 +1077,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),

@@ -1,5 +1,5 @@
 import { Component, useState } from "@odoo/owl";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from "@web/components/select_menu/select_menu";
 import { useBus } from "@web/core/utils/hooks";
 
 export class SelectMenuWrapper extends Component {

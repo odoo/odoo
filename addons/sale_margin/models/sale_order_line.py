@@ -9,12 +9,12 @@ class SaleOrderLine(models.Model):
 
     margin = fields.Float(
         "Margin", compute='_compute_margin',
-        digits='Product Price', store=True, groups="base.group_user", precompute=True)
+        min_display_digits='Product Price', store=True, groups="base.group_user", precompute=True)
     margin_percent = fields.Float(
         "Margin (%)", compute='_compute_margin', store=True, groups="base.group_user", precompute=True)
     purchase_price = fields.Float(
         string="Cost", compute="_compute_purchase_price",
-        digits='Product Price', store=True, readonly=False, copy=False, precompute=True,
+        min_display_digits='Product Price', store=True, readonly=False, copy=False, precompute=True,
         groups="base.group_user")
 
     @api.depends('product_id', 'company_id', 'currency_id', 'product_uom_id')
@@ -39,9 +39,9 @@ class SaleOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             # Find alternative calculation when line is added to order from delivery
-            if line.qty_delivered and not line.product_uom_qty:
-                calculated_subtotal = line.price_unit * line.qty_delivered
-                line.margin = calculated_subtotal - (line.purchase_price * line.qty_delivered)
+            if line.qty_transferred and not line.product_uom_qty:
+                calculated_subtotal = line.price_unit * line.qty_transferred
+                line.margin = calculated_subtotal - (line.purchase_price * line.qty_transferred)
                 line.margin_percent = calculated_subtotal and line.margin / calculated_subtotal
             else:
                 line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)

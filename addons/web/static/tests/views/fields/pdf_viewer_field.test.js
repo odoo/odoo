@@ -1,3 +1,7 @@
+// @ts-check
+
+import { expect, test } from "@odoo/hoot";
+import { click, queryOne, setInputFiles, waitFor } from "@odoo/hoot-dom";
 import {
     clickSave,
     defineModels,
@@ -8,11 +12,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { test, expect } from "@odoo/hoot";
-import { click, setInputFiles, queryOne, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 
-const getIframeSrc = () => queryOne(".o_field_widget iframe.o_pdfview_iframe").dataset.src;
+const getIframeSrc = () =>
+    queryOne(".o_field_widget iframe.o_pdfview_iframe").dataset.src;
 
 const getIframeProtocol = () => getIframeSrc().match(/\?file=(\w+)%3A/)[1];
 

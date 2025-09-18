@@ -81,8 +81,8 @@ class AccountMove(models.Model):
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
 
-    def _compute_amount(self):
-        super()._compute_amount()
+    def _compute_amounts(self):
+        super()._compute_amounts()
         for move in self:
             if move.move_type == 'entry' and move.reversed_pos_order_id:
                 move.amount_total_signed = move.amount_total_signed * -1
@@ -109,7 +109,7 @@ class AccountMove(models.Model):
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
 
-    def button_draft(self):
+    def action_draft(self):
         if self.sudo().pos_order_ids.filtered(lambda o: o.session_id.state != 'closed'):
             self.env.user._bus_send("simple_notification", {
                 'type': 'danger',
@@ -117,7 +117,7 @@ class AccountMove(models.Model):
                 'sticky': True,
             })
             return False
-        return super().button_draft()
+        return super().action_draft()
 
     @api.model
     def _load_pos_data_fields(self, config):

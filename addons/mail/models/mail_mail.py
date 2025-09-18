@@ -3,9 +3,10 @@
 
 import ast
 import datetime
+import itertools
 import json
 import logging
-import psycopg2
+import psycopg
 import pytz
 import re
 import smtplib
@@ -208,7 +209,7 @@ class MailMail(models.Model):
                 ('state', '=', 'outgoing'),
                 '|',
                    ('scheduled_date', '=', False),
-                   ('scheduled_date', '<=', datetime.datetime.utcnow()),
+                   ('scheduled_date', '<=', datetime.datetime.now(datetime.UTC)),
         ]
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])
@@ -574,7 +575,7 @@ class MailMail(models.Model):
 
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size')) or 1000
         for (mail_server_id, alias_domain_id, smtp_from), record_ids in group_per_smtp_from.items():
-            for batch_ids in tools.split_every(batch_size, record_ids):
+            for batch_ids in itertools.batched(record_ids, batch_size):
                 yield mail_server_id, alias_domain_id, smtp_from, batch_ids
 
     def _split_by_delayed_batch(self, mail_server):
@@ -724,7 +725,7 @@ class MailMail(models.Model):
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
                     batch = self.browse(batch_ids)
-                    batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
+                    batch.write({'state': 'exception', 'failure_reason': str(exc)})
                     batch._postprocess_sent_message(success_pids=[], success_emails=[], failure_type="mail_smtp")
             else:
                 self.browse(batch_ids)._send(
@@ -872,7 +873,7 @@ class MailMail(models.Model):
                                 failure_type = "mail_email_missing"
                             else:
                                 failure_type = "mail_email_invalid"
-                            failure_reason = tools.exception_to_unicode(error)
+                            failure_reason = str(error)
                             # No valid recipient found for this particular
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is
@@ -897,7 +898,6 @@ class MailMail(models.Model):
                         _logger.info("Total emails tried by SMTP: %s", len(email_list))
 
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
-                    # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 else:
                     mail_vals = {}
                     if failure_reason:
@@ -915,7 +915,7 @@ class MailMail(models.Model):
                     mail.id, mail.message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
-            except (psycopg2.Error, smtplib.SMTPServerDisconnected):
+            except (psycopg.Error, smtplib.SMTPServerDisconnected):
                 # If an error with the database or SMTP session occurs, chances are that the cursor
                 # or SMTP session are unusable, causing further errors when trying to save the state.
                 _logger.exception(
@@ -944,7 +944,7 @@ class MailMail(models.Model):
 
                 # generic (unknown) error as fallback
                 if not failure_reason:
-                    failure_reason = tools.exception_to_unicode(e)
+                    failure_reason = str(e)
                 if not failure_type:
                     failure_type = "unknown"
 

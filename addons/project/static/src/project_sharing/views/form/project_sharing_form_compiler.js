@@ -1,6 +1,6 @@
-import { append, createElement, setAttributes } from "@web/core/utils/xml";
+import { append, createElement, setAttributes } from "@web/core/utils/dom/xml";
 import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/ui/block/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { FormCompiler } from "@web/views/form/form_compiler";
 

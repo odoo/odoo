@@ -91,9 +91,9 @@ class ProductTemplate(models.Model):
     def _get_service_to_general_map(self):
         return {
             # service_policy: (invoice_policy, service_type)
-            'ordered_prepaid': ('order', 'manual'),
-            'delivered_milestones': ('delivery', 'milestones'),
-            'delivered_manual': ('delivery', 'manual'),
+            'ordered_prepaid': ('ordered', 'manual'),
+            'delivered_milestones': ('transferred', 'milestones'),
+            'delivered_manual': ('transferred', 'manual'),
         }
 
     def _get_general_to_service_map(self):

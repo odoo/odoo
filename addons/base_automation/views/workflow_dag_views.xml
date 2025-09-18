@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================================================================
+         Workflow DAG Enhancements for base.automation
+         ======================================================================== -->
+
+    <record id="view_base_automation_list_workflow_dag" model="ir.ui.view">
+        <field name="name">base.automation.list.workflow.dag</field>
+        <field name="model">base.automation</field>
+        <field name="inherit_id" ref="base_automation.view_base_automation_tree" />
+        <field name="arch" type="xml">
+
+            <!-- Add DAG indicator column -->
+            <xpath expr="//list/field[@name='trigger']" position="after">
+                <field name="use_workflow_dag"
+                    widget="boolean_toggle"
+                    optional="show"
+                    readonly="1" />
+            </xpath>
+
+            <!-- Add decoration for workflow automations -->
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-bf">use_workflow_dag</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_base_automation_kanban_workflow_dag" model="ir.ui.view">
+        <field name="name">base.automation.kanban.workflow.dag</field>
+        <field name="model">base.automation</field>
+        <field name="inherit_id" ref="base_automation.view_base_automation_kanban" />
+        <field name="arch" type="xml">
+
+            <!-- Add workflow indicator badge -->
+            <xpath expr="//templates/t[@t-name='card']/div[@data-name='more-info']"
+                position="before">
+                <field name="use_workflow_dag" invisible="1" />
+                <div class="badge bg-info ms-2" invisible="not use_workflow_dag">
+                    <i class="fa fa-sitemap" /> Workflow DAG </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_base_automation_form_workflow_dag" model="ir.ui.view">
+        <field name="name">base.automation.form.workflow.dag</field>
+        <field name="model">base.automation</field>
+        <field name="inherit_id" ref="base_automation.view_base_automation_form" />
+        <field name="arch" type="xml">
+
+            <!-- Add workflow control buttons in header -->
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <!-- Workflow DAG mode buttons -->
+                    <button
+                        name="action_reset_workflow"
+                        string="Reset Workflow"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not use_workflow_dag or trigger != 'on_hand'"
+                        groups="base.group_user"
+                        help="Reset all actions to initial state (root actions ready, others waiting)" />
+                    <button
+                        name="action_execute_next"
+                        string="Execute Next Step"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not use_workflow_dag or trigger != 'on_hand'"
+                        groups="base.group_user"
+                        help="Execute the next ready action in the workflow" />
+                    <button
+                        name="action_manual_trigger"
+                        string="⚡ Trigger Now"
+                        type="object"
+                        class="btn-primary"
+                        invisible="use_workflow_dag or trigger != 'on_hand'"
+                        groups="base.group_user"
+                        help="Manually trigger this automation on selected records" />
+                </header>
+            </xpath>
+
+            <!-- Add workflow configuration in trigger group -->
+            <xpath expr="//group[@invisible='not model_id']/group[1]" position="after">
+                <group string="Workflow DAG Configuration"
+                    invisible="not use_workflow_dag or trigger not in ['on_hand', 'on_create', 'on_write', 'on_create_or_write']">
+                    <field name="auto_execute_workflow"
+                        widget="boolean_toggle"
+                        help="If enabled, workflow automatically executes next ready actions. If disabled, user must click 'Execute Next' button."
+                    />
+                </group>
+            </xpath>
+
+            <!-- Add workflow mode toggle in title area (safe from trigger widget) -->
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group>
+                    <field name="use_workflow_dag"
+                        string="Enable Workflow DAG"
+                        widget="boolean_toggle"
+                        help="Enable to use dependencies between actions (Directed Acyclic Graph)"
+                    />
+                </group>
+
+                <!-- Add helpful info for on_hand trigger (non-blocking) -->
+                <group invisible="trigger != 'on_hand'">
+                    <div class="alert alert-info" role="alert">
+                        <div invisible="use_workflow_dag">
+                            <h5><i class="fa fa-hand-paper-o" /> Manual Trigger - Standalone Mode</h5>
+                            <p class="mb-1">This automation runs only when manually triggered.</p>
+                            <ul class="mb-0">
+                                <li>Click <strong>⚡ Trigger Now</strong> button above</li>
+                                <li>Or add action menu to your model</li>
+                                <li>Or call <code>action_manual_trigger()</code> programmatically</li>
+                            </ul>
+                            <p class="mb-0 mt-2">
+                                <em>Tip: Enable "Workflow DAG" for multi-step workflows with
+                                    dependencies.</em>
+                            </p>
+                        </div>
+                        <div invisible="not use_workflow_dag">
+                            <h5><i class="fa fa-sitemap" /> Manual Trigger - Workflow DAG Mode</h5>
+                            <p class="mb-1">This automation orchestrates multi-step workflows.</p>
+                            <ul class="mb-0">
+                                <li>Click <strong>Reset Workflow</strong> to initialize</li>
+                                <li>Click <strong>Execute Next Step</strong> to run actions</li>
+                                <li>Enable <strong>Auto-Execute Workflow</strong> for automatic
+                                    progression</li>
+                            </ul>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+
+            <!-- Enhance Actions page with DAG features -->
+            <xpath expr="//page[@name='actions']" position="attributes">
+                <attribute name="string">Actions <field name="use_workflow_dag" invisible="1" /><span
+                        invisible="not use_workflow_dag"> (Workflow DAG)</span></attribute>
+            </xpath>
+
+            <!-- Add help text and action state info to Actions page -->
+            <xpath expr="//page[@name='actions']/field[@name='action_server_ids']" position="before">
+                <div class="alert alert-info" role="alert" invisible="not use_workflow_dag">
+                    <h4><i class="fa fa-sitemap" /> Workflow DAG Mode Enabled</h4>
+                    <p class="mb-1"> Actions can have <strong>dependencies</strong> (predecessors).
+                        An action will only execute when all its predecessors complete. </p>
+                    <ul class="mb-0">
+                        <li><strong>Root actions</strong> (no predecessors) start ready</li>
+                        <li><strong>Parallel branches</strong> can execute simultaneously</li>
+                        <li><strong>Diamond patterns</strong> wait for all branches to complete</li>
+                        <li><strong>Cycles are prevented</strong> automatically</li>
+                    </ul>
+                </div>
+            </xpath>
+
+            <!-- Force list view mode for actions when DAG is enabled -->
+            <xpath expr="//page[@name='actions']/field[@name='action_server_ids']"
+                position="attributes">
+                <attribute name="mode">list,form</attribute>
+                <attribute name="context">{'list_view_ref': 'base_automation.view_ir_actions_server_tree_workflow'}</attribute>
+            </xpath>
+
+            <!-- Add workflow statistics to notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Workflow Status" name="workflow_status"
+                    invisible="not use_workflow_dag">
+                    <group>
+                        <group string="Execution Mode">
+                            <field name="auto_execute_workflow" readonly="1" />
+                        </group>
+                        <group string="Action Summary">
+                            <div class="o_workflow_stats">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Total Actions:</span>
+                                    <strong>
+                                        <field name="action_count_total" nolabel="1" readonly="1" />
+                                    </strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-muted">
+                                    <span><i class="fa fa-circle-o" /> Waiting:</span>
+                                    <span>
+                                        <field name="action_count_waiting" nolabel="1" readonly="1" />
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-info">
+                                    <span><i class="fa fa-dot-circle-o" /> Ready:</span>
+                                    <span>
+                                        <field name="action_count_ready" nolabel="1" readonly="1" />
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-warning">
+                                    <span><i class="fa fa-spinner" /> In Progress:</span>
+                                    <span>
+                                        <field name="action_count_in_progress" nolabel="1"
+                                            readonly="1" />
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-success">
+                                    <span><i class="fa fa-check-circle" /> Done:</span>
+                                    <span>
+                                        <field name="action_count_done" nolabel="1" readonly="1" />
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between text-danger">
+                                    <span><i class="fa fa-times-circle" /> Error:</span>
+                                    <span>
+                                        <field name="action_count_error" nolabel="1" readonly="1" />
+                                    </span>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+
+                    <separator string="Workflow Graph Visualization" class="mt-4" />
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-info-circle" /> Visual graph designer coming soon. For now, view dependencies in the Actions tab. </div>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

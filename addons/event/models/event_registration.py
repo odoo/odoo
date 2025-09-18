@@ -346,10 +346,8 @@ class EventRegistration(models.Model):
         """ Update schedulers to set them as running again, and cron to be called
         as soon as possible. """
         if self.env.context.get("install_mode", False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
-            # server start and hangs indefinitely, leading to serious crashes
-            # we currently avoid this by not running the scheduler, would be best to find the actual
-            # reason for this issue and fix it so we can remove this check
+            # running the scheduler for demo data can cause report rendering during
+            # server start, leading to serious crashes — skip during install
             return
 
         open_registrations = self.filtered(lambda registration: registration.state == 'open')

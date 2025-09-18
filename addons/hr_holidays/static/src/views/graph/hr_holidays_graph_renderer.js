@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
-import { groupBy } from "@web/core/utils/arrays";
+import { groupBy } from "@web/core/utils/collections/arrays";
 
 const colorScheme = cookie.get("color_scheme");
 

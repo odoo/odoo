@@ -1,8 +1,7 @@
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-
+import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 export class NetworkConnectionLostPopup extends Component {
     static template = "pos_self_order.NetworkConnectionLostPopup";
     static props = ["close", "access_token"];
@@ -65,7 +64,7 @@ export class NetworkConnectionLostPopup extends Component {
                 if (navigator.onLine) {
                     this.checkConnectivityTimeout = setTimeout(
                         () => this.checkConnectivity(),
-                        2000
+                        2000,
                     );
                 }
             }

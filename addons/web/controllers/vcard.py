@@ -1,48 +1,68 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import importlib.util
 import io
 import zipfile
 
-import odoo.http as http
-
+from odoo import _, http
 from odoo.exceptions import UserError
-from odoo.http import request, content_disposition
+from odoo.http import content_disposition, request
 
 
 class Partner(http.Controller):
-
-    @http.route(['/web_enterprise/partner/<model("res.partner"):partner>/vcard',
-                 '/web/partner/vcard'], type='http', auth="user")
+    @http.route(
+        [
+            '/web_enterprise/partner/<model("res.partner"):partner>/vcard',
+            "/web/partner/vcard",
+        ],
+        type="http",
+        auth="user",
+    )
     def download_vcard(self, partner_ids=None, partner=None, **kwargs):
-        if importlib.util.find_spec('vobject') is None:
-            raise UserError(self.env._('vobject library is not installed'))
+        if importlib.util.find_spec("vobject") is None:
+            raise UserError(_("vobject library is not installed"))
 
+        partners = request.env["res.partner"]
         if partner_ids:
-            partner_ids = list(filter(None, (int(pid) for pid in partner_ids.split(',') if pid.isdigit())))
-            partners = request.env['res.partner'].browse(partner_ids)
+            partner_ids = list(
+                filter(
+                    None,
+                    (int(pid) for pid in partner_ids.split(",") if pid.isdigit()),
+                )
+            )
+            partners = request.env["res.partner"].browse(partner_ids)
             if len(partners) > 1:
-                with io.BytesIO() as buffer:
-                    with zipfile.ZipFile(buffer, 'w') as zipf:
-                        for partner in partners:
-                            filename = f"{partner.name or partner.email}.vcf"
-                            content = partner._get_vcard_file()
-                            zipf.writestr(filename, content)
-
-                    return request.make_response(buffer.getvalue(), [
-                        ('Content-Type', 'application/zip'),
-                        ('Content-Length', len(content)),
-                        ('Content-Disposition', content_disposition('Contacts.zip'))
-                    ])
+                buffer = io.BytesIO()
+                with zipfile.ZipFile(buffer, "w") as zipf:
+                    for p in partners:
+                        label = p.name or p.email or f"contact_{p.id}"
+                        zipf.writestr(f"{label}.vcf", p._get_vcard_file())
+                zip_data = buffer.getvalue()
+                return request.make_response(
+                    zip_data,
+                    [
+                        ("Content-Type", "application/zip"),
+                        ("Content-Length", len(zip_data)),
+                        (
+                            "Content-Disposition",
+                            content_disposition("Contacts.zip"),
+                        ),
+                    ],
+                )
 
         if partner or partners:
             partner = partner or partners
             content = partner._get_vcard_file()
-            return request.make_response(content, [
-                ('Content-Type', 'text/vcard'),
-                ('Content-Length', len(content)),
-                ('Content-Disposition', content_disposition(f"{partner.name or partner.email}.vcf")),
-            ])
+            return request.make_response(
+                content,
+                [
+                    ("Content-Type", "text/vcard"),
+                    ("Content-Length", len(content)),
+                    (
+                        "Content-Disposition",
+                        content_disposition(
+                            f"{partner.name or partner.email or f'contact_{partner.id}'}.vcf"
+                        ),
+                    ),
+                ],
+            )
 
         return request.not_found()

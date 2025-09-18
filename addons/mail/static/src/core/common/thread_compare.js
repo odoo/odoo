@@ -1,11 +1,10 @@
-import { registry } from "@web/core/registry";
-
 /**
  * Registry of functions to sort threads in messaging menu.
  * The expected value is a function with the following
  * signature:
  *     (thread1: Thread, thread2: Thread) => number | undefined
  */
+import { registry } from "@web/core/registry";
 export const threadCompareRegistry = registry.category("mail.thread_compare");
 
 threadCompareRegistry.add(
@@ -24,7 +23,7 @@ threadCompareRegistry.add(
             return 1;
         }
     },
-    { sequence: 10 }
+    { sequence: 10 },
 );
 
 threadCompareRegistry.add(
@@ -42,9 +41,13 @@ threadCompareRegistry.add(
         if (!bMessageDateTime && aMessageDatetime) {
             return -1;
         }
-        if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
+        if (
+            aMessageDatetime &&
+            bMessageDateTime &&
+            aMessageDatetime !== bMessageDateTime
+        ) {
             return bMessageDateTime - aMessageDatetime;
         }
     },
-    { sequence: 40 }
+    { sequence: 40 },
 );

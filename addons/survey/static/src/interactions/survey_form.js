@@ -1,7 +1,7 @@
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -11,11 +11,11 @@ import {
     serializeDate,
 } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { resizeTextArea } from "@web/core/utils/autoresize";
+import { utils as uiUtils } from "@web/ui/block/ui_service";
+import { resizeTextArea } from "@web/core/utils/dom/autoresize";
 import { Interaction } from "@web/public/interaction";
 import { redirect } from "@web/core/utils/urls";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web/core/utils/dom/scrolling";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { fadeIn, fadeOut } from "@survey/utils";
@@ -423,8 +423,6 @@ export class SurveyForm extends Interaction {
                 },
                 cancel: () => {},
             });
-        } else if (targetEl.value === "finish") {
-            this.submitForm({ isFinish: true });
         } else {
             this.submitForm();
         }

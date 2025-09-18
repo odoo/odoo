@@ -3,6 +3,9 @@ import { patch } from "@web/core/utils/patch";
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
+
+import { registry } from "@web/core/registry";
+
 function patchSurveyForm() {
     const SurveyForm = odoo.loader.modules.get("@survey/interactions/survey_form").SurveyForm;
     patch(SurveyForm.prototype, {
@@ -17,8 +20,6 @@ function patchSurveyForm() {
  * This tour will test that, for the demo certification allowing 2 attempts, a user can
  * try and fail twice and will no longer be able to take the certification.
  */
-
-import { registry } from "@web/core/registry";
 
 const patchSteps = [
     {

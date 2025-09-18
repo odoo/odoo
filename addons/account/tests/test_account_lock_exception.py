@@ -51,7 +51,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception to make the move editable (for the current user)
                 self.env['account.lock_exception'].create({
@@ -61,12 +61,12 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'end_datetime': self.fakenow + timedelta(hours=24),
                     'reason': 'test_user_exception_move_edit_multi_user',
                 })
-                move.button_draft()
+                move.action_draft()
                 move.action_post()
 
                 # Check that the exception does not apply to other users
                 with self.assertRaises(UserError):
-                    move.with_user(self.other_user).button_draft()
+                    move.with_user(self.other_user).action_draft()
 
     def test_global_exception_move_edit_multi_user(self):
         """
@@ -79,7 +79,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add a global exception to make the move editable for everyone
                 self.env['account.lock_exception'].create({
@@ -90,10 +90,10 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'reason': 'test_global_exception_move_edit_multi_user',
                 })
 
-                move.button_draft()
+                move.action_draft()
                 move.action_post()
 
-                move.with_user(self.other_user).button_draft()
+                move.with_user(self.other_user).action_draft()
 
 
     def test_user_exception_branch(self):
@@ -128,8 +128,8 @@ class TestAccountLockException(AccountTestInvoicingCommon):
 
                 # The branch_move is locked while the root_move is not
                 with self.assertRaises(UserError):
-                    branch_move.button_draft()
-                root_move.button_draft()
+                    branch_move.action_draft()
+                root_move.action_draft()
                 root_move.action_post()
 
                 # Add an exception in the branch to make the branch_move editable (for the current user)
@@ -140,7 +140,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'end_datetime': self.fakenow + timedelta(hours=24),
                     'reason': 'test_user_exception_branch branch exception',
                 })
-                branch_move.button_draft()
+                branch_move.action_draft()
                 branch_move.action_post()
 
                 # Lock the parent company
@@ -149,7 +149,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Check that both moves are locked now (the branch exception alone is insufficient)
                 for move in [branch_move, root_move]:
                     with self.assertRaises(UserError):
-                        move.button_draft()
+                        move.action_draft()
 
                 # Add an exception in the parent company to make both moves editable (for the current user)
                 self.env['account.lock_exception'].create({
@@ -160,7 +160,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'reason': 'test_user_exception_branch root_company exception',
                 })
                 for move in [branch_move, root_move]:
-                    move.button_draft()
+                    move.action_draft()
                     move.action_post()
 
 
@@ -174,7 +174,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception for another company
                 self.env['account.lock_exception'].create({
@@ -187,7 +187,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
 
                 # Check that the exception is insufficient
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
 
     def test_user_exception_insufficient(self):
@@ -201,7 +201,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception before the lock date but not before the date of the test_invoice
                 self.env['account.lock_exception'].create({
@@ -214,7 +214,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
 
                 # Check that the exception is insufficient
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
 
     def test_expired_exception(self):
@@ -228,7 +228,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an expired exception
                 self.env['account.lock_exception'].create({
@@ -240,7 +240,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'reason': 'test_expired_exception',
                 })
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
 
     def test_revoked_exception(self):
@@ -251,7 +251,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception to make the move editable (for the current user)
                 exception = self.env['account.lock_exception'].create({
@@ -261,14 +261,14 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'end_datetime': self.fakenow + timedelta(hours=24),
                     'reason': 'test_user_exception_move_edit_multi_user',
                 })
-                move.button_draft()
+                move.action_draft()
                 move.action_post()
 
                 exception.action_revoke()
 
                 # Check that the exception does not work anymore
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
 
     def test_user_exception_wrong_field(self):
@@ -283,7 +283,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception for a different lock date field
                 self.env['account.lock_exception'].create({
@@ -296,7 +296,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
 
                 # Check that the exception is insufficient
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
 
     def test_hard_lock_date(self):
@@ -333,7 +333,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
         # Check that the exceptions are insufficient
         for move in [in_move, out_move]:
             with self.assertRaises(UserError):
-                move.button_draft()
+                move.action_draft()
 
     def test_company_lock_date(self):
         """
@@ -399,7 +399,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 # Lock the move
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
                 with self.assertRaises(UserError):
-                    move.button_draft()
+                    move.action_draft()
 
                 # Add an exception removing the lock date
                 self.env['account.lock_exception'].create({
@@ -409,5 +409,5 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'end_datetime': self.fakenow + timedelta(hours=24),
                     'reason': 'test_user_exception_move_edit_multi_user',
                 })
-                move.button_draft()
+                move.action_draft()
 

@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from lxml import etree, objectify
 
 from odoo.tests import HttpCase, JsonRpcException
-from odoo.tools import urls
+from odoo.libs.web import urls
 
 from odoo.addons.payment.tests.common import PaymentCommon
 

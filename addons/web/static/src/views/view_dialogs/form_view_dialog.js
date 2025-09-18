@@ -1,10 +1,15 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { useChildRef, useService } from "@web/core/utils/hooks";
-import { CallbackRecorder } from "@web/search/action_hook";
-import { View } from "@web/views/view";
+// @ts-check
+
+/** @module @web/views/view_dialogs/form_view_dialog - Modal dialog embedding a full form view for creating or editing a single record */
 
 import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { CallbackRecorder } from "@web/search/action_hook";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { View } from "@web/views/view";
 
+/** Modal dialog embedding a full form view for creating or editing a single record, with save/discard/expand controls. */
 export class FormViewDialog extends Component {
     static template = "web.FormViewDialog";
     static components = { Dialog, View };
@@ -109,6 +114,7 @@ export class FormViewDialog extends Component {
         }
     }
 
+    /** Invoke the onRecordDiscarded callback (if any) and close the dialog. */
     async discardRecord() {
         if (this.props.onRecordDiscarded) {
             await this.props.onRecordDiscarded();
@@ -116,9 +122,12 @@ export class FormViewDialog extends Component {
         this.props.close();
     }
 
+    /** Navigate to a full-page form view for the current record, closing the dialog. */
     async onExpand() {
         const beforeLeaveCallbacks = this.viewProps.__beforeLeave__.callbacks;
-        const res = await Promise.all(beforeLeaveCallbacks.map((callback) => callback()));
+        const res = await Promise.all(
+            beforeLeaveCallbacks.map((callback) => callback()),
+        );
         if (!res.includes(false)) {
             this.actionService.doAction({
                 type: "ir.actions.act_window",
@@ -133,3 +142,5 @@ export class FormViewDialog extends Component {
         }
     }
 }
+
+registry.category("dialogs").add("form_view", FormViewDialog);

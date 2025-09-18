@@ -1,4 +1,4 @@
-import { loader } from "@web/core/emoji_picker/emoji_picker";
+import { loader } from "@web/components/emoji_picker/emoji_picker";
 
 import { loadJS } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";

@@ -2,7 +2,26 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': props.isChatterAside, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
+    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': props.isChatterAside and !isCollapsedAside, 'o-chatter-disabled': props.threadId === false, 'o-chatter-collapsed': isCollapsedAside }" t-on-scroll="onScrollDebounced" t-ref="root">
+        <t t-if="isCollapsedAside">
+            <div class="o-mail-Chatter-collapsed d-flex flex-column align-items-center d-print-none" t-on-click="toggleChatterCollapse">
+                <button class="btn btn-light btn-sm m-1 mb-2 p-2" title="Expand Chatter">
+                    <i class="oi oi-fw oi-panel-right"/>
+                </button>
+                <div class="o-mail-Chatter-collapsed-icon position-relative" title="Messages">
+                    <i class="fa fa-comments-o"/>
+                </div>
+                <div t-if="attachments.length" class="o-mail-Chatter-collapsed-icon position-relative" title="Attachments">
+                    <i class="fa fa-paperclip"/>
+                    <sup class="badge rounded-pill text-bg-primary" t-esc="attachments.length"/>
+                </div>
+                <div t-if="props.has_activities and activities.length" class="o-mail-Chatter-collapsed-icon position-relative" title="Activities">
+                    <i class="fa fa-clock-o"/>
+                    <sup class="badge rounded-pill text-bg-success" t-esc="activities.length"/>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto">
                 <div t-if="state.isSearchOpen" class="flex-grow-1">
@@ -14,17 +33,19 @@
                         'btn-secondary': state.composerType === 'note',
                         'active': state.composerType === 'message',
                         'my-2': !props.compactHeight
-                    }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                    }" t-att-disabled="!state.thread.canPostMessage and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
                     <button class="o-mail-Chatter-logNote btn text-nowrap me-1" t-att-class="{
                         'btn-primary active': state.composerType === 'note',
                         'btn-secondary': state.composerType !== 'note',
                         'my-2': !props.compactHeight
-                    }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                    }" t-att-disabled="!state.thread.canPostMessage and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
-                    <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
+                    <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }"
+                            t-att-disabled="!state.thread.canPostMessage and props.threadId"
+                            data-hotkey="shift+a" t-on-click="scheduleActivity">
                         <span>Activity</span>
                     </button>
                     <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
@@ -53,6 +74,9 @@
                         </t>
                     </Dropdown>
                 </div>
+                <button t-if="props.isChatterAside" class="o-mail-Chatter-collapse btn btn-link text-action px-1" t-att-class="{ 'my-2': !props.compactHeight }" aria-label="Collapse Chatter" title="Collapse Chatter" t-on-click="toggleChatterCollapse">
+                    <i class="oi oi-fw oi-panel-right"/>
+                </button>
             </div>
             <t t-if="state.composerType">
                 <t t-if="state.composerType === 'message'">
@@ -87,7 +111,7 @@
                         />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
-                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.canPostMessage">
                                     <i class="fa fa-plus-square"/>
                                     Attach files
                                 </button>
@@ -99,6 +123,7 @@
                 <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
             </t>
         </div>
+        </t>
     </div>
 </t>
 
@@ -141,7 +166,8 @@
 </t>
 
 <t t-name="mail.Chatter.attachFiles">
-    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
+    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments"
+            t-att-disabled="state.isSearchOpen || (!state.thread.canPostMessage and attachments.length === 0)">
         <i class="fa fa-paperclip fa-lg me-1"/>
         <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>

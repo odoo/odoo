@@ -199,7 +199,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.unlink()
 
         with self.assertRaises(UserError):
-            self.test_move.button_draft()
+            self.test_move.action_draft()
 
         # Try to add a new journal entry prior to the lock date.
         copy_move = self.test_move.copy({'date': '2017-01-01'})
@@ -247,7 +247,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.unlink()
 
         with self.assertRaises(UserError):
-            self.test_move.button_draft()
+            self.test_move.action_draft()
 
         copy_move = self.test_move.copy({'date': self.test_move.date})
 
@@ -466,7 +466,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             unlink_posted_items()
 
         # You can remove journal items if the related journal entry is draft.
-        self.test_move.button_draft()
+        self.test_move.action_draft()
         unlink_posted_items()
 
     def test_account_move_inactive_currency_raise_error_on_post(self):
@@ -795,7 +795,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
 
         # You can remove journal items if the related journal entry is draft.
-        self.test_move.button_draft()
+        self.test_move.action_draft()
         edit_tax_on_posted_moves()
 
     def test_misc_tax_autobalance(self):
@@ -876,7 +876,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         exchange_diff = moves.line_ids.matched_debit_ids.exchange_move_id
         self.assertTrue(exchange_diff)
         with self.assertRaises(UserError):
-            exchange_diff.button_draft()
+            exchange_diff.action_draft()
 
     def test_always_exigible_caba_account(self):
         """ Always exigible misc operations (so, the ones without payable/receivable line) with cash basis
@@ -1023,7 +1023,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'code': 'AJ',
         })
         self.test_move.action_post()
-        self.test_move.button_draft()  # move has posted_before == True
+        self.test_move.action_draft()  # move has posted_before == True
         self.assertEqual(self.test_move.journal_id, self.company_data['default_journal_misc'])
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
         with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'):
@@ -1311,7 +1311,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         fields_recomputed = []
 
         def mock_recompute(self, field, ids=None):
-            ids_to_compute = self.env.transaction.tocompute.get(field, ())
+            ids_to_compute = self.env.transaction.compute_engine.pending_ids(field)
             ids = ids_to_compute if ids is None else [id_ for id_ in ids if id_ in ids_to_compute]
             if field.store and (
                 (self._name == 'account.move' and invoice.id in ids)
@@ -1345,3 +1345,60 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         self.env.flush_all()
         self.assertEqual(fields_recomputed, [])
+
+    def test_post_invoice_fails_with_account_and_journal_company_inconsistency(self):
+        """
+        Ensure that an invoice cannot be posted when at least one line account
+        belongs to a different company than the journal.
+
+        The test verifies that:
+        - Using a journal from a branch company (child of the account's company) is allowed
+        - Using a journal from an unrelated company correctly raises a UserError
+        - Using a shared account between two companies works as expected
+        """
+        account = self.company_data['default_account_revenue']
+        move = self.env['account.move'].create({
+            'line_ids': [
+                Command.create({'name': 'debit_line', 'debit': 100.0, 'account_id': account.id}),
+                Command.create({'name': 'credit_line', 'credit': 100.0, 'account_id': account.id}),
+            ]
+        })
+
+        # Ensure branch company aren't considered as inconsistency
+        company_branch = self.env['res.company'].create({
+            'name': 'Company Branch',
+            'parent_id': self.env.company.id,
+        })
+        journal_branch = self.env['account.journal'].create({
+            'name': 'Company Branch Journal',
+            'type': 'general',
+            'code': 'CBrJ',
+            'company_id': company_branch.id,
+        })
+        move.write({'company_id': company_branch.id, 'journal_id': journal_branch.id})
+        move.action_post()
+        move.action_draft()
+
+        # Ensure posting fails when the account's company is different than the journal's company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        journal_b = self.env['account.journal'].create({
+            'name': 'Company B Journal',
+            'type': 'general',
+            'code': 'CBJ',
+            'company_id': company_b.id,
+        })
+        move.write({'name': '/', 'company_id': company_b.id, 'journal_id': journal_b.id})
+        with self.assertRaisesRegex(UserError, rf"The entry is using accounts \({account.display_name}\) from a different company\."):
+            move.action_post()
+
+        # Ensure posting works for accounts shared between the two companies
+        shared_account = self.env['account.account'].create([{
+            'name': 'Shared Account',
+            'company_ids': [Command.set((self.env.company | company_b).ids)],
+            'code_mapping_ids': [
+                Command.create({'company_id': self.env.company.id, 'code': '180001'}),
+                Command.create({'company_id': company_b.id, 'code': '180001'}),
+            ],
+        }])
+        move.line_ids.account_id = shared_account
+        move.action_post()

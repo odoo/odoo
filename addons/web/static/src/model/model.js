@@ -1,10 +1,6 @@
-import { RPCError } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
-import { Deferred, Race } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
-import { useSetupAction } from "@web/search/action_hook";
-import { SEARCH_KEYS } from "@web/search/with_search/with_search";
-import { buildSampleORM } from "./sample_server";
+// @ts-check
+
+/** @module @web/model/model - Abstract base Model class with OWL lifecycle integration and sample data fallback */
 
 import {
     EventBus,
@@ -14,26 +10,59 @@ import {
     status,
     useComponent,
 } from "@odoo/owl";
+import { useSetupAction } from "@web/core/action_hook";
+import { SEARCH_KEYS } from "@web/core/constants";
+import { RPCError } from "@web/core/network/rpc";
+import { Deferred, Race } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/services/user";
 
-/**
- * @typedef {import("@web/env").OdooEnv} OdooEnv
- * @typedef {import("@web/search/search_model").SearchParams} SearchParams
- * @typedef {import("services").ServiceFactories} Services
- */
+import { buildSampleORM } from "./sample_server";
+
+/** @import { OdooEnv } from "@web/env" */
+/** @import { SearchParams } from "@web/search/search_model" */
+/** @import { ServiceFactories as Services } from "services" */
 
 export class Model {
     static services = [];
 
     /**
      * @param {OdooEnv} env
-     * @param {SearchParams} params
-     * @param {Services} services
+     * @param {Object} params
+     * @param {Object} services
      */
     constructor(env, params, services) {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
         this.isReady = false;
+        /** @type {boolean} */
+        this.useSampleModel = false;
+        /**
+         * The root data point, set by subclass `load()` implementations
+         * (e.g. a Record, DynamicRecordList, or DynamicGroupList).
+         * @type {any}
+         */
+        this.root = undefined;
+        /**
+         * Model metadata, set by subclass implementations
+         * (e.g. GraphModel, PivotModel).
+         * @type {any}
+         */
+        this.metaData = undefined;
+        /**
+         * Model data, set by subclass implementations
+         * (e.g. PivotModel, GraphModel).
+         * @type {any}
+         */
+        this.data = undefined;
+        /**
+         * Model configuration, set by subclass implementations
+         * (e.g. RelationalModel).
+         * @type {any}
+         */
+        this.config = undefined;
+        /** @type {Deferred} */
         this.whenReady = new Deferred();
         this.whenReady.then(() => {
             this.isReady = true;
@@ -43,13 +72,13 @@ export class Model {
     }
 
     /**
-     * @param {SearchParams} params
-     * @param {Services} services
+     * @param {Object} _params
+     * @param {Object} _services
      */
-    setup(/* params, services */) {}
+    setup(_params, _services) {}
 
     /**
-     * @param {Partial<SearchParams>} _params
+     * @param {Partial<SearchParams>} [_params]
      */
     async load(_params) {}
 
@@ -83,7 +112,7 @@ export class Model {
 
 /**
  * @param {Record<string, unknown>} props
- * @returns {SearchParams}
+ * @returns {Object}
  */
 function getSearchParams(props) {
     const params = {};
@@ -94,15 +123,15 @@ function getSearchParams(props) {
 }
 
 /**
- * @template {typeof Model} T
- * @param {T} ModelClass
+ * @param {typeof Model} ModelClass
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.beforeFirstLoad]
- * @returns {InstanceType<T>}
+ * @returns {Model}
  */
 export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();
+    /** @type {Record<string, any>} */
     const services = {};
     for (const key of ModelClass.services) {
         services[key] = useService(key);
@@ -119,18 +148,18 @@ export function useModel(ModelClass, params, options = {}) {
 }
 
 /**
- * @template {typeof Model} T
- * @param {T} ModelClass
+ * @param {typeof Model} ModelClass
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.lazy=false]
- * @returns {InstanceType<T>}
+ * @returns {Model}
  */
 export function useModelWithSampleData(ModelClass, params, options = {}) {
     const component = useComponent();
     if (!(ModelClass.prototype instanceof Model)) {
         throw new Error(`the model class should extend Model`);
     }
+    /** @type {Record<string, any>} */
     const services = {};
     for (const key of ModelClass.services) {
         services[key] = useService(key);
@@ -164,7 +193,8 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
         await model.load(searchParams);
         if (useSampleModel && !model.hasData()) {
             sampleORM =
-                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
+                sampleORM ||
+                buildSampleORM(component.props.resModel, component.props.fields, user);
             // Load data with sampleORM then restore real ORM.
             model.orm = sampleORM;
             await model.load(searchParams);
@@ -212,7 +242,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     return model;
 }
 
-export function _makeFieldFromPropertyDefinition(name, definition, relatedPropertyField) {
+function _makeFieldFromPropertyDefinition(name, definition, relatedPropertyField) {
     return {
         ...definition,
         name,
@@ -237,11 +267,15 @@ export async function addPropertyFieldDefs(orm, resModel, context, fields, group
                         context,
                     })
                     .then((definition) => {
-                        fields[gb] = _makeFieldFromPropertyDefinition(gb, definition, field);
+                        fields[gb] = _makeFieldFromPropertyDefinition(
+                            gb,
+                            definition,
+                            field,
+                        );
                     })
                     .catch(() => {
                         fields[gb] = _makeFieldFromPropertyDefinition(gb, {}, field);
-                    })
+                    }),
             );
         }
     }

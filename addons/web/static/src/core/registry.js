@@ -1,4 +1,8 @@
-import { EventBus, validate } from "@odoo/owl";
+// @ts-check
+
+/** @module @web/core/registry - Hierarchical key-value store for services, components, fields, and actions */
+
+import { EventBus, onWillDestroy, onWillStart, useState, validate } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -11,6 +15,12 @@ export class DuplicatedKeyError extends Error {}
 // Validation
 // -----------------------------------------------------------------------------
 
+/**
+ * @param {string} name
+ * @param {string} key
+ * @param {any} value
+ * @param {object} schema
+ */
 const validateSchema = (name, key, value, schema) => {
     if (!odoo.debug) {
         return;
@@ -18,7 +28,10 @@ const validateSchema = (name, key, value, schema) => {
     try {
         validate(value, schema);
     } catch (error) {
-        throw new Error(`Validation error for key "${key}" in registry "${name}": ${error}`);
+        throw new Error(
+            `Validation error for key "${key}" in registry "${name}": ${error}`,
+            { cause: error },
+        );
     }
 };
 
@@ -102,7 +115,7 @@ export class Registry extends EventBus {
         }
         if (!force && key in this.content) {
             throw new DuplicatedKeyError(
-                `Cannot add key "${key}" in the "${this.name}" registry: it already exists`
+                `Cannot add key "${key}" in the "${this.name}" registry: it already exists`,
             );
         }
         let previousSequence;
@@ -121,11 +134,14 @@ export class Registry extends EventBus {
      * Get an item from the registry
      *
      * @param {string} key
+     * @param {GetRegistryItemShape<T>} [defaultValue]
      * @returns {GetRegistryItemShape<T>}
      */
     get(key, defaultValue) {
         if (arguments.length < 2 && !(key in this.content)) {
-            throw new KeyNotFoundError(`Cannot find key "${key}" in the "${this.name}" registry`);
+            throw new KeyNotFoundError(
+                `Cannot find key "${key}" in the "${this.name}" registry`,
+            );
         }
         const info = this.content[key];
         return info ? info[1] : defaultValue;
@@ -149,7 +165,9 @@ export class Registry extends EventBus {
      */
     getAll() {
         if (!this.elements) {
-            const content = Object.values(this.content).sort((el1, el2) => el1[0] - el2[0]);
+            const content = Object.values(this.content).sort(
+                (el1, el2) => el1[0] - el2[0],
+            );
             this.elements = content.map((elem) => elem[1]);
         }
         return this.elements.slice();
@@ -162,7 +180,9 @@ export class Registry extends EventBus {
      */
     getEntries() {
         if (!this.entries) {
-            const entries = Object.entries(this.content).sort((el1, el2) => el1[1][0] - el2[1][0]);
+            const entries = Object.entries(this.content).sort(
+                (el1, el2) => el1[1][0] - el2[1][0],
+            );
             this.entries = entries.map(([str, elem]) => [str, elem[1]]);
         }
         return this.entries.slice();
@@ -194,6 +214,12 @@ export class Registry extends EventBus {
         return this.subRegistries[subcategory];
     }
 
+    /**
+     * Set a validation schema for this registry. All existing and future
+     * entries will be validated against it.
+     *
+     * @param {object} schema
+     */
     addValidation(schema) {
         if (this.validationSchema) {
             throw new Error("Validation schema already set on this registry");
@@ -207,3 +233,55 @@ export class Registry extends EventBus {
 
 /** @type {Registry<import("registries").GlobalRegistry>} */
 export const registry = new Registry();
+
+// ---------------------------------------------------------------------------
+// Registry hook (merged from registry_hook.js)
+// ---------------------------------------------------------------------------
+
+/**
+ * OWL hook that provides a reactive view of a registry's entries.
+ * Re-renders the component when entries are added or removed.
+ *
+ * @template T
+ * @param {Registry<T>} registry
+ * @returns {{ entries: [string, GetRegistryItemShape<T>][] }}
+ */
+export function useRegistry(registry) {
+    const state = useState({ entries: registry.getEntries() });
+    const listener = ({ detail }) => {
+        const index = state.entries.findIndex(([k]) => k === detail.key);
+        if (detail.operation === "add" && index === -1) {
+            // New key: insert at the correct sorted position.
+            const newEntries = registry.getEntries();
+            const newEntry = newEntries.find(([k]) => k === detail.key);
+            const newIndex = newEntries.indexOf(newEntry);
+            if (newIndex === newEntries.length - 1) {
+                state.entries.push(newEntry);
+            } else {
+                state.entries.splice(newIndex, 0, newEntry);
+            }
+        } else if (detail.operation === "add" && index !== -1) {
+            // Force-replace: update value and reposition if sequence changed.
+            // After removing the stale entry at `index`, the remaining entries
+            // match newEntries minus the replaced key, so inserting at newIndex
+            // always produces the correct sorted result.
+            const newEntries = registry.getEntries();
+            const newEntry = newEntries.find(([k]) => k === detail.key);
+            if (newEntry) {
+                const newIndex = newEntries.indexOf(newEntry);
+                state.entries.splice(index, 1);
+                state.entries.splice(newIndex, 0, newEntry);
+            }
+        } else if (detail.operation === "delete" && index >= 0) {
+            state.entries.splice(index, 1);
+        }
+    };
+
+    onWillStart(() =>
+        registry.addEventListener("UPDATE", /** @type {any} */ (listener)),
+    );
+    onWillDestroy(() =>
+        registry.removeEventListener("UPDATE", /** @type {any} */ (listener)),
+    );
+    return state;
+}

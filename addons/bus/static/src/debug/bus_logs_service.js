@@ -1,7 +1,5 @@
 import { reactive } from "@odoo/owl";
-
 import { registry } from "@web/core/registry";
-
 export const busLogsService = {
     dependencies: ["bus_service", "legacy_multi_tab", "worker_service"],
     /**
@@ -34,7 +32,7 @@ export const busLogsService = {
         };
         if (state.enabled) {
             console.log(
-                "Bus logging is enabled. To disable it, use `odoo.busLogging.stop()`. To download the logs, use `odoo.busLogging.download()`."
+                "Bus logging is enabled. To disable it, use `odoo.busLogging.stop()`. To download the logs, use `odoo.busLogging.download()`.",
             );
         }
         return state;

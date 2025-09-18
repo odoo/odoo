@@ -7,7 +7,7 @@ from pytz import timezone
 
 from odoo import http, _
 from odoo.http import content_disposition, request
-from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.libs.text.html import nl2br
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 

@@ -8,7 +8,7 @@ class ProductProduct(models.Model):
     @api.onchange('service_tracking')
     def _onchange_type_event_booth(self):
         if self.service_tracking == 'event_booth':
-            self.invoice_policy = 'order'
+            self.invoice_policy = 'ordered'
 
     @api.constrains('service_tracking')
     def _check_service_tracking_for_event_booths(self):

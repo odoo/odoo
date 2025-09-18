@@ -2,7 +2,7 @@
 
 from odoo import Command, fields
 from odoo.tests import Form, tagged
-from odoo.tools.float_utils import float_round, float_compare
+from odoo.libs.numbers.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon

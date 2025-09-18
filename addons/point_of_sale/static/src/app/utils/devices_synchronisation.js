@@ -1,6 +1,5 @@
 import { Domain } from "@web/core/domain";
 import { logPosMessage } from "./pretty_console_log";
-
 const CONSOLE_COLOR = "#b56be3";
 /**
  * Class representing the synchronization of records.
@@ -43,7 +42,12 @@ export default class DevicesSynchronisation {
             return acc;
         }, {});
 
-        logPosMessage("Synchronisation", "dispatch", "Disptaching synchronization", CONSOLE_COLOR);
+        logPosMessage(
+            "Synchronisation",
+            "dispatch",
+            "Disptaching synchronization",
+            CONSOLE_COLOR,
+        );
         await this.pos.data.call("pos.config", "notify_synchronisation", [
             odoo.pos_config_id,
             odoo.pos_session_id,
@@ -64,13 +68,14 @@ export default class DevicesSynchronisation {
     async collect(data) {
         const { static_records, session_id, device_identifier } = data;
         const isSameDevice =
-            odoo.pos_session_id != session_id || device_identifier == this.pos.device.identifier;
+            odoo.pos_session_id != session_id ||
+            device_identifier == this.pos.device.identifier;
 
         logPosMessage(
             "Synchronisation",
             "collect",
             `Incoming synchronization from ${isSameDevice ? "this" : "another"} device`,
-            CONSOLE_COLOR
+            CONSOLE_COLOR,
         );
 
         if (isSameDevice) {
@@ -94,23 +99,25 @@ export default class DevicesSynchronisation {
         const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
         let response = {};
         try {
-            response = await this.pos.data.call("pos.config", "read_config_open_orders", [
-                odoo.pos_config_id,
-                domain,
-                recordIds,
-            ]);
+            response = await this.pos.data.call(
+                "pos.config",
+                "read_config_open_orders",
+                [odoo.pos_config_id, domain, recordIds],
+            );
         } catch (error) {
             logPosMessage(
                 "Synchronisation",
                 "readDataFromServer",
                 `Error reading open orders data from server: ${error}`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
             );
             return;
         }
 
         if (Object.keys(response.dynamic_records).length) {
-            const missing = await this.pos.data.missingRecursive(response.dynamic_records);
+            const missing = await this.pos.data.missingRecursive(
+                response.dynamic_records,
+            );
             const { dynamicR, staticR } = Object.entries(missing).reduce(
                 (acc, [model, records]) => {
                     if (this.dynamicModels.has(model)) {
@@ -120,7 +127,7 @@ export default class DevicesSynchronisation {
                     }
                     return acc;
                 },
-                { dynamicR: {}, staticR: {} }
+                { dynamicR: {}, staticR: {} },
             );
 
             this.processStaticRecords(staticR);
@@ -182,63 +189,75 @@ export default class DevicesSynchronisation {
         const dynamicModels = this.dynamicModels;
         const recordsToCheck = Array.from(dynamicModels).reduce((acc, model) => {
             acc[model] = this.models[model].filter(
-                (r) => !this.pos.data.opts.databaseTable[model]?.condition(r)
+                (r) => !this.pos.data.opts.databaseTable[model]?.condition(r),
             );
             return acc;
         }, {});
 
         const recordIdsByModel = {};
-        const domainByModel = Object.entries(recordsToCheck).reduce((acc, [model, records]) => {
-            const serverRecs = records.filter((r) => r.isSynced);
-            const ids = serverRecs.map((r) => r.id);
-            const config = this.pos.config;
-            const domains = [];
+        const domainByModel = Object.entries(recordsToCheck).reduce(
+            (acc, [model, records]) => {
+                const serverRecs = records.filter((r) => r.isSynced);
+                const ids = serverRecs.map((r) => r.id);
+                const config = this.pos.config;
+                const domains = [];
 
-            if (ids.length === 0 && model !== "pos.order") {
-                return acc;
-            }
+                if (ids.length === 0 && model !== "pos.order") {
+                    return acc;
+                }
 
-            recordIdsByModel[model] = ids;
-            for (const record of serverRecs) {
-                const recordDateTime = record.write_date.plus({ seconds: 1 }).toUTC();
-                const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
-                    numberingSystem: "latn",
-                });
+                recordIdsByModel[model] = ids;
+                for (const record of serverRecs) {
+                    const recordDateTime = record.write_date
+                        .plus({ seconds: 1 })
+                        .toUTC();
+                    const recordDateTimeString = recordDateTime.toFormat(
+                        "yyyy-MM-dd HH:mm:ss",
+                        {
+                            numberingSystem: "latn",
+                        },
+                    );
 
-                let domain = new Domain([
-                    ["id", "=", record.id],
-                    ["write_date", ">=", recordDateTimeString],
-                ]);
+                    let domain = new Domain([
+                        ["id", "=", record.id],
+                        ["write_date", ">=", recordDateTimeString],
+                    ]);
 
+                    if (model === "pos.order") {
+                        domain = Domain.or([
+                            domain,
+                            new Domain([
+                                ["id", "=", record.id],
+                                ["state", "!=", record.state],
+                            ]),
+                        ]);
+                    }
+
+                    domains.push(domain);
+                }
+
+                let domain = Domain.or(domains);
                 if (model === "pos.order") {
                     domain = Domain.or([
                         domain,
                         new Domain([
-                            ["id", "=", record.id],
-                            ["state", "!=", record.state],
+                            ["id", "not in", ids],
+                            ["state", "=", "draft"],
+                            [
+                                "config_id",
+                                "in",
+                                [config.id, ...config.raw.trusted_config_ids],
+                            ],
                         ]),
                     ]);
+
+                    acc[model] = domain.toList();
                 }
 
-                domains.push(domain);
-            }
-
-            let domain = Domain.or(domains);
-            if (model === "pos.order") {
-                domain = Domain.or([
-                    domain,
-                    new Domain([
-                        ["id", "not in", ids],
-                        ["state", "=", "draft"],
-                        ["config_id", "in", [config.id, ...config.raw.trusted_config_ids]],
-                    ]),
-                ]);
-
-                acc[model] = domain.toList();
-            }
-
-            return acc;
-        }, {});
+                return acc;
+            },
+            {},
+        );
 
         return { domain: domainByModel, recordIds: recordIdsByModel };
     }

@@ -1,8 +1,6 @@
 import { reactive } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
 export class DiscussCoreWeb {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -18,28 +16,37 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
-            // If the current user invited a new user, and the new user is
-            // connecting for the first time while the current user is present
-            // then open a chat for the current user with the new user.
-            const notification = _t("%(user)s just connected for the first time. Wish them luck!", {
-                user: username,
-            });
-            this.notificationService.add(notification, { type: "info" });
-            if (!(await this.multiTab.isOnMainTab())) {
-                return;
-            }
-            const chat = await this.store.getChat({ partnerId });
-            if (chat && !this.ui.isSmall) {
-                chat.openChatWindow({ focus: false });
-            }
-        });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-            if (message.thread?.model === "discuss.channel") {
-                // initChannelsUnreadCounter becomes unreliable
-                this.store.channels.fetch();
-            }
-        });
+        this.busService.subscribe(
+            "res.users/connection",
+            async ({ partnerId, username }) => {
+                // If the current user invited a new user, and the new user is
+                // connecting for the first time while the current user is present
+                // then open a chat for the current user with the new user.
+                const notification = _t(
+                    "%(user)s just connected for the first time. Wish them luck!",
+                    {
+                        user: username,
+                    },
+                );
+                this.notificationService.add(notification, { type: "info" });
+                if (!(await this.multiTab.isOnMainTab())) {
+                    return;
+                }
+                const chat = await this.store.getChat({ partnerId });
+                if (chat && !this.ui.isSmall) {
+                    chat.openChatWindow({ focus: false });
+                }
+            },
+        );
+        this.env.bus.addEventListener(
+            "mail.message/delete",
+            ({ detail: { message } }) => {
+                if (message.thread?.model === "discuss.channel") {
+                    // initChannelsUnreadCounter becomes unreliable
+                    this.store.channels.fetch();
+                }
+            },
+        );
     }
 }
 

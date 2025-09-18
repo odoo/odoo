@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+from pathlib import Path
 
 import jinja2
 
@@ -8,39 +9,42 @@ from . import Command
 
 
 class Scaffold(Command):
-    """ Generates an Odoo module skeleton. """
+    """Generates an Odoo module skeleton."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.epilog = "Built-in templates available are: %s" % ', '.join(
-            d for d in os.listdir(builtins())
-            if d != 'base'
-        )
+        self.epilog = f"Built-in templates available are: {
+            ', '.join(d.name for d in _builtins_dir().iterdir() if d.name != 'base')
+        }"
 
     def run(self, cmdargs):
         # TODO: bash completion file
         parser = self.parser
         parser.add_argument(
-            '-t', '--template', type=template, default=template('default'),
+            "-t",
+            "--template",
+            type=Template,
+            default=Template("default"),
             help="Use a custom module template, can be a template name or the"
-                 " path to a module template (default: %(default)s)")
-        parser.add_argument('name', help="Name of the module to create")
+            " path to a module template (default: %(default)s)",
+        )
+        parser.add_argument("name", help="Name of the module to create")
         parser.add_argument(
-            'dest', default='.', nargs='?',
-            help="Directory to create the module in (default: %(default)s)")
+            "dest",
+            default=".",
+            nargs="?",
+            help="Directory to create the module in (default: %(default)s)",
+        )
 
         if not cmdargs:
             sys.exit(parser.print_help())
         args = parser.parse_args(args=cmdargs)
 
-        if args.template.id == 'l10n_payroll':
-            name_split = args.name.split('-')
-            params = {
-                'name': name_split[0],
-                'code': name_split[1]
-            }
+        if args.template.id == "l10n_payroll":
+            name_split = args.name.split("-")
+            params = {"name": name_split[0], "code": name_split[1]}
         else:
-            params = {'name': args.name}
+            params = {"name": args.name}
 
         args.template.render_to(
             snake(args.name),
@@ -49,52 +53,60 @@ class Scaffold(Command):
         )
 
 
-builtins = lambda *args: os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'templates',
-    *args)
+def _builtins_dir(*parts):
+    """Return the path to the built-in templates directory."""
+    base = Path(__file__).resolve().parent / "templates"
+    return base / Path(*parts) if parts else base
+
 
 def snake(s):
-    """ snake cases ``s``
+    """Convert ``s`` to snake_case.
 
-    :param str s:
-    :return: str
+    Inserts underscores before uppercase letters preceded by a
+    non-uppercase letter, then lowercases and joins on whitespace.
     """
-    # insert a space before each uppercase character preceded by a
-    # non-uppercase letter
-    s = re.sub(r'(?<=[^A-Z])\B([A-Z])', r' \1', s)
-    # lowercase everything, split on whitespace and join
-    return '_'.join(s.lower().split())
+    s = re.sub(r"(?<=[^A-Z])\B([A-Z])", r" \1", s)
+    return "_".join(s.lower().split())
+
+
 def pascal(s):
-    return ''.join(
-        ss.capitalize()
-        for ss in re.sub(r'[_\s]+', ' ', s).split()
-    )
+    """Convert ``s`` to PascalCase."""
+    return "".join(ss.capitalize() for ss in re.sub(r"[_\s]+", " ", s).split())
+
 
 def directory(p, create=False):
-    expanded = os.path.abspath(
-        os.path.expanduser(
-            os.path.expandvars(p)))
-    if create and not os.path.exists(expanded):
-        os.makedirs(expanded)
-    if not os.path.isdir(expanded):
-        sys.exit("%s is not a directory" % p)
+    """Resolve and validate a directory path.
+
+    Args:
+        p: Directory path (supports ~ and $VAR expansion).
+        create: If True, create the directory if it doesn't exist.
+    """
+    expanded = Path(os.path.expandvars(p)).expanduser().resolve()
+    if create and not expanded.exists():
+        expanded.mkdir(parents=True)
+    if not expanded.is_dir():
+        sys.exit(f"{p} is not a directory")
     return expanded
 
-env = jinja2.Environment()
-env.filters['snake'] = snake
-env.filters['pascal'] = pascal
-class template(object):
+
+_env = jinja2.Environment()  # noqa: S701 — generates .py/.xml code templates, not HTML
+_env.filters["snake"] = snake
+_env.filters["pascal"] = pascal
+
+
+class Template:
+    """A module template that can be rendered into a new Odoo module."""
+
     def __init__(self, identifier):
         # TODO: archives (zipfile, tarfile)
         self.id = identifier
         # is identifier a builtin?
-        self.path = builtins(identifier)
-        if os.path.isdir(self.path):
+        self.path = _builtins_dir(identifier)
+        if self.path.is_dir():
             return
         # is identifier a directory?
-        self.path = identifier
-        if os.path.isdir(self.path):
+        self.path = Path(identifier)
+        if self.path.is_dir():
             return
         sys.exit(f"{identifier} is not a valid module template")
 
@@ -102,41 +114,41 @@ class template(object):
         return self.id
 
     def files(self):
-        """ Lists the (local) path and content of all files in the template
-        """
-        for root, _, files in os.walk(self.path):
-            for f in files:
-                path = os.path.join(root, f)
-                yield path, open(path, 'rb').read()
+        """List the (local) path and content of all files in the template."""
+        for dirpath, _, filenames in self.path.walk():
+            for f in filenames:
+                filepath = dirpath / f
+                yield filepath, filepath.read_bytes()
 
     def render_to(self, modname, directory, params=None):
-        """ Render this module template to ``dest`` with the provided
-         rendering parameters
+        """Render this module template to ``directory`` with the provided
+        rendering parameters.
         """
-        # overwrite with local
         for path, content in self.files():
-            path = env.from_string(path).render(params)
-            local = os.path.relpath(path, self.path)
+            rendered = Path(_env.from_string(str(path)).render(params))
+            local = rendered.relative_to(self.path)
             # strip .template extension
-            root, ext = os.path.splitext(local)
-            if ext == '.template':
-                local = root
+            ext = rendered.suffix
+            if ext == ".template":
+                local = local.with_suffix("")
             if self.id == "l10n_payroll":
                 modname = f"l10n_{params['code']}_hr_payroll"
-            dest = os.path.join(directory, modname, local)
-            destdir = os.path.dirname(dest)
-            if not os.path.exists(destdir):
-                os.makedirs(destdir)
+            dest = Path(directory) / modname / local
+            dest.parent.mkdir(parents=True, exist_ok=True)
 
-            with open(dest, 'wb') as f:
-                if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html', '.template'):
+            with dest.open("wb") as f:
+                if ext not in (
+                    ".py",
+                    ".xml",
+                    ".csv",
+                    ".js",
+                    ".rst",
+                    ".html",
+                    ".template",
+                ):
                     f.write(content)
                 else:
-                    env.from_string(content.decode('utf-8'))\
-                       .stream(params or {})\
-                       .dump(f, encoding='utf-8')
-                    f.write(b'\n')
-
-def warn(message):
-    # ASK: shall we use logger ?
-    print("WARNING:", message)
+                    _env.from_string(content.decode("utf-8")).stream(params or {}).dump(
+                        f, encoding="utf-8"
+                    )
+                    f.write(b"\n")

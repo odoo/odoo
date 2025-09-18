@@ -1,6 +1,10 @@
-import { registry } from "@web/core/registry";
-import { Interaction } from "./interaction";
+// @ts-check
 
+/** @module @web/public/public_component_interaction - Interaction that mounts OWL components declared via owl-component HTML elements */
+
+import { registry } from "@web/core/registry";
+
+import { Interaction } from "./interaction";
 export class PublicComponentInteraction extends Interaction {
     static selector = "owl-component[name]";
 
@@ -10,7 +14,11 @@ export class PublicComponentInteraction extends Interaction {
         // html from a previous page edit, where owl-components were not properly
         // cleaned up while saving
         this.el.replaceChildren();
-        this.mountComponent(this.el, this.Component, props);
+        this.mountComponent(
+            this.el,
+            /** @type {typeof import("@odoo/owl").Component} */ (this.Component),
+            props,
+        );
     }
 
     get Component() {
@@ -19,4 +27,6 @@ export class PublicComponentInteraction extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("public_components", PublicComponentInteraction);
+registry
+    .category("public.interactions")
+    .add("public_components", PublicComponentInteraction);

@@ -26,8 +26,8 @@ class IrModelFields(models.Model):
         vals['tracking'] = tracking
         return vals
 
-    def _instanciate_attrs(self, field_data):
-        attrs = super()._instanciate_attrs(field_data)
+    def _instantiate_attrs(self, field_data):
+        attrs = super()._instantiate_attrs(field_data)
         if attrs and field_data.get('tracking'):
             attrs['tracking'] = field_data['tracking']
         return attrs

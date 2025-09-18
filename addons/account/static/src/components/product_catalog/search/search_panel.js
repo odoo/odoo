@@ -1,5 +1,5 @@
 import { onWillStart, useState } from '@odoo/owl';
-import { getActiveHotkey } from '@web/core/hotkeys/hotkey_service';
+import { getActiveHotkey } from '@web/services/hotkeys/hotkey_service';
 import { rpc } from '@web/core/network/rpc';
 import { useBus } from '@web/core/utils/hooks';
 import { SearchPanel } from '@web/search/search_panel/search_panel';

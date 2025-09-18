@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { reactive, toRaw } from "@odoo/owl";
 

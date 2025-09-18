@@ -1,16 +1,20 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
-import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
+import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
-import { isEventHandled } from "@web/core/utils/misc";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-
-import { Component, onMounted, onWillUnmount, useRef, useExternalListener } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
-
+import { isEventHandled } from "@web/core/utils/dom/events";
+import { useService } from "@web/core/utils/hooks";
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
@@ -62,7 +66,8 @@ export class CallParticipantCard extends Component {
         return (
             this.isOfActiveCall &&
             (this.rtcSession.notEq(this.rtc.selfSession) ||
-                (this.env.debug && this.rtc.state.connectionType === CONNECTION_TYPES.SERVER))
+                (this.env.debug &&
+                    this.rtc.state.connectionType === CONNECTION_TYPES.SERVER))
         );
     }
 
@@ -78,7 +83,10 @@ export class CallParticipantCard extends Component {
 
     get isSmall() {
         return Boolean(
-            this.props.isSidebarItem || this.ui.isSmall || this.props.minimized || this.props.inset
+            this.props.isSidebarItem ||
+            this.ui.isSmall ||
+            this.props.minimized ||
+            this.props.inset,
         );
     }
 
@@ -112,11 +120,15 @@ export class CallParticipantCard extends Component {
     }
 
     get channelMember() {
-        return this.rtcSession ? this.rtcSession.channel_member_id : this.props.cardData.member;
+        return this.rtcSession
+            ? this.rtcSession.channel_member_id
+            : this.props.cardData.member;
     }
 
     get isOfActiveCall() {
-        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.channel));
+        return Boolean(
+            this.rtcSession && this.rtcSession.channel?.eq(this.rtc.channel),
+        );
     }
 
     get showConnectionState() {
@@ -159,7 +171,9 @@ export class CallParticipantCard extends Component {
 
     get isTalking() {
         return Boolean(
-            this.rtcSession && this.rtcSession.isActuallyTalking && !this.rtc.selfSession?.is_deaf
+            this.rtcSession &&
+            this.rtcSession.isActuallyTalking &&
+            !this.rtc.selfSession?.is_deaf,
         );
     }
 
@@ -167,12 +181,15 @@ export class CallParticipantCard extends Component {
         const screenStream = this.rtcSession.videoStreams.get("screen");
         return Boolean(
             this.rtcSession.raisingHand &&
-                (!screenStream || screenStream !== this.props.cardData.videoStream)
+            (!screenStream || screenStream !== this.props.cardData.videoStream),
         );
     }
 
     get isActiveRtcSession() {
-        return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
+        return (
+            this.rtcSession &&
+            this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession)
+        );
     }
 
     async onClick(ev) {
@@ -216,7 +233,9 @@ export class CallParticipantCard extends Component {
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
             const insetEl = this.root.el;
-            const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
+            const bottomOffset = this.env.inChatWindow
+                ? this.window.innerHeight * 0.05
+                : 0; // 5vh in pixels
             if (parseInt(insetEl.style.left) < insetEl.parentNode.offsetWidth / 2) {
                 insetEl.style.left = "1vh";
                 insetEl.style.right = "";
@@ -255,10 +274,17 @@ export class CallParticipantCard extends Component {
         const insetEl = this.root.el;
         const parent = insetEl.parentNode;
         const boundingRect =
-            this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
+            this.parentBoundingRect ||
+            (this.parentBoundingRect = parent.getBoundingClientRect());
         const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
-        const clientX = Math.max((ev.clientX ?? ev.touches[0].clientX) - boundingRect.left, 0);
-        const clientY = Math.max((ev.clientY ?? ev.touches[0].clientY) - boundingRect.top, 0);
+        const clientX = Math.max(
+            (ev.clientX ?? ev.touches[0].clientX) - boundingRect.left,
+            0,
+        );
+        const clientY = Math.max(
+            (ev.clientY ?? ev.touches[0].clientY) - boundingRect.top,
+            0,
+        );
         if (!this.dragPos) {
             this.dragPos = { posX: clientX, posY: clientY };
         }
@@ -268,8 +294,10 @@ export class CallParticipantCard extends Component {
         const heightOffset = parent.offsetHeight - insetEl.clientHeight - bottomOffset;
         this.dragPos.posX = Math.min(clientX, widthOffset);
         this.dragPos.posY = Math.min(clientY, heightOffset);
-        insetEl.style.left = Math.min(Math.max(insetEl.offsetLeft - dX, 0), widthOffset) + "px";
-        insetEl.style.top = Math.min(Math.max(insetEl.offsetTop - dY, 0), heightOffset) + "px";
+        insetEl.style.left =
+            Math.min(Math.max(insetEl.offsetLeft - dX, 0), widthOffset) + "px";
+        insetEl.style.top =
+            Math.min(Math.max(insetEl.offsetTop - dY, 0), heightOffset) + "px";
     }
 
     onFullScreenChange() {

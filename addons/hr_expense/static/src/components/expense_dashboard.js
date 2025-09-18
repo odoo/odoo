@@ -1,5 +1,5 @@
 import { useService } from '@web/core/utils/hooks';
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatMonetary } from "@web/fields/formatters";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ExpenseDashboard extends Component {

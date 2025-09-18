@@ -1,8 +1,12 @@
+// @ts-check
+
+/** @module @web/public/interaction - Base class for public page interactions with selector matching, dynamic content, and service access */
+
 import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+
 import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
-
 /**
  * This is the base class to describe interactions. The Interaction class
  * provides a good integration with the web framework (env/services), a well
@@ -243,7 +247,11 @@ export class Interaction {
      * @return {Function} protected function
      */
     protectSyncAfterAsync(fn) {
-        return this.__colibri__.protectSyncAfterAsync(this, "protectSyncAfterAsync", fn);
+        return this.__colibri__.protectSyncAfterAsync(
+            this,
+            "protectSyncAfterAsync",
+            fn,
+        );
     }
 
     /**
@@ -291,7 +299,7 @@ export class Interaction {
                 }
             },
             delay,
-            options
+            options,
         );
         this.registerCleanup(() => {
             debouncedFn.cancel();
@@ -305,7 +313,7 @@ export class Interaction {
             }[debouncedFn.name],
             {
                 cancel: debouncedFn.cancel,
-            }
+            },
         );
     }
 
@@ -333,7 +341,7 @@ export class Interaction {
             }[throttledFn.name],
             {
                 cancel: throttledFn.cancel,
-            }
+            },
         );
     }
 
@@ -363,14 +371,22 @@ export class Interaction {
      * @returns {Function} removes the listeners
      */
     addListener(target, event, fn, options) {
+        /** @type {any[]} */
         let nodes;
-        if (target.nodeName && ["FORM", "SELECT"].includes(target.nodeName)) {
+        const t = /** @type {any} */ (target);
+        if (t.nodeName && ["FORM", "SELECT"].includes(t.nodeName)) {
             nodes = [target];
         } else {
-            nodes = target[Symbol.iterator] ? target : [target];
+            nodes = t[Symbol.iterator] ? t : [target];
         }
-        const [ev, handler, opts] = this.__colibri__.addListener(nodes, event, fn, options);
-        return () => nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
+        const [ev, handler, opts] = this.__colibri__.addListener(
+            nodes,
+            event,
+            fn,
+            options,
+        );
+        return () =>
+            nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
     }
 
     /**
@@ -401,7 +417,9 @@ export class Interaction {
      */
     removeChildren(el, insertBackOnClean = true) {
         for (const child of el.children) {
-            this.services["public.interactions"].stopInteractions(child);
+            this.services["public.interactions"].stopInteractions(
+                /** @type {HTMLElement} */ (child),
+            );
         }
         const children = [...el.childNodes];
         el.replaceChildren();
@@ -418,7 +436,7 @@ export class Interaction {
      * @param { Object } renderContext
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
-     * @param { Function } callback called with rendered elements before insertion
+     * @param { Function } [callback] called with rendered elements before insertion
      * @param { boolean } [removeOnClean]
      * @returns { HTMLElement[] } rendered elements
      */
@@ -428,17 +446,22 @@ export class Interaction {
         locationEl,
         position = "beforeend",
         callback,
-        removeOnClean = true
+        removeOnClean = true,
     ) {
         const fragment = renderToFragment(template, renderContext);
-        const result = [...fragment.children];
+        const result = /** @type {HTMLElement[]} */ ([...fragment.children]);
         const els = [...fragment.children];
         callback?.(els);
         if (["afterend", "afterbegin"].includes(position)) {
             els.reverse();
         }
         for (const el of els) {
-            this.insert(el, locationEl, position, removeOnClean);
+            this.insert(
+                /** @type {HTMLElement} */ (el),
+                locationEl,
+                position,
+                removeOnClean,
+            );
         }
         return result;
     }
@@ -458,7 +481,7 @@ export class Interaction {
      * Mounts an Owl component.
      *
      * @param {HTMLElement} el
-     * @param {import("@odoo/owl").Component} C
+     * @param {typeof import("@odoo/owl").Component} C
      * @param {Object|null} [props]
      * @returns {Function} destroy function for early removal
      */

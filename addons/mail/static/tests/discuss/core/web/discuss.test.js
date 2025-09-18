@@ -23,7 +23,7 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 
 describe.current.tags("desktop");
 defineMailModels();

@@ -2,8 +2,6 @@ import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-
-// This component is only use in Kiosk mode
 export class PaymentPage extends Component {
     static template = "pos_self_order.PaymentPage";
     static props = {};
@@ -19,7 +17,9 @@ export class PaymentPage extends Component {
 
         onMounted(() => {
             if (this.selfOrder.models["pos.payment.method"].length === 1) {
-                this.selectMethod(this.selfOrder.models["pos.payment.method"].getFirst().id);
+                this.selectMethod(
+                    this.selfOrder.models["pos.payment.method"].getFirst().id,
+                );
             }
         });
 
@@ -41,7 +41,7 @@ export class PaymentPage extends Component {
 
     get selectedPaymentMethod() {
         return this.selfOrder.models["pos.payment.method"].find(
-            (p) => p.id === this.state.paymentMethodId
+            (p) => p.id === this.state.paymentMethodId,
         );
     }
 

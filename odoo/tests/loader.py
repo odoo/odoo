@@ -1,18 +1,14 @@
 import importlib
 import importlib.util
 import inspect
-import logging
 import sys
 from pathlib import Path
 from unittest import case
 
 from .. import tools
-from .tag_selector import TagsSelector
-from .suite import OdooSuite
 from .result import OdooTestResult
-
-
-_logger = logging.getLogger(__name__)
+from .suite import OdooSuite
+from .tag_selector import TagsSelector
 
 
 def get_module_test_cases(module):
@@ -27,8 +23,8 @@ def get_module_test_cases(module):
 
         test_case_class = obj
         test_cases = test_case_class.__dict__.items()
-        if getattr(test_case_class, 'allow_inherited_tests_method', False):
-            # keep iherited method for specific classes.
+        if getattr(test_case_class, "allow_inherited_tests_method", False):
+            # keep inherited method for specific classes.
             # This is likely to be removed once a better solution is found
             test_cases = inspect.getmembers(test_case_class, callable)
         else:
@@ -39,22 +35,22 @@ def get_module_test_cases(module):
         for method_name, method in test_cases:
             if not callable(method):
                 continue
-            if not method_name.startswith('test'):
+            if not method_name.startswith("test"):
                 continue
             yield test_case_class(method_name)
 
 
 def get_test_modules(module):
-    """ Return a list of module for the addons potentially containing tests to
-    feed get_module_test_cases() """
-    results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
+    """Return a list of module for the addons potentially containing tests to
+    feed get_module_test_cases()"""
+    results = _get_tests_modules(importlib.util.find_spec(f"odoo.addons.{module}"))
     results += list(_get_upgrade_test_modules(module))
 
     return results
 
 
 def _get_tests_modules(mod):
-    spec = importlib.util.find_spec('.tests', mod.name)
+    spec = importlib.util.find_spec(".tests", mod.name)
     if not spec:
         return []
 
@@ -62,7 +58,7 @@ def _get_tests_modules(mod):
     return [
         mod_obj
         for name, mod_obj in inspect.getmembers(tests_mod, inspect.ismodule)
-        if name.startswith('test_')
+        if name.startswith("test_")
     ]
 
 
@@ -79,7 +75,9 @@ def _get_upgrade_test_modules(module):
         upg = importlib.import_module(module_name)
         for path in map(Path, upg.__path__):
             for test in path.glob("tests/test_*.py"):
-                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+                spec = importlib.util.spec_from_file_location(
+                    f"{upg.__name__}.tests.{test.stem}", test
+                )
                 if not spec:
                     continue
                 pymod = importlib.util.module_from_spec(spec)
@@ -88,14 +86,14 @@ def _get_upgrade_test_modules(module):
                 yield pymod
 
 
-def make_suite(module_names, position='at_install'):
-    """ Creates a test suite for all the tests in the specified modules,
+def make_suite(module_names, position="at_install"):
+    """Creates a test suite for all the tests in the specified modules,
     filtered by the provided ``position`` and the current test tags
 
     :param list[str] module_names: modules to load tests from
     :param str position: "at_install" or "post_install"
     """
-    config_tags = TagsSelector(tools.config['test_tags'])
+    config_tags = TagsSelector(tools.config["test_tags"])
     position_tag = TagsSelector(position)
     tests = (
         t
@@ -104,12 +102,13 @@ def make_suite(module_names, position='at_install'):
         for t in get_module_test_cases(m)
         if position_tag.check(t) and config_tags.check(t)
     )
-    return OdooSuite(sorted(tests, key=lambda t: getattr(t, 'test_sequence', 0)))
+    return OdooSuite(sorted(tests, key=lambda t: getattr(t, "test_sequence", 0)))
 
 
 def run_suite(suite, global_report=None):
     # avoid dependency hell
     from ..modules import module
+
     module.current_test = True
 
     results = OdooTestResult(global_report=global_report)

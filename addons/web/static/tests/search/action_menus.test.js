@@ -1,3 +1,9 @@
+// @ts-check
+
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
+import { registry } from "@web/core/registry";
+
 import {
     contains,
     defineModels,
@@ -7,9 +13,6 @@ import {
     onRpc,
     stepAllNetworkCalls,
 } from "../web_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
-import { registry } from "@web/core/registry";
 
 /** Foo is dummy model to test `action.report` with domain of its field `value`. **/
 class Foo extends models.Model {
@@ -104,10 +107,9 @@ test("render ActionMenus in list view", async () => {
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(queryAllTexts(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`)).toEqual([
-        "Print",
-        "Actions",
-    ]);
+    expect(
+        queryAllTexts(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`),
+    ).toEqual(["Print", "Actions"]);
 
     // select Print dropdown
     await contains(`.o_cp_action_menus .dropdown-toggle:eq(0)`).click();
@@ -237,10 +239,9 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
-    expect(queryAllTexts(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`)).toEqual([
-        "Print",
-        "Actions",
-    ]);
+    expect(
+        queryAllTexts(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`),
+    ).toEqual(["Print", "Actions"]);
 
     // select Print dropdown
     await contains(`.o_cp_action_menus .dropdown-toggle:eq(0)`).click();

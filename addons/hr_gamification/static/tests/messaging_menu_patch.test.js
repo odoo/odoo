@@ -2,7 +2,7 @@ import { click, start } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { defineHrGamificationModels } from "@hr_gamification/../tests/hr_gamification_test_helpers";
 import { asyncStep, makeMockServer, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 defineHrGamificationModels();
 

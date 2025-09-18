@@ -1,5 +1,4 @@
 import { rpc } from "@web/core/network/rpc";
-
 const REQUEST_TIMEOUT = 5000;
 const INACTIVITY_TIMEOUT = 110000;
 
@@ -26,19 +25,27 @@ export class PineLabs {
         if (paymentRequestResponse) {
             await this.paymentPolling(this.savedOrder);
         }
-        this.removePaymentHandler(["plutusTransactionReferenceID", "paymentRefNo"]);
+        this.removePaymentHandler([
+            "plutusTransactionReferenceID",
+            "paymentRefNo",
+        ]);
     }
 
     async processPayment(order) {
         try {
-            const initialResponse = await rpc(`/kiosk/payment/${this.pos_config.id}/kiosk`, {
-                order: order.serializeForORM(),
-                access_token: this.access_token,
-                payment_method_id: this.pineLabsPaymentMethod.id,
-            });
+            const initialResponse = await rpc(
+                `/kiosk/payment/${this.pos_config.id}/kiosk`,
+                {
+                    order: order.serializeForORM(),
+                    access_token: this.access_token,
+                    payment_method_id: this.pineLabsPaymentMethod.id,
+                },
+            );
             if (initialResponse) {
                 this.savedOrder = initialResponse.order[0];
-                return this.handlePineLabsResponse(initialResponse.payment_status);
+                return this.handlePineLabsResponse(
+                    initialResponse.payment_status,
+                );
             }
         } catch (error) {
             this.errorCallback(error);
@@ -51,20 +58,30 @@ export class PineLabs {
             // We need to provide the amount in paisa since Pine Labs processes amounts in paisa.
             // The conversion rate between INR and paisa is set as 1 INR = 100 paisa.
             const data = {
-                plutusTransactionReferenceID: localStorage.getItem("plutusTransactionReferenceID"),
+                plutusTransactionReferenceID: localStorage.getItem(
+                    "plutusTransactionReferenceID",
+                ),
                 amount: order.amount_total * 100,
             };
-            const cancelResponse = await rpc("/pos-self-order/pine-labs-cancel-transaction/", {
-                access_token: this.access_token,
-                order_id: order.id,
-                payment_data: data,
-                payment_method_id: this.pineLabsPaymentMethod.id,
-            });
+            const cancelResponse = await rpc(
+                "/pos-self-order/pine-labs-cancel-transaction/",
+                {
+                    access_token: this.access_token,
+                    order_id: order.id,
+                    payment_data: data,
+                    payment_method_id: this.pineLabsPaymentMethod.id,
+                },
+            );
 
             if (cancelResponse) {
                 // Successfully cancelled the transaction
                 if (cancelResponse.notification) {
-                    this.errorCallback(new PineLabsError(cancelResponse.notification, "warning"));
+                    this.errorCallback(
+                        new PineLabsError(
+                            cancelResponse.notification,
+                            "warning",
+                        ),
+                    );
                     return true;
                 }
                 return this.handlePineLabsResponse(cancelResponse);
@@ -84,7 +101,9 @@ export class PineLabs {
      */
     async paymentPolling(order) {
         const data = {
-            plutusTransactionReferenceID: localStorage.getItem("plutusTransactionReferenceID"),
+            plutusTransactionReferenceID: localStorage.getItem(
+                "plutusTransactionReferenceID",
+            ),
             payment_ref_no: localStorage.getItem("paymentRefNo"),
         };
         this.stopInactivePayment().then(() => (this.paymentStopped = true));
@@ -104,7 +123,7 @@ export class PineLabs {
                         order_id: order.id,
                         payment_data: data,
                         payment_method_id: this.pineLabsPaymentMethod.id,
-                    }
+                    },
                 );
                 if (statusResponse?.status === "TXN APPROVED") {
                     return resolve(true);
@@ -118,7 +137,7 @@ export class PineLabs {
                     fetchPaymentStatus,
                     REQUEST_TIMEOUT,
                     resolve,
-                    reject
+                    reject,
                 );
             } catch (error) {
                 this.errorCallback(error);
@@ -136,15 +155,20 @@ export class PineLabs {
         response.plutusTransactionReferenceID &&
             localStorage.setItem(
                 "plutusTransactionReferenceID",
-                response.plutusTransactionReferenceID
+                response.plutusTransactionReferenceID,
             );
-        response.payment_ref_no && localStorage.setItem("paymentRefNo", response.payment_ref_no);
+        response.payment_ref_no &&
+            localStorage.setItem("paymentRefNo", response.payment_ref_no);
         return true;
     }
 
     stopInactivePayment() {
         return new Promise(
-            (resolve) => (this.inactivityTimeout = setTimeout(resolve, INACTIVITY_TIMEOUT))
+            (resolve) =>
+                (this.inactivityTimeout = setTimeout(
+                    resolve,
+                    INACTIVITY_TIMEOUT,
+                )),
         );
     }
 

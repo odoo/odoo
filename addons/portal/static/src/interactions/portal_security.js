@@ -1,10 +1,10 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { renderToMarkup } from "@web/core/utils/render";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export class PortalSecurity extends Interaction {
     static selector = ".o_portal_security_body";

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, edit, queryOne, queryText, queryValue } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -52,7 +54,7 @@ test("ProgressBarField: max_value should update", async () => {
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual(
             { int_field: 999, float_field: 5, name: "new name" },
-            { message: "New value of progress bar saved" }
+            { message: "New value of progress bar saved" },
         );
     });
     await mountView({
@@ -91,7 +93,9 @@ test("ProgressBarField: value should update in edit mode when typing in input", 
         resId: 1,
     });
 
-    expect(queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar")).toBe("99%", {
+    expect(
+        queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar"),
+    ).toBe("99%", {
         message: "Initial value should be correct",
     });
     await click(".o_progressbar_value .o_input");
@@ -129,11 +133,12 @@ test("ProgressBarField: value should update in edit mode when typing in input wi
             </form>`,
         resId: 1,
     });
-    expect(".o_form_view .o_form_editable").toHaveCount(1, { message: "Form in edit mode" });
-    expect(queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar")).toBe(
-        "99/\n0",
-        { message: "Initial value should be correct" }
-    );
+    expect(".o_form_view .o_form_editable").toHaveCount(1, {
+        message: "Form in edit mode",
+    });
+    expect(
+        queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar"),
+    ).toBe("99/\n0", { message: "Initial value should be correct" });
 
     await click(".o_progressbar_value .o_input");
     await animationFrame();
@@ -141,10 +146,11 @@ test("ProgressBarField: value should update in edit mode when typing in input wi
     await animationFrame();
     await clickSave();
     await animationFrame();
-    expect(queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar")).toBe(
-        "69/\n0",
-        { message: "New value should be different than initial after click" }
-    );
+    expect(
+        queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar"),
+    ).toBe("69/\n0", {
+        message: "New value should be different than initial after click",
+    });
 });
 
 test("ProgressBarField: max value should update in edit mode when typing in input with field max value", async () => {
@@ -165,27 +171,28 @@ test("ProgressBarField: max value should update in edit mode when typing in inpu
         resId: 1,
     });
 
-    expect(queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input")).toBe(
-        "99\n/0",
-        { message: "Initial value should be correct" }
-    );
-    expect(".o_form_view .o_form_editable").toHaveCount(1, { message: "Form in edit mode" });
+    expect(
+        queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input"),
+    ).toBe("99\n/0", { message: "Initial value should be correct" });
+    expect(".o_form_view .o_form_editable").toHaveCount(1, {
+        message: "Form in edit mode",
+    });
     queryOne(".o_progressbar input").focus();
     await animationFrame();
 
-    expect(queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input")).toBe(
-        "99\n/0.44",
-        { message: "Initial value is not formatted when focused" }
-    );
+    expect(
+        queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input"),
+    ).toBe("99\n/0.44", { message: "Initial value is not formatted when focused" });
 
     await click(".o_progressbar_value .o_input");
     await edit("69", { confirm: "enter" });
     await clickSave();
 
-    expect(queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input")).toBe(
-        "99\n/69",
-        { message: "New value should be different than initial after click" }
-    );
+    expect(
+        queryText(".o_progressbar") + queryValue(".o_progressbar_value .o_input"),
+    ).toBe("99\n/69", {
+        message: "New value should be different than initial after click",
+    });
 });
 
 test("ProgressBarField: Standard readonly mode is readonly", async () => {
@@ -311,13 +318,16 @@ test("ProgressBarField: readonly and editable attrs/options in kanban", async ()
         message: "the field is still in readonly since there is readonly attribute",
     });
 
-    await click(".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input");
+    await click(
+        ".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input",
+    );
     await edit("69", { confirm: "enter" });
     await animationFrame();
-    expect(".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input").toHaveValue(
-        "69",
-        { message: "New value should be different than initial after click" }
-    );
+    expect(
+        ".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input",
+    ).toHaveValue("69", {
+        message: "New value should be different than initial after click",
+    });
 });
 
 test("ProgressBarField: write float instead of int works, in locale", async () => {
@@ -342,11 +352,15 @@ test("ProgressBarField: write float instead of int works, in locale", async () =
         resId: 1,
     });
 
-    expect(queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar")).toBe("99%", {
+    expect(
+        queryValue(".o_progressbar_value .o_input") + queryText(".o_progressbar"),
+    ).toBe("99%", {
         message: "Initial value should be correct",
     });
 
-    expect(".o_form_view .o_form_editable").toHaveCount(1, { message: "Form in edit mode" });
+    expect(".o_form_view .o_form_editable").toHaveCount(1, {
+        message: "Form in edit mode",
+    });
 
     await click(".o_field_widget input");
     await animationFrame();
@@ -402,6 +416,7 @@ test("ProgressBarField: color is correctly set when value > max value", async ()
         resId: 1,
     });
     expect(".o_progressbar .bg-warning").toHaveCount(1, {
-        message: "As the value has excedded the max value, the color should be set to bg-warning",
+        message:
+            "As the value has excedded the max value, the color should be set to bg-warning",
     });
 });

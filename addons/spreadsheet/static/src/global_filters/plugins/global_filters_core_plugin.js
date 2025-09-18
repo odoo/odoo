@@ -5,7 +5,7 @@ import {
     checkFilterDefaultValueIsValid,
     globalFieldMatchingRegistry,
 } from "@spreadsheet/global_filters/helpers";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 /**

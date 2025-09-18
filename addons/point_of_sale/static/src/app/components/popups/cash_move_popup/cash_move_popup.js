@@ -1,17 +1,15 @@
+import { Component, useState } from "@odoo/owl";
+import { Input } from "@point_of_sale/app/components/inputs/input/input";
+import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
+import { CashMoveReceipt } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { parseFloat } from "@web/views/fields/parsers";
-import { Component, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-
-import { CashMoveReceipt } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt";
-import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
-import { Dialog } from "@web/core/dialog/dialog";
-import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
-import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-
+import { parseFloat } from "@web/fields/parsers";
+import { Dialog } from "@web/ui/dialog/dialog";
 const { DateTime } = luxon;
 
 export class CashMovePopup extends Component {
@@ -55,13 +53,19 @@ export class CashMovePopup extends Component {
         await this.pos.data.call(
             "pos.session",
             "try_cash_in_out",
-            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId, extras),
+            this._prepareTryCashInOutPayload(
+                type,
+                amount,
+                reason,
+                this.partnerId,
+                extras,
+            ),
             {},
-            true
+            true,
         );
         await this.pos.logEmployeeMessage(
             `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
-            "CASH_DRAWER_ACTION"
+            "CASH_DRAWER_ACTION",
         );
         const order = this.pos.models["pos.order"].create({
             session_id: this.pos.session,
@@ -85,7 +89,7 @@ export class CashMovePopup extends Component {
         this.props.close();
         this.notification.add(
             _t("Successfully made a cash %s of %s.", type, formattedAmount),
-            3000
+            3000,
         );
     }
     onClickButton(type) {
@@ -101,12 +105,17 @@ export class CashMovePopup extends Component {
         return [[this.pos.session.id], type, amount, reason, partnerId, extras];
     }
     isValidCashMove() {
-        return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
+        return (
+            this.env.utils.isValidFloat(this.state.amount) &&
+            this.state.reason.trim() !== ""
+        );
     }
     async openDetails() {
-        const cashMoves = await this.pos.data.call("pos.session", "get_cash_in_out_list", [
-            this.pos.session.id,
-        ]);
+        const cashMoves = await this.pos.data.call(
+            "pos.session",
+            "get_cash_in_out_list",
+            [this.pos.session.id],
+        );
         this.dialog.add(CashMoveListPopup, {
             cashMoves: cashMoves.map((m) => ({
                 ...m,

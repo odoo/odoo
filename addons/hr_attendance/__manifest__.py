@@ -57,7 +57,6 @@ actions(Check in/Check out) performed by them.
             ('include', 'web._assets_primary_variables'),
             'hr_attendance/static/src/scss/kiosk/bootstrap_overridden.scss',
             ('include', 'web._assets_frontend_helpers'),
-            'web/static/lib/jquery/jquery.js',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
@@ -77,7 +76,7 @@ actions(Check in/Check out) performed by them.
             ('remove', 'hr_attendance/static/src/components/attendance_menu/**/*'),
 
             'hr_attendance/static/src/scss/kiosk/hr_attendance.scss',
-            "web/static/src/views/fields/formatters.js",
+            "web/static/src/fields/formatters.js",
 
             # document link
             "web/static/src/session.js",

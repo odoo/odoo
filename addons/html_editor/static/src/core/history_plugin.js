@@ -5,7 +5,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { withSequence } from "@html_editor/utils/resource";
 import { Deferred } from "@web/core/utils/concurrency";
 import { toggleClass } from "@html_editor/utils/dom";
-import { omit, pick } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/collections/objects";
 import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
 
 /**

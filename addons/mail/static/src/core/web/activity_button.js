@@ -1,10 +1,7 @@
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
-
 import { Component, useEnv, useRef } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-
+import { usePopover } from "@web/ui/popover/popover_hook";
 export class ActivityButton extends Component {
     static props = {
         record: { type: Object },
@@ -82,7 +79,9 @@ export class ActivityButton extends Component {
             const selectedIds = selectedRecords.map((r) => r.resId);
             // If the current record is not selected, ignore the selection
             const resIds =
-                selectedIds.includes(resId) && selectedIds.length > 1 ? selectedIds : undefined;
+                selectedIds.includes(resId) && selectedIds.length > 1
+                    ? selectedIds
+                    : undefined;
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: (thread) => {

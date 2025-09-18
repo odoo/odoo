@@ -8,7 +8,7 @@
 The module adds Microsoft user in res user.
 ===========================================
 """,
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'data': [
         'data/microsoft_account_data.xml',
     ],

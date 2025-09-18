@@ -191,8 +191,8 @@ class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWD
         # Confirm the invoice and check SO invoice status
         invoice.action_post()
         self.assertEqual(
-            sale_order.invoice_status, 'invoiced',
-            f"Order is in '{sale_order.invoice_status}' status while it should be 'invoiced'.")
+            sale_order.invoice_state, 'invoiced',
+            f"Order is in '{sale_order.invoice_state}' status while it should be 'invoiced'.")
 
         register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
         register_payments._create_payments()

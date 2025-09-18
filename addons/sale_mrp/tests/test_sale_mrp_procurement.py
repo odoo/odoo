@@ -20,7 +20,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('uom.group_uom')
         self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
-        # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
+        # In order to test the sale_mrp module in Odoo, I start by creating a new product 'Slider Mobile'
         # I define product category Mobile Products Sellable.
 
         with mute_logger('odoo.tests.common.onchange'):
@@ -62,10 +62,10 @@ class TestSaleMrpProcurement(TransactionCase):
         # I create a sale order for product Slider mobile
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env['res.partner'].create({'name': 'Another Test Partner'})
-        with so_form.order_line.new() as line:
+        with so_form.line_ids.new() as line:
             line.product_id = product_template_slidermobile0.product_variant_ids
             line.price_unit = 200
-            line.product_uom_qty = 500.0
+            line.product_qty = 500.0
             line.customer_lead = 7.0
         sale_order_so0 = so_form.save()
 
@@ -159,14 +159,14 @@ class TestSaleMrpProcurement(TransactionCase):
 
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env['res.partner'].create({'name': 'Another Test Partner'})
-        with so_form.order_line.new() as line:
+        with so_form.line_ids.new() as line:
             line.product_id = self.complex_product
             line.price_unit = 1
-            line.product_uom_qty = 1
-        with so_form.order_line.new() as line:
+            line.product_qty = 1
+        with so_form.line_ids.new() as line:
             line.product_id = self.finished_product
             line.price_unit = 1
-            line.product_uom_qty = 1
+            line.product_qty = 1
         sale_order_so0 = so_form.save()
 
         sale_order_so0.action_confirm()
@@ -227,16 +227,16 @@ class TestSaleMrpProcurement(TransactionCase):
 
         so = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product.name,
                     'product_id': product.id,
-                    'product_uom_qty': 1.0,
+                    'product_qty': 1.0,
                     'price_unit': 1,
                 })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'sale')
+        self.assertEqual(so.state, 'done')
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
@@ -260,10 +260,10 @@ class TestSaleMrpProcurement(TransactionCase):
         })
         so = self.env['sale.order'].create({
             'partner_id': customer.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': kit_1.id,
-                    'product_uom_qty': 1.0,
+                    'product_qty': 1.0,
                 })],
         })
         so.action_confirm()
@@ -314,24 +314,24 @@ class TestSaleMrpProcurement(TransactionCase):
 
         so = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product.name,
                     'product_id': product.id,
-                    'product_uom_qty': 510,
+                    'product_qty': 510,
                     'product_uom_id': uom_gram.id,
                     'price_unit': 1,
                 })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'sale')
+        self.assertEqual(so.state, 'done')
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
         self.assertEqual(mo.product_uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 510)
 
-        so.order_line.product_uom_qty = 510 * 2
+        so.line_ids.product_qty = 510 * 2
         self.assertEqual(mo.product_uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 1020)
 
@@ -346,16 +346,16 @@ class TestSaleMrpProcurement(TransactionCase):
 
         so = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'name': 'sol_p1',
                     'product_id': self.env['product.product'].create({'name': 'p1'}).id,
-                    'product_uom_qty': 1,
+                    'product_qty': 1,
                 }),
                 Command.create({
                     'name': 'sol_p2',
                     'product_id': self.env['product.product'].create({'name': 'p2'}).id,
-                    'product_uom_qty': 1,
+                    'product_qty': 1,
                 }),
             ],
         })

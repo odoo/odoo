@@ -7,7 +7,7 @@ from functools import reduce
 
 from odoo import api, models
 from odoo.fields import Domain
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 
 class ResPartner(models.Model):

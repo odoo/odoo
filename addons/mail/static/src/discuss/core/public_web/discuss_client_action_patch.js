@@ -1,7 +1,5 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
-
 import { patch } from "@web/core/utils/patch";
-
 patch(DiscussClientAction.prototype, {
     async restoreDiscussThread() {
         await this.store.channels.fetch();

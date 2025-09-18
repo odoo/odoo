@@ -1,9 +1,11 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { DEFAULT_DATE, FAKE_MODEL } from "./calendar_test_helpers";
-
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
+
+import { DEFAULT_DATE, FAKE_MODEL } from "./calendar_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -17,6 +19,7 @@ const FAKE_RECORD = {
     isTimeHidden: false,
     rawRecord: {
         name: "Meeting",
+        description: "<p>Test description</p>",
     },
 };
 
@@ -41,6 +44,9 @@ test(`mount a CalendarCommonPopover`, async () => {
     expect(`.popover-header`).toHaveText("Meeting");
     expect(`.list-group`).toHaveCount(2);
     expect(`.list-group.o_cw_popover_fields_secondary`).toHaveCount(1);
+    expect(
+        `.list-group.o_cw_popover_fields_secondary div[name="description"]`,
+    ).toHaveClass("text-wrap");
     expect(`.card-footer .o_cw_popover_edit`).toHaveCount(1);
     expect(`.card-footer .o_cw_popover_delete`).toHaveCount(1);
 });
@@ -114,7 +120,9 @@ test(`isDateHidden is false`, async () => {
     await start({
         model: { ...FAKE_MODEL, isDateHidden: false },
     });
-    expect(`.list-group:eq(0)`).toHaveText("July 16, 2021\n08:00 - 11:15 (3 hours, 15 minutes)");
+    expect(`.list-group:eq(0)`).toHaveText(
+        "July 16, 2021\n08:00 - 11:15 (3 hours, 15 minutes)",
+    );
 });
 
 test(`isTimeHidden is true`, async () => {
@@ -128,7 +136,9 @@ test(`isTimeHidden is false`, async () => {
     await start({
         record: { ...FAKE_RECORD, isTimeHidden: false },
     });
-    expect(`.list-group:eq(0)`).toHaveText("July 16, 2021\n08:00 - 11:15 (3 hours, 15 minutes)");
+    expect(`.list-group:eq(0)`).toHaveText(
+        "July 16, 2021\n08:00 - 11:15 (3 hours, 15 minutes)",
+    );
 });
 
 test(`canDelete is true`, async () => {

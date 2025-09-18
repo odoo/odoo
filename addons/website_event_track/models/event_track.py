@@ -8,7 +8,7 @@ from random import randint
 from textwrap import shorten
 
 from pytz import timezone, utc
-import werkzeug.urls
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
@@ -754,6 +754,6 @@ class EventTrack(models.Model):
         }
 
         return {
-            'google_url': GOOGLE_CALENDAR_URL + werkzeug.urls.url_encode(google_params),
+            'google_url': GOOGLE_CALENDAR_URL + urlencode(google_params),
             'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics',
         }

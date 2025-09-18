@@ -1,6 +1,7 @@
-const { DateTime } = luxon;
 import { Domain } from "@web/core/domain";
 import { expect } from "@odoo/hoot";
+
+const { DateTime } = luxon;
 
 function getDateDomainBounds(domain) {
     const startDateStr = domain[1][2];

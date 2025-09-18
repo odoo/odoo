@@ -1,4 +1,3 @@
-# ruff: noqa: E402, PLC0415
 # ignore import not at top of the file
 import ast
 import logging
@@ -20,7 +19,9 @@ def literal_eval(expr):
         if buffer_size_env.isdigit():
             buffer_size = int(buffer_size_env)
         else:
-            _logger.error("ODOO_LIMIT_LITEVAL_BUFFER has to be an integer, defaulting to 100KiB")
+            _logger.error(
+                "ODOO_LIMIT_LITEVAL_BUFFER has to be an integer, defaulting to 100KiB"
+            )
 
     if isinstance(expr, str) and len(expr) > buffer_size:
         raise ValueError("expression can't exceed buffer limit")

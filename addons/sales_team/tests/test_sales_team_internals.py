@@ -51,7 +51,7 @@ class TestCornerCases(TransactionCase):
         ])
         self.assertEqual(found, sales_team_1_m2)
 
-        with self.assertRaises(exceptions.UserError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(exceptions.UserError), mute_logger('odoo.db'):
             self.env['crm.team.member'].create({
                 'user_id': self.user_sales_leads.id,
                 'crm_team_id': self.sales_team_1.id,
@@ -60,7 +60,7 @@ class TestCornerCases(TransactionCase):
     def test_unicity_multicreate(self):
         """ Test constraint works with creating duplicates in the same create
         method. """
-        with self.assertRaises(exceptions.UserError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(exceptions.UserError), mute_logger('odoo.db'):
             self.env['crm.team.member'].create([
                 {'user_id': self.user_sales_leads.id, 'crm_team_id': self.sales_team_1.id},
                 {'user_id': self.user_sales_leads.id, 'crm_team_id': self.sales_team_1.id}

@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/services/http_service";
 import { rpc } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
 

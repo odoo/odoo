@@ -2,7 +2,7 @@
 
 {
     'name': 'Authentication via LDAP',
-    'depends': ['base', 'base_setup'],
+    'depends': ['web'],
     #'description': < auto-loaded from README file
     'category': 'Hidden/Tools',
     'data': [

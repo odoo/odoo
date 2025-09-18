@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/components/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 

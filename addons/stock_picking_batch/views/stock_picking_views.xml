@@ -3,7 +3,7 @@
     <record id="stock_picking_form_inherit" model="ir.ui.view">
         <field name="name">stock.picking.form.inherit</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="inherit_id" ref="stock.view_stock_picking_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button type="object"
@@ -21,10 +21,10 @@
         </field>
     </record>
 
-    <record id="vpicktree" model="ir.ui.view">
+    <record id="view_stock_picking_list_vpicktree" model="ir.ui.view">
         <field name="name">stock.picking.list.inherit.stock.picking.batch</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="inherit_id" ref="stock.view_stock_picking_list_vpicktree"/>
         <field name="arch" type="xml">
             <field name="picking_type_id" position="after">
                 <field name="batch_id" optional="show"
@@ -34,7 +34,7 @@
                             ('picking_type_id', '=', picking_type_id),
                             ('picking_type_id', '=', False),
                     ]"
-                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
+                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['done', 'cancel']"/>
             </field>
         </field>
     </record>
@@ -42,7 +42,7 @@
     <record id="stock_picking_view_batch_tree_ref" model="ir.ui.view">
         <field name="name">stock.picking.view.list.inherit.stock.picking.batch</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="inherit_id" ref="stock.view_stock_picking_list_vpicktree"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
@@ -53,7 +53,7 @@
             </field>
             <field name="company_id" position="replace"/>
             <field name="batch_id" position="replace"/>
-            <field name="scheduled_date" position="attributes">
+            <field name="date_planned" position="attributes">
                 <attribute name="optional">hide</attribute>
             </field>
             <field name="priority" position="attributes">

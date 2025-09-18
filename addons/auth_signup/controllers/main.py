@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import werkzeug
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import http, tools, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS, LOGIN_SUCCESSFUL_PARAMS
 from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
-from odoo.addons.base_setup.controllers.main import BaseSetup
+from odoo.addons.web.controllers.settings import BaseSetup
 from odoo.exceptions import UserError
 from odoo.tools.translate import LazyTranslate
 from odoo.http import request
@@ -77,7 +77,7 @@ class AuthSignupHome(Home):
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
             if user:
-                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+                return request.redirect('/web/login?%s' % urlencode({'login': user.login, 'redirect': '/web'}))
 
         response = request.render('auth_signup.signup', qcontext)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -116,7 +116,7 @@ class AuthSignupHome(Home):
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
             if user:
-                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+                return request.redirect('/web/login?%s' % urlencode({'login': user.login, 'redirect': '/web'}))
 
         response = request.render('auth_signup.reset_password', qcontext)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'

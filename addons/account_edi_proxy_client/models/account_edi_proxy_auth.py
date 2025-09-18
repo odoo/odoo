@@ -6,7 +6,7 @@ import time
 from typing import Literal
 
 import requests
-import werkzeug.urls
+from urllib.parse import parse_qs, urlsplit
 
 
 class OdooEdiProxyAuth(requests.auth.AuthBase):
@@ -25,18 +25,21 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
 
     def __get_payload(self, request, msg_timestamp):
         # craft the message (timestamp|url path|id_client|query params|body content)
-        parsed_url = werkzeug.urls.url_parse(request.path_url)
+        parsed_url = urlsplit(request.path_url)
 
         body = request.body
         if isinstance(body, bytes):
             body = body.decode()
         body = json.loads(body)
 
+        # parse_qs returns lists for values; flatten to match werkzeug's url_decode behavior
+        query_dict = {k: v[0] if len(v) == 1 else v for k, v in parse_qs(parsed_url.query).items()}
+
         return '%s|%s|%s|%s|%s' % (
             msg_timestamp,  # timestamp
             parsed_url.path,  # url path
             self.id_client,
-            json.dumps(werkzeug.urls.url_decode(parsed_url.query), sort_keys=True),  # url query params sorted by key
+            json.dumps(query_dict, sort_keys=True),  # url query params sorted by key
             json.dumps(body, sort_keys=True))  # http request body
 
     def __sign_request_with_token(self, message):

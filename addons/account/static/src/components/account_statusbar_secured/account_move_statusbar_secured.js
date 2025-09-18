@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
+import { statusBarField, StatusBarField } from "@web/fields/display/statusbar/statusbar_field";
 
 export class AccountMoveStatusBarSecuredField extends StatusBarField {
     static template = "account.MoveStatusBarSecuredField";

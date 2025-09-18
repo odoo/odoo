@@ -4,7 +4,7 @@ import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
-import { omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/collections/objects";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -293,12 +293,12 @@ export const websiteEditService = {
             callShared,
         };
 
-        window.parent.document.addEventListener("edit_page", (ev) => {
+        const handleEditPage = (ev) => {
             stop(ev.detail.iframeDocument);
-        });
+        };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
-        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+        const handlePluginLoaded = (ev) => {
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -309,6 +309,22 @@ export const websiteEditService = {
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
             setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+        };
+
+        window.parent.document.addEventListener("edit_page", handleEditPage);
+        window.parent.document.addEventListener(
+            "edit_interaction_plugin_loaded",
+            handlePluginLoaded
+        );
+
+        // Clean up parent document listeners when iframe unloads to prevent
+        // stale handlers from serving an outdated service to new plugins.
+        window.addEventListener("beforeunload", () => {
+            window.parent.document.removeEventListener("edit_page", handleEditPage);
+            window.parent.document.removeEventListener(
+                "edit_interaction_plugin_loaded",
+                handlePluginLoaded
+            );
         });
 
         return websiteEditService;
@@ -327,73 +343,6 @@ PublicRoot.include({
         const websiteEdit = this.bindService("website_edit");
         const mode = options?.editableMode ? "edit" : "normal";
         websiteEdit.update(targetEl, mode);
-    },
-});
-
-// Patch Colibri.
-
-patch(Colibri.prototype, {
-    protectSyncAfterAsync(interaction, name, fn) {
-        fn = super.protectSyncAfterAsync(interaction, name, fn);
-        const fullName = `${interaction.constructor.name}/${name}`;
-        return (...args) => {
-            // TODO No jQuery ?
-            const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
-            wysiwyg?.odooEditor.observerUnactive(fullName);
-            const result = fn(...args);
-            wysiwyg?.odooEditor.observerActive(fullName);
-            return result;
-        };
-    },
-    addListener(target, event, fn, options) {
-        const boundFn = fn.bind(this.interaction);
-        if (event.startsWith("slide.bs.carousel")) {
-            // Never allow cancelling this event in edit mode.
-            fn = (...args) => {
-                const ev = args[0];
-                ev.preventDefault = () => {};
-                ev.stopPropagation = () => {};
-                return boundFn(...args);
-            };
-        } else {
-            fn = boundFn;
-        }
-        let stealth = true;
-        const parts = event.split(".");
-        if (parts.includes("keepInHistory") || options?.keepInHistory) {
-            stealth = false;
-            event = parts.filter((part) => part !== "keepInHistory").join(".");
-            delete options?.keepInHistory;
-        }
-        // TODO No jQuery ?
-        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
-        let stealthFn = fn;
-        if (wysiwyg?.odooEditor && !fn.isHandler && stealth) {
-            const name = `${this.interaction.constructor.name}/${event}`;
-            stealthFn = (...args) => {
-                wysiwyg.odooEditor.observerUnactive(name);
-                const result = fn(...args);
-                wysiwyg.odooEditor.observerActive(name);
-                return result;
-            };
-        }
-        return super.addListener(target, event, stealthFn, options);
-    },
-    applyAttr(el, attr, value) {
-        // TODO No jQuery ?
-        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
-        const name = `${this.interaction.constructor.name}/${attr}`;
-        wysiwyg?.odooEditor.observerUnactive(name);
-        super.applyAttr(...arguments);
-        wysiwyg?.odooEditor.observerActive(name);
-    },
-    applyTOut(el, value) {
-        // TODO No jQuery ?
-        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
-        const name = `${this.interaction.constructor.name}/t-out`;
-        wysiwyg?.odooEditor.observerUnactive(name);
-        super.applyTOut(...arguments);
-        wysiwyg?.odooEditor.observerActive(name);
     },
 });
 

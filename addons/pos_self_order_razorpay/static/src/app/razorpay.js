@@ -1,5 +1,4 @@
 import { rpc } from "@web/core/network/rpc";
-
 const REQUEST_TIMEOUT = 10000;
 
 export class RazorpayError extends Error {}
@@ -25,7 +24,11 @@ export class Razorpay {
     handleRazorpayResponse(response) {
         if (response?.error) {
             this.payment_stopped
-                ? this.errorCallback(new RazorpayError("Transaction canceled due to inactivity"))
+                ? this.errorCallback(
+                      new RazorpayError(
+                          "Transaction canceled due to inactivity",
+                      ),
+                  )
                 : this.errorCallback(new RazorpayError(response.error));
             this.removePaymentHandler(["p2pRequestId"]);
             return false;
@@ -37,12 +40,15 @@ export class Razorpay {
     async cancelPayment(order) {
         const data = { p2pRequestId: localStorage.getItem("p2pRequestId") };
         try {
-            const cancel_response = await rpc("/pos-self-order/razorpay-cancel-transaction/", {
-                access_token: this.access_token,
-                order_id: order.id,
-                payment_data: data,
-                payment_method_id: this.razorpayPaymentMethod.id,
-            });
+            const cancel_response = await rpc(
+                "/pos-self-order/razorpay-cancel-transaction/",
+                {
+                    access_token: this.access_token,
+                    order_id: order.id,
+                    payment_data: data,
+                    payment_method_id: this.razorpayPaymentMethod.id,
+                },
+            );
             if (cancel_response) {
                 if (cancel_response?.errorMessage) {
                     this.errorCallback(cancel_response.errorMessage, "warning");
@@ -65,14 +71,19 @@ export class Razorpay {
 
     async processPayment(order) {
         try {
-            const initial_response = await rpc(`/kiosk/payment/${this.pos_config.id}/kiosk`, {
-                order: order.serializeForORM(),
-                access_token: this.access_token,
-                payment_method_id: this.razorpayPaymentMethod.id,
-            });
+            const initial_response = await rpc(
+                `/kiosk/payment/${this.pos_config.id}/kiosk`,
+                {
+                    order: order.serializeForORM(),
+                    access_token: this.access_token,
+                    payment_method_id: this.razorpayPaymentMethod.id,
+                },
+            );
             if (initial_response) {
                 this.savedOrder = initial_response.order[0];
-                return this.handleRazorpayResponse(initial_response.payment_status);
+                return this.handleRazorpayResponse(
+                    initial_response.payment_status,
+                );
             }
         } catch (error) {
             this.errorCallback(error);
@@ -103,7 +114,7 @@ export class Razorpay {
                         order_id: order.id,
                         payment_data: data,
                         payment_method_id: this.razorpayPaymentMethod.id,
-                    }
+                    },
                 );
                 if (polling_response?.error) {
                     this.handleRazorpayResponse(polling_response);
@@ -122,7 +133,10 @@ export class Razorpay {
                 } else {
                     // clearing previous timeout before setting a new one
                     clearTimeout(this.pollTimeout);
-                    this.pollTimeout = setTimeout(fetchPaymentStatus, REQUEST_TIMEOUT);
+                    this.pollTimeout = setTimeout(
+                        fetchPaymentStatus,
+                        REQUEST_TIMEOUT,
+                    );
                 }
             } catch (error) {
                 this.errorCallback(error);
@@ -132,7 +146,9 @@ export class Razorpay {
     }
 
     stopInactivePayment() {
-        return new Promise((resolve) => (this.inactivityTimeout = setTimeout(resolve, 90000)));
+        return new Promise(
+            (resolve) => (this.inactivityTimeout = setTimeout(resolve, 90000)),
+        );
     }
 
     removePaymentHandler(payment_data) {

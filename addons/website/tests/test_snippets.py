@@ -2,7 +2,7 @@
 import logging
 
 from lxml import html
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -46,8 +46,8 @@ class TestSnippets(HttpCase):
             for el in data_snippet_els
             if el.attrib['data-oe-snippet-key'] not in blacklist
         })
-        snippets_names_encoded = url_encode({'snippets_names': snippets_names})
-        path = url_encode({
+        snippets_names_encoded = urlencode({'snippets_names': snippets_names})
+        path = urlencode({
             'path': '/?' + snippets_names_encoded
         })
         if 'mail.group' in self.env and not self.env['mail.group'].search_count([]):
@@ -65,7 +65,7 @@ class TestSnippets(HttpCase):
             'social_facebook': "https://www.facebook.com/Odoo",
             'social_twitter': 'https://twitter.com/Odoo',
             'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_youtube': 'https://www.youtube.com/@odoo',
             'social_github': 'https://github.com/odoo',
             'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
             'social_tiktok': 'https://www.tiktok.com/@odoo',

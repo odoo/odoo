@@ -1,6 +1,7 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { expectMarkup, allowTranslations } from "@web/../tests/web_test_helpers";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
+import { allowTranslations, expectMarkup } from "@web/../tests/web_test_helpers";
 import { renderToElement, renderToString } from "@web/core/utils/render";
 
 describe.current.tags("headless");
@@ -14,7 +15,7 @@ test("renderToElement always returns an element", () => {
         </t>
         <t t-else="">
           <div>Ok</div>
-        </t>`
+        </t>`,
     );
     const compiledTemplate = renderToElement("test.render.template.1");
     expect(compiledTemplate.parentElement).toBe(null, {

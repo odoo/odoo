@@ -1,3 +1,5 @@
+// @ts-check
+
 import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -9,7 +11,13 @@ import {
     resize,
     unload,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    Deferred,
+    mockSendBeacon,
+    mockTouch,
+    runAllTimers,
+} from "@odoo/hoot-mock";
 import {
     clickModalButton,
     clickSave,
@@ -32,12 +40,11 @@ import {
     swipeLeft,
     swipeRight,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { RPCCache } from "@web/core/network/rpc_cache";
-import { pick } from "@web/core/utils/objects";
+import { pick } from "@web/core/utils/collections/objects";
 import { redirect } from "@web/core/utils/urls";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { WebClient } from "@web/webclient/webclient";
@@ -139,7 +146,9 @@ test("change setting on nav bar click in base settings on desktop", async () => 
         `,
     });
 
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "crm setting selected",
+    });
     expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
@@ -160,24 +169,20 @@ test("change setting on nav bar click in base settings on desktop", async () => 
         "Title of group Foo",
     ]);
     expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
-    expect(".o_searchview input").toBeFocused({ message: "searchview input should be focused" });
+    expect(".o_searchview input").toBeFocused({
+        message: "searchview input should be focused",
+    });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
-    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
-        "title",
-        "this is bar info"
-    );
-    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
-        "title",
-        "this is foo info"
-    );
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute("title", "this is bar info");
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute("title", "this is foo info");
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html",
     );
     expect(".o_setting_box a:eq(1)").toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html"
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html",
     );
 
     await editSearch("Hello there");
@@ -187,10 +192,12 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
-    expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
+    expect(queryFirst(".highlighter")).toHaveText("B", {
+        message: "b word highlighted",
+    });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
-        { message: "Foo is not shown" }
+        { message: "Foo is not shown" },
     );
 
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
@@ -199,10 +206,9 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Big");
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual(
-        ["Big BAZ"],
-        { message: "Only 'Big Baz' is shown" }
-    );
+    expect(
+        queryAllTexts(".o_settings_container  .o_setting_box .o_form_label"),
+    ).toEqual(["Big BAZ"], { message: "Only 'Big Baz' is shown" });
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
         message: "The title of group Bar is also selected",
     });
@@ -212,35 +218,42 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(queryFirst(".highlighter")).toHaveText("Manage Us", {
         message: "Manage Us word highlighted",
     });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Bar"], {
-        message: "Foo is not shown",
-    });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Bar"],
+        {
+            message: "Foo is not shown",
+        },
+    );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("group Bar");
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
-        { message: "When searching a title, all group is shown" }
+        { message: "When searching a title, all group is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("different");
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Personalize setting"],
-        { message: "When searching a title, all group is shown" }
+        { message: "When searching a title, all group is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("bx");
     await animationFrame();
-    expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
+    expect(".o_nocontent_help").toBeVisible({
+        message: "record not found message shown",
+    });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Fo");
-    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    expect(queryFirst(".highlighter")).toHaveText("Fo", {
+        message: "Fo word highlighted",
+    });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
-        { message: "only settings in group Foo is shown" }
+        { message: "only settings in group Foo is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
@@ -248,7 +261,9 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual([], {
+    expect(
+        queryAllTexts(".o_settings_container  .o_setting_box .o_form_label"),
+    ).toEqual([], {
         message: "Hide settings should not be shown",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
@@ -296,7 +311,9 @@ test("change setting on nav bar click in base settings on mobile", async () => {
         `,
     });
 
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "crm setting selected",
+    });
     expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
@@ -319,21 +336,15 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
-    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
-        "title",
-        "this is bar info"
-    );
-    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
-        "title",
-        "this is foo info"
-    );
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute("title", "this is bar info");
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute("title", "this is foo info");
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html",
     );
     expect(".o_setting_box a:eq(1)").toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html"
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html",
     );
 
     await editSearch("Hello there");
@@ -343,10 +354,12 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
-    expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
+    expect(queryFirst(".highlighter")).toHaveText("B", {
+        message: "b word highlighted",
+    });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
-        { message: "Foo is not shown" }
+        { message: "Foo is not shown" },
     );
 
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
@@ -355,10 +368,9 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Big");
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual(
-        ["Big BAZ"],
-        { message: "Only 'Big Baz' is shown" }
-    );
+    expect(
+        queryAllTexts(".o_settings_container  .o_setting_box .o_form_label"),
+    ).toEqual(["Big BAZ"], { message: "Only 'Big Baz' is shown" });
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
         message: "The title of group Bar is also selected",
     });
@@ -368,35 +380,42 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(queryFirst(".highlighter")).toHaveText("Manage Us", {
         message: "Manage Us word highlighted",
     });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Bar"], {
-        message: "Foo is not shown",
-    });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Bar"],
+        {
+            message: "Foo is not shown",
+        },
+    );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("group Bar");
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
-        { message: "When searching a title, all group is shown" }
+        { message: "When searching a title, all group is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("different");
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Personalize setting"],
-        { message: "When searching a title, all group is shown" }
+        { message: "When searching a title, all group is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("bx");
     await animationFrame();
-    expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
+    expect(".o_nocontent_help").toBeVisible({
+        message: "record not found message shown",
+    });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Fo");
-    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    expect(queryFirst(".highlighter")).toHaveText("Fo", {
+        message: "Fo word highlighted",
+    });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
-        { message: "only settings in group Foo is shown" }
+        { message: "only settings in group Foo is shown" },
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
@@ -404,7 +423,9 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual([], {
+    expect(
+        queryAllTexts(".o_settings_container  .o_setting_box .o_form_label"),
+    ).toEqual([], {
         message: "Hide settings should not be shown",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
@@ -534,19 +555,27 @@ test("unhighlight section not matching anymore", async () => {
             </form>
         `,
     });
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(".settings .app_settings_block").toBeVisible({ message: "project settings show" });
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "crm setting selected",
+    });
+    expect(".settings .app_settings_block").toBeVisible({
+        message: "project settings show",
+    });
 
     await editSearch("trea");
     await runAllTimers();
     await animationFrame();
-    expect(".highlighter").toHaveCount(2, { message: "should have 2 options highlighted" });
+    expect(".highlighter").toHaveCount(2, {
+        message: "should have 2 options highlighted",
+    });
     expect(queryAllTexts(":has(>.highlighter)")).toEqual(["treads", "treats"]);
 
     await editSearch("tread");
     await runAllTimers();
     await animationFrame();
-    expect(".highlighter").toHaveCount(1, { message: "should have only one highlighted" });
+    expect(".highlighter").toHaveCount(1, {
+        message: "should have only one highlighted",
+    });
     expect(queryAllTexts(":has(>.highlighter)")).toEqual(["treads"]);
 });
 
@@ -821,7 +850,9 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
 
     const action = getService("action").doAction(1);
     await animationFrame();
-    expect(".modal").toHaveCount(0, { message: "do not open modal if there is no change" });
+    expect(".modal").toHaveCount(0, {
+        message: "do not open modal if there is no change",
+    });
     await action;
 
     await getService("action").doAction(1);
@@ -852,7 +883,9 @@ test("Auto save: don't save on closing tab/browser", async () => {
     expect(".o_field_boolean input:checked").toHaveCount(0, {
         message: "checkbox should not be checked",
     });
-    expect(".o_dirty_warning").toHaveCount(0, { message: "warning message should not be shown" });
+    expect(".o_dirty_warning").toHaveCount(0, {
+        message: "warning message should not be shown",
+    });
     await click(".o_field_boolean input[id=bar_0]");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(1, {
@@ -883,7 +916,9 @@ test("Auto save: don't save on visibility change", async () => {
     expect(".o_field_boolean input:checked").toHaveCount(0, {
         message: "checkbox should not be checked",
     });
-    expect(".o_dirty_warning").toHaveCount(0, { message: "warning message should not be shown" });
+    expect(".o_dirty_warning").toHaveCount(0, {
+        message: "warning message should not be shown",
+    });
     click(".o_field_boolean input[id=bar_0]");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(1, {
@@ -954,7 +989,9 @@ test("settings views does not write the id on the url", async () => {
     expect(".o_field_boolean input").toHaveProperty("disabled", false);
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
     await clickSave();
 
     await animationFrame();
@@ -1005,7 +1042,9 @@ test("settings views can search when coming back in breadcrumbs", async () => {
     await animationFrame();
     await editSearch("Fo");
     await runAllTimers();
-    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    expect(queryFirst(".highlighter")).toHaveText("Fo", {
+        message: "Fo word highlighted",
+    });
 });
 
 test("search for default label when label has empty string", async () => {
@@ -1102,7 +1141,9 @@ test("clicking on any button in setting should show discard warning if setting f
 
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
 
     await click("button[name='4']");
     await animationFrame();
@@ -1171,17 +1212,24 @@ test("header field don't dirty settings", async () => {
     Task._views.list = /* xml */ `<list><field name="display_name"/></list>`;
 
     onRpc("web_save", ({ args }) => {
-        expect(args[1]).toEqual({ foo: true }, { message: "should create a record with foo=true" });
+        expect(args[1]).toEqual(
+            { foo: true },
+            { message: "should create a record with foo=true" },
+        );
     });
 
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(1);
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
 
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
 
     expect(".modal-title").toHaveCount(0, {
         message: "should not say that there are unsaved changes",
@@ -1441,11 +1489,15 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(1);
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
 
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
 
     await click("button[name='4']");
     await animationFrame();
@@ -1499,13 +1551,17 @@ test("settings view shows a message if there are changes", async () => {
         `,
     });
 
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
     expect(".o_control_panel .o_dirty_warning").toHaveCount(0, {
         message: "warning message should not be shown",
     });
     await click(".o_field_boolean input[id=bar_0]");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
         message: "warning message should be shown",
     });
@@ -1685,11 +1741,15 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(1);
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
 
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
+    expect(".o_field_boolean input").toBeChecked({
+        message: "checkbox should be checked",
+    });
 
     await click('button[name="4"]');
     await animationFrame();
@@ -1740,7 +1800,9 @@ test("Discard button clean the settings view", async () => {
         "get_views",
         "onchange",
     ]);
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
 
     await click(".o_field_boolean input");
     await animationFrame();
@@ -1750,7 +1812,9 @@ test("Discard button clean the settings view", async () => {
 
     await click(".o_control_panel .o_form_button_cancel");
     await animationFrame();
-    expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
+    expect(".o_field_boolean input").not.toBeChecked({
+        message: "checkbox should not be checked",
+    });
     expect.verifySteps(["onchange"]);
 });
 
@@ -1798,12 +1862,16 @@ test("Settings Radio widget: show and search", async () => {
     expect(queryAllTexts(".o_radio_item:has(label)")).toEqual(["xphone", "xpad"]);
     await editSearch("xp");
     await runAllTimers();
-    expect(".highlighter").toHaveCount(2, { message: "should have 2 options highlighted" });
+    expect(".highlighter").toHaveCount(2, {
+        message: "should have 2 options highlighted",
+    });
     expect(queryAllTexts(":has(>.highlighter)")).toEqual(["xphone", "xpad"]);
 
     await editSearch("xph");
     await runAllTimers();
-    expect(".highlighter").toHaveCount(1, { message: "should have only one highlighted" });
+    expect(".highlighter").toHaveCount(1, {
+        message: "should have only one highlighted",
+    });
     expect(queryAllTexts(":has(>.highlighter)")).toEqual(["xphone"]);
 });
 
@@ -1835,16 +1903,22 @@ test("Settings with createLabelFromField", async () => {
 
     await editSearch("__comp__.props.record");
     await runAllTimers();
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([]);
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        [],
+    );
 
     await editSearch("baz");
     await runAllTimers();
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([]);
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        [],
+    );
 
     await editSearch("zab");
     await runAllTimers();
     expect(".highlighter").toHaveText("Zab", { message: "Zab word highlighted" });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Zab"]);
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Zab"],
+    );
 });
 
 test("standalone field labels with string inside a settings page", async () => {
@@ -1905,7 +1979,7 @@ test("field and artificial label inside a settings page", async () => {
     });
     expect(".o_field_integer[name=count]").toHaveCount(1);
     expect("span.o_form_label").toHaveInnerHTML(
-        `<span searchabletext="\n                            items\n                        ">\n                            items\n                        </span>`
+        `<span searchabletext="\n                            items\n                        ">\n                            items\n                        </span>`,
     );
 });
 
@@ -1937,15 +2011,15 @@ test("highlight Element with inner html/fields", async () => {
     });
 
     expect(".o_setting_right_pane .text-muted").toHaveText(
-        "this is Baz value: treads and this is the after text"
+        "this is Baz value: treads and this is the after text",
     );
     const expectedCompiled = /* xml */ `
             <HighlightText originalText="\`this is Baz value: \`"/>
             <Field id="'baz_0'" name="'baz'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['baz_0']" readonly="__comp__.props.readonly"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
-    expect(queryFirst("SearchableSetting div.text-muted", { root: compiled })).toHaveInnerHTML(
-        expectedCompiled
-    );
+    expect(
+        queryFirst("SearchableSetting div.text-muted", { root: compiled }),
+    ).toHaveInnerHTML(expectedCompiled);
 });
 
 test.tags("desktop", "focus required");
@@ -2115,9 +2189,12 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     expect('.o_field_widget[name="file"] .fa-download').toHaveCount(1, {
         message: "Download button should be display in settings form view",
     });
-    expect('.o_field_widget[name="file"].o_field_binary .o_input').toHaveValue("coucou.txt", {
-        message: "the binary field should display the file name in the input",
-    });
+    expect('.o_field_widget[name="file"].o_field_binary .o_input').toHaveValue(
+        "coucou.txt",
+        {
+            message: "the binary field should display the file name in the input",
+        },
+    );
     expect(".o_field_binary .o_clear_file_button").toHaveCount(1, {
         message: "there shoud be a button to clear the file",
     });
@@ -2141,7 +2218,9 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();
 
-    expect(".o_field_binary input").not.toBeVisible({ message: "the input should be hidden" });
+    expect(".o_field_binary input").not.toBeVisible({
+        message: "the input should be hidden",
+    });
     expect(".o_field_binary .o_select_file_button").toHaveCount(1, {
         message: "there should be a button to upload the file",
     });
@@ -2182,8 +2261,12 @@ test("Open settings from url, with app anchor", async () => {
     redirect("/odoo/settings#crm");
     await mountWithCleanup(WebClient);
     await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "crm setting selected",
+    });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
+        "Foo",
+    ]);
 });
 
 test("Open settings from url, with setting id anchor", async () => {
@@ -2217,10 +2300,16 @@ test("Open settings from url, with setting id anchor", async () => {
 
     redirect("/odoo/settings#setting_id");
     await mountWebClient();
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "crm setting selected",
+    });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
+        "Foo",
+    ]);
     expect(".o_setting_highlight").toHaveCount(1);
-    expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual(["Foo"]);
+    expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual([
+        "Foo",
+    ]);
     await runAllTimers();
     expect(".o_setting_highlight").toHaveCount(0);
 });
@@ -2302,7 +2391,7 @@ test("Don't cache settings data", async () => {
     const cache = new RPCCache(
         "mockRpc",
         1,
-        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
     );
 
     defineActions([
@@ -2331,13 +2420,19 @@ test("Don't cache settings data", async () => {
     await getService("action").doAction(1);
 
     await animationFrame();
-    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Bar"]);
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
+        "Bar",
+    ]);
 
     // The view is cached
-    expect(Object.keys(cache.ramCache.ram.get_views)[0].includes("res.config.settings")).toBe(true);
+    expect(
+        Object.keys(cache.ramCache.ram.get_views)[0].includes("res.config.settings"),
+    ).toBe(true);
     // The onChange is not cached
     expect(
-        Object.keys(cache.ramCache.ram.onchange || {})?.[0]?.includes("res.config.settings")
+        Object.keys(cache.ramCache.ram.onchange || {})?.[0]?.includes(
+            "res.config.settings",
+        ),
     ).toBe(undefined);
 });
 

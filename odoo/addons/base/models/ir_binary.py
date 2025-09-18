@@ -1,42 +1,52 @@
 import logging
-from datetime import datetime
+import pathlib
+from datetime import UTC, datetime
 from mimetypes import guess_extension
+from typing import Any
 
 import werkzeug.http
 
 from odoo import models
 from odoo.exceptions import MissingError, UserError
 from odoo.http import Stream, request
+from odoo.libs.filesystem.mimetypes import (
+    MIMETYPE_HEAD_SIZE,
+    get_extension,
+    guess_mimetype,
+)
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_guess_size_from_field_name, image_process
-from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, get_extension, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
 
-DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
+DEFAULT_PLACEHOLDER_PATH = "web/static/img/placeholder.png"
 _logger = logging.getLogger(__name__)
 
 
 class IrBinary(models.AbstractModel):
-    _name = 'ir.binary'
+    _name = "ir.binary"
     _description = "File streaming helper model for controllers"
 
     def _find_record(
-            self, xmlid=None, res_model='ir.attachment', res_id=None,
-            access_token=None, field=None
-    ):
+        self,
+        xmlid: str | None = None,
+        res_model: str = "ir.attachment",
+        res_id: int | None = None,
+        access_token: str | None = None,
+        field: str | None = None,
+    ) -> Any:
         """
         Find and return a record either using an xmlid either a model+id
         pair. This method is an helper for the ``/web/content`` and
         ``/web/image`` controllers and should not be used in other
         contextes.
 
-        :param Optional[str] xmlid: xmlid of the record
-        :param Optional[str] res_model: model of the record,
+        :param str | None xmlid: xmlid of the record
+        :param str res_model: model of the record,
             ir.attachment by default.
-        :param Optional[id] res_id: id of the record
-        :param Optional[str] access_token: access token to use instead
+        :param int | None res_id: id of the record
+        :param str | None access_token: access token to use instead
             of the access rights and access rules.
-        :param Optional[str] field: image field name to check the access to
+        :param str | None field: image field name to check the access to
         :returns: single record
         :raises MissingError: when no record was found.
         """
@@ -46,15 +56,19 @@ class IrBinary(models.AbstractModel):
         elif res_id is not None and res_model in self.env:
             record = self.env[res_model].browse(res_id).exists()
         if not record:
-            raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")  # pylint: disable=missing-gettext
-        if access_token and verify_limited_field_access_token(record, field, access_token, scope="binary"):
+            raise MissingError(  # pylint: disable=missing-gettext,E8507
+                f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}"
+            )
+        if access_token and verify_limited_field_access_token(
+            record, field, access_token, scope="binary"
+        ):
             return record.sudo()
         if record._can_return_content(field, access_token):
             return record.sudo()
         record.check_access("read")
         return record
 
-    def _record_to_stream(self, record, field_name):
+    def _record_to_stream(self, record: Any, field_name: str) -> Stream:
         """
         Low level method responsible for the actual conversion from a
         model record to a stream. This method is an extensible hook for
@@ -64,20 +78,31 @@ class IrBinary(models.AbstractModel):
         :param record: the record where to load the data from.
         :param str field_name: the binary field where to load the data
             from.
-        :rtype: odoo.http.Stream
+        :rtype: Stream
         """
-        if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
+        if record._name == "ir.attachment" and field_name in (
+            "raw",
+            "datas",
+            "db_datas",
+        ):
             return record._to_http_stream()
 
         field = record._fields[field_name]
-        record._check_field_access(field, 'read')
+        record._check_field_access(field, "read")
 
         if field.attachment:
-            field_attachment = self.env['ir.attachment'].sudo().search(
-                domain=[('res_model', '=', record._name),
-                        ('res_id', '=', record.id),
-                        ('res_field', '=', field_name)],
-                limit=1)
+            field_attachment = (
+                self.env["ir.attachment"]
+                .sudo()
+                .search(
+                    domain=[
+                        ("res_model", "=", record._name),
+                        ("res_id", "=", record.id),
+                        ("res_field", "=", field_name),
+                    ],
+                    limit=1,
+                )
+            )
             if not field_attachment:
                 raise MissingError(self.env._("The related attachment does not exist."))
             return field_attachment._to_http_stream()
@@ -85,37 +110,49 @@ class IrBinary(models.AbstractModel):
         return Stream.from_binary_field(record, field_name)
 
     def _get_stream_from(
-        self, record, field_name='raw', filename=None, filename_field='name',
-        mimetype=None, default_mimetype='application/octet-stream',
-    ):
+        self,
+        record: Any,
+        field_name: str = "raw",
+        filename: str | None = None,
+        filename_field: str = "name",
+        mimetype: str | None = None,
+        default_mimetype: str = "application/octet-stream",
+    ) -> Stream:
         """
         Create a :class:odoo.http.Stream: from a record's binary field.
 
         :param record: the record where to load the data from.
         :param str field_name: the binary field where to load the data
             from.
-        :param Optional[str] filename: when the stream is downloaded by
+        :param str | None filename: when the stream is downloaded by
             a browser, what filename it should have on disk. By default
             it is ``{model}-{id}-{field}.{extension}``, the extension is
             determined thanks to mimetype.
-        :param Optional[str] filename_field: like ``filename`` but use
+        :param str filename_field: like ``filename`` but use
             one of the record's char field as filename.
-        :param Optional[str] mimetype: the data mimetype to use instead
+        :param str | None mimetype: the data mimetype to use instead
             of the stored one (attachment) or the one determined by
             magic.
         :param str default_mimetype: the mimetype to use when the
             mimetype couldn't be determined. By default it is
             ``application/octet-stream``.
-        :rtype: odoo.http.Stream
+        :rtype: Stream
         """
-        with replace_exceptions(ValueError, by=UserError(f'Expected singleton: {record}')):  # pylint: disable=missing-gettext
+        with replace_exceptions(
+            ValueError,
+            by=UserError(  # pylint: disable=missing-gettext
+                f"Expected singleton: {record}"
+            ),
+        ):
             record.ensure_one()
 
         try:
             field_def = record._fields[field_name]
         except KeyError:
-            raise UserError(f"Record has no field {field_name!r}.")  # pylint: disable=missing-gettext
-        if field_def.type != 'binary':
+            raise UserError(  # pylint: disable=missing-gettext,E8507
+                f"Record has no field {field_name!r}."
+            )
+        if field_def.type != "binary":
             raise UserError(  # pylint: disable=missing-gettext
                 f"Field {field_def!r} is type {field_def.type!r} but "
                 f"it is only possible to stream Binary or Image fields."
@@ -123,14 +160,14 @@ class IrBinary(models.AbstractModel):
 
         stream = self._record_to_stream(record, field_name)
 
-        if stream.type in ('data', 'path'):
+        if stream.type in ("data", "path"):
             if mimetype:
                 stream.mimetype = mimetype
             elif not stream.mimetype:
-                if stream.type == 'data':
+                if stream.type == "data":
                     head = stream.data[:MIMETYPE_HEAD_SIZE]
                 else:
-                    with open(stream.path, 'rb') as file:
+                    with pathlib.Path(stream.path).open("rb") as file:
                         head = file.read(MIMETYPE_HEAD_SIZE)
                 stream.mimetype = guess_mimetype(head, default=default_mimetype)
 
@@ -139,20 +176,33 @@ class IrBinary(models.AbstractModel):
             elif filename_field in record:
                 stream.download_name = record[filename_field]
             if not stream.download_name:
-                stream.download_name = f'{record._table}-{record.id}-{field_name}'
+                stream.download_name = f"{record._table}-{record.id}-{field_name}"
 
-            stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
-            if (not get_extension(stream.download_name)
-                and stream.mimetype != 'application/octet-stream'):
-                stream.download_name += guess_extension(stream.mimetype) or ''
+            stream.download_name = stream.download_name.replace("\n", "_").replace(
+                "\r", "_"
+            )
+            if (
+                not get_extension(stream.download_name)
+                and stream.mimetype != "application/octet-stream"
+            ):
+                stream.download_name += guess_extension(stream.mimetype) or ""
 
         return stream
 
     def _get_image_stream_from(
-        self, record, field_name='raw', filename=None, filename_field='name',
-        mimetype=None, default_mimetype='image/png', placeholder=None,
-        width=0, height=0, crop=False, quality=0,
-    ):
+        self,
+        record: Any,
+        field_name: str = "raw",
+        filename: str | None = None,
+        filename_field: str = "name",
+        mimetype: str | None = None,
+        default_mimetype: str = "image/png",
+        placeholder: str | None = None,
+        width: int = 0,
+        height: int = 0,
+        crop: bool = False,
+        quality: int = 0,
+    ) -> Stream:
         """
         Create a :class:odoo.http.Stream: from a record's binary field,
         equivalent of :meth:`~get_stream_from` but for images.
@@ -171,19 +221,19 @@ class IrBinary(models.AbstractModel):
         :param record: the record where to load the data from.
         :param str field_name: the binary field where to load the data
             from.
-        :param Optional[str] filename: when the stream is downloaded by
+        :param str | None filename: when the stream is downloaded by
             a browser, what filename it should have on disk. By default
             it is ``{table}-{id}-{field}.{extension}``, the extension is
             determined thanks to mimetype.
-        :param Optional[str] filename_field: like ``filename`` but use
+        :param str filename_field: like ``filename`` but use
             one of the record's char field as filename.
-        :param Optional[str] mimetype: the data mimetype to use instead
+        :param str | None mimetype: the data mimetype to use instead
             of the stored one (attachment) or the one determined by
             magic.
         :param str default_mimetype: the mimetype to use when the
             mimetype couldn't be determined. By default it is
             ``image/png``.
-        :param Optional[pathlike] placeholder: in case the image is not
+        :param str | None placeholder: in case the image is not
             found or unaccessible, the path of an image to use instead.
             By default the record ``_get_placeholder_filename`` on the
             requested field or ``web/static/img/placeholder.png``.
@@ -198,11 +248,15 @@ class IrBinary(models.AbstractModel):
         stream = None
         try:
             stream = self._get_stream_from(
-                record, field_name, filename, filename_field, mimetype,
-                default_mimetype
+                record,
+                field_name,
+                filename,
+                filename_field,
+                mimetype,
+                default_mimetype,
             )
         except UserError:
-            if request.params.get('download'):
+            if request and request.params.get("download"):
                 raise
 
         if not stream or stream.size == 0:
@@ -210,28 +264,28 @@ class IrBinary(models.AbstractModel):
                 placeholder = record._get_placeholder_filename(field_name)
             stream = self._get_placeholder_stream(placeholder)
 
-        if stream.type == 'url':
+        if stream.type == "url":
             return stream  # Rezising an external URL is not supported
-        if not stream.mimetype.startswith('image/'):
-            stream.mimetype = 'application/octet-stream'
+        if not stream.mimetype.startswith("image/"):
+            stream.mimetype = "application/octet-stream"
 
         if (width, height) == (0, 0):
             width, height = image_guess_size_from_field_name(field_name)
 
         if isinstance(stream.etag, str):
-            stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
+            stream.etag += f"-{width}x{height}-crop={crop}-quality={quality}"
         if isinstance(stream.last_modified, (int, float)):
-            stream.last_modified = datetime.fromtimestamp(stream.last_modified, tz=None)
+            stream.last_modified = datetime.fromtimestamp(stream.last_modified, tz=UTC)
         modified = werkzeug.http.is_resource_modified(
             request.httprequest.environ,
             etag=stream.etag if isinstance(stream.etag, str) else None,
-            last_modified=stream.last_modified
+            last_modified=stream.last_modified,
         )
 
         if modified and (width or height or crop):
-            if stream.type == 'path':
-                with open(stream.path, 'rb') as file:
-                    stream.type = 'data'
+            if stream.type == "path":
+                with pathlib.Path(stream.path).open("rb") as file:
+                    stream.type = "data"
                     stream.path = None
                     stream.data = file.read()
             stream.data = image_process(
@@ -244,13 +298,13 @@ class IrBinary(models.AbstractModel):
 
         return stream
 
-    def _get_placeholder_stream(self, path=None):
+    def _get_placeholder_stream(self, path: str | None = None) -> Stream:
         if not path:
             path = DEFAULT_PLACEHOLDER_PATH
-        return Stream.from_path(path, filter_ext=('.png', '.jpg'))
+        return Stream.from_path(path, filter_ext=(".png", ".jpg"))
 
-    def _placeholder(self, path=False):
+    def _placeholder(self, path: str | bool = False) -> bytes:
         if not path:
             path = DEFAULT_PLACEHOLDER_PATH
-        with file_open(path, 'rb', filter_ext=('.png', '.jpg')) as file:
+        with file_open(path, "rb", filter_ext=(".png", ".jpg")) as file:
             return file.read()

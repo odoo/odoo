@@ -2,7 +2,7 @@
 
 import json
 
-from werkzeug.urls import url_encode, url_parse
+from urllib.parse import urlencode as url_encode, urlsplit as url_parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError

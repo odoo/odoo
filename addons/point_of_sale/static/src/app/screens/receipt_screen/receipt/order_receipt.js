@@ -1,11 +1,10 @@
 import { Component } from "@odoo/owl";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { ReceiptHeader } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt_header/receipt_header";
-import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
-import { _t } from "@web/core/l10n/translation";
-import { formatCurrency } from "@web/core/currency";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
-
+import { _t } from "@web/core/l10n/translation";
+import { formatCurrency } from "@web/services/currency";
 export class OrderReceipt extends Component {
     static template = "point_of_sale.OrderReceipt";
     static components = {

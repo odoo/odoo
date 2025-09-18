@@ -1,6 +1,6 @@
 import { ListController } from '@web/views/list/list_controller';
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 
 export class StockOrderpointListController extends ListController {
     static template = "stock.StockOrderpoint.listView";

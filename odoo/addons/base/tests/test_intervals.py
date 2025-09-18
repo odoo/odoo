@@ -1,13 +1,12 @@
 from datetime import datetime
 
+from odoo.libs.intervals import Intervals, intervals_overlap, invert_intervals
 from odoo.tests.common import TransactionCase
-from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
 
 
 class TestIntervals(TransactionCase):
-
     def ints(self, pairs):
-        recs = self.env['base']
+        recs = self.env["base"]
         return [(a, b, recs) for a, b in pairs]
 
     def test_union(self):
@@ -71,8 +70,8 @@ class TestIntervals(TransactionCase):
         )
 
     def test_keep_distinct(self):
-        """ Test merge operations between two Intervals
-            instances with different _keep_distinct flags.
+        """Test merge operations between two Intervals
+        instances with different _keep_distinct flags.
         """
 
         A = Intervals(self.ints([(0, 10)]), keep_distinct=False)
@@ -94,22 +93,32 @@ class TestIntervals(TransactionCase):
 
 
 class TestUtils(TransactionCase):
-
     def test_intervals_intersections(self):
         test_data = [
-            ((datetime(2023, 2, 14), datetime(2023, 2, 15)),
-             (datetime(2023, 2, 15), datetime(2023, 2, 16)), False),
-            ((datetime(2023, 2, 14), datetime(2023, 2, 15)),
-             (datetime(2023, 2, 13), datetime(2023, 2, 16)), True),
-            ((datetime(2023, 2, 13), datetime(2023, 2, 16)),
-             (datetime(2023, 2, 14), datetime(2023, 2, 15)), True),
-            ((datetime(2023, 2, 13), datetime(2023, 2, 16)),
-             (datetime(2023, 2, 15), datetime(2023, 2, 17)), True),
+            (
+                (datetime(2023, 2, 14), datetime(2023, 2, 15)),
+                (datetime(2023, 2, 15), datetime(2023, 2, 16)),
+                False,
+            ),
+            (
+                (datetime(2023, 2, 14), datetime(2023, 2, 15)),
+                (datetime(2023, 2, 13), datetime(2023, 2, 16)),
+                True,
+            ),
+            (
+                (datetime(2023, 2, 13), datetime(2023, 2, 16)),
+                (datetime(2023, 2, 14), datetime(2023, 2, 15)),
+                True,
+            ),
+            (
+                (datetime(2023, 2, 13), datetime(2023, 2, 16)),
+                (datetime(2023, 2, 15), datetime(2023, 2, 17)),
+                True,
+            ),
         ]
         for interval_a, interval_b, overlaps in test_data:
             with self.subTest(interval_a=interval_a, interval_b=interval_b):
-                self.assertEqual(intervals_overlap(
-                    interval_a, interval_b), overlaps)
+                self.assertEqual(intervals_overlap(interval_a, interval_b), overlaps)
 
     def test_intervals_inversion(self):
         test_intervals = [
@@ -120,15 +129,30 @@ class TestUtils(TransactionCase):
             (datetime(2023, 2, 11), datetime(2023, 2, 12)),
             (datetime(2023, 2, 13), datetime(2023, 2, 15)),  # overlapping
             (datetime(2023, 2, 14), datetime(2023, 2, 18)),
-            (datetime(2023, 2, 15), datetime(2023, 2, 16)),  # contained inside the previous
-            (datetime(2023, 2, 25), datetime(2023, 3, 10)),  # unordered non-adjacent
+            (
+                datetime(2023, 2, 15),
+                datetime(2023, 2, 16),
+            ),  # contained inside the previous
+            (
+                datetime(2023, 2, 25),
+                datetime(2023, 3, 10),
+            ),  # unordered non-adjacent
             (datetime(2023, 2, 20), datetime(2023, 2, 22)),
         ]
         test_limits = [
             (datetime(2023, 1, 1), datetime(2023, 4, 1)),  # all-encompassing
-            (datetime(2023, 2, 5), datetime(2023, 3, 10)),  # exact fit original intervals
-            (datetime(2023, 2, 9), datetime(2023, 2, 12)),  # exact fit of one interval
-            (datetime(2023, 2, 6), datetime(2023, 2, 9)),  # exact fit of one inverted interval
+            (
+                datetime(2023, 2, 5),
+                datetime(2023, 3, 10),
+            ),  # exact fit original intervals
+            (
+                datetime(2023, 2, 9),
+                datetime(2023, 2, 12),
+            ),  # exact fit of one interval
+            (
+                datetime(2023, 2, 6),
+                datetime(2023, 2, 9),
+            ),  # exact fit of one inverted interval
             (datetime(2023, 2, 8), datetime(2023, 2, 11)),  # overlapping some
         ]
         test_results = [
@@ -154,16 +178,18 @@ class TestUtils(TransactionCase):
                 (datetime(2023, 2, 8), datetime(2023, 2, 9)),
             ],
         ]
-        for limits, expected_result in zip(test_limits, test_results):
+        for limits, expected_result in zip(test_limits, test_results, strict=False):
             start, end = limits
             with self.subTest(start=start, end=end):
-                self.assertListEqual(invert_intervals(test_intervals, start, end), expected_result)
+                self.assertListEqual(
+                    invert_intervals(test_intervals, start, end),
+                    expected_result,
+                )
 
 
 class TestKeepDistinctIntervals(TransactionCase):
-
     def ints(self, pairs):
-        recs = self.env['base']
+        recs = self.env["base"]
         return [(a, b, recs) for a, b in pairs]
 
     def test_union(self):
@@ -184,7 +210,12 @@ class TestKeepDistinctIntervals(TransactionCase):
     def test_intersection(self):
         def check(a, b, c):
             a, b, c = self.ints(a), self.ints(b), self.ints(c)
-            self.assertEqual(list(Intervals(a, keep_distinct=True) & Intervals(b, keep_distinct=True)), c)
+            self.assertEqual(
+                list(
+                    Intervals(a, keep_distinct=True) & Intervals(b, keep_distinct=True)
+                ),
+                c,
+            )
 
         check([(10, 20)], [(5, 8)], [])
         check([(10, 20)], [(5, 10)], [])
@@ -207,7 +238,12 @@ class TestKeepDistinctIntervals(TransactionCase):
     def test_difference(self):
         def check(a, b, c):
             a, b, c = self.ints(a), self.ints(b), self.ints(c)
-            self.assertEqual(list(Intervals(a, keep_distinct=True) - Intervals(b, keep_distinct=True)), c)
+            self.assertEqual(
+                list(
+                    Intervals(a, keep_distinct=True) - Intervals(b, keep_distinct=True)
+                ),
+                c,
+            )
 
         check([(10, 20)], [(5, 8)], [(10, 20)])
         check([(10, 20)], [(5, 10)], [(10, 20)])

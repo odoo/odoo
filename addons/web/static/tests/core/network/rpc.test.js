@@ -1,13 +1,14 @@
+// @ts-check
+
 import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { mockFetch } from "@odoo/hoot-mock";
-
 import {
     ConnectionAbortedError,
     ConnectionLostError,
-    RPCError,
     rpc,
     rpcBus,
+    RPCError,
 } from "@web/core/network/rpc";
 import { RPCCache } from "@web/core/network/rpc_cache";
 
@@ -142,7 +143,7 @@ test("rpc can send additional headers", async () => {
             new Headers([
                 ["Content-Type", "application/json"],
                 ["Hello", "World"],
-            ])
+            ]),
         );
         return { result: true };
     });
@@ -154,8 +155,8 @@ test("Cache: can cache a simple rpc", async () => {
         new RPCCache(
             "mockRpc",
             1,
-            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
-        )
+            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b",
+        ),
     );
     mockFetch(() => {
         expect.step("Fetch");

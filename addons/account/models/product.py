@@ -2,7 +2,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_amount
-from odoo.tools.misc import split_every
+from itertools import batched
 
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
@@ -122,11 +122,11 @@ class ProductTemplate(models.Model):
               JOIN product_template prod_template ON prod_variant.product_tmpl_id = prod_template.id
               JOIN uom_uom template_uom ON prod_template.uom_id = template_uom.id
               JOIN uom_uom line_uom ON line.product_uom_id = line_uom.id
-             WHERE prod_template.id IN %s
+             WHERE prod_template.id = ANY(%s)
                AND line.parent_state = 'posted'
                AND template_uom.id != line_uom.id
              LIMIT 1
-        """, [tuple(self.ids)])
+        """, [list(self.ids)])
         if self.env.cr.fetchall():
             raise ValidationError(_(
                 "This product is already being used in posted Journal Entries.\n"
@@ -145,7 +145,7 @@ class ProductTemplate(models.Model):
         if not default_customer_taxes:
             return
         links = [Command.link(t.id) for t in default_customer_taxes]
-        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+        for sub_ids in batched(self.ids, self.env.cr.BATCH_SIZE):
             chunk = self.browse(sub_ids)
             chunk.write({'taxes_id': links})
             chunk.invalidate_recordset(['taxes_id'])
@@ -155,7 +155,7 @@ class ProductTemplate(models.Model):
         if not default_supplier_taxes:
             return
         links = [Command.link(t.id) for t in default_supplier_taxes]
-        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+        for sub_ids in batched(self.ids, self.env.cr.BATCH_SIZE):
             chunk = self.browse(sub_ids)
             chunk.write({'supplier_taxes_id': links})
             chunk.invalidate_recordset(['supplier_taxes_id'])

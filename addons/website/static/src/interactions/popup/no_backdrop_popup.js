@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { isScrollableY } from "@web/core/utils/scrolling";
+import { isScrollableY } from "@web/core/utils/dom/scrolling";
 
 export class NoBackdropPopup extends Interaction {
     static selector = ".s_popup_no_backdrop";

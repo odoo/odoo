@@ -1,6 +1,8 @@
+// @ts-check
+
 import { serverState } from "../../mock_server_state.hoot";
-import { ServerModel } from "../mock_model";
 import * as fields from "../mock_fields";
+import { ServerModel } from "../mock_model";
 
 export class ResGroups extends ServerModel {
     _name = "res.groups";

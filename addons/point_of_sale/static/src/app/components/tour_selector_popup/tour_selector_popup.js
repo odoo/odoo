@@ -1,8 +1,7 @@
-import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-
+import { registry } from "@web/core/registry";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class TourSelectorPopup extends Component {
     static components = { Dialog };
     static template = "point_of_sale.TourSelectorPopup";

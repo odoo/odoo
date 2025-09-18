@@ -1,8 +1,12 @@
-import { Component } from "@odoo/owl";
-import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
-import { pick } from "@web/core/utils/objects";
-import { debounce as debounceFn } from "@web/core/utils/timing";
+// @ts-check
 
+/** @module @web/views/view_button/view_button - Renders arch button elements with debouncing, tooltips, and Bootstrap class resolution */
+
+import { Component } from "@odoo/owl";
+import { useDropdownCloser } from "@web/components/dropdown/dropdown_hooks";
+import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/collections/objects";
+import { debounce as debounceFn } from "@web/core/utils/timing";
 const explicitRankClasses = [
     "btn-primary",
     "btn-secondary",
@@ -18,6 +22,11 @@ const odooToBootstrapClasses = {
     oe_link: "btn-link",
 };
 
+/**
+ * Parse an icon string into a tag/class descriptor for Font Awesome, OdooIcon, or image sources.
+ * @param {string} iconString - icon identifier (e.g. "fa-save", "oi-settings", or an image URL)
+ * @returns {{ tag: string, class?: string, src?: string }}
+ */
 function iconFromString(iconString) {
     const icon = {};
     if (iconString.startsWith("fa-")) {
@@ -33,6 +42,7 @@ function iconFromString(iconString) {
     return icon;
 }
 
+/** Renders a button from a view arch (`<button>` or `<a>` tag) with debouncing, tooltips, and Bootstrap class resolution. */
 export class ViewButton extends Component {
     static template = "web.views.ViewButton";
     static props = [
@@ -108,7 +118,9 @@ export class ViewButton extends Component {
     }
 
     /**
+     * Delegate to a custom onClick prop or the environment's onClickViewButton handler.
      * @param {MouseEvent} ev
+     * @param {boolean} [newWindow] - open the resulting action in a new window
      */
     onClick(ev, newWindow) {
         if (this.props.tag === "a") {
@@ -119,7 +131,7 @@ export class ViewButton extends Component {
             return this.props.onClick();
         }
 
-        this.env.onClickViewButton({
+        return this.env.onClickViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
                 pick(
@@ -128,13 +140,17 @@ export class ViewButton extends Component {
                     "evalContext",
                     "resModel",
                     "resId",
-                    "resIds"
+                    "resIds",
                 ),
             beforeExecute: () => this.dropdownControl.close(),
             newWindow,
         });
     }
 
+    /**
+     * Build the CSS class string, mapping Odoo legacy classes to Bootstrap and applying default rank.
+     * @returns {string}
+     */
     getClassName() {
         const classNames = [];
         let hasExplicitRank = false;
@@ -162,3 +178,5 @@ export class ViewButton extends Component {
         return classNames.join(" ");
     }
 }
+
+registry.category("shared_components").add("ViewButton", ViewButton);

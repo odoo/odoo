@@ -1,7 +1,7 @@
 /*!
-FullCalendar Core v6.1.11
+FullCalendar Core v6.1.20
 Docs & License: https://fullcalendar.io
-(c) 2023 Adam Shaw
+(c) 2024 Adam Shaw
 */
 var FullCalendar = (function (exports) {
     'use strict';
@@ -672,6 +672,25 @@ var FullCalendar = (function (exports) {
         if (oldProps === newProps) {
             return true;
         }
+        // if (debug) {
+        //   for (let key in newProps) {
+        //     if (key in oldProps && isObjValsEqual(oldProps[key], newProps[key], equalityFuncs[key])) {
+        //       // equal
+        //     } else {
+        //       if (debug) {
+        //         console.log('prop difference', key, oldProps[key], newProps[key])
+        //       }
+        //     }
+        //   }
+        //   // check for props that were omitted in the new
+        //   for (let key in oldProps) {
+        //     if (!(key in newProps)) {
+        //       if (debug) {
+        //         console.log('prop absent', key)
+        //       }
+        //     }
+        //   }
+        // }
         for (let key in newProps) {
             if (key in oldProps && isObjValsEqual(oldProps[key], newProps[key], equalityFuncs[key])) ;
             else {
@@ -1056,10 +1075,10 @@ var FullCalendar = (function (exports) {
 
     const EXTENDED_SETTINGS_AND_SEVERITIES = {
         week: 3,
-        separator: 0,
-        omitZeroMinute: 0,
-        meridiem: 0,
-        omitCommas: 0,
+        separator: 9,
+        omitZeroMinute: 9,
+        meridiem: 9,
+        omitCommas: 9,
     };
     const STANDARD_DATE_PROP_SEVERITIES = {
         timeZoneName: 7,
@@ -1081,22 +1100,25 @@ var FullCalendar = (function (exports) {
         constructor(formatSettings) {
             let standardDateProps = {};
             let extendedSettings = {};
-            let severity = 0;
+            let smallestUnitNum = 9; // the smallest unit in the formatter (9 is a sentinel, beyond max)
             for (let name in formatSettings) {
                 if (name in EXTENDED_SETTINGS_AND_SEVERITIES) {
                     extendedSettings[name] = formatSettings[name];
-                    severity = Math.max(EXTENDED_SETTINGS_AND_SEVERITIES[name], severity);
+                    const severity = EXTENDED_SETTINGS_AND_SEVERITIES[name];
+                    if (severity < 9) {
+                        smallestUnitNum = Math.min(EXTENDED_SETTINGS_AND_SEVERITIES[name], smallestUnitNum);
+                    }
                 }
                 else {
                     standardDateProps[name] = formatSettings[name];
                     if (name in STANDARD_DATE_PROP_SEVERITIES) { // TODO: what about hour12? no severity
-                        severity = Math.max(STANDARD_DATE_PROP_SEVERITIES[name], severity);
+                        smallestUnitNum = Math.min(STANDARD_DATE_PROP_SEVERITIES[name], smallestUnitNum);
                     }
                 }
             }
             this.standardDateProps = standardDateProps;
             this.extendedSettings = extendedSettings;
-            this.severity = severity;
+            this.smallestUnitNum = smallestUnitNum;
             this.buildFormattingFunc = memoize(buildFormattingFunc);
         }
         format(date, context) {
@@ -1131,8 +1153,8 @@ var FullCalendar = (function (exports) {
             }
             return full0 + separator + full1;
         }
-        getLargestUnit() {
-            switch (this.severity) {
+        getSmallestUnit() {
+            switch (this.smallestUnitNum) {
                 case 7:
                 case 6:
                 case 5:
@@ -1443,6 +1465,7 @@ var FullCalendar = (function (exports) {
         viewDidMount: identity,
         viewWillUnmount: identity,
         nowIndicator: Boolean,
+        nowIndicatorSnap: identity,
         nowIndicatorClassNames: identity,
         nowIndicatorContent: identity,
         nowIndicatorDidMount: identity,
@@ -1625,6 +1648,7 @@ var FullCalendar = (function (exports) {
         eventMinWidth: 30,
         eventShortHeight: 30,
         monthStartFormat: { month: 'long', day: 'numeric' },
+        nowIndicatorSnap: 'auto',
     };
     // calendar listeners
     // ------------------
@@ -2487,7 +2511,7 @@ var FullCalendar = (function (exports) {
     function getDateMeta(date, todayRange, nowDate, dateProfile) {
         return {
             dow: date.getUTCDay(),
-            isDisabled: Boolean(dateProfile && !rangeContainsMarker(dateProfile.activeRange, date)),
+            isDisabled: Boolean(dateProfile && (!dateProfile.activeRange || !rangeContainsMarker(dateProfile.activeRange, date))),
             isOther: Boolean(dateProfile && !rangeContainsMarker(dateProfile.currentRange, date)),
             isToday: Boolean(todayRange && rangeContainsMarker(todayRange, date)),
             isPast: Boolean(nowDate ? (date < nowDate) : todayRange ? (date < todayRange.start) : false),
@@ -2673,10 +2697,10 @@ var FullCalendar = (function (exports) {
     function computeRect(el) {
         let rect = el.getBoundingClientRect();
         return {
-            left: rect.left + window.pageXOffset,
-            top: rect.top + window.pageYOffset,
-            right: rect.right + window.pageXOffset,
-            bottom: rect.bottom + window.pageYOffset,
+            left: rect.left + window.scrollX,
+            top: rect.top + window.scrollY,
+            right: rect.right + window.scrollX,
+            bottom: rect.bottom + window.scrollY,
         };
     }
     function computeClippedClientRect(el) {
@@ -2940,16 +2964,16 @@ var FullCalendar = (function (exports) {
     }
     class WindowScrollController extends ScrollController {
         getScrollTop() {
-            return window.pageYOffset;
+            return window.scrollY;
         }
         getScrollLeft() {
-            return window.pageXOffset;
+            return window.scrollX;
         }
         setScrollTop(n) {
-            window.scroll(window.pageXOffset, n);
+            window.scroll(window.scrollX, n);
         }
         setScrollLeft(n) {
-            window.scroll(n, window.pageYOffset);
+            window.scroll(n, window.scrollY);
         }
         getScrollWidth() {
             return document.documentElement.scrollWidth;
@@ -3138,9 +3162,10 @@ var FullCalendar = (function (exports) {
     }
 
     const ViewContextType = createContext({}); // for Components
-    function buildViewContext(viewSpec, viewApi, viewOptions, dateProfileGenerator, dateEnv, theme, pluginHooks, dispatch, getCurrentData, emitter, calendarApi, registerInteractiveComponent, unregisterInteractiveComponent) {
+    function buildViewContext(viewSpec, viewApi, viewOptions, dateProfileGenerator, dateEnv, nowManager, theme, pluginHooks, dispatch, getCurrentData, emitter, calendarApi, registerInteractiveComponent, unregisterInteractiveComponent) {
         return {
             dateEnv,
+            nowManager,
             options: viewOptions,
             pluginHooks,
             emitter,
@@ -3168,13 +3193,14 @@ var FullCalendar = (function (exports) {
 
     /* eslint max-classes-per-file: off */
     class PureComponent extends x$1 {
+        // debug: boolean
         shouldComponentUpdate(nextProps, nextState) {
-            if (this.debug) {
-                // eslint-disable-next-line no-console
-                console.log(getUnequalProps(nextProps, this.props), getUnequalProps(nextState, this.state));
-            }
-            return !compareObjs(this.props, nextProps, this.propEquality) ||
-                !compareObjs(this.state, nextState, this.stateEquality);
+            const shouldUpdate = !compareObjs(this.props, nextProps, this.propEquality /*, this.debug */) ||
+                !compareObjs(this.state, nextState, this.stateEquality /*, this.debug */);
+            // if (this.debug && shouldUpdate) {
+            //   console.log('shouldUpdate!')
+            // }
+            return shouldUpdate;
         }
         // HACK for freakin' React StrictMode
         safeSetState(newState) {
@@ -3246,36 +3272,9 @@ var FullCalendar = (function (exports) {
         }
     }
 
-    function reduceCurrentDate(currentDate, action) {
-        switch (action.type) {
-            case 'CHANGE_DATE':
-                return action.dateMarker;
-            default:
-                return currentDate;
-        }
-    }
-    function getInitialDate(options, dateEnv) {
-        let initialDateInput = options.initialDate;
-        // compute the initial ambig-timezone date
-        if (initialDateInput != null) {
-            return dateEnv.createMarker(initialDateInput);
-        }
-        return getNow(options.now, dateEnv); // getNow already returns unzoned
-    }
-    function getNow(nowInput, dateEnv) {
-        if (typeof nowInput === 'function') {
-            nowInput = nowInput();
-        }
-        if (nowInput == null) {
-            return dateEnv.createNowMarker();
-        }
-        return dateEnv.createMarker(nowInput);
-    }
-
     class DateProfileGenerator {
         constructor(props) {
             this.props = props;
-            this.nowDate = getNow(props.nowInput, props.dateEnv);
             this.initHiddenDays();
         }
         /* Date Range Computation
@@ -3360,7 +3359,7 @@ var FullCalendar = (function (exports) {
         buildValidRange() {
             let input = this.props.validRangeInput;
             let simpleInput = typeof input === 'function'
-                ? input.call(this.props.calendarApi, this.nowDate)
+                ? input.call(this.props.calendarApi, this.props.dateEnv.toDate(this.props.nowManager.getDateMarker()))
                 : input;
             return this.refineRange(simpleInput) ||
                 { start: null, end: null }; // completely open-ended
@@ -5405,7 +5404,13 @@ var FullCalendar = (function (exports) {
             let navLinkAttrs = (!dayMeta.isDisabled && props.colCnt > 1)
                 ? buildNavLinkAttrs(this.context, date)
                 : {};
-            let renderProps = Object.assign(Object.assign(Object.assign({ date: dateEnv.toDate(date), view: viewApi }, props.extraRenderProps), { text }), dayMeta);
+            let publicDate = dateEnv.toDate(date);
+            // workaround for Luxon (and maybe moment) returning prior-days when start-of-day
+            // in DST gap: https://github.com/fullcalendar/fullcalendar/issues/7633
+            if (dateEnv.namedTimeZoneImpl) {
+                publicDate = addMs(publicDate, 3600000); // add an hour
+            }
+            let renderProps = Object.assign(Object.assign(Object.assign({ date: publicDate, view: viewApi }, props.extraRenderProps), { text }), dayMeta);
             return (y(ContentContainer, { elTag: "th", elClasses: classNames, elAttrs: Object.assign({ role: 'columnheader', colSpan: props.colSpan, 'data-date': !dayMeta.isDisabled ? formatDayString(date) : undefined }, props.extraDataAttrs), renderProps: renderProps, generatorName: "dayHeaderContent", customGenerator: options.dayHeaderContent, defaultGenerator: renderInner$1, classNameGenerator: options.dayHeaderClassNames, didMount: options.dayHeaderDidMount, willUnmount: options.dayHeaderWillUnmount }, (InnerContainer) => (y("div", { className: "fc-scrollgrid-sync-inner" }, !dayMeta.isDisabled && (y(InnerContainer, { elTag: "a", elAttrs: navLinkAttrs, elClasses: [
                     'fc-col-header-cell-cushion',
                     props.isSticky && 'fc-sticky',
@@ -5447,9 +5452,20 @@ var FullCalendar = (function (exports) {
     class NowTimer extends x$1 {
         constructor(props, context) {
             super(props, context);
-            this.initialNowDate = getNow(context.options.now, context.dateEnv);
-            this.initialNowQueriedMs = new Date().valueOf();
-            this.state = this.computeTiming().currentState;
+            this.handleRefresh = () => {
+                let timing = this.computeTiming();
+                if (timing.state.nowDate.valueOf() !== this.state.nowDate.valueOf()) {
+                    this.setState(timing.state);
+                }
+                this.clearTimeout();
+                this.setTimeout(timing.waitMs);
+            };
+            this.handleVisibilityChange = () => {
+                if (!document.hidden) {
+                    this.handleRefresh();
+                }
+            };
+            this.state = this.computeTiming().state;
         }
         render() {
             let { props, state } = this;
@@ -5457,6 +5473,9 @@ var FullCalendar = (function (exports) {
         }
         componentDidMount() {
             this.setTimeout();
+            this.context.nowManager.addResetListener(this.handleRefresh);
+            // fired tab becomes visible after being hidden
+            document.addEventListener('visibilitychange', this.handleVisibilityChange);
         }
         componentDidUpdate(prevProps) {
             if (prevProps.unit !== this.props.unit) {
@@ -5466,27 +5485,49 @@ var FullCalendar = (function (exports) {
         }
         componentWillUnmount() {
             this.clearTimeout();
+            this.context.nowManager.removeResetListener(this.handleRefresh);
+            document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         }
         computeTiming() {
             let { props, context } = this;
-            let unroundedNow = addMs(this.initialNowDate, new Date().valueOf() - this.initialNowQueriedMs);
-            let currentUnitStart = context.dateEnv.startOf(unroundedNow, props.unit);
-            let nextUnitStart = context.dateEnv.add(currentUnitStart, createDuration(1, props.unit));
-            let waitMs = nextUnitStart.valueOf() - unroundedNow.valueOf();
+            let unroundedNow = context.nowManager.getDateMarker();
+            let { nowIndicatorSnap } = context.options;
+            if (nowIndicatorSnap === 'auto') {
+                nowIndicatorSnap =
+                    // large unit?
+                    /year|month|week|day/.test(props.unit) ||
+                        // if slotDuration 30 mins for example, would NOT appear to snap (legacy behavior)
+                        (props.unitValue || 1) === 1;
+            }
+            let nowDate;
+            let waitMs;
+            if (nowIndicatorSnap) {
+                nowDate = context.dateEnv.startOf(unroundedNow, props.unit); // aka currentUnitStart
+                let nextUnitStart = context.dateEnv.add(nowDate, createDuration(1, props.unit));
+                waitMs = nextUnitStart.valueOf() - unroundedNow.valueOf();
+            }
+            else {
+                nowDate = unroundedNow;
+                waitMs = 1000 * 60; // 1 minute
+            }
             // there is a max setTimeout ms value (https://stackoverflow.com/a/3468650/96342)
             // ensure no longer than a day
             waitMs = Math.min(1000 * 60 * 60 * 24, waitMs);
             return {
-                currentState: { nowDate: currentUnitStart, todayRange: buildDayRange(currentUnitStart) },
-                nextState: { nowDate: nextUnitStart, todayRange: buildDayRange(nextUnitStart) },
+                state: { nowDate, todayRange: buildDayRange(nowDate) },
                 waitMs,
             };
         }
-        setTimeout() {
-            let { nextState, waitMs } = this.computeTiming();
+        setTimeout(waitMs = this.computeTiming().waitMs) {
+            // NOTE: timeout could take longer than expected if tab sleeps,
+            // which is why we listen to 'visibilitychange'
             this.timeoutId = setTimeout(() => {
-                this.setState(nextState, () => {
-                    this.setTimeout();
+                // NOTE: timeout could also return *earlier* than expected, and we need to wait 2 ms more
+                // This is why use use same waitMs from computeTiming, so we don't skip an interval while
+                // .setState() is executing
+                const timing = this.computeTiming();
+                this.setState(timing.state, () => {
+                    this.setTimeout(timing.waitMs);
                 });
             }, waitMs);
         }
@@ -6619,8 +6660,11 @@ var FullCalendar = (function (exports) {
     class EventContainer extends BaseComponent {
         constructor() {
             super(...arguments);
+            // memo
+            this.buildPublicEvent = memoize((context, eventDef, eventInstance) => new EventImpl(context, eventDef, eventInstance));
             this.handleEl = (el) => {
                 this.el = el;
+                setRef(this.props.elRef, el);
                 if (el) {
                     setElSeg(el, this.props.seg);
                 }
@@ -6633,7 +6677,7 @@ var FullCalendar = (function (exports) {
             const { eventRange } = seg;
             const { ui } = eventRange;
             const renderProps = {
-                event: new EventImpl(context, eventRange.def, eventRange.instance),
+                event: this.buildPublicEvent(context, eventRange.def, eventRange.instance),
                 view: context.viewApi,
                 timeText: props.timeText,
                 textColor: ui.textColor,
@@ -6652,11 +6696,11 @@ var FullCalendar = (function (exports) {
                 isDragging: Boolean(props.isDragging),
                 isResizing: Boolean(props.isResizing),
             };
-            return (y(ContentContainer, Object.assign({}, props /* contains children */, { elRef: this.handleEl, elClasses: [
+            return (y(ContentContainer, { elRef: this.handleEl, elTag: props.elTag, elAttrs: props.elAttrs, elClasses: [
                     ...getEventClassNames(renderProps),
                     ...seg.eventRange.ui.classNames,
                     ...(props.elClasses || []),
-                ], renderProps: renderProps, generatorName: "eventContent", customGenerator: options.eventContent, defaultGenerator: props.defaultGenerator, classNameGenerator: options.eventClassNames, didMount: options.eventDidMount, willUnmount: options.eventWillUnmount })));
+                ], elStyle: props.elStyle, renderProps: renderProps, generatorName: "eventContent", customGenerator: options.eventContent, defaultGenerator: props.defaultGenerator, classNameGenerator: options.eventClassNames, didMount: options.eventDidMount, willUnmount: options.eventWillUnmount }, props.children));
         }
         componentDidUpdate(prevProps) {
             if (this.el && this.props.seg !== prevProps.seg) {
@@ -6683,6 +6727,9 @@ var FullCalendar = (function (exports) {
                 Boolean(eventContentArg.isEndResizable) && (y("div", { className: "fc-event-resizer fc-event-resizer-end" }))))));
         }
     }
+    StandardEvent.addPropsEquality({
+        seg: isPropsEqual,
+    });
     function renderInnerContent$1(innerProps) {
         return (y("div", { className: "fc-event-main-frame" },
             innerProps.timeText && (y("div", { className: "fc-event-time" }, innerProps.timeText)),
@@ -6697,7 +6744,7 @@ var FullCalendar = (function (exports) {
             date: context.dateEnv.toDate(props.date),
             view: context.viewApi,
         };
-        return (y(ContentContainer, Object.assign({}, props /* includes children */, { elTag: props.elTag || 'div', renderProps: renderProps, generatorName: "nowIndicatorContent", customGenerator: options.nowIndicatorContent, classNameGenerator: options.nowIndicatorClassNames, didMount: options.nowIndicatorDidMount, willUnmount: options.nowIndicatorWillUnmount })));
+        return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag || 'div', elAttrs: props.elAttrs, elClasses: props.elClasses, elStyle: props.elStyle, renderProps: renderProps, generatorName: "nowIndicatorContent", customGenerator: options.nowIndicatorContent, classNameGenerator: options.nowIndicatorClassNames, didMount: options.nowIndicatorDidMount, willUnmount: options.nowIndicatorWillUnmount }, props.children));
     }));
 
     const DAY_NUM_FORMAT = createFormatter({ day: 'numeric' });
@@ -6720,12 +6767,12 @@ var FullCalendar = (function (exports) {
                 dateEnv: context.dateEnv,
                 monthStartFormat: options.monthStartFormat,
             });
-            return (y(ContentContainer, Object.assign({}, props /* includes children */, { elClasses: [
+            return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag, elAttrs: Object.assign(Object.assign({}, props.elAttrs), (renderProps.isDisabled ? {} : { 'data-date': formatDayString(props.date) })), elClasses: [
                     ...getDayClassNames(renderProps, context.theme),
                     ...(props.elClasses || []),
-                ], elAttrs: Object.assign(Object.assign({}, props.elAttrs), (renderProps.isDisabled ? {} : { 'data-date': formatDayString(props.date) })), renderProps: renderProps, generatorName: "dayCellContent", customGenerator: options.dayCellContent, defaultGenerator: props.defaultGenerator, classNameGenerator: 
+                ], elStyle: props.elStyle, renderProps: renderProps, generatorName: "dayCellContent", customGenerator: options.dayCellContent, defaultGenerator: props.defaultGenerator, classNameGenerator: 
                 // don't use custom classNames if disabled
-                renderProps.isDisabled ? undefined : options.dayCellClassNames, didMount: options.dayCellDidMount, willUnmount: options.dayCellWillUnmount })));
+                renderProps.isDisabled ? undefined : options.dayCellClassNames, didMount: options.dayCellDidMount, willUnmount: options.dayCellWillUnmount }, props.children));
         }
     }
     function hasCustomDayCellContent(options) {
@@ -6762,7 +6809,7 @@ var FullCalendar = (function (exports) {
         let text = dateEnv.format(date, format);
         let renderProps = { num, text, date };
         return (y(ContentContainer // why isn't WeekNumberContentArg being auto-detected?
-        , Object.assign({}, props /* includes children */, { renderProps: renderProps, generatorName: "weekNumberContent", customGenerator: options.weekNumberContent, defaultGenerator: renderInner, classNameGenerator: options.weekNumberClassNames, didMount: options.weekNumberDidMount, willUnmount: options.weekNumberWillUnmount })));
+        , { elRef: props.elRef, elTag: props.elTag, elAttrs: props.elAttrs, elClasses: props.elClasses, elStyle: props.elStyle, renderProps: renderProps, generatorName: "weekNumberContent", customGenerator: options.weekNumberContent, defaultGenerator: renderInner, classNameGenerator: options.weekNumberClassNames, didMount: options.weekNumberDidMount, willUnmount: options.weekNumberWillUnmount }, props.children));
     }));
     function renderInner(innerProps) {
         return innerProps.text;
@@ -7018,10 +7065,10 @@ var FullCalendar = (function (exports) {
             let { props, context } = this;
             let { options } = context;
             let renderProps = { view: context.viewApi };
-            return (y(ContentContainer, Object.assign({}, props, { elTag: props.elTag || 'div', elClasses: [
+            return (y(ContentContainer, { elRef: props.elRef, elTag: props.elTag || 'div', elAttrs: props.elAttrs, elClasses: [
                     ...buildViewClassNames(props.viewSpec),
                     ...(props.elClasses || []),
-                ], renderProps: renderProps, classNameGenerator: options.viewClassNames, generatorName: undefined, didMount: options.viewDidMount, willUnmount: options.viewWillUnmount }), () => props.children));
+                ], elStyle: props.elStyle, renderProps: renderProps, classNameGenerator: options.viewClassNames, generatorName: undefined, didMount: options.viewDidMount, willUnmount: options.viewWillUnmount }, () => props.children));
         }
     }
     function buildViewClassNames(viewSpec) {
@@ -7247,7 +7294,7 @@ var FullCalendar = (function (exports) {
             this.unselect();
             this.dispatch({
                 type: 'CHANGE_DATE',
-                dateMarker: getNow(state.calendarOptions.now, state.dateEnv),
+                dateMarker: state.nowManager.getDateMarker(),
             });
         }
         gotoDate(zonedDateInput) {
@@ -8158,6 +8205,25 @@ var FullCalendar = (function (exports) {
         return viewType;
     }
 
+    function reduceCurrentDate(currentDate, action) {
+        switch (action.type) {
+            case 'CHANGE_DATE':
+                return action.dateMarker;
+            default:
+                return currentDate;
+        }
+    }
+    // should be initialized once and stay constant
+    // this will change too
+    function getInitialDate(options, dateEnv, nowManager) {
+        let initialDateInput = options.initialDate;
+        // compute the initial ambig-timezone date
+        if (initialDateInput != null) {
+            return dateEnv.createMarker(initialDateInput);
+        }
+        return nowManager.getDateMarker();
+    }
+
     function reduceDynamicOptionOverrides(dynamicOptionOverrides, action) {
         switch (action.type) {
             case 'SET_OPTION':
@@ -8667,6 +8733,7 @@ var FullCalendar = (function (exports) {
                     endTime: refined.endTime || null,
                     startRecur: refined.startRecur ? dateEnv.createMarker(refined.startRecur) : null,
                     endRecur: refined.endRecur ? dateEnv.createMarker(refined.endRecur) : null,
+                    dateEnv,
                 };
                 let duration;
                 if (refined.duration) {
@@ -8686,7 +8753,7 @@ var FullCalendar = (function (exports) {
         expand(typeData, framingRange, dateEnv) {
             let clippedFramingRange = intersectRanges(framingRange, { start: typeData.startRecur, end: typeData.endRecur });
             if (clippedFramingRange) {
-                return expandRanges(typeData.daysOfWeek, typeData.startTime, clippedFramingRange, dateEnv);
+                return expandRanges(typeData.daysOfWeek, typeData.startTime, typeData.dateEnv, dateEnv, clippedFramingRange);
             }
             return [];
         },
@@ -8696,22 +8763,33 @@ var FullCalendar = (function (exports) {
         recurringTypes: [recurring],
         eventRefiners: SIMPLE_RECURRING_REFINERS,
     });
-    function expandRanges(daysOfWeek, startTime, framingRange, dateEnv) {
+    function expandRanges(daysOfWeek, startTime, eventDateEnv, calendarDateEnv, framingRange) {
         let dowHash = daysOfWeek ? arrayToHash(daysOfWeek) : null;
         let dayMarker = startOfDay(framingRange.start);
         let endMarker = framingRange.end;
         let instanceStarts = [];
+        // https://github.com/fullcalendar/fullcalendar/issues/7934
+        if (startTime) {
+            if (startTime.milliseconds < 0) {
+                // possible for next-day to have negative business hours that go into current day
+                endMarker = addDays(endMarker, 1);
+            }
+            else if (startTime.milliseconds >= 1000 * 60 * 60 * 24) {
+                // possible for prev-day to have >24hr business hours that go into current day
+                dayMarker = addDays(dayMarker, -1);
+            }
+        }
         while (dayMarker < endMarker) {
             let instanceStart;
             // if everyday, or this particular day-of-week
             if (!dowHash || dowHash[dayMarker.getUTCDay()]) {
                 if (startTime) {
-                    instanceStart = dateEnv.add(dayMarker, startTime);
+                    instanceStart = calendarDateEnv.add(dayMarker, startTime);
                 }
                 else {
                     instanceStart = dayMarker;
                 }
-                instanceStarts.push(instanceStart);
+                instanceStarts.push(calendarDateEnv.createMarker(eventDateEnv.toDate(instanceStart)));
             }
             dayMarker = addDays(dayMarker, 1);
         }
@@ -8876,6 +8954,49 @@ var FullCalendar = (function (exports) {
         return { year: 'numeric', month: 'long', day: 'numeric' };
     }
 
+    /*
+    TODO: test switching timezones when NO timezone plugin
+    */
+    class CalendarNowManager {
+        constructor() {
+            this.resetListeners = new Set();
+        }
+        handleInput(dateEnv, // will change if timezone setup changed
+        nowInput) {
+            const oldDateEnv = this.dateEnv;
+            if (dateEnv !== oldDateEnv) {
+                if (typeof nowInput === 'function') {
+                    this.nowFn = nowInput;
+                }
+                else if (!oldDateEnv) { // first time?
+                    this.nowAnchorDate = dateEnv.toDate(nowInput
+                        ? dateEnv.createMarker(nowInput)
+                        : dateEnv.createNowMarker());
+                    this.nowAnchorQueried = Date.now();
+                }
+                this.dateEnv = dateEnv;
+                // not first time? fire reset handlers
+                if (oldDateEnv) {
+                    for (const resetListener of this.resetListeners.values()) {
+                        resetListener();
+                    }
+                }
+            }
+        }
+        getDateMarker() {
+            return this.nowAnchorDate
+                ? this.dateEnv.timestampToMarker(this.nowAnchorDate.valueOf() +
+                    (Date.now() - this.nowAnchorQueried))
+                : this.dateEnv.createMarker(this.nowFn());
+        }
+        addResetListener(handler) {
+            this.resetListeners.add(handler);
+        }
+        removeResetListener(handler) {
+            this.resetListeners.delete(handler);
+        }
+    }
+
     // in future refactor, do the redux-style function(state=initial) for initial-state
     // also, whatever is happening in constructor, have it happen in action queue too
     class CalendarDataManager {
@@ -8895,6 +9016,7 @@ var FullCalendar = (function (exports) {
             this.buildEventUiBases = memoize(buildEventUiBases);
             this.parseContextBusinessHours = memoizeObjArg(parseContextBusinessHours);
             this.buildTitle = memoize(buildTitle);
+            this.nowManager = new CalendarNowManager();
             this.emitter = new Emitter();
             this.actionRunner = new TaskRunner(this._handleAction.bind(this), this.updateData.bind(this));
             this.currentCalendarOptionsInput = {};
@@ -8910,6 +9032,7 @@ var FullCalendar = (function (exports) {
             };
             this.props = props;
             this.actionRunner.pause();
+            this.nowManager = new CalendarNowManager();
             let dynamicOptionOverrides = {};
             let optionsData = this.computeOptionsData(props.optionOverrides, dynamicOptionOverrides, props.calendarApi);
             let currentViewType = optionsData.calendarOptions.initialView || optionsData.pluginHooks.initialView;
@@ -8919,12 +9042,8 @@ var FullCalendar = (function (exports) {
             props.calendarApi.currentDataManager = this;
             this.emitter.setThisContext(props.calendarApi);
             this.emitter.setOptions(currentViewData.options);
-            let currentDate = getInitialDate(optionsData.calendarOptions, optionsData.dateEnv);
-            let dateProfile = currentViewData.dateProfileGenerator.build(currentDate);
-            if (!rangeContainsMarker(dateProfile.activeRange, currentDate)) {
-                currentDate = dateProfile.currentRange.start;
-            }
             let calendarContext = {
+                nowManager: this.nowManager,
                 dateEnv: optionsData.dateEnv,
                 options: optionsData.calendarOptions,
                 pluginHooks: optionsData.pluginHooks,
@@ -8933,6 +9052,11 @@ var FullCalendar = (function (exports) {
                 emitter: this.emitter,
                 getCurrentData: this.getCurrentData,
             };
+            let currentDate = getInitialDate(optionsData.calendarOptions, optionsData.dateEnv, this.nowManager);
+            let dateProfile = currentViewData.dateProfileGenerator.build(currentDate);
+            if (!rangeContainsMarker(dateProfile.activeRange, currentDate)) {
+                currentDate = dateProfile.currentRange.start;
+            }
             // needs to be after setThisContext
             for (let callback of optionsData.pluginHooks.contextInit) {
                 callback(calendarContext);
@@ -8993,6 +9117,7 @@ var FullCalendar = (function (exports) {
             emitter.setThisContext(props.calendarApi);
             emitter.setOptions(currentViewData.options);
             let calendarContext = {
+                nowManager: this.nowManager,
                 dateEnv: optionsData.dateEnv,
                 options: optionsData.calendarOptions,
                 pluginHooks: optionsData.pluginHooks,
@@ -9060,7 +9185,7 @@ var FullCalendar = (function (exports) {
             let oldData = this.data;
             let optionsData = this.computeOptionsData(props.optionOverrides, state.dynamicOptionOverrides, props.calendarApi);
             let currentViewData = this.computeCurrentViewData(state.currentViewType, optionsData, props.optionOverrides, state.dynamicOptionOverrides);
-            let data = this.data = Object.assign(Object.assign(Object.assign({ viewTitle: this.buildTitle(state.dateProfile, currentViewData.options, optionsData.dateEnv), calendarApi: props.calendarApi, dispatch: this.dispatch, emitter: this.emitter, getCurrentData: this.getCurrentData }, optionsData), currentViewData), state);
+            let data = this.data = Object.assign(Object.assign(Object.assign({ nowManager: this.nowManager, viewTitle: this.buildTitle(state.dateProfile, currentViewData.options, optionsData.dateEnv), calendarApi: props.calendarApi, dispatch: this.dispatch, emitter: this.emitter, getCurrentData: this.getCurrentData }, optionsData), currentViewData), state);
             let changeHandlers = optionsData.pluginHooks.optionChangeHandlers;
             let oldCalendarOptions = oldData && oldData.calendarOptions;
             let newCalendarOptions = optionsData.calendarOptions;
@@ -9168,8 +9293,10 @@ var FullCalendar = (function (exports) {
             }
             let { refinedOptions, extra } = this.processRawViewOptions(viewSpec, optionsData.pluginHooks, optionsData.localeDefaults, optionOverrides, dynamicOptionOverrides);
             warnUnknownOptions(extra);
+            this.nowManager.handleInput(optionsData.dateEnv, refinedOptions.now);
             let dateProfileGenerator = this.buildDateProfileGenerator({
                 dateProfileGeneratorClass: viewSpec.optionDefaults.dateProfileGeneratorClass,
+                nowManager: this.nowManager,
                 duration: viewSpec.duration,
                 durationUnit: viewSpec.durationUnit,
                 usesMinMaxTime: viewSpec.optionDefaults.usesMinMaxTime,
@@ -9183,7 +9310,6 @@ var FullCalendar = (function (exports) {
                 dateIncrement: refinedOptions.dateIncrement,
                 hiddenDays: refinedOptions.hiddenDays,
                 weekends: refinedOptions.weekends,
-                nowInput: refinedOptions.now,
                 validRangeInput: refinedOptions.validRange,
                 visibleRangeInput: refinedOptions.visibleRange,
                 fixedWeekCount: refinedOptions.fixedWeekCount,
@@ -9587,8 +9713,6 @@ var FullCalendar = (function (exports) {
         render() {
             let { props } = this;
             let { toolbarConfig, options } = props;
-            let toolbarProps = this.buildToolbarProps(props.viewSpec, props.dateProfile, props.dateProfileGenerator, props.currentDate, getNow(props.options.now, props.dateEnv), // TODO: use NowTimer????
-            props.viewTitle);
             let viewVGrow = false;
             let viewHeight = '';
             let viewAspectRatio;
@@ -9604,16 +9728,20 @@ var FullCalendar = (function (exports) {
             else {
                 viewAspectRatio = Math.max(options.aspectRatio, 0.5); // prevent from getting too tall
             }
-            let viewContext = this.buildViewContext(props.viewSpec, props.viewApi, props.options, props.dateProfileGenerator, props.dateEnv, props.theme, props.pluginHooks, props.dispatch, props.getCurrentData, props.emitter, props.calendarApi, this.registerInteractiveComponent, this.unregisterInteractiveComponent);
+            let viewContext = this.buildViewContext(props.viewSpec, props.viewApi, props.options, props.dateProfileGenerator, props.dateEnv, props.nowManager, props.theme, props.pluginHooks, props.dispatch, props.getCurrentData, props.emitter, props.calendarApi, this.registerInteractiveComponent, this.unregisterInteractiveComponent);
             let viewLabelId = (toolbarConfig.header && toolbarConfig.header.hasTitle)
                 ? this.state.viewLabelId
                 : undefined;
             return (y(ViewContextType.Provider, { value: viewContext },
-                toolbarConfig.header && (y(Toolbar, Object.assign({ ref: this.headerRef, extraClassName: "fc-header-toolbar", model: toolbarConfig.header, titleId: viewLabelId }, toolbarProps))),
-                y(ViewHarness, { liquid: viewVGrow, height: viewHeight, aspectRatio: viewAspectRatio, labeledById: viewLabelId },
-                    this.renderView(props),
-                    this.buildAppendContent()),
-                toolbarConfig.footer && (y(Toolbar, Object.assign({ ref: this.footerRef, extraClassName: "fc-footer-toolbar", model: toolbarConfig.footer, titleId: "" }, toolbarProps)))));
+                y(NowTimer, { unit: "day" }, (nowDate) => {
+                    let toolbarProps = this.buildToolbarProps(props.viewSpec, props.dateProfile, props.dateProfileGenerator, props.currentDate, nowDate, props.viewTitle);
+                    return (y(_, null,
+                        toolbarConfig.header && (y(Toolbar, Object.assign({ ref: this.headerRef, extraClassName: "fc-header-toolbar", model: toolbarConfig.header, titleId: viewLabelId }, toolbarProps))),
+                        y(ViewHarness, { liquid: viewVGrow, height: viewHeight, aspectRatio: viewAspectRatio, labeledById: viewLabelId },
+                            this.renderView(props),
+                            this.buildAppendContent()),
+                        toolbarConfig.footer && (y(Toolbar, Object.assign({ ref: this.footerRef, extraClassName: "fc-footer-toolbar", model: toolbarConfig.footer, titleId: "" }, toolbarProps)))));
+                })));
         }
         componentDidMount() {
             let { props } = this;
@@ -9835,7 +9963,7 @@ var FullCalendar = (function (exports) {
         return sliceEventStore(props.eventStore, props.eventUiBases, props.dateProfile.activeRange, allDay ? props.nextDayThreshold : null).fg;
     }
 
-    const version = '6.1.11';
+    const version = '6.1.20';
 
     exports.Calendar = Calendar;
     exports.Internal = internal;

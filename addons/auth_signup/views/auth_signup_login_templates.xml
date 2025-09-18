@@ -54,7 +54,7 @@
                     <t t-call="auth_signup.fields"/>
 
                     <p class="alert alert-danger" t-if="error" role="alert">
-                        <t t-esc="error"/>
+                        <t t-out="error"/>
                     </p>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
@@ -73,7 +73,7 @@
                 <div class="oe_structure" id="oe_structure_reset_password_top"/>
                 <div t-if="message" class="oe_login_form clearfix">
                     <p class="alert alert-success" t-if="message" role="status">
-                        <t t-esc="message"/>
+                        <t t-out="message"/>
                     </p>
                     <a href="/web/login" class="btn btn-link btn-sm float-start" role="button">Back to Login</a>
                 </div>
@@ -96,7 +96,7 @@
                     </t>
 
                     <p class="alert alert-danger" t-if="error" role="alert">
-                        <t t-esc="error"/>
+                        <t t-out="error"/>
                     </p>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>

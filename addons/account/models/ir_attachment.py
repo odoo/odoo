@@ -1,6 +1,6 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
 
 import io

@@ -1,13 +1,12 @@
-import { patch } from "@web/core/utils/patch";
-import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-
+import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
+import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 patch(PosStore.prototype, {
     /**
      * @override
@@ -32,14 +31,18 @@ patch(PosStore.prototype, {
     get openOrder() {
         if (this.config.module_pos_restaurant) {
             return (
-                this.models["pos.order"].find((o) => o.state === "draft" && o.isDirectSale) ||
-                this.addNewOrder()
+                this.models["pos.order"].find(
+                    (o) => o.state === "draft" && o.isDirectSale,
+                ) || this.addNewOrder()
             );
         }
         return super.openOrder;
     },
     get defaultPage() {
-        if (this.config.module_pos_restaurant && this.config.default_screen === "tables") {
+        if (
+            this.config.module_pos_restaurant &&
+            this.config.default_screen === "tables"
+        ) {
             return {
                 page: "FloorScreen",
                 params: {},
@@ -55,9 +58,12 @@ patch(PosStore.prototype, {
                 action: () =>
                     this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
-                    !["PaymentScreen", "TicketScreen", "ActionScreen", "LoginScreen"].includes(
-                        this.router.state.current
-                    ) &&
+                    ![
+                        "PaymentScreen",
+                        "TicketScreen",
+                        "ActionScreen",
+                        "LoginScreen",
+                    ].includes(this.router.state.current) &&
                     this.navigate("FloorScreen"),
             },
         ];
@@ -76,7 +82,8 @@ patch(PosStore.prototype, {
             for (const order of orders) {
                 // Avoid to block others devices on register screen when no table and name is set.
                 if (!order.table_id && !order.floating_order_name) {
-                    order.floating_order_name = order.floatingOrderName || order.pos_reference;
+                    order.floating_order_name =
+                        order.floatingOrderName || order.pos_reference;
                 }
             }
         }
@@ -88,7 +95,7 @@ patch(PosStore.prototype, {
             startingValue: currentOrder.customer_count,
             feedback: (buffer) => {
                 const value = this.env.utils.formatCurrency(
-                    currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
+                    currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0,
                 );
                 return value ? `${value} / ${_t("Guest")}` : "";
             },
@@ -125,7 +132,11 @@ patch(PosStore.prototype, {
     },
     async ensureGuestCustomerCount(order, removeEmptyOrder = true) {
         const currentPreset = order.preset_id;
-        if (this.config.use_presets && currentPreset?.use_guest && !order.uiState.guestSetted) {
+        if (
+            this.config.use_presets &&
+            currentPreset?.use_guest &&
+            !order.uiState.guestSetted
+        ) {
             await this.setCustomerCount(order, removeEmptyOrder);
             if (order.getCustomerCount() === 0 && order.table_id) {
                 order.setCustomerCount(order.table_id.seats);
@@ -157,7 +168,11 @@ patch(PosStore.prototype, {
                 delete srcPrep[srcKey];
             } else {
                 srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+                destPrep[destKey] = {
+                    ...srcPrep[srcKey],
+                    uuid: destLine.uuid,
+                    quantity: qty,
+                };
             }
         }
     },
@@ -166,12 +181,15 @@ patch(PosStore.prototype, {
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
 
         // Sum the guest counts from both orders
-        const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
+        const totalGuests =
+            sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
         destOrder.setCustomerCount(totalGuests);
 
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
-            const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
+            const destinationLine = destOrder?.lines?.find((l) =>
+                l.canBeMergedWith(orphanLine),
+            );
             let uuid = "";
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
@@ -181,14 +199,18 @@ patch(PosStore.prototype, {
                     destOrder.last_order_preparation_change.lines,
                     orphanLine,
                     destinationLine,
-                    orphanLine.qty
+                    orphanLine.qty,
                 );
             } else {
                 const serializedLine = { ...orphanLine.raw };
                 serializedLine.order_id = destOrder.id;
                 delete serializedLine.uuid;
                 delete serializedLine.id;
-                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                const newLine = this.models["pos.order.line"].create(
+                    serializedLine,
+                    false,
+                    true,
+                );
                 newLine.course_id = orphanLine.course_id?.id;
                 uuid = newLine.uuid;
                 if (orphanLine.course_id && mergedCourses) {
@@ -196,7 +218,7 @@ patch(PosStore.prototype, {
                     const course = mergedCourses[orphanLine.course_id.uuid];
                     if (course?.lines) {
                         course.lines = course.lines.map((lineUuid) =>
-                            lineUuid === orphanLine.uuid ? uuid : lineUuid
+                            lineUuid === orphanLine.uuid ? uuid : lineUuid,
                         );
                     }
                 }
@@ -205,7 +227,7 @@ patch(PosStore.prototype, {
                     destOrder.last_order_preparation_change.lines,
                     orphanLine,
                     newLine,
-                    orphanLine.qty
+                    orphanLine.qty,
                 );
             }
 
@@ -283,7 +305,9 @@ patch(PosStore.prototype, {
         });
 
         // Ensures all courses are assigned to the target order
-        const mergedCourses = Array.from(courseMap.values()).sort((a, b) => a.index - b.index);
+        const mergedCourses = Array.from(courseMap.values()).sort(
+            (a, b) => a.index - b.index,
+        );
         mergedCourses.forEach((course) => (course.order_id = destOrder.id));
         destOrder.course_ids = mergedCourses;
         return result;
@@ -304,22 +328,21 @@ patch(PosStore.prototype, {
                 }
                 return acc;
             },
-            []
+            [],
         );
         let beforeMergeCourseDetails;
         if (order?.uiState?.unmergeCourses) {
-            beforeMergeCourseDetails = Object.entries(order.uiState.unmergeCourses).reduce(
-                (acc, [uuid, details]) => {
-                    if (details.table_id === unmergeTable.id) {
-                        acc.push({
-                            ...details,
-                            uuid: uuid,
-                        });
-                    }
-                    return acc;
-                },
-                []
-            );
+            beforeMergeCourseDetails = Object.entries(
+                order.uiState.unmergeCourses,
+            ).reduce((acc, [uuid, details]) => {
+                if (details.table_id === unmergeTable.id) {
+                    acc.push({
+                        ...details,
+                        uuid: uuid,
+                    });
+                }
+                return acc;
+            }, []);
         }
 
         if (beforeMergeDetails.length) {
@@ -353,7 +376,11 @@ patch(PosStore.prototype, {
                     qty: detail.quantity,
                 });
 
-                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                const newLine = this.models["pos.order.line"].create(
+                    serializedLine,
+                    false,
+                    true,
+                );
                 if (course) {
                     newLine.course_id = course;
                 }
@@ -367,12 +394,13 @@ patch(PosStore.prototype, {
                     newOrder.last_order_preparation_change.lines,
                     line,
                     newLine,
-                    detail.quantity
+                    detail.quantity,
                 );
 
                 delete order.uiState.unmerge[line.uuid];
                 if (this.config.module_pos_restaurant) {
-                    newOrder.uiState.mappingOrderlinesUuid[detail.formerUuid] = newLine.uuid;
+                    newOrder.uiState.mappingOrderlinesUuid[detail.formerUuid] =
+                        newLine.uuid;
                 }
             }
 
@@ -410,7 +438,7 @@ patch(PosStore.prototype, {
         const orders = this.getOpenOrders();
         for (const table of tables) {
             const tableOrders = orders.filter(
-                (order) => order.table_id?.id === table.id && !order.finalized
+                (order) => order.table_id?.id === table.id && !order.finalized,
             );
             const qtyChange = tableOrders.reduce(
                 (acc, order) => {
@@ -418,7 +446,7 @@ patch(PosStore.prototype, {
                     acc.changed += quantityChange.count;
                     return acc;
                 },
-                { changed: 0 }
+                { changed: 0 },
             );
             table.uiState.orderCount = tableOrders.length;
             table.uiState.changeCount = qtyChange.changed;
@@ -451,7 +479,7 @@ patch(PosStore.prototype, {
         }, {});
         const noteCount = ["general_customer_note", "internal_note"].reduce(
             (count, note) => count + (note in orderChanges ? 1 : 0),
-            0
+            0,
         );
 
         const nbNoteChange = Object.keys(orderChanges.noteUpdate).length;
@@ -481,7 +509,10 @@ patch(PosStore.prototype, {
     },
     async handleUrlParams(event) {
         await super.handleUrlParams(...arguments);
-        if (this.config.module_pos_restaurant && this.router.state.current === "ProductScreen") {
+        if (
+            this.config.module_pos_restaurant &&
+            this.router.state.current === "ProductScreen"
+        ) {
             const orderUuid = this.router.state.params.orderUuid;
             const order = this.models["pos.order"].getBy("uuid", orderUuid);
             if (order && order.table_id) {
@@ -492,10 +523,12 @@ patch(PosStore.prototype, {
     //@override
     async afterProcessServerData() {
         this.floorPlanStyle =
-            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
+            localStorage.getItem("floorPlanStyle") ||
+            (this.ui.isSmall ? "kanban" : "default");
 
         if (this.config.module_pos_restaurant) {
-            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            this.currentFloor =
+                this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
         }
 
         const data = await super.afterProcessServerData(...arguments);
@@ -566,7 +599,7 @@ patch(PosStore.prototype, {
             const confirmed = await ask(this.dialog, {
                 title: _t("Warning !"),
                 body: _t(
-                    "It seems that the order has not been sent. Would you like to send it to preparation?"
+                    "It seems that the order has not been sent. Would you like to send it to preparation?",
                 ),
                 confirmLabel: _t("Order"),
                 cancelLabel: _t("Discard"),
@@ -591,8 +624,8 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
                 ...this.models["restaurant.floor"].map((floor) =>
-                    floor.table_ids.map((table) => table.id)
-                )
+                    floor.table_ids.map((table) => table.id),
+                ),
             );
             await this.syncAllOrders({ table_ids: tableIds });
         }
@@ -618,7 +651,7 @@ patch(PosStore.prototype, {
             this.setOrder(currentOrder);
         } else {
             const potentialsOrders = this.models["pos.order"].filter(
-                (o) => !o.table_id && !o.finalized && o.lines.length === 0
+                (o) => !o.table_id && !o.finalized && o.lines.length === 0,
             );
 
             if (potentialsOrders.length) {
@@ -746,7 +779,7 @@ patch(PosStore.prototype, {
     },
     getTableFromElement(el) {
         return this.models["restaurant.table"].get(
-            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+            [...el.classList].find((c) => c.includes("tableId")).split("-")[1],
         );
     },
     getOrderFromElement(el) {
@@ -765,7 +798,7 @@ patch(PosStore.prototype, {
                 onClose: () => {
                     this.isOrderTransferMode = false;
                 },
-            }
+            },
         );
         const transferToItselfNotif = () => {
             closeNotification?.();
@@ -868,7 +901,9 @@ patch(PosStore.prototype, {
                 await this.handleFailToPrepareOrderTransfer([sourceOrder]);
                 return;
             }
-            destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
+            destinationOrder = this.getActiveOrdersOnTable(
+                destinationTable.rootTable,
+            )[0];
         }
         await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
         if (destinationTable) {
@@ -883,7 +918,9 @@ patch(PosStore.prototype, {
             return;
         }
 
-        const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
+        const destinationOrder = this.getActiveOrdersOnTable(
+            destinationTable.rootTable,
+        )[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
     },
@@ -891,8 +928,13 @@ patch(PosStore.prototype, {
         await this.syncAllOrders({ orders });
     },
     getCustomerCount(tableId) {
-        const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
-        return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
+        const tableOrders = this.getTableOrders(tableId).filter(
+            (order) => !order.finalized,
+        );
+        return tableOrders.reduce(
+            (count, order) => count + order.getCustomerCount(),
+            0,
+        );
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
@@ -957,16 +999,22 @@ patch(PosStore.prototype, {
             const changes = {
                 new: [],
                 cancelled: [],
-                noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+                noteUpdate: course.lines.map((line) => ({
+                    product_id: line.getProduct().id,
+                })),
                 noteUpdateTitle: _t("Course %s fired", "" + course.index),
                 printNoteUpdateData: false,
             };
             this.getOrder().uiState.lastPrints.push(changes);
             await this.printChanges(this.getOrder(), [changes], false);
         } catch (e) {
-            logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
-                e,
-            ]);
+            logPosMessage(
+                "Store",
+                "printCourseTicket",
+                "Unable to print course",
+                CONSOLE_COLOR,
+                [e],
+            );
         }
     },
     async transferLinesToCourse() {
@@ -1041,7 +1089,7 @@ patch(PosStore.prototype, {
                     "restoreSampleDataState",
                     "Error while restoring sample data state",
                     CONSOLE_COLOR,
-                    [err]
+                    [err],
                 );
             }
         }

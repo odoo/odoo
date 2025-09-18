@@ -18,10 +18,10 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot"
 import { freezeOdooData, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
 
-const { pivotRegistry } = registries;
-
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
 import { createSpreadsheetWithList } from "../helpers/list";
+
+const { pivotRegistry } = registries;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();

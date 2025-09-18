@@ -1,7 +1,6 @@
 import codecs
 from typing import Union
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.ec import (
     EllipticCurvePublicKey,
     EllipticCurvePublicNumbers,
@@ -35,7 +34,7 @@ def decoded_public_key_to_cryptography(
         y = int(codecs.encode(public_key.y, "hex"), 16)
         curve = get_ec2_curve(public_key.crv)
 
-        ecc_pub_key = EllipticCurvePublicNumbers(x, y, curve).public_key(default_backend())
+        ecc_pub_key = EllipticCurvePublicNumbers(x, y, curve).public_key()
 
         return ecc_pub_key
     elif isinstance(public_key, DecodedRSAPublicKey):
@@ -46,7 +45,7 @@ def decoded_public_key_to_cryptography(
         e = int(codecs.encode(public_key.e, "hex"), 16)
         n = int(codecs.encode(public_key.n, "hex"), 16)
 
-        rsa_pub_key = RSAPublicNumbers(e, n).public_key(default_backend())
+        rsa_pub_key = RSAPublicNumbers(e, n).public_key()
 
         return rsa_pub_key
     elif isinstance(public_key, DecodedOKPPublicKey):

@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageDescription, ImageDescriptionPopover } from "./image_description";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
-import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { createFileViewer } from "@web/components/file_viewer/file_viewer_hook";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -357,6 +357,10 @@ export class ImagePlugin extends Plugin {
                 description: _t("Embed the image in the document."),
                 icon: "fa-image",
                 run: () => {
+                    this.dispatchTo(
+                        "before_paste_handlers",
+                        this.dependencies.selection.getEditableSelection()
+                    );
                     const img = this.document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.dependencies.dom.insert(img);

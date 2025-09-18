@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { SlideCategoryListRenderer } from "./slide_category_list_renderer";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
 
 class SlideCategoryOneToManyField extends X2ManyField {
     static components = {

@@ -1,7 +1,7 @@
 $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: $o-gray-900 !default;
 $o-default-report-secondary-color: $o-default-report-primary-color !default;
-$o-default-report-margins:  11mm !default; // 7mm + container padding
+$o-default-report-margins:  8mm !default;
 $o-snailmail-address-padding-top: 42px;
 
 
@@ -84,7 +84,7 @@ ul.o_checklist {
 }
 
 blockquote {
-    padding: $spacer/2 $spacer;
+    padding: calc($spacer / 2) $spacer;
     border-left: 5px solid;
     border-color: map-get($grays, '300');
     font-style: italic;
@@ -108,16 +108,16 @@ li.oe-nested {
 }
 
 .o_company_logo {
-    max-height: 6rem;
+    max-height: 5rem;
     max-width: 12rem;
 
     &_small {
-        max-height: 4rem;
+        max-height: 3.5rem;
     }
 
     &_big {
-        max-height: 8rem;
-        max-width: 16rem;
+        max-height: 6rem;
+        max-width: 14rem;
     }
 }
 
@@ -125,9 +125,12 @@ li.oe-nested {
     margin-bottom: 0;
 }
 
+.o_footer_content {
+    font-size: 0.85rem;
+}
+
 div[name=comment] p, div[name=address] p {
-    // wkhtmltopdf trims margin top/bottom which would extend a flex
-    // container's height. This rule cut the address block's p margins to replicate in html.
+    // Cut address block's p margins to prevent flex container height expansion
     margin-bottom: 0;
 }
 
@@ -154,7 +157,7 @@ div[name=comment] p, div[name=address] p {
 }
 
 // The default ir.qweb.field.contact uses a text-truncate on the address span
-// which doesn't work in wkhtml and breaks the wrapping behavior.
+// which breaks the wrapping behavior in PDF output.
 span[itemprop="streetAddress"] {
     white-space: normal;
 }
@@ -165,7 +168,7 @@ span[itemprop="streetAddress"] {
     max-width: 9rem;
 }
 
-// Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
+// Override html_editor display styles with explicit font sizes for PDF output
 .display-1-fs {
     font-size: 6rem;
 }

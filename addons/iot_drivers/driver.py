@@ -5,7 +5,7 @@ from threading import Thread, Event
 from odoo.addons.iot_drivers.main import drivers, iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.tools.helpers import toggleable
-from odoo.tools.lru import LRU
+from odoo.libs.lru import LRU
 
 _logger = logging.getLogger(__name__)
 

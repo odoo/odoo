@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 #
 # odoo-mailgate
@@ -28,10 +28,7 @@ EX_CONFIG = 78
 import sys
 try:
     import traceback
-    try:
-        import xmlrpclib
-    except ImportError:
-        import xmlrpc.client as xmlrpclib
+    import xmlrpc.client as xmlrpclib
     import socket
     from optparse import OptionParser as _OptionParser
 except ImportError as e:
@@ -81,8 +78,7 @@ def main():
 
     try:
         msg = sys.stdin.read()
-        if sys.version_info > (3,):
-            msg = msg.encode()
+        msg = msg.encode()
         models = xmlrpclib.ServerProxy('%s://%s:%s/xmlrpc/2/object' % (o.protocol, o.host, o.port), allow_none=True)
         models.execute_kw(o.database, o.userid, o.password, 'mail.thread', 'message_process', [False, xmlrpclib.Binary(msg)], {})
     except xmlrpclib.Fault as e:

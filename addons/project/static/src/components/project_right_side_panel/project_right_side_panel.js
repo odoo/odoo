@@ -1,14 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { formatFloat } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/fields/formatters";
 import { ViewButton } from '@web/views/view_button/view_button';
 
 import { ProjectRightSidePanelSection } from './components/project_right_side_panel_section';
 import { ProjectMilestone } from './components/project_milestone';
 import { ProjectProfitability } from './components/project_profitability';
-import { getCurrency } from '@web/core/currency';
+import { getCurrency } from '@web/services/currency';
 import { Component, onWillStart, useState } from "@odoo/owl";
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/ui/block/ui_service";
 
 export class ProjectRightSidePanel extends Component {
     static components = {

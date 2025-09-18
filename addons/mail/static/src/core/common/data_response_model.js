@@ -1,7 +1,5 @@
 import { fields, Record } from "@mail/core/common/record";
-
 import { Deferred } from "@web/core/utils/concurrency";
-
 /**
  * This class represents a specific and unique request coming from the client to the server, and it
  * also holds the corresponding response coming from the server.

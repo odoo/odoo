@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 import contextlib
 import datetime
-import json
 import logging
 import math
 import os
 import selectors
 import threading
 import time
-from psycopg2 import InterfaceError
-from psycopg2.pool import PoolError
+import psycopg
+import psycopg.sql
+from psycopg import InterfaceError
 
 import odoo
 from ..tools import orjson
 from odoo import api, fields, models
+from odoo.libs.json import dumps as json_dumps
 from odoo.service.server import CommonServer
-from odoo.tools import json_default, SQL
-from odoo.tools.constants import GC_UNLINK_LIMIT
+from odoo.tools import SQL
+from odoo.tools.json import orjson_default
 from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
@@ -43,11 +44,62 @@ def get_notify_payload_max_length(default=8000):
 NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 
 
+_notify_conn: psycopg.Connection | None = None
+_notify_lock = threading.Lock()
+
+
+def _get_notify_conn():
+    """Return a persistent autocommit connection to the ``postgres`` database.
+
+    Lazily opened on first call, reused thereafter.  Reconnects
+    transparently if the connection was lost.
+    """
+    global _notify_conn  # noqa: PLW0603
+    if _notify_conn is None or _notify_conn.closed:
+        _dbname, params = odoo.db.connection_info_for("postgres")
+        _notify_conn = psycopg.connect(autocommit=True, **params)
+    return _notify_conn
+
+
+def _close_notify_conn():
+    global _notify_conn  # noqa: PLW0603
+    if _notify_conn is not None:
+        with contextlib.suppress(Exception):
+            _notify_conn.close()
+        _notify_conn = None
+
+
+def _send_pg_notify(payloads):
+    """Send pg_notify on the ``postgres`` database.
+
+    PostgreSQL LISTEN/NOTIFY is database-scoped: the bus loop
+    (``ImDispatch.loop``) listens on the ``postgres`` database, so
+    NOTIFY must also be sent on ``postgres``.
+
+    Uses a persistent direct connection with ``autocommit=True`` (not
+    the pool) so NOTIFY is sent immediately regardless of the caller's
+    transaction state and without pool contention.
+    """
+    with _notify_lock:
+        conn = _get_notify_conn()
+        try:
+            for payload in payloads:
+                conn.execute(
+                    psycopg.sql.SQL("SELECT {}('imbus', %s)").format(
+                        psycopg.sql.Identifier(ODOO_NOTIFY_FUNCTION)
+                    ),
+                    (payload,),
+                )
+        except Exception:
+            _close_notify_conn()
+            raise
+
+
 # ---------------------------------------------------------
 # Bus
 # ---------------------------------------------------------
 def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=json_default)
+    return json_dumps(v, default=orjson_default)
 
 def hashable(key):
     if isinstance(key, list):
@@ -146,51 +198,44 @@ class BusBus(models.Model):
             # When calling `NOTIFY imbus`, notifications will be fetched in the
             # bus table. If the transaction is not commited yet, there will be
             # nothing to fetch, and the websocket will return no notification.
-            @self.env.cr.postcommit.add
+            cr_ref = self.env.cr
+
+            @cr_ref.postcommit.add
             def notify():
                 payloads = get_notify_payloads(
-                    list(self.env.cr.postcommit.data.pop("bus.bus.channels"))
+                    list(cr_ref.postcommit.data.pop("bus.bus.channels"))
                 )
                 if len(payloads) > 1:
                     _logger.info(
                         "The imbus notification payload was too large, it's been split into %d payloads.",
                         len(payloads),
                     )
-                with odoo.sql_db.db_connect("postgres").cursor() as cr:
-                    for payload in payloads:
-                        cr.execute(
-                            SQL(
-                                "SELECT %s('imbus', %s)",
-                                SQL.identifier(ODOO_NOTIFY_FUNCTION),
-                                payload,
-                            )
-                        )
+                _send_pg_notify(payloads)
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        # first poll return the notification in the 'buffer'
+        # Direct SQL — bus.bus is a simple queue table with no computed fields.
+        # Channel filtering provides security; sudo/access rules are unnecessary.
         if last == 0:
             timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-            domain = [('create_date', '>', timeout_ago)]
-        else:  # else returns the unread notifications
-            domain = [('id', '>', last)]
+            where = SQL("create_date > %s", timeout_ago)
+        else:
+            where = SQL("id > %s", last)
         if ignore_ids:
-            domain.append(("id", "not in", ignore_ids))
+            where = SQL("%s AND NOT (id = ANY(%s))", where, ignore_ids)
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
-        domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain, ["message"])
-        # list of notification to return
-        result = []
-        for notif in notifications:
-            result.append({
-                'id': notif['id'],
-                'message': orjson.loads(notif['message']),
-            })
-        return result
+        self.env.cr.execute(SQL(
+            "SELECT id, message FROM bus_bus WHERE %s AND channel = ANY(%s) ORDER BY id",
+            where, channels,
+        ))
+        return [
+            {'id': row[0], 'message': orjson.loads(row[1])}
+            for row in self.env.cr.fetchall()
+        ]
 
     def _bus_last_id(self):
-        last = self.env['bus.bus'].search([], order='id desc', limit=1)
-        return last.id if last else 0
+        self.env.cr.execute("SELECT COALESCE(MAX(id), 0) FROM bus_bus")
+        return self.env.cr.fetchone()[0]
 
 
 # ---------------------------------------------------------
@@ -235,20 +280,22 @@ class ImDispatch(threading.Thread):
                 self._channels_to_ws.pop(channel)
 
     def loop(self):
-        """ Dispatch postgres notifications to the relevant websockets """
+        """Dispatch postgres notifications to the relevant websockets.
+
+        Uses a direct connection (not the pool) so the long-lived LISTEN
+        connection does not consume a pool slot.
+        """
         _logger.info("Bus.loop listen imbus on db postgres")
-        with odoo.sql_db.db_connect('postgres').cursor() as cr, \
+        _dbname, params = odoo.db.connection_info_for("postgres")
+        with psycopg.connect(autocommit=True, **params) as conn, \
              selectors.DefaultSelector() as sel:
-            cr.execute("listen imbus")
-            cr.commit()
-            conn = cr._cnx
+            conn.execute("LISTEN imbus")
             sel.register(conn, selectors.EVENT_READ)
             while not stop_event.is_set():
                 if sel.select(TIMEOUT):
-                    conn.poll()
                     channels = []
-                    while conn.notifies:
-                        channels.extend(orjson.loads(conn.notifies.pop().payload))
+                    for notif in conn.notifies(timeout=0):
+                        channels.extend(orjson.loads(notif.payload))
                     # relay notifications to websockets that have
                     # subscribed to the corresponding channels.
                     websockets = set()
@@ -262,14 +309,14 @@ class ImDispatch(threading.Thread):
             try:
                 self.loop()
             except Exception as exc:
-                if isinstance(exc, (InterfaceError, PoolError)) and stop_event.is_set():
+                if isinstance(exc, (InterfaceError, psycopg.OperationalError)) and stop_event.is_set():
                     continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
-# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
-# IMDispatch has a lazy start, so we could initialize it anyway
-# And this avoids the Bus unavailable error messages
+# Lazy-started singleton — initialized early to avoid "Bus unavailable" errors.
+# ImDispatch.start() is deferred until the first subscribe() call.
 dispatch = ImDispatch()
 stop_event = threading.Event()
 CommonServer.on_stop(stop_event.set)
+CommonServer.on_stop(_close_notify_conn)

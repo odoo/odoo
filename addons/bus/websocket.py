@@ -4,7 +4,7 @@ import functools
 import hashlib
 import logging
 import os
-import psycopg2
+import psycopg
 import random
 import socket
 import struct
@@ -15,7 +15,7 @@ from collections import defaultdict, deque
 from contextlib import contextmanager, suppress
 from enum import IntEnum
 from itertools import count
-from psycopg2.pool import PoolError
+from odoo.db import PoolError
 from queue import PriorityQueue
 from urllib.parse import urlparse
 from weakref import WeakSet
@@ -50,7 +50,7 @@ def acquire_cursor(db):
     try:
         for _ in range(MAX_TRY_ON_POOL_ERROR):
             # Yield before trying to acquire the cursor to let other
-            # greenlets release their cursor.
+            # threads release their cursor.
             time.sleep(0)
             with suppress(PoolError), Registry(db).cursor() as cr:
                 yield cr
@@ -59,7 +59,7 @@ def acquire_cursor(db):
             delay *= 1.5
         raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
     finally:
-        # Yield after releasing the cursor to let waiting greenlets
+        # Yield after releasing the cursor to let waiting threads
         # immediately pick up the freed connection.
         time.sleep(0)
 
@@ -325,11 +325,7 @@ class Websocket:
         # always sorted by notif_id ASC
         self._notif_history = []
         # Websocket start up
-        self.__selector = (
-            selectors.PollSelector()
-            if odoo.evented and hasattr(selectors, 'PollSelector')
-            else selectors.DefaultSelector()
-        )
+        self.__selector = selectors.DefaultSelector()
         self.__selector.register(self.__socket, selectors.EVENT_READ)
         self.__selector.register(self.__cmd_queue, selectors.EVENT_READ)
         self.state = ConnectionState.OPEN
@@ -493,7 +489,7 @@ class Websocket:
 
     def _process_next_message(self):
         """
-        Process the next message coming throught the socket. If a
+        Process the next message coming through the socket. If a
         data message can be extracted, return its decoded payload.
         As per the RFC, only control frames will be processed once
         the connection reaches the closing state.
@@ -699,7 +695,7 @@ class Websocket:
         This method is a simple rate limiter designed not to allow
         more than one request by `RL_DELAY` seconds. `RL_BURST` specify
         how many requests can be made in excess of the given rate at the
-        begining. When requests are received too fast, raises the
+        beginning. When requests are received too fast, raises the
         `RateLimitExceededException`.
         """
         now = time.time()
@@ -762,7 +758,7 @@ class Websocket:
         if 'next_sid' in session:
             self._session = root.session_store.get(session['next_sid'])
             return self._dispatch_bus_notifications()
-         # Mark the notification request as processed.
+        # Mark the notification request as processed.
         self._waiting_for_dispatch = False
         with acquire_cursor(session.db) as cr:
             env = self.new_env(cr, session)
@@ -923,7 +919,7 @@ class WebsocketRequest:
             threading.current_thread().dbname = self.registry.db_name
             self.registry.check_signaling()
         except (
-            AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
+            AttributeError, psycopg.OperationalError, psycopg.ProgrammingError
         ) as exc:
             raise InvalidDatabaseException() from exc
 
@@ -999,7 +995,7 @@ class WebsocketConnectionHandler:
     @classmethod
     def open_connection(cls, request, version):
         """
-        Open a websocket connection if the handshake is successfull.
+        Open a websocket connection if the handshake is successful.
         :return: Response indicating the server performed a connection
         upgrade.
         :raise: UpgradeRequired if there is no intersection between the
@@ -1023,10 +1019,10 @@ class WebsocketConnectionHandler:
             # WebSocket authentication.
             request.session.is_dirty = True
             return response
-        except KeyError as exc:
-            raise RuntimeError(
-                f"Couldn't bind the websocket. Is the connection opened on the evented port ({config['gevent_port']})?"
-            ) from exc
+        except KeyError:
+            raise ServiceUnavailable(
+                "Websocket unavailable on this port. Use the evented service port."
+            )
         except HTTPException as exc:
             # The HTTP stack does not log exceptions derivated from the
             # HTTPException class since they are valid responses.

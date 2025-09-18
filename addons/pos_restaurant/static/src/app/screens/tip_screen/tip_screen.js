@@ -1,13 +1,12 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Component, onMounted, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { TipReceipt } from "@pos_restaurant/app/components/tip_receipt/tip_receipt";
-import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
-
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
     static props = {
@@ -55,14 +54,17 @@ export class TipScreen extends Component {
             this.dialog.add(AlertDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
-                    "This order is not yet synced to server. Make sure it is synced then try again."
+                    "This order is not yet synced to server. Make sure it is synced then try again.",
                 ),
             });
             return;
         }
 
         if (!amount) {
-            await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
+            await this.pos.data.write("pos.order", [serverId], {
+                is_tipped: true,
+                tip_amount: 0,
+            });
             this.goNextScreen();
             return;
         }
@@ -71,7 +73,7 @@ export class TipScreen extends Component {
             const confirmed = await ask(this.dialog, {
                 title: "Are you sure?",
                 body: `${this.env.utils.formatCurrency(
-                    amount
+                    amount,
                 )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
             });
             if (!confirmed) {
@@ -87,13 +89,15 @@ export class TipScreen extends Component {
         if (paymentline.payment_method_id.payment_terminal) {
             paymentline.amount += amount;
             await paymentline.payment_method_id.payment_terminal.sendPaymentAdjust(
-                paymentline.uuid
+                paymentline.uuid,
             );
         }
 
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
-        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
+        const serverTipLine = await this.pos.data.create("pos.order.line", [
+            serializedTipLine,
+        ]);
         await this.pos.data.write("pos.order", [serverId], {
             is_tipped: true,
             tip_amount: serverTipLine[0].priceIncl,
@@ -110,10 +114,12 @@ export class TipScreen extends Component {
     }
     async printTipReceipt() {
         const order = this.currentOrder;
-        const selectedPaymentLine = order.getSelectedPaymentline() || order.payment_ids[0];
-        const receipts = [selectedPaymentLine?.ticket, selectedPaymentLine?.cashier_receipt].filter(
-            Boolean
-        );
+        const selectedPaymentLine =
+            order.getSelectedPaymentline() || order.payment_ids[0];
+        const receipts = [
+            selectedPaymentLine?.ticket,
+            selectedPaymentLine?.cashier_receipt,
+        ].filter(Boolean);
         for (let i = 0; i < receipts.length; i++) {
             await this.printer.print(
                 TipReceipt,
@@ -122,7 +128,7 @@ export class TipScreen extends Component {
                     order: order,
                     total: this.env.utils.formatCurrency(this.totalAmount),
                 },
-                { webPrintFallback: false }
+                { webPrintFallback: false },
             );
         }
     }

@@ -6,7 +6,7 @@ import requests
 import uuid
 
 from odoo import exceptions, modules, _
-from odoo.tools import email_normalize, exception_to_unicode
+from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
 
@@ -135,7 +135,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
             _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
         )
     except (requests.exceptions.RequestException, IAPServerError) as e:
-        _logger.warning("iap jsonrpc %s failed, %s: %s", url, e.__class__.__name__, exception_to_unicode(e))
+        _logger.warning("iap jsonrpc %s failed, %s: %s", url, e.__class__.__name__, str(e))
         raise exceptions.AccessError(
             _("An error occurred while reaching %s. Please contact Odoo support if this error persists.", url)
         )

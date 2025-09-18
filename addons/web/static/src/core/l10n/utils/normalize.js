@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/l10n/utils/normalize - Unicode normalization, case folding, and accent-insensitive string matching */
+
 /**
  * @typedef {{
  *  match: string;
@@ -65,13 +69,20 @@ export function normalizedMatch(src, substr) {
      * taken into account in the length calculation to get the indexes right,
      * hence Math.max(x.length, 1).
      */
-    const flattenSrcLength = normalizedSrc.reduce((acc, x) => acc + Math.max(x.length, 1), 0);
+    const flattenSrcLength = normalizedSrc.reduce(
+        (acc, x) => acc + Math.max(x.length, 1),
+        0,
+    );
     for (let i = 0; i <= flattenSrcLength - normalizedSubstr.length; ++i) {
-        const substrStack = Array.from(normalizedSubstr).reverse();
+        const substrStack = Array.from(normalizedSubstr).toReversed();
         for (let j = 0; i + j < normalizedSrc.length; ++j) {
             const current = normalizedSrc[i + j];
             // "every" in case normalization expanded current to several chars
-            if (![...current].every((c) => substrStack.length === 0 || c === substrStack.pop())) {
+            if (
+                ![...current].every(
+                    (c) => substrStack.length === 0 || c === substrStack.pop(),
+                )
+            ) {
                 break;
             }
             if (substrStack.length === 0) {
@@ -126,7 +137,9 @@ const DECOMPOSITION_BY_LIGATURE = new Map([
  * @returns {string}
  */
 function expandLigatures(str) {
-    return Array.from(str, (char) => DECOMPOSITION_BY_LIGATURE.get(char) ?? char).join("");
+    return Array.from(str, (char) => DECOMPOSITION_BY_LIGATURE.get(char) ?? char).join(
+        "",
+    );
 }
 
 /**
@@ -159,7 +172,7 @@ const DIACRITIC_LIKES = new Map([
 function unaccent(str) {
     return Array.from(
         str.normalize("NFD").replace(/\p{Nonspacing_Mark}/gu, ""),
-        (char) => DIACRITIC_LIKES.get(char) ?? char
+        (char) => DIACRITIC_LIKES.get(char) ?? char,
     ).join("");
 }
 

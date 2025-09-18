@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
@@ -8,7 +10,6 @@ import {
     models,
     mountWithSearch,
 } from "@web/../tests/web_test_helpers";
-
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 class Partner extends models.Model {
@@ -105,7 +106,11 @@ test("basic search panel rendering", async () => {
     await contains(".o_search_panel .o-dropdown").click();
     expect(".o_search_panel_section.o_search_panel_category").toHaveCount(1);
     expect(".o_search_panel_category_value").toHaveCount(3);
-    expect(queryAllTexts(".o_search_panel_field li")).toEqual(["All", "gold", "silver"]);
+    expect(queryAllTexts(".o_search_panel_field li")).toEqual([
+        "All",
+        "gold",
+        "silver",
+    ]);
 
     await contains(".o_search_panel_category_value:nth-of-type(2) header").click();
     expect(".o_search_panel .o-dropdown").toHaveText("gold");

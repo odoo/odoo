@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
-
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/ui/dialog/dialog";
+
 import { discussComponentRegistry } from "./discuss_component_registry";
 
 export class MessageConfirmDialog extends Component {

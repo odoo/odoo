@@ -1,24 +1,25 @@
-import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
+import { uuidv4 } from "@point_of_sale/utils";
+
+import { Base } from "./base";
+import { createExtraField, processModelClasses } from "./model_classes";
+import { processModelDefs } from "./model_defs";
 import { RecordStore } from "./record_store";
+import { ormSerialization } from "./serialization";
 import {
-    RELATION_TYPES,
-    X2MANY_TYPES,
-    DATE_TIME_TYPE,
-    RAW_SYMBOL,
-    STORE_SYMBOL,
-    mapObj,
+    AggregatedUpdates,
+    BACKREF_PREFIX,
     convertDateTimeToRaw,
     convertDateToRaw,
-    BACKREF_PREFIX,
+    DATE_TIME_TYPE,
+    mapObj,
     PARENT_X2MANY_TYPES,
+    RAW_SYMBOL,
+    RELATION_TYPES,
     SERIALIZED_UI_STATE_PROP,
-    AggregatedUpdates,
+    STORE_SYMBOL,
+    X2MANY_TYPES,
 } from "./utils";
-import { Base } from "./base";
-import { processModelDefs } from "./model_defs";
-import { createExtraField, processModelClasses } from "./model_classes";
-import { ormSerialization } from "./serialization";
 
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
@@ -237,7 +238,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         _sanitizeRawData(vals, options = {}) {
-            const { connectRecords = true, serverData = false, existingRecord = false } = options;
+            const {
+                connectRecords = true,
+                serverData = false,
+                existingRecord = false,
+            } = options;
             let dataToConnect;
             if (!vals.uuid && database[this.name]?.key === "uuid") {
                 vals.uuid = uuidv4();
@@ -254,7 +259,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 const value = vals[fieldName];
                 if (field.required && (value === undefined || value === null)) {
                     throw new Error(
-                        `'${fieldName}' field is required when creating '${this.name}' record.`
+                        `'${fieldName}' field is required when creating '${this.name}' record.`,
                     );
                 }
                 if (RELATION_TYPES.has(field.type)) {
@@ -265,8 +270,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const rawValue = isX2Many ? new Set(value) : value;
                     const data = existingRecord?.[field.name];
                     let localIds = [];
-                    if (isX2Many && existingRecord && opts.databaseTable[field.relation]?.key) {
-                        localIds = data.filter((r) => r.isSynced === false)?.map((r) => r.id) || [];
+                    if (
+                        isX2Many &&
+                        existingRecord &&
+                        opts.databaseTable[field.relation]?.key
+                    ) {
+                        localIds =
+                            data
+                                .filter((r) => r.isSynced === false)
+                                ?.map((r) => r.id) || [];
                     }
 
                     if (connectRecords) {
@@ -329,11 +341,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         _create(vals, opts = {}) {
-            const { connectRecords = true, serverData = false, delaySetup = false } = opts;
-            const { rawData, uiState, extraFields, dataToConnect } = this._sanitizeRawData(vals, {
-                serverData,
-                connectRecords,
-            });
+            const {
+                connectRecords = true,
+                serverData = false,
+                delaySetup = false,
+            } = opts;
+            const { rawData, uiState, extraFields, dataToConnect } =
+                this._sanitizeRawData(vals, {
+                    serverData,
+                    connectRecords,
+                });
             const ModelRecordClass = modelClasses[this.name];
             let record = new ModelRecordClass({
                 model: this,
@@ -387,7 +404,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     if (opts.omitUnknownField) {
                         continue;
                     }
-                    throw new Error(`The field '${name}' does not exist in model '${this.name}'`);
+                    throw new Error(
+                        `The field '${name}' does not exist in model '${this.name}'`,
+                    );
                 }
                 const coModelName = field.relation;
                 const coModel = this.models[coModelName];
@@ -399,37 +418,74 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
                 if (coModel) {
                     if (X2MANY_TYPES.has(field.type)) {
-                        const commands = convertToX2ManyCommands(vals[name], opts.strict);
+                        const commands = convertToX2ManyCommands(
+                            vals[name],
+                            opts.strict,
+                        );
                         for (const cmd of commands) {
                             const [command, ...records] = cmd;
                             if (command === "unlink") {
                                 for (const record2 of records) {
-                                    models._disconnect(field, record, record2, aggregatedUpdates);
+                                    models._disconnect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                             } else if (command === "clear") {
                                 const linkedRecs = record[name];
                                 for (const record2 of [...linkedRecs]) {
-                                    models._disconnect(field, record, record2, aggregatedUpdates);
+                                    models._disconnect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                             } else if (command === "create") {
-                                const newRecords = records.map((vals) => coModel.create(vals));
+                                const newRecords = records.map((vals) =>
+                                    coModel.create(vals),
+                                );
                                 for (const record2 of newRecords) {
-                                    models._connect(field, record, record2, aggregatedUpdates);
+                                    models._connect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                             } else if (command === "link") {
                                 for (const record2 of records) {
-                                    models._connect(field, record, record2, aggregatedUpdates);
+                                    models._connect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                             } else if (command === "set") {
                                 const linkedRecs = record[name];
                                 for (const record2 of [...linkedRecs]) {
-                                    models._disconnect(field, record, record2, aggregatedUpdates);
+                                    models._disconnect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                                 for (const record2 of records) {
-                                    models._connect(field, record, record2, aggregatedUpdates);
+                                    models._connect(
+                                        field,
+                                        record,
+                                        record2,
+                                        aggregatedUpdates,
+                                    );
                                 }
                             } else {
-                                throw new Error("Command '" + command + "' not supported");
+                                throw new Error(
+                                    "Command '" + command + "' not supported",
+                                );
                             }
                         }
                     } else if (field.type === "many2one") {
@@ -439,12 +495,25 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             const exist = coModel.exists(id);
                             if (exist) {
                                 models._connect(field, record, id, aggregatedUpdates);
-                            } else if (this.models[field.relation] && typeof value === "object") {
+                            } else if (
+                                this.models[field.relation] &&
+                                typeof value === "object"
+                            ) {
                                 const newRecord = coModel.create(value);
-                                models._connect(field, record, newRecord, aggregatedUpdates);
+                                models._connect(
+                                    field,
+                                    record,
+                                    newRecord,
+                                    aggregatedUpdates,
+                                );
                             }
                         } else if (record[name]) {
-                            models._disconnect(field, record, record[name], aggregatedUpdates);
+                            models._disconnect(
+                                field,
+                                record,
+                                record[name],
+                                aggregatedUpdates,
+                            );
                         }
                     } else {
                         throw new Error(`Relation type '${field.type}' not supported`);
@@ -502,10 +571,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     if (records) {
                         for (const record2 of [...records]) {
                             handleCommand(inverse, field, record, opts.backend);
-                            models._disconnect(field, record, record2, aggregatedUpdates);
+                            models._disconnect(
+                                field,
+                                record,
+                                record2,
+                                aggregatedUpdates,
+                            );
                         }
                     }
-                } else if (field.type === "many2one" && typeof record[name] === "object") {
+                } else if (
+                    field.type === "many2one" &&
+                    typeof record[name] === "object"
+                ) {
                     handleCommand(inverse, field, record, opts.backend);
                     models._disconnect(field, record, record[name], aggregatedUpdates);
                 }
@@ -558,7 +635,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 unsubscribers.push(
                     record.model.addEventListener("delete", (data) => {
                         index.delete(data.id);
-                    })
+                    }),
                 );
 
                 const cleanup = () => {
@@ -571,7 +648,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                 const relationModel = record.models[relation];
                 for (const operation of ["update", "create", "delete"]) {
-                    unsubscribers.push(relationModel.addEventListener(operation, cleanup));
+                    unsubscribers.push(
+                        relationModel.addEventListener(operation, cleanup),
+                    );
                 }
             }
 
@@ -596,7 +675,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         constructor(processedModelDefs) {
             Object.assign(
                 this,
-                mapObj(processedModelDefs, (modelName) => new Model(modelName))
+                mapObj(processedModelDefs, (modelName) => new Model(modelName)),
             );
             this[STORE_SYMBOL] = store;
         }
@@ -614,10 +693,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         loadConnectedData(data, modelsToLoad = []) {
-            return disabler.call((...args) => this._loadData(...args), data, modelsToLoad, {
-                connectRecords: false,
-                serverData: true,
-            });
+            return disabler.call(
+                (...args) => this._loadData(...args),
+                data,
+                modelsToLoad,
+                {
+                    connectRecords: false,
+                    serverData: true,
+                },
+            );
         }
 
         /**
@@ -652,7 +736,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const recordStore = this[STORE_SYMBOL];
                     const modelInstance = this[model];
                     for (const vals of valsArray) {
-                        const existingRecord = recordStore.get(model, modelKey, vals[modelKey]);
+                        const existingRecord = recordStore.get(
+                            model,
+                            modelKey,
+                            vals[modelKey],
+                        );
                         let record,
                             uiState,
                             isUpdate = false;
@@ -672,7 +760,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             existingRecord[RAW_SYMBOL] = rawData;
                             recordStore.add(existingRecord);
                             if (dataToConnect) {
-                                modelInstance._connectRecords(existingRecord, dataToConnect);
+                                modelInstance._connectRecords(
+                                    existingRecord,
+                                    dataToConnect,
+                                );
                             }
                             record = existingRecord;
                             uiState = newUiState;
@@ -736,22 +827,42 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     return;
                 }
                 if (!inverse.dummy && inverse.name in recordToConnect) {
-                    this._addItem(recordToConnect, inverse, ownerRecord, aggregatedUpdates);
+                    this._addItem(
+                        recordToConnect,
+                        inverse,
+                        ownerRecord,
+                        aggregatedUpdates,
+                    );
                 }
                 if (prevConnectedRecordId && !inverse.dummy) {
                     const prevRecord = this[STORE_SYMBOL].getById(
                         field.relation,
-                        prevConnectedRecordId
+                        prevConnectedRecordId,
                     );
-                    this._removeItem(prevRecord, inverse, ownerRecord, aggregatedUpdates);
+                    this._removeItem(
+                        prevRecord,
+                        inverse,
+                        ownerRecord,
+                        aggregatedUpdates,
+                    );
                 }
                 ownerRecord[RAW_SYMBOL][field.name] = recordToConnect.id;
                 aggregatedUpdates.add(ownerRecord, field.name);
             } else if (field.type === "one2many") {
                 if (!inverse.dummy) {
-                    this._connect(inverse, recordToConnect, ownerRecord, aggregatedUpdates);
+                    this._connect(
+                        inverse,
+                        recordToConnect,
+                        ownerRecord,
+                        aggregatedUpdates,
+                    );
                 } else {
-                    this._addItem(ownerRecord, field, recordToConnect, aggregatedUpdates);
+                    this._addItem(
+                        ownerRecord,
+                        field,
+                        recordToConnect,
+                        aggregatedUpdates,
+                    );
                 }
             } else if (field.type === "many2many") {
                 this._addItem(ownerRecord, field, recordToConnect, aggregatedUpdates);
@@ -776,17 +887,42 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 if (prevConnectedRecordId === recordToDisconnect.id) {
                     ownerRecord[RAW_SYMBOL][field.name] = undefined;
                     aggregatedUpdates.add(ownerRecord, field.name);
-                    this._removeItem(recordToDisconnect, inverse, ownerRecord, aggregatedUpdates);
+                    this._removeItem(
+                        recordToDisconnect,
+                        inverse,
+                        ownerRecord,
+                        aggregatedUpdates,
+                    );
                 }
             } else if (field.type === "one2many") {
                 if (!inverse.dummy) {
-                    this._disconnect(inverse, recordToDisconnect, ownerRecord, aggregatedUpdates);
+                    this._disconnect(
+                        inverse,
+                        recordToDisconnect,
+                        ownerRecord,
+                        aggregatedUpdates,
+                    );
                 } else {
-                    this._removeItem(ownerRecord, field, recordToDisconnect, aggregatedUpdates);
+                    this._removeItem(
+                        ownerRecord,
+                        field,
+                        recordToDisconnect,
+                        aggregatedUpdates,
+                    );
                 }
             } else if (field.type === "many2many") {
-                this._removeItem(ownerRecord, field, recordToDisconnect, aggregatedUpdates);
-                this._removeItem(recordToDisconnect, inverse, ownerRecord, aggregatedUpdates);
+                this._removeItem(
+                    ownerRecord,
+                    field,
+                    recordToDisconnect,
+                    aggregatedUpdates,
+                );
+                this._removeItem(
+                    recordToDisconnect,
+                    inverse,
+                    ownerRecord,
+                    aggregatedUpdates,
+                );
             }
         }
 

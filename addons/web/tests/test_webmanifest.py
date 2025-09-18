@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests.common import tagged
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
-@tagged("-at_install", "post_install")
+
+@tagged("-at_install", "post_install", "web_http", "web_manifest")
 class WebManifestRoutesTest(HttpCaseWithUserDemo):
     """
     This test suite is used to request the routes used by the PWA backend implementation
@@ -27,11 +25,22 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
         self.assertEqual(data["prefer_related_applications"], False)
-        self.assertCountEqual(data["icons"], [
-            {'src': '/web/static/img/odoo-icon-192x192.png', 'sizes': '192x192', 'type': 'image/png'},
-            {'src': '/web/static/img/odoo-icon-512x512.png', 'sizes': '512x512', 'type': 'image/png'}
-        ])
-        self.assertGreaterEqual(len(data["shortcuts"]), 0)
+        self.assertCountEqual(
+            data["icons"],
+            [
+                {
+                    "src": "/web/static/img/odoo-icon-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                },
+                {
+                    "src": "/web/static/img/odoo-icon-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                },
+            ],
+        )
+        self.assertIsInstance(data["shortcuts"], list)
         for shortcut in data["shortcuts"]:
             self.assertGreater(len(shortcut["name"]), 0)
             self.assertGreater(len(shortcut["description"]), 0)
@@ -53,14 +62,27 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
         self.assertEqual(data["prefer_related_applications"], False)
-        self.assertCountEqual(data["icons"], [
-            {'src': '/web/static/img/odoo-icon-192x192.png', 'sizes': '192x192', 'type': 'image/png'},
-            {'src': '/web/static/img/odoo-icon-512x512.png', 'sizes': '512x512', 'type': 'image/png'}
-        ])
+        self.assertCountEqual(
+            data["icons"],
+            [
+                {
+                    "src": "/web/static/img/odoo-icon-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                },
+                {
+                    "src": "/web/static/img/odoo-icon-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                },
+            ],
+        )
         self.assertEqual(len(data["shortcuts"]), 0)
 
     def test_webmanifest_scoped(self):
-        response = self.url_open("/web/manifest.scoped_app_manifest?app_id=test&path=/test&app_name=Test")
+        response = self.url_open(
+            "/web/manifest.scoped_app_manifest?app_id=test&path=/test&app_name=Test"
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/manifest+json")
         data = response.json()
@@ -71,9 +93,16 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
         self.assertEqual(data["prefer_related_applications"], False)
-        self.assertCountEqual(data["icons"], [
-            {'src': "/web/static/img/odoo-icon-192x192.png", 'sizes': 'any', 'type': 'image/png'}
-        ])
+        self.assertCountEqual(
+            data["icons"],
+            [
+                {
+                    "src": "/web/static/img/odoo-icon-192x192.png",
+                    "sizes": "any",
+                    "type": "image/png",
+                }
+            ],
+        )
         self.assertEqual(len(data["shortcuts"]), 0)
 
     def test_serviceworker(self):
@@ -104,6 +133,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
 
         document = self.url_open("/odoo")
         self.assertIn(
-            '<link rel="apple-touch-icon" href="/web/static/img/odoo-icon-ios.png"/>', document.text,
+            '<link rel="apple-touch-icon" href="/web/static/img/odoo-icon-ios.png"/>',
+            document.text,
             "Icon for iOS is present in the head of the document.",
         )

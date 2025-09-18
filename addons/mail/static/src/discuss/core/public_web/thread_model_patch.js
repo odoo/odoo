@@ -2,16 +2,16 @@ import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
-
 import { patch } from "@web/core/utils/patch";
-
 /** @type {import("models").Thread} */
 const threadPatch = {
     setup() {
         super.setup(...arguments);
         this.appAsUnreadChannels = fields.One("DiscussApp", {
             compute() {
-                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+                return this.channel_type === "channel" && this.isUnread
+                    ? this.store.discuss
+                    : null;
             },
         });
         this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
@@ -34,7 +34,8 @@ const threadPatch = {
         });
         this.sub_channel_ids = fields.Many("Thread", {
             inverse: "parent_channel_id",
-            sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+            sort: (a, b) =>
+                compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
         });
         this.displayInSidebar = fields.Attr(false, {
             compute() {
@@ -81,13 +82,18 @@ const threadPatch = {
      * @param {string} [param0.name]
      */
     async createSubChannel({ initialMessage, name } = {}) {
-        const { store_data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
-            parent_channel_id: this.parent_channel_id?.id || this.id,
-            from_message_id: initialMessage?.id,
-            name,
-        });
+        const { store_data, sub_channel } = await rpc(
+            "/discuss/channel/sub_channel/create",
+            {
+                parent_channel_id: this.parent_channel_id?.id || this.id,
+                from_message_id: initialMessage?.id,
+                name,
+            },
+        );
         this.store.insert(store_data);
-        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
+        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({
+            focus: true,
+        });
     },
     /**
      * @param {*} param0
@@ -99,15 +105,18 @@ const threadPatch = {
             return;
         }
         const limit = 30;
-        const { store_data, sub_channel_ids } = await rpc("/discuss/channel/sub_channel/fetch", {
-            before: this.lastSubChannelLoaded?.id,
-            limit,
-            parent_channel_id: this.id,
-            search_term: searchTerm,
-        });
+        const { store_data, sub_channel_ids } = await rpc(
+            "/discuss/channel/sub_channel/fetch",
+            {
+                before: this.lastSubChannelLoaded?.id,
+                limit,
+                parent_channel_id: this.id,
+                search_term: searchTerm,
+            },
+        );
         this.store.insert(store_data);
         const threads = sub_channel_ids.map((subChannelId) =>
-            this.store.Thread.get({ model: "discuss.channel", id: subChannelId })
+            this.store.Thread.get({ model: "discuss.channel", id: subChannelId }),
         );
 
         if (searchTerm) {
@@ -115,10 +124,12 @@ const threadPatch = {
             // searching for a specific term.
             return;
         }
-        const subChannels = threads.filter((thread) => this.eq(thread.parent_channel_id));
+        const subChannels = threads.filter((thread) =>
+            this.eq(thread.parent_channel_id),
+        );
         this.lastSubChannelLoaded = subChannels.reduce(
             (min, channel) => (!min || channel.id < min.id ? channel : min),
-            this.lastSubChannelLoaded
+            this.lastSubChannelLoaded,
         );
         if (subChannels.length < limit) {
             this.loadSubChannelsDone = true;

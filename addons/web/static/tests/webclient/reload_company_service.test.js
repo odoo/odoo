@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import {
     defineModels,
@@ -6,7 +8,6 @@ import {
     mockService,
     models,
 } from "@web/../tests/web_test_helpers";
-
 import { rpcBus } from "@web/core/network/rpc";
 
 class Company extends models.Model {

@@ -68,16 +68,18 @@ declare module "registries" {
 
     export interface FieldsRegistryItemShape {
         additionalClasses?: string[];
-        component: typeof Component;
+        component: any;
         displayName?: TranslatableString;
-        extractProps?(options: StaticFieldInfo, dynamicInfo: DynamicFieldInfo): Record<string, any>;
+        extractProps?(...args: any[]): Record<string, any>;
         fieldDependencies?: Partial<StaticFieldInfo>[] | ((baseInfo: StaticFieldInfo) => Partial<StaticFieldInfo>[]);
-        listViewWidth?: number | number[] | ((param: { type: FieldType; hasLabel: boolean; }) => number | false);
+        listViewWidth?: number | number[] | ((param: { type: string; hasLabel: boolean; }) => number | false);
         relatedFields?: Partial<StaticFieldInfo>[] | ((baseInfo: StaticFieldInfo) => Partial<StaticFieldInfo>[]);
-        isEmpty?(record: Record<string, any>, fieldName: string): boolean;
-        supportedOptions?: SupportedOptions[];
-        supportedTypes?: FieldType[];
+        isEmpty?(...args: any[]): boolean;
+        supportedAttributes?: any[];
+        supportedOptions?: any[];
+        supportedTypes?: string[];
         useSubView?: boolean;
+        [key: string]: any;
     }
 
     interface GlobalRegistryCategories {

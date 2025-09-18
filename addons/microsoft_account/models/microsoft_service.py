@@ -6,7 +6,7 @@ import json
 import logging
 
 import requests
-from werkzeug import urls
+from urllib.parse import urlencode, urlsplit
 
 from odoo import api, fields, models, _
 
@@ -73,7 +73,7 @@ class MicrosoftService(models.AbstractModel):
             'refresh_token': rtoken,
         }
         microsoft_data = self._do_request(
-            DEFAULT_MICROSOFT_TOKEN_ENDPOINT,
+            self._get_token_endpoint(),
             params=data,
             headers=headers,
             method='POST',
@@ -96,7 +96,7 @@ class MicrosoftService(models.AbstractModel):
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
 
-        encoded_params = urls.url_encode({
+        encoded_params = urlencode({
             'response_type': 'code',
             'client_id': self._get_microsoft_client_id(service),
             'state': json.dumps(state),
@@ -147,8 +147,8 @@ class MicrosoftService(models.AbstractModel):
         if headers is None:
             headers = {}
 
-        assert urls.url_parse(preuri + uri).host in [
-            urls.url_parse(url).host for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
+        assert urlsplit(preuri + uri).hostname in [
+            urlsplit(url).hostname for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
         ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))

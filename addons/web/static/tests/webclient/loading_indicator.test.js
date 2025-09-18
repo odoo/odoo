@@ -1,3 +1,5 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -6,12 +8,14 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-
+import { config as transitionConfig } from "@web/components/transition";
 import { rpcBus } from "@web/core/network/rpc";
-import { config as transitionConfig } from "@web/core/transition";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 
-const payload = (id) => ({ data: { id, params: { model: "", method: "" } }, settings: {} });
+const payload = (id) => ({
+    data: { id, params: { model: "", method: "" } },
+    settings: {},
+});
 
 beforeEach(() => {
     patchWithCleanup(transitionConfig, { disabled: true });

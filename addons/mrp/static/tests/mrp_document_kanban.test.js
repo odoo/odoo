@@ -10,7 +10,7 @@ import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { inputFiles } from "@web/../tests/utils";
 import { asyncStep, getService, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
-import { fileUploadService } from "@web/core/file_upload/file_upload_service";
+import { fileUploadService } from "@web/services/file_upload_service";
 
 describe.current.tags("desktop");
 defineMrpModels();

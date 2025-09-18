@@ -18,7 +18,7 @@
     # any module necessary for this one to work correctly
     # so stupid that we need to use the stupid defineMailModel helper, so we need
     # to depend on mail
-    'depends': ['base', 'html_editor', 'mail'],
+    'depends': ['mail'],
 
     'assets': {
         'web._assets_primary_variables': [

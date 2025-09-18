@@ -1,13 +1,13 @@
-import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
-import { registry } from "@web/core/registry";
 import { EventBus, onWillDestroy, useComponent } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { parseFloat as oParseFloat } from "@web/fields/parsers";
 import { session } from "@web/session";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
-        "0123456789+-.,".split("")
-    )
+        "0123456789+-.,".split(""),
+    ),
 );
 const CONTROL_KEYS = new Set(["Enter", "Esc"]);
 const ALLOWED_KEYS = new Set([...INPUT_KEYS, ...CONTROL_KEYS]);
@@ -140,7 +140,7 @@ class NumberBuffer extends EventBus {
         onWillDestroy(() => {
             const currentComponentName = currentComponent.constructor.name;
             const indexComponent = this.bufferHolderStack.findIndex(
-                (stack) => stack.component.constructor.name === currentComponentName
+                (stack) => stack.component.constructor.name === currentComponentName,
             );
             this.bufferHolderStack.splice(indexComponent, 1);
             this._setUp();
@@ -166,7 +166,9 @@ class NumberBuffer extends EventBus {
         const overlays = Object.values(this.overlay.overlays);
         if (
             overlays.length &&
-            !overlays.some((overlay) => overlay.props.subComponent?.name === "NumberPopup")
+            !overlays.some(
+                (overlay) => overlay.props.subComponent?.name === "NumberPopup",
+            )
         ) {
             return;
         }
@@ -187,7 +189,10 @@ class NumberBuffer extends EventBus {
     }
     _bufferEvents(handler) {
         return (event) => {
-            if (["INPUT", "TEXTAREA"].includes(event.target.tagName) || !this.eventsBuffer) {
+            if (
+                ["INPUT", "TEXTAREA"].includes(event.target.tagName) ||
+                !this.eventsBuffer
+            ) {
                 return;
             }
             // Ignore any input if combined with Ctrl, Cmd, or Alt
@@ -285,18 +290,25 @@ class NumberBuffer extends EventBus {
             if (isEmpty(buffer)) {
                 this.state.buffer = null;
             } else {
-                const nCharToRemove = buffer[buffer.length - 1] === this.decimalPoint ? 2 : 1;
+                const nCharToRemove =
+                    buffer[buffer.length - 1] === this.decimalPoint ? 2 : 1;
                 this.state.buffer = buffer.substring(0, buffer.length - nCharToRemove);
             }
         } else if (input === "+") {
             if (this.state.buffer[0] === "-") {
-                this.state.buffer = this.state.buffer.substring(1, this.state.buffer.length);
+                this.state.buffer = this.state.buffer.substring(
+                    1,
+                    this.state.buffer.length,
+                );
             }
         } else if (input === "-") {
             if (isFirstInput) {
                 this.state.buffer = "-0";
             } else if (this.state.buffer[0] === "-") {
-                this.state.buffer = this.state.buffer.substring(1, this.state.buffer.length);
+                this.state.buffer = this.state.buffer.substring(
+                    1,
+                    this.state.buffer.length,
+                );
             } else {
                 this.state.buffer = "-" + this.state.buffer;
             }

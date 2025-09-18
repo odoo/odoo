@@ -1,11 +1,12 @@
+// @ts-check
+
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { mockFetch } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-
 import {
-    assets,
     assetCacheByDocument,
+    assets,
     globalBundleCache,
     loadBundle,
     loadCSS,
@@ -51,7 +52,7 @@ test("loadJS: load invalid JS lib", async () => {
 
     await expect(loadJS("/some/invalid/file.js")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.js failed/,
-        { message: "Trying to load an invalid file rejects the promise" }
+        { message: "Trying to load an invalid file rejects the promise" },
     );
 });
 
@@ -72,7 +73,7 @@ test("loadCSS: load invalid CSS lib", async () => {
 
     await expect(loadCSS("/some/invalid/file.css")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.css failed/,
-        { message: "Trying to load an invalid file rejects the promise" }
+        { message: "Trying to load an invalid file rejects the promise" },
     );
 });
 
@@ -84,7 +85,9 @@ test("loadBundle: load js and css files", async () => {
 
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
+        expect.step(
+            `add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
+        );
     });
 
     loadBundle("test.bundle");
@@ -106,7 +109,9 @@ test("loadBundle: load only js files", async () => {
 
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
+        expect.step(
+            `add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
+        );
     });
 
     loadBundle("test.bundle", { css: false });
@@ -126,7 +131,9 @@ test("loadBundle: load only css files", async () => {
 
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
-        expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
+        expect.step(
+            `add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
+        );
     });
 
     loadBundle("test.bundle", { js: false });
@@ -147,7 +154,7 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
+            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
         );
     });
 
@@ -159,8 +166,8 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });
@@ -197,7 +204,7 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
+            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
         );
     });
 
@@ -212,8 +219,8 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });
@@ -222,8 +229,8 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });

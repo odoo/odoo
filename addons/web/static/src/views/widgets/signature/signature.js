@@ -1,10 +1,14 @@
+// @ts-check
+
+/** @module @web/views/widgets/signature/signature - Widget opening a signature drawing dialog and writing the captured image to a Binary field */
+
+import { Component } from "@odoo/owl";
+import { SignatureDialog } from "@web/components/signature/signature_dialog";
 import { registry } from "@web/core/registry";
-import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component } from "@odoo/owl";
-
+/** Widget that opens a signature drawing dialog and writes the captured image to a Binary field on the record. */
 export class SignatureWidget extends Component {
     static template = "web.SignatureWidget";
     static props = {
@@ -20,6 +24,7 @@ export class SignatureWidget extends Component {
         this.orm = useService("orm");
     }
 
+    /** Open the SignatureDialog pre-filled with the record's full name field. */
     onClickSignature() {
         const nameAndSignatureProps = {
             mode: "draw",
@@ -33,7 +38,7 @@ export class SignatureWidget extends Component {
             let signName;
             const fullNameData = record.data[fullName];
             if (record.fields[fullName].type === "many2one") {
-                signName = fullNameData && fullNameData.display_name;
+                signName = fullNameData?.display_name;
             } else {
                 signName = fullNameData;
             }
@@ -50,14 +55,23 @@ export class SignatureWidget extends Component {
         this.dialogService.add(SignatureDialog, dialogProps);
     }
 
+    /**
+     * Write the base64 signature image to the record's signature field via ORM.
+     * @param {{ signatureImage: string }} param0 - data URL from the signature pad
+     */
     async uploadSignature({ signatureImage }) {
         const file = signatureImage.split(",")[1];
-        const { model, resModel, resId } = this.props.record;
+        const record = this.props.record;
+        const { model, resModel, resId } = record;
+        const signatureField = this.props.signatureField;
+        // Use the raw ORM service — the protected wrapper from useService()
+        // rejects or hangs when the widget is destroyed. On mobile the widget
+        // lives inside a dropdown that closes on re-render, but the write
+        // must still complete (the dialog outlives the widget).
+        const orm = this.env.services.orm;
 
-        await this.env.services.orm.write(resModel, [resId], {
-            [this.props.signatureField]: file,
-        });
-        await this.props.record.load();
+        await orm.write(resModel, [resId], { [signatureField]: file });
+        await record.load();
         model.notify();
     }
 }

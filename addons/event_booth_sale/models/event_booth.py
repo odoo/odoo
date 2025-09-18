@@ -37,7 +37,7 @@ class EventBooth(models.Model):
 
     def action_view_sale_order(self):
         self.sale_order_id.ensure_one()
-        action = self.env['ir.actions.actions']._for_xml_id('sale.action_orders')
+        action = self.env['ir.actions.actions']._for_xml_id('sale.action_sale_order')
         action['views'] = [(False, 'form')]
         action['res_id'] = self.sale_order_id.id
         return action

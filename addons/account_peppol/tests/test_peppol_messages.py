@@ -441,6 +441,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     def test_peppol_send_multi_async(self):
         company_2 = self.setup_other_company()['company']
         company_2.write({
+            'peppol_eas': '0230',
+            'peppol_endpoint': 'C2584563200',
             'country_id': self.env.ref('base.be').id,
         })
 

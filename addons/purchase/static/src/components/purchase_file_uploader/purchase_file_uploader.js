@@ -1,8 +1,8 @@
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { FileUploader } from "@web/views/fields/file_handler";
-import { WarningDialog } from "@web/core/errors/error_dialogs";
+import { FileUploader } from "@web/fields/file_handler";
+import { WarningDialog } from "@web/components/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
@@ -71,7 +71,7 @@ export class PurchaseFileUploader extends Component {
         try {
             action = await this.orm.call(
                 resModel,
-                "action_create_invoice",
+                "action_create_invoice_from_file",
                 [ids, this.attachmentIdsToProcess],
                 { context: { ...this.env.searchModel.context } }
             );

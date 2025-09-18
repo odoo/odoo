@@ -1,5 +1,7 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     formatList,
     jsToPyLocale,
@@ -7,8 +9,7 @@ import {
     normalizedMatch,
     pyToJsLocale,
 } from "@web/core/l10n/utils";
-import { user } from "@web/core/user";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { user } from "@web/services/user";
 
 describe.current.tags("headless");
 
@@ -40,9 +41,12 @@ describe("jsToPyLocale", () => {
     test("2-letter ISO 639 code", () => expect(jsToPyLocale("tg")).toBe("tg"));
     test("3-letter ISO 639 code", () => expect(jsToPyLocale("kab")).toBe("kab"));
     test("language with region", () => expect(jsToPyLocale("fr-BE")).toBe("fr_BE"));
-    test("language with region (UN M49 code)", () => expect(jsToPyLocale("es-419")).toBe("es_419"));
-    test("language with Latin script", () => expect(jsToPyLocale("sr-Latn")).toBe("sr@latin"));
-    test("language with Cyrillic script", () => expect(jsToPyLocale("sr-Cyrl")).toBe("sr@Cyrl"));
+    test("language with region (UN M49 code)", () =>
+        expect(jsToPyLocale("es-419")).toBe("es_419"));
+    test("language with Latin script", () =>
+        expect(jsToPyLocale("sr-Latn")).toBe("sr@latin"));
+    test("language with Cyrillic script", () =>
+        expect(jsToPyLocale("sr-Cyrl")).toBe("sr@Cyrl"));
     test("language with region and script", () =>
         expect(jsToPyLocale("sr-Latn-RS")).toBe("sr_RS@latin"));
     test("already converted locale", () => expect(jsToPyLocale("fr_TG")).toBe("fr_TG"));
@@ -57,9 +61,12 @@ describe("pyToJsLocale", () => {
     test("2-letter ISO 639 code", () => expect(pyToJsLocale("tg")).toBe("tg"));
     test("3-letter ISO 639 code", () => expect(pyToJsLocale("kab")).toBe("kab"));
     test("language with region", () => expect(pyToJsLocale("fr_BE")).toBe("fr-BE"));
-    test("language with region (UN M49 code)", () => expect(pyToJsLocale("es_419")).toBe("es-419"));
-    test("language with Latin script", () => expect(pyToJsLocale("sr@latin")).toBe("sr-Latn"));
-    test("language with Cyrillic script", () => expect(pyToJsLocale("sr@Cyrl")).toBe("sr-Cyrl"));
+    test("language with region (UN M49 code)", () =>
+        expect(pyToJsLocale("es_419")).toBe("es-419"));
+    test("language with Latin script", () =>
+        expect(pyToJsLocale("sr@latin")).toBe("sr-Latn"));
+    test("language with Cyrillic script", () =>
+        expect(pyToJsLocale("sr@Cyrl")).toBe("sr-Cyrl"));
     test("language with region and script", () =>
         expect(pyToJsLocale("sr_RS@latin")).toBe("sr-Latn-RS"));
     test("already converted locale", () => expect(pyToJsLocale("fr-TG")).toBe("fr-TG"));
@@ -73,9 +80,12 @@ describe("normalize", () => {
     test("diacritics-like", () => expect(normalize("ĦøŧØłð")).toBe("hotold"));
     test("French", () => expect(normalize("éàïœùûîêü")).toBe("eaioeuuieu"));
     test("normalization forms", () =>
-        expect(normalize("éÈäÙ".normalize("NFC"))).toBe(normalize("éÈäÙ".normalize("NFD"))));
+        expect(normalize("éÈäÙ".normalize("NFC"))).toBe(
+            normalize("éÈäÙ".normalize("NFD")),
+        ));
     test("compatibility equivalence", () => expect(normalize("㎩㎭𝐞")).toBe("parade"));
-    test("case folding", () => expect(normalize("Kevin Großkreutz")).toBe("kevin grosskreutz"));
+    test("case folding", () =>
+        expect(normalize("Kevin Großkreutz")).toBe("kevin grosskreutz"));
     test("ligatures", () => expect(normalize("ŒÆĲ")).toBe("oeaeij"));
     test("empty string", () => expect(normalize("")).toBe(""));
 });
@@ -102,7 +112,10 @@ describe("normalizedMatch", () => {
     });
     describe("ligatures", () => {
         test("in source string", () => {
-            const { start, end, match } = normalizedMatch("Richard Cœur de Lion", "coeur");
+            const { start, end, match } = normalizedMatch(
+                "Richard Cœur de Lion",
+                "coeur",
+            );
             expect(start).toBe(8);
             expect(end).toBe(12);
             expect(match).toBe("Cœur");
@@ -144,7 +157,7 @@ describe("normalizedMatch", () => {
         test("normalization form is preserved", () => {
             const { start, end, match } = normalizedMatch(
                 "eĥoŝanĝo ĉiuĵaŭde".normalize("NFD"),
-                "EHOSANGO CIUJAUDE"
+                "EHOSANGO CIUJAUDE",
             );
             expect(start).toBe(0);
             expect(end).toBe(23);

@@ -1,6 +1,5 @@
 import { DiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 import { patch } from "@web/core/utils/patch";
-
 patch(DiscussCoreCommon.prototype, {
     _handleNotificationChannelDelete(thread, metadata) {
         const { notifId } = metadata;
@@ -18,13 +17,13 @@ patch(DiscussCoreCommon.prototype, {
             this.store.starred.counter -= starredCounter;
         }
         this.store.inbox.messages = this.store.inbox.messages.filter(
-            (msg) => !msg.thread?.eq(thread)
+            (msg) => !msg.thread?.eq(thread),
         );
         if (notifId > this.store.inbox.counter_bus_id) {
             this.store.inbox.counter -= thread.message_needaction_counter;
         }
         this.store.history.messages = this.store.history.messages.filter(
-            (msg) => !msg.thread?.eq(thread)
+            (msg) => !msg.thread?.eq(thread),
         );
         if (thread.eq(this.store.discuss.thread)) {
             this.store.discuss.thread = undefined;

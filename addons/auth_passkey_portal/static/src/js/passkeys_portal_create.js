@@ -5,7 +5,7 @@ import { renderToMarkup } from "@web/core/utils/render";
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
 import { _t } from "@web/core/l10n/translation";
 import * as passkeyLib from "@auth_passkey/../lib/simplewebauthn";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 export class PortalPasskeyCreate extends Interaction {
     static selector = "#portal_passkey_add";

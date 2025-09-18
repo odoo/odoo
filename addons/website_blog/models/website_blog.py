@@ -72,14 +72,14 @@ class BlogBlog(models.Model):
                 blog_post_blog_tag_rel r
                     join blog_post p on r.blog_post_id=p.id
             WHERE
-                p.blog_id in %s
+                p.blog_id = ANY(%s)
             GROUP BY
                 p.blog_id,
                 r.blog_tag_id
             ORDER BY
                 count(*) DESC
         """
-        self.env.cr.execute(req, [tuple(self.ids)])
+        self.env.cr.execute(req, [list(self.ids)])
         tag_by_blog = {i.id: [] for i in self}
         all_tags = set()
         for blog_id, freq, tag_id in self.env.cr.fetchall():

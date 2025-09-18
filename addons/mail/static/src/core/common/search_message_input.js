@@ -1,10 +1,9 @@
 import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
-import { useAutofocus } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-
+import { useAutofocus } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} SearchFilter
  * @property {string} label
@@ -36,7 +35,7 @@ export class SearchMessageInput extends Component {
                     this.props.closeSearch?.();
                 }
             },
-            { capture: true }
+            { capture: true },
         );
     }
 

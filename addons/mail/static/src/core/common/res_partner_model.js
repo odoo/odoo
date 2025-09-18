@@ -1,8 +1,7 @@
-import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/core/common/record";
-import { imageUrl } from "@web/core/utils/urls";
+import { Store } from "@mail/core/common/store_service";
 import { debounce } from "@web/core/utils/timing";
-
+import { imageUrl } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class ResPartner extends Record {
@@ -12,7 +11,7 @@ export class ResPartner extends Record {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
             (newStatus) => record.updateImStatus(newStatus),
-            Store.IM_STATUS_DEBOUNCE_DELAY
+            Store.IM_STATUS_DEBOUNCE_DELAY,
         );
         return record;
     }
@@ -23,7 +22,9 @@ export class ResPartner extends Record {
         },
         onUpdate() {
             if (this.previousPresencechannel) {
-                this.store.env.services.bus_service.deleteChannel(this.previousPresencechannel);
+                this.store.env.services.bus_service.deleteChannel(
+                    this.previousPresencechannel,
+                );
             }
             if (this._triggerPresenceSubscription) {
                 this.store.env.services.bus_service.addChannel(this.presenceChannel);
@@ -124,7 +125,9 @@ export class ResPartner extends Record {
 
     searchChat() {
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+            (thread) =>
+                thread.channel_type === "chat" &&
+                thread.correspondent?.persona.eq(this),
         );
     }
 

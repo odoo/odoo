@@ -12,6 +12,7 @@ class UserError(Exception):
     Typically when the user tries to do something that has no sense given the current
     state of a record.
     """
+
     http_status = 422  # Unprocessable Entity
 
     def __init__(self, message):
@@ -22,7 +23,7 @@ class UserError(Exception):
 
 
 class RedirectWarning(Exception):
-    """ Warning with a possibility to redirect the user instead of simply
+    """Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
 
     :param str message: exception message and frontend modal content
@@ -32,6 +33,7 @@ class RedirectWarning(Exception):
     :param dict additional_context: parameter passed to action_id.
            Can be used to limit a view to active_ids for example.
     """
+
     def __init__(self, message, action, button_text, additional_context=None):
         super().__init__(message, action, button_text, additional_context)
 
@@ -47,6 +49,7 @@ class AccessDenied(UserError):
 
         When you try to log with a wrong password.
     """
+
     http_status = 403  # Forbidden
 
     def __init__(self, message="Access Denied"):
@@ -66,13 +69,14 @@ class AccessDenied(UserError):
         accessible by the system administrators.
         """
         self.with_traceback(None)
-        self.traceback = ('', '', '')
+        self.traceback = ("", "", "")
 
         # During handling of the above exception, another exception occurred
         self.__context__ = None
 
         # The above exception was the direct cause of the following exception
         self.__cause__ = None
+
 
 class AccessError(UserError):
     """Access rights error.
@@ -81,6 +85,7 @@ class AccessError(UserError):
 
         When you try to read a record that you are not allowed to.
     """
+
     http_status = 403  # Forbidden
 
 
@@ -103,6 +108,7 @@ class MissingError(UserError):
 
         When you try to write on a deleted record.
     """
+
     http_status = 404  # Not Found
 
 
@@ -113,6 +119,7 @@ class LockError(UserError):
 
         Code tried to lock records, but could not succeed.
     """
+
     http_status = 409  # Conflict
 
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { makeServerError, mockService, serverState } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import {
     addGlobalFilter,

@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { getVisibleElements } from "@web/core/utils/ui";
-import { Macro } from "@web/core/macro";
+import { getVisibleElements } from "@web/core/utils/dom/ui";
+import { Macro } from "@web/core/utils/macro";
 
 const ACTION_HELPERS = {
     click(el) {

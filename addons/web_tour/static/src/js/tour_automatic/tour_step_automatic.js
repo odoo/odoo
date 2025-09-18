@@ -3,8 +3,8 @@ import * as hoot from "@odoo/hoot-dom";
 import { serializeChanges, serializeMutation } from "@web_tour/js/utils/tour_utils";
 import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { TourStep } from "@web_tour/js/tour_step";
-import { getTag } from "@web/core/utils/xml";
-import { MacroMutationObserver } from "@web/core/macro";
+import { getTag } from "@web/core/utils/dom/xml";
+import { MacroMutationObserver } from "@web/core/utils/macro";
 
 async function waitForMutations(target = document, timeout = 1000 / 16) {
     return new Promise((resolve) => {

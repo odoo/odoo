@@ -56,12 +56,12 @@ class ResUsers(models.Model):
         self.env.cr.execute("""
             SELECT bu.user_id, b.level, count(1)
             FROM gamification_badge_user bu, gamification_badge b
-            WHERE bu.user_id IN %s
+            WHERE bu.user_id = ANY(%s)
               AND bu.badge_id = b.id
               AND b.level IS NOT NULL
             GROUP BY bu.user_id, b.level
             ORDER BY bu.user_id;
-        """, [tuple(self.ids)])
+        """, [list(self.ids)])
 
         for (user_id, level, count) in self.env.cr.fetchall():
             # levels are gold, silver, bronze but fields have _badge postfix
@@ -171,12 +171,12 @@ FROM (
         ORDER BY karma_gain_total DESC
     ) intermediate
 ) final
-WHERE final.user_id IN %s""",
+WHERE final.user_id = ANY(%s)""",
             where_query.from_clause,
             where_query.where_clause or SQL("TRUE"),
             SQL("AND tracking.tracking_date::DATE >= %s::DATE", from_date) if from_date else SQL(),
             SQL("AND tracking.tracking_date::DATE <= %s::DATE", to_date) if to_date else SQL(),
-            tuple(self.ids),
+            list(self.ids),
         )
 
         self.env.cr.execute(sql)
@@ -219,10 +219,10 @@ FROM (
     FROM %s
     WHERE %s
 ) sub
-WHERE sub.user_id IN %s""",
+WHERE sub.user_id = ANY(%s)""",
             where_query.from_clause,
             where_query.where_clause or SQL("TRUE"),
-            tuple(self.ids),
+            list(self.ids),
         )
         self.env.cr.execute(sql)
         return self.env.cr.dictfetchall()

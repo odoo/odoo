@@ -2,11 +2,14 @@ import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
 
 // temporary for OnNoResultReturned bug
-import { ThirdPartyScriptError } from "@web/core/errors/error_service";
-const errorHandlerRegistry = registry.category("error_handlers");
-import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { ThirdPartyScriptError } from "@web/services/error_service";
 
+import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+
+const errorHandlerRegistry = registry.category("error_handlers");
+
+const JQUERY_URL = "/delivery_mondialrelay/static/lib/jquery.slim.min.js";
 const MONDIALRELAY_SCRIPT_URL = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"
 
 function corsIgnoredErrorHandler(env, error) {
@@ -28,7 +31,11 @@ export class MondialRelayField extends Component {
             if (!this.enabled || this.state.libLoaded) {
                 return;
             }
-            loadJS(MONDIALRELAY_SCRIPT_URL).then(() => {this.state.libLoaded = true});
+            // Load jQuery (required by MR plugin) then load the MR plugin
+            const loadLibs = window.jQuery
+                ? loadJS(MONDIALRELAY_SCRIPT_URL)
+                : loadJS(JQUERY_URL).then(() => loadJS(MONDIALRELAY_SCRIPT_URL));
+            loadLibs.then(() => {this.state.libLoaded = true});
         });
 
         useEffect(
@@ -36,7 +43,7 @@ export class MondialRelayField extends Component {
                 if (!el) {
                     return;
                 }
-                this.insertWidget($(el));
+                this.insertWidget(el);
             },
             () => [this.state.libLoaded && this.root.el],
         )
@@ -46,7 +53,7 @@ export class MondialRelayField extends Component {
         return this.props.record.data.is_mondialrelay;
     }
 
-    insertWidget($el) {
+    insertWidget(el) {
         const params = {
             Target: "", // required but handled by OnParcelShopSelected
             Brand: this.props.record.data.mondialrelay_brand,
@@ -81,9 +88,10 @@ export class MondialRelayField extends Component {
                 }, 10000);
             },
         };
-        $el.show();
-        $el.MR_ParcelShopPicker(params);
-        $el.trigger("MR_RebindMap");
+        el.style.display = '';
+        // MR plugin is a jQuery plugin — use jQuery wrapper
+        window.jQuery(el).MR_ParcelShopPicker(params);
+        window.jQuery(el).trigger("MR_RebindMap");
     }
 }
 

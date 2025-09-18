@@ -1,22 +1,22 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
+import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/dom/ui";
 import { usePosition } from "@web/core/position/position_hook";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { shallowEqual } from "@web/core/utils/arrays";
-import { roundDecimals } from "@web/core/utils/numbers";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
+import { shallowEqual } from "@web/core/utils/collections/arrays";
+import { roundDecimals } from "@web/core/utils/format/numbers";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import { formatPercentage } from "@web/views/fields/formatters";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { TagsList } from "@web/components/tags_list/tags_list";
+import { useOpenMany2XRecord } from "@web/fields/relational/many2x_autocomplete";
+import { formatPercentage } from "@web/fields/formatters";
 
 import { Record } from "@web/model/record";
-import { Field } from "@web/views/fields/field";
+import { Field } from "@web/fields/field";
 import {
     Component,
     useState,

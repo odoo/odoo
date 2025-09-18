@@ -1,6 +1,9 @@
+// @ts-check
+
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockTouch } from "@odoo/hoot-mock";
+import { Component, onMounted, reactive, useState, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -8,10 +11,7 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { Component, onMounted, reactive, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
 import {
     useAutofocus,
@@ -22,6 +22,7 @@ import {
     useServiceProtectMethodHandling,
     useSpellCheck,
 } from "@web/core/utils/hooks";
+import { CommandPalette } from "@web/services/commands/command_palette";
 
 describe("useAutofocus", () => {
     test.tags("desktop");
@@ -312,7 +313,7 @@ describe("useService", () => {
         }
 
         await expect(mountWithCleanup(MyComponent)).rejects.toThrow(
-            "Service toy_service is not available"
+            "Service toy_service is not available",
         );
     });
 
@@ -395,7 +396,9 @@ describe("useService", () => {
         // Functions and methods have the correct this
         def.resolve();
         await expect(objectService.asyncMethod()).resolves.toBe(objectService);
-        await expect(objectService.asyncMethod.call("boundThis")).resolves.toBe("boundThis");
+        await expect(objectService.asyncMethod.call("boundThis")).resolves.toBe(
+            "boundThis",
+        );
         await expect(functionService()).resolves.toBe(undefined);
         await expect(functionService.call("boundThis")).resolves.toBe("boundThis");
         expect(nbCalls).toBe(4);
@@ -414,12 +417,16 @@ describe("useService", () => {
         expect.verifySteps([]);
 
         // Calling the functions after the destruction rejects the promise
-        await expect(objectService.asyncMethod()).rejects.toThrow("Component is destroyed");
+        await expect(objectService.asyncMethod()).rejects.toThrow(
+            "Component is destroyed",
+        );
         await expect(objectService.asyncMethod.call("boundThis")).rejects.toThrow(
-            "Component is destroyed"
+            "Component is destroyed",
         );
         await expect(functionService()).rejects.toThrow("Component is destroyed");
-        await expect(functionService.call("boundThis")).rejects.toThrow("Component is destroyed");
+        await expect(functionService.call("boundThis")).rejects.toThrow(
+            "Component is destroyed",
+        );
         expect(nbCalls).toBe(8);
         useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked;
     });

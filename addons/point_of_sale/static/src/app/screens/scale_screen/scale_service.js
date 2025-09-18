@@ -1,8 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { roundDecimals, formatFloat } from "@web/core/utils/numbers";
+import { formatFloat, roundDecimals } from "@web/core/utils/format/numbers";
 import { Reactive } from "@web/core/utils/reactive";
-
 const MEASURING_DELAY_MS = 500;
 const TARE_TIMEOUT_MS = 3000;
 
@@ -117,7 +116,10 @@ export class PosScaleService extends Reactive {
     }
 
     get netWeight() {
-        return roundDecimals(this.weight - (this.tare || 0), this.product.decimalAccuracy);
+        return roundDecimals(
+            this.weight - (this.tare || 0),
+            this.product.decimalAccuracy,
+        );
     }
 
     get netWeightString() {
@@ -147,7 +149,9 @@ export class PosScaleService extends Reactive {
     }
 
     get totalPriceString() {
-        const priceString = this.env.utils.formatCurrency(this.netWeight * this.product.unitPrice);
+        const priceString = this.env.utils.formatCurrency(
+            this.netWeight * this.product.unitPrice,
+        );
         return priceString;
     }
 
@@ -156,7 +160,9 @@ export class PosScaleService extends Reactive {
             throw new Error(_t("Cannot weigh product - IoT Box is disconnected"));
         }
         if (this.hardwareProxy.connectionInfo.drivers.scale?.status !== "connected") {
-            throw new Error(_t("Cannot weigh product - Scale is not connected to IoT Box"));
+            throw new Error(
+                _t("Cannot weigh product - Scale is not connected to IoT Box"),
+            );
         }
     }
 }

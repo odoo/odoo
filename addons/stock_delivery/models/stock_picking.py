@@ -167,7 +167,7 @@ class StockPicking(models.Model):
         self.carrier_id.get_return_label(self)
 
     def _get_matching_delivery_lines(self):
-        return self.sale_id.order_line.filtered(
+        return self.sale_id.line_ids.filtered(
             lambda l: l.is_delivery
             and l.currency_id.is_zero(l.price_unit)
             and l.product_id == self.carrier_id.product_id

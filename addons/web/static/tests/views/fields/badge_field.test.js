@@ -1,5 +1,13 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -52,8 +60,12 @@ test("BadgeField component on a char field in list view", async () => {
     });
 
     expect(`.o_field_badge[name="display_name"]:contains(first record)`).toHaveCount(1);
-    expect(`.o_field_badge[name="display_name"]:contains(second record)`).toHaveCount(1);
-    expect(`.o_field_badge[name="display_name"]:contains(fourth record)`).toHaveCount(1);
+    expect(`.o_field_badge[name="display_name"]:contains(second record)`).toHaveCount(
+        1,
+    );
+    expect(`.o_field_badge[name="display_name"]:contains(fourth record)`).toHaveCount(
+        1,
+    );
 });
 
 test("BadgeField component on a selection field in list view", async () => {
@@ -75,8 +87,12 @@ test("BadgeField component on a many2one field in list view", async () => {
         arch: `<list><field name="many2one_field" widget="badge"/></list>`,
     });
 
-    expect(`.o_field_badge[name="many2one_field"]:contains(first record)`).toHaveCount(1);
-    expect(`.o_field_badge[name="many2one_field"]:contains(fourth record)`).toHaveCount(1);
+    expect(`.o_field_badge[name="many2one_field"]:contains(first record)`).toHaveCount(
+        1,
+    );
+    expect(`.o_field_badge[name="many2one_field"]:contains(fourth record)`).toHaveCount(
+        1,
+    );
 });
 
 test("BadgeField component with decoration-xxx attributes", async () => {

@@ -11,7 +11,7 @@ from odoo.tools.pdf import (
     NumberObject,
     PdfFileReader,
     PdfFileWriter,
-    createStringObject,
+    create_string_object,
 )
 
 
@@ -24,19 +24,20 @@ class IrActionsReport(models.Model):
         if self._get_report(report_ref).report_name != 'sale.report_saleorder':
             return result
 
+
         ICP = self.env['ir.config_parameter'].sudo()
         always_include = str2bool(ICP.get_param('sale.always_include_selected_documents'))
         orders = self.env['sale.order'].browse(res_ids)
 
         for order in orders:
             if (
-                (order.state != 'sale' or always_include)
+                (order.state != 'done' or always_include)
                 and (initial_stream := result.get(order.id, {}).get('stream'))
             ):
                 quotation_documents = order.quotation_document_ids
                 headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
                 footers = quotation_documents - headers
-                has_product_document = any(line.product_document_ids for line in order.order_line)
+                has_product_document = any(line.product_document_ids for line in order.line_ids)
 
                 if not headers and not has_product_document and not footers:
                     continue
@@ -55,7 +56,7 @@ class IrActionsReport(models.Model):
                             writer, header, form_fields_values_mapping, prefix, order
                         )
                 if has_product_document:
-                    for line in order.order_line:
+                    for line in order.line_ids:
                         for doc in line.product_document_ids:
                             # Use both the id of the line and the doc as variants could use the same
                             # document.
@@ -133,7 +134,7 @@ class IrActionsReport(models.Model):
         base_record = order_line or order
         path = form_field.path
 
-        # If path = 'order_id.order_line.product_id.name'
+        # If path = 'order_id.line_ids.product_id.name'
         path = path.split('.')  # ['order_id', 'order_line', 'product_id', 'name']
         # Sudo to be able to follow the path set by the admin
         records = base_record.sudo().mapped('.'.join(path[:-1]))  # product.product(id1, id2, ...)
@@ -208,17 +209,17 @@ class IrActionsReport(models.Model):
 
         field_names = set()
         if prefix:
-            field_names = reader.getFormTextFields()
+            field_names = reader.get_form_text_fields()
 
-        for page_id in range(reader.getNumPages()):
-            page = reader.getPage(page_id)
+        for page_id in range(len(reader.pages)):
+            page = reader.pages[page_id]
             if prefix and page.get('/Annots'):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
-                    reader_annot = page['/Annots'][j].getObject()
+                    reader_annot = page['/Annots'][j].get_object()
                     # Check parent object for '/T' if missing.
                     if '/T' not in reader_annot and '/Parent' in reader_annot:
-                        reader_annot = reader_annot['/Parent'].getObject()
+                        reader_annot = reader_annot['/Parent'].get_object()
                     if reader_annot.get('/T') in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the forms.
@@ -234,7 +235,7 @@ class IrActionsReport(models.Model):
                         new_flags = form_flags | readonly_flag | multiline_flag
 
                         reader_annot.update({
-                            NameObject("/T"): createStringObject(new_key),
+                            NameObject("/T"): create_string_object(new_key),
                             NameObject("/Ff"): NumberObject(new_flags),
                         })
-            writer.addPage(page)
+            writer.add_page(page)

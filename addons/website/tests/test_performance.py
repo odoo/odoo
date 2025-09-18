@@ -5,7 +5,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUs
 
 from contextlib import closing
 
-from odoo.sql_db import categorize_query
+from odoo.db import categorize_query
 from odoo.tools import mute_logger
 from odoo.tests.common import tagged
 

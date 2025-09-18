@@ -28,7 +28,7 @@ class SaleOrderLine(models.Model):
                     purch_price_uom,
                     product.cost_currency_id,
                 )
-            elif not line.product_uom_qty and line.qty_delivered:
+            elif not line.product_uom_qty and line.qty_transferred:
                 # if line added from delivery and standard price, pass to super
                 line_ids_to_pass.add(line.id)
         return super(SaleOrderLine, self.browse(line_ids_to_pass))._compute_purchase_price()

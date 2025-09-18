@@ -1,10 +1,9 @@
-import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
+import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
-
+import { Dialog } from "@web/ui/dialog/dialog";
 export class OptionalProductPopup extends Component {
     static template = "point_of_sale.OptionalProductPopup";
     static components = { Dialog };
@@ -28,7 +27,9 @@ export class OptionalProductPopup extends Component {
             optional_product.product_tmpl_id.isConfigurable() &&
             !Object.keys(optional_product.payload).length
         ) {
-            const payload = await this.pos.openConfigurator(optional_product.product_tmpl_id);
+            const payload = await this.pos.openConfigurator(
+                optional_product.product_tmpl_id,
+            );
             if (!payload) {
                 return;
             }
@@ -53,7 +54,7 @@ export class OptionalProductPopup extends Component {
 
     get buttonDisabled() {
         return this.state.product_lines.every((line) =>
-            line.product_tmpl_id.uom_id.isZero(line.qty)
+            line.product_tmpl_id.uom_id.isZero(line.qty),
         );
     }
 

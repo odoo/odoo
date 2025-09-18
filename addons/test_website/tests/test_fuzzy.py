@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import psycopg2
+import psycopg
 
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -86,7 +86,7 @@ class TestAutoComplete(TransactionCase):
             try:
                 self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
                 self.env.registry.has_trigram = True
-            except psycopg2.Error:
+            except psycopg.Error:
                 _logger.warning("pg_trgm extension can't be installed, which is required to run this test")
                 return
 

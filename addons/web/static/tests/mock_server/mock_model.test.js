@@ -1,11 +1,13 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import {
-    MockServer,
     defineModels,
     fields,
     getService,
     makeMockEnv,
     makeMockServer,
+    MockServer,
     models,
 } from "@web/../tests/web_test_helpers";
 
@@ -43,14 +45,16 @@ test("model name can be implicitly extracted from its constructor name", async (
     expect(MockServer.env["res.partner"]).toBeInstanceOf(ResPartner);
 
     expect(() => MockServer.env["res.currency"]).toThrow(
-        "could not get model from server environment"
+        "could not get model from server environment",
     );
 });
 
 test("model should be defined on the mock server", async () => {
     await makeMockEnv();
 
-    await expect(getService("orm").searchRead("oui", [], ["id", "name"])).resolves.toEqual([
+    await expect(
+        getService("orm").searchRead("oui", [], ["id", "name"]),
+    ).resolves.toEqual([
         {
             id: 1,
             name: "John Doe",
@@ -117,7 +121,9 @@ test("models can be extended by having the same name", async () => {
     expect(MockServer.env["same.model"]._fields.description.type).toBe("text");
     expect(MockServer.env["same.model"]._fields.title.type).toBe("char");
 
-    await expect(orm.call("same.model", "same_method")).resolves.toBe("overridden by 3");
+    await expect(orm.call("same.model", "same_method")).resolves.toBe(
+        "overridden by 3",
+    );
     await expect(orm.call("same.model", "second_method")).resolves.toBe("added by 2");
     await expect(orm.call("same.model", "third_method")).resolves.toBe("added by 3");
 });
@@ -141,7 +147,7 @@ describe("level 1", () => {
         await makeMockEnv();
 
         await expect(
-            getService("orm").searchRead("oui", [], ["id", "name", "age"])
+            getService("orm").searchRead("oui", [], ["id", "name", "age"]),
         ).resolves.toEqual([
             {
                 id: 1,
@@ -158,7 +164,11 @@ describe("level 1", () => {
         await makeMockEnv();
 
         await expect(
-            getService("orm").searchRead("oui", [], ["id", "name", "age", "surname", "create_date"])
+            getService("orm").searchRead(
+                "oui",
+                [],
+                ["id", "name", "age", "surname", "create_date"],
+            ),
         ).resolves.toEqual([
             {
                 id: 1,
@@ -178,7 +188,7 @@ describe("level 1", () => {
             await makeMockEnv();
 
             await expect(
-                getService("orm").searchRead("oui", [], ["id", "name", "age", "email"])
+                getService("orm").searchRead("oui", [], ["id", "name", "age", "email"]),
             ).resolves.toEqual([
                 {
                     id: 1,

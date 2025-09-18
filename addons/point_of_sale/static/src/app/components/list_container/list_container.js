@@ -1,9 +1,8 @@
 import { Component, useEffect, useRef, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
-import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-
+import { useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/ui/dialog/dialog";
 class ListContainerDialog extends Component {
     static components = { Dialog };
     static props = {
@@ -62,7 +61,7 @@ export class ListContainer extends Component {
             () => {
                 this.sizing.reload();
             },
-            () => [this.props.items]
+            () => [this.props.items],
         );
     }
     shouldBeInvisible(itemIndex) {

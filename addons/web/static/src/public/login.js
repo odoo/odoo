@@ -1,8 +1,11 @@
-import { Interaction } from "./interaction";
+// @ts-check
+
+/** @module @web/public/login - Login form interaction that adds a loading effect on submit */
+
 import { registry } from "@web/core/registry";
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 
-import { addLoadingEffect } from "@web/core/utils/ui";
-
+import { Interaction } from "./interaction";
 export class Login extends Interaction {
     static selector = ".oe_login_form";
     dynamicContent = {
@@ -20,8 +23,12 @@ export class Login extends Interaction {
      */
     onSubmit(ev) {
         if (!ev.defaultPrevented) {
-            const submitEl = ev.currentTarget.querySelector("button[type='submit']");
-            const removeLoadingEffect = addLoadingEffect(submitEl);
+            const submitEl = /** @type {HTMLElement} */ (
+                ev.currentTarget
+            ).querySelector("button[type='submit']");
+            const removeLoadingEffect = addLoadingEffect(
+                /** @type {HTMLButtonElement} */ (submitEl),
+            );
             const oldPreventDefault = ev.preventDefault.bind(ev);
             ev.preventDefault = () => {
                 removeLoadingEffect();
@@ -31,6 +38,4 @@ export class Login extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("public.login", Login);
+registry.category("public.interactions").add("public.login", Login);

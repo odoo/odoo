@@ -4,6 +4,8 @@ import {
     transform,
 } from "@html_editor/utils/perspective_utils";
 
+import { describe, expect, test } from "@odoo/hoot";
+
 const epsilon = 100 * Number.EPSILON;
 
 function midpoint([x0, y0], [x1, y1], weight = 0.5) {
@@ -18,8 +20,6 @@ function pointEqual(a, b) {
 function notPointEqual(a, b) {
     expect(Math.abs(a[0] - b[0]) > epsilon || Math.abs(a[1] - b[1]) > epsilon).toBe(true);
 }
-
-import { describe, expect, test } from "@odoo/hoot";
 
 describe("Perspective Utils", () => {
     test("Should correctly transform 2D points using a projective transformation", async () => {

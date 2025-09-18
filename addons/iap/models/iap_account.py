@@ -4,14 +4,14 @@ import hashlib
 import logging
 import secrets
 import uuid
-import werkzeug.urls
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import module
 from odoo.tools import get_lang
-from odoo.tools.urls import urljoin as url_join
+from odoo.libs.web.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 
@@ -211,7 +211,7 @@ class IapAccount(models.Model):
             'account_token': hashed_account_token,
             'hashed': 1,
         }
-        return '%s?%s' % (base_url, werkzeug.urls.url_encode(d))
+        return '%s?%s' % (base_url, urlencode(d))
 
     @api.model
     def _hash_iap_token(self, key):

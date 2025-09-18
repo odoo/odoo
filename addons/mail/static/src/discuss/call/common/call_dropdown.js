@@ -1,7 +1,6 @@
-import { Component, useRef, useState, useExternalListener, useSubEnv } from "@odoo/owl";
-import { useNavigation } from "@web/core/navigation/navigation";
+import { Component, useExternalListener, useRef, useState, useSubEnv } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
-
+import { useNavigation } from "@web/services/navigation/navigation";
 /**
  * CallDropdown is an alternative to the web popover for calls to make them available
  * in cases where they cannot be overlays (main components), such as in picture-in-picture mode.
@@ -41,7 +40,7 @@ export class CallDropdown extends Component {
             getItems: () => {
                 if (this.state.isOpen && this.menuRef.el) {
                     return this.menuRef.el.querySelectorAll(
-                        ":scope .o-navigable, :scope .o-dropdown"
+                        ":scope .o-navigable, :scope .o-dropdown",
                     );
                 }
                 return [];
@@ -80,7 +79,8 @@ export class CallDropdown extends Component {
             return;
         }
         const isOutsideClick =
-            !this.triggerRef.el?.contains(ev.target) && !this.menuRef.el?.contains(ev.target);
+            !this.triggerRef.el?.contains(ev.target) &&
+            !this.menuRef.el?.contains(ev.target);
         if (isOutsideClick) {
             this.close();
         }

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -139,7 +141,11 @@ test("JsonCheckBoxesField (some readonly)", async () => {
 test("JsonCheckBoxesField (question circle)", async () => {
     Partner._records[0].json_checkboxes_field = {
         key1: { checked: true, label: "First Key" },
-        key2: { checked: false, label: "Second Key", question_circle: "Some info about this" },
+        key2: {
+            checked: false,
+            label: "Second Key",
+            question_circle: "Some info about this",
+        },
     };
     await mountView({
         type: "form",
@@ -153,11 +159,13 @@ test("JsonCheckBoxesField (question circle)", async () => {
             </form>`,
     });
 
-    expect("div.o_field_widget div.form-check:eq(0) ~ i.fa-question-circle").toHaveCount(0, {
+    expect(
+        "div.o_field_widget div.form-check:eq(0) ~ i.fa-question-circle",
+    ).toHaveCount(0, {
         message: "first checkbox should not have a question circle",
     });
     expect(
-        "div.o_field_widget div.form-check:eq(1) ~ i.fa-question-circle[title='Some info about this']"
+        "div.o_field_widget div.form-check:eq(1) ~ i.fa-question-circle[title='Some info about this']",
     ).toHaveCount(1, {
         message: "second checkbox should have a question circle",
     });

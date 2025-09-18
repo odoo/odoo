@@ -2,9 +2,7 @@ import { ActivityArchParser } from "@mail/views/web/activity/activity_arch_parse
 import { ActivityController } from "@mail/views/web/activity/activity_controller";
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
-
 import { registry } from "@web/core/registry";
-
 export const activityView = {
     type: "activity",
     searchMenuTypes: ["filter", "favorite"],

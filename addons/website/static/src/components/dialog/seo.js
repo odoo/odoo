@@ -3,10 +3,10 @@ import { deduceURLfromText } from "@html_editor/main/link/utils";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp } from "@web/core/utils/format/strings";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
-import { isVisible } from "@web/core/utils/ui";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { isVisible } from "@web/core/utils/dom/ui";
+import { CheckBox } from "@web/components/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { WebsiteDialog } from "./dialog";
 import {

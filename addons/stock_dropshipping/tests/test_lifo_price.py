@@ -74,7 +74,7 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         purchase_order_lifo1.button_confirm()
 
         # I check the "Approved" status of purchase order 1
-        self.assertEqual(purchase_order_lifo1.state, 'purchase')
+        self.assertEqual(purchase_order_lifo1.state, 'done')
 
         # Process the receipt of purchase order 1
         purchase_order_lifo1.picking_ids[0].move_ids.quantity = purchase_order_lifo1.picking_ids[0].move_ids.product_qty

@@ -19,9 +19,8 @@ sent mails with personal token for the invitation of the survey.
     'depends': [
         'auth_signup',
         'http_routing',
-        'mail',
-        'web_tour',
-        'gamification'],
+        'gamification',
+    ],
     'data': [
         'report/survey_templates.xml',
         'report/survey_reports.xml',

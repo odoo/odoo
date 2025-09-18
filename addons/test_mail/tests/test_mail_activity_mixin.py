@@ -92,7 +92,7 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 user_id=self.user_admin.id,
-                feedback='Test feedback',
+                feedback='Test feedback 1',
             )
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
             self.assertFalse(act1.active)
@@ -108,21 +108,22 @@ class TestActivityMixin(TestActivityCommon):
             # Perform todo activities for remaining people
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
-                feedback='Test feedback')
+                feedback='Test feedback 2')
             self.assertFalse(act3.active)
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
             self.assertEqual(len(self.test_record.message_ids), 3)
-            act_messages = self.test_record.message_ids[:2]
-            self.assertEqual(act_messages.subtype_id, self.env.ref('mail.mt_activities'))
+            self.assertEqual(len(self.test_record.message_ids), 3)
+            feedback2, feedback1, _create_log = self.test_record.message_ids
+            self.assertEqual((feedback2 + feedback1).subtype_id, self.env.ref('mail.mt_activities'))
 
             # Unlink meeting activities
             self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
 
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
-            self.assertEqual(len(self.test_record.message_ids), 3)
+            self.assertEqual(len(self.test_record.message_ids), 3, 'Should not produce additional message')
             self.assertFalse(self.test_record.activity_state)
             self.assertFalse(act2.exists())
 
@@ -600,10 +601,17 @@ class TestActivityMixin(TestActivityCommon):
         with patch.object(MailActivity, 'unlink', lambda self: None):
             test_record.unlink()
         self.assertTrue(act.exists())
-        self.assertFalse(act.sudo().active)
+        self.assertFalse(act.active)
         self.assertFalse(test_record.exists())
-        self.assertFalse(self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
-            [('active', '=', False)]))
+
+        self.env.invalidate_all()
+        self.assertEqual(
+            self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
+                [('active', '=', False)]), act,
+            'Should consider unassigned activity on removed record = access without crash'
+        )
+        self.env.invalidate_all()
+        _dummy = act.with_user(self.user_admin).read(['summary'])
 
 
 @tests.tagged('mail_activity', 'mail_activity_mixin')

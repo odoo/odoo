@@ -386,7 +386,7 @@ ul.oe_menu_editor {
 // Generate all spacings for all sizes
 @mixin o-spacing-all($factor: 1) {
     // Generate vertical margin/padding classes used by the editor
-    @for $i from 0 through (256 / 8) {
+    @for $i from 0 through 32 {
         @include o-vspacing($i * 8, $factor);
     }
     @include o-vspacing(4, $factor);
@@ -495,7 +495,7 @@ a.o_underline {
 
 // BS4 blockquote has no style anymore, except bloquote <footer>
 blockquote {
-    padding: $spacer/2 $spacer;
+    padding: calc($spacer / 2) $spacer;
     border-left: 5px solid;
     border-color: map-get($grays, '300');
     font-style: italic;

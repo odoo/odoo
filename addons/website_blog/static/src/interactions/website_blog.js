@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { verifyHttpsUrl } from "@website/utils/misc";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 
 export class WebsiteBlog extends Interaction {
     static selector = ".website_blog";

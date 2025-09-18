@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
-import { useX2ManyCrud, useOpenX2ManyRecord } from "@web/views/fields/relational_utils";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { useX2ManyCrud } from "@web/fields/relational/x2many_crud";
+import { useOpenX2ManyRecord } from "@web/fields/relational/x2many_dialog";
+import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 const fieldRegistry = registry.category("fields");

@@ -2,8 +2,7 @@
 
 import logging
 import requests
-import urllib3
-import werkzeug.urls
+from urllib.parse import urlencode
 from werkzeug.exceptions import BadRequest
 
 from odoo.http import request, route, Controller
@@ -22,8 +21,10 @@ class DiscussGifController(Controller):
                 f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
             )
             response.raise_for_status()
-        except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
-            _logger.error("Exceeded the request's maximum size for a searching term.")
+        except requests.exceptions.ConnectionError:
+            _logger.error("Failed to connect to Tenor GIF API (connection retries exhausted).")
+        except requests.exceptions.HTTPError:
+            _logger.error("Tenor GIF API returned an HTTP error.")
 
         if not response:
             raise BadRequest()
@@ -33,7 +34,7 @@ class DiscussGifController(Controller):
     def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        query_string = werkzeug.urls.url_encode(
+        query_string = urlencode(
             {
                 "q": search_term,
                 "key": ir_config.get_param("discuss.tenor_api_key"),
@@ -54,7 +55,7 @@ class DiscussGifController(Controller):
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        query_string = werkzeug.urls.url_encode(
+        query_string = urlencode(
             {
                 "key": ir_config.get_param("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
@@ -75,7 +76,7 @@ class DiscussGifController(Controller):
     def _gif_posts(self, ids):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        query_string = werkzeug.urls.url_encode(
+        query_string = urlencode(
             {
                 "ids": ",".join(ids),
                 "key": ir_config.get_param("discuss.tenor_api_key"),

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Macro } from "@web/core/macro";
+import { Macro } from "@web/core/utils/macro";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, press } from "@odoo/hoot-dom";
 import {

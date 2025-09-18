@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.tests.common import TransactionCase
 
 
@@ -8,13 +5,15 @@ class TestEnv(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEnv, cls).setUpClass()
-        user = cls.env['res.users'].create({
-            'name': 'superuser',
-            'login': 'superuser',
-            'password': 'superuser',
-            'group_ids': [(6, 0, cls.env.user.group_ids.ids)],
-        })
+        super().setUpClass()
+        user = cls.env["res.users"].create(
+            {
+                "name": "superuser",
+                "login": "superuser",
+                "password": "superuser",
+                "group_ids": [(6, 0, cls.env.user.group_ids.ids)],
+            }
+        )
         cls.env = cls.env(user=user)
 
         # make sure there is at least another environment in the current transaction
@@ -25,13 +24,17 @@ class TestEnv(TransactionCase):
         The main goal of the test is actually to check the values of the
         environment after this test execution (see test_env_company_part_02)
         """
-        company = self.env['res.company'].create({
-            "name": "Test Company",
-        })
-        self.env.user.write({
-            'company_id': company.id,
-            'company_ids': [(4, company.id), (4, self.env.company.id)],
-        })
+        company = self.env["res.company"].create(
+            {
+                "name": "Test Company",
+            }
+        )
+        self.env.user.write(
+            {
+                "company_id": company.id,
+                "company_ids": [(4, company.id), (4, self.env.company.id)],
+            }
+        )
         self.assertEqual(self.env.company, self.env.user.company_id)
         self.assertTrue(self.env.company.exists())
         self.assertEqual(self.sudo_env.company, self.env.user.company_id)

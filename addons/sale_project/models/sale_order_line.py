@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError, UserError
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
+    qty_transferred_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(
         'project.project', 'Generated Project',
         index=True, copy=False, export_string_translation=False)
@@ -62,29 +62,48 @@ class SaleOrderLine(models.Model):
         return res
 
     @api.depends('product_id.type')
-    def _compute_product_updatable(self):
-        super()._compute_product_updatable()
+    def _compute_product_readonly(self):
+        """Extend product_readonly for service products with project/task.
+
+        In addition to base conditions, service products become readonly when confirmed.
+        This prevents changing the product after tasks/projects have been generated.
+        """
+        super()._compute_product_readonly()
         for line in self:
-            if line.product_id.type == 'service' and line.state == 'sale':
-                line.product_updatable = False
+            if line.product_id.type == 'service' and line.state == 'done':
+                line.product_readonly = True
 
     @api.depends('product_id')
-    def _compute_qty_delivered_method(self):
+    def _compute_qty_transferred_method(self):
         milestones_lines = self.filtered(lambda sol:
             not sol.is_expense
             and sol.product_id.type == 'service'
             and sol.product_id.service_type == 'milestones'
         )
-        milestones_lines.qty_delivered_method = 'milestones'
-        super(SaleOrderLine, self - milestones_lines)._compute_qty_delivered_method()
+        milestones_lines.qty_transferred_method = 'milestones'
+        super(SaleOrderLine, self - milestones_lines)._compute_qty_transferred_method()
 
     @api.depends('product_uom_qty', 'reached_milestones_ids.quantity_percentage')
-    def _compute_qty_delivered(self):
-        super()._compute_qty_delivered()
+    def _compute_qty_transferred(self):
+        lines_by_milestones = self.filtered(lambda sol: sol.qty_transferred_method == 'milestones')
+        super(SaleOrderLine, self - lines_by_milestones)._compute_qty_transferred()
 
-    def _prepare_qty_delivered(self):
+        if not lines_by_milestones:
+            return
+
+        project_milestone_read_group = self.env['project.milestone']._read_group(
+            [('sale_line_id', 'in', lines_by_milestones.ids), ('is_reached', '=', True)],
+            ['sale_line_id'],
+            ['quantity_percentage:sum'],
+        )
+        reached_milestones_per_sol = {sale_line.id: percentage_sum for sale_line, percentage_sum in project_milestone_read_group}
+        for line in lines_by_milestones:
+            sol_id = line.id or line._origin.id
+            line.qty_transferred = reached_milestones_per_sol.get(sol_id, 0.0) * line.product_uom_qty
+
+    def _prepare_qty_transferred(self):
         lines_by_milestones = self.filtered(lambda sol: sol.qty_delivered_method == 'milestones')
-        delivered_qties = super(SaleOrderLine, self - lines_by_milestones)._prepare_qty_delivered()
+        delivered_qties = super(SaleOrderLine, self - lines_by_milestones)._prepare_qty_transferred()
 
         if not lines_by_milestones:
             return delivered_qties
@@ -95,9 +114,11 @@ class SaleOrderLine(models.Model):
             ['quantity_percentage:sum'],
         )
         reached_milestones_per_sol = {sale_line.id: percentage_sum for sale_line, percentage_sum in project_milestone_read_group}
+
         for line in lines_by_milestones:
             sol_id = line.id or line._origin.id
             delivered_qties[line] = reached_milestones_per_sol.get(sol_id, 0.0) * line.product_uom_qty
+
         return delivered_qties
 
     @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
@@ -128,7 +149,7 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         # Do not generate task/project when expense SO line, but allow
         # generate task with hours=0.
-        confirmed_lines = lines.filtered(lambda sol: sol.state == 'sale' and not sol.is_expense)
+        confirmed_lines = lines.filtered(lambda sol: sol.state == 'done' and not sol.is_expense)
         # We track the lines that already generated a task, so we know we won't have to post a message for them after calling the generation service
         has_task_lines = confirmed_lines.filtered('task_id')
         confirmed_lines.sudo()._timesheet_service_generation()
@@ -150,15 +171,15 @@ class SaleOrderLine(models.Model):
 
     def write(self, vals):
         sols_with_no_qty_ordered = self.env['sale.order.line']
-        if 'product_uom_qty' in vals and vals.get('product_uom_qty') > 0:
-            sols_with_no_qty_ordered = self.filtered(lambda sol: sol.product_uom_qty == 0)
+        if 'product_qty' in vals and vals.get('product_qty') > 0:
+            sols_with_no_qty_ordered = self.filtered(lambda sol: sol.product_qty == 0)
         result = super().write(vals)
         # changing the ordered quantity should change the allocated hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
-        if vals.get('product_uom_qty') and sols_with_no_qty_ordered:
-            sols_with_no_qty_ordered.filtered(lambda l: l.is_service and l.state == 'sale' and not l.is_expense)._timesheet_service_generation()
-        if 'product_uom_qty' in vals and not self.env.context.get('no_update_allocated_hours', False):
+        if vals.get('product_qty') and sols_with_no_qty_ordered:
+            sols_with_no_qty_ordered.filtered(lambda l: l.is_service and l.state == 'done' and not l.is_expense)._timesheet_service_generation()
+        if 'product_qty' in vals and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
                     allocated_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)
@@ -255,24 +276,16 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(
-            lambda line: line.product_id and line.name).product_id
-        if self.product_id in products_inside_template_line_with_name:
-            title = self.product_id.name
-            description = '<br/>'.join(sale_line_name_parts)
-        else:
-            default_name = self.with_context(
-                lang=self.order_id._get_lang(),
-            )._get_sale_order_line_multiline_description_sale()
-            if (
-                self.name != default_name
-                and len(sale_line_name_parts) > 1
-                and sale_line_name_parts[1]
-            ):
-                # if there's a custom line description, skip the product name part when possible
-                sale_line_name_parts.pop(0)
+
+        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
+            sale_line_name_parts.pop(0)
+
+        if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
             title = sale_line_name_parts[0]
-            description = '<br/>'.join(sale_line_name_parts[1:])
+            description = ''
+        else:
+            title = self.product_id.display_name
+            description = '<br/>'.join(sale_line_name_parts)
 
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
@@ -296,7 +309,7 @@ class SaleOrderLine(models.Model):
         else:
             allocated_hours = sum(
                 sol._convert_qty_company_hours(self.company_id)
-                for sol in self.order_id.order_line
+                for sol in self.order_id.line_ids
                 if sol.product_id.task_template_id.id == template.id
                 and sol.product_id.service_policy in self._get_product_service_policy()
             )
@@ -464,13 +477,13 @@ class SaleOrderLine(models.Model):
             if self.product_id.service_tracking == 'task_in_project':
                 self.task_id.milestone_id = milestone.id
 
-    def _prepare_invoice_line(self, **optional_values):
+    def _prepare_aml_vals(self, **optional_values):
         """
             If the sale order line isn't linked to a sale order which already have a default analytic account,
             this method allows to retrieve the analytic account which is linked to project or task directly linked
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
-        values = super()._prepare_invoice_line(**optional_values)
+        values = super()._prepare_aml_vals(**optional_values)
         if not values.get('analytic_distribution') and not self.analytic_distribution:
             if self.task_id.project_id.account_id:
                 values['analytic_distribution'] = {self.task_id.project_id.account_id.id: 100}
@@ -494,8 +507,8 @@ class SaleOrderLine(models.Model):
         """
         return {}
 
-    def _prepare_procurement_values(self):
-        values = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        values = super()._prepare_procurement_vals()
         if self.order_id.project_id:
             values['project_id'] = self.order_id.project_id.id
         return values

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { mockTimeZone } from "@odoo/hoot-mock";
 import {
@@ -9,7 +11,6 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
-
 import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 
 class Partner extends models.Model {
@@ -148,10 +149,10 @@ defineModels([Partner, Bar, Foo]);
 
 /**
  * @param {{
- *  model: string;
- *  method: string;
- *  args: any[];
- *  kwargs: Record<string, any>;
+ *  model?: string;
+ *  method?: string;
+ *  args?: any[];
+ *  kwargs?: Record<string, any>;
  *  [key: string]: any;
  * }} params
  */
@@ -176,10 +177,10 @@ function fetchCallKw(params) {
 
 /**
  * @param {{
- *  model: string;
- *  method: string;
- *  args: any[];
- *  kwargs: Record<string, any>;
+ *  model?: string;
+ *  method?: string;
+ *  args?: any[];
+ *  kwargs?: Record<string, any>;
  *  [key: string]: any;
  * }} params
  */
@@ -246,7 +247,7 @@ test("onRpc: pure, error handling", async () => {
         () => {
             throw new Error("boom");
         },
-        { pure: true }
+        { pure: true },
     );
 
     await makeMockServer();
@@ -311,30 +312,32 @@ test("rpc: calls on mock server", async () => {
         () => {
             throw new Error("Pure boom");
         },
-        { pure: true }
+        { pure: true },
     );
     await makeMockServer();
 
     await expect(rpc("/route")).resolves.toBe("pure route response");
-    await expect(rpc("http://pure.route.com/")).resolves.toBe("external route response");
+    await expect(rpc("http://pure.route.com/")).resolves.toBe(
+        "external route response",
+    );
 
     await expect(rpc("/boom")).rejects.toThrow("RPC_ERROR: Boom");
     await expect(rpc("/boom/pure")).rejects.toThrow(ConnectionLostError);
 
     // MockServer error handling with 'rpc'
     await expect(rpc("/unknown/route")).rejects.toThrow(
-        "Unimplemented server route: /unknown/route"
+        "Unimplemented server route: /unknown/route",
     );
     await expect(rpc("https://unknown.route")).rejects.toThrow(
-        "Unimplemented server external URL: https://unknown.route"
+        "Unimplemented server external URL: https://unknown.route",
     );
     await expect(
         rpc("/web/dataset/call_kw/fake.model/fake_method", {
             model: "fake.model",
             method: "fake_method",
-        })
+        }),
     ).rejects.toThrow(
-        `Cannot find a definition for model "fake.model": could not get model from server environment`
+        `Cannot find a definition for model "fake.model": could not get model from server environment`,
     );
 });
 
@@ -725,7 +728,7 @@ test("performRPC: formatted_read_group, group by date with number granularity", 
         expect(response.map((x) => x[`date:${granularity}`])).toEqual(result);
         expect(response.map((x) => x.__count)).toEqual(count);
         expect(response.map((x) => x.__extra_domain)).toEqual(
-            result.map((r) => [[`date.${granularity}`, "=", r]])
+            result.map((r) => [[`date.${granularity}`, "=", r]]),
         );
     }
 });
@@ -1020,7 +1023,7 @@ test("performRPC: formatted_read_group, group by datetime with number granularit
         expect(response.map((x) => x[`datetime:${granularity}`])).toEqual(result);
         expect(response.map((x) => x.__count)).toEqual(count);
         expect(response.map((x) => x.__extra_domain)).toEqual(
-            result.map((r) => [[`datetime.${granularity}`, "=", r]])
+            result.map((r) => [[`datetime.${granularity}`, "=", r]]),
         );
     }
 });
@@ -1047,7 +1050,9 @@ test("performRPC: formatted_read_group day_of_week", async () => {
         },
     });
 
-    expect(response.map((x) => x["datetime:day_of_week"])).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(response.map((x) => x["datetime:day_of_week"])).toEqual([
+        0, 1, 2, 3, 4, 5, 6,
+    ]);
     expect(response.map((x) => x["foo:sum"])).toEqual([77, 11, 22, 33, 44, 55, 66]);
 });
 
@@ -1063,7 +1068,7 @@ test("performRPC: formatted_read_group, group by m2m", async () => {
                 groupby: ["partner_ids"],
                 aggregates: ["__count"],
             },
-        })
+        }),
     ).resolves.toEqual([
         {
             partner_ids: [1, "Jean-Michel"],
@@ -1138,7 +1143,7 @@ test("performRPC: formatted_read_group, group by m2o", async () => {
                 groupby: ["partner_id"],
                 aggregates: ["__count"],
             },
-        })
+        }),
     ).resolves.toEqual([
         {
             partner_id: [2, "Raoul"],
@@ -1193,7 +1198,7 @@ test("performRPC: formatted_read_group, group by integer", async () => {
                 groupby: ["foo"],
                 aggregates: ["__count"],
             },
-        })
+        }),
     ).resolves.toEqual([
         {
             __extra_domain: [["foo", "=", 0]],
@@ -1240,7 +1245,7 @@ test("performRPC: formatted_read_group, group by selection", async () => {
                 groupby: ["select"],
                 aggregates: ["__count"],
             },
-        })
+        }),
     ).resolves.toEqual([
         { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
         { select: "dev", __extra_domain: [["select", "=", "dev"]], __count: 1 },
@@ -1559,7 +1564,9 @@ describe("groupby chain of fields", () => {
         expect(result).toEqual([
             {
                 __count: 3,
-                __extra_domain: [["foo_id", "any", [["bar_id", "any", [["name", "=", "bar_a"]]]]]],
+                __extra_domain: [
+                    ["foo_id", "any", [["bar_id", "any", [["name", "=", "bar_a"]]]]],
+                ],
                 "foo_id.bar_id.name": "bar_a",
             },
             {
@@ -1570,7 +1577,11 @@ describe("groupby chain of fields", () => {
                     [
                         "foo_id",
                         "any",
-                        ["|", ["bar_id", "not any", []], ["bar_id", "any", [["name", "=", false]]]],
+                        [
+                            "|",
+                            ["bar_id", "not any", []],
+                            ["bar_id", "any", [["name", "=", false]]],
+                        ],
                     ],
                 ],
                 "foo_id.bar_id.name": false,
@@ -1681,7 +1692,9 @@ describe("groupby chain of fields", () => {
         expect(result).toEqual([
             {
                 "foo_id.schedule_datetime:month_number": 8,
-                __extra_domain: [["foo_id", "any", [["schedule_datetime.month_number", "=", 8]]]],
+                __extra_domain: [
+                    ["foo_id", "any", [["schedule_datetime.month_number", "=", 8]]],
+                ],
                 __count: 1,
             },
             {
@@ -1732,7 +1745,7 @@ describe("groupby chain of fields", () => {
                         groupby,
                         aggregates: ["__count", "name:array_agg"],
                     },
-                })
+                }),
             );
         }
         const result = await ormRequest({
@@ -1763,7 +1776,7 @@ test("performRPC: read_progress_bar grouped by boolean", async () => {
                     field: "select",
                 },
             },
-        })
+        }),
     ).resolves.toEqual({
         False: { new: 0, dev: 0, done: 2 },
         True: { new: 3, dev: 1, done: 0 },
@@ -1790,7 +1803,7 @@ test("performRPC: read_progress_bar grouped by datetime", async () => {
                     field: "select",
                 },
             },
-        })
+        }),
     ).resolves.toEqual({
         "2019-12-29 23:00:00": { dev: 0, done: 0, new: 1 },
         "2016-04-10 23:00:00": { dev: 0, done: 0, new: 1 },
@@ -1814,7 +1827,7 @@ test("performRPC: read_progress_bar grouped by many2one", async () => {
                     field: "select",
                 },
             },
-        })
+        }),
     ).resolves.toEqual({
         1: { dev: 0, done: 0, new: 2 },
         2: { dev: 0, done: 0, new: 1 },
@@ -1941,7 +1954,7 @@ test("webRead sub-fields of a many2one field", async () => {
                     },
                 },
             },
-        })
+        }),
     ).resolves.toEqual([
         {
             id: 1,
@@ -1993,7 +2006,7 @@ test("performRPC: create one record (old API)", async () => {
             model: "bar",
             method: "create",
             args: [{ name: "A" }],
-        })
+        }),
     ).resolves.toBe(7);
 });
 
@@ -2005,7 +2018,7 @@ test("performRPC: create one record (new API)", async () => {
             model: "bar",
             method: "create",
             args: [[{ name: "A" }]],
-        })
+        }),
     ).resolves.toEqual([7]);
 });
 
@@ -2017,7 +2030,7 @@ test("performRPC: create several records (new API)", async () => {
             model: "bar",
             method: "create",
             args: [[{ name: "A" }, { name: "B" }]],
-        })
+        }),
     ).resolves.toEqual([7, 8]);
 });
 
@@ -2029,7 +2042,7 @@ test("performRPC: trigger onchange for new record", async () => {
             model: "bar",
             method: "onchange",
             args: [[], {}, [], { foo: {} }],
-        })
+        }),
     ).resolves.toEqual({ value: { foo: 0 } });
 });
 

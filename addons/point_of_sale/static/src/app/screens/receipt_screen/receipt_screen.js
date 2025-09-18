@@ -1,14 +1,13 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, useState } from "@odoo/owl";
 import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { registry } from "@web/core/registry";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { isValidEmail } from "@point_of_sale/utils";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
-
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { isValidEmail } from "@point_of_sale/utils";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
     static components = { OrderReceipt };
@@ -33,10 +32,10 @@ export class ReceiptScreen extends Component {
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doFullPrint = useTrackedAsync(() =>
-            this.pos.printReceipt({ order: this.currentOrder })
+            this.pos.printReceipt({ order: this.currentOrder }),
         );
         this.doBasicPrint = useTrackedAsync(() =>
-            this.pos.printReceipt({ order: this.currentOrder, basic: true })
+            this.pos.printReceipt({ order: this.currentOrder, basic: true }),
         );
     }
     actionSendReceiptOnEmail() {
@@ -57,7 +56,9 @@ export class ReceiptScreen extends Component {
             .getOrderlines()
             .find((line) => tip_product_id && line.product_id.id === tip_product_id);
         const tipAmount = tipLine ? tipLine.prices.total_included : 0;
-        const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
+        const orderAmountStr = this.env.utils.formatCurrency(
+            orderTotalAmount - tipAmount,
+        );
         if (!tipAmount) {
             return orderAmountStr;
         }
@@ -84,7 +85,7 @@ export class ReceiptScreen extends Component {
                 order: this.currentOrder,
                 basic_receipt: basicReceipt,
             },
-            { addClass: "pos-receipt-print p-3" }
+            { addClass: "pos-receipt-print p-3" },
         );
     async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;
@@ -92,7 +93,7 @@ export class ReceiptScreen extends Component {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
-                    "This order is not yet synced to server. Make sure it is synced then try again."
+                    "This order is not yet synced to server. Make sure it is synced then try again.",
                 ),
                 showReloadButton: true,
             });

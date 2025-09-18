@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { Record } from "@web/model/relational_model/record";
+import { RelationalRecord } from "@web/model/relational_model/record";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-class ProductCatalogRecord extends Record {
+class ProductCatalogRecord extends RelationalRecord {
     setup(config, data, options = {}) {
         this.productCatalogData = data.productCatalogData;
         data = { ...data };

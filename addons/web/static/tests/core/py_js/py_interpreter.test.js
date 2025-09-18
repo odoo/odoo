@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+// @ts-check
 
+import { describe, expect, test } from "@odoo/hoot";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 
 describe.current.tags("headless");
@@ -104,15 +105,19 @@ describe("boolean properties", () => {
 
     test("get value from context", () => {
         expect(evaluateExpr("foo == 'foo' or foo == 'bar'", { foo: "bar" })).toBe(true);
-        expect(evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "foo", bar: "bar" })).toBe(
-            true
-        );
+        expect(
+            evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "foo", bar: "bar" }),
+        ).toBe(true);
     });
 
     test("should be lazy", () => {
         // second clause should nameerror if evaluated
-        expect(() => evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "foo" })).toThrow();
-        expect(evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "bar" })).toBe(false);
+        expect(() =>
+            evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "foo" }),
+        ).toThrow();
+        expect(evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "bar" })).toBe(
+            false,
+        );
         expect(evaluateExpr("foo == 'foo' or bar == 'bar'", { foo: "foo" })).toBe(true);
     });
 
@@ -208,9 +213,12 @@ describe("comparisons", () => {
     });
 
     test("should compare strings", () => {
-        expect(evaluateExpr("date >= current", { date: "2010-06-08", current: "2010-06-05" })).toBe(
-            true
-        );
+        expect(
+            evaluateExpr("date >= current", {
+                date: "2010-06-08",
+                current: "2010-06-05",
+            }),
+        ).toBe(true);
         expect(evaluateExpr('state >= "cancel"', { state: "cancel" })).toBe(true);
         expect(evaluateExpr('state >= "cancel"', { state: "open" })).toBe(true);
     });
@@ -283,7 +291,9 @@ describe("conversions", () => {
     test("to bool", () => {
         expect(evaluateExpr("bool('')")).toBe(false);
         expect(evaluateExpr("bool('foo')")).toBe(true);
-        expect(evaluateExpr("bool(date_deadline)", { date_deadline: "2008" })).toBe(true);
+        expect(evaluateExpr("bool(date_deadline)", { date_deadline: "2008" })).toBe(
+            true,
+        );
         expect(evaluateExpr("bool(s)", { s: "" })).toBe(false);
     });
 });
@@ -435,25 +445,31 @@ describe("sets", () => {
 
     test("set intersection", () => {
         expect(evaluateExpr("set([1,2,3]).intersection()")).toEqual(new Set([1, 2, 3]));
-        expect(evaluateExpr("set([1,2,3]).intersection(set([2,3]))")).toEqual(new Set([2, 3]));
-        expect(evaluateExpr("set([1,2,3]).intersection([2,3])")).toEqual(new Set([2, 3]));
+        expect(evaluateExpr("set([1,2,3]).intersection(set([2,3]))")).toEqual(
+            new Set([2, 3]),
+        );
+        expect(evaluateExpr("set([1,2,3]).intersection([2,3])")).toEqual(
+            new Set([2, 3]),
+        );
         expect(evaluateExpr("set([1,2,3]).intersection(r)", { r: [2, 3] })).toEqual(
-            new Set([2, 3])
+            new Set([2, 3]),
         );
-        expect(evaluateExpr("r.intersection([2,3])", { r: new Set([1, 2, 3, 2]) })).toEqual(
-            new Set([2, 3])
-        );
+        expect(
+            evaluateExpr("r.intersection([2,3])", { r: new Set([1, 2, 3, 2]) }),
+        ).toEqual(new Set([2, 3]));
 
-        expect(evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1, 2] })).toEqual(
-            new Set([2])
-        );
-        expect(evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1] })).toEqual(
-            new Set()
-        );
-        expect(evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 1 })).toEqual(new Set());
-        expect(evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 2 })).toEqual(
-            new Set([2])
-        );
+        expect(
+            evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1, 2] }),
+        ).toEqual(new Set([2]));
+        expect(
+            evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1] }),
+        ).toEqual(new Set());
+        expect(
+            evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 1 }),
+        ).toEqual(new Set());
+        expect(
+            evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 2 }),
+        ).toEqual(new Set([2]));
 
         expect(() => evaluateExpr("set([]).intersection([], [])")).toThrow(); // valid but not supported by py_js
         expect(() => evaluateExpr("set([]).intersection([], [], [])")).toThrow(); // valid but not supported by py_js
@@ -461,23 +477,29 @@ describe("sets", () => {
 
     test("set difference", () => {
         expect(evaluateExpr("set([1,2,3]).difference()")).toEqual(new Set([1, 2, 3]));
-        expect(evaluateExpr("set([1,2,3]).difference(set([2,3]))")).toEqual(new Set([1]));
+        expect(evaluateExpr("set([1,2,3]).difference(set([2,3]))")).toEqual(
+            new Set([1]),
+        );
         expect(evaluateExpr("set([1,2,3]).difference([2,3])")).toEqual(new Set([1]));
-        expect(evaluateExpr("set([1,2,3]).difference(r)", { r: [2, 3] })).toEqual(new Set([1]));
-        expect(evaluateExpr("r.difference([2,3])", { r: new Set([1, 2, 3, 2, 4]) })).toEqual(
-            new Set([1, 4])
+        expect(evaluateExpr("set([1,2,3]).difference(r)", { r: [2, 3] })).toEqual(
+            new Set([1]),
         );
+        expect(
+            evaluateExpr("r.difference([2,3])", { r: new Set([1, 2, 3, 2, 4]) }),
+        ).toEqual(new Set([1, 4]));
 
-        expect(evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1, 2] })).toEqual(
-            new Set([1])
-        );
-        expect(evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1] })).toEqual(
-            new Set([1])
-        );
+        expect(
+            evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1, 2] }),
+        ).toEqual(new Set([1]));
+        expect(
+            evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1] }),
+        ).toEqual(new Set([1]));
         expect(evaluateExpr("set([foo_id]).difference([2,3])", { foo_id: 1 })).toEqual(
-            new Set([1])
+            new Set([1]),
         );
-        expect(evaluateExpr("set([foo_id]).difference([2,3])", { foo_id: 2 })).toEqual(new Set());
+        expect(evaluateExpr("set([foo_id]).difference([2,3])", { foo_id: 2 })).toEqual(
+            new Set(),
+        );
 
         expect(() => evaluateExpr("set([]).difference([], [])")).toThrow(); // valid but not supported by py_js
         expect(() => evaluateExpr("set([]).difference([], [], [])")).toThrow(); // valid but not supported by py_js
@@ -485,23 +507,31 @@ describe("sets", () => {
 
     test("set union", () => {
         expect(evaluateExpr("set([1,2,3]).union()")).toEqual(new Set([1, 2, 3]));
-        expect(evaluateExpr("set([1,2,3]).union(set([2,3,4]))")).toEqual(new Set([1, 2, 3, 4]));
-        expect(evaluateExpr("set([1,2,3]).union([2,4])")).toEqual(new Set([1, 2, 3, 4]));
-        expect(evaluateExpr("set([1,2,3]).union(r)", { r: [2, 4] })).toEqual(new Set([1, 2, 3, 4]));
+        expect(evaluateExpr("set([1,2,3]).union(set([2,3,4]))")).toEqual(
+            new Set([1, 2, 3, 4]),
+        );
+        expect(evaluateExpr("set([1,2,3]).union([2,4])")).toEqual(
+            new Set([1, 2, 3, 4]),
+        );
+        expect(evaluateExpr("set([1,2,3]).union(r)", { r: [2, 4] })).toEqual(
+            new Set([1, 2, 3, 4]),
+        );
         expect(evaluateExpr("r.union([2,3])", { r: new Set([1, 2, 2, 4]) })).toEqual(
-            new Set([1, 2, 4, 3])
+            new Set([1, 2, 4, 3]),
         );
 
         expect(evaluateExpr("set(foo_ids).union([2,3])", { foo_ids: [1, 2] })).toEqual(
-            new Set([1, 2, 3])
+            new Set([1, 2, 3]),
         );
         expect(evaluateExpr("set(foo_ids).union([2,3])", { foo_ids: [1] })).toEqual(
-            new Set([1, 2, 3])
+            new Set([1, 2, 3]),
         );
         expect(evaluateExpr("set([foo_id]).union([2,3])", { foo_id: 1 })).toEqual(
-            new Set([1, 2, 3])
+            new Set([1, 2, 3]),
         );
-        expect(evaluateExpr("set([foo_id]).union([2,3])", { foo_id: 2 })).toEqual(new Set([2, 3]));
+        expect(evaluateExpr("set([foo_id]).union([2,3])", { foo_id: 2 })).toEqual(
+            new Set([2, 3]),
+        );
 
         expect(() => evaluateExpr("set([]).union([], [])")).toThrow(); // valid but not supported by py_js
         expect(() => evaluateExpr("set([]).union([], [], [])")).toThrow(); // valid but not supported by py_js

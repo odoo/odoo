@@ -200,12 +200,12 @@ class TestMrpProductionBackorder(TestMrpCommon):
         for i in range(nb_product_todo):
             active_production.action_assign()
 
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
                 ml.quantity = 4
                 ml.lot_id = lot_1
             details_operation_form.save()
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_form_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
                 ml.quantity = 1
                 ml.lot_id = lot_2
@@ -248,7 +248,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 3
 
-        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 4 * 3
         details_operation_form.save()
@@ -256,7 +256,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         # Consume 1 Product from lot1 and 2 from lot 2
         p2_smls = production.move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
         self.assertEqual(len(p2_smls), 2, 'One for each lot')
-        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 1
             ml.lot_id = lot1
@@ -336,7 +336,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         production_form.qty_producing = 3.1
         production = production_form.save()
 
-        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 3.09
 
@@ -382,12 +382,12 @@ class TestMrpProductionBackorder(TestMrpCommon):
         for i in range(nb_product_todo):
             active_production.lot_producing_ids = serials_final[i]
             active_production.qty_producing = 1
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_form_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
                 ml.quantity = 1
                 ml.lot_id = serials_p1[i]
             details_operation_form.save()
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_form_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
                 ml.quantity = 1
                 ml.lot_id = serials_p2[i]

@@ -1,10 +1,41 @@
-import { _t } from "@web/core/l10n/translation";
+// @ts-check
+
+/** @module @web/views/pivot/pivot_model - Pivot table data loading, group tree expansion, measure aggregation, and cell computation */
+
 import { Domain } from "@web/core/domain";
-import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
+import {
+    cartesian,
+    sections,
+    symmetricalDifference,
+} from "@web/core/utils/collections/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
-import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
-import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
+import { computeReportMeasures, processMeasure } from "@web/views/view_measurements";
+
+import { formatPivotForExport } from "./pivot_export";
+import {
+    addGroup,
+    findGroup,
+    getLeafCounts,
+    getTreeHeight,
+    hasData,
+    pruneTree,
+    sortTree,
+} from "./pivot_group_tree";
+import {
+    getCellValue,
+    getCurrencyIds,
+    getMeasurements,
+    getMeasureSpecs,
+} from "./pivot_measurements";
+import { getTableHeaders, getTableRows } from "./pivot_table";
+import {
+    getGroupBySpecs,
+    getGroupDomain,
+    getGroupLabels,
+    getGroupValues,
+} from "./pivot_value_utils";
 
 /**
  * Pivot Model
@@ -301,13 +332,14 @@ import { computeReportMeasures, processMeasure } from "@web/views/utils";
 
 /**
  * @typedef Config
- * @property {MetaData} metaData
- * @property {Data} data
+ * @property {any} metaData
+ * @property {any} data
  */
 
 export class PivotModel extends Model {
     /**
      * @override
+     * @param {Object} params
      * @param {Object} params.metaData
      * @param {string[]} params.metaData.activeMeasures
      * @param {string[]} params.metaData.colGroupBys
@@ -328,7 +360,9 @@ export class PivotModel extends Model {
         // concurrency management
         this.keepLast = new KeepLast();
         this.race = new Race();
+        /** @type {(...args: any[]) => any} */
         const _loadData = this._loadData.bind(this);
+        /** @type {any} */
         this._loadData = (...args) => this.race.add(_loadData(...args));
 
         let sortedColumn = params.metaData.sortedColumn || null;
@@ -355,12 +389,13 @@ export class PivotModel extends Model {
             counts: {},
             numbering: {},
         };
-        const metaData = Object.assign({}, params.metaData, {
+        const metaData = {
+            ...params.metaData,
             customGroupBys: params.metaData.customGroupBys || new Map(),
             expandedRowGroupBys: params.metaData.expandedRowGroupBys || [],
             expandedColGroupBys: params.metaData.expandedColGroupBys || [],
             sortedColumn,
-        });
+        };
         this.metaData = this._buildMetaData(metaData);
 
         this.reload = false; // used to discriminate between the first load and subsequent reloads
@@ -415,9 +450,7 @@ export class PivotModel extends Model {
         this.notify();
     }
     /**
-     * Close the group with id given by groupId. A type must be specified
-     * in case groupId is [[], []] (the id of the group 'Total') because this
-     * group is present in both colGroupTree and rowGroupTree.
+     * Close the group with id given by groupId.
      *
      * @param {Array[]} groupId
      * @param {'row'|'col'} type
@@ -436,13 +469,13 @@ export class PivotModel extends Model {
             groupBys = this.metaData.rowGroupBys;
             expandedGroupBys = this.metaData.expandedRowGroupBys;
             tree = this.data.rowGroupTree;
-            group = this._findGroup(this.data.rowGroupTree, groupId[0]);
+            group = findGroup(this.data.rowGroupTree, groupId[0]);
             keyPart = 0;
         } else {
             groupBys = this.metaData.colGroupBys;
             expandedGroupBys = this.metaData.expandedColGroupBys;
             tree = this.data.colGroupTree;
-            group = this._findGroup(this.data.colGroupTree, groupId[1]);
+            group = findGroup(this.data.colGroupTree, groupId[1]);
             keyPart = 1;
         }
 
@@ -471,7 +504,7 @@ export class PivotModel extends Model {
 
         group.directSubTrees.clear();
         delete group.sortedKeys;
-        var newGroupBysLength = this._getTreeHeight(tree) - 1;
+        const newGroupBysLength = getTreeHeight(tree) - 1;
         if (newGroupBysLength <= groupBys.length) {
             expandedGroupBys.splice(0);
             groupBys.splice(newGroupBysLength);
@@ -481,8 +514,7 @@ export class PivotModel extends Model {
         this.notify();
     }
     /**
-     * Reload the view with the current rowGroupBys and colGroupBys
-     * This is the easiest way to expand all the groups that are not expanded
+     * Reload the view with the current rowGroupBys and colGroupBys.
      */
     async expandAll() {
         const config = { metaData: this.metaData, data: this.data };
@@ -492,7 +524,7 @@ export class PivotModel extends Model {
     /**
      * Expand a group by using groupBy to split it and trigger a re-rendering.
      *
-     * @param {Object} group
+     * @param {string} groupId
      * @param {'row'|'col'} type
      */
     async expandGroup(groupId, type) {
@@ -501,7 +533,7 @@ export class PivotModel extends Model {
         }
 
         const config = { metaData: this.metaData, data: this.data };
-        await this._expandGroup(groupId, type, config);
+        await this._expandGroup(/** @type {any} */ (groupId), type, config);
         this.notify();
     }
     /**
@@ -511,62 +543,10 @@ export class PivotModel extends Model {
      * @returns {Object}
      */
     exportData() {
-        const measureCount = this.metaData.activeMeasures.length;
-
-        const table = this.getTable();
-
-        // process headers
-        const headers = table.headers;
-        let colGroupHeaderRows;
-        let measureRow = [];
-
-        function processHeader(header) {
-            const inTotalColumn = header.groupId[1].length === 0;
-            return {
-                title: header.title,
-                width: header.width,
-                height: header.height,
-                is_bold: !!header.measure && inTotalColumn,
-            };
-        }
-
-        colGroupHeaderRows = headers.slice(0, headers.length - 1);
-        measureRow = headers[headers.length - 1].map(processHeader);
-
-        // remove the empty headers on left side
-        colGroupHeaderRows[0].splice(0, 1);
-
-        colGroupHeaderRows = colGroupHeaderRows.map((headerRow) => headerRow.map(processHeader));
-
-        // process rows
-        const tableRows = table.rows.map((row) => ({
-            title: row.title,
-            indent: row.indent,
-            values: row.subGroupMeasurements.map((measurement) => {
-                let value = measurement.value;
-                if (value === undefined) {
-                    value = "";
-                }
-                return {
-                    is_bold: measurement.isBold,
-                    value: value,
-                };
-            }),
-        }));
-
-        return {
-            model: this.metaData.resModel,
-            title: this.metaData.title,
-            col_group_headers: colGroupHeaderRows,
-            measure_headers: measureRow,
-            rows: tableRows,
-            measure_count: measureCount,
-        };
+        return formatPivotForExport(this.getTable(), this.metaData);
     }
     /**
-     * Swap the pivot columns and the rows. The flip operation is synchronous.
-     * However, we must wait for a potential pending reload to complete before
-     * flipping the axes. This method is thus async.
+     * Swap the pivot columns and the rows.
      */
     async flip() {
         await this.race.getCurrentProm();
@@ -590,10 +570,9 @@ export class PivotModel extends Model {
 
         function twist(object) {
             const newObject = {};
-            Object.keys(object).forEach((key) => {
-                const value = object[key];
-                newObject[twistKey(key)] = value;
-            });
+            for (const key of Object.keys(object)) {
+                newObject[twistKey(key)] = object[key];
+            }
             return newObject;
         }
 
@@ -605,16 +584,14 @@ export class PivotModel extends Model {
         this.notify();
     }
     /**
-     * Returns a domain representation of a group
+     * Returns a domain representation of a group.
      *
      * @param {Object} group
-     * @param {Array} group.colValues
-     * @param {Array} group.rowValues
      * @returns {Array[]}
      */
     getGroupDomain(group) {
         const config = { metaData: this.metaData, data: this.data };
-        return this._getGroupDomain(group, config);
+        return getGroupDomain(group, config);
     }
     /**
      * Returns a description of the pivot table.
@@ -622,26 +599,31 @@ export class PivotModel extends Model {
      * @returns {Object}
      */
     getTable() {
-        const headers = this._getTableHeaders();
+        const headers = getTableHeaders(this.data, this.metaData);
         return {
-            headers: headers,
-            rows: this._getTableRows(this.data.rowGroupTree, headers[headers.length - 1]),
+            headers,
+            rows: getTableRows(
+                this.data.rowGroupTree,
+                headers.at(-1),
+                this.data,
+                this.metaData,
+            ),
         };
     }
     /**
      * Returns the total number of columns of the pivot table.
      *
-     * @returns {integer}
+     * @returns {number}
      */
     getTableWidth() {
-        var leafCounts = this._getLeafCounts(this.data.colGroupTree);
+        const leafCounts = getLeafCounts(this.data.colGroupTree);
         return leafCounts[JSON.stringify(this.data.colGroupTree.root.values)] + 2;
     }
     /**
      * @returns {boolean} true iff there's no data in the table
      */
     hasData() {
-        return this._hasData(this.data);
+        return hasData(this.data);
     }
     /**
      * @override
@@ -655,7 +637,9 @@ export class PivotModel extends Model {
         if (!this.reload) {
             metaData.rowGroupBys =
                 searchParams.context.pivot_row_groupby ||
-                (searchParams.groupBy.length ? searchParams.groupBy : metaData.rowGroupBys);
+                (searchParams.groupBy.length
+                    ? searchParams.groupBy
+                    : metaData.rowGroupBys);
             this.reload = true;
         } else {
             metaData.rowGroupBys = searchParams.groupBy.length
@@ -665,10 +649,16 @@ export class PivotModel extends Model {
         metaData.colGroupBys =
             searchParams.context.pivot_column_groupby || this.metaData.colGroupBys;
 
-        if (JSON.stringify(metaData.rowGroupBys) !== JSON.stringify(this.metaData.rowGroupBys)) {
+        if (
+            JSON.stringify(metaData.rowGroupBys) !==
+            JSON.stringify(this.metaData.rowGroupBys)
+        ) {
             metaData.expandedRowGroupBys = [];
         }
-        if (JSON.stringify(metaData.colGroupBys) !== JSON.stringify(this.metaData.colGroupBys)) {
+        if (
+            JSON.stringify(metaData.colGroupBys) !==
+            JSON.stringify(this.metaData.colGroupBys)
+        ) {
             metaData.expandedColGroupBys = [];
         }
 
@@ -677,25 +667,25 @@ export class PivotModel extends Model {
             processedMeasures.forEach((e) => allActivesMeasures.add(e));
         }
 
-        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
-            ...allActivesMeasures,
-        ]);
+        metaData.measures = computeReportMeasures(
+            metaData.fields,
+            metaData.fieldAttrs,
+            [...allActivesMeasures],
+        );
         const config = { metaData, data: this.data };
         await addPropertyFieldDefs(
             this.orm,
             metaData.resModel,
             searchParams.context,
             metaData.fields,
-            new Set([...metaData.rowGroupBys, ...metaData.colGroupBys])
+            new Set([...metaData.rowGroupBys, ...metaData.colGroupBys]),
         );
         return this._loadData(config);
     }
     /**
-     * Sort the rows, depending on the values of a given column.  This is an
-     * in-memory sort.
+     * Sort the rows, depending on the values of a given column.
      *
      * @param {Object} sortedColumn
-     * @param {number[]} sortedColumn.groupId
      */
     sortRows(sortedColumn) {
         if (this.race.getCurrentProm()) {
@@ -720,9 +710,6 @@ export class PivotModel extends Model {
         metaData.activeMeasures = this.nextActiveMeasures;
         const index = metaData.activeMeasures.indexOf(fieldName);
         if (index !== -1) {
-            // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information (but still, we need
-            // to wait in case there is a pending load)
             metaData.activeMeasures.splice(index, 1);
             await Promise.resolve(this.race.getCurrentProm());
             this.metaData = metaData;
@@ -741,62 +728,32 @@ export class PivotModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
-     * Add labels/values in the provided groupTree. A new leaf is created in
-     * the groupTree with a root object corresponding to the group with given
-     * labels/values.
-     *
-     * @protected
-     * @param {Object} groupTree, either this.data.rowGroupTree or this.data.colGroupTree
-     * @param {string[]} labels
-     * @param {Array} values
-     */
-    _addGroup(groupTree, labels, values) {
-        let tree = groupTree;
-        // we assume here that the group with value value.slice(value.length - 2) has already been added.
-        values.slice(0, values.length - 1).forEach(function (value) {
-            tree = tree.directSubTrees.get(value);
-        });
-        const value = values[values.length - 1];
-        if (tree.directSubTrees.has(value)) {
-            return;
-        }
-        tree.directSubTrees.set(value, {
-            root: {
-                labels: labels,
-                values: values,
-            },
-            directSubTrees: new Map(),
-        });
-    }
-    /**
-     * Return a copy of this.metaData, extended with optional params. This is useful
-     * for async methods that need to modify this.metaData, but it can't be done in
-     * place directly for the model to be concurrency proof (so they work on a
-     * copy and commit it at the end).
+     * Return a copy of this.metaData, extended with optional params.
      *
      * @protected
      * @param {Object} params
      * @returns {Object}
      */
     _buildMetaData(params) {
-        const metaData = Object.assign({}, this.metaData, params);
+        const metaData = { ...this.metaData, ...params };
         metaData.activeMeasures = [...metaData.activeMeasures];
         metaData.colGroupBys = [...metaData.colGroupBys];
         metaData.rowGroupBys = [...metaData.rowGroupBys];
         metaData.expandedColGroupBys = [...metaData.expandedColGroupBys];
         metaData.expandedRowGroupBys = [...metaData.expandedRowGroupBys];
         metaData.customGroupBys = new Map([...metaData.customGroupBys]);
-        // shallow copy sortedColumn because we never modify groupId in place
-        metaData.sortedColumn = metaData.sortedColumn ? { ...metaData.sortedColumn } : null;
+        metaData.sortedColumn = metaData.sortedColumn
+            ? { ...metaData.sortedColumn }
+            : null;
         metaData.domain = this.searchParams.domain;
         Object.defineProperty(metaData, "fullColGroupBys", {
             get() {
-                return metaData.colGroupBys.concat(metaData.expandedColGroupBys);
+                return [...metaData.colGroupBys, ...metaData.expandedColGroupBys];
             },
         });
         Object.defineProperty(metaData, "fullRowGroupBys", {
             get() {
-                return metaData.rowGroupBys.concat(metaData.expandedRowGroupBys);
+                return [...metaData.rowGroupBys, ...metaData.expandedRowGroupBys];
             },
         });
         return metaData;
@@ -805,7 +762,7 @@ export class PivotModel extends Model {
      * Expand a group by using groupBy to split it.
      *
      * @protected
-     * @param {Object} group
+     * @param {Array[]} groupId
      * @param {'row'|'col'} type
      * @param {Config} config
      */
@@ -817,7 +774,8 @@ export class PivotModel extends Model {
             type: type,
         };
         const groupValues = type === "row" ? groupId[0] : groupId[1];
-        const groupBys = type === "row" ? metaData.fullRowGroupBys : metaData.fullColGroupBys;
+        const groupBys =
+            type === "row" ? metaData.fullRowGroupBys : metaData.fullColGroupBys;
         if (groupValues.length >= groupBys.length) {
             throw new Error("Cannot expand group");
         }
@@ -835,93 +793,6 @@ export class PivotModel extends Model {
         delete group.type;
         await this._subdivideGroup(group, divisors, config);
     }
-    /**
-     * Find a group with given values in the provided groupTree, either
-     * this.rowGrouptree or this.data.colGroupTree.
-     *
-     * @protected
-     * @param {Object} groupTree
-     * @param {Array} values
-     * @returns {Object}
-     */
-    _findGroup(groupTree, values) {
-        let tree = groupTree;
-        values.slice(0, values.length).forEach((value) => {
-            tree = tree.directSubTrees.get(value);
-        });
-        return tree;
-    }
-    /**
-     * @protected
-     * @param {Array[]} groupId
-     * @param {string} measure
-     * @param {Config} config
-     * @returns {number}
-     */
-    _getCellValue(groupId, measure, config) {
-        var key = JSON.stringify(groupId);
-        if (!config.data.measurements[key]) {
-            return;
-        }
-        return config.data.measurements[key][measure];
-    }
-    /**
-     * @protected
-     * @param {Array[]} groupId
-     * @param {string} measure
-     * @param {Config} config
-     * @returns {number}
-     */
-    _getCellCurrency(groupId, measure, config) {
-        var key = JSON.stringify(groupId);
-        if (!config.data.currencyIds[key]) {
-            return;
-        }
-        return config.data.currencyIds[key][measure];
-    }
-    /**
-     * @protected
-     * @param {string[]} rowGroupBy
-     * @param {string[]} colGroupBy
-     * @returns {string[]}
-     */
-    _getGroupBySpecs(rowGroupBy, colGroupBy) {
-        const set = rowGroupBy.concat(colGroupBy).reduce((acc, gb) => {
-            acc.add(this._normalize(gb));
-            return acc;
-        }, new Set());
-        return [...set];
-    }
-    /**
-     * Returns a domain representation of a group
-     *
-     * @protected
-     * @param {Object} group
-     * @param {Array} group.colValues
-     * @param {Array} group.rowValues
-     * @param {Config} config
-     * @returns {Array[]}
-     */
-    _getGroupDomain(group, config) {
-        const { data } = config;
-        var key = JSON.stringify([group.rowValues, group.colValues]);
-        return data.groupDomains[key];
-    }
-    /**
-     * Returns the group sanitized labels.
-     *
-     * @protected
-     * @param {Object} group
-     * @param {string[]} groupBys
-     * @param {Config} config
-     * @returns {string[]}
-     */
-    _getGroupLabels(group, groupBys, config) {
-        return groupBys.map((gb) => {
-            const groupBy = this._normalize(gb);
-            return this._sanitizeLabel(group[groupBy], groupBy, config);
-        });
-    }
 
     async _getGroupsSubdivision(params, groupInfo) {
         const { resModel, groupDomain, groupingSets, measureSpecs, kwargs } = params;
@@ -930,368 +801,32 @@ export class PivotModel extends Model {
             groupDomain,
             groupingSets,
             measureSpecs,
-            kwargs
+            kwargs,
         );
-        return groupInfo.map((info) => ({ ...info, subGroups: result[info.subGroupIndex] }));
+        return groupInfo.map((info) => ({
+            ...info,
+            subGroups: result[info.subGroupIndex],
+        }));
     }
 
     /**
-     * Returns the group sanitized values.
-     *
-     * @protected
-     * @param {Object} group
-     * @param {string[]} groupBys
-     * @returns {Array}
-     */
-    _getGroupValues(group, groupBys) {
-        return groupBys.map((gb) => {
-            const groupBy = this._normalize(gb);
-            return this._sanitizeValue(group[groupBy]);
-        });
-    }
-    /**
-     * Returns the leaf counts of each group inside the given tree.
-     *
-     * @protected
-     * @param {Object} tree
-     * @returns {Object} keys are group ids
-     */
-    _getLeafCounts(tree) {
-        const leafCounts = {};
-        let leafCount;
-        if (!tree.directSubTrees.size) {
-            leafCount = 1;
-        } else {
-            leafCount = [...tree.directSubTrees.values()].reduce((acc, subTree) => {
-                const subLeafCounts = this._getLeafCounts(subTree);
-                Object.assign(leafCounts, subLeafCounts);
-                return acc + leafCounts[JSON.stringify(subTree.root.values)];
-            }, 0);
-        }
-
-        leafCounts[JSON.stringify(tree.root.values)] = leafCount;
-        return leafCounts;
-    }
-    /**
-     * Returns the group sanitized measure values for the measures in
-     * this.metaData.activeMeasures (that migth contain '__count', not really a fieldName).
-     *
-     * @protected
-     * @param {Object} group
-     * @param {Config} config
-     * @returns {Array}
-     */
-    _getMeasurements(group, config) {
-        const { metaData } = config;
-        return this._getMeasureSpecs(config).reduce((measurements, measureName) => {
-            var measurement = group[measureName];
-            const [fieldName, aggregator] = measureName.split(":");
-            if (aggregator === "array_agg_distinct") {
-                return measurements;
-            }
-            if (aggregator === "sum_currency") {
-                const currencies =
-                    group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
-                if (currencies.length === 1) {
-                    return measurements;
-                }
-            }
-            if (metaData.measures[fieldName].type === "boolean" && measurement instanceof Boolean) {
-                measurement = measurement ? 1 : 0;
-            }
-            measurements[fieldName] = measurement;
-            return measurements;
-        }, {});
-    }
-    /**
-     * Returns the group sanitized currency id values for the measures in
-     * this.metaData.activeMeasures (only useful for monetary).
-     *
-     * @protected
-     * @param {Object} group
-     * @param {Config} config
-     * @returns {Array}
-     */
-    _getCurrencyIds(group, config) {
-        const { metaData } = config;
-        return this._getMeasureSpecs(config).reduce((currencyIds, measureName) => {
-            const [fieldName, aggregator] = measureName.split(":");
-            if (aggregator === "array_agg_distinct") {
-                return currencyIds;
-            }
-            const measureField = metaData.measures[fieldName];
-            if (measureField.type === "monetary" && measureField.currency_field) {
-                currencyIds[fieldName] = group[measureField.currency_field + ":array_agg_distinct"];
-            }
-            return currencyIds;
-        }, {});
-    }
-    /**
-     * Returns a description of the measures row of the pivot table
-     *
-     * @protected
-     * @param {Object[]} columns for which measure cells must be generated
-     * @returns {Object[]}
-     */
-    _getMeasuresRow(columns) {
-        const sortedColumn = this.metaData.sortedColumn || {};
-        const measureRow = [];
-
-        columns.forEach((column) => {
-            this.metaData.activeMeasures.forEach((measureName) => {
-                const measureCell = {
-                    groupId: column.groupId,
-                    height: 1,
-                    measure: measureName,
-                    title: this.metaData.measures[measureName].string,
-                    width: 1,
-                };
-                if (
-                    sortedColumn.measure === measureName &&
-                    JSON.stringify(sortedColumn.groupId) === JSON.stringify(column.groupId) // FIXME
-                ) {
-                    measureCell.order = sortedColumn.order;
-                }
-                measureRow.push(measureCell);
-            });
-        });
-
-        return measureRow;
-    }
-    /**
-     * Returns the list of measure specs associated with metaData.activeMeasures, i.e.
-     * a measure 'fieldName' becomes 'fieldName:aggregator' where
-     * aggregator is the value specified on the field 'fieldName' for
-     * the key aggregator.
+     * Initialize/Reinitialize data and subdivide the group 'Total'.
      *
      * @protected
      * @param {Config} config
-     * @return {string[]}
-     */
-    _getMeasureSpecs(config) {
-        const { metaData } = config;
-        return metaData.activeMeasures.reduce((acc, measure) => {
-            if (measure === "__count") {
-                acc.push(measure);
-                return acc;
-            }
-            const field = this.metaData.fields[measure];
-            if (field.type === "many2one") {
-                field.aggregator = "count_distinct";
-            }
-            if (field.aggregator === undefined) {
-                throw new Error(
-                    "No aggregate function has been provided for the measure '" + measure + "'"
-                );
-            }
-            acc.push(measure + ":" + field.aggregator);
-            if (field.currency_field) {
-                acc.push(field.currency_field + ":array_agg_distinct");
-                acc.push(field.name + ":sum_currency");
-            }
-            return acc;
-        }, []);
-    }
-    /**
-     * Make sure that the labels of different many2one values are distinguished
-     * by numbering them if necessary.
-     *
-     * @protected
-     * @param {Array} label
-     * @param {string} fieldName
-     * @param {Config} config
-     * @returns {string}
-     */
-    _getNumberedLabel(label, fieldName, config) {
-        const { data } = config;
-        const id = label[0];
-        const name = label[1];
-        data.numbering[fieldName] = data.numbering[fieldName] || {};
-        data.numbering[fieldName][name] = data.numbering[fieldName][name] || {};
-        const numbers = data.numbering[fieldName][name];
-        numbers[id] = numbers[id] || Object.keys(numbers).length + 1;
-        return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
-    }
-
-    /**
-     * Returns the list of header rows of the pivot table: the col group rows
-     * (depending on the col groupbys), the measures row.
-     *
-     * @protected
-     * @returns {Object[]}
-     */
-    _getTableHeaders() {
-        const colGroupBys = this.metaData.fullColGroupBys;
-        const height = colGroupBys.length + 1;
-        const measureCount = this.metaData.activeMeasures.length;
-        const leafCounts = this._getLeafCounts(this.data.colGroupTree);
-        let headers = [];
-        const measureColumns = []; // used to generate the measure cells
-
-        // 1) generate col group rows (total row + one row for each col groupby)
-        const colGroupRows = new Array(height).fill(0).map(() => []);
-        // blank top left cell
-        colGroupRows[0].push({
-            height: height + 1,
-            title: "",
-            width: 1,
-        });
-
-        // col groupby cells with group values
-        /**
-         * Recursive function that generates the header cells corresponding to
-         * the groups of a given tree.
-         *
-         * @param {Object} tree
-         */
-        function generateTreeHeaders(tree, fields) {
-            const group = tree.root;
-            const rowIndex = group.values.length;
-            const row = colGroupRows[rowIndex];
-            const groupId = [[], group.values];
-            const isLeaf = !tree.directSubTrees.size;
-            const leafCount = leafCounts[JSON.stringify(tree.root.values)];
-            const cell = {
-                groupId: groupId,
-                height: isLeaf ? colGroupBys.length + 1 - rowIndex : 1,
-                isLeaf: isLeaf,
-                isFolded: isLeaf && colGroupBys.length > group.values.length,
-                label:
-                    rowIndex === 0
-                        ? undefined
-                        : fields[colGroupBys[rowIndex - 1].split(":")[0]].string,
-                title: group.labels.length ? group.labels[group.labels.length - 1] : _t("Total"),
-                width: leafCount * measureCount,
-            };
-            row.push(cell);
-            if (isLeaf) {
-                measureColumns.push(cell);
-            }
-
-            [...tree.directSubTrees.values()].forEach((subTree) => {
-                generateTreeHeaders(subTree, fields);
-            });
-        }
-
-        generateTreeHeaders(this.data.colGroupTree, this.metaData.fields);
-        // blank top right cell for 'Total' group (if there is more that one leaf)
-        if (leafCounts[JSON.stringify(this.data.colGroupTree.root.values)] > 1) {
-            var groupId = [[], []];
-            var totalTopRightCell = {
-                groupId: groupId,
-                height: height,
-                title: "",
-                width: measureCount,
-            };
-            colGroupRows[0].push(totalTopRightCell);
-            measureColumns.push(totalTopRightCell);
-        }
-        headers = headers.concat(colGroupRows);
-
-        // 2) generate measures row
-        var measuresRow = this._getMeasuresRow(measureColumns);
-        headers.push(measuresRow);
-
-        return headers;
-    }
-    /**
-     * Returns the list of body rows of the pivot table for a given tree.
-     *
-     * @protected
-     * @param {Object} tree
-     * @param {Object[]} columns
-     * @returns {Object[]}
-     */
-    _getTableRows(tree, columns) {
-        let rows = [];
-        const group = tree.root;
-        const rowGroupId = [group.values, []];
-        const title = group.labels.length ? group.labels[group.labels.length - 1] : _t("Total");
-        const indent = group.labels.length;
-        const isLeaf = !tree.directSubTrees.size;
-        const rowGroupBys = this.metaData.fullRowGroupBys;
-
-        const subGroupMeasurements = columns.map((column) => {
-            const colGroupId = column.groupId;
-            const groupIntersectionId = [rowGroupId[0], colGroupId[1]];
-            const measure = column.measure;
-
-            const value = this._getCellValue(groupIntersectionId, measure, {
-                data: this.data,
-            });
-            const currencyIds = this._getCellCurrency(groupIntersectionId, measure, {
-                data: this.data,
-            });
-
-            const measurement = {
-                groupId: groupIntersectionId,
-                measure: measure,
-                value: value,
-                currencyIds,
-                isBold: !groupIntersectionId[0].length || !groupIntersectionId[1].length,
-            };
-            return measurement;
-        });
-
-        rows.push({
-            title: title,
-            label:
-                indent === 0
-                    ? undefined
-                    : this.metaData.fields[rowGroupBys[indent - 1].split(":")[0]].string,
-            groupId: rowGroupId,
-            indent: indent,
-            isLeaf: isLeaf,
-            isFolded: isLeaf && rowGroupBys.length > group.values.length,
-            subGroupMeasurements: subGroupMeasurements,
-        });
-
-        const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
-        subTreeKeys.forEach((subTreeKey) => {
-            const subTree = tree.directSubTrees.get(subTreeKey);
-            rows = rows.concat(this._getTableRows(subTree, columns));
-        });
-
-        return rows;
-    }
-    /**
-     * returns the height of a given groupTree
-     *
-     * @protected
-     * @param {Object} tree, a groupTree
-     * @returns {number}
-     */
-    _getTreeHeight(tree) {
-        const subTreeHeights = [...tree.directSubTrees.values()].map(
-            this._getTreeHeight.bind(this)
-        );
-        return Math.max(0, Math.max.apply(null, subTreeHeights)) + 1;
-    }
-    /**
-     * @protected
-     * @param {Data} data
-     * @returns {boolean} true iff there's no data in the table
-     */
-    _hasData(data) {
-        const key = JSON.stringify([[], []]);
-        return data.counts[key] > 0;
-    }
-    /**
-     * Initialize/Reinitialize data.rowGroupTree, colGroupTree, measurements,
-     * counts and subdivide the group 'Total' as many times it is necessary.
-     * A first subdivision with no groupBy (divisors.slice(0, 1)) is made in
-     * order to see if there is data in the intersection of the group 'Total'
-     * and the domain. In case there is none, non supplementary rpc
-     * will be done (see the code of subdivideGroup).
-     *
-     * @protected
-     * @param {Config} config
+     * @param {boolean} prune
      */
     async _loadData(config, prune = true) {
-        config.data = {}; // data will be completely recomputed
+        config.data = /** @type {any} */ ({});
         const { data, metaData } = config;
-        data.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
-        data.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
+        data.rowGroupTree = {
+            root: { labels: [], values: [] },
+            directSubTrees: new Map(),
+        };
+        data.colGroupTree = {
+            root: { labels: [], values: [] },
+            directSubTrees: new Map(),
+        };
         data.measurements = {};
         data.currencyIds = {};
         data.counts = {};
@@ -1308,16 +843,18 @@ export class PivotModel extends Model {
         await this._subdivideGroup(group, divisors, config);
 
         // keep folded groups folded after the reload if the structure of the table is the same
-        if (prune && this._hasData(data) && this._hasData(this.data)) {
+        if (prune && hasData(data) && hasData(this.data)) {
             if (
-                symmetricalDifference(metaData.rowGroupBys, this.metaData.rowGroupBys).length === 0
+                symmetricalDifference(metaData.rowGroupBys, this.metaData.rowGroupBys)
+                    .length === 0
             ) {
-                this._pruneTree(data.rowGroupTree, this.data.rowGroupTree);
+                pruneTree(data.rowGroupTree, this.data.rowGroupTree);
             }
             if (
-                symmetricalDifference(metaData.colGroupBys, this.metaData.colGroupBys).length === 0
+                symmetricalDifference(metaData.colGroupBys, this.metaData.colGroupBys)
+                    .length === 0
             ) {
-                this._pruneTree(data.colGroupTree, this.data.colGroupTree);
+                pruneTree(data.colGroupTree, this.data.colGroupTree);
             }
         }
 
@@ -1325,25 +862,8 @@ export class PivotModel extends Model {
         this.metaData = config.metaData;
     }
     /**
-     * @protected
-     * @param {string} gb
-     * @returns {string}
-     */
-    _normalize(gb) {
-        const [fieldName, interval] = gb.split(":");
-        const field = this.metaData.fields[fieldName];
-        if (["date", "datetime"].includes(field.type)) {
-            return `${fieldName}:${interval || "month"}`;
-        } else {
-            return fieldName;
-        }
-    }
-    /**
-     * Extract the information in the read_group results (groupSubdivisions)
-     * and develop this.data.rowGroupTree, colGroupTree, measurements, counts, and
-     * groupDomains.
-     * If a column needs to be sorted, the rowGroupTree corresponding to the
-     * group is sorted.
+     * Extract the information in the read_group results and develop
+     * rowGroupTree, colGroupTree, measurements, counts, and groupDomains.
      *
      * @protected
      * @param {Object} group
@@ -1354,54 +874,68 @@ export class PivotModel extends Model {
         const { data, metaData } = config;
         const groupRowValues = group.rowValues;
         let groupRowLabels = [];
-        let rowSubTree = data.rowGroupTree;
-        let root;
         if (groupRowValues.length) {
-            // we should have labels information on hand! regretful!
-            rowSubTree = this._findGroup(data.rowGroupTree, groupRowValues);
-            root = rowSubTree.root;
-            groupRowLabels = root.labels;
+            const rowSubTree = findGroup(data.rowGroupTree, groupRowValues);
+            groupRowLabels = rowSubTree.root.labels;
         }
 
         const groupColValues = group.colValues;
         let groupColLabels = [];
         if (groupColValues.length) {
-            root = this._findGroup(data.colGroupTree, groupColValues).root;
-            groupColLabels = root.labels;
+            groupColLabels = findGroup(data.colGroupTree, groupColValues).root.labels;
         }
 
         groupSubdivisions.forEach((groupSubdivision) => {
             groupSubdivision.subGroups.forEach((subGroup) => {
-                const rowValues = groupRowValues.concat(
-                    this._getGroupValues(subGroup, groupSubdivision.rowGroupBy)
-                );
-                const rowLabels = groupRowLabels.concat(
-                    this._getGroupLabels(subGroup, groupSubdivision.rowGroupBy, config)
-                );
+                const rowValues = [
+                    ...groupRowValues,
+                    ...getGroupValues(
+                        subGroup,
+                        groupSubdivision.rowGroupBy,
+                        metaData.fields,
+                    ),
+                ];
+                const rowLabels = [
+                    ...groupRowLabels,
+                    ...getGroupLabels(
+                        subGroup,
+                        groupSubdivision.rowGroupBy,
+                        config,
+                        metaData.fields,
+                    ),
+                ];
 
-                const colValues = groupColValues.concat(
-                    this._getGroupValues(subGroup, groupSubdivision.colGroupBy)
-                );
-                const colLabels = groupColLabels.concat(
-                    this._getGroupLabels(subGroup, groupSubdivision.colGroupBy, config)
-                );
+                const colValues = [
+                    ...groupColValues,
+                    ...getGroupValues(
+                        subGroup,
+                        groupSubdivision.colGroupBy,
+                        metaData.fields,
+                    ),
+                ];
+                const colLabels = [
+                    ...groupColLabels,
+                    ...getGroupLabels(
+                        subGroup,
+                        groupSubdivision.colGroupBy,
+                        config,
+                        metaData.fields,
+                    ),
+                ];
 
                 if (!colValues.length && rowValues.length) {
-                    this._addGroup(data.rowGroupTree, rowLabels, rowValues);
+                    addGroup(data.rowGroupTree, rowLabels, rowValues);
                 }
                 if (colValues.length && !rowValues.length) {
-                    this._addGroup(data.colGroupTree, colLabels, colValues);
+                    addGroup(data.colGroupTree, colLabels, colValues);
                 }
 
                 const key = JSON.stringify([rowValues, colValues]);
 
-                data.measurements[key] = this._getMeasurements(subGroup, config);
-                data.currencyIds[key] = this._getCurrencyIds(subGroup, config);
+                data.measurements[key] = getMeasurements(subGroup, config);
+                data.currencyIds[key] = getCurrencyIds(subGroup, config);
                 data.counts[key] = subGroup.__count;
 
-                // if __domain is not defined this means that we are in the
-                // case where
-                // groupSubdivision.rowGroupBy = groupSubdivision.rowGroupBy = []
                 if (subGroup.__domain) {
                     data.groupDomains[key] = subGroup.__domain;
                 } else {
@@ -1415,87 +949,7 @@ export class PivotModel extends Model {
         }
     }
     /**
-     * Make any group in tree a leaf if it was a leaf in oldTree.
-     *
-     * @protected
-     * @param {Object} tree
-     * @param {Object} oldTree
-     */
-    _pruneTree(tree, oldTree) {
-        if (!oldTree.directSubTrees.size) {
-            tree.directSubTrees.clear();
-            delete tree.sortedKeys;
-            return;
-        }
-        [...tree.directSubTrees.keys()].forEach((subTreeKey) => {
-            const subTree = tree.directSubTrees.get(subTreeKey);
-            if (!oldTree.directSubTrees.has(subTreeKey)) {
-                subTree.directSubTrees.clear();
-                delete subTree.sortedKeys;
-            } else {
-                const oldSubTree = oldTree.directSubTrees.get(subTreeKey);
-                this._pruneTree(subTree, oldSubTree);
-            }
-        });
-    }
-
-    /**
-     * Extract from a groupBy value a label.
-     *
-     * @protected
-     * @param {any} value
-     * @param {string} groupBy
-     * @param {Config} config
-     * @returns {string}
-     */
-    _sanitizeLabel(value, groupBy, config) {
-        const { metaData } = config;
-        const fieldName = groupBy.split(":")[0];
-        if (fieldName && metaData.fields[fieldName]) {
-            const field = metaData.fields[fieldName];
-            if (field.type === "boolean") {
-                return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
-            } else if (field.type === "integer") {
-                if (fieldName === "id" && Array.isArray(value)) {
-                    return value[1];
-                }
-                return value || "0";
-            }
-        }
-        if (value === false) {
-            return metaData.fields[fieldName].falsy_value_label || _t("None");
-        }
-        if (value instanceof Array) {
-            return this._getNumberedLabel(value, fieldName, config);
-        }
-        if (
-            fieldName &&
-            metaData.fields[fieldName] &&
-            metaData.fields[fieldName].type === "selection"
-        ) {
-            const selected = metaData.fields[fieldName].selection.find((o) => o[0] === value);
-            return selected ? selected[1] : value; // selected should be truthy normally ?!
-        }
-        return value;
-    }
-    /**
-     * Extract from a groupBy value the raw value of that groupBy (discarding
-     * a label if any)
-     *
-     * @protected
-     * @param {any} value
-     * @returns {any}
-     */
-    _sanitizeValue(value) {
-        if (value instanceof Array) {
-            return value[0];
-        }
-        return value;
-    }
-    /**
-     * Get all partitions of a given group using the provided list of divisors
-     * and enrich the objects of this.data.rowGroupTree, colGroupTree,
-     * measurements, counts.
+     * Get all partitions of a given group and enrich data structures.
      *
      * @protected
      * @param {Object} group
@@ -1506,27 +960,29 @@ export class PivotModel extends Model {
         const { data } = config;
         const key = JSON.stringify([group.rowValues, group.colValues]);
 
-        // if no information on group content is available, we fetch data.
-        // if group is known to be empty, we don't need to fetch data.
         if (!data.counts[key] || data.counts[key] > 0) {
             const subGroup = {
                 rowValues: group.rowValues,
                 colValues: group.colValues,
             };
-            const groupDomain = this._getGroupDomain(subGroup, config);
-            const measureSpecs = this._getMeasureSpecs(config);
-            if (!measureSpecs.includes("__count")) {
-                measureSpecs.push("__count");
+            const groupDomainValue = getGroupDomain(subGroup, config);
+            const measureSpecsList = getMeasureSpecs(config);
+            if (!measureSpecsList.includes("__count")) {
+                measureSpecsList.push("__count");
             }
             const resModel = config.metaData.resModel;
             const kwargs = { context: this.searchParams.context };
             const groupingSets = [];
             const groupInfo = [];
             divisors.forEach((divisor) => {
-                const groupBy = this._getGroupBySpecs(divisor[0], divisor[1]);
-                const key = JSON.stringify(groupBy.toSorted());
+                const groupBy = getGroupBySpecs(
+                    divisor[0],
+                    divisor[1],
+                    config.metaData.fields,
+                );
+                const sortedKey = JSON.stringify(groupBy.toSorted());
                 let index = groupingSets.findIndex(
-                    (value) => JSON.stringify(value.toSorted()) === key
+                    (value) => JSON.stringify(value.toSorted()) === sortedKey,
                 );
                 if (index === -1) {
                     index = groupingSets.length;
@@ -1542,13 +998,13 @@ export class PivotModel extends Model {
 
             const params = {
                 resModel,
-                groupDomain,
-                measureSpecs,
+                groupDomain: groupDomainValue,
+                measureSpecs: measureSpecsList,
                 kwargs,
                 groupingSets,
             };
             const groupSubdivisions = await this.keepLast.add(
-                this._getGroupsSubdivision(params, groupInfo)
+                this._getGroupsSubdivision(params, groupInfo),
             );
             if (groupSubdivisions.length) {
                 this._prepareData(group, groupSubdivisions, config);
@@ -1556,12 +1012,10 @@ export class PivotModel extends Model {
         }
     }
     /**
-     * Sort the rows, depending on the values of a given column.  This is an
-     * in-memory sort.
+     * Sort the rows, depending on the values of a given column.
      *
      * @protected
      * @param {Object} sortedColumn
-     * @param {number[]} sortedColumn.groupId
      * @param {Config} config
      */
     _sortRows(sortedColumn, config) {
@@ -1574,25 +1028,10 @@ export class PivotModel extends Model {
             const subTree = tree.directSubTrees.get(subTreeKey);
             const groupIntersectionId = [subTree.root.values, colGroupValues];
             const value =
-                this._getCellValue(groupIntersectionId, sortedColumn.measure, { data }) || 0;
+                getCellValue(groupIntersectionId, sortedColumn.measure, data) || 0;
             return sortedColumn.order === "asc" ? value : -value;
         };
 
-        this._sortTree(sortFunction, data.rowGroupTree);
-    }
-    /**
-     * Sort recursively the subTrees of tree using sortFunction.
-     * In the end each node of the tree has its direct children sorted
-     * according to the criterion reprensented by sortFunction.
-     *
-     * @protected
-     * @param {Function} sortFunction
-     * @param {Object} tree
-     */
-    _sortTree(sortFunction, tree) {
-        tree.sortedKeys = sortBy([...tree.directSubTrees.keys()], sortFunction(tree));
-        [...tree.directSubTrees.values()].forEach((subTree) => {
-            this._sortTree(sortFunction, subTree);
-        });
+        sortTree(sortFunction, data.rowGroupTree);
     }
 }

@@ -73,10 +73,10 @@ class SlideChannelPartner(models.Model):
                        AND partner_id = SCP.partner_id
                        AND completed = TRUE
                 )
-            WHERE SCP.id IN %s
+            WHERE SCP.id = ANY(%s)
             ORDER BY SCP.id, SS.sequence, SS.id
         """
-        self.env.cr.execute(query, [tuple(self.ids)])
+        self.env.cr.execute(query, [list(self.ids)])
         next_slide_per_membership = {
             line['id']: line['slide_id']
             for line in self.env.cr.dictfetchall()

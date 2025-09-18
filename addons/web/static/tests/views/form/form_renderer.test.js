@@ -1,8 +1,15 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { defineModels, fields, models, mountView, contains } from "@web/../tests/web_test_helpers";
-
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 
 class Partner extends models.Model {
@@ -71,7 +78,9 @@ test("compile header and buttons", async () => {
         type: "form",
         resId: 1,
     });
-    expect(`.o_statusbar_buttons button[name=action_button]:contains(ActionButton)`).toHaveCount(1);
+    expect(
+        `.o_statusbar_buttons button[name=action_button]:contains(ActionButton)`,
+    ).toHaveCount(1);
 });
 
 test("render field with placeholder", async () => {
@@ -83,12 +92,14 @@ test("render field with placeholder", async () => {
                 static template = xml`<div/>`;
                 setup() {
                     expect.step("setup field component");
-                    expect(this.props.placeholder).toBe("e.g. Contact's Name or //someinfo...");
+                    expect(this.props.placeholder).toBe(
+                        "e.g. Contact's Name or //someinfo...",
+                    );
                 }
             },
             extractProps: ({ attrs }) => ({ placeholder: attrs.placeholder }),
         },
-        { force: true }
+        { force: true },
     );
 
     Partner._views = {
@@ -191,9 +202,15 @@ test("statusbar stay visible when scrolling (sticky)", async () => {
 
     const scrollTarget = queryOne(".o_form_view .o_content");
     const scrollRect = scrollTarget.getBoundingClientRect();
-    expect(statusBar.getBoundingClientRect().top).toBeWithin(scrollRect.top, scrollRect.bottom);
+    expect(statusBar.getBoundingClientRect().top).toBeWithin(
+        scrollRect.top,
+        scrollRect.bottom,
+    );
     scrollTarget.scrollTop = scrollTarget.scrollHeight; // scroll to bottom
-    expect(statusBar.getBoundingClientRect().top).toBeWithin(scrollRect.top, scrollRect.bottom);
+    expect(statusBar.getBoundingClientRect().top).toBeWithin(
+        scrollRect.top,
+        scrollRect.bottom,
+    );
 });
 
 test.tags("mobile");
@@ -222,7 +239,13 @@ test("statusbar is non-sticky on mobile", async () => {
 
     const scrollTarget = queryOne(".o_form_view .o_form_view_container");
     const scrollRect = scrollTarget.getBoundingClientRect();
-    expect(statusBar.getBoundingClientRect().top).toBeWithin(scrollRect.top, scrollRect.bottom);
+    expect(statusBar.getBoundingClientRect().top).toBeWithin(
+        scrollRect.top,
+        scrollRect.bottom,
+    );
     scrollTarget.scrollTop = scrollTarget.scrollHeight; // scroll to bottom
-    expect(statusBar.getBoundingClientRect().top).not.toBeWithin(scrollRect.top, scrollRect.bottom);
+    expect(statusBar.getBoundingClientRect().top).not.toBeWithin(
+        scrollRect.top,
+        scrollRect.bottom,
+    );
 });

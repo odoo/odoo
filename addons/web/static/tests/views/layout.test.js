@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -17,7 +19,6 @@ import {
     mountWithCleanup,
     mountWithSearch,
 } from "@web/../tests/web_test_helpers";
-
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { SearchModel } from "@web/search/search_model";
@@ -114,7 +115,7 @@ test(`Rendering with default ControlPanel and SearchPanel`, async () => {
             });
             useSubEnv({ searchModel: this.searchModel });
             onWillStart(async () => {
-                await this.searchModel.load({ resModel: "foo" , searchViewId: false});
+                await this.searchModel.load({ resModel: "foo", searchViewId: false });
             });
         }
     }
@@ -229,7 +230,7 @@ test(`Custom control panel`, async () => {
             resModel: "foo",
             searchViewId: false,
         },
-        { ControlPanel }
+        { ControlPanel },
     );
     expect(`.o_toy_content`).toHaveCount(1);
     expect(`.o_toy_search_panel`).toHaveCount(1);
@@ -258,7 +259,7 @@ test(`Custom search panel`, async () => {
             resModel: "foo",
             searchViewId: false,
         },
-        { SearchPanel }
+        { SearchPanel },
     );
     expect(`.o_toy_content`).toHaveCount(1);
     expect(`.o_toy_search_panel`).toHaveCount(1);

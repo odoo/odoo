@@ -1,6 +1,5 @@
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { onMounted } from "@odoo/owl";
-
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 export class AvatarUserFormViewDialog extends FormViewDialog {
     setup() {
         super.setup();

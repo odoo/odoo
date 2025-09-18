@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dialog } from "@web/core/dialog/dialog";
+import { CheckBox } from "@web/components/checkbox/checkbox";
+import { Dialog } from "@web/ui/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 

@@ -1,8 +1,12 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { useService } from "@web/core/utils/hooks";
+// @ts-check
+
+/** @module @web/views/form/form_error_dialog/form_error_dialog - Error dialog shown on form save failure with discard/redirect/stay options */
 
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/ui/dialog/dialog";
 
+/** Error dialog shown when a form save fails while navigating away (discard / redirect / stay). */
 export class FormErrorDialog extends Component {
     static template = "web.FormErrorDialog";
     static components = { Dialog };
@@ -26,6 +30,7 @@ export class FormErrorDialog extends Component {
         }
     }
 
+    /** @returns {Promise<void>} execute the redirect action or fall back to doAction */
     async onRedirectBtnClicked() {
         if (this.props.onRedirect) {
             await this.props.onRedirect({
@@ -42,11 +47,13 @@ export class FormErrorDialog extends Component {
         }
     }
 
+    /** @returns {Promise<void>} discard changes and close the dialog */
     async discard() {
         await this.props.onDiscard();
         this.props.close();
     }
 
+    /** @returns {Promise<void>} stay on the current form and close the dialog */
     async stay() {
         await this.props.onStayHere();
         this.props.close();

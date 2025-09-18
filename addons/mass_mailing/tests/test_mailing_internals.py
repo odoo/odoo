@@ -8,13 +8,13 @@ from datetime import datetime
 from unittest.mock import patch
 
 from freezegun import freeze_time
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
-from odoo.sql_db import Cursor
+from odoo.db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
 
@@ -417,7 +417,7 @@ class TestMassMailValues(MassMailCommon):
         mail_values = composer._prepare_mail_values(recipient.ids)[recipient.id]
         self.assertIn(f"Received the mailing <b>{mass_mailing_name}</b>", mail_values["body"], "The composer doesn't use the provided mass_mailing_name")
 
-    @mute_logger('odoo.sql_db')
+    @mute_logger('odoo.db')
     @users('user_marketing')
     def test_mailing_trace_values(self):
         recipient = self.partner_employee

@@ -1,6 +1,14 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
-import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -109,7 +117,7 @@ test("color picker in editable list view", async () => {
     expect(".o_data_row:nth-child(1).o_selected_row").toHaveCount(1);
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
     await contains(
-        ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6"
+        ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6",
     ).click();
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
     await contains(".o_data_row:nth-child(2) .o_data_cell").click();
@@ -133,16 +141,19 @@ test("column widths: dont overflow color picker in list", async () => {
         visible: false,
     }).click();
     const date_column_width = queryAll(
-        '.o_list_table thead th[data-name="date_field"]'
+        '.o_list_table thead th[data-name="date_field"]',
     )[0].style.width.replace("px", "");
     const int_field_column_width = queryAll(
-        '.o_list_table thead th[data-name="int_field"]'
+        '.o_list_table thead th[data-name="int_field"]',
     )[0].style.width.replace("px", "");
     // Default values for date and int fields are: date: '92px', integer: '74px'
     // With the screen growing, the proportion is kept and thus int_field would remain smaller than date if
     // the color_picker wouldn't have widthInList set to '1'. With that property set, int_field size will be bigger
     // than date's one.
-    expect(parseFloat(date_column_width)).toBeLessThan(parseFloat(int_field_column_width), {
-        message: "colorpicker should display properly (Horizontly)",
-    });
+    expect(parseFloat(date_column_width)).toBeLessThan(
+        parseFloat(int_field_column_width),
+        {
+            message: "colorpicker should display properly (Horizontly)",
+        },
+    );
 });

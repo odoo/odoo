@@ -8,9 +8,9 @@ import {
     useSubEnv,
     xml,
 } from "@odoo/owl";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
+import { OVERLAY_SYMBOL } from "@web/ui/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import { useActiveElement } from "@web/ui/block/ui_service";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -182,7 +182,14 @@ export class EditorOverlay extends Component {
             return true;
         }
         const scrollContainerRect = scrollContainer.getBoundingClientRect();
-        const top = Math.max(scrollContainerRect.top, 0);
+        let scrollContainerTop = scrollContainerRect.top;
+        if (scrollContainer.ownerDocument !== overlayElement.ownerDocument) {
+            const frameElement = scrollContainer.ownerDocument.defaultView?.frameElement;
+            if (frameElement) {
+                scrollContainerTop += frameElement.getBoundingClientRect().top;
+            }
+        }
+        const top = Math.max(scrollContainerTop, 0);
         const bottom = top + scrollContainerRect.height;
         const overflowsTop = solution.top < top;
         const overflowsBottom = solution.top + overlayElement.offsetHeight > bottom;

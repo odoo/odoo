@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { formatFloat } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/fields/formatters";
 import { Component } from "@odoo/owl";
 
 export class ReceptionReportLine extends Component {

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
@@ -14,14 +16,13 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { useService } from "@web/core/utils/hooks";
-
+import { CharField } from "@web/fields/basic/char/char_field";
+import { Field } from "@web/fields/field";
+import { Many2ManyTagsField } from "@web/fields/relational/many2many_tags/many2many_tags_field";
+import { Many2OneField } from "@web/fields/relational/many2one/many2one_field";
 import { Record } from "@web/model/record";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-import { CharField } from "@web/views/fields/char/char_field";
-import { Field } from "@web/views/fields/field";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class Foo extends models.Model {
     foo = fields.Char();
@@ -273,7 +274,13 @@ test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
 
     await contains(`[name='foo'] input`).edit("abc");
     await contains(`button.save`).click();
-    expect.verifySteps(["fields_get", "web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
+    expect.verifySteps([
+        "fields_get",
+        "web_read",
+        "onWillSaveRecord",
+        "web_save",
+        "onRecordSaved",
+    ]);
 });
 
 test(`can access record changes`, async () => {
@@ -290,7 +297,9 @@ test(`can access record changes`, async () => {
         `;
 
         async doSomething(record) {
-            expect.step(`do something with ${JSON.stringify(await record.getChanges())}`);
+            expect.step(
+                `do something with ${JSON.stringify(await record.getChanges())}`,
+            );
         }
     }
 
@@ -629,7 +638,7 @@ test(`can switch records`, async () => {
 
     onRpc("web_read", ({ method, args, kwargs }) => {
         expect.step(
-            `${method} : ${JSON.stringify(args[0])} - ${JSON.stringify(kwargs.specification)}`
+            `${method} : ${JSON.stringify(args[0])} - ${JSON.stringify(kwargs.specification)}`,
         );
     });
     await mountWithCleanup(Parent);
@@ -691,7 +700,7 @@ test(`can switch records with values`, async () => {
     const parent = await mountWithCleanup(Parent);
     const _record = findComponent(
         parent,
-        (component) => component instanceof Record.components._Record
+        (component) => component instanceof Record.components._Record,
     );
 
     // No load since the values are provided to the record
@@ -744,7 +753,7 @@ test(`faulty useRecordObserver in widget`, async () => {
 
     await mountWithCleanup(Parent);
     expect(`.error`).toHaveText(
-        `The following error occurred in onWillStart: "faulty record observer"`
+        `The following error occurred in onWillStart: "faulty record observer"`,
     );
 });
 

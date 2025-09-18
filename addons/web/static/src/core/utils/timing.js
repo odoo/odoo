@@ -1,12 +1,16 @@
-import { browser } from "@web/core/browser/browser";
+// @ts-check
+
+/** @module @web/core/utils/timing - Batched callbacks, debounce, throttle, and recurring animation frame scheduling */
+
 import { onWillUnmount, useComponent } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same
  * time frame will only call the original callback once.
- * @param callback the callback to batch
- * @param synchronize this function decides the granularity of the batch (a microtick by default)
- * @returns a batched version of the original callback
+ * @param {Function} callback the callback to batch
+ * @param {() => Promise<void>} [synchronize] this function decides the granularity of the batch (a microtick by default)
+ * @returns {(...args: any[]) => Promise<void>} a batched version of the original callback
  */
 export function batched(callback, synchronize = () => Promise.resolve()) {
     let scheduled = false;
@@ -36,15 +40,12 @@ export function batched(callback, synchronize = () => Promise.resolve()) {
  * @param {number | "animationFrame"} delay how long should elapse before the function
  *      is called. If 'animationFrame' is given instead of a number, 'requestAnimationFrame'
  *      will be used instead of 'setTimeout'.
- * @param {boolean} [options] if true, equivalent to exclusive leading. If false, equivalent to exclusive trailing.
- * @param {object} [options]
- * @param {boolean} [options.leading=false] whether the function should be invoked at the leading edge of the timeout
- * @param {boolean} [options.trailing=true] whether the function should be invoked at the trailing edge of the timeout
+ * @param {boolean | {leading?: boolean, trailing?: boolean}} [options] if boolean: true=leading-only, false=trailing-only. If object: configure leading/trailing independently.
  * @returns {T & { cancel: () => void }} the debounced function
  */
 export function debounce(func, delay, options) {
     let handle;
-    const funcName = func.name ? func.name + " (debounce)" : "debounce";
+    const funcName = func.name ? `${func.name} (debounce)` : "debounce";
     const useAnimationFrame = delay === "animationFrame";
     const setFnName = useAnimationFrame ? "requestAnimationFrame" : "setTimeout";
     const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
@@ -70,7 +71,7 @@ export function debounce(func, delay, options) {
                         lastArgs = args;
                     }
                     browser[clearFnName](handle);
-                    handle = browser[setFnName](() => {
+                    handle = /** @type {any} */ (browser)[setFnName](() => {
                         handle = null;
                         if (trailing && lastArgs) {
                             Promise.resolve(func.apply(this, lastArgs)).then(resolve);
@@ -87,7 +88,7 @@ export function debounce(func, delay, options) {
                     func.apply(this, lastArgs);
                 }
             },
-        }
+        },
     );
 }
 
@@ -131,13 +132,16 @@ export function setRecurringAnimationFrame(callback) {
 export function throttleForAnimation(func) {
     let handle = null;
     const calls = new Set();
-    const funcName = func.name ? `${func.name} (throttleForAnimation)` : "throttleForAnimation";
+    const funcName = func.name
+        ? `${func.name} (throttleForAnimation)`
+        : "throttleForAnimation";
+    let self;
     const pending = () => {
         if (calls.size) {
             handle = browser.requestAnimationFrame(pending);
             const { args, resolve } = [...calls].pop();
             calls.clear();
-            Promise.resolve(func.apply(this, args)).then(resolve);
+            Promise.resolve(func.apply(self, args)).then(resolve);
         } else {
             handle = null;
         }
@@ -146,6 +150,7 @@ export function throttleForAnimation(func) {
         {
             /** @type {any} */
             [funcName](...args) {
+                self = this;
                 return new Promise((resolve) => {
                     const isNew = handle === null;
                     if (isNew) {
@@ -163,7 +168,7 @@ export function throttleForAnimation(func) {
                 calls.clear();
                 handle = null;
             },
-        }
+        },
     );
 }
 
@@ -176,22 +181,19 @@ export function throttleForAnimation(func) {
  * @template {Function} T
  * @param {T} callback
  * @param {number | "animationFrame"} delay
- * @param {Object} [options]
- * @param {string} [options.execBeforeUnmount=false] executes the callback if the debounced function
- *      has been called and not resolved before destroying the component.
- * @param {boolean} [options.immediate=false] whether the function should be called on
- *      the leading edge of the timeout.
- * @param {boolean} [options.trailing=!options.immediate] whether the function should be called on
- *      the trailing edge of the timeout.
+ * @param {{execBeforeUnmount?: boolean, immediate?: boolean, trailing?: boolean}} [options]
  * @returns {T & { cancel: () => void }}
  */
 export function useDebounced(
     callback,
     delay,
-    { execBeforeUnmount = false, immediate = false, trailing = !immediate } = {}
+    { execBeforeUnmount = false, immediate = false, trailing = !immediate } = {},
 ) {
     const component = useComponent();
-    const debounced = debounce(callback.bind(component), delay, { leading: immediate, trailing });
+    const debounced = debounce(callback.bind(component), delay, {
+        leading: immediate,
+        trailing,
+    });
     onWillUnmount(() => debounced.cancel(execBeforeUnmount));
     return debounced;
 }

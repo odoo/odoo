@@ -7,9 +7,8 @@ import {
     useRef,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/format/strings";
 import { useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
-
 export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";
     static props = ["message", "thread", "registerMessageRef?"];
@@ -41,7 +40,7 @@ export class NotificationMessage extends Component {
                     model: this.props.thread.model,
                     thread: this.props.thread,
                 }),
-                this.props.thread
+                this.props.thread,
             );
         }
     }
@@ -53,7 +52,9 @@ export class NotificationMessage extends Component {
     get callInformation() {
         const history = this.message.call_history_ids[0];
         if (history?.duration_hour === undefined || !history?.end_dt) {
-            return _t("%(author)s started a call.", { author: this.message.authorName });
+            return _t("%(author)s started a call.", {
+                author: this.message.authorName,
+            });
         }
         let duration = luxon.Duration.fromObject({
             seconds: Math.max(1, Math.round(history.duration_hour * 3600)),

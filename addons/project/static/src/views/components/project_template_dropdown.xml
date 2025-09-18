@@ -13,7 +13,7 @@
                 <div role="separator" class="dropdown-divider"/>
                 <div class="dropdown-header">Project Templates</div>
                 <t t-foreach="state.projectTemplates" t-as="template" t-key="template.id">
-                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-project-template d-flex align-items-center pe-0'"
+                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdown-item-indent o-project-template d-flex align-items-center pe-0'"
                         onSelected="() => this.createProjectFromTemplate(template)">
                         <span class="text-truncate" t-out="template.name"/>
                         <ProjectTemplateButtons resModel="'project.project'" resId="template.id"/>

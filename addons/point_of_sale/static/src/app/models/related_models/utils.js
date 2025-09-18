@@ -1,9 +1,4 @@
-import {
-    deserializeDateTime,
-    serializeDateTime,
-    deserializeDate,
-    serializeDate,
-} from "@web/core/l10n/dates";
+import { deserializeDate, deserializeDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 export const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 export const DATE_TIME_TYPE = new Set(["date", "datetime"]);
 export const X2MANY_TYPES = new Set(["many2many", "one2many"]);
@@ -18,7 +13,7 @@ export function getBackRef(model, fieldName) {
 }
 export function clone(obj) {
     return JSON.parse(
-        JSON.stringify(obj, (_, value) => (value instanceof Set ? [...value] : value))
+        JSON.stringify(obj, (_, value) => (value instanceof Set ? [...value] : value)),
     );
 }
 
@@ -44,7 +39,9 @@ export function convertRawToDateTime(model, value, prop) {
     }
     const datetime = deserializeDateTime(value);
     if (!datetime.isValid) {
-        throw new Error(`Invalid date: ${value} for model ${model.model} in field ${prop}`);
+        throw new Error(
+            `Invalid date: ${value} for model ${model.model} in field ${prop}`,
+        );
     }
     return datetime;
 }
@@ -66,7 +63,9 @@ export function convertRawToDate(model, value, prop) {
     }
     const date = deserializeDate(value);
     if (!date.isValid) {
-        throw new Error(`Invalid date: ${value} for model ${model.model} in field ${prop}`);
+        throw new Error(
+            `Invalid date: ${value} for model ${model.model} in field ${prop}`,
+        );
     }
     return date;
 }
@@ -100,7 +99,9 @@ export function deepImmutable(obj, errorMsg) {
                 return true;
             }
             const value = Reflect.get(target, prop, receiver);
-            return value && typeof value === "object" ? deepImmutable(value, errorMsg) : value;
+            return value && typeof value === "object"
+                ? deepImmutable(value, errorMsg)
+                : value;
         },
         set() {
             throw new Error(errorMsg);
@@ -141,7 +142,10 @@ export class AggregatedUpdates {
         const { silentModels = [] } = opts;
         for (const [record, fields] of this.updates) {
             if (!silentModels.includes(record.model.name)) {
-                record.model.triggerEvents("update", { id: record.id, fields: [...fields] });
+                record.model.triggerEvents("update", {
+                    id: record.id,
+                    fields: [...fields],
+                });
             }
             record._markDirty();
         }

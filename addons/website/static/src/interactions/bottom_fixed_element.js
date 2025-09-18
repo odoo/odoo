@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { touching, isVisible } from "@web/core/utils/ui";
+import { touching, isVisible } from "@web/core/utils/dom/ui";
 
 export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";

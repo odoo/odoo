@@ -1,7 +1,7 @@
 import { Message } from "@mail/core/common/message";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 

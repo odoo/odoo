@@ -1,4 +1,4 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from typing import Any, Self
 
 from dateutil.relativedelta import relativedelta
 
@@ -7,153 +7,214 @@ from odoo.fields import Domain
 from odoo.tools import format_amount, formatLang
 
 STATUS_COLOR = {
-    'on_track': 20,  # green / success
-    'at_risk': 22,  # orange
-    'off_track': 23,  # red / danger
-    'on_hold': 21,  # light blue
-    'done': 24,  # purple
+    "on_track": 20,  # green / success
+    "at_risk": 22,  # orange
+    "off_track": 23,  # red / danger
+    "on_hold": 21,  # light blue
+    "done": 24,  # purple
     False: 0,  # default grey -- for studio
     # Only used in project.task
-    'to_define': 0,
+    "to_define": 0,
 }
 
 
 class ProjectUpdate(models.Model):
-    _name = 'project.update'
-    _description = 'Project Update'
-    _order = 'id desc'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+    _name = "project.update"
+    _description = "Project Update"
+    _order = "id desc"
+    _inherit = ["mail.thread.cc", "mail.activity.mixin"]
 
     @api.model
-    def default_get(self, fields):
+    def default_get(self, fields: list[str]) -> dict:
         result = super().default_get(fields)
-        if 'project_id' in fields and not result.get('project_id'):
-            result['project_id'] = self.env.context.get('active_id')
-        if result.get('project_id'):
-            project = self.env['project.project'].browse(result['project_id'])
-            if 'progress' in fields and not result.get('progress'):
-                result['progress'] = project.last_update_id.progress
-            if 'description' in fields and not result.get('description'):
-                result['description'] = self._build_description(project)
-            if 'status' in fields and not result.get('status'):
+        if "project_id" in fields and not result.get("project_id"):
+            result["project_id"] = self.env.context.get("active_id")
+        if result.get("project_id"):
+            project = self.env["project.project"].browse(result["project_id"])
+            if "progress" in fields and not result.get("progress"):
+                result["progress"] = project.last_update_id.progress
+            if "description" in fields and not result.get("description"):
+                result["description"] = self._build_description(project)
+            if "status" in fields and not result.get("status"):
                 # `to_define` is not an option for self.status, here we actually want to default to `on_track`
                 # the goal of `to_define` is for a project to start without an actual status.
-                result['status'] = project.last_update_status if project.last_update_status != 'to_define' else 'on_track'
+                result["status"] = (
+                    project.last_update_status
+                    if project.last_update_status != "to_define"
+                    else "on_track"
+                )
         return result
 
     name = fields.Char("Title", required=True, tracking=True)
-    status = fields.Selection(selection=[
-        ('on_track', 'On Track'),
-        ('at_risk', 'At Risk'),
-        ('off_track', 'Off Track'),
-        ('on_hold', 'On Hold'),
-        ('done', 'Complete'),
-    ], required=True, tracking=True, export_string_translation=False)
-    color = fields.Integer(compute='_compute_color', export_string_translation=False)
+    status = fields.Selection(
+        selection=[
+            ("on_track", "On Track"),
+            ("at_risk", "At Risk"),
+            ("off_track", "Off Track"),
+            ("on_hold", "On Hold"),
+            ("done", "Complete"),
+        ],
+        required=True,
+        tracking=True,
+        export_string_translation=False,
+    )
+    color = fields.Integer(compute="_compute_color", export_string_translation=False)
     progress = fields.Integer(tracking=True)
-    progress_percentage = fields.Float(compute='_compute_progress_percentage', export_string_translation=False)
-    user_id = fields.Many2one('res.users', string='Author', required=True, default=lambda self: self.env.user)
+    progress_percentage = fields.Float(
+        compute="_compute_progress_percentage", export_string_translation=False
+    )
+    user_id = fields.Many2one(
+        "res.users",
+        string="Author",
+        required=True,
+        default=lambda self: self.env.user,
+    )
     description = fields.Html()
     date = fields.Date(default=fields.Date.context_today, tracking=True)
-    project_id = fields.Many2one('project.project', required=True, domain=[('is_template', '=', False)], index=True, export_string_translation=False)
-    name_cropped = fields.Char(compute="_compute_name_cropped", export_string_translation=False)
-    task_count = fields.Integer("Task Count", readonly=True, export_string_translation=False)
-    closed_task_count = fields.Integer("Closed Task Count", readonly=True, export_string_translation=False)
-    closed_task_percentage = fields.Integer("Closed Task Percentage", compute="_compute_closed_task_percentage", export_string_translation=False)
+    project_id = fields.Many2one(
+        "project.project",
+        required=True,
+        domain=[("is_template", "=", False)],
+        index=True,
+        export_string_translation=False,
+    )
+    name_cropped = fields.Char(
+        compute="_compute_name_cropped", export_string_translation=False
+    )
+    task_count = fields.Integer(
+        "Task Count", readonly=True, export_string_translation=False
+    )
+    closed_task_count = fields.Integer(
+        "Closed Task Count", readonly=True, export_string_translation=False
+    )
+    closed_task_percentage = fields.Integer(
+        "Closed Task Percentage",
+        compute="_compute_closed_task_percentage",
+        export_string_translation=False,
+    )
     label_tasks = fields.Char(related="project_id.label_tasks")
 
-    @api.depends('status')
-    def _compute_color(self):
+    @api.depends("status")
+    def _compute_color(self) -> None:
         for update in self:
             update.color = STATUS_COLOR[update.status]
 
-    @api.depends('progress')
-    def _compute_progress_percentage(self):
+    @api.depends("progress")
+    def _compute_progress_percentage(self) -> None:
         for update in self:
             update.progress_percentage = update.progress / 100
 
-    @api.depends('name')
-    def _compute_name_cropped(self):
+    @api.depends("name")
+    def _compute_name_cropped(self) -> None:
         for update in self:
-            update.name_cropped = (update.name[:57] + '...') if update.name and len(update.name) > 60 else update.name
+            update.name_cropped = (
+                (update.name[:57] + "...")
+                if update.name and len(update.name) > 60
+                else update.name
+            )
 
-    def _compute_closed_task_percentage(self):
+    def _compute_closed_task_percentage(self) -> None:
         for update in self:
-            update.closed_task_percentage = update.task_count and round(update.closed_task_count * 100 / update.task_count)
+            update.closed_task_percentage = update.task_count and round(
+                update.closed_task_count * 100 / update.task_count
+            )
 
     # ---------------------------------
     # ORM Override
     # ---------------------------------
     @api.model_create_multi
-    def create(self, vals_list):
+    def create(self, vals_list: list[dict]) -> Self:
         updates = super().create(vals_list)
         for update in updates:
             project = update.project_id
             project.sudo().last_update_id = update
-            update.write({
-                "task_count": project.task_count,
-                "closed_task_count": project.task_count - project.open_task_count,
-            })
+            update.write(
+                {
+                    "task_count": project.task_count,
+                    "closed_task_count": project.task_count - project.open_task_count,
+                }
+            )
         return updates
 
-    def unlink(self):
+    def unlink(self) -> bool:
         projects = self.project_id
         res = super().unlink()
         for project in projects:
-            project.last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
+            project.last_update_id = self.search(
+                [("project_id", "=", project.id)], order="date desc", limit=1
+            )
         return res
 
     # ---------------------------------
     # Build default description
     # ---------------------------------
     @api.model
-    def _build_description(self, project):
-        return self.env['ir.qweb']._render('project.project_update_default_description', self._get_template_values(project))
+    def _build_description(self, project: Any) -> str:
+        return self.env["ir.qweb"]._render(
+            "project.project_update_default_description",
+            self._get_template_values(project),
+        )
 
     @api.model
-    def _get_template_values(self, project):
+    def _get_template_values(self, project: Any) -> dict:
         milestones = self._get_milestone_values(project)
         profitability_values, show_profitability = project._get_profitability_values()
         return {
-            'user': self.env.user,
-            'project': project,
-            'profitability': profitability_values,
-            'show_profitability': show_profitability,
-            'show_activities': milestones['show_section'],
-            'milestones': milestones,
-            'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
-            'format_monetary': lambda value: format_amount(self.env, value, project.currency_id, trailing_zeroes=False),
+            "user": self.env.user,
+            "project": project,
+            "profitability": profitability_values,
+            "show_profitability": show_profitability,
+            "show_activities": milestones["show_section"],
+            "milestones": milestones,
+            "format_lang": lambda value, digits: formatLang(
+                self.env, value, digits=digits
+            ),
+            "format_monetary": lambda value: format_amount(
+                self.env, value, project.currency_id, trailing_zeroes=False
+            ),
         }
 
     @api.model
-    def _get_milestone_values(self, project):
-        Milestone = self.env['project.milestone']
+    def _get_milestone_values(self, project: Any) -> dict:
+        Milestone = self.env["project.milestone"]
         if not project.allow_milestones:
             return {
-                'show_section': False,
-                'list': [],
-                'updated': [],
-                'last_update_date': None,
-                'created': []
+                "show_section": False,
+                "list": [],
+                "updated": [],
+                "last_update_date": None,
+                "created": [],
             }
         list_milestones = Milestone.search(
-            [('project_id', '=', project.id),
-             '|', ('deadline', '<', fields.Date.context_today(self) + relativedelta(years=1)), ('deadline', '=', False)])._get_data_list()
+            [
+                ("project_id", "=", project.id),
+                "|",
+                (
+                    "deadline",
+                    "<",
+                    fields.Date.context_today(self) + relativedelta(years=1),
+                ),
+                ("deadline", "=", False),
+            ]
+        )._get_data_list()
         updated_milestones = self._get_last_updated_milestone(project)
-        domain = Domain('project_id', '=', project.id)
+        domain = Domain("project_id", "=", project.id)
         if project.last_update_id.create_date:
-            domain &= Domain('create_date', '>', project.last_update_id.create_date)
+            domain &= Domain("create_date", ">", project.last_update_id.create_date)
         created_milestones = Milestone.search(domain)._get_data_list()
         return {
-            'show_section': (list_milestones or updated_milestones or created_milestones) and True or False,
-            'list': list_milestones,
-            'updated': updated_milestones,
-            'last_update_date': project.last_update_id.create_date or None,
-            'created': created_milestones,
+            "show_section": (
+                (list_milestones or updated_milestones or created_milestones) and True
+            )
+            or False,
+            "list": list_milestones,
+            "updated": updated_milestones,
+            "last_update_date": project.last_update_id.create_date or None,
+            "created": created_milestones,
         }
 
     @api.model
-    def _get_last_updated_milestone(self, project):
+    def _get_last_updated_milestone(self, project: Any) -> list[dict]:
         query = """
             SELECT DISTINCT pm.id as milestone_id,
                             pm.deadline as deadline,
@@ -182,15 +243,26 @@ class ProjectUpdate(models.Model):
                    ORDER BY pm.deadline ASC
                    LIMIT 1;
         """
-        query_params = {'project_id': project.id}
+        query_params = {"project_id": project.id}
         if project.last_update_id.create_date:
-            query_params['last_update_date'] = project.last_update_id.create_date
+            query_params["last_update_date"] = project.last_update_id.create_date
         self.env.cr.execute(query, query_params)
         results = self.env.cr.dictfetchall()
-        mapped_result = {res['milestone_id']: {'new_value': res['new_value'], 'old_value': res['old_value']} for res in results}
-        milestones = self.env['project.milestone'].search([('id', 'in', list(mapped_result.keys()))])
-        return [{
-            **milestone._get_data(),
-            'new_value': mapped_result[milestone.id]['new_value'],
-            'old_value': mapped_result[milestone.id]['old_value'],
-        } for milestone in milestones]
+        mapped_result = {
+            res["milestone_id"]: {
+                "new_value": res["new_value"],
+                "old_value": res["old_value"],
+            }
+            for res in results
+        }
+        milestones = self.env["project.milestone"].search(
+            [("id", "in", list(mapped_result.keys()))]
+        )
+        return [
+            {
+                **milestone._get_data(),
+                "new_value": mapped_result[milestone.id]["new_value"],
+                "old_value": mapped_result[milestone.id]["old_value"],
+            }
+            for milestone in milestones
+        ]

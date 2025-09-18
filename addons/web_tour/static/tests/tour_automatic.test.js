@@ -10,8 +10,8 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Macro } from "@web/core/macro";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { Macro } from "@web/core/utils/macro";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 

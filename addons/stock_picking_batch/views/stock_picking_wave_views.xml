@@ -4,7 +4,7 @@
         <field name="name">Prepare Wave</field>
         <field name="res_model">stock.move.line</field>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
+        <field name="view_id" ref="view_stock_move_line_list_detailed_wave"/>
         <field name="target">new</field>
         <field name="domain">[('state', '!=', 'done'), ('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
         <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
@@ -13,7 +13,7 @@
         <field name="name">Prepare Wave</field>
         <field name="res_model">stock.move.line</field>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
+        <field name="view_id" ref="view_stock_move_line_list_detailed_wave"/>
         <field name="target">new</field>
         <field name="domain">[('state', '!=', 'done'), ('picking_id', '!=', False)]</field>
         <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
@@ -88,10 +88,10 @@
         </field>
     </record>
 
-    <record id="stock_picking_type_kanban_batch" model="ir.ui.view">
+    <record id="view_stock_picking_type_kanban_batch" model="ir.ui.view">
         <field name="name">picking.type.kanban.batch</field>
         <field name="model">stock.picking.type</field>
-        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="inherit_id" ref="stock.view_stock_picking_type_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='kanban_menu_section']" position="inside">
                 <div role="menuitem">

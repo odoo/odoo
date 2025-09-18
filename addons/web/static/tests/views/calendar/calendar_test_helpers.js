@@ -1,11 +1,17 @@
+// @ts-check
+
 import { click, drag, edit, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
-import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
-
-import { createElement } from "@web/core/utils/xml";
+import {
+    contains,
+    getMockEnv,
+    swipeLeft,
+    swipeRight,
+} from "@web/../tests/web_test_helpers";
+import { createElement } from "@web/core/utils/dom/xml";
+import { Field } from "@web/fields/field";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
-import { Field } from "@web/views/fields/field";
 
 export const DEFAULT_DATE = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
 
@@ -143,6 +149,7 @@ export const FAKE_FIELDS = {
         default: 1,
     },
     name: { string: "Name", type: "char" },
+    description: { string: "Description", type: "html" },
     start_date: { string: "Start Date", type: "date" },
     stop_date: { string: "Stop Date", type: "date" },
     start: { string: "Start Datetime", type: "datetime" },
@@ -187,11 +194,24 @@ export const FAKE_MODEL = {
             createElement("field", { name: "name" }),
             { event: { fields: FAKE_FIELDS } },
             "event",
-            "calendar"
+            "calendar",
+        ),
+        description: Field.parseFieldNode(
+            createElement("field", { name: "description", class: "text-wrap" }),
+            { event: { fields: FAKE_FIELDS } },
+            "event",
+            "calendar",
         ),
     },
     activeFields: {
         name: {
+            context: "{}",
+            invisible: false,
+            readonly: false,
+            required: false,
+            onChange: false,
+        },
+        description: {
             context: "{}",
             invisible: false,
             readonly: false,
@@ -299,7 +319,9 @@ export function findFilterPanelSectionFilter(sectionName) {
 export async function pickDate(date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    await click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
+    await click(
+        `.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`,
+    );
     await animationFrame();
 }
 
@@ -367,16 +389,27 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const midTime = `${String(midHour).padStart(2, "0")}:00:00`;
 
     instantScrollTo(
-        queryFirst(`.fc-timegrid-slot[data-time="${midTime}"]:eq(1)`, { visible: false })
+        queryFirst(`.fc-timegrid-slot[data-time="${midTime}"]:eq(1)`, {
+            visible: false,
+        }),
     );
 
-    const startColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${startDate}"]`);
+    const startColumnRect = queryRect(
+        `.fc-col-header-cell.fc-day[data-date="${startDate}"]`,
+    );
     const startRow = queryFirst(`.fc-timegrid-slot[data-time="${startTime}"]:eq(1)`);
-    const endColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`);
+    const endColumnRect = queryRect(
+        `.fc-col-header-cell.fc-day[data-date="${endDate}"]`,
+    );
     const endRow = queryFirst(`.fc-timegrid-slot[data-time="${endTime}"]:eq(1)`);
+
+    // Use the column center x as an absolute position (not relative to the row)
+    // to avoid miscalculating when columns are narrow (e.g. mobile viewport).
+    const startCenterX = startColumnRect.left + startColumnRect.width / 2;
+    const endCenterX = endColumnRect.left + endColumnRect.width / 2;
     const optionStart = {
         relative: true,
-        position: { y: 1, x: startColumnRect.left },
+        position: { y: 1, x: startCenterX - queryRect(startRow).x },
     };
 
     await hover(startRow, optionStart);
@@ -384,7 +417,7 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const { drop } = await drag(startRow, optionStart);
     await animationFrame();
     await drop(endRow, {
-        position: { y: -1, x: endColumnRect.left },
+        position: { y: -1, x: endCenterX - queryRect(endRow).x },
         relative: true,
     });
 
@@ -668,7 +701,9 @@ export async function navigate(direction) {
         }
         await advanceFrame(16);
     } else {
-        await contains(`.o_calendar_navigation_buttons .o_calendar_button_${direction}`).click();
+        await contains(
+            `.o_calendar_navigation_buttons .o_calendar_button_${direction}`,
+        ).click();
     }
 }
 

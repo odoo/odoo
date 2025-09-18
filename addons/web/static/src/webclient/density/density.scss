@@ -1,0 +1,136 @@
+// =============================================================================
+// Content Density Toggle
+// =============================================================================
+// SAP Fiori-inspired density modes: default (cozy), compact, condensed.
+// Font sizes stay constant — only spacing, padding, and heights change.
+// The navbar is EXEMPT (touch targets must stay large).
+//
+// Existing CSS custom properties are overridden where available;
+// selector overrides are used for hardcoded SCSS values.
+
+// Shared compact-level overrides (reused by condensed mode)
+@mixin density-compact-base() {
+    // ── List View ──────────────────────────────────────────────────────
+    .o_list_renderer {
+        --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm * 0.5};
+
+        .o_list_table > tbody > tr > td {
+            padding-top: #{$table-cell-padding-y-sm * 0.4};
+            padding-bottom: #{$table-cell-padding-y-sm * 0.4};
+        }
+
+        .o_list_table > tbody > tr.o_group_header > th {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+    }
+
+    // ── Kanban View ────────────────────────────────────────────────────
+    .o_kanban_view {
+        --KanbanRecord-padding-v: 4px;
+        --KanbanRecord-padding-h: 6px;
+        --KanbanRecord-margin-v: 3px;
+        --KanbanRecord-margin-h: 6px;
+        --KanbanRecord-gap-v: 3px;
+        --Card-Footer-gap: 2px;
+    }
+
+    // ── Form View ──────────────────────────────────────────────────────
+    .o_form_view {
+        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 0.5};
+
+        .o_form_sheet {
+            --formView-sheet-padding-y: #{map-get($spacers, 2)};
+            --formView-sheet-padding-y-md: #{map-get($spacers, 2)};
+            --formView-sheet-padding-y-lg: #{map-get($spacers, 3)};
+            --formView-sheet-padding-y-xxl: #{map-get($spacers, 2)};
+        }
+
+        .o_form_sheet_bg {
+            --formView-sheetBg-padding-x: #{map-get($spacers, 2)};
+        }
+
+        .o_inner_group {
+            margin-bottom: #{$o-form-spacing-unit * 2};
+        }
+
+        // Stat buttons
+        .o-form-buttonbox .oe_stat_button {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        // Notebook tabs
+        .o_notebook > .nav-tabs > .nav-item > .nav-link {
+            padding: 4px 12px;
+        }
+    }
+
+    // ── Buttons (scoped to action manager, navbar exempt) ──────────────
+    .o_action_manager {
+        .btn:not(.btn-sm):not(.btn-lg):not(.oe_stat_button):not(.o_arrow_button) {
+            padding-top: #{$input-btn-padding-y-sm};
+            padding-bottom: #{$input-btn-padding-y-sm};
+        }
+    }
+
+    // ── Input fields ───────────────────────────────────────────────────
+    .o_action_manager .o_field_widget .o_input:not(.o_searchview_input) {
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+
+    // ── Dropdowns ──────────────────────────────────────────────────────
+    .o_action_manager .dropdown-menu .dropdown-item {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    // ── Control Panel (search bar area) ────────────────────────────────
+    .o_control_panel {
+        padding-top: #{map-get($spacers, 1)};
+        padding-bottom: #{map-get($spacers, 1)};
+    }
+
+    // ── Chatter spacing ────────────────────────────────────────────────
+    .o-mail-Chatter {
+        --mail-Chatter-contentPaddingLeft: #{map-get($spacers, 2)};
+    }
+}
+
+// ───────────────────────────────────────────────────────────────────────────
+// COMPACT MODE (~27% height reduction)
+// ───────────────────────────────────────────────────────────────────────────
+body.o-density-compact {
+    @include density-compact-base();
+}
+
+// ───────────────────────────────────────────────────────────────────────────
+// CONDENSED MODE (compact + even tighter tables/lists)
+// Per SAP Fiori guidelines, condensed is always combined with compact.
+// ───────────────────────────────────────────────────────────────────────────
+body.o-density-condensed {
+    @include density-compact-base();
+
+    // ── List View: ultra-tight rows ────────────────────────────────────
+    .o_list_renderer {
+        --ListRenderer-thead-padding-y: 2px;
+
+        .o_list_table > tbody > tr > td {
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .o_list_table > tbody > tr.o_group_header > th {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+    }
+
+    // ── Kanban: even tighter ───────────────────────────────────────────
+    .o_kanban_view {
+        --KanbanRecord-padding-v: 2px;
+        --KanbanRecord-padding-h: 4px;
+        --KanbanRecord-margin-v: 2px;
+    }
+}

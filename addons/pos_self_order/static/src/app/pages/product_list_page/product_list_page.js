@@ -1,15 +1,23 @@
-import { Component, useRef, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { useService } from "@web/core/utils/hooks";
-
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
-import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { useService } from "@web/core/utils/hooks";
 import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
-import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
-import { useScrollShadow, useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
-
+import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
+import {
+    useHorizontalScrollShadow,
+    useScrollShadow,
+} from "../../utils/scroll_shadow_hook";
 let savedScrollTop = 0;
 
 export class ProductListPage extends Component {
@@ -31,7 +39,9 @@ export class ProductListPage extends Component {
             this.selfOrder.computeAvailableCategories();
         }
         const availableCategories = this.selfOrder.availableCategories;
-        const topCategories = availableCategories.filter((category) => !category.parent_id);
+        const topCategories = availableCategories.filter(
+            (category) => !category.parent_id,
+        );
         const selectedCategory =
             initCategories && topCategories.length > 0
                 ? topCategories[0]
@@ -51,9 +61,9 @@ export class ProductListPage extends Component {
                 this.productListRef,
                 (catId) => {
                     this.state.selectedCategory = this.state.topCategories.find(
-                        (c) => c.id === catId
+                        (c) => c.id === catId,
                     );
-                }
+                },
             ).scrollToCategory;
         }
 
@@ -74,7 +84,7 @@ export class ProductListPage extends Component {
                         return acc;
                     }, {});
             },
-            () => [this.selfOrder.currentOrder.lines]
+            () => [this.selfOrder.currentOrder.lines],
         );
 
         onMounted(() => {
@@ -112,7 +122,7 @@ export class ProductListPage extends Component {
         scrollItemIntoViewX(
             this.categoryListRef.el,
             `[data-category-pill="${this.selectedCategory.id}"]`,
-            { edgePadding: 20, minRightGap: this.categoryListRef.el.offsetWidth / 3 }
+            { edgePadding: 20, minRightGap: this.categoryListRef.el.offsetWidth / 3 },
         );
     }
 
@@ -120,7 +130,9 @@ export class ProductListPage extends Component {
         if (product.pos_categ_ids.length === 0) {
             return true;
         }
-        return product.pos_categ_ids.some((categ) => this.selfOrder.isCategoryAvailable(categ.id));
+        return product.pos_categ_ids.some((categ) =>
+            this.selfOrder.isCategoryAvailable(categ.id),
+        );
     }
 
     get topSelectedCategory() {
@@ -154,7 +166,11 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        return (
+            category.associatedProducts ||
+            this.selfOrder.productByCategIds[category.id] ||
+            []
+        );
     }
 
     toggleSubCategoryPanel() {
@@ -177,7 +193,10 @@ export class ProductListPage extends Component {
                 el.removeEventListener("transitionend", handler);
             });
             return;
-        } else if (nextSubCategories.length === 0 && this.state.subCategories.length === 0) {
+        } else if (
+            nextSubCategories.length === 0 &&
+            this.state.subCategories.length === 0
+        ) {
             return;
         }
 
@@ -194,7 +213,8 @@ export class ProductListPage extends Component {
             return;
         }
         if (product.isCombo()) {
-            const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(product);
+            const { show, selectedCombos } =
+                this.selfOrder.showComboSelectionPage(product);
             if (show) {
                 this.router.navigate("combo_selection", { id: product.id });
             } else {
@@ -208,7 +228,7 @@ export class ProductListPage extends Component {
                     selectedCombos.map((combo) => ({
                         ...combo,
                         qty: 1,
-                    }))
+                    })),
                 );
             }
         } else if (product.isConfigurable()) {
@@ -235,7 +255,11 @@ export class ProductListPage extends Component {
         const productEl = target.closest(".o_self_product_box");
 
         const toOrder = document.querySelector(".to-order");
-        if (!toOrder || window.getComputedStyle(toOrder).display === "none" || !productEl) {
+        if (
+            !toOrder ||
+            window.getComputedStyle(toOrder).display === "none" ||
+            !productEl
+        ) {
             return;
         }
 
@@ -268,7 +292,12 @@ export class ProductListPage extends Component {
 
         const wrapper = document.createElement("div");
         Object.assign(wrapper.style, initialStyles);
-        wrapper.classList.add("position-fixed", "o_self_product_list_page", "shadow-lg", "z-1");
+        wrapper.classList.add(
+            "position-fixed",
+            "o_self_product_list_page",
+            "shadow-lg",
+            "z-1",
+        );
         wrapper.appendChild(clonedPic);
 
         const infosDiv = clonedPic.querySelector(".product-infos");

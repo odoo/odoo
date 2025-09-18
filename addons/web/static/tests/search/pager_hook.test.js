@@ -1,4 +1,7 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     defineModels,
@@ -8,10 +11,8 @@ import {
     mountWithSearch,
     pagerNext,
 } from "@web/../tests/web_test_helpers";
-
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { usePager } from "@web/search/pager_hook";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Foo extends models.Model {}
 

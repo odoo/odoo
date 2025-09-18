@@ -1,6 +1,8 @@
-import { registry } from "@web/core/registry";
+// @ts-check
+
 import { WORKER_STATE } from "@bus/workers/websocket_worker";
 import { whenReady } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 function logout() {
     return [
@@ -89,11 +91,13 @@ registry.category("web_tour.tours").add("test_user_switch", {
         ...logout(),
         {
             content: "Check if there is Mitchell Admin in user list selection",
-            trigger: ".o_user_switch .list-group-item:nth-child(1):contains('Mitchell Admin')",
+            trigger:
+                ".o_user_switch .list-group-item:nth-child(1):contains('Mitchell Admin')",
         },
         {
             content: "Check if there is Marc Demo in user list selection",
-            trigger: ".o_user_switch .list-group-item:nth-child(2):contains('Marc Demo')",
+            trigger:
+                ".o_user_switch .list-group-item:nth-child(2):contains('Marc Demo')",
         },
         {
             content: "Choice demo",
@@ -120,7 +124,8 @@ registry.category("web_tour.tours").add("test_user_switch", {
         },
         {
             content: "Click on Mitchell Admin",
-            trigger: ".o_user_switch .list-group-item:nth-child(1):contains('Mitchell Admin')",
+            trigger:
+                ".o_user_switch .list-group-item:nth-child(1):contains('Mitchell Admin')",
             run: "click",
         },
         {

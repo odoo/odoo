@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SkeletonView">
+        <div class="o_skeleton_view d-flex flex-column h-100">
+            <!-- Control Panel skeleton -->
+            <div class="o_skeleton_cp d-flex align-items-center px-3 py-2 border-bottom bg-view"
+                 t-if="props.withControlPanel">
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="o_skeleton rounded" style="width: 88px; height: 30px;"/>
+                </div>
+                <div class="flex-grow-1"/>
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="o_skeleton rounded" style="width: 180px; height: 28px;"/>
+                    <span class="o_skeleton rounded-circle" style="width: 28px; height: 28px;"/>
+                    <span class="o_skeleton rounded-circle" style="width: 28px; height: 28px;"/>
+                </div>
+            </div>
+
+            <!-- View content skeleton -->
+            <div class="o_skeleton_content flex-grow-1 overflow-hidden">
+                <t t-if="viewType === 'list'">
+                    <table class="o_skeleton_list table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th class="o_skeleton_checkbox" style="width: 40px;">
+                                    <span class="o_skeleton rounded" style="width: 16px; height: 16px;"/>
+                                </th>
+                                <t t-foreach="listCols" t-as="col" t-key="col">
+                                    <th>
+                                        <span class="o_skeleton rounded"
+                                              t-att-style="'width: ' + (50 + col * 10) + '%; height: 12px;'"/>
+                                    </th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="listRows" t-as="row" t-key="row">
+                                <tr class="o_skeleton_row" t-att-style="'animation-delay: ' + (row * 40) + 'ms;'">
+                                    <td>
+                                        <span class="o_skeleton rounded" style="width: 16px; height: 16px;"/>
+                                    </td>
+                                    <t t-foreach="listCols" t-as="col" t-key="col">
+                                        <td>
+                                            <span class="o_skeleton rounded"
+                                                  t-att-style="'width: ' + cellWidth(row, col) + '%; height: 12px;'"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+
+                <t t-if="viewType === 'kanban'">
+                    <div class="o_skeleton_kanban d-flex gap-3 p-3 h-100">
+                        <t t-foreach="kanbanGroups" t-as="group" t-key="group">
+                            <div class="o_skeleton_kanban_group d-flex flex-column gap-2 flex-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="o_skeleton rounded"
+                                          t-att-style="'width: ' + (80 + group * 30) + 'px; height: 16px;'"/>
+                                    <span class="o_skeleton rounded-pill ms-2" style="width: 24px; height: 18px;"/>
+                                </div>
+                                <t t-foreach="kanbanCards" t-as="card" t-key="card">
+                                    <div class="o_skeleton_kanban_card card"
+                                         t-att-style="'animation-delay: ' + (group * 60 + card * 40) + 'ms;'">
+                                        <div class="card-body p-3 d-flex flex-column gap-2">
+                                            <span class="o_skeleton rounded" style="width: 75%; height: 14px;"/>
+                                            <span class="o_skeleton rounded" style="width: 50%; height: 12px;"/>
+                                            <div class="d-flex gap-2 mt-1">
+                                                <span class="o_skeleton rounded-pill" style="width: 60px; height: 20px;"/>
+                                                <span class="o_skeleton rounded-circle ms-auto" style="width: 24px; height: 24px;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <t t-if="viewType === 'form'">
+                    <div class="o_skeleton_form p-4">
+                        <div class="o_skeleton_sheet bg-view rounded shadow-sm p-4 mx-auto" style="max-width: 960px;">
+                            <!-- Title area -->
+                            <div class="mb-4">
+                                <span class="o_skeleton rounded" style="width: 280px; height: 24px;"/>
+                            </div>
+                            <!-- Button bar -->
+                            <div class="d-flex gap-2 mb-4">
+                                <span class="o_skeleton rounded" style="width: 80px; height: 28px;"/>
+                                <span class="o_skeleton rounded" style="width: 100px; height: 28px;"/>
+                                <span class="o_skeleton rounded" style="width: 70px; height: 28px;"/>
+                            </div>
+                            <!-- Two-column field grid -->
+                            <div class="row g-3">
+                                <t t-foreach="formFields" t-as="field" t-key="field">
+                                    <div class="col-6 d-flex flex-column gap-1"
+                                         t-att-style="'animation-delay: ' + (field * 50) + 'ms;'">
+                                        <span class="o_skeleton rounded"
+                                              t-att-style="'width: ' + (60 + field * 8 % 30) + 'px; height: 10px;'"/>
+                                        <span class="o_skeleton rounded" style="width: 100%; height: 30px;"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <!-- Notebook tabs -->
+                            <div class="d-flex gap-3 mt-4 mb-3 border-bottom pb-2">
+                                <span class="o_skeleton rounded" style="width: 70px; height: 14px;"/>
+                                <span class="o_skeleton rounded" style="width: 90px; height: 14px;"/>
+                                <span class="o_skeleton rounded" style="width: 60px; height: 14px;"/>
+                            </div>
+                            <!-- Tab content lines -->
+                            <div class="d-flex flex-column gap-2">
+                                <span class="o_skeleton rounded" style="width: 100%; height: 12px;"/>
+                                <span class="o_skeleton rounded" style="width: 85%; height: 12px;"/>
+                                <span class="o_skeleton rounded" style="width: 70%; height: 12px;"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-if="viewType !== 'list' and viewType !== 'kanban' and viewType !== 'form'">
+                    <div class="o_skeleton_generic p-4 d-flex flex-column gap-3">
+                        <span class="o_skeleton rounded" style="width: 40%; height: 20px;"/>
+                        <span class="o_skeleton rounded" style="width: 100%; height: 14px;"/>
+                        <span class="o_skeleton rounded" style="width: 90%; height: 14px;"/>
+                        <span class="o_skeleton rounded" style="width: 75%; height: 14px;"/>
+                        <div class="d-flex gap-3 mt-2">
+                            <span class="o_skeleton rounded" style="width: 200px; height: 120px;"/>
+                            <span class="o_skeleton rounded" style="width: 200px; height: 120px;"/>
+                            <span class="o_skeleton rounded" style="width: 200px; height: 120px;"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

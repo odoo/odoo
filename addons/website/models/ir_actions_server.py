@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.http import request
-from odoo.tools import urls
+from odoo.libs.web import urls
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 

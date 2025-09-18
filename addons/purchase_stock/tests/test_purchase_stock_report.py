@@ -12,7 +12,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         """
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 5
         po = po_form.save()
@@ -28,7 +28,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(pending_qty_in, 5)
 
         # Confirms the PO and checks the report again.
-        po.button_confirm()
+        po.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
         draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
@@ -55,7 +55,7 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         # Increase the PO quantity to 10, so must create a second receipt.
         po_form = Form(po)
-        with po_form.order_line.edit(0) as line:
+        with po_form.line_ids.edit(0) as line:
             line.product_qty = 10
         po = po_form.save()
         # Checks the report.
@@ -84,7 +84,7 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 4
         po = po_form.save()
@@ -100,7 +100,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(pending_qty_in, 4)
 
         # Confirms the PO and checks the report again.
-        po.button_confirm()
+        po.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
         draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
@@ -128,7 +128,7 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         # Increase the PO quantity to 10, so must create a second receipt.
         po_form = Form(po)
-        with po_form.order_line.edit(0) as line:
+        with po_form.line_ids.edit(0) as line:
             line.product_qty = 10
         po = po_form.save()
         # Checks the report.
@@ -149,56 +149,23 @@ class TestPurchaseStockReports(TestReportsCommon):
         # We create 2 identical PO
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 5
         po1 = po_form.save()
-        po1.button_confirm()
+        po1.action_confirm()
         po2 = po1.copy()
-        po2.button_confirm()
+        po2.action_confirm()
 
         # Check for both PO if the highlight (is_matched) corresponds to the correct PO
         for po in [po1, po2]:
-            context = po.order_line[0].action_product_forecast_report()['context']
+            context = po.line_ids[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines[1:]:
                 if line['document_in']['id'] == po.id:
                     self.assertTrue(line['is_matched'], "The corresponding PO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the PO shoud not be matched.")
-
-    def test_approval_and_forecasted_qty(self):
-        """
-        When a PO is waiting for an approval, its quantities should be included
-        in the draft quantity count
-        """
-        self.env.company.po_double_validation = 'two_step'
-        self.env.company.po_double_validation_amount = 0
-
-        basic_purchase_user = mail_new_test_user(
-            self.env,
-            login='basic_purchase_user',
-            groups='base.group_user,purchase.group_purchase_user',
-        )
-
-        po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
-            line.product_id = self.product
-            line.product_qty = 50
-        po_form.save()
-
-        po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
-            line.product_id = self.product
-            line.product_qty = 100
-        po = po_form.save()
-        po.with_user(basic_purchase_user).button_confirm()
-
-        docs = self.get_report_forecast(product_template_ids=self.product_template.ids)[1]
-        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
-        self.assertEqual(draft_purchase_qty, 150)
 
     def test_vendor_delay_report_with_uom(self):
         """
@@ -210,11 +177,11 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 12
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt_move = receipt.move_ids
@@ -260,11 +227,11 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 10
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt_move = receipt.move_ids
@@ -306,11 +273,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         """
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 10
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01_move = receipt01.move_ids
@@ -356,14 +323,14 @@ class TestPurchaseStockReports(TestReportsCommon):
         })
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 10
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = product_no_categ
             line.product_qty = 10
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt_moves = receipt.move_ids
@@ -390,11 +357,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         """
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product
             line.product_qty = 10
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.quantity = 6

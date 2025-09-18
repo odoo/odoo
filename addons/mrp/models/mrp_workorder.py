@@ -9,7 +9,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_datetime, float_round
 from odoo.tools.date_utils import sum_intervals
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 
 class MrpWorkorder(models.Model):
@@ -321,6 +321,8 @@ class MrpWorkorder(models.Model):
 
         for workorder in self:
             workorder.blocked_by_workorder_ids.needed_by_workorder_ids = workorder.needed_by_workorder_ids
+
+        self.end_all()
         res = super().unlink()
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct (`next_work_order_id` could be obsolete now).
@@ -487,6 +489,7 @@ class MrpWorkorder(models.Model):
                 elif wo.product_uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
 
+        workorders_with_new_wc = self.env['mrp.workorder']
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
@@ -498,9 +501,7 @@ class MrpWorkorder(models.Model):
                     workorder.leave_id.resource_id = new_workcenter.resource_id
                     if workorder.state == 'progress':
                         continue
-                    workorder.duration_expected = workorder._get_duration_expected()
-                    if workorder.date_start:
-                        workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
+                    workorders_with_new_wc |= workorder
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -537,6 +538,10 @@ class MrpWorkorder(models.Model):
                 if production.product_uom_id.compare(min_wo_qty, 0) > 0:
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
+        for workorder in workorders_with_new_wc:
+            workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.date_start:
+                workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
 
         return res
 
@@ -758,6 +763,12 @@ class MrpWorkorder(models.Model):
         """
         for production in self.production_id:
             production._plan_workorders(replan=True)
+        # Invalidate conflict-dependent popover for all workorders on affected
+        # workcenters: _compute_json_popover uses a cross-record SQL query
+        # (_get_conflicted_workorder_ids) whose result changes when any
+        # workorder on the same workcenter is rescheduled — a dependency that
+        # @api.depends cannot express.
+        self.invalidate_model(['show_json_popover', 'json_popover'])
         return True
 
     def button_scrap(self):
@@ -766,7 +777,7 @@ class MrpWorkorder(models.Model):
             'name': _('Scrap Products'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
-            'views': [(self.env.ref('stock.stock_scrap_form_view2').id, 'form')],
+            'views': [(self.env.ref('stock.view_stock_scrap_form2').id, 'form')],
             'type': 'ir.actions.act_window',
             'context': {'default_company_id': self.production_id.company_id.id,
                         'default_workorder_id': self.id,
@@ -834,7 +845,7 @@ class MrpWorkorder(models.Model):
             SELECT wo1.id, wo2.id
             FROM mrp_workorder wo1, mrp_workorder wo2
             WHERE
-                wo1.id IN %s
+                wo1.id = ANY(%s)
                 AND wo1.state IN ('blocked', 'ready')
                 AND wo2.state IN ('blocked', 'ready')
                 AND wo1.id != wo2.id
@@ -842,7 +853,7 @@ class MrpWorkorder(models.Model):
                 AND (DATE_TRUNC('second', wo2.date_start), DATE_TRUNC('second', wo2.date_finished))
                     OVERLAPS (DATE_TRUNC('second', wo1.date_start), DATE_TRUNC('second', wo1.date_finished))
         """
-        self.env.cr.execute(sql, [tuple(self.ids)])
+        self.env.cr.execute(sql, [list(self.ids)])
         res = defaultdict(list)
         for wo1, wo2 in self.env.cr.fetchall():
             res[wo1].append(wo2)

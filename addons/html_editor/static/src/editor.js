@@ -4,7 +4,7 @@ import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
-import { setElementContent } from "@web/core/utils/html";
+import { setElementContent } from "@web/core/utils/dom/html";
 
 /** @typedef {import("plugins").EditorResources} EditorResources */
 /** @typedef {import("plugins").GlobalResources} GlobalResources */
@@ -138,6 +138,7 @@ export class Editor {
             }
         }
         editable.setAttribute("contenteditable", true);
+        editable.setAttribute("translate", "no");
         initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
         editable.classList.add("odoo-editor-editable");
         if (this.config.classList) {

@@ -17,9 +17,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 
-const { corePluginRegistry, coreViewsPluginRegistry, featurePluginRegistry } =
-    spreadsheet.registries;
-
 import {
     GlobalFiltersCorePlugin,
     GlobalFiltersUIPlugin,
@@ -41,6 +38,9 @@ import { PivotOdooUIPlugin } from "./pivot/plugins/pivot_odoo_ui_plugin";
 import { ListCoreGlobalFilterPlugin } from "./list/plugins/list_core_global_filter_plugin";
 import { globalFieldMatchingRegistry } from "./global_filters/helpers";
 import { OdooChartFeaturePlugin } from "./chart/plugins/odoo_chart_feature_plugin";
+
+const { corePluginRegistry, coreViewsPluginRegistry, featurePluginRegistry } =
+    spreadsheet.registries;
 
 globalFieldMatchingRegistry.add("pivot", {
     getIds: (getters) =>

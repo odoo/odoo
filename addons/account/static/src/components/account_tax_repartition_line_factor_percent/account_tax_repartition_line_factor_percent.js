@@ -1,5 +1,5 @@
-import { FloatField, floatField } from "@web/views/fields/float/float_field";
-import { roundPrecision } from "@web/core/utils/numbers";
+import { FloatField, floatField } from "@web/fields/basic/float/float_field";
+import { roundPrecision } from "@web/core/utils/format/numbers";
 import {registry} from "@web/core/registry";
 
 export class AccountTaxRepartitionLineFactorPercent extends FloatField {

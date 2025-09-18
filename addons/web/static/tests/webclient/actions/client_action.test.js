@@ -1,3 +1,5 @@
+// @ts-check
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
@@ -13,7 +15,6 @@ import {
     stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
@@ -29,7 +30,9 @@ class TestClientAction extends Component {
         </div>`;
     static props = ["*"];
     setup() {
-        onMounted(() => this.env.config.setDisplayName(`Client action ${this.props.action.id}`));
+        onMounted(() =>
+            this.env.config.setDisplayName(`Client action ${this.props.action.id}`),
+        );
     }
 }
 
@@ -332,7 +335,9 @@ test("test display_notification client action", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_content").toHaveText("message");
+    expect(
+        ".o_notification_manager .o_notification .o_notification_content",
+    ).toHaveText("message");
     expect(".o_kanban_view").toHaveCount(1);
     await contains(".o_notification_close").click();
     expect(".o_notification_manager .o_notification").toHaveCount(0);
@@ -359,9 +364,9 @@ test("test display_notification client action with links", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_content").toHaveText(
-        "message test <R&D> <R&D>"
-    );
+    expect(
+        ".o_notification_manager .o_notification .o_notification_content",
+    ).toHaveText("message test <R&D> <R&D>");
     expect(".o_kanban_view").toHaveCount(1);
     await contains(".o_notification_close").click();
     expect(".o_notification_manager .o_notification").toHaveCount(0);
@@ -383,7 +388,9 @@ test("test display_notification client action with links", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_title").toHaveCount(0);
+    expect(".o_notification_manager .o_notification .o_notification_title").toHaveCount(
+        0,
+    );
 });
 
 test("test next action on display_notification client action", async () => {
@@ -406,7 +413,7 @@ test("test next action on display_notification client action", async () => {
                 },
             },
         },
-        options
+        options,
     );
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);

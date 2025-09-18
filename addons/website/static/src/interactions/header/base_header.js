@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { compensateScrollbar } from "@web/core/utils/scrolling";
+import { SIZES, utils as uiUtils } from "@web/ui/block/ui_service";
+import { compensateScrollbar } from "@web/core/utils/dom/scrolling";
 
 export class BaseHeader extends Interaction {
     dynamicContent = {

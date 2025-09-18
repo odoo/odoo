@@ -1,10 +1,11 @@
 import { onWillUpdateProps, useComponent, useState } from "@odoo/owl";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
+import { useDateTimePicker } from "@web/components/datetime/datetime_picker_hook";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { getFieldDomain, useRecordObserver } from "@web/model/relational_model/utils";
-import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
+import { getFieldDomain } from "@web/model/relational_model/utils";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
+import { statusBarField, StatusBarField } from "@web/fields/display/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
 
 export class VersionsTimeline extends StatusBarField {

@@ -4,7 +4,7 @@ import base64
 import re
 import requests
 
-from werkzeug.urls import url_parse
+from urllib.parse import urlsplit
 
 from odoo import api, models
 from odoo.tools import misc
@@ -258,7 +258,7 @@ class WebsiteAssets(models.AbstractModel):
                         req = requests.get(url, timeout=5, headers=headers_woff2)
                         # https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2
                         # -> s-modak-v18-EJRYQgs1XtIEskMB-hRp7w.woff2
-                        name = url_parse(url).path.lstrip('/').replace('/', '-')
+                        name = urlsplit(url).path.lstrip('/').replace('/', '-')
                         attachment = IrAttachment.create({
                             'name': f'google-font-{name}',
                             'type': 'binary',
@@ -310,7 +310,7 @@ class WebsiteAssets(models.AbstractModel):
             if regex.search(updatedFileContent):
                 updatedFileContent = re.sub(regex, replacement, updatedFileContent)
             else:
-                updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
+                updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
 

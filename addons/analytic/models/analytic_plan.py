@@ -161,9 +161,9 @@ class AccountAnalyticPlan(models.Model):
                    array_agg(child.id) as children_ids
               FROM account_analytic_plan parent
               JOIN account_analytic_plan child ON child.parent_path LIKE parent.parent_path || '%%'
-             WHERE parent.id IN %s
+             WHERE parent.id = ANY(%s)
           GROUP BY parent.id
-        """, [tuple(self.ids)])
+        """, [list(self.ids)])
         all_children_ids = dict(self.env.cr.fetchall())
 
         plans_count = dict(

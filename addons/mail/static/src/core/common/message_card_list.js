@@ -1,10 +1,8 @@
 import { Message } from "@mail/core/common/message";
 import { useVisible } from "@mail/utils/common/hooks";
-
 import { Component, useSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
 /**
  * @typedef {Object} Props
  * @property {string} [emptyText]
@@ -59,7 +57,9 @@ export class MessageCardList extends Component {
             this.env.inMeetingView?.openChat();
         }
         // Give the time for menus to close before scrolling to the message.
-        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+        await new Promise((resolve) =>
+            setTimeout(() => requestAnimationFrame(resolve)),
+        );
         await this.env.messageHighlight?.highlightMessage(message, this.props.thread);
     }
 

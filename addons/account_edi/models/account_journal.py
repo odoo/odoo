@@ -64,9 +64,9 @@ class AccountJournal(models.Model):
                 FROM account_edi_document doc
                 JOIN account_move move ON move.id = doc.move_id
                 WHERE doc.state IN ('to_cancel', 'to_send')
-                AND move.journal_id IN %s
+                AND move.journal_id = ANY(%s)
                 GROUP BY move.journal_id
-            ''', [tuple(journal_ids)])
+            ''', [list(journal_ids)])
             protected_edi_formats_per_journal = {r[0]: set(r[1]) for r in self.env.cr.fetchall()}
         else:
             protected_edi_formats_per_journal = defaultdict(set)

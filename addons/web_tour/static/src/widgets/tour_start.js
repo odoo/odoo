@@ -1,4 +1,4 @@
-import { charField, CharField } from "@web/views/fields/char/char_field";
+import { charField, CharField } from "@web/fields/basic/char/char_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 

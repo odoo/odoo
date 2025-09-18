@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @module @web/core/py_js/py_parser - Pratt parser that converts Python token streams into AST nodes */
+
 import { binaryOperators, comparators } from "./py_tokenizer";
 
 // -----------------------------------------------------------------------------
@@ -29,14 +33,14 @@ import { binaryOperators, comparators } from "./py_tokenizer";
  * @typedef { ASTNumber | ASTString | ASTBoolean | ASTNone | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup} AST
  */
 
-export class ParserError extends Error {}
+class ParserError extends Error {}
 
 // -----------------------------------------------------------------------------
 // Constants and helpers
 // -----------------------------------------------------------------------------
 
 const chainedOperators = new Set(comparators);
-const infixOperators = new Set(binaryOperators.concat(comparators));
+const infixOperators = new Set([...binaryOperators, ...comparators]);
 
 /**
  * Compute the "binding power" of a symbol
@@ -131,7 +135,10 @@ function parsePrefix(current, tokens) {
             if (current.value === "None") {
                 return { type: 3 /* None */ };
             } else {
-                return { type: 2 /* Boolean */, value: current.value === "True" };
+                return {
+                    type: 2 /* Boolean */,
+                    value: current.value === "True",
+                };
             }
         case 3 /* Name */:
             return { type: 5 /* Name */, value: current.value };
@@ -172,7 +179,9 @@ function parsePrefix(current, tokens) {
                     }
                     tokens.shift();
                     isTuple = isTuple || content.length === 0;
-                    return isTuple ? { type: 10 /* Tuple */, value: content } : content[0];
+                    return isTuple
+                        ? { type: 10 /* Tuple */, value: content }
+                        : content[0];
                 }
                 case "[": {
                     const value = [];
@@ -193,11 +202,13 @@ function parsePrefix(current, tokens) {
                     return { type: 4 /* List */, value };
                 }
                 case "{": {
+                    /** @type {Record<string, AST>} */
                     const dict = {};
                     while (tokens[0] && !isSymbol(tokens[0], "}")) {
                         const key = _parse(tokens, 0);
                         if (
-                            (key.type !== 1 /* String */ && key.type !== 0) /* Number */ ||
+                            (key.type !== 1 /* String */ &&
+                                key.type !== 0) /* Number */ ||
                             !tokens[0] ||
                             !isSymbol(tokens[0], ":")
                         ) {
@@ -222,7 +233,7 @@ function parsePrefix(current, tokens) {
 }
 
 /**
- * @param {AST} ast
+ * @param {AST} left
  * @param {Token} current
  * @param {Token[]} tokens
  * @returns {AST}
@@ -250,9 +261,10 @@ function parseInfix(left, current, tokens) {
                         throw new ParserError("invalid obj lookup");
                     }
                 }
+                /** @type {AST} */
                 let op = {
                     type: 7 /* BinaryOperator */,
-                    op: current.value,
+                    op: /** @type {string} */ (current.value),
                     left,
                     right,
                 };
@@ -263,18 +275,20 @@ function parseInfix(left, current, tokens) {
                     chainedOperators.has(tokens[0].value)
                 ) {
                     const nextToken = tokens.shift();
+                    /** @type {ASTBinaryOperator} */
+                    const nextRight = {
+                        type: 7 /* BinaryOperator */,
+                        op: /** @type {string} */ (nextToken.value),
+                        left: right,
+                        right: _parse(tokens, bindingPower(nextToken)),
+                    };
                     op = {
                         type: 14 /* BooleanOperator */,
                         op: "and",
                         left: op,
-                        right: {
-                            type: 7 /* BinaryOperator */,
-                            op: nextToken.value,
-                            left: right,
-                            right: _parse(tokens, bindingPower(nextToken)),
-                        },
+                        right: nextRight,
                     };
-                    right = op.right.right;
+                    right = nextRight.right;
                 }
                 return op;
             }
@@ -282,6 +296,7 @@ function parseInfix(left, current, tokens) {
                 case "(": {
                     // function call
                     const args = [];
+                    /** @type {Record<string, AST>} */
                     const kwargs = {};
                     while (tokens[0] && !isSymbol(tokens[0], ")")) {
                         const arg = _parse(tokens, 0);
@@ -298,7 +313,12 @@ function parseInfix(left, current, tokens) {
                         throw new ParserError("parsing error");
                     }
                     tokens.shift();
-                    return { type: 8 /* FunctionCall */, fn: left, args, kwargs };
+                    return {
+                        type: 8 /* FunctionCall */,
+                        fn: left,
+                        args,
+                        kwargs,
+                    };
                 }
                 case "=":
                     if (left.type === 5 /* Name */) {
@@ -382,7 +402,7 @@ export function parse(tokens) {
  * @returns {{[name: string]: any}}
  */
 export function parseArgs(args, spec) {
-    const last = args[args.length - 1];
+    const last = args.at(-1);
     const unnamedArgs = typeof last === "object" ? args.slice(0, -1) : args;
     const kwargs = typeof last === "object" ? last : {};
     for (const [index, val] of unnamedArgs.entries()) {

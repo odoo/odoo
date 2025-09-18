@@ -1,10 +1,12 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { FAKE_FILTER_SECTIONS, FAKE_MODEL } from "./calendar_test_helpers";
-
-import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { runAllTimers } from "@odoo/hoot-mock";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
+
+import { FAKE_FILTER_SECTIONS, FAKE_MODEL } from "./calendar_test_helpers";
 
 test(`render filter panel`, async () => {
     await mountWithCleanup(CalendarFilterSection, {
@@ -60,18 +62,15 @@ test(`filters can have avatar`, async () => {
     });
     expect(`.o_calendar_filter .o_cw_filter_avatar`).toHaveCount(3);
     expect(`.o_calendar_filter img.o_cw_filter_avatar`).toHaveCount(3);
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(0) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/3/avatar_128"
-    );
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(1) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/4/avatar_128"
-    );
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(2) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/6/avatar_128"
-    );
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(0) .o_cw_filter_avatar`,
+    ).toHaveAttribute("data-src", "/web/image/res.partner/3/avatar_128");
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(1) .o_cw_filter_avatar`,
+    ).toHaveAttribute("data-src", "/web/image/res.partner/4/avatar_128");
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(2) .o_cw_filter_avatar`,
+    ).toHaveAttribute("data-src", "/web/image/res.partner/6/avatar_128");
 });
 
 test(`filters with no avatar`, async () => {
@@ -123,7 +122,9 @@ test(`click on filter`, async () => {
             model: {
                 ...FAKE_MODEL,
                 updateFilters(fieldName, filters, active) {
-                    expect.step(`${fieldName} ${filters.map((f) => f.value)} ${active}`);
+                    expect.step(
+                        `${fieldName} ${filters.map((f) => f.value)} ${active}`,
+                    );
                 },
             },
             section: FAKE_FILTER_SECTIONS[0],

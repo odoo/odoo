@@ -1,16 +1,15 @@
+import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { toRaw, useComponent, useState } from "@odoo/owl";
-
+import { useEmojiPicker } from "@web/components/emoji_picker/emoji_picker";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
+import { discussComponentRegistry } from "./discuss_component_registry";
 const { DateTime } = luxon;
 
 export const messageActionsRegistry = registry.category("mail.message/actions");
@@ -55,7 +54,7 @@ registerMessageAction("reaction", {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
-                        content === emoji && thread.effectiveSelf.in(personas)
+                        content === emoji && thread.effectiveSelf.in(personas),
                 );
                 if (!reaction) {
                     message.react(emoji);
@@ -108,7 +107,8 @@ registerMessageAction("reply-to", {
 });
 registerMessageAction("toggle-star", {
     condition: ({ message }) => message.canToggleStar,
-    icon: ({ message }) => (message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o"),
+    icon: ({ message }) =>
+        message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o",
     name: ({ message }) => (message.starred ? _t("Remove Star") : _t("Add Star")),
     onSelected: ({ message }) => message.toggleStar(),
     sequence: 30,
@@ -155,7 +155,9 @@ registerMessageAction("delete", {
             discussComponentRegistry.get("MessageConfirmDialog"),
             {
                 message,
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
+                prompt: _t(
+                    "Are you sure you want to bid farewell to this message forever?",
+                ),
                 onConfirm: () => {
                     def.resolve(true);
                     message.remove({
@@ -163,7 +165,7 @@ registerMessageAction("delete", {
                     });
                 },
             },
-            { context: owner, onClose: () => def.resolve(false) }
+            { context: owner, onClose: () => def.resolve(false) },
         );
         return def;
     },
@@ -228,7 +230,10 @@ export class MessageAction extends Action {
     }
 
     get params() {
-        return Object.assign(super.params, { message: this.messageFn(), thread: this.threadFn() });
+        return Object.assign(super.params, {
+            message: this.messageFn(),
+            thread: this.threadFn(),
+        });
     }
 }
 
@@ -243,17 +248,21 @@ class UseMessageActions extends UseActions {
  */
 export function useMessageActions({ message, thread } = {}) {
     const component = useComponent();
-    const transformedActions = messageActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) =>
-                new MessageAction({ owner: component, id, definition, message, thread })
-        );
+    const transformedActions = messageActionsRegistry.getEntries().map(
+        ([id, definition]) =>
+            new MessageAction({
+                owner: component,
+                id,
+                definition,
+                message,
+                thread,
+            }),
+    );
     for (const action of transformedActions) {
         action.setup();
     }
     const state = useState(
-        new UseMessageActions(component, transformedActions, useService("mail.store"))
+        new UseMessageActions(component, transformedActions, useService("mail.store")),
     );
     return state;
 }

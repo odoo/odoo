@@ -1,7 +1,6 @@
-import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
-
+import { useService } from "@web/core/utils/hooks";
 export const buttonsType = {
     type: Array,
     element: [

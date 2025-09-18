@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatMonetary } from "@web/fields/formatters";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";

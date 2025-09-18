@@ -60,9 +60,9 @@ class CloudStorageAttachmentMigration(models.Model):
         max_file_size = int(ICP.get_param('cloud_storage_migration_max_file_size', 10**9))  # default 1GB
         max_batch_file_size = int(ICP.get_param('cloud_storage_migration_max_batch_file_size', 10**10))  # default 10GB
         message_model_names = ICP.get_param('cloud_storage_migration_message_models', '').split(',')
-        message_model_names = tuple(m_ for m in message_model_names if (m_ := m.strip()) and m_ in self.env)
+        message_model_names = [m_ for m in message_model_names if (m_ := m.strip()) and m_ in self.env]
         all_model_names = ICP.get_param('cloud_storage_migration_all_models', '').split(',')
-        all_model_names = tuple(m_ for m in all_model_names if (m_ := m.strip()) and m_ in self.env)
+        all_model_names = [m_ for m in all_model_names if (m_ := m.strip()) and m_ in self.env]
         if not message_model_names and not all_model_names:
             raise UserError(_("No model for cloud storage migration"))
 
@@ -93,9 +93,9 @@ class CloudStorageAttachmentMigration(models.Model):
 
         check_model = []
         if message_model_names:
-            check_model.append(SQL('(ia.res_model IN %s AND mar.attachment_id IS NOT NULL)', message_model_names))
+            check_model.append(SQL('(ia.res_model = ANY(%s) AND mar.attachment_id IS NOT NULL)', message_model_names))
         if all_model_names:
-            check_model.append(SQL('(ia.res_model IN %s)', all_model_names))
+            check_model.append(SQL('(ia.res_model = ANY(%s))', all_model_names))
         check_model = SQL(' OR ').join(check_model)
 
         check_documents = SQL("""

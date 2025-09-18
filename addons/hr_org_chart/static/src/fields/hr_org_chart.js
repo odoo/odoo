@@ -1,12 +1,12 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
+import { usePopover } from "@web/ui/popover/popover_hook";
+import { user } from "@web/services/user";
 import { onEmployeeSubRedirect } from './hooks';
 import { Component, useState } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { standardFieldProps } from "@web/fields/standard_field_props";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 
 class HrOrgChartPopover extends Component {
     static template = "hr_org_chart.hr_orgchart_emp_popover";

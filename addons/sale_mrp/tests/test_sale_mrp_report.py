@@ -52,7 +52,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {'name': self.tracked_kit.name, 'product_id': self.tracked_kit.id, 'product_uom_qty': 1}),
             ],
         })
@@ -96,7 +96,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
         so_1, so_2 = self.env['sale.order'].create([
             {
                 'partner_id': self.partner_a.id,
-                'order_line': [Command.create({
+                'line_ids': [Command.create({
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 8.0,
@@ -105,7 +105,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
             },
             {
                 'partner_id': self.partner_a.id,
-                'order_line': [Command.create({
+                'line_ids': [Command.create({
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 7.0,

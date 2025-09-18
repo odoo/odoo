@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { setInputFiles } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -40,7 +42,7 @@ test("widget many2many_binary", async () => {
                 message: "file is correctly uploaded to the server",
             });
             const ids = MockServer.env["ir.attachment"].create(
-                ufile.map(({ name }) => ({ name, mimetype: "text/plain" }))
+                ufile.map(({ name }) => ({ name, mimetype: "text/plain" })),
             );
             return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
         },
@@ -95,7 +97,9 @@ test("widget many2many_binary", async () => {
 
     expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
-    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+    expect(
+        "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
+    ).toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attach").toHaveText("Pictures");
 
@@ -104,7 +108,9 @@ test("widget many2many_binary", async () => {
 
     // Set and trigger the change of a file for the input
     await contains(".o_file_input_trigger").click();
-    await setInputFiles(new File(["fake_file"], "fake_file.tiff", { type: "text/plain" }));
+    await setInputFiles(
+        new File(["fake_file"], "fake_file.tiff", { type: "text/plain" }),
+    );
     await animationFrame();
 
     expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("fake_file.tiff", {
@@ -116,11 +122,13 @@ test("widget many2many_binary", async () => {
     expect(".o_attachment:nth-child(2) .o_image.o_hover").toHaveAttribute(
         "data-mimetype",
         "text/plain",
-        { message: "preview displays the right mimetype" }
+        { message: "preview displays the right mimetype" },
     );
 
     // delete the attachment
-    await contains("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").click();
+    await contains(
+        "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
+    ).click();
 
     await clickSave();
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
@@ -136,9 +144,12 @@ test("widget many2many_binary displays notification on error", async () => {
     mockService("http", {
         post(route, { ufile }) {
             expect(route).toBe("/web/binary/upload_attachment");
-            expect([ufile[0].name, ufile[1].name]).toEqual(["good_file.txt", "bad_file.txt"], {
-                message: "files are correctly sent to the server",
-            });
+            expect([ufile[0].name, ufile[1].name]).toEqual(
+                ["good_file.txt", "bad_file.txt"],
+                {
+                    message: "files are correctly sent to the server",
+                },
+            );
             const ids = MockServer.env["ir.attachment"].create({
                 name: ufile[0].name,
                 mimetype: "text/plain",
@@ -171,7 +182,9 @@ test("widget many2many_binary displays notification on error", async () => {
     expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
-    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+    expect(
+        "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
+    ).toHaveCount(1);
 
     // Set and trigger the import of 2 files in the input
     await contains(".o_file_input_trigger").click();
@@ -186,7 +199,9 @@ test("widget many2many_binary displays notification on error", async () => {
     });
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_content").toHaveText("Uploading error. Error on file: bad_file.txt");
+    expect(".o_notification_content").toHaveText(
+        "Uploading error. Error on file: bad_file.txt",
+    );
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });
 
@@ -204,7 +219,7 @@ test("widget many2many_binary image MIME type preview", async () => {
                 message: "file is correctly uploaded to the server",
             });
             const ids = MockServer.env["ir.attachment"].create(
-                ufile.map(({ name }) => ({ name, mimetype: "image/png" }))
+                ufile.map(({ name }) => ({ name, mimetype: "image/png" })),
             );
             return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
         },
@@ -227,7 +242,9 @@ test("widget many2many_binary image MIME type preview", async () => {
     expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
     expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
-    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+    expect(
+        "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
+    ).toHaveCount(1);
 
     // Set and trigger the import of a png image in the input
     await contains(".o_file_input_trigger").click();
@@ -243,6 +260,6 @@ test("widget many2many_binary image MIME type preview", async () => {
     expect(".o_attachment:nth-child(2) .o_preview_image.o_hover").toHaveAttribute(
         "src",
         `data:image/png;base64,${IMAGE_B64}`,
-        { message: "preview should display the image preview" }
+        { message: "preview should display the image preview" },
     );
 });

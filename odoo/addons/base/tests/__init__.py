@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from . import common
 from . import test_acl
 from . import test_api
@@ -52,10 +50,10 @@ from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
 from . import test_search
-from . import test_split_table
 from . import test_sql
 from . import test_translate
 from . import test_tz
+
 # from . import test_uninstall  # loop
 from . import test_user_has_group
 from . import test_views
@@ -83,3 +81,10 @@ from . import test_num2words_ar
 from . import test_cli
 from . import test_signature
 from . import test_import_files
+from . import test_nplusone
+from . import test_orm_profiler
+from . import test_base_perf_regression
+from . import test_base_benchmark
+from . import test_backend_integration
+from . import test_res_config_install
+from . import test_default_group

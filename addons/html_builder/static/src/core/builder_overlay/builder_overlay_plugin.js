@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { getScrollingElement, getScrollingTarget } from "@web/core/utils/dom/scrolling";
 import { checkElement } from "../builder_options_plugin";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 import { withSequence } from "@html_editor/utils/resource";

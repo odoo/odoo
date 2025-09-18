@@ -2,9 +2,9 @@ import { _t } from "@web/core/l10n/translation";
 import {
     StateSelectionField,
     stateSelectionField,
-} from "@web/views/fields/state_selection/state_selection_field";
-import { useCommand } from "@web/core/commands/command_hook";
-import { formatSelection } from "@web/views/fields/formatters";
+} from "@web/fields/selection/state_selection/state_selection_field";
+import { useCommand } from "@web/services/commands/command_hook";
+import { formatSelection } from "@web/fields/formatters";
 
 import { registry } from "@web/core/registry";
 import { useState } from "@odoo/owl";

@@ -1,8 +1,9 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { allowTranslations } from "@web/../tests/web_test_helpers";
-
-import { humanSize } from "@web/core/utils/binary";
 import { resizeBlobImg } from "@web/core/utils/files";
+import { humanSize } from "@web/core/utils/format/binary";
 
 describe.current.tags("headless");
 

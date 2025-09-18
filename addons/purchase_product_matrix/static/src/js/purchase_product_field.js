@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { useMatrixConfigurator } from "@product_matrix/js/matrix_configurator_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 import {
     productLabelSectionAndNoteField,
     ProductLabelSectionAndNoteField

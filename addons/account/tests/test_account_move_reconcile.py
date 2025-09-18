@@ -193,9 +193,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 COALESCE(SUM(line.balance), 0.0)            AS total_balance,
                 COALESCE(SUM(line.amount_currency), 0.0)    AS total_amount_currency
             FROM account_move_line line
-            WHERE line.account_id IN %s
+            WHERE line.account_id = ANY(%s)
             GROUP BY line.account_id
-        ''', [tuple(expected_values.keys())])
+        ''', [list(expected_values.keys())])
         for account_id, total_balance, total_amount_currency in self.cr.fetchall():
             account, expected_balance, expected_amount_currency = expected_values[account_id]
             self.assertEqual(
@@ -2207,7 +2207,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
         pay1_rec_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.move_id.button_draft()
+        pay1.move_id.action_draft()
         pay1.move_id.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
@@ -2508,7 +2508,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
         pay1_rec_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.move_id.button_draft()
+        pay1.move_id.action_draft()
         pay1.move_id.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
@@ -3344,7 +3344,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         invoice = self.create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
         payment_1 = self.create_line_for_reconciliation(-30.0, -60.0, foreign_curr, '2017-01-01')
         payment_2 = self.create_line_for_reconciliation(-30.0, -60.0, foreign_curr, '2017-01-01')
-        (invoice.move_id + payment_2.move_id).button_draft()
+        (invoice.move_id + payment_2.move_id).action_draft()
         amls = invoice + payment_1 + payment_2
         amls.reconcile()
         partials = self._get_partials(amls)
@@ -4780,7 +4780,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(len(init_reconciliation), 2)  # reconciled for caba and receivable
 
         # Make sure that we don't break any reconciliation before
-        bill.button_draft()
+        bill.action_draft()
         self.assertEqual((payment.move_id + bill).line_ids._reconciled_by_number(), init_reconciliation)
 
         # Make sure there is no traceback like "Record has already been deleted" during the deletion of partials.
@@ -5073,11 +5073,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
 
         line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
-        line_1.move_id.button_draft()
+        line_1.move_id.action_draft()
         line_2 = self.create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2016-01-01')
         line_3 = self.create_line_for_reconciliation(-400.0, -400.0, comp_curr, '2016-01-01')
         line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2016-01-01')
-        line_4.move_id.button_draft()
+        line_4.move_id.action_draft()
         line_5 = self.create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01')
         (line_1 + line_2 + line_3).matching_number = '11111'  # Will be converted to a temporary number
         (line_4 + line_5).matching_number = '22222'  # Will be converted to a temporary number
@@ -5097,7 +5097,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         line_2 = self.create_line_for_reconciliation(-100.0, -100.0, comp_curr, '2016-01-01', self.receivable_account)
         line_3 = self.create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01', self.extra_receivable_account_1)
         line_4 = self.create_line_for_reconciliation(-200.0, -200.0, comp_curr, '2016-01-01', self.extra_receivable_account_1)
-        (line_1 + line_2 + line_3 + line_4).move_id.button_draft()
+        (line_1 + line_2 + line_3 + line_4).move_id.action_draft()
         (line_1 + line_2 + line_3 + line_4).matching_number = '11111'  # Will be converted to a temporary number
         # posting triggers the matching of the imported values
         (line_1 + line_2).move_id.action_post()

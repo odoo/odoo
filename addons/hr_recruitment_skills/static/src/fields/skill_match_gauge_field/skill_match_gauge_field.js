@@ -3,8 +3,8 @@ import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatFloat } from "@web/views/fields/formatters";
-import { GaugeField, gaugeField } from "@web/views/fields/gauge/gauge_field";
+import { formatFloat } from "@web/fields/formatters";
+import { GaugeField, gaugeField } from "@web/fields/display/gauge/gauge_field";
 
 export class SkillMatchGaugeField extends GaugeField {
     static template = "hr_recruitment.SkillMatchGaugeField";

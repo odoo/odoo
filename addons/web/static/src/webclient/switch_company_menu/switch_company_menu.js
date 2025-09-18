@@ -1,24 +1,37 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
+// @ts-check
+
+/** @module @web/webclient/switch_company_menu/switch_company_menu - Company switcher systray dropdown with multi-select, search, and access-rights verification */
 
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
-import { useCommand } from "@web/core/commands/command_hook";
-import { _t } from "@web/core/l10n/translation";
-import { symmetricalDifference } from "@web/core/utils/arrays";
-import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
-import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { user, userBus } from "@web/core/user";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/components/dropdown/dropdown_group";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { router } from "@web/core/browser/router";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { symmetricalDifference } from "@web/core/utils/collections/arrays";
+import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
+import { useCommand } from "@web/services/commands/command_hook";
+import { useHotkey } from "@web/services/hotkeys/hotkey_hook";
+import { user, userBus } from "@web/services/user";
+import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
 
+/**
+ * @param {number} cid - company ID
+ * @returns {Object | undefined} the company descriptor from user.allowedCompaniesWithAncestors
+ */
 function getCompany(cid) {
     return user.allowedCompaniesWithAncestors.find((c) => c.id === cid);
 }
 
-export class CompanySelector {
+/**
+ * Manages the selection state for company switching.
+ *
+ * Tracks which companies are selected/deselected, handles single-company
+ * vs. multi-company mode detection, and applies changes via the router.
+ */
+class CompanySelector {
     constructor(actionService, dropdownState) {
         this.actionService = actionService;
         this.dropdownState = dropdownState;
@@ -29,7 +42,7 @@ export class CompanySelector {
         return (
             symmetricalDifference(
                 this.selectedCompaniesIds,
-                user.activeCompanies.map((c) => c.id)
+                user.activeCompanies.map((c) => c.id),
             ).length > 0
         );
     }
@@ -38,6 +51,10 @@ export class CompanySelector {
         return this.selectedCompaniesIds.includes(companyId);
     }
 
+    /**
+     * @param {"toggle"|"loginto"} mode
+     * @param {number} companyId
+     */
     switchCompany(mode, companyId) {
         if (mode === "toggle") {
             if (this.selectedCompaniesIds.includes(companyId)) {
@@ -69,7 +86,7 @@ export class CompanySelector {
             const hasReadRights = await user.checkAccessRight(
                 controller.props.resModel,
                 "read",
-                controller.props.resId
+                controller.props.resId,
             );
 
             if (!hasReadRights) {
@@ -115,28 +132,37 @@ export class CompanySelector {
                     this.selectedCompaniesIds.push(companyId);
                 }
             } else if (unshift) {
-                const index = this.selectedCompaniesIds.findIndex((c) => c === companyId);
+                const index = this.selectedCompaniesIds.findIndex(
+                    (c) => c === companyId,
+                );
                 this.selectedCompaniesIds.splice(index, 1);
                 this.selectedCompaniesIds.unshift(companyId);
             }
         }
 
-        this._getBranches(companyId).forEach((companyId) => this._selectCompany(companyId));
+        this._getBranches(companyId).forEach((companyId) =>
+            this._selectCompany(companyId),
+        );
     }
 
     _deselectCompany(companyId) {
         if (this.selectedCompaniesIds.includes(companyId)) {
-            this.selectedCompaniesIds.splice(this.selectedCompaniesIds.indexOf(companyId), 1);
+            this.selectedCompaniesIds.splice(
+                this.selectedCompaniesIds.indexOf(companyId),
+                1,
+            );
         }
-        this._getBranches(companyId).forEach((companyId) => this._deselectCompany(companyId));
+        this._getBranches(companyId).forEach((companyId) =>
+            this._deselectCompany(companyId),
+        );
     }
 
     _getBranches(companyId) {
         return getCompany(companyId).child_ids || [];
     }
-    
+
     _isCompanyAllowed(companyId) {
-        return user.allowedCompanies.some((c) => c.id == companyId);
+        return user.allowedCompanies.some((c) => c.id === companyId);
     }
 
     _isSingleCompanyMode() {
@@ -183,9 +209,20 @@ export class CompanySelector {
     }
 }
 
+/**
+ * Systray dropdown for switching between companies in a multi-company environment.
+ *
+ * Supports search filtering, keyboard navigation, select-all, and applies
+ * company changes via the router (with access-rights verification).
+ */
 export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
-    static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem };
+    static components = {
+        Dropdown,
+        DropdownItem,
+        DropdownGroup,
+        SwitchCompanyItem,
+    };
     static props = {};
     static CompanySelector = CompanySelector;
 
@@ -195,12 +232,17 @@ export class SwitchCompanyMenu extends Component {
         const actionService = useService("action");
 
         this.companySelector = useState(
-            new this.constructor.CompanySelector(actionService, this.dropdown)
+            new /** @type {any} */ (this.constructor).CompanySelector(
+                actionService,
+                this.dropdown,
+            ),
         );
         useChildSubEnv({ companySelector: this.companySelector });
 
         this.searchInputRef = useRef("inputRef");
-        this.state = useState({});
+        this.state = useState(
+            /** @type {{ searchFilter: string, showFilter: boolean, visibleCompanies: any[] }} */ ({}),
+        );
         this.resetState();
 
         useHotkey("control+enter", () => this.confirm(), {
@@ -208,7 +250,9 @@ export class SwitchCompanyMenu extends Component {
             isAvailable: () => this.companySelector.hasSelectionChanged,
         });
 
-        useCommand(_t("Switch Company"), () => this.dropdown.open(), { hotkey: "alt+shift+u" });
+        useCommand(_t("Switch Company"), () => this.dropdown.open(), {
+            hotkey: "alt+shift+u",
+        });
         useBus(userBus, "ACTIVE_COMPANIES_CHANGED", () => {
             this.companySelector.reset();
         });
@@ -253,13 +297,15 @@ export class SwitchCompanyMenu extends Component {
 
     get hasSelectedCompanies() {
         return this.visibleCompanies.some((c) =>
-            this.companySelector.isCompanySelected(c.company.id)
+            this.companySelector.isCompanySelected(c.company.id),
         );
     }
 
     get selectAllClass() {
         if (
-            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
+            this.visibleCompanies.every((c) =>
+                this.companySelector.isCompanySelected(c.company.id),
+            )
         ) {
             return "btn-link text-primary";
         } else {
@@ -269,11 +315,15 @@ export class SwitchCompanyMenu extends Component {
 
     get selectAllIcon() {
         if (
-            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
+            this.visibleCompanies.every((c) =>
+                this.companySelector.isCompanySelected(c.company.id),
+            )
         ) {
             return "fa-check-square text-primary";
         } else if (
-            this.visibleCompanies.some((c) => this.companySelector.isCompanySelected(c.company.id))
+            this.visibleCompanies.some((c) =>
+                this.companySelector.isCompanySelected(c.company.id),
+            )
         ) {
             return "fa-minus-square-o";
         } else {
@@ -332,10 +382,13 @@ export class SwitchCompanyMenu extends Component {
                 this.searchInputRef.el.focus();
             }
 
-            if (this.containerRef.el) {
+            if (/** @type {any} */ (this.containerRef).el) {
                 // Fixes the container width so it doesn't change when searching.
-                const currentWidth = this.containerRef.el.getBoundingClientRect().width;
-                this.containerRef.el.style.width = currentWidth + "px";
+                const currentWidth = /** @type {any} */ (
+                    this.containerRef
+                ).el.getBoundingClientRect().width;
+                /** @type {any} */ (this.containerRef).el.style.width =
+                    `${currentWidth}px`;
             }
         } else {
             this.resetState();

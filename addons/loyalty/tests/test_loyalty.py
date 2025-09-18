@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from psycopg2 import IntegrityError
+from psycopg import IntegrityError
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
@@ -67,7 +67,7 @@ class TestLoyalty(TransactionCase):
 
     def test_discount_product_unlink(self):
         # Test that we can not unlink discount line product id
-        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+        with mute_logger('odoo.db'), self.assertRaises(IntegrityError):
             self.program.reward_ids.discount_line_product_id.unlink()
 
     def test_loyalty_mail(self):

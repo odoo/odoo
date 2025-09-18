@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+} from "@web/fields/relational/many2many_tags/many2many_tags_field";
+import { Many2XAutocomplete } from "@web/fields/relational/many2x_autocomplete";
 
 export class Many2ManyTagsJournalsMany2xAutocomplete extends Many2XAutocomplete {
     static template = "account.Many2ManyTagsJournalsMany2xAutocomplete";

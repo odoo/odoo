@@ -1,9 +1,16 @@
+// @ts-check
+
 import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
 import { click, tick } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    Deferred,
+    microTick,
+    runAllTimers,
+} from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-
 import {
     batched,
     debounce,
@@ -283,7 +290,10 @@ describe("debounce", () => {
             expect.step("myFunc");
             return lastValue;
         };
-        const myDebouncedFunc = debounce(myFunc, 3000, { leading: true, trailing: true });
+        const myDebouncedFunc = debounce(myFunc, 3000, {
+            leading: true,
+            trailing: true,
+        });
         myDebouncedFunc(42).then((x) => expect.step("resolved " + x));
         myDebouncedFunc(43).then((x) => expect.step("resolved " + x));
         myDebouncedFunc(44).then((x) => expect.step("resolved " + x));
@@ -371,7 +381,7 @@ describe("throttleForAnimationScrollEvent", () => {
             const nodeName = val && val.currentTarget && val.currentTarget.nodeName;
             const targetName = targetEl && targetEl.nodeName;
             expect.step(
-                `throttled function called with ${nodeName} in event, but ${targetName} in parameter`
+                `throttled function called with ${nodeName} in event, but ${targetName} in parameter`,
             );
             throttled.resolve();
         });
@@ -410,7 +420,9 @@ describe("throttleForAnimationScrollEvent", () => {
             "after scroll",
         ]);
         await throttled;
-        expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
+        expect.verifySteps([
+            "throttled function called with null in event, but DIV in parameter",
+        ]);
         el.remove();
     });
 });
@@ -449,9 +461,13 @@ describe("useDebounced", () => {
             static template = xml`<button class="c" t-on-click="() => this.debounced('hello')">C</button>`;
             static props = ["*"];
             setup() {
-                this.debounced = useDebounced((p) => expect.step(`debounced: ${p}`), 1000, {
-                    execBeforeUnmount: true,
-                });
+                this.debounced = useDebounced(
+                    (p) => expect.step(`debounced: ${p}`),
+                    1000,
+                    {
+                        execBeforeUnmount: true,
+                    },
+                );
             }
         }
         const component = await mountWithCleanup(TestComponent);
@@ -506,7 +522,10 @@ describe("useThrottleForAnimation", () => {
             static template = xml`<button class="c" t-on-click="throttled">C</button>`;
             static props = ["*"];
             setup() {
-                this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);
+                this.throttled = useThrottleForAnimation(
+                    () => expect.step("throttled"),
+                    1000,
+                );
             }
         }
         const component = await mountWithCleanup(TestComponent);

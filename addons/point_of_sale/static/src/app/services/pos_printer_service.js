@@ -1,8 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { AlertDialog } from "@web/ui/dialog/confirmation_dialog";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 export const posPrinterService = {
@@ -33,7 +33,9 @@ export class PosPrinterService extends PrinterService {
         } catch {
             this.dialog.add(AlertDialog, {
                 title: _t("Printing is not supported on some browsers"),
-                body: _t("It is possible to print your tickets by making use of an IoT Box."),
+                body: _t(
+                    "It is possible to print your tickets by making use of an IoT Box.",
+                ),
             });
             return false;
         }
@@ -49,7 +51,7 @@ export class PosPrinterService extends PrinterService {
                     "printHtml",
                     "An unknown error occured in printHtml",
                     false,
-                    [error]
+                    [error],
                 );
             }
 

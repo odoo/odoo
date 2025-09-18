@@ -2,7 +2,9 @@ from base64 import b64decode
 from ssl import SSLError
 
 import requests
-from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.x509 import load_pem_x509_certificate
+from OpenSSL.crypto import X509
 from OpenSSL.crypto import Error as CryptoError
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from urllib3.util.ssl_ import create_urllib3_context
@@ -29,7 +31,7 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         if self.ca_certificates:
             for cert in self.ca_certificates:
                 try:
-                    x509 = load_certificate(FILETYPE_PEM, b64decode(cert.pem_certificate))
+                    x509 = X509.from_cryptography(load_pem_x509_certificate(b64decode(cert.pem_certificate)))
                     context._ctx.get_cert_store().add_cert(x509)
                 except (TypeError, CryptoError) as e:
                     raise SSLError(f"CA certificate {cert.name} is invalid: {e.message}")
@@ -47,17 +49,17 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         conn.cert_file = cert
         conn.key_file = None
 
-    def get_connection(self, url, proxies=None):
-        """ Reads the certificate from a certificate.certificate rather than from the filesystem """
+    def get_connection_with_tls_context(self, request, verify, proxies=None, cert=None):
+        """Load certificate from a certificate.certificate record rather than from the filesystem."""
         # OVERRIDE
-        conn = super().get_connection(url, proxies=proxies)
+        conn = super().get_connection_with_tls_context(request, verify, proxies=proxies, cert=cert)
         context = conn.conn_kw['ssl_context']
 
         def patched_load_cert_chain(certificate, keyfile=None, password=None):
             certificate = certificate.sudo()
             pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
-            context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
-            context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
+            context._ctx.use_certificate(load_pem_x509_certificate(pem))
+            context._ctx.use_privatekey(load_pem_private_key(key, password=None))
 
         context.load_cert_chain = patched_load_cert_chain
         return conn

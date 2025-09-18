@@ -3,14 +3,14 @@
 # * hr_work_entry
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:50+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/ja/>\n"
@@ -45,12 +45,6 @@ msgstr ""
 "が必要）\n"
 "        計画: 勤務記録は従業員の計画から生成されます（計画アプリが必要）\n"
 "    "
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "%(employee)s does not have a contract on %(date)s."
-msgstr "%(employee)sに契約がありません(%(date)s時点)。"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -104,7 +98,7 @@ msgstr "<span>時間</span>"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -393,7 +387,7 @@ msgstr "従業員契約"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
 msgid "Employee Record"
-msgstr "従業員記録"
+msgstr "従業員レコード"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
@@ -537,9 +531,8 @@ msgstr "チェックされている場合、この勤務記録は勤務予定時
 msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
-msgstr ""
-"アクティブフィールドをfalseに設定すると、勤務記録タイプを削除せずに非表示にす"
-"ることができます。"
+msgstr "有効フィールドをfalseに設定すると、勤務記録タイプを削除せずに非表示にすること"
+"ができます。"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -1423,6 +1416,9 @@ msgstr "若年者のための休暇"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 msgid "hours"
 msgstr "時間"
+
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)sに契約がありません(%(date)s時点)。"
 
 #~ msgid ""
 #~ "%(employee)s does not have a contract from %(date_start)s to %(date_end)s."

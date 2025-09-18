@@ -1,12 +1,12 @@
 import { Component, useState, onWillStart } from "@odoo/owl";
 
 import { Domain } from "@web/core/domain";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { Pager } from "@web/core/pager/pager";
-import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
+import { Pager } from "@web/components/pager/pager";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/ui/block/ui_service";
 import { useService } from "@web/core/utils/hooks";
 
 export class KioskManualSelection extends Component {

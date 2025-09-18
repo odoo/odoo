@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardFieldProps } from "@web/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
@@ -37,7 +37,7 @@ class X2ManyButtons extends Component {
     }
 
     async openFormAndDiscard(id) {
-        const action = await this.orm.call(this.currentField.resModel, "action_open_business_doc", [id], {});
+        const action = await this.orm.call(this.currentField.resModel, "action_view_business_doc", [id], {});
         await this.props.record.discard();
         this.action.doAction(action);
     }

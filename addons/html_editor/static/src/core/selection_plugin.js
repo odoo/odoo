@@ -13,7 +13,7 @@ import {
     firstLeaf,
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
@@ -23,7 +23,7 @@ import {
     normalizeNotEditableNode,
     normalizeSelfClosingElement,
 } from "../utils/selection";
-import { closestScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY } from "@web/core/utils/dom/scrolling";
 import { weakMemoize } from "@html_editor/utils/functions";
 
 /**
@@ -259,6 +259,7 @@ export class SelectionPlugin extends Plugin {
         if (this.document !== document) {
             const focusEditable = () => {
                 this.focusEditableDocument = true;
+                this.dispatchTo("selection_enter_handlers");
             };
             const unFocusEditable = (ev) => {
                 if (this.focusEditableDocument) {
@@ -379,15 +380,29 @@ export class SelectionPlugin extends Plugin {
             if (anchorNode === focusNode && focusOffset < anchorOffset) {
                 direction = !direction;
             }
+
+            // Last resort: if the document selection doesn't even have the right
+            // anchorNode comparing to the range, we don't set the active selection.
+            const isSelectionUncorrectable = direction
+                ? anchorNode !== range.startContainer
+                : anchorNode !== range.endContainer;
+
             if (
                 this.activeSelection &&
-                (isProtecting(anchorNode) ||
+                (isSelectionUncorrectable ||
+                    isProtecting(anchorNode) ||
                     (isProtected(anchorNode) && !isUnprotecting(anchorNode)))
             ) {
                 // Keep the previous activeSelection in case of user interactions
                 // inside a protected zone.
                 return this.activeSelection;
             }
+            // For Safari, in edge cases in collaboration, the selection can be
+            // wrong (e.g. offsets are out of range) while the range is correct.
+            // We use range's offsets instead of selection's.
+            anchorOffset = direction ? range.startOffset : range.endOffset;
+            focusOffset = direction ? range.endOffset : range.startOffset;
+
             [anchorNode, anchorOffset] = normalizeSelfClosingElement(anchorNode, anchorOffset);
             [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset);
             const [startContainer, startOffset, endContainer, endOffset] =
@@ -482,14 +497,15 @@ export class SelectionPlugin extends Plugin {
     getSelectionData() {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        let collapsed;
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
                       get isCollapsed() {
-                          if (this.collapsed === undefined) {
-                              this.collapsed = selection.isCollapsed;
+                          if (collapsed === undefined) {
+                              collapsed = selection.isCollapsed;
                           }
-                          return this.collapsed;
+                          return collapsed;
                       },
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
@@ -500,9 +516,17 @@ export class SelectionPlugin extends Plugin {
                           : null,
                   })
                 : null;
+        // On Chrome, a specific sequence of actions could leave activeSelection
+        // having a connected anchorNode but with offset too high, pointing to
+        // an element that no longer exists. This is why the following condition
+        // is necessary (see commit message).
+        const isSelectionConnected =
+            this.activeSelection.anchorNode.isConnected &&
+            nodeSize(this.activeSelection.anchorNode) >= this.activeSelection.anchorOffset &&
+            nodeSize(this.activeSelection.focusNode) >= this.activeSelection.focusOffset;
         if (documentSelectionIsInEditable) {
             this.activeSelection = this.makeActiveSelection(selection);
-        } else if (!this.activeSelection.anchorNode.isConnected) {
+        } else if (!isSelectionConnected) {
             this.activeSelection = this.makeActiveSelection();
         }
         let { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed, direction } =
@@ -959,7 +983,7 @@ export class SelectionPlugin extends Plugin {
             isProtecting(node) || (isProtected(node) && !isUnprotecting(node));
         if (
             focusTarget !== anchorTarget &&
-            focusTarget.previousSibling === anchorTarget &&
+            focusTarget?.previousSibling === anchorTarget &&
             protectionCheck(anchorTarget)
         ) {
             return;
@@ -1094,14 +1118,22 @@ export class SelectionPlugin extends Plugin {
             return;
         }
 
-        const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
-        // If selection includes a non-editable element, focusing editor will move cursor to different position.
-        if (
-            !closestNonEditable(editableSelection.anchorNode) &&
-            !closestNonEditable(editableSelection.focusNode)
-        ) {
-            // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
-            this.editable.focus({ preventScroll: true });
+        // Focusing the closest editable element is required since, in the website
+        // 'this.editable' itself is contenteditable="false`.
+        const closestEditable = closestElement(
+            editableSelection.commonAncestorContainer,
+            (el) => el.getAttribute("contenteditable") === "true"
+        );
+        closestEditable?.focus({ preventScroll: true });
+
+        // If selection is inside a non-editable element, focusing editor might
+        // move cursor to different position. so reapply the last selection.
+        const closestNonEditable = closestElement(
+            editableSelection.commonAncestorContainer,
+            (el) => !el.isContentEditable
+        );
+        if (closestNonEditable) {
+            this.setSelection(editableSelection, { normalize: false });
         }
 
         if (!currentSelectionIsInEditable) {

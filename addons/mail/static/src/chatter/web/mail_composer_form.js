@@ -1,11 +1,10 @@
-import { formView } from "@web/views/form/form_view";
-import { registry } from "@web/core/registry";
-import { EventBus, toRaw, useEffect, useRef, useSubEnv } from "@odoo/owl";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useService } from "@web/core/utils/hooks";
-import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-
+import { EventBus, toRaw, useEffect, useRef, useSubEnv } from "@odoo/owl";
+import { useCustomDropzone } from "@web/components/dropzone/dropzone_hook";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { useX2ManyCrud } from "@web/fields/relational/x2many_crud";
+import { formView } from "@web/views/form/form_view";
 export class MailComposerFormController extends formView.Controller {
     static props = {
         ...formView.Controller.props,
@@ -41,7 +40,11 @@ export class MailComposerFormRenderer extends formView.Renderer {
                     }
                 }
             },
-            () => [this.props.record.isInEdition, this.root.el, this.props.record.resId]
+            () => [
+                this.props.record.isInEdition,
+                this.root.el,
+                this.props.record.resId,
+            ],
         );
 
         const getActiveMailThreads = () =>
@@ -55,7 +58,10 @@ export class MailComposerFormRenderer extends formView.Renderer {
 
         // Add file dropzone on full mail composer:
         this.attachmentUploadService = useService("mail.attachment_upload");
-        this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
+        this.operations = useX2ManyCrud(
+            () => this.props.record.data["attachment_ids"],
+            true,
+        );
 
         useCustomDropzone(this.root, MailAttachmentDropzone, {
             /** @param {Event} event */
@@ -65,7 +71,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                         const attachment = await this.attachmentUploadService.upload(
                             thread,
                             thread.composer,
-                            file
+                            file,
                         );
                         await this.operations.saveRecord([attachment.id]);
                     }
@@ -83,7 +89,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],
-                ["email", "id", "lang", "name"]
+                ["email", "id", "lang", "name"],
             );
 
             /**
@@ -92,7 +98,9 @@ export class MailComposerFormRenderer extends formView.Renderer {
              */
             const updateRecipientWithCorrespondingPartner = (recipient) => {
                 const partner = selectedPartners.find(
-                    (partner) => partner.id === recipient.id || partner.email === recipient.email
+                    (partner) =>
+                        partner.id === recipient.id ||
+                        partner.email === recipient.email,
                 );
                 if (partner) {
                     return {
@@ -116,18 +124,18 @@ export class MailComposerFormRenderer extends formView.Renderer {
             for (const thread of getActiveMailThreads()) {
                 // Update the recipient lists:
                 thread.suggestedRecipients = thread.suggestedRecipients.map(
-                    updateRecipientWithCorrespondingPartner
+                    updateRecipientWithCorrespondingPartner,
                 );
                 thread.additionalRecipients = thread.additionalRecipients.map(
-                    updateRecipientWithCorrespondingPartner
+                    updateRecipientWithCorrespondingPartner,
                 );
 
                 // Remove the recipients that got removed from the composer:
                 thread.suggestedRecipients = thread.suggestedRecipients.filter(
-                    isRecipientSelectedFromFullMailComposer
+                    isRecipientSelectedFromFullMailComposer,
                 );
                 thread.additionalRecipients = thread.additionalRecipients.filter(
-                    isRecipientSelectedFromFullMailComposer
+                    isRecipientSelectedFromFullMailComposer,
                 );
 
                 // Add the recipients that got added to the composer:
@@ -136,7 +144,11 @@ export class MailComposerFormRenderer extends formView.Renderer {
                         ...thread.suggestedRecipients,
                         ...thread.additionalRecipients,
                     ];
-                    if (!allRecipients.some((recipient) => recipient.partner_id === partner.id)) {
+                    if (
+                        !allRecipients.some(
+                            (recipient) => recipient.partner_id === partner.id,
+                        )
+                    ) {
                         thread.additionalRecipients.push({
                             display_name: partner.display_name,
                             email: partner.email,

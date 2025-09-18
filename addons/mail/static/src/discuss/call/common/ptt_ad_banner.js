@@ -2,7 +2,6 @@ import { Component, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
-
 export class PttAdBanner extends Component {
     static template = "discuss.pttAdBanner";
     static props = {};

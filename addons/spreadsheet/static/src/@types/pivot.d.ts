@@ -1,5 +1,5 @@
 import { OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/pivot_runtime";
-import { ORM } from "@web/core/orm_service";
+import { ORM } from "@web/services/orm_service";
 import { PivotMeasure } from "@spreadsheet/pivot/pivot_runtime";
 import { ServerData } from "@spreadsheet/data_sources/server_data";
 import { Pivot, CommonPivotCoreDefinition, PivotCoreDefinition } from "@odoo/o-spreadsheet";

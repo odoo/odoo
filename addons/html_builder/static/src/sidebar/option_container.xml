@@ -37,23 +37,23 @@
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(props.editingElement)"/>
                 </t>
-                <t t-if="props.isClonable || props.cloneDisabledReason">
+                <t t-if="domState.isClonable || domState.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
-                    <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
+                    <span t-att-title="domState.cloneDisabledReason" t-att-aria-label="domState.cloneDisabledReason">
 	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
 	                            title="Duplicate this block"
 	                            aria-label="Duplicate this block"
-                                t-att-disabled="!!props.cloneDisabledReason"
+                                t-att-disabled="!!domState.cloneDisabledReason"
 	                            t-on-click="cloneElement"/>
 	                </span>
                 </t>
-                <t t-if="props.isRemovable || props.removeDisabledReason">
+                <t t-if="domState.isRemovable || domState.removeDisabledReason">
                     <!-- Disabled buttons do not display their title -->
-                    <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
+                    <span t-att-title="domState.removeDisabledReason" t-att-aria-label="domState.removeDisabledReason">
 	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
 	                            title="Remove this block"
 	                            aria-label="Remove this block"
-	                            t-att-disabled="!!props.removeDisabledReason"
+	                            t-att-disabled="!!domState.removeDisabledReason"
 	                            t-on-click="removeElement"/>
 	                </span>
                 </t>

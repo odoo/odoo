@@ -11,7 +11,7 @@
             <t t-else="">Edit</t>
         </button>
         <Dropdown t-else="">
-            <button class="o-website-btn-custo-primary o-dropdown-toggle-custo btn rounded-0 border-0 px-3" accesskey="a">
+            <button class="o-website-btn-custo-primary o-dropdown-toggle-custo btn rounded-0 border-0 px-3" accesskey="a" t-on-click="this.onEditDropdownClick">
                 <span t-if="websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
                 <t t-else="">Edit</t>
             </button>

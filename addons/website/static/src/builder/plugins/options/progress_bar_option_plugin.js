@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { clamp } from "@web/core/utils/numbers";
+import { clamp } from "@web/core/utils/format/numbers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 

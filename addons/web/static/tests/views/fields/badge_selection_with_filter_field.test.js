@@ -1,7 +1,14 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     is_raining_outside = fields.Boolean();
@@ -23,7 +30,8 @@ class Partner extends models.Model {
 
     _onChanges = {
         is_raining_outside(record) {
-            record.allowed_moods = ["happy"] + (record.is_raining_outside ? ["sad"] : []);
+            record.allowed_moods =
+                ["happy"] + (record.is_raining_outside ? ["sad"] : []);
         },
         color(record) {
             record.allowed_moods =

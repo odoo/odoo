@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from psycopg2 import OperationalError
+from psycopg import OperationalError
 from pytz import timezone
-from werkzeug.urls import url_quote_plus, url_encode
+from urllib.parse import quote_plus, urlencode
 
 import hashlib
 import logging
@@ -301,13 +301,13 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # servicio de cotejo o remisión de información por parte del receptor de la factura"
         # https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DetalleEspecificacTecnCodigoQRfactura.pdf
         endpoint_url = self.company_id._l10n_es_edi_verifactu_get_endpoints()['QR']
-        url_params = url_encode({
+        url_params = urlencode({
             'nif': record_identifier['IDEmisorFactura'],
             'numserie': record_identifier['NumSerieFactura'],
             'fecha': record_identifier['FechaExpedicionFactura'],
             'importe': record_identifier['ImporteTotal'],
         })
-        url = url_quote_plus(f"{endpoint_url}?{url_params}")
+        url = quote_plus(f"{endpoint_url}?{url_params}")
         return f'/report/barcode/?barcode_type=QR&value={url}&barLevel=M&width=180&height=180'
 
     @api.model

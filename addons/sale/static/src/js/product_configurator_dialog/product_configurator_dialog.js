@@ -1,9 +1,9 @@
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
-import { Dialog } from '@web/core/dialog/dialog';
+import { Dialog } from '@web/ui/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
-import { formatCurrency } from '@web/core/currency';
+import { formatCurrency } from '@web/services/currency';
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
@@ -264,8 +264,8 @@ export class ProductConfiguratorDialog extends Component {
         if (product.quantity === quantity) {
             return false;
         }
-        const { price } = await this._updateCombination(product, quantity, product.uom.id);
         product.quantity = quantity;
+        const { price } = await this._updateCombination(product, quantity, product.uom.id);
         product.price = parseFloat(price);
 
         return true;

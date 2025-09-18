@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
+    <record id="view_sale_order_search_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="inherit_id" ref="sale.view_sale_order_search"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <filter name="my_sale_orders_filter" position="before">
-                <filter string="Confirmed" name="order_confirmed" domain="[('state', '=', 'sale')]"/>
+                <filter string="Confirmed" name="order_confirmed" domain="[('state', '=', 'done')]"/>
                 <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent')]"/>
                 <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
@@ -23,10 +23,10 @@
         </field>
     </record>
 
-    <record id="view_sales_order_filter_ecommerce_unpaid" model="ir.ui.view">
+    <record id="view_sale_order_search_ecommerce_unpaid" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.unpaid.view</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="inherit_id" ref="sale.view_sale_order_search"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
@@ -47,7 +47,7 @@
         <field name="view_mode">list,form,kanban,activity</field>
         <field name="domain">[]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="search_view_id" ref="view_sale_order_search_ecommerce"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There is no confirmed order from the website
@@ -62,7 +62,7 @@
         <field name="view_mode">list,form,kanban,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="search_view_id" ref="view_sale_order_search_ecommerce"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There is no unpaid order from the website yet
@@ -72,7 +72,7 @@
         </field>
     </record>
 
-    <record id="view_sales_order_filter_ecommerce_abondand" model="ir.ui.view">
+    <record id="view_sale_order_search_ecommerce_abondand" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.abandonned.view</field>
         <field name="model">sale.order</field>
         <field name="priority">32</field>
@@ -99,9 +99,9 @@
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">list,form,kanban</field>
-        <field name="domain">[('state', '=', 'sale'), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
+        <field name="domain">[('state', '=', 'done'), ('line_ids', '!=', False), ('invoice_state', '=', 'to invoice'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="search_view_id" ref="view_sale_order_search_ecommerce"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 You don't have any order to invoice from the website
@@ -118,8 +118,8 @@
         <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
-        <field name="view_id" ref="sale.view_quotation_tree"/>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_unpaid"/>
+        <field name="view_id" ref="sale.view_sale_order_list_quotation"/>
+        <field name="search_view_id" ref="view_sale_order_search_ecommerce_unpaid"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There is no unpaid order from the website yet
@@ -136,8 +136,8 @@
         <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('is_abandoned_cart', '=', 1)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
-        <field name="view_id" ref="sale.view_quotation_tree"/>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>
+        <field name="view_id" ref="sale.view_sale_order_list_quotation"/>
+        <field name="search_view_id" ref="view_sale_order_search_ecommerce_abondand"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No abandoned carts found
@@ -153,12 +153,12 @@
     <record id="sale_order_view_form" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale.view_sale_order_form"/>
         <field name="arch" type="xml">
-            <button name="action_quotation_send" id="quotation_send_primary" position="attributes">
+            <button name="action_send_quotation" id="quotation_send_primary" position="attributes">
                 <attribute name="invisible" separator="or" add="is_abandoned_cart and not cart_recovery_email_sent"/>
             </button>
-            <button name="action_quotation_send" position="after">
+            <button name="action_send_quotation" position="after">
                 <button
                     name="action_recovery_email_send"
                     type="object"
@@ -167,9 +167,9 @@
                     data-hotkey="l"
                     invisible="not is_abandoned_cart or cart_recovery_email_sent"/>
             </button>
-            <button name="action_quotation_send" id="quotation_send" position="after">
+            <button name="action_send_quotation" id="quotation_send" position="after">
                 <button
-                    name="action_quotation_send"
+                    name="action_send_quotation"
                     id="send_by_email_bis"
                     string="Send by Email"
                     type="object"
@@ -189,10 +189,10 @@
         </field>
     </record>
 
-    <record id="sale_order_tree" model="ir.ui.view">
+    <record id="view_sale_order_list" model="ir.ui.view">
         <field name="name">sale.order.list.inherit.website.sale</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="inherit_id" ref="sale.view_sale_order_list"/>
         <field name="arch" type="xml">
             <field name="user_id" position="before">
                 <field name="website_id" groups="website.group_multi_website" optional="show"/>

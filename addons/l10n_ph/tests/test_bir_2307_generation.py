@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
-import xlrd
 import base64
+
+import openpyxl
 
 from odoo import Command
 from odoo.tests import tagged
@@ -70,16 +71,15 @@ class TestBIR2307Generation(TestPhCommon):
         # 2: Build the expected values
         expected_values = {
             # Header
-            0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
+            1: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
+            2: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
         }
 
-        report_file = io.BytesIO(bir_2307)
-        xls = xlrd.open_workbook(file_contents=report_file.read())
-        sheet = xls.sheet_by_index(0)
+        wb = openpyxl.load_workbook(io.BytesIO(bir_2307))
+        sheet = wb.active
         for row, values in expected_values.items():
-            row_values = sheet.row_values(row)
+            row_values = [cell.value for cell in sheet[row]]
             for row_value, expected_value in zip(row_values, values):
                 self.assertEqual(row_value, expected_value)
 
@@ -94,13 +94,12 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
-        sheet = xl.sheet_by_index(0)
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
+        sheet = wb.active
 
         result = []
-        for row in range(1, sheet.nrows):
-            result.append(sheet.row_values(row))
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            result.append(list(row))
         self.assertEqual(result, [])
 
     def test_02_simple_atc(self):
@@ -116,13 +115,12 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
-        sheet = xl.sheet_by_index(0)
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
+        sheet = wb.active
 
         result = []
-        for row in range(1, sheet.nrows):
-            result.append(sheet.row_values(row))
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            result.append(list(row))
         self.assertEqual(result, [
             ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]
         ])
@@ -142,13 +140,12 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
-        sheet = xl.sheet_by_index(0)
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
+        sheet = wb.active
 
         result = []
-        for row in range(1, sheet.nrows):
-            result.append(sheet.row_values(row))
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            result.append(list(row))
         self.assertEqual(result, [
             ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '10% ATC', 'WI010', 1150.0, 10.0, 115.0]
         ])
@@ -167,13 +164,12 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
-        sheet = xl.sheet_by_index(0)
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(wizard.xls_file)))
+        sheet = wb.active
 
         result = []
-        for row in range(1, sheet.nrows):
-            result.append(sheet.row_values(row))
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            result.append(list(row))
         # We expect the values in company currency in the file.
         self.assertEqual(result, [
             ['01/01/2025', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]

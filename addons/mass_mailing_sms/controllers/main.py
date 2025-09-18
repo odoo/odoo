@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
+from urllib.parse import urlencode
+
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
@@ -63,7 +64,7 @@ class MailingSMSController(http.Controller):
         # trace found -> number valid, code matching
         if valid_trace:
             return request.redirect(
-                f'/sms/{mailing_id}/unsubscribe/{trace_code}?{werkzeug.urls.url_encode({"sms_number": sanitized_number})}'
+                f'/sms/{mailing_id}/unsubscribe/{trace_code}?{urlencode({"sms_number": sanitized_number})}'
             )
 
         # otherwise: generate error message, loop on same page

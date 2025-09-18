@@ -15,8 +15,8 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import date_utils, float_compare, ormcache
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
-from odoo.tools.float_utils import float_round
-from odoo.tools.intervals import Intervals
+from odoo.libs.numbers.float_utils import float_round
+from odoo.libs.intervals import Intervals
 
 from odoo.addons.base.models.res_partner import _tz_get
 
@@ -516,7 +516,6 @@ class ResourceCalendar(models.Model):
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
-            ('company_id', 'in', [False] + ([r.company_id.id for r in resources_list if r.company_id] or [self.company_id.id])),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)

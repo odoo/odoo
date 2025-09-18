@@ -1,14 +1,18 @@
+// @ts-check
+
+/** @module @web/webclient/menus/menu_helpers - Utility functions to traverse the menu tree and compute flat app/menuItem lists for HomeMenu */
+
 /**
  * Traverses the given menu tree, executes the given callback for each node with
  * the node itself and the list of its ancestors as arguments.
  *
  * @param {Object} tree tree of menus as exported by the menus service
  * @param {Function} cb
- * @param {[Object]} [parents] the ancestors of the tree root, if any
+ * @param {Object[]} [parents] the ancestors of the tree root, if any
  */
 function traverseMenuTree(tree, cb, parents = []) {
     cb(tree, parents);
-    tree.childrenTree.forEach((c) => traverseMenuTree(c, cb, parents.concat([tree])));
+    tree.childrenTree.forEach((c) => traverseMenuTree(c, cb, [...parents, tree]));
 }
 
 /**
@@ -34,14 +38,16 @@ export function computeAppsAndMenuItems(menuTree) {
             id: menuItem.id,
             xmlid: menuItem.xmlid,
             actionID: menuItem.actionID,
-            href: `/odoo/${menuItem.actionPath || "action-" + menuItem.actionID}`,
+            href: `/odoo/${menuItem.actionPath || `action-${menuItem.actionID}`}`,
             appID: menuItem.appID,
         };
         if (isApp) {
             if (menuItem.webIconData) {
                 item.webIconData = menuItem.webIconData;
             } else {
-                const [iconClass, color, backgroundColor] = (menuItem.webIcon || "").split(",");
+                const [iconClass, color, backgroundColor] = (
+                    menuItem.webIcon || ""
+                ).split(",");
                 if (backgroundColor !== undefined) {
                     // Could split in three parts?
                     item.webIcon = { iconClass, color, backgroundColor };
@@ -62,8 +68,10 @@ export function computeAppsAndMenuItems(menuTree) {
 }
 
 /**
- * @param {Array} order
- * Sorts the apps in the homescreen menu according to the given order as an array of xmlid strings
+ * Sorts the apps in the homescreen menu according to the given order.
+ *
+ * @param {Object[]} apps - app menu items to sort in-place
+ * @param {string[]} order - ordered array of xmlid strings
  */
 export function reorderApps(apps, order) {
     apps.sort((a, b) => {

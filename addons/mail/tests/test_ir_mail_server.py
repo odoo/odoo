@@ -10,7 +10,9 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, users
-from odoo.tools import config, mute_logger, split_every
+from itertools import batched
+
+from odoo.tools import config, mute_logger
 
 
 @tagged('mail_server')
@@ -428,7 +430,7 @@ class TestPersonalServer(MailCommon):
         self.assertEqual(len(sent), sent_count)
 
         scheduled_dates = sorted(unsent.mapped('scheduled_date'))
-        scheduled_dates = list(split_every(TEST_LIMIT, scheduled_dates))
+        scheduled_dates = list(batched(scheduled_dates, TEST_LIMIT))
 
         for i, to_check in enumerate(scheduled_dates, start=1):
             self.assertEqual(set(to_check), {send_datetime.replace(second=0) + timedelta(minutes=i)})

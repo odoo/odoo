@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_parse, url_decode, url_encode
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from odoo.addons.auth_signup.models.res_partner import ResPartner
 from odoo.addons.mail.tests.common import MailCommon
@@ -211,22 +211,22 @@ class TestPortalFlow(MailCommon, HttpCase):
         else:
             raise AssertionError('Record access URL not found')
         # build altered access_token URL for testing security
-        parsed_url = url_parse(cls.record_portal_url_auth)
-        query_params = url_decode(parsed_url.query)
+        parsed_url = urlsplit(cls.record_portal_url_auth)
+        query_params = dict(parse_qsl(parsed_url.query))
         cls.record_portal_hash = query_params['hash']
-        cls.record_portal_url_auth_wrong_token = parsed_url.replace(
-            query=url_encode({
+        cls.record_portal_url_auth_wrong_token = urlunsplit(parsed_url._replace(
+            query=urlencode(sorted({
                 **query_params,
                 'access_token': query_params['access_token'].translate(
                     str.maketrans('0123456789abcdef', '9876543210fedcba')
                 )
-            }, sort=True)
-        ).to_url()
+            }.items()))
+        ))
 
         # prepare result URLs on self to ease tests
         # ------------------------------------------------------------
         cls.portal_web_url = f'{base_url}/my/test_portal/{cls.record_portal.id}'
-        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash}, sort=True)}'
+        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{urlencode(sorted({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash}.items()))}'
         cls.public_act_url_share = f'{base_url}/test_portal/public_type/{cls.record_public_act_url.id}'
         cls.internal_backend_local_url = f'/odoo/{cls.record_internal._name}/{cls.record_internal.id}'
         cls.portal_backend_local_url = f'/odoo/{cls.record_portal._name}/{cls.record_portal.id}'
@@ -254,9 +254,9 @@ class TestPortalFlow(MailCommon, HttpCase):
             self.record_portal_url_auth, self.record_portal_url_auth_wrong_token,
         ):
             with self.subTest(url=url):
-                parsed = url_parse(url)
+                parsed = urlsplit(url)
                 self.assertEqual(parsed.path, '/mail/view')
-                params = url_decode(parsed.query)
+                params = dict(parse_qsl(parsed.query))
                 url_params.append(params)
                 # Note that pid, hash and auth_signup_token are not tested by this test but may be present in the URL (config).
                 self.assertEqual(params.get('model'), 'mail.test.portal')
@@ -315,7 +315,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             # std url, read record -> redirect to my with parameters being record portal action parameters (???)
             (
                 'Access record (no customer portal)', self.record_read_url_base,
-                f'{self.test_base_url}/my?{url_encode({"subpath": f"{self.record_read._name}/{self.record_read.id}"})}',
+                f'{self.test_base_url}/my?{urlencode({"subpath": f"{self.record_read._name}/{self.record_read.id}"})}',
             ),
             # std url, no access to record -> redirect to my
             (
@@ -367,21 +367,21 @@ class TestPortalFlow(MailCommon, HttpCase):
             # invalid token -> ko -> redirect to login with redirect to original link, will be rejected after login
             (
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
-                f'{login_url}?{url_encode({"redirect": self.record_portal_url_auth_wrong_token.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_portal_url_auth_wrong_token.replace(self.test_base_url, "")})}',
             ),
             # std url, no access to record -> redirect to login with redirect to original link, will be rejected after login
             (
                 'No access record (internal)', self.record_internal_url_base,
-                f'{login_url}?{url_encode({"redirect": self.record_internal_url_base.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_internal_url_base.replace(self.test_base_url, "")})}',
             ),
             # std url, no access to record but portal -> redirect to login, original (local) URL kept as redirection post login to try again (even if faulty)
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
-                f'{login_url}?{url_encode({"redirect": self.record_portal_url_base.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_portal_url_base.replace(self.test_base_url, "")})}',
             ),
             (
                 'No access record (portal can read, no customer portal)', self.record_read_url_base,
-                f'{login_url}?{url_encode({"redirect": self.record_read_url_base.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_read_url_base.replace(self.test_base_url, "")})}',
             ),
             # public_type act_url -> share users are redirected to frontend url
             (
@@ -391,15 +391,15 @@ class TestPortalFlow(MailCommon, HttpCase):
             # not existing -> redirect to login, original (internal) URL kept as redirection post login to try again (even if faulty)
             (
                 'Not existing record (internal)', self.record_internal_url_no_exists,
-                f'{login_url}?{url_encode({"redirect": self.record_internal_url_no_exists.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_internal_url_no_exists.replace(self.test_base_url, "")})}',
             ),
             (
                 'Not existing record (portal enabled)', self.record_portal_url_no_exists,
-                f'{login_url}?{url_encode({"redirect": self.record_portal_url_no_exists.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_portal_url_no_exists.replace(self.test_base_url, "")})}',
             ),
             (
                 'Not existing model', self.record_url_no_model,
-                f'{login_url}?{url_encode({"redirect": self.record_url_no_model.replace(self.test_base_url, "")})}',
+                f'{login_url}?{urlencode({"redirect": self.record_url_no_model.replace(self.test_base_url, "")})}',
             ),
         ]:
             with self.subTest(name=url_name, url=url):
@@ -423,7 +423,7 @@ class TestPortalFlow(MailCommon, HttpCase):
                 '/mail/view?model=%s&res_id=%s' % (model, res_id),
                 timeout=15
             )
-            path = url_parse(response.url).path
+            path = urlsplit(response.url).path
             self.assertEqual(
                 path, '/web/login',
                 'Failed with %s - %s' % (model, res_id)
@@ -431,8 +431,8 @@ class TestPortalFlow(MailCommon, HttpCase):
 
     def assert_URL(self, url, expected_path, expected_fragment_params=None, expected_query=None):
         """Asserts that the URL has the expected path and if set, the expected fragment parameters and query."""
-        parsed_url = url_parse(url)
-        fragment_params = url_decode(parsed_url.fragment)
+        parsed_url = urlsplit(url)
+        fragment_params = dict(parse_qsl(parsed_url.fragment))
         self.assertEqual(parsed_url.path, expected_path)
         if expected_fragment_params:
             for key, expected_value in expected_fragment_params.items():

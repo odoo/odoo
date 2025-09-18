@@ -1,9 +1,16 @@
-import { _t } from "@web/core/l10n/translation";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { useRef, useState, Component, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { downloadPosLogs } from "../pretty_console_log";
 const { DateTime } = luxon;
 
@@ -27,7 +34,7 @@ export class DebugWidget extends Component {
             device_identifier: this.pos.device.data.device_identifier,
             next_number: this.pos.device.data.next_number,
             unsynced_number_stack: JSON.stringify(
-                this.pos.device?.data?.unsynced_number_stack || []
+                this.pos.device?.data?.unsynced_number_stack || [],
             ),
         });
 
@@ -37,11 +44,17 @@ export class DebugWidget extends Component {
                 return;
             }
 
-            this.importOrderInput.el.addEventListener("click", this.handleFileOrderImport);
+            this.importOrderInput.el.addEventListener(
+                "click",
+                this.handleFileOrderImport,
+            );
         });
         onWillDestroy(() => {
             if (this.importOrderInput?.el) {
-                this.importOrderInput.el.removeEventListener("click", this.handleFileOrderImport);
+                this.importOrderInput.el.removeEventListener(
+                    "click",
+                    this.handleFileOrderImport,
+                );
             }
         });
 
@@ -56,13 +69,13 @@ export class DebugWidget extends Component {
                 const interval = setInterval(() => {
                     this.state.next_number = this.pos.device?.data?.next_number;
                     this.state.unsynced_number_stack = JSON.stringify(
-                        this.pos.device?.data?.unsynced_number_stack || []
+                        this.pos.device?.data?.unsynced_number_stack || [],
                     );
                 }, 500);
 
                 return () => clearInterval(interval);
             },
-            () => [this.state.isOpen]
+            () => [this.state.isOpen],
         );
     }
     get isDisabled() {
@@ -90,7 +103,9 @@ export class DebugWidget extends Component {
         if (!this.barcodeReader) {
             return;
         }
-        const ean = this.barcodeReader.parser.sanitize_ean(this.state.barcodeInput || "0");
+        const ean = this.barcodeReader.parser.sanitize_ean(
+            this.state.barcodeInput || "0",
+        );
         this.state.barcodeInput = ean;
         await this.barcodeReader.scan(ean);
     }
@@ -106,12 +121,12 @@ export class DebugWidget extends Component {
             body: _t(
                 `This operation will destroy all ${
                     paid ? "paid" : "unpaid"
-                } orders in the browser. You will lose all the data. This operation cannot be undone.`
+                } orders in the browser. You will lose all the data. This operation cannot be undone.`,
             ),
             confirm: () => {
                 this.pos.data.network.unsyncData = [];
                 const orders = this.pos.models["pos.order"].filter(
-                    (order) => order.finalized === paid
+                    (order) => order.finalized === paid,
                 );
 
                 for (const order of orders) {

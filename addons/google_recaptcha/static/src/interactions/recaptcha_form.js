@@ -4,7 +4,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
-import { addLoadingEffect } from "@web/core/utils/ui";
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 
 export class RecaptchaForm extends Interaction {
     static selector = "form[data-captcha]";

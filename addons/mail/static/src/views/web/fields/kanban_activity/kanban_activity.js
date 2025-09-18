@@ -1,10 +1,7 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
-
 import { Component } from "@odoo/owl";
-
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
+import { standardFieldProps } from "@web/fields/standard_field_props";
 export class KanbanActivity extends Component {
     static components = { ActivityButton };
     // used in children, in particular in ActivityButton

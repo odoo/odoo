@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import batched
+
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import split_every
 
 
 class StockWarehouse(models.Model):
@@ -45,7 +46,7 @@ class StockWarehouse(models.Model):
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
-            warehouse.manufacture_to_resupply = bool(manufacture_route.product_selectable or manufacture_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids
 
     def _inverse_manufacture_to_resupply(self):
         for warehouse in self:
@@ -326,7 +327,8 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_orderpoint_products(self):
         non_kit_ids = []
-        for products in split_every(2000, super()._get_orderpoint_products().ids, self.env['product.product'].browse):
+        for batch_ids in batched(super()._get_orderpoint_products().ids, 2000):
+            products = self.env['product.product'].browse(batch_ids)
             kit_ids = set(k.id for k in self.env['mrp.bom']._bom_find(products, bom_type='phantom').keys())
             non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
             products.invalidate_recordset()

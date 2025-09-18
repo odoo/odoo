@@ -1,44 +1,54 @@
-import { _t } from "@web/core/l10n/translation";
+// @ts-check
+
+/** @module @web/views/kanban/kanban_record - Individual kanban card component with compiled template, color strips, cover images, and action handling */
+
+import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { ColorList } from "@web/components/colorlist/colorlist";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-import { Field } from "@web/views/fields/field";
-import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
+import { Field } from "@web/fields/field";
+import { fileTypeMagicWordMap } from "@web/fields/media/image/image_field";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
+import { getFormattedValue } from "@web/views/view_utils";
 import { Widget } from "@web/views/widgets/widget";
-import { getFormattedValue } from "../utils";
+
 import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
-
-import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
 
 // These classes determine whether a click on a record should open it.
-export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(
-    ","
-);
+export const CANCEL_GLOBAL_CLICK = [
+    "a",
+    ".dropdown",
+    ".oe_kanban_action",
+    "[data-bs-toggle]",
+].join(",");
 
 /**
  * Returns the index of a color determined by a given record.
  */
-export function getColorIndex(value) {
+function getColorIndex(value) {
     if (typeof value === "number") {
         return Math.round(value) % COLORS.length;
     } else if (typeof value === "string") {
-        const charCodeSum = [...value].reduce((acc, _, i) => acc + value.charCodeAt(i), 0);
+        const charCodeSum = [...value].reduce(
+            (acc, _, i) => acc + value.charCodeAt(i),
+            0,
+        );
         return charCodeSum % COLORS.length;
     } else {
         return 0;
@@ -48,7 +58,7 @@ export function getColorIndex(value) {
 /**
  * Returns a "raw" version of the field value on a given record.
  *
- * @param {Record} record
+ * @param {any} record
  * @param {string} fieldName
  * @returns {any}
  */
@@ -61,11 +71,11 @@ export function getRawValue(record, fieldName) {
             return value.count ? value.currentIds : [];
         }
         case "many2one": {
-            return (value && value.id) || false;
+            return value?.id || false;
         }
         case "date":
         case "datetime": {
-            return value && value.toISO();
+            return typeof value?.toISO === "function" ? value.toISO() : value;
         }
         default: {
             return value;
@@ -76,7 +86,7 @@ export function getRawValue(record, fieldName) {
 /**
  * Returns a formatted version of the field value on a given record.
  *
- * @param {Record} record
+ * @param {any} record
  * @param {string} fieldName
  * @returns {string}
  */
@@ -107,7 +117,7 @@ export function getFormattedRecord(record) {
 /**
  * Returns the image URL of a given field on the record.
  *
- * @param {Record} record
+ * @param {any} record
  * @param {string} [model] model name
  * @param {string} [field] field name
  * @param {number | [number, ...any[]]} [idOrIds] id or array
@@ -194,14 +204,15 @@ export class KanbanRecord extends Component {
 
         this.templates = useViewCompiler(ViewCompiler, templates);
 
-        this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates;
+        this.showMenu =
+            /** @type {any} */ (this.constructor).KANBAN_MENU_ATTRIBUTE in templates;
 
         this.dataState = useState({ record: {}, widget: {} });
         this.createWidget(this.props);
         onWillUpdateProps(this.createWidget);
-        useRecordObserver((record) =>
-            Object.assign(this.dataState.record, getFormattedRecord(record))
-        );
+        useRecordObserver((record) => {
+            Object.assign(this.dataState.record, getFormattedRecord(record));
+        });
         this.rootRef = useRef("root");
         this.hasTouch = hasTouch();
 
@@ -240,7 +251,8 @@ export class KanbanRecord extends Component {
     }
 
     getRecordClasses() {
-        const { archInfo, canResequence, forceGlobalClick, record, progressBarState } = this.props;
+        const { archInfo, canResequence, forceGlobalClick, record, progressBarState } =
+            this.props;
         const classes = ["o_kanban_record d-flex"];
         if (canResequence) {
             classes.push("o_draggable");
@@ -277,7 +289,7 @@ export class KanbanRecord extends Component {
      * @param {MouseEvent} ev
      */
     onGlobalClick(ev, newWindow) {
-        if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
+        if (/** @type {HTMLElement} */ (ev.target).closest(CANCEL_GLOBAL_CLICK)) {
             return;
         }
         if (this.props.getSelection().length > 0 || ev.altKey) {
@@ -303,7 +315,7 @@ export class KanbanRecord extends Component {
                 },
                 {
                     newWindow,
-                }
+                },
             );
         } else if (forceGlobalClick || this.props.archInfo.canOpenRecords) {
             openRecord(record, { newWindow });
@@ -340,7 +352,8 @@ export class KanbanRecord extends Component {
      * @param {Object} params
      */
     triggerAction(params) {
-        const { archInfo, openRecord, deleteRecord, record, archiveRecord } = this.props;
+        const { archInfo, openRecord, deleteRecord, record, archiveRecord } =
+            this.props;
         const { type } = params;
         switch (type) {
             case "open": {
@@ -366,20 +379,27 @@ export class KanbanRecord extends Component {
                     field.relation === "ir.attachment" &&
                     widgets.includes("attachment_image")
                 ) {
-                    this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
+                    this.dialog.add(KanbanCoverImageDialog, {
+                        autoOpen,
+                        fieldName,
+                        record,
+                    });
                 } else {
                     const warning = _t(
                         `Could not set the cover image: incorrect field ("%s") is provided in the view.`,
-                        fieldName
+                        fieldName,
                     );
-                    this.notification.add({ title: warning, type: "danger" });
+                    this.notification.add(warning, { type: "danger" });
                 }
                 break;
             }
             default: {
-                return this.notification.add(_t("Kanban: no action for type: %(type)s", { type }), {
-                    type: "danger",
-                });
+                return this.notification.add(
+                    _t("Kanban: no action for type: %(type)s", { type }),
+                    {
+                        type: "danger",
+                    },
+                );
             }
         }
     }

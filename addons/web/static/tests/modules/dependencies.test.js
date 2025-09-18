@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 
 /**
@@ -10,7 +12,7 @@ function invalidImportsFrom(folder, allowedFolders) {
     // modules within a folder can always depend on one another
     allowedFolders.push(folder);
     const modulesToCheck = Array.from(odoo.loader.modules.keys()).filter((module) =>
-        module.startsWith(`@web/${folder}/`)
+        module.startsWith(`@web/${folder}/`),
     );
     const invalidDeps = {};
     for (const module of modulesToCheck) {
@@ -19,7 +21,9 @@ function invalidImportsFrom(folder, allowedFolders) {
             if (dep === "@odoo/owl" || dep === "@web/session") {
                 return false;
             }
-            return !allowedFolders.some((allowed) => dep.startsWith(`@web/${allowed}/`));
+            return !allowedFolders.some((allowed) =>
+                dep.startsWith(`@web/${allowed}/`),
+            );
         });
         if (invalid.length) {
             invalidDeps[module] = invalid;

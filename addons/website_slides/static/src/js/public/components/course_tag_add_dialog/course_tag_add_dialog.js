@@ -1,7 +1,7 @@
 import { Component, useState } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { Dialog } from "@web/ui/dialog/dialog";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { SelectMenu } from "@web/components/select_menu/select_menu";
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { rpc } from "@web/core/network/rpc";

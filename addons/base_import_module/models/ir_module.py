@@ -4,15 +4,13 @@ import io
 import json
 import logging
 import lxml
-import os
-import pathlib
 import sys
 import traceback
 import zipfile
 from babel.messages import extract
 from collections import defaultdict
 from io import BytesIO
-from os.path import join as opj
+from pathlib import Path
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
@@ -119,7 +117,7 @@ class IrModuleModule(models.Model):
             return False
         values = self.get_values_from_terp(terp)
         try:
-            icon_path = terp.raw_value('icon') or opj(terp.name, 'static/description/icon.png')
+            icon_path = terp.raw_value('icon') or str(Path(terp.name) / 'static/description/icon.png')
             file_path(icon_path, env=self.env, check_exists=True)
             values['icon'] = '/' + icon_path
         except OSError:
@@ -152,7 +150,7 @@ class IrModuleModule(models.Model):
             mode = 'init'
 
         exclude_list = set()
-        base_dir = pathlib.Path(path)
+        base_dir = Path(path)
         for pattern in terp.get('cloc_exclude', []):
             exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
 
@@ -161,13 +159,13 @@ class IrModuleModule(models.Model):
             kind_of_files.append('demo')
         for kind in kind_of_files:
             for filename in terp.get(kind, []):
-                ext = os.path.splitext(filename)[1].lower()
+                ext = Path(filename).suffix.lower()
                 if ext not in ('.xml', '.csv', '.sql'):
                     _logger.info("module %s: skip unsupported file %s", module, filename)
                     continue
                 _logger.info("module %s: loading %s", module, filename)
                 noupdate = ext == '.csv' and kind == 'init_xml'
-                pathname = opj(path, filename)
+                pathname = str(Path(path) / filename)
                 idref = {}
                 convert_file(self.env, module, filename, idref, mode, noupdate, pathname=pathname)
                 if filename in exclude_list:
@@ -182,18 +180,16 @@ class IrModuleModule(models.Model):
                             'res_id': rec_id,
                         }])
 
-        path_static = opj(path, 'static')
+        path_static = Path(path) / 'static'
         IrAttachment = self.env['ir.attachment']
-        if os.path.isdir(path_static):
-            for root, _dirs, files in os.walk(path_static):
+        if path_static.is_dir():
+            for root, _dirs, files in path_static.walk():
                 for static_file in files:
-                    full_path = opj(root, static_file)
+                    full_path = str(root / static_file)
                     with file_open(full_path, 'rb', env=self.env) as fp:
                         data = base64.b64encode(fp.read())
-                    url_path = '/{}{}'.format(module, full_path.split(path)[1].replace(os.path.sep, '/'))
-                    if not isinstance(url_path, str):
-                        url_path = url_path.decode(sys.getfilesystemencoding())
-                    filename = os.path.split(url_path)[1]
+                    url_path = f"/{module}/{Path(full_path).relative_to(path).as_posix()}"
+                    filename = Path(url_path).name
                     values = dict(
                         name=filename,
                         url=url_path,
@@ -216,7 +212,7 @@ class IrModuleModule(models.Model):
                             'module': module,
                             'res_id': attachment.id,
                         })
-                        if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
+                        if str(Path(full_path).relative_to(base_dir)) in exclude_list:
                             self.env['ir.model.data'].create({
                                 'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
                                 'model': 'ir.attachment',
@@ -225,13 +221,13 @@ class IrModuleModule(models.Model):
                             })
 
         # store translation files as attachments to allow loading translations for webclient
-        path_lang = opj(path, 'i18n')
-        if os.path.isdir(path_lang):
-            for entry in os.scandir(path_lang):
+        path_lang = Path(path) / 'i18n'
+        if path_lang.is_dir():
+            for entry in path_lang.iterdir():
                 if not entry.is_file() or not entry.name.endswith('.po'):
                     # we don't support sub-directories in i18n
                     continue
-                with file_open(entry.path, 'rb', env=self.env) as fp:
+                with file_open(str(entry), 'rb', env=self.env) as fp:
                     raw = fp.read()
                 lang = entry.name.split('.')[0]
                 # store as binary ir.attachment
@@ -347,19 +343,21 @@ class IrModuleModule(models.Model):
                 dependencies = defaultdict(list)
                 for mod_name, manifest in manifest_files:
                     _manifest_path = z.extract(manifest, module_dir)
-                    terp = Manifest._from_path(opj(module_dir, mod_name), env=self.env)
+                    module_dir_path = Path(module_dir)
+                    terp = Manifest._from_path(str(module_dir_path / mod_name), env=self.env)
                     if not terp:
                         continue
                     files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
                     if with_demo:
                         files_to_import += terp.get('demo', [])
                     for filename in files_to_import:
-                        if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
+                        if Path(filename).suffix.lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
                     dependencies[mod_name] = terp.get('depends', [])
 
-                dirs = {d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))}
+                module_dir_path = Path(module_dir)
+                dirs = {d.name for d in module_dir_path.iterdir() if d.is_dir()}
                 sorted_dirs = topological_sort(dependencies)
                 if wrong_modules := dirs.difference(sorted_dirs):
                     raise UserError(_(
@@ -380,7 +378,7 @@ class IrModuleModule(models.Model):
                     module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
-                        path = opj(module_dir, mod_name)
+                        path = str(Path(module_dir) / mod_name)
                         self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
                         raise UserError(_(
@@ -678,7 +676,7 @@ class IrModuleModule(models.Model):
         for attachment in attachments.filtered('raw'):
             display_path = f'addons{attachment.url}'
             if attachment.url.endswith('js'):
-                extract_method = 'odoo.tools.babel:extract_javascript'
+                extract_method = 'odoo.tools.babel_extractors:extract_javascript'
                 extract_keywords = {'_t': None}
             else:
                 extract_method = 'odoo.tools.translate:babel_extract_qweb'
@@ -716,12 +714,14 @@ def _is_studio_custom(path):
     Returns True if any of the records contains a context with the key
     studio in it, False if none of the records do
     """
-    filepaths = []
-    for level in os.walk(path):
-        filepaths += [os.path.join(level[0], fn) for fn in level[2]]
-    filepaths = [fp for fp in filepaths if fp.lower().endswith('.xml')]
+    xml_files = [
+        dirpath / fn
+        for dirpath, _dirs, files in Path(path).walk()
+        for fn in files
+        if fn.lower().endswith('.xml')
+    ]
 
-    for fp in filepaths:
+    for fp in xml_files:
         root = lxml.etree.parse(fp).getroot()
 
         for record in root:

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Model } from "../mock_model";
 
 export class IrModelAccess extends Model {

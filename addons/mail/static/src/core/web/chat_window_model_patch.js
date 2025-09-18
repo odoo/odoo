@@ -1,7 +1,5 @@
 import { ChatWindow } from "@mail/core/common/chat_window_model";
-
 import { patch } from "@web/core/utils/patch";
-
 patch(ChatWindow.prototype, {
     async _onClose(options) {
         if (

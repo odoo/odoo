@@ -1,7 +1,7 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 
 import { ProjectTemplateButtons } from "./project_template_buttons";
 
@@ -31,7 +31,7 @@ export class ProjectTemplateDropdown extends Component {
         },
     };
     static defaultProps = {
-        hotkey: "r",
+        hotkey: "c",
         isDisabled: false,
     };
 

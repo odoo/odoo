@@ -198,16 +198,16 @@ class WebsiteSnippetFilter(models.Model):
         sale_orders = self.env['sale.order'].sudo().search([
             ('website_id', '=', website.id),
             ('company_id', '=', website.company_id.id),
-            ('state', '=', 'sale'),
+            ('state', '=', 'done'),
         ], limit=8, order='date_order DESC')
         if sale_orders:
             if self.env.context.get('hide_variants'):
                 sold_products = Counter(
                     sol.product_id.product_tmpl_id.product_variant_id
-                    for sol in sale_orders.order_line
+                    for sol in sale_orders.line_ids
                 )
             else:
-                sold_products = Counter(sol.product_id for sol in sale_orders.order_line)
+                sold_products = Counter(sol.product_id for sol in sale_orders.line_ids)
             if sold_products:
                 domain = Domain(domain) & Domain('id', 'in', [p.id for p, _ in sold_products.most_common(limit)])
                 products = self.env['product.product'].with_context(
@@ -220,7 +220,7 @@ class WebsiteSnippetFilter(models.Model):
         products = self.env['product.product']
         visitor = self.env['website.visitor']._get_visitor_from_request()
         if visitor:
-            excluded_products = request.cart.order_line.product_id.ids
+            excluded_products = request.cart.line_ids.product_id.ids
             tracked_products = self.env['website.track'].sudo()._read_group([
                 ('visitor_id', '=', visitor.id),
                 ('product_id', '!=', False),
@@ -256,14 +256,14 @@ class WebsiteSnippetFilter(models.Model):
             sale_orders = self.env['sale.order'].sudo().search([
                 ('website_id', '=', website.id),
                 ('company_id', '=', website.company_id.id),
-                ('state', '=', 'sale'),
-                ('order_line.product_id.product_tmpl_id', '=', current_template.id),
+                ('state', '=', 'done'),
+                ('line_ids.product_id.product_tmpl_id', '=', current_template.id),
             ], limit=8, order='date_order DESC')
             if sale_orders:
-                cart_products = request.cart.order_line.product_id
+                cart_products = request.cart.line_ids.product_id
                 excluded_products = cart_products.product_tmpl_id.product_variant_ids
                 excluded_products |= current_template.product_variant_ids
-                included_products = sale_orders.order_line.product_id
+                included_products = sale_orders.line_ids.product_id
                 if self.env.context.get('hide_variants'):
                     included_products = included_products.product_tmpl_id.product_variant_id
                 if products := included_products - excluded_products:
@@ -279,7 +279,7 @@ class WebsiteSnippetFilter(models.Model):
             product_template_id and int(product_template_id)
         ).exists()
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = request.cart.line_ids.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             included_products = current_template._get_website_accessory_product()
@@ -300,7 +300,7 @@ class WebsiteSnippetFilter(models.Model):
             product_template_id and int(product_template_id)
         ).exists()
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = request.cart.line_ids.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             alternative_products = current_template._get_website_alternative_product()

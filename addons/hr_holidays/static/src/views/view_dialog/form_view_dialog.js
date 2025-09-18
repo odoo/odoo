@@ -3,7 +3,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";

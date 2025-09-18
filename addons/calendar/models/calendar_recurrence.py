@@ -297,9 +297,9 @@ class CalendarRecurrence(models.Model):
             SELECT DISTINCT ON (recurrence_id) id event_id, recurrence_id
                     FROM calendar_event 
                    WHERE start > %s
-                     AND id IN %s
+                     AND id = ANY(%s)
                 ORDER BY recurrence_id,start ASC;
-        """, (now, tuple(self.calendar_event_ids.ids)))
+        """, (now, list(self.calendar_event_ids.ids)))
         result = self.env.cr.dictfetchall()
         if not result:
             return

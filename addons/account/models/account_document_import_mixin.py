@@ -11,7 +11,7 @@ from struct import error as StructError
 from odoo import api, models, modules
 from odoo.exceptions import RedirectWarning
 from odoo.tools import groupby
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.libs.filesystem.mimetypes import guess_mimetype
 from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 
 _logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ def extract_pdf_embedded_files(filename, content):
             return []
 
         try:
-            return list(pdf_reader.getAttachments())
+            return list(pdf_reader.get_attachments())
         except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
             return []
@@ -471,7 +471,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
             or file_data['mimetype'].endswith('/xml')
         ):
             try:
-                return etree.fromstring(file_data['raw'])
+                return etree.fromstring(file_data['raw'], parser=etree.XMLParser(remove_comments=True, resolve_entities=False))
             except etree.ParseError as e:
                 _logger.info('Error when reading the xml file "%s": %s', file_data['name'], e)
 

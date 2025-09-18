@@ -1,31 +1,29 @@
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
-import { Activity } from "@mail/core/web/activity";
-import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
-import { FollowerList } from "@mail/core/web/follower_list";
-import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { usePopoutAttachment } from "@mail/core/common/attachment_view";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-import { RecipientsInput } from "@mail/core/web/recipients_input";
+import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { Activity } from "@mail/core/web/activity";
+import { FollowerList } from "@mail/core/web/follower_list";
+import { RecipientsInput } from "@mail/core/web/recipients_input";
+import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { status, useEffect } from "@odoo/owl";
-
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { useDropdownState } from "@web/components/dropdown/dropdown_hooks";
+import { useCustomDropzone } from "@web/components/dropzone/dropzone_hook";
 import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { FileUploader } from "@web/views/fields/file_handler";
-import { patch } from "@web/core/utils/patch";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { useService } from "@web/core/utils/hooks";
-import { useMessageSearch } from "@mail/core/common/message_search_hook";
-import { usePopoutAttachment } from "@mail/core/common/attachment_view";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { useRecordObserver } from "@web/model/relational_model/utils";
-
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
+import { FileUploader } from "@web/fields/file_handler";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 export const DELAY_FOR_SPINNER = 1000;
 
 Object.assign(Chatter.components, {
@@ -54,7 +52,7 @@ Chatter.props.push(
     "isChatterAside?",
     "isInFormSheetBg?",
     "saveRecord?",
-    "record?"
+    "record?",
 );
 
 Object.assign(Chatter.defaultProps, {
@@ -88,6 +86,8 @@ patch(Chatter.prototype, {
         Object.assign(this.state, {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
+            isCollapsed:
+                browser.localStorage.getItem("chatter_aside_collapsed") === "true",
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
@@ -95,7 +95,10 @@ patch(Chatter.prototype, {
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(
-            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
+            this.store.Thread.insert({
+                model: this.props.threadModel,
+                id: this.props.threadId,
+            }),
         );
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
@@ -120,7 +123,9 @@ patch(Chatter.prototype, {
                             }
                         }
                         Promise.all(
-                            files.map((file) => this.attachmentUploader.uploadFile(file))
+                            files.map((file) =>
+                                this.attachmentUploader.uploadFile(file),
+                            ),
                         ).then(() => {
                             if (this.props.hasParentReloadOnAttachmentsChanged) {
                                 this.reloadParentView();
@@ -130,7 +135,7 @@ patch(Chatter.prototype, {
                     }
                 },
             },
-            () => !this.store.meetingViewOpened || this.env.inMeetingView
+            () => !this.store.meetingViewOpened || this.env.inMeetingView,
         );
         useEffect(
             () => {
@@ -141,17 +146,18 @@ patch(Chatter.prototype, {
                 if (this.state.thread?.isLoadingAttachments) {
                     this.loadingAttachmentTimeout = browser.setTimeout(
                         () => (this.state.showAttachmentLoading = true),
-                        DELAY_FOR_SPINNER
+                        DELAY_FOR_SPINNER,
                     );
                 } else {
                     this.state.showAttachmentLoading = false;
                     this.state.isAttachmentBoxOpened =
                         this.state.isAttachmentBoxOpened ||
-                        (this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0);
+                        (this.props.isAttachmentBoxVisibleInitially &&
+                            this.attachments.length > 0);
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
-            () => [this.state.thread, this.state.thread?.isLoadingAttachments]
+            () => [this.state.thread, this.state.thread?.isLoadingAttachments],
         );
         useEffect(
             () => {
@@ -163,13 +169,13 @@ patch(Chatter.prototype, {
                     this.state.isAttachmentBoxOpened = false;
                 }
             },
-            () => [this.state.thread?.status, this.attachments]
+            () => [this.state.thread?.status, this.attachments],
         );
         useEffect(
             () => {
                 this.state.aside = this.props.isChatterAside;
             },
-            () => [this.props.isChatterAside]
+            () => [this.props.isChatterAside],
         );
     },
 
@@ -194,7 +200,11 @@ patch(Chatter.prototype, {
                 return;
             }
         });
-        if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
+        if (
+            (!partnerIds.length && !email) ||
+            mode !== "message" ||
+            status(this) === "destroyed"
+        ) {
             return;
         }
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
@@ -203,7 +213,7 @@ patch(Chatter.prototype, {
                 thread_id: this.props.threadId,
                 partner_ids: partnerIds,
                 main_email: email,
-            })
+            }),
         );
         if (status(this) === "destroyed" && !this.state.thread) {
             return;
@@ -214,13 +224,14 @@ patch(Chatter.prototype, {
             partner_id: result.partner_id,
             name: result.name || result.email,
         }));
-        this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
-            (additionalRecipient) =>
+        this.state.thread.additionalRecipients =
+            this.state.thread.additionalRecipients.filter((additionalRecipient) =>
                 this.state.thread.suggestedRecipients.every(
                     (suggestedRecipient) =>
-                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
-                )
-        );
+                        suggestedRecipient.partner_id !==
+                        additionalRecipient.partner_id,
+                ),
+            );
     },
 
     /**
@@ -244,9 +255,13 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        const res = Object.assign(super.childSubEnv, {
+            messageHighlight: this.messageHighlight,
+        });
         assignGetter(res.inChatter, { aside: () => this.props.isChatterAside });
-        Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
+        Object.assign(res.inChatter, {
+            toggleComposer: this.toggleComposer.bind(this),
+        });
         return res;
     },
 
@@ -256,6 +271,13 @@ patch(Chatter.prototype, {
 
     get followingText() {
         return _t("Following");
+    },
+
+    /**
+     * Whether the chatter is collapsed in aside mode.
+     */
+    get isCollapsedAside() {
+        return this.props.isChatterAside && this.state.isCollapsed;
     },
 
     /**
@@ -439,6 +461,14 @@ patch(Chatter.prototype, {
 
     toggleActivities() {
         this.state.showActivities = !this.state.showActivities;
+    },
+
+    /**
+     * Toggle chatter collapsed state and persist to localStorage.
+     */
+    toggleChatterCollapse() {
+        this.state.isCollapsed = !this.state.isCollapsed;
+        browser.localStorage.setItem("chatter_aside_collapsed", this.state.isCollapsed);
     },
 
     toggleComposer(mode = false, { force = false } = {}) {

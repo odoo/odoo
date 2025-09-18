@@ -6,7 +6,7 @@ from datetime import datetime
 from pytz import timezone
 
 from odoo import api, fields, models
-from odoo.tools.intervals import Intervals
+from odoo.libs.intervals import Intervals
 
 
 class ResourceResource(models.Model):

@@ -18,7 +18,7 @@ export function useCategoryScrollSpy(
     categoryScrollContainerRef,
     productScrollContainerRef,
     onCategoryVisible = () => {},
-    options = {}
+    options = {},
 ) {
     const {
         categoryScrollOffsetLeft = 0,
@@ -35,7 +35,7 @@ export function useCategoryScrollSpy(
         selectedCategoryId = categoryId;
         onCategoryVisible(selectedCategoryId);
         const tabEl = categoryScrollContainerRef.el.querySelector(
-            `[data-category-pill="${categoryId}"]`
+            `[data-category-pill="${categoryId}"]`,
         );
         if (tabEl) {
             const scrollLeft = tabEl.offsetLeft + categoryScrollOffsetLeft;
@@ -47,7 +47,9 @@ export function useCategoryScrollSpy(
     }
 
     function scrollToCategory(categoryId) {
-        const section = categorySections.find((el) => el.dataset.category === "" + categoryId);
+        const section = categorySections.find(
+            (el) => el.dataset.category === "" + categoryId,
+        );
         const { el: scrollEl } = productScrollContainerRef;
 
         if (section) {

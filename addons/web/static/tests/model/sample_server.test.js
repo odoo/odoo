@@ -1,3 +1,5 @@
+// @ts-check
+
 import { describe, expect, test } from "@odoo/hoot";
 import { SampleServer } from "@web/model/sample_server";
 
@@ -127,7 +129,9 @@ describe("Sample data", () => {
         // Basic fields
         expect(SAMPLE_PEOPLE).toInclude(rec.display_name);
         expect(SAMPLE_PEOPLE).toInclude(rec.name);
-        expect(rec.email).toBe(`${rec.display_name.replace(/ /, ".").toLowerCase()}@sample.demo`);
+        expect(rec.email).toBe(
+            `${rec.display_name.replace(/ /, ".").toLowerCase()}@sample.demo`,
+        );
         expect(rec.phone_number).toMatch(/\+1 555 754 000\d/);
         expect(rec.website_url).toMatch(/http:\/\/sample\d\.com/);
         expect(rec.urlemailphone).toBe(false);
@@ -160,7 +164,10 @@ describe("Sample data", () => {
     });
 
     test("country type", async () => {
-        const server = new DeterministicSampleServer("res.country", fields["res.country"]);
+        const server = new DeterministicSampleServer(
+            "res.country",
+            fields["res.country"],
+        );
         const { records } = await server.mockRpc({
             method: "web_search_read",
             model: "res.country",
@@ -229,21 +236,23 @@ describe("RPC calls", () => {
                     profession: "adventurer",
                     __count: 5,
                     __records: server.data.hobbit.records.filter(
-                        (r) => r.profession === "adventurer"
+                        (r) => r.profession === "adventurer",
                     ),
                 },
                 {
                     __extra_domain: [],
                     profession: "brewer",
                     __count: 5,
-                    __records: server.data.hobbit.records.filter((r) => r.profession === "brewer"),
+                    __records: server.data.hobbit.records.filter(
+                        (r) => r.profession === "brewer",
+                    ),
                 },
                 {
                     __extra_domain: [],
                     profession: "gardener",
                     __count: 6,
                     __records: server.data.hobbit.records.filter(
-                        (r) => r.profession === "gardener"
+                        (r) => r.profession === "gardener",
                     ),
                 },
             ],
@@ -268,8 +277,13 @@ describe("RPC calls", () => {
         });
         expect(result).toHaveLength(2);
         expect(result.groups).toHaveLength(2);
-        expect(result.groups.map((g) => g.profession)).toEqual(["gardener", "adventurer"]);
-        expect(result.groups.reduce((acc, g) => acc + g.__count, 0)).toBe(MAIN_RECORDSET_SIZE);
+        expect(result.groups.map((g) => g.profession)).toEqual([
+            "gardener",
+            "adventurer",
+        ]);
+        expect(result.groups.reduce((acc, g) => acc + g.__count, 0)).toBe(
+            MAIN_RECORDSET_SIZE,
+        );
         expect(result.groups.every((g) => g.__count === g.__records.length)).toBe(true);
     });
 
@@ -296,7 +310,9 @@ describe("RPC calls", () => {
             "brewer",
             "adventurer",
         ]);
-        expect(result.groups.reduce((acc, g) => acc + g.__count, 0)).toBe(MAIN_RECORDSET_SIZE);
+        expect(result.groups.reduce((acc, g) => acc + g.__count, 0)).toBe(
+            MAIN_RECORDSET_SIZE,
+        );
         expect(result.groups.every((g) => g.__count === g.__records.length)).toBe(true);
     });
 
@@ -322,7 +338,11 @@ describe("RPC calls", () => {
             aggregates: ["__count"],
         });
         expect(result).toHaveLength(3);
-        expect(result.map((g) => g.profession)).toEqual(["adventurer", "brewer", "gardener"]);
+        expect(result.map((g) => g.profession)).toEqual([
+            "adventurer",
+            "brewer",
+            "gardener",
+        ]);
         expect(result.reduce((acc, g) => acc + g.__count, 0)).toBe(MAIN_RECORDSET_SIZE);
     });
 
@@ -335,10 +355,14 @@ describe("RPC calls", () => {
             aggregates: ["__count", "age:sum"],
         });
         expect(result).toHaveLength(3);
-        expect(result.map((g) => g.profession)).toEqual(["adventurer", "brewer", "gardener"]);
+        expect(result.map((g) => g.profession)).toEqual([
+            "adventurer",
+            "brewer",
+            "gardener",
+        ]);
         expect(result.reduce((acc, g) => acc + g.__count, 0)).toBe(MAIN_RECORDSET_SIZE);
         expect(result.reduce((acc, g) => acc + g["age:sum"], 0)).toBe(
-            server.data.hobbit.records.reduce((acc, rec) => acc + rec.age, 0)
+            server.data.hobbit.records.reduce((acc, rec) => acc + rec.age, 0),
         );
     });
 

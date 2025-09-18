@@ -1,19 +1,20 @@
-import { NameAndSignature } from "@web/core/signature/name_and_signature";
-import { SignatureWidget } from "@web/views/widgets/signature/signature";
+// @ts-check
 
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
+    clickModalButton,
+    contains,
     defineModels,
     fields,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
-    contains,
-    clickModalButton,
 } from "@web/../tests/web_test_helpers";
-import { beforeEach, test, expect } from "@odoo/hoot";
-import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { NameAndSignature } from "@web/components/signature/name_and_signature";
+import { SignatureWidget } from "@web/views/widgets/signature/signature";
 
 class Partner extends models.Model {
     display_name = fields.Char();

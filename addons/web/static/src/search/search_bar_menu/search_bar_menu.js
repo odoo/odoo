@@ -1,17 +1,28 @@
+// @ts-check
+
+/** @module @web/search/search_bar_menu/search_bar_menu - Dropdown menu grouping Filter, Group By, Favorites, and search panels */
+
 import { Component, useState } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { AccordionItem } from "@web/components/dropdown/accordion_item";
+import { CheckboxItem } from "@web/components/dropdown/checkbox_item";
+import { Dropdown } from "@web/components/dropdown/dropdown";
+import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/collections/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
+import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
+/**
+ * Dropdown menu that groups Filter, Group By, and Favorites panels.
+ *
+ * Renders within the search bar and provides the UI for toggling filters,
+ * date filters, group-bys, custom group-bys, property group-bys,
+ * favorites, and registry-provided favorite menu items.
+ */
 export class SearchBarMenu extends Component {
     static template = "web.SearchBarMenu";
     static components = {
@@ -39,7 +50,9 @@ export class SearchBarMenu extends Component {
         this.actionService = useService("action");
         // GroupBy
         const fields = [];
-        for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
+        for (const [fieldName, field] of Object.entries(
+            this.env.searchModel.searchViewFields,
+        )) {
             if (this.validateField(fieldName, field)) {
                 fields.push(Object.assign({ name: fieldName }, field));
             }
@@ -47,13 +60,14 @@ export class SearchBarMenu extends Component {
         this.fields = sortBy(fields, "string");
         // Favorite
         this.state = useState({ sharedFavoritesExpanded: false });
-        useBus(this.env.searchModel, "update", this.render);
+        useBus(this.env.searchModel, "update", /** @type {any} */ (this.render));
     }
 
     // Filter Panel
+    /** @returns {Object[]} enriched filter and dateFilter search items */
     get filterItems() {
         return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter"].includes(searchItem.type)
+            ["filter", "dateFilter"].includes(searchItem.type),
         );
     }
 
@@ -88,7 +102,8 @@ export class SearchBarMenu extends Component {
     get groupByItems() {
         return this.env.searchModel.getSearchItems(
             (searchItem) =>
-                ["groupBy", "dateGroupBy"].includes(searchItem.type) && !searchItem.isProperty
+                ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
+                !searchItem.isProperty,
         );
     }
 
@@ -124,15 +139,19 @@ export class SearchBarMenu extends Component {
 
     // Favorite Panel
 
+    /** @returns {Object[]} private favorite search items (owned by current user) */
     get favorites() {
         return this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "favorite" && searchItem.userIds.length === 1
+            (searchItem) =>
+                searchItem.type === "favorite" && searchItem.userIds.length === 1,
         );
     }
 
+    /** @returns {Object[]} shared favorite search items (collapsed to 3 until expanded) */
     get sharedFavorites() {
         const sharedFavorites = this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "favorite" && searchItem.userIds.length !== 1
+            (searchItem) =>
+                searchItem.type === "favorite" && searchItem.userIds.length !== 1,
         );
         if (sharedFavorites.length <= 4 || this.state.sharedFavoritesExpanded) {
             this.state.sharedFavoritesExpanded = true;
@@ -142,6 +161,7 @@ export class SearchBarMenu extends Component {
         return sharedFavorites;
     }
 
+    /** @returns {{ Component: Function, groupNumber: number, key: string }[]} registry-provided favorite menu items */
     get otherItems() {
         const registryMenus = [];
         for (const item of favoriteMenuRegistry.getAll()) {
@@ -156,10 +176,12 @@ export class SearchBarMenu extends Component {
         return registryMenus;
     }
 
+    /** @param {number} itemId */
     onFavoriteSelected(itemId) {
         this.env.searchModel.toggleSearchItem(itemId);
     }
 
+    /** @param {number} itemId */
     editFavorite(itemId) {
         this.actionService.doAction({
             type: "ir.actions.act_window",

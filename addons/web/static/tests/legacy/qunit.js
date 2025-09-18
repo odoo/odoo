@@ -1,6 +1,8 @@
+// @ts-check
+
 /** @odoo-module alias=@web/../tests/qunit default=false */
 
-import { isVisible as isElemVisible } from "@web/core/utils/ui";
+import { isVisible as isElemVisible } from "@web/core/utils/dom/ui";
 import { fullTraceback, fullAnnotatedTraceback } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
 import { Component, whenReady } from "@odoo/owl";
@@ -47,27 +49,27 @@ export function setupQUnit() {
      * Example: assert.containsN(document.body, '.modal', 0)
      */
     function containsN(target, selector, n, msg) {
-        let $el;
+        let el;
         if (target._widgetRenderAndInsert) {
-            $el = target.$el; // legacy widget
+            el = target.el; // legacy widget
         } else if (target instanceof Component) {
             if (!target.el) {
                 throw new Error(
                     `containsN assert with selector '${selector}' called on an unmounted component`
                 );
             }
-            $el = $(target.el);
+            el = target.el;
         } else {
-            $el = target instanceof Element ? $(target) : target;
+            el = target instanceof Element ? target : target;
         }
         msg = msg || `Selector '${selector}' should have exactly ${n} matches inside the target`;
-        QUnit.assert.strictEqual($el.find(selector).length, n, msg);
+        QUnit.assert.strictEqual(el.querySelectorAll(selector).length, n, msg);
     }
 
     /**
      * Checks that the target contains exactly 0 match for the selector.
      *
-     * @param {Element} el
+     * @param {Element} target
      * @param {string} selector
      * @param {string} [msg]
      */
@@ -78,7 +80,7 @@ export function setupQUnit() {
     /**
      * Checks that the target contains exactly 1 match for the selector.
      *
-     * @param {Element} el
+     * @param {Element} target
      * @param {string} selector
      * @param {string} [msg]
      */
@@ -141,36 +143,28 @@ export function setupQUnit() {
      * - is unique
      * - has the given attribute with the proper value
      *
-     * @param {Component | Element | Widget | jQuery} w
+     * @param {Component | Element | Widget | jQuery} target
      * @param {string} attr
      * @param {string} value
      * @param {string} [msg]
      */
     function hasAttrValue(target, attr, value, msg) {
-        let $el;
+        let el;
         if (target._widgetRenderAndInsert) {
-            $el = target.$el; // legacy widget
+            el = target.el; // legacy widget
         } else if (target instanceof Component) {
             if (!target.el) {
                 throw new Error(
                     `hasAttrValue assert with attr '${attr}' called on an unmounted component`
                 );
             }
-            $el = $(target.el);
+            el = target.el;
         } else {
-            $el = target instanceof Element ? $(target) : target;
+            el = target instanceof Element ? target : target;
         }
 
-        if ($el.length !== 1) {
-            const descr = `hasAttrValue (${attr}: ${value})`;
-            QUnit.assert.ok(
-                false,
-                `Assertion '${descr}' targets ${$el.length} elements instead of 1`
-            );
-        } else {
-            msg = msg || `attribute '${attr}' of target should be '${value}'`;
-            QUnit.assert.strictEqual($el.attr(attr), value, msg);
-        }
+        msg = msg || `attribute '${attr}' of target should be '${value}'`;
+        QUnit.assert.strictEqual(el.getAttribute(attr), value, msg);
     }
 
     /**
@@ -465,25 +459,21 @@ export function setupQUnit() {
      */
     function addSortButton() {
         sortButtonAppended = true;
-        var $sort = $("<label> sort by time (desc)</label>").css({ float: "right" });
-        $("h2#qunit-userAgent").append($sort);
-        $sort.click(function () {
-            var $ol = $("ol#qunit-tests");
-            var $results = $ol.children("li").get();
-            $results.sort(function (a, b) {
-                var timeA = Number($(a).find("span.runtime").first().text().split(" ")[0]);
-                var timeB = Number($(b).find("span.runtime").first().text().split(" ")[0]);
-                if (timeA < timeB) {
-                    return 1;
-                } else if (timeA > timeB) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+        const sortLabel = document.createElement("label");
+        sortLabel.textContent = " sort by time (desc)";
+        sortLabel.style.cssFloat = "right";
+        document.querySelector("h2#qunit-userAgent")?.append(sortLabel);
+        sortLabel.addEventListener("click", () => {
+            const ol = document.querySelector("ol#qunit-tests");
+            const results = [...ol.children];
+            results.sort((a, b) => {
+                const timeA = Number(a.querySelector("span.runtime")?.textContent.split(" ")[0] || 0);
+                const timeB = Number(b.querySelector("span.runtime")?.textContent.split(" ")[0] || 0);
+                return timeB - timeA;
             });
-            $.each($results, function (idx, $itm) {
-                $ol.append($itm);
-            });
+            for (const item of results) {
+                ol.append(item);
+            }
         });
     }
 

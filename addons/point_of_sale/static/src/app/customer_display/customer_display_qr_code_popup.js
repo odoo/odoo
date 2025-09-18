@@ -1,10 +1,9 @@
 import { Component, xml } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
-import { CopyButton } from "@web/core/copy_button/copy_button";
-import { useService } from "@web/core/utils/hooks";
+import { CopyButton } from "@web/components/copy_button/copy_button";
 import { _t } from "@web/core/l10n/translation";
-
+import { useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/ui/dialog/dialog";
 export class QrCodeCustomerDisplay extends Component {
     static template = "point_of_sale.QrCodeCustomerDisplay";
     static components = { Dialog, CopyButton };
@@ -24,7 +23,7 @@ export class QrCodeCustomerDisplay extends Component {
         window.open(
             this.props.customerDisplayURL,
             "newWindow",
-            "width=800,height=600,left=200,top=200"
+            "width=800,height=600,left=200,top=200",
         );
         this.notification.add(_t("PoS Customer Display opened in a new window"));
     }

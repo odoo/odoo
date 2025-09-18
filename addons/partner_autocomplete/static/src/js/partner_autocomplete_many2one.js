@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { computeM2OProps, Many2One } from "@web/fields/relational/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/fields/relational/many2one/many2one_field";
 import { Component } from "@odoo/owl";
-import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/fields/relational/many2x_autocomplete";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
 import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
@@ -108,11 +108,6 @@ export class PartnerAutoCompleteMany2one extends Component {
             context.default_image_1920 = data.logo;
         }
 
-        const unspsc_codes = data.company.unspsc_codes;
-        if(unspsc_codes){
-            context.default_category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_get_tag_ids", [[], unspsc_codes]);
-        }
-
         return this.openRecord({ context });
     }
 }
@@ -121,4 +116,4 @@ export const PartnerAutoCompleteMany2oneField = {
     ...buildM2OFieldDescription(PartnerAutoCompleteMany2one),
 };
 
-registry.category("fields").add("res_partner_many2one", PartnerAutoCompleteMany2oneField);
+registry.category("fields").add("res_partner_many2one", PartnerAutoCompleteMany2oneField, { force: true });

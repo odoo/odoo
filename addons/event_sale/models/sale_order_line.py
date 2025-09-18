@@ -55,6 +55,10 @@ class SaleOrderLine(models.Model):
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
                 }
+                # When confirming in backend a single order, keep paid registrations in draft
+                # so attendee details can be filled before confirmation; free ones stay open for seat checks.
+                if len(self.order_id) == 1 and not so_line.currency_id.is_zero(so_line.price_total):
+                    values['state'] = 'draft'
                 registrations_vals.append(values)
 
         if registrations_vals:
@@ -81,18 +85,18 @@ class SaleOrderLine(models.Model):
                 line.event_ticket_id = False
 
     @api.depends('event_ticket_id')
-    def _compute_price_unit(self):
-        super()._compute_price_unit()
+    def _compute_price_and_discount(self):
+        super()._compute_price_and_discount()
 
     @api.depends('event_slot_id', 'event_ticket_id')
     def _compute_name(self):
         """Override to add the compute dependency.
 
-        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
+        The custom name logic can be found below in _get_line_multiline_description_sale.
         """
         super()._compute_name()
 
-    def _get_sale_order_line_multiline_description_sale(self):
+    def _get_line_multiline_description_sale(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
                 So in that case we use the description computed from the ticket, instead of the description computed from the product.
@@ -101,9 +105,9 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id:
             return self.event_ticket_id._get_ticket_multiline_description() + \
                 ('\n%s' % self.event_slot_id.display_name if self.event_slot_id else '') + \
-                self._get_sale_order_line_multiline_description_variants()
+                self._get_line_multiline_description_variants()
         else:
-            return super()._get_sale_order_line_multiline_description_sale()
+            return super()._get_line_multiline_description_sale()
 
     def _use_template_name(self):
         """ We do not want configured description to get rewritten by template default"""
@@ -111,7 +115,7 @@ class SaleOrderLine(models.Model):
             return False
         return super()._use_template_name()
 
-    def _get_display_price(self):
+    def _get_price_display(self):
         if self.event_ticket_id and self.event_id:
             event_ticket = self.event_ticket_id
             company = event_ticket.company_id or self.env.company
@@ -120,4 +124,4 @@ class SaleOrderLine(models.Model):
             else:
                 price = event_ticket.price
             return self._convert_to_sol_currency(price, company.currency_id)
-        return super()._get_display_price()
+        return super()._get_price_display()

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
-import { formatPercentage } from "@web/views/fields/formatters";
-import { progressBarField, ProgressBarField } from "@web/views/fields/progress_bar/progress_bar_field";
+import { formatPercentage } from "@web/fields/formatters";
+import { progressBarField, ProgressBarField } from "@web/fields/display/progress_bar/progress_bar_field";
 
 export class ProjectTaskProgressBarField extends ProgressBarField {
     get currentValue() {

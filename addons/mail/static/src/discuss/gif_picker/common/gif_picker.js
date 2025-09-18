@@ -1,13 +1,11 @@
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
-
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { useService, useAutofocus } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
+import { PICKER_PROPS, usePicker } from "@web/components/emoji_picker/emoji_picker";
 import { rpc } from "@web/core/network/rpc";
-import { PICKER_PROPS, usePicker } from "@web/core/emoji_picker/emoji_picker";
-
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
+import { user } from "@web/services/user";
 export function useGifPicker(...args) {
     return usePicker(GifPicker, ...args);
 }
@@ -74,7 +72,7 @@ export class GifPicker extends Component {
                     }
                 }
             },
-            300
+            300,
         );
         this.next = "";
         this.showFavorite = false;
@@ -127,7 +125,7 @@ export class GifPicker extends Component {
                     this.openCategories();
                 }
             },
-            () => [this.searchTerm, this.props.state?.picker]
+            () => [this.searchTerm, this.props.state?.picker],
         );
     }
 
@@ -162,7 +160,7 @@ export class GifPicker extends Component {
                     country: region,
                     locale: `${language}_${region}`,
                 },
-                { silent: true }
+                { silent: true },
             );
             if (tags) {
                 this.state.categories = tags;
@@ -265,13 +263,21 @@ export class GifPicker extends Component {
     async onClickFavorite(gif) {
         if (!this.isFavorite(gif)) {
             this.state.favorites.gifs.push(gif);
-            await this.orm.silent.create("discuss.gif.favorite", [{ tenor_gif_id: gif.id }]);
+            await this.orm.silent.create("discuss.gif.favorite", [
+                { tenor_gif_id: gif.id },
+            ]);
         } else {
-            const index = this.state.favorites.gifs.findIndex(({ id }) => id === gif.id);
+            const index = this.state.favorites.gifs.findIndex(
+                ({ id }) => id === gif.id,
+            );
             if (index >= 0) {
                 this.state.favorites.gifs.splice(index, 1);
             }
-            await rpc("/discuss/gif/remove_favorite", { tenor_gif_id: gif.id }, { silent: true });
+            await rpc(
+                "/discuss/gif/remove_favorite",
+                { tenor_gif_id: gif.id },
+                { silent: true },
+            );
         }
     }
 
@@ -284,7 +290,7 @@ export class GifPicker extends Component {
             const [results] = await rpc(
                 "/discuss/gif/favorites",
                 { offset: this.offset },
-                { silent: true }
+                { silent: true },
             );
             this.offset += 20;
             this.state.favorites.gifs.push(...results);
@@ -298,7 +304,9 @@ export class GifPicker extends Component {
      * @param {TenorGif} gif
      */
     isFavorite(gif) {
-        return this.state.favorites.gifs.map((favorite) => favorite.id).includes(gif.id);
+        return this.state.favorites.gifs
+            .map((favorite) => favorite.id)
+            .includes(gif.id);
     }
 
     onClickFavoritesCategory() {

@@ -1,12 +1,11 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
-
 import { _t } from "@web/core/l10n/translation";
-
 registerThreadAction("mark-all-read", {
     condition: ({ owner, thread }) =>
         thread?.id === "inbox" && !owner.isDiscussSidebarChannelActions,
     disabledCondition: ({ thread }) => thread.isEmpty,
-    open: ({ store }) => store.env.services.orm.silent.call("mail.message", "mark_all_as_read"),
+    open: ({ store }) =>
+        store.env.services.orm.silent.call("mail.message", "mark_all_as_read"),
     sequence: 1,
     name: _t("Mark all read"),
 });

@@ -1,9 +1,9 @@
 import { _t } from '@web/core/l10n/translation';
-import { ConfirmationDialog, deleteConfirmationMessage } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { ConfirmationDialog, deleteConfirmationMessage } from '@web/ui/dialog/confirmation_dialog';
 import { ListRenderer } from '@web/views/list/list_renderer';
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
-import { X2ManyField, x2ManyField } from '@web/views/fields/x2many/x2many_field';
+import { X2ManyField, x2ManyField } from '@web/fields/relational/x2many/x2many_field';
 
 
 export class PAVListRenderer extends ListRenderer {

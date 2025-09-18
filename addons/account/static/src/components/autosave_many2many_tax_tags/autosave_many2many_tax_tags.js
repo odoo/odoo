@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { useRecordObserver } from "@web/model/relational_model/record_hooks";
 import {
     Many2ManyTaxTagsField,
     many2ManyTaxTagsField

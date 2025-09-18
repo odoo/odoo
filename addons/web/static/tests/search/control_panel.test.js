@@ -1,5 +1,7 @@
-import { expect, test, getFixture } from "@odoo/hoot";
-import { click, press, keyDown, keyUp, queryAll, queryFirst } from "@odoo/hoot-dom";
+// @ts-check
+
+import { expect, getFixture, test } from "@odoo/hoot";
+import { click, keyDown, keyUp, press, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { reactive } from "@odoo/owl";
 import {
@@ -12,7 +14,6 @@ import {
     mountWithSearch,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -53,10 +54,12 @@ test("breadcrumbs", async () => {
                     onSelected: () => expect.step("controller_9"),
                 },
             ],
-        }
+        },
     );
 
-    const breadcrumbItems = queryAll(`.o_breadcrumb li.breadcrumb-item, .o_breadcrumb .active`);
+    const breadcrumbItems = queryAll(
+        `.o_breadcrumb li.breadcrumb-item, .o_breadcrumb .active`,
+    );
     expect(breadcrumbItems).toHaveCount(2);
     expect(breadcrumbItems[0]).toHaveText("Previous");
     expect(breadcrumbItems[1]).toHaveText("Current");
@@ -76,7 +79,7 @@ test("view switcher", async () => {
                 { type: "list", active: true, icon: "oi-view-list", name: "List" },
                 { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
             ],
-        }
+        },
     );
     expect(`.o_control_panel_navigation .o_cp_switch_buttons`).toHaveCount(1);
     expect(`.o_switch_view`).toHaveCount(2);
@@ -104,13 +107,15 @@ test("view switcher (middle click)", async () => {
                 { type: "list", active: true, icon: "oi-view-list", name: "List" },
                 { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
             ],
-        }
+        },
     );
     expect(`.o_control_panel_navigation .o_cp_switch_buttons`).toHaveCount(1);
     expect(`.o_switch_view`).toHaveCount(2);
 
     getService("action").switchView = (viewType, props, options) =>
-        expect.step(`${viewType} -- ${JSON.stringify(props)} -- ${JSON.stringify(options)}`);
+        expect.step(
+            `${viewType} -- ${JSON.stringify(props)} -- ${JSON.stringify(options)}`,
+        );
 
     await contains(".o_switch_view.o_kanban").click({ ctrlKey: true });
     expect.verifySteps([`kanban -- {} -- {"newWindow":true}`]);
@@ -126,7 +131,7 @@ test("views aria labels", async () => {
                 { type: "list", active: true, icon: "oi-view-list", name: "List" },
                 { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
             ],
-        }
+        },
     );
 
     const views = queryAll`.o_switch_view`;
@@ -144,7 +149,7 @@ test("view switcher on mobile", async () => {
                 { type: "list", active: true, icon: "oi-view-list", name: "List" },
                 { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
             ],
-        }
+        },
     );
     expect(`.o_control_panel_navigation .o_cp_switch_buttons`).toHaveCount(1);
 
@@ -224,9 +229,12 @@ test("hotkey overlay not overlapped by active view button", async () => {
     expect(`.o_switch_view.active`).toHaveCount(1);
 
     const hotkeyZIndex = Number(
-        getComputedStyle(queryFirst(`.o_cp_switch_buttons .o_web_hotkey_overlay`)).zIndex
+        getComputedStyle(queryFirst(`.o_cp_switch_buttons .o_web_hotkey_overlay`))
+            .zIndex,
     );
-    const buttonZIndex = Number(getComputedStyle(queryFirst(`.o_switch_view.active`)).zIndex);
+    const buttonZIndex = Number(
+        getComputedStyle(queryFirst(`.o_switch_view.active`)).zIndex,
+    );
 
     expect(hotkeyZIndex).toBeGreaterThan(buttonZIndex);
 
@@ -259,7 +267,8 @@ test("control panel layout buttons in dialog", async () => {
     await contains(".o_data_cell").click();
     expect(".modal-footer button:visible").toHaveCount(2);
     expect(".o_control_panel_main_buttons button").toHaveCount(0, {
-        message: "layout buttons are not replicated in the control panel when inside a dialog",
+        message:
+            "layout buttons are not replicated in the control panel when inside a dialog",
     });
 });
 
@@ -273,7 +282,7 @@ test("Control panel is shown/hide on top when scrolling", async () => {
                 { type: "list", active: true, icon: "oi-view-list", name: "List" },
                 { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
             ],
-        }
+        },
     );
     const contentHeight = 200;
     const sampleContent = document.createElement("div");

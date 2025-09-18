@@ -1,8 +1,12 @@
+// @ts-check
+
+/** @module @web/search/search_arch_parser - Parses search view XML arch into structured filter, groupby, and search panel items */
+
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
-import { clamp } from "@web/core/utils/numbers";
-import { visitXML } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/dom/xml";
+import { clamp } from "@web/core/utils/format/numbers";
 import { DEFAULT_INTERVAL, toGeneratorId } from "@web/search/utils/dates";
 
 const ALL = _t("All");
@@ -24,6 +28,11 @@ function getContextGroupBy(context) {
     }
 }
 
+/**
+ * Normalize extended search item types to their base type.
+ * @param {string} type
+ * @returns {string}
+ */
 function reduceType(type) {
     if (type === "dateFilter") {
         return "filter";
@@ -34,8 +43,23 @@ function reduceType(type) {
     return type;
 }
 
+/**
+ * Parser that transforms a `<search>` view architecture XML into structured
+ * pre-search items, search panel sections, and label resolution callbacks.
+ */
 export class SearchArchParser {
-    constructor(searchViewDescription, fields, searchDefaults = {}, searchPanelDefaults = {}) {
+    /**
+     * @param {{ irFilters?: Object[], arch?: string }} searchViewDescription
+     * @param {Record<string, Object>} fields - field definitions from the model
+     * @param {Record<string, any>} [searchDefaults={}] - default search values from context
+     * @param {Record<string, any>} [searchPanelDefaults={}] - default search panel selections
+     */
+    constructor(
+        searchViewDescription,
+        fields,
+        searchDefaults = {},
+        searchPanelDefaults = {},
+    ) {
         const { irFilters, arch } = searchViewDescription;
 
         this.fields = fields || {};
@@ -61,6 +85,10 @@ export class SearchArchParser {
         this.optionsParams = null;
     }
 
+    /**
+     * Walk the search arch XML and produce structured output.
+     * @returns {{ labels: Function[], preSearchItems: Array[], searchPanelInfo: Object, sections: Array[] }}
+     */
     parse() {
         visitXML(this.arch, (node, visitChildren) => {
             switch (node.tagName) {
@@ -96,6 +124,10 @@ export class SearchArchParser {
         };
     }
 
+    /**
+     * Flush the current group of pre-search items and start a new one.
+     * @param {string | null} [tag=null] - the type tag for the new group
+     */
     pushGroup(tag = null) {
         if (this.currentGroup.length) {
             if (this.currentTag === "groupBy") {
@@ -109,6 +141,10 @@ export class SearchArchParser {
         this.groupNumber++;
     }
 
+    /**
+     * Process a `<field>` node: extract domain, operator, defaults, and label callbacks.
+     * @param {Element} node
+     */
     visitField(node) {
         this.pushGroup("field");
         const preField = { type: "field" };
@@ -147,7 +183,9 @@ export class SearchArchParser {
                     // Note: many2one as a default filter will have a
                     // numeric value instead of a string => we want "="
                     // instead of "ilike".
-                    if (["char", "html", "many2many", "one2many", "text"].includes(type)) {
+                    if (
+                        ["char", "html", "many2many", "one2many", "text"].includes(type)
+                    ) {
                         operator = "ilike";
                     } else {
                         operator = "=";
@@ -155,7 +193,11 @@ export class SearchArchParser {
                 }
                 preField.defaultRank = -10;
                 const { selection, context, relation } = this.fields[name];
-                preField.defaultAutocompleteValue = { label: `${value}`, operator, value };
+                preField.defaultAutocompleteValue = {
+                    label: `${value}`,
+                    operator,
+                    value,
+                };
                 if (fieldType === "selection") {
                     const option = selection.find((sel) => sel[0] === value);
                     if (!option) {
@@ -165,11 +207,13 @@ export class SearchArchParser {
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) =>
                         orm
-                            .call(relation, "read", [value, ["display_name"]], { context })
+                            .call(relation, "read", [value, ["display_name"]], {
+                                context,
+                            })
                             .then((results) => {
                                 preField.defaultAutocompleteValue.label =
                                     results[0]["display_name"];
-                            })
+                            }),
                     );
                 } else if (
                     ["many2many", "one2many"].includes(fieldType) &&
@@ -180,12 +224,14 @@ export class SearchArchParser {
                     preField.defaultAutocompleteValue.value = val;
                     this.labels.push((orm) =>
                         orm
-                            .call(relation, "read", [val, ["display_name"]], { context })
+                            .call(relation, "read", [val, ["display_name"]], {
+                                context,
+                            })
                             .then((results) => {
                                 preField.defaultAutocompleteValue.label = `${results
                                     .map((r) => r["display_name"])
                                     .join(" or ")}`;
-                            })
+                            }),
                     );
                 }
             }
@@ -202,6 +248,12 @@ export class SearchArchParser {
         this.currentGroup.push(preField);
     }
 
+    /**
+     * Process a `<filter>` node: detect type (filter, groupBy, dateGroupBy, dateFilter),
+     * handle defaults, and push to the current group.
+     * @param {Element} node
+     * @param {() => void} visitChildren
+     */
     visitFilter(node, visitChildren) {
         const preSearchItem = { type: "filter" };
         if (node.hasAttribute("context")) {
@@ -214,7 +266,8 @@ export class SearchArchParser {
                 preSearchItem.fieldType = groupByField.type;
                 if (["date", "datetime"].includes(groupByField.type)) {
                     preSearchItem.type = "dateGroupBy";
-                    preSearchItem.defaultIntervalId = defaultInterval || DEFAULT_INTERVAL;
+                    preSearchItem.defaultIntervalId =
+                        defaultInterval || DEFAULT_INTERVAL;
                 }
             } else {
                 preSearchItem.context = context;
@@ -236,8 +289,14 @@ export class SearchArchParser {
                     endMonth: Number(node.getAttribute("end_month") || 0),
                     customOptions: [],
                 };
-                const defaultOffset = clamp(optionsParams.startMonth, optionsParams.endMonth, 0);
-                preSearchItem.defaultGeneratorIds = [toGeneratorId("month", defaultOffset)];
+                const defaultOffset = clamp(
+                    optionsParams.startMonth,
+                    optionsParams.endMonth,
+                    0,
+                );
+                preSearchItem.defaultGeneratorIds = [
+                    toGeneratorId("month", defaultOffset),
+                ];
                 if (node.hasAttribute("default_period")) {
                     preSearchItem.defaultGeneratorIds = node
                         .getAttribute("default_period")
@@ -295,6 +354,10 @@ export class SearchArchParser {
         this.currentGroup.push(preSearchItem);
     }
 
+    /**
+     * Process a `<filter>` child of a date filter — adds a custom period option.
+     * @param {Element} node
+     */
     visitDateOption(node) {
         const preDateOption = { type: "dateOption" };
         for (const attribute of ["name", "string", "domain"]) {
@@ -308,12 +371,22 @@ export class SearchArchParser {
         this.optionsParams.customOptions.push(preDateOption);
     }
 
+    /**
+     * Process a `<group>` node: flush current group, visit children, flush again.
+     * @param {Element} node
+     * @param {() => void} visitChildren
+     */
     visitGroup(node, visitChildren) {
         this.pushGroup();
         visitChildren();
         this.pushGroup();
     }
 
+    /**
+     * Process the root `<search>` node.
+     * @param {Element} node
+     * @param {() => void} visitChildren
+     */
     visitSearch(node, visitChildren) {
         visitChildren();
         this.pushGroup();
@@ -322,6 +395,11 @@ export class SearchArchParser {
         }
     }
 
+    /**
+     * Process the `<searchpanel>` node: build category and filter sections.
+     * @param {Element} searchPanelNode
+     * @returns {false} stops the visitor from descending into children
+     */
     visitSearchPanel(searchPanelNode) {
         let hasCategoryWithCounters = false;
         let hasFilterWithDomain = false;
@@ -331,7 +409,9 @@ export class SearchArchParser {
             this.searchPanelInfo.className = searchPanelNode.getAttribute("class");
         }
         if (searchPanelNode.hasAttribute("view_types")) {
-            this.searchPanelInfo.viewTypes = searchPanelNode.getAttribute("view_types").split(",");
+            this.searchPanelInfo.viewTypes = searchPanelNode
+                .getAttribute("view_types")
+                .split(",");
         }
 
         for (const node of searchPanelNode.children) {
@@ -374,7 +454,8 @@ export class SearchArchParser {
                     bold: true,
                     parentId: false,
                 });
-                hasCategoryWithCounters = hasCategoryWithCounters || section.enableCounters;
+                hasCategoryWithCounters =
+                    hasCategoryWithCounters || section.enableCounters;
             } else {
                 section.domain = attrs.domain || "[]";
                 section.groupBy = attrs.groupby || null;
@@ -394,20 +475,21 @@ export class SearchArchParser {
         if (hasCategoryWithCounters && hasFilterWithDomain) {
             // If incompatibilities are found -> disables all category counters
             for (const section of this.sections) {
-                if (section.type === "category") {
-                    section.enableCounters = false;
+                if (section[1].type === "category") {
+                    section[1].enableCounters = false;
                 }
             }
             // ... and triggers a warning
             console.warn(
                 "Warning: categories with counters are incompatible with filters having a domain attribute.",
-                "All category counters have been disabled to avoid inconsistencies."
+                "All category counters have been disabled to avoid inconsistencies.",
             );
         }
 
         return false; // we do not want to let the parser keep visiting children
     }
 
+    /** Process a `<separator/>` node: flush the current group. */
     visitSeparator() {
         this.pushGroup();
     }

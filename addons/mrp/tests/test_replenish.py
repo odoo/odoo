@@ -229,12 +229,12 @@ class TestMrpReplenish(TestMrpCommon):
         # Error is triggered for date_start <= lead_horizon_date < date_finished
         prod.date_start = fields.Date.today() + timedelta(days=1)
 
-        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+        with Form(orderpoint, view='stock.view_stock_warehouse_orderpoint_list_editable') as form:
             form.product_min_qty = 3
         self.assertEqual(orderpoint.qty_to_order, 1)
 
         orderpoint.trigger = 'manual'
-        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+        with Form(orderpoint, view='stock.view_stock_warehouse_orderpoint_list_editable') as form:
             form.product_min_qty = 10
             self.assertEqual(form.qty_to_order, 0)
         self.assertEqual(form.qty_to_order, 8)

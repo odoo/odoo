@@ -128,7 +128,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
 
     def test_lock_dates(self):
         moves = self.env['account.move'].search([])
-        moves.filtered(lambda x: x.state != 'draft').button_draft()
+        moves.filtered(lambda x: x.state != 'draft').action_draft()
         moves.unlink()
         for lock, lock_sale, lock_purchase in [
             ('hard_lock_date', True, True),
@@ -177,7 +177,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                         self.root_company[lock] = root_lock
                         self.branch_a[lock] = branch_lock
                     with check():
-                        move.button_draft()
+                        move.action_draft()
 
     def test_change_record_company(self):
         account = self.env['account.account'].create({

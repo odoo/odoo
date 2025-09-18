@@ -1,6 +1,6 @@
-import { FloatField, floatField } from "@web/views/fields/float/float_field";
+import { FloatField, floatField } from "@web/fields/basic/float/float_field";
 import { registry } from "@web/core/registry";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/services/hotkeys/hotkey_service";
 import { useEffect, useRef } from "@odoo/owl";
 
 export class CountedQuantityWidgetField extends FloatField {

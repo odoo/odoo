@@ -1,14 +1,19 @@
-import { roundPrecision } from "@web/core/utils/numbers";
-import { Base } from "../related_models";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
-import { formatCurrency } from "@web/core/currency";
+import { roundPrecision } from "@web/core/utils/format/numbers";
+import { formatCurrency } from "@web/services/currency";
+import { Base } from "../related_models";
 
 export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
 
     prepareProductBaseLineForTaxesComputationExtraValues(opts = {}) {
-        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = opts;
+        const {
+            price = false,
+            pricelist = false,
+            fiscalPosition = false,
+            priceExtra = 0,
+        } = opts;
         const isVariant = Boolean(this?.product_tmpl_id);
         const config = this.models["pos.config"].getFirst();
         const productTemplate = isVariant ? this.product_tmpl_id : this;
@@ -17,7 +22,7 @@ export class ProductTemplateAccounting extends Base {
             1,
             priceExtra,
             false,
-            isVariant ? this : false
+            isVariant ? this : false,
         );
         const priceUnit = price || price === 0 ? price : baseP;
         const currency = config.currency_id;
@@ -56,7 +61,7 @@ export class ProductTemplateAccounting extends Base {
         recurring = false,
         variant = false,
         original_line = false,
-        related_lines = []
+        related_lines = [],
     ) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
@@ -67,8 +72,8 @@ export class ProductTemplateAccounting extends Base {
             alert(
                 _t(
                     "An error occurred when loading product prices. " +
-                        "Make sure all pricelists are available in the POS."
-                )
+                        "Make sure all pricelists are available in the POS.",
+                ),
             );
         }
 
@@ -84,21 +89,29 @@ export class ProductTemplateAccounting extends Base {
 
         if (original_line && original_line.isLotTracked() && product) {
             related_lines.push(
-                ...original_line.order_id.lines.filter((line) => line.product_id.id == product.id)
+                ...original_line.order_id.lines.filter(
+                    (line) => line.product_id.id == product.id,
+                ),
             );
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
 
-        const tmplRules = (productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [])
+        const tmplRules = (
+            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || []
+        )
             .filter((rule) => rule.pricelist_id.id === pricelist.id && !rule.product_id)
             .sort((a, b) => b.min_quantity - a.min_quantity);
-        const productRules = (product?.backLink?.("<-product.pricelist.item.product_id") || [])
+        const productRules = (
+            product?.backLink?.("<-product.pricelist.item.product_id") || []
+        )
             .filter((rule) => rule.pricelist_id.id === pricelist.id)
             .sort((a, b) => b.min_quantity - a.min_quantity);
 
         const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
         const productRulesSet = new Set(productRules.map((rule) => rule.id));
-        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(
+            this.parentCategories,
+        );
         const rules = this.models["product.pricelist.item"]
             .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
             .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
@@ -109,7 +122,13 @@ export class ProductTemplateAccounting extends Base {
         }
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.getPrice(rule.base_pricelist_id, quantity, 0, true, variant);
+                price = this.getPrice(
+                    rule.base_pricelist_id,
+                    quantity,
+                    0,
+                    true,
+                    variant,
+                );
             }
         } else if (rule.base === "standard_price") {
             price = standardPrice;
@@ -145,7 +164,12 @@ export class ProductTemplateAccounting extends Base {
 
     getBaseLine(opts = {}) {
         const vals = opts.overridedValues || {};
-        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = vals;
+        const {
+            price = false,
+            pricelist = false,
+            fiscalPosition = false,
+            priceExtra = 0,
+        } = vals;
 
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             {},
@@ -155,7 +179,7 @@ export class ProductTemplateAccounting extends Base {
                 fiscalPosition,
                 priceExtra,
                 ...vals,
-            })
+            }),
         );
     }
 

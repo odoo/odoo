@@ -13,7 +13,7 @@ import {
 } from "@spreadsheet/../tests/helpers/commands";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { Component, onWillUnmount, xml } from "@odoo/owl";

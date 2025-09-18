@@ -33,7 +33,7 @@ from odoo.addons.iot_drivers.tools.system import (
     IS_WINDOWS,
     mtr,
 )
-from odoo.tools.func import reset_cached_properties
+from odoo.libs.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
 lock = Lock()

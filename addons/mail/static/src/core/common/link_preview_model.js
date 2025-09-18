@@ -1,7 +1,17 @@
 import { fields, Record } from "@mail/core/common/record";
 import { convertToEmbedURL } from "@mail/utils/common/misc";
 
-const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "webm", "mpeg", "mpg", "ogv", "3gp"]);
+const VIDEO_EXTENSIONS = new Set([
+    "mp4",
+    "mov",
+    "avi",
+    "mkv",
+    "webm",
+    "mpeg",
+    "mpg",
+    "ogv",
+    "3gp",
+]);
 
 export class LinkPreview extends Record {
     static _name = "mail.link.preview";

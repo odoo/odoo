@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { user } from "@web/services/user";
 import { Message } from "@mail/core/common/message";
 
 import { patch } from "@web/core/utils/patch";

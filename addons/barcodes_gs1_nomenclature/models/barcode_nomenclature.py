@@ -5,7 +5,7 @@ import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.barcode import get_barcode_check_digit
+from odoo.libs.barcode import get_barcode_check_digit
 
 FNC1_CHAR = '\x1D'
 

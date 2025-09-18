@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect } from "@odoo/hoot";
 
 /**

@@ -18,7 +18,7 @@ export class AttributeSelectionHelper {
 
     getAllCustomValues() {
         return Object.fromEntries(
-            Object.values(this.customValues).flatMap((value) => Object.entries(value))
+            Object.values(this.customValues).flatMap((value) => Object.entries(value)),
         );
     }
 
@@ -54,7 +54,9 @@ export class AttributeSelectionHelper {
 
     getMissingAttributeValue(attributes) {
         return attributes.find(
-            (attr) => attr.attribute_id.display_type !== "multi" && !this.hasValueSelected(attr)
+            (attr) =>
+                attr.attribute_id.display_type !== "multi" &&
+                !this.hasValueSelected(attr),
         );
     }
 
@@ -64,7 +66,7 @@ export class AttributeSelectionHelper {
 
     getSelectedAttributeValues(attribute) {
         return attribute.product_template_value_ids.filter((value) =>
-            this.isValueSelected(attribute, value)
+            this.isValueSelected(attribute, value),
         );
     }
 }

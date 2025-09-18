@@ -4,7 +4,7 @@ import { Deferred } from "@odoo/hoot-mock";
 import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mockGetMedia } from "@mail/../tests/mail_test_helpers";
-import { uuid } from "@web/core/utils/strings";
+import { uuid } from "@web/core/utils/format/strings";
 
 defineMailModels();
 

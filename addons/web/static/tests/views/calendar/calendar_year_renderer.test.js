@@ -1,15 +1,17 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, resize } from "@odoo/hoot-dom";
 import { mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import {
     mockService,
     mountWithCleanup,
-    preloadBundle,
     patchWithCleanup,
+    preloadBundle,
 } from "@web/../tests/web_test_helpers";
-import { FAKE_MODEL, clickDate, selectDateRange } from "./calendar_test_helpers";
-
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
+
+import { clickDate, FAKE_MODEL, selectDateRange } from "./calendar_test_helpers";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
@@ -74,7 +76,9 @@ test(`display events`, async () => {
 
     await start({
         createRecord(record) {
-            expect.step(`${record.start.toISODate()} allDay:${record.isAllDay} no event`);
+            expect.step(
+                `${record.start.toISODate()} allDay:${record.isAllDay} no event`,
+            );
         },
     });
 

@@ -1,9 +1,14 @@
-import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
-import { getCurrency, getCurrencyRates } from "@web/core/currency";
-import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
-import { formatMonetary } from "../fields/formatters";
+// @ts-check
 
+/** @module @web/views/view_components/multi_currency_popover - Popover showing a monetary value converted into each active company currency */
+
+import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { formatMonetary } from "@web/fields/formatters";
+import { getCurrency, getCurrencyRates } from "@web/services/currency";
+import { user } from "@web/services/user";
+
+/** Popover showing a monetary value converted into each of the company's active currencies. */
 export class MultiCurrencyPopover extends Component {
     static template = "web.MultiCurrencyPopover";
     static props = {
@@ -27,6 +32,7 @@ export class MultiCurrencyPopover extends Component {
         });
     }
 
+    /** @returns {Array<Object>} non-default currencies with their rates and converted values */
     get currencies() {
         return this.props.currencyIds.reduce((currencies, currencyId) => {
             if (currencyId !== this.defaultCurrency) {
@@ -41,6 +47,11 @@ export class MultiCurrencyPopover extends Component {
         }, []);
     }
 
+    /**
+     * @param {number} value
+     * @param {number} currencyId
+     * @returns {string} formatted monetary string
+     */
     formatedValue(value, currencyId) {
         return formatMonetary(value, { currencyId });
     }

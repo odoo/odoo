@@ -1,3 +1,5 @@
+// @ts-check
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import {
@@ -7,9 +9,8 @@ import {
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-
-import { currencies } from "@web/core/currency";
 import { rpcBus } from "@web/core/network/rpc";
+import { currencies } from "@web/services/currency";
 
 class Currency extends models.Model {
     _name = "res.currency";

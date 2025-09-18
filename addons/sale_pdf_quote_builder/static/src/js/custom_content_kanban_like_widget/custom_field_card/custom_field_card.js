@@ -1,6 +1,6 @@
 import { Component, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useAutoresize } from "@web/core/utils/autoresize";
+import { useAutoresize } from "@web/core/utils/dom/autoresize";
 
 export class CustomFieldCard extends Component {
     static template = "sale_pdf_quote_builder.customFieldCard";

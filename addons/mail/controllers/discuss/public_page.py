@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import psycopg2.errors
+import psycopg.errors
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
@@ -79,7 +79,7 @@ class PublicPageController(http.Controller):
                         "uuid": create_token,
                     }
                 )
-            except psycopg2.errors.UniqueViolation:
+            except psycopg.errors.UniqueViolation:
                 # concurrent insert attempt: another request created the channel.
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()

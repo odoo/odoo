@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
-
 export class PosCategory extends Base {
     static pythonModel = "pos.category";
 
@@ -33,7 +32,8 @@ export class PosCategory extends Base {
     get associatedProducts() {
         const allCategoryIds = this.getAllChildren().map((cat) => cat.id);
         const products = allCategoryIds.flatMap(
-            (catId) => this.models["product.template"].getBy("pos_categ_ids", catId) || []
+            (catId) =>
+                this.models["product.template"].getBy("pos_categ_ids", catId) || [],
         );
         // Remove duplicates since owl doesn't like them.
         return Array.from(new Set(products));

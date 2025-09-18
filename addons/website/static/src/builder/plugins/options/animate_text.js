@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { AnimateOption } from "./animate_option";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/ui/popover/popover_hook";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { POSITION_BUS } from "@web/core/position/position_hook";

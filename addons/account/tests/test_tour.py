@@ -18,7 +18,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
         # This field is only present in account_accountant
         if 'deferred_move_ids' in all_moves._fields:
             all_moves = all_moves.filtered(lambda m: not m.deferred_move_ids)
-        all_moves.button_draft()
+        all_moves.action_draft()
         all_moves.with_context(force_delete=True).unlink()
 
         # In case of latam impacting multiple countries, disable the required fields manually.
@@ -53,7 +53,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
         invoices = self.env['account.move'].search([('company_id', '=', self.env.company.id), ('move_type', '=', 'out_invoice')])
         for invoice in invoices:
             if invoice.state in ('cancel', 'posted'):
-                invoice.button_draft()
+                invoice.action_draft()
         invoices.unlink()
 
         # remove all entries in the miscellaneous journal to test the onboarding

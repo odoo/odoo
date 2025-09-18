@@ -1,11 +1,12 @@
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
-import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { fields, Record } from "./record";
-import { debounce } from "@web/core/utils/timing";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { debounce } from "@web/core/utils/timing";
 
-const MESSAGE_SOUND = "mail.user_setting.message_sound";
+import { fields, Record } from "./record";
+export const MESSAGE_SOUND = "mail.user_setting.message_sound";
+export const USE_BLUR_LS = "mail_user_setting_use_blur";
 
 export class Settings extends Record {
     id;
@@ -22,11 +23,12 @@ export class Settings extends Record {
         this.saveVoiceThresholdDebounce = debounce(() => {
             browser.localStorage.setItem(
                 "mail_user_setting_voice_threshold",
-                this.voiceActivationThreshold.toString()
+                this.voiceActivationThreshold.toString(),
             );
         }, 2000);
         this.hasCanvasFilterSupport =
-            typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
+            typeof document.createElement("canvas").getContext("2d").filter !==
+            "undefined";
         this._loadLocalSettings();
     }
 
@@ -41,34 +43,37 @@ export class Settings extends Record {
      */
     channel_notifications = fields.Attr("mentions", {
         compute() {
-            return this.channel_notifications === false ? "mentions" : this.channel_notifications;
+            return this.channel_notifications === false
+                ? "mentions"
+                : this.channel_notifications;
         },
     });
+    _recomputeMessageSound = 0;
     messageSound = fields.Attr(true, {
         compute() {
+            void this._recomputeMessageSound;
             return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.messageSound) {
-                browser.localStorage.removeItem(MESSAGE_SOUND);
-            } else {
-                browser.localStorage.setItem(MESSAGE_SOUND, "false");
-            }
         },
     });
     useCallAutoFocus = fields.Attr(true, {
         /** @this {import("models").Settings} */
         compute() {
-            return !browser.localStorage.getItem("mail_user_setting_disable_call_auto_focus");
+            return !browser.localStorage.getItem(
+                "mail_user_setting_disable_call_auto_focus",
+            );
         },
         /** @this {import("models").Settings} */
         onUpdate() {
             if (this.useCallAutoFocus) {
-                browser.localStorage.removeItem("mail_user_setting_disable_call_auto_focus");
+                browser.localStorage.removeItem(
+                    "mail_user_setting_disable_call_auto_focus",
+                );
                 return;
             }
-            browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
+            browser.localStorage.setItem(
+                "mail_user_setting_disable_call_auto_focus",
+                "true",
+            );
         },
     });
 
@@ -91,17 +96,11 @@ export class Settings extends Record {
     backgroundBlurAmount = 10;
     edgeBlurAmount = 10;
     showOnlyVideo = false;
+    _recomputeUseBlur = 0;
     useBlur = fields.Attr(false, {
         compute() {
-            return browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.useBlur) {
-                browser.localStorage.setItem("mail_user_setting_use_blur", "true");
-            } else {
-                browser.localStorage.removeItem("mail_user_setting_use_blur");
-            }
+            void this._recomputeUseBlur;
+            return browser.localStorage.getItem(USE_BLUR_LS) === "true";
         },
     });
     blurPerformanceWarning = fields.Attr(false, {
@@ -194,6 +193,16 @@ export class Settings extends Record {
         ];
     }
 
+    /** @param {boolean} newValue */
+    setUseBlur(newValue) {
+        if (newValue) {
+            browser.localStorage.setItem(USE_BLUR_LS, true);
+        } else {
+            browser.localStorage.removeItem(USE_BLUR_LS);
+        }
+        this._recomputeUseBlur++;
+    }
+
     getMuteUntilText(dt) {
         if (dt) {
             return dt.year <= luxon.DateTime.now().year + 2
@@ -210,7 +219,9 @@ export class Settings extends Record {
     async setCustomNotifications(custom_notifications, thread = undefined) {
         return rpc("/discuss/settings/custom_notifications", {
             custom_notifications:
-                !thread && custom_notifications === "mentions" ? false : custom_notifications,
+                !thread && custom_notifications === "mentions"
+                    ? false
+                    : custom_notifications,
             channel_id: thread?.id,
         });
     }
@@ -231,7 +242,10 @@ export class Settings extends Record {
      */
     async setAudioInputDevice(audioInputDeviceId) {
         this.audioInputDeviceId = audioInputDeviceId;
-        browser.localStorage.setItem("mail_user_setting_audio_input_device_id", audioInputDeviceId);
+        browser.localStorage.setItem(
+            "mail_user_setting_audio_input_device_id",
+            audioInputDeviceId,
+        );
     }
     /**
      * @param {String} audioOutputDeviceId
@@ -240,7 +254,7 @@ export class Settings extends Record {
         this.audioOutputDeviceId = audioOutputDeviceId;
         browser.localStorage.setItem(
             "mail_user_setting_audio_output_device_id",
-            audioOutputDeviceId
+            audioOutputDeviceId,
         );
     }
     /**
@@ -251,7 +265,7 @@ export class Settings extends Record {
         this.cameraInputDeviceId = cameraInputDeviceId;
         browser.localStorage.setItem(
             "mail_user_setting_camera_input_device_id",
-            cameraInputDeviceId
+            cameraInputDeviceId,
         );
     }
     /**
@@ -292,9 +306,14 @@ export class Settings extends Record {
         this.volumeSettingsTimeouts.set(
             key,
             browser.setTimeout(
-                this._onSaveVolumeSettingTimeout.bind(this, { key, partnerId, guestId, volume }),
-                5000
-            )
+                this._onSaveVolumeSettingTimeout.bind(this, {
+                    key,
+                    partnerId,
+                    guestId,
+                    volume,
+                }),
+                5000,
+            ),
         );
     }
     /**
@@ -366,30 +385,35 @@ export class Settings extends Record {
      */
     _loadLocalSettings() {
         const voiceActivationThresholdString = browser.localStorage.getItem(
-            "mail_user_setting_voice_threshold"
+            "mail_user_setting_voice_threshold",
         );
         this.voiceActivationThreshold = voiceActivationThresholdString
             ? parseFloat(voiceActivationThresholdString)
             : this.voiceActivationThreshold;
         this.audioInputDeviceId = browser.localStorage.getItem(
-            "mail_user_setting_audio_input_device_id"
+            "mail_user_setting_audio_input_device_id",
         );
         this.audioOutputDeviceId = browser.localStorage.getItem(
-            "mail_user_setting_audio_output_device_id"
+            "mail_user_setting_audio_output_device_id",
         );
         this.cameraInputDeviceId = browser.localStorage.getItem(
-            "mail_user_setting_camera_input_device_id"
+            "mail_user_setting_camera_input_device_id",
         );
         this.showOnlyVideo =
-            browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";
+            browser.localStorage.getItem("mail_user_setting_show_only_video") ===
+            "true";
         const backgroundBlurAmount = browser.localStorage.getItem(
-            "mail_user_setting_background_blur_amount"
+            "mail_user_setting_background_blur_amount",
         );
-        this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
-        const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
+        this.backgroundBlurAmount = backgroundBlurAmount
+            ? parseInt(backgroundBlurAmount)
+            : 10;
+        const edgeBlurAmount = browser.localStorage.getItem(
+            "mail_user_setting_edge_blur_amount",
+        );
         this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
         this.useCallAutoFocus = !browser.localStorage.getItem(
-            "mail_user_setting_disable_call_auto_focus"
+            "mail_user_setting_disable_call_auto_focus",
         );
     }
     /**
@@ -407,7 +431,7 @@ export class Settings extends Record {
                     use_push_to_talk: this.use_push_to_talk,
                     voice_active_duration: this.voice_active_duration,
                 },
-            }
+            },
         );
     }
     /**
@@ -422,15 +446,15 @@ export class Settings extends Record {
             "res.users.settings",
             "set_volume_setting",
             [[this.id], partnerId, volume],
-            { guest_id: guestId }
+            { guest_id: guestId },
         );
     }
     onStorage(ev) {
         if (ev.key === MESSAGE_SOUND) {
-            this.messageSound = ev.newValue !== "false";
+            this._recomputeMessageSound++;
         }
-        if (ev.key === "mail_user_setting_use_blur") {
-            this.useBlur = ev.newValue === "true";
+        if (ev.key === USE_BLUR_LS) {
+            this._recomputeUseBlur++;
         }
     }
     /**
@@ -443,7 +467,7 @@ export class Settings extends Record {
         browser.clearTimeout(this.globalSettingsTimeout);
         this.globalSettingsTimeout = browser.setTimeout(
             () => this._onSaveGlobalSettingsTimeout(),
-            2000
+            2000,
         );
     }
 }

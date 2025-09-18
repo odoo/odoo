@@ -140,7 +140,9 @@ class MailMessage(models.Model):
     def _compute_account_audit_log_restricted(self):
         self.account_audit_log_restricted = False
         if potentially_restricted := self.filtered(lambda r: r.model in DOMAINS):
-            restricted = self.search(Domain('id', 'in', potentially_restricted.ids) + self._search_account_audit_log_restricted('in', [True]))
+            self.env.flush_all()
+            search_domain = self._search_account_audit_log_restricted('in', [True])
+            restricted = self.search(Domain('id', 'in', potentially_restricted.ids) & search_domain)
             restricted.account_audit_log_restricted = True
 
     def _search_account_audit_log_restricted(self, operator, value):
