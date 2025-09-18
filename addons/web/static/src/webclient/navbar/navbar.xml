@@ -115,6 +115,7 @@
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
                   <img style="height: 2em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}"/>
+                  <i t-if="currentApp.webIcon" t-att-class="`${currentApp.webIconClass} fa-2x me-2`" t-att-style="'color:' + currentApp.webIconColor"></i>
                   <span class="fs-4 fw-bolder"><t t-esc="currentApp.name"/></span>
                 </div>
                 <ul class="list-unstyled py-2 ps-0 mb-0">
