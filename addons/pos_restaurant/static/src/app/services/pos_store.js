@@ -3,7 +3,6 @@ import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -356,15 +355,18 @@ patch(PosStore.prototype, {
 
         return false;
     },
-    async onDeleteOrder(order) {
-        const orderIsDeleted = await super.onDeleteOrder(...arguments);
+    removeOrder(order) {
+        const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
+        const orderRemoved = super.removeOrder(...arguments);
         if (
-            orderIsDeleted &&
+            orderRemoved &&
+            wasCurrentOrder &&
             this.config.module_pos_restaurant &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
             this.showScreen("FloorScreen");
         }
+        return orderRemoved;
     },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
@@ -440,18 +442,6 @@ patch(PosStore.prototype, {
     },
     get selectedTable() {
         return this.getOrder()?.table_id;
-    },
-    showScreen(screenName, props = {}, newOrder = false) {
-        const order = this.getOrder();
-        if (
-            this.config.module_pos_restaurant &&
-            this.mainScreen.component === ProductScreen &&
-            order &&
-            !order.isBooked
-        ) {
-            this.removeOrder(order);
-        }
-        return super.showScreen(...arguments);
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.getOrder()) {
