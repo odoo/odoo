@@ -508,27 +508,49 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Dialog.confirm(),
         ].flat(),
 });
+registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.cancel(),
+            ProductScreen.isShown(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.hasTable("2"),
+        ].flat(),
+});
 
 registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
     steps: () =>
         [
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.cancel(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.isShown(),
             FloorScreen.clickNewOrder(),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPresetTimingSlot(),
             Chrome.selectPresetTimingSlotHour("15:00"),
             Chrome.presetTimingSlotIs("15:00"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
+            ProductScreen.selectPreset("Takeaway", "Eat in"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(1, "John"),
             TicketScreen.nthRowContains(1, "Takeaway", false),
-            TicketScreen.nthRowContains(2, "002"),
+            TicketScreen.nthRowContains(2, "004"),
             TicketScreen.nthRowContains(2, "Eat in", false),
         ].flat(),
 });
