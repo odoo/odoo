@@ -110,9 +110,10 @@ class StockRule(models.Model):
                     vals = rules[0]._prepare_purchase_order(company_id, origins, positive_values)
                     # The company_id is the same for all procurements since
                     # _make_po_get_domain add the company in the domain.
-                    # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
-                    # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
-                    po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                    # Create the PO using the current logged-in user if the replenishment is triggered manually.
+                    # Otherwise, fallback to SUPERUSER_ID (e.g., PO generated from sales orders).
+                    user_id = (self.env.context.get('manual_replenishment') and self.env.uid) or SUPERUSER_ID
+                    po = self.env['purchase.order'].with_company(company_id).with_user(user_id).sudo().create(vals)
             else:
                 reference_ids = set()
                 for procurement in procurements:

@@ -90,7 +90,7 @@ class ProductReplenish(models.TransientModel):
     def launch_replenishment(self):
         try:
             now = self.env.cr.now()
-            self.env['stock.rule'].with_context(clean_context(self.env.context)).run([
+            self.env['stock.rule'].with_context(clean_context(self.env.context), manual_replenishment=True).run([
                 self.env['stock.rule'].Procurement(
                     self.product_id,
                     self.quantity,

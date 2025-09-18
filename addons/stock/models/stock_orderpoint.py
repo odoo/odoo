@@ -344,7 +344,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in self:
                 orderpoint.qty_to_order = orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast)
         try:
-            self._procure_orderpoint_confirm(company_id=self.env.company)
+            self.with_context(manual_replenishment=True)._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
             if len(self) != 1:
                 raise e
