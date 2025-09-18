@@ -298,11 +298,12 @@ export class AnimateOptionPlugin extends Plugin {
     getAnimatedText() {
         const selection = this.dependencies.selection.getSelectionData().editableSelection;
         const ancestor = closestElement(selection.commonAncestorContainer, ".o_animated_text");
-        if (
-            ancestor &&
-            (selection.isCollapsed || selection.textContent() === ancestor.textContent)
-        ) {
-            return ancestor;
+        if (ancestor) {
+            const selectionText = selection.textContent().replace(/\s+/g, " ").trim();
+            const ancestorText = ancestor.innerText.replace(/\s+/g, " ").trim();
+            if (selection.isCollapsed || selectionText === ancestorText) {
+                return ancestor;
+            }
         }
     }
     isAnimatedTextActive() {
