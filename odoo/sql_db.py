@@ -243,18 +243,11 @@ class BaseCursor(_CursorProtocol):
         raise NotImplementedError
 
     def dictfetchmany(self, size: int) -> list[dict[str, typing.Any]]:
-        res: list[dict[str, typing.Any]] = []
-        while size > 0 and (row := self.dictfetchone()) is not None:
-            res.append(row)
-            size -= 1
-        return res
+        raise NotImplementedError
 
     def dictfetchall(self) -> list[dict[str, typing.Any]]:
         """ Return all rows as dicts (column_name -> value). """
-        res: list[dict[str, typing.Any]] = []
-        while (row := self.dictfetchone()) is not None:
-            res.append(row)
-        return res
+        raise NotImplementedError
 
     def split_for_in_conditions(self, ids: Iterable[T], size: int = 0) -> Iterator[tuple[T, ...]]:
         """Split a list of identifiers into one or more smaller tuples
@@ -374,20 +367,23 @@ class Cursor(BaseCursor):
             self.execute("SET search_path = public, pg_catalog;")
             self.commit()  # ensure that the search_path remains after a rollback
 
-    def __build_dict(self, row: tuple) -> dict[str, typing.Any]:
+    def dictfetchone(self) -> dict[str, typing.Any] | None:
         description = self._obj.description
         assert description, "Query does not have results"
-        return {column.name: row[index] for index, column in enumerate(description)}
-
-    def dictfetchone(self) -> dict[str, typing.Any] | None:
         row = self._obj.fetchone()
-        return self.__build_dict(row) if row else None
+        return {column.name: value for column, value in zip(description, row)} if row else None
 
     def dictfetchmany(self, size) -> list[dict[str, typing.Any]]:
-        return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
+        description = self._obj.description
+        assert description, "Query does not have results"
+        names = [column.name for column in description]
+        return [dict(zip(names, row)) for row in self._obj.fetchmany(size)]
 
     def dictfetchall(self) -> list[dict[str, typing.Any]]:
-        return [self.__build_dict(row) for row in self._obj.fetchall()]
+        description = self._obj.description
+        assert description, "Query does not have results"
+        names = [column.name for column in description]
+        return [dict(zip(names, row)) for row in self._obj.fetchall()]
 
     def __del__(self):
         if not self._closed and not self._cnx.closed:
