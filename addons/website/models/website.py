@@ -1590,6 +1590,17 @@ class Website(models.Model):
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
+            if (
+                'sitemap' in rule.endpoint.routing
+                and rule.endpoint.routing['sitemap'] is True
+                and "request.redirect" in inspect.getsource(rule.endpoint.func)
+            ):
+                logger.warning(
+                    "Sitemap for controller %s (%s) is set to True but the endpoint performs a redirect, "
+                    "please set it to False or a function returning the URLs to include in the sitemap.",
+                    rule.endpoint,
+                    rule.endpoint.func,
+                )
 
             if callable(sitemap_func):
                 func_key = _unwrap_callable(sitemap_func)

@@ -165,6 +165,17 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
+    def sitemap_blog(env, rule, qs):
+        Blog = env['blog.blog']
+        blogs = tools.lazy(lambda: Blog.search(env['website'].get_current_website().website_domain(), order="sequence"))
+        slug = env['ir.http']._slug
+
+        if len(blogs) == 1:
+            yield {'loc': '/blog/%s' % slug(blogs[0])}
+        else:
+            for blog in blogs:
+                yield {'loc': '/blog/%s' % slug(blog)}
+
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
@@ -174,7 +185,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
-    ], type='http', auth="public", website=True, sitemap=True, list_as_website_content=_lt("Blogs"))
+    ], type='http', auth="public", website=True, sitemap=sitemap_blog, list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="sequence"))
