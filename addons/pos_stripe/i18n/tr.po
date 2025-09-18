@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_stripe
+# * pos_stripe
 #
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-02-20 10:02+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-09-17 17:23+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"pos_stripe/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
@@ -24,25 +28,27 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Stripe"
-msgstr ""
+msgstr "Stripe'dan belirteç alma yetkiniz bulunmamaktadır"
 
 #. module: pos_stripe
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
 msgstr ""
+"Bu ödeme yöntemini kullanmadan önce Stripe bağlantısını tamamlamayı "
+"unutmayın."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Failed to discover: %s"
-msgstr ""
+msgstr "Keşif başarısız: %s"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
-msgstr ""
+msgstr "Kaynak yüklenemedi: net::ERR_INTERNET_DISCONNECTED"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__id
@@ -53,53 +59,53 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "No available Stripe readers."
-msgstr ""
+msgstr "Kullanılabilir Stripe okuyucusu yok."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Payment cancelled because not reader connected"
-msgstr ""
+msgstr "Ödeme iptal edildi çünkü okuyucu bağlı değil"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemleri"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Reader disconnected"
-msgstr ""
+msgstr "Okuyucu bağlantısı kesildi"
 
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe Error"
-msgstr ""
+msgstr "Stripe Hatası"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "Stripe Serial Number"
-msgstr ""
+msgstr "Stripe Seri Numarası"
 
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Stripe payment provider for company %s is missing"
-msgstr ""
+msgstr "%s şirketi için Stripe ödeme sağlayıcısı eksik."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe readers %s not listed in your account"
-msgstr ""
+msgstr "Stripe okuyucu %s hesabınızda listelenmemiş."
 
 #. module: pos_stripe
 #. odoo-python
@@ -107,8 +113,10 @@ msgstr ""
 msgid ""
 "Terminal %(terminal)s is already used on payment method %(payment_method)s."
 msgstr ""
+"Terminal %(terminal)s, ödeme yöntemi %(payment_method)s zaten "
+"kullanılmaktadır."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
-msgstr ""
+msgstr "[Stripe terminalinin seri numarası], örneğin: WSC513105011295"

@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_totp_mail
+# * auth_totp_mail
 #
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-07-01 09:07+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-09-17 17:19+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"auth_totp_mail/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -21,6 +25,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -89,6 +95,9 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Pro přihlášení zadejte níže šestimístný ověřovací kód, který "
+"byl právě zaslán e-mailem na adresu"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
@@ -107,45 +116,46 @@ msgstr ""
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
+"Z vašeho účtu bylo právě odstraněno důvěryhodné zařízení: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Account Security"
-msgstr ""
+msgstr "Zabezpečení účtu"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
 msgid "All users"
-msgstr ""
+msgstr "Všichni uživatelé"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
-msgstr ""
+msgstr "Autentikační zařízení"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Nelze odeslat e-mail: uživatel %s nemá žádnou e-mailovou adresu."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigurační nastavení"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovací název"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "Pouze pro zaměstnance"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
@@ -154,23 +164,26 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
+"Vynutit dvoufaktorové ověřování e-mailem pro zaměstnance nebo pro všechny "
+"uživatele (včetně uživatelů portálu), pokud nepovolili žádnou jinou metodu "
+"dvoufaktorového ověřování."
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Vynutit dvoufaktorové ověření"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr ""
+msgstr "Pozvánka k aktivaci dvoufaktorové autentizace na vašem účtu Odoo"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -179,98 +192,100 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"Pozvánka k použití dvoufaktorového ověření byla odeslaná pro následující "
+"uživatele: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "Pozvat na použití 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "Pozvat k použití dvoufaktorového ověřování"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Learn More"
-msgstr ""
+msgstr "Další informace"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "Nové připojení k vašemu účtu"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "Otevřete konfiguraci dvoufaktorového ověření"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Poslat e-mail znovu"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Activated"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Aktivováno 2FA"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Deaktivováno 2FA"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid "Security Update: Device Removed"
-msgstr ""
+msgstr "Aktualizace zabezpečení: Odebráno zařízení"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Nastavení: 2FA Pozvánka"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "Nastavení: 2Fa Nové přihlášení"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Pravidlo pro vynucování dvoufaktorového ověření"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr ""
+msgstr "Na vašem účtu byla aktivována dvoufaktorová autentizace"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr ""
+msgstr "Dvoufaktorové ověření bylo na vašem účtu deaktivováno"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Ověření se nezdařilo, zkontrolujte prosím šestimístný kód"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -278,13 +293,16 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Důrazně doporučujeme aktivovat dvoufaktorové ověřování pomocí ověřovací "
+"aplikace, která vám pomůže zabezpečit váš účet.\n"
+"                <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "Váš kód dvoufaktorového ověřování"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
-msgstr ""
+msgstr "aktivace dvoufaktorové autentizace"

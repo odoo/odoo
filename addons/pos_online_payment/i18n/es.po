@@ -1,42 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_online_payment
+# * pos_online_payment
 #
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2024-09-26 08:55+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-09-17 17:29+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
+"pos_online_payment/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr ""
+msgstr "<strong>Error:</strong> la moneda falta o no es válida."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid ""
 "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>Error:</strong> ocurrió un problema durante el proceso de pago."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 msgid "A POS config cannot have more than one online payment method."
 msgstr ""
+"Una configuración de TPV no puede tener más de un método de pago en línea."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "Se debe especificar una opción de pago."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -44,11 +49,13 @@ msgstr ""
 msgid ""
 "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
+"No se puede usar un pago de validación para el pago en línea del Punto de "
+"venta."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "Todos los proveedores disponibles"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -58,33 +65,36 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"Todos los proveedores de pago que configure para un método de pago en línea "
+"deben tener la misma moneda que el diario de ventas, la moneda de la "
+"compañía o, si eso no está configurado, la de la configuración del TPV."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "Proveedores permitidos"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Amount"
-msgstr ""
+msgstr "Importe"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Amount:"
-msgstr ""
+msgstr "Importe:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "Cancelar pago"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "No se puede crear un pago en línea para el TPV sin un registro de pago."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -93,12 +103,15 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"No se puede crear un pago para el TPV con un método de pago que no está en "
+"línea y un pago contable en línea."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot edit a POS online payment essential data."
 msgstr ""
+"No se puede editar la información esencial del pago en línea para el TPV."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -107,95 +120,97 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
+"No se pudo crear un método de pago en línea (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
-msgstr ""
+msgstr "Tiene un proveedor de pago en línea"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payment"
-msgstr ""
+msgstr "Pago en línea no válido"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payments"
-msgstr ""
+msgstr "Pagos en línea no válidos"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invoice could not be generated"
-msgstr ""
+msgstr "No se pudo generar la factura"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
 msgid "Next online payment amount to pay"
-msgstr ""
+msgstr "Próximo importe de pago en línea a pagar"
 
 #. module: pos_online_payment
 #: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
 msgid "Online"
-msgstr ""
+msgstr "En línea"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Pago en línea"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "Método de pago en línea"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr ""
+msgstr "Contabilidad de pago en línea"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "Pago en línea no disponible"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
-msgstr ""
+msgstr "Los pagos en línea no pueden tener un importe negativo (%s: %s)."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order ID"
-msgstr ""
+msgstr "ID de la orden"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Order ID:"
-msgstr ""
+msgstr "ID de la orden:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order Reference"
-msgstr ""
+msgstr "Referencia de la orden"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
-msgstr ""
+msgstr "Referencia de la orden:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Order saving issue"
-msgstr ""
+msgstr "Problema al guardar la orden"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -206,82 +221,83 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 msgid "POS Order"
-msgstr ""
+msgstr "Pedido de TPV"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "Payment Providers"
-msgstr ""
+msgstr "Proveedores de pago"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transacción de pago"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 msgid "Payments"
-msgstr ""
+msgstr "Pagos"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Configuración del TPV"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Pedidos de TPV"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Métodos de pago en el punto de venta"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Pagos en el punto de venta"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Sesión TPV"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
-msgstr ""
+msgstr "Procesado por"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
-msgstr ""
+msgstr "Código QR para pagar"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Escanee el código QR para pagar"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
-msgstr ""
+msgstr "Escanear para pagar"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Server error"
-msgstr ""
+msgstr "Error de servidor"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr ""
+"El pago en línea del TPV (tx.id=%d) no se ha podido guardar correctamente"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -290,107 +306,109 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
+"El pago en línea del TPV (tx.id=%d) no se ha podido guardar correctamente ya "
+"que no fue posible encontrar el método de pago en línea"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The POS session is not opened."
-msgstr ""
+msgstr "La sesión del TPV no está abierta."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr ""
+msgstr "El pedido de punto de venta que está vinculado a la transacción de pago"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr ""
+msgstr "El pedido de punto de venta vinculado a este pago"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The QR Code for paying could not be generated."
-msgstr ""
+msgstr "No fue posible generar el código QR para el pago."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The amount to pay has changed. Please refresh the page."
-msgstr ""
+msgstr "El importe a pagar ha cambiado. Por favor, actualice la página."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The currency is invalid."
-msgstr ""
+msgstr "La moneda no es válida."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The invoice could not be generated."
-msgstr ""
+msgstr "La factura no se pudo generar."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The order has been cancelled."
-msgstr ""
+msgstr "Se ha cancelado el pedido."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The order has not been saved correctly on the server."
-msgstr ""
+msgstr "El pedido no se ha guardado correctamente en el servidor."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "El contacto del pago en línea del TPV (id=%d) no se pudo encontrar"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "El proveedor de pago no es válido."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
+msgstr "El pago debe ser directo, con redirección o lo debe crear un token."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "El token de pago no es válido."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "La transacción del pago (%d) tiene un importe negativo."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided order or access token is invalid."
-msgstr ""
+msgstr "El pedido o el token de acceso que proporcionó no es válido."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided partner_id is different than expected."
-msgstr ""
+msgstr "El partner_id que proporcionó es diferente al esperado."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The saved order could not be retrieved."
-msgstr ""
+msgstr "No se ha podido recuperar el pedido guardado."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -399,12 +417,14 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
+"El importe total de los pagos en línea pendientes para ejecutar (%s) no "
+"corresponde al importe pendiente de pago de la orden (%s)."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "Algunos pagos en línea no estaban en su vista."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -413,6 +433,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
 msgstr ""
+"Hay un problema con el servidor. No podemos recuperar el estado de pago en "
+"línea."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -421,29 +443,32 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
+"Hay un problema con el servidor. No podemos recuperar el estado de pago del "
+"pedido en línea. ¿Está seguro de que no hay un pago en línea para este "
+"pedido?"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
-msgstr ""
+msgstr "No hay un método de pago en línea para este pedido de TPV."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "There is nothing to pay for this order."
-msgstr ""
+msgstr "No hay nada que pagar para este pedido."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "No hay nada que pagar."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "To Pay"
-msgstr ""
+msgstr "A pagar"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -452,33 +477,36 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
+"Para usar un método de pago en línea en la configuración de TPV, debe tener "
+"al menos un proveedor de pago publicado que además sea compatible con la "
+"moneda en la configuración del TPV."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "Tokenization is not available for logged out customers."
-msgstr ""
+msgstr "La tokenización no está disponible para clientes que cerraron sesión."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference"
-msgstr ""
+msgstr "Referencia de la transacción"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Try again"
-msgstr ""
+msgstr "Inténtalo de nuevo"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Updated online payments"
-msgstr ""
+msgstr "Pagos en línea actualizados"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -486,24 +514,26 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
+"Use este método de pago para pagos en línea (pagos realizados en una página "
+"de internet con proveedores de pago en línea)."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "You have not activated any"
-msgstr ""
+msgstr "No ha activado ningún"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "payment provider"
-msgstr ""
+msgstr "proveedor de pago"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr ""
+msgstr "para permitir pagos en línea."
