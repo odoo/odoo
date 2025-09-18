@@ -277,6 +277,7 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.clickOrderButton(),
             Dialog.is({ title: "Printing failed" }),
             Dialog.cancel(),
+            Chrome.waitRequest(),
             FloorScreen.clickTable("2"),
             inLeftSide([
                 ...ProductScreen.clickLine("Coca-Cola", "1"),
@@ -286,6 +287,7 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.clickReleaseButton(), // synced order should be cancelled instead of deletion
             Dialog.is({ title: "Printing failed" }),
             Dialog.cancel(),
+            Chrome.waitRequest(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickReleaseButton(),
             Chrome.clickOrders(),
@@ -583,13 +585,28 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             ...checkPrinterRetryDialog(["Printer 1 (0.0.0.0)", "Printer 2 (0.0.0.0)"]),
         ].flat(),
 });
+registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.cancel(),
+            ProductScreen.isShown(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.hasTable("2"),
+        ].flat(),
+});
 
 registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
     steps: () =>
         [
             Chrome.freezeDateTime(1749965940000), // June 15, 2025
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
             FloorScreen.clickNewOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
@@ -604,7 +621,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             TicketScreen.nthRowContains(1, "John"),
             TicketScreen.nthRowContains(1, "Takeaway", false),
             TicketScreen.nthRowNotContains(1, "06/15/2025", false),
-            TicketScreen.nthRowContains(2, "002"),
+            TicketScreen.nthRowContains(2, "004"),
             TicketScreen.nthRowContains(2, "Eat in", false),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
@@ -623,6 +640,14 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             Chrome.startPoS(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
+            Chrome.selectPresetTimingSlotHour("12:20"),
+            Chrome.presetTimingSlotIs("12:20"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.cancel(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.isShown(),
             Chrome.endTour(),
         ].flat(),
 });

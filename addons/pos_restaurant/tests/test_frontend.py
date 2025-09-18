@@ -596,11 +596,20 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Takeaway',
             'identification': 'name',
         })
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
         self.main_pos_config.write({
             'use_presets': True,
-            'default_preset_id': self.preset_eat_in.id,
-            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+            'default_preset_id': self.preset_delivery.id,
+            'available_preset_ids': [(6, 0, [
+                self.preset_takeaway.id,
+                self.preset_eat_in.id,
+                self.preset_delivery.id,
+            ])],
         })
+        self.start_pos_tour('test_preset_delivery_restaurant')
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Takeaway',
             'attendance_ids': [(0, 0, {
@@ -615,9 +624,11 @@ class TestFrontend(TestFrontendCommon):
             'use_timing': True,
             'resource_calendar_id': resource_calendar
         })
-        self.start_pos_tour('test_preset_timing_restaurant')
+
         self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
         self.start_pos_tour('test_open_register_with_preset_takeaway')
+        self.main_pos_config.write({'default_preset_id': self.preset_eat_in.id})
+        self.start_pos_tour('test_preset_timing_restaurant')
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
