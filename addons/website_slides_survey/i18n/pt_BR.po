@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2025-09-16 10:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-09-18 13:02+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/website_slides_survey/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -27,7 +28,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid "- %s (Courses - %s)"
-msgstr ""
+msgstr "- %s (Cursos - %s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -40,6 +41,7 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -56,6 +58,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá, <t t-out=\"object.partner_id.name or 'participant' or ''\""
+">participante,</t><br><br>\n"
+"        Infelizmente, você não foi aprovado na certificação e não é mais um "
+"membro do curso: <t t-out=\"object.slide_partner_id.channel_id.name or ''\""
+">Jardinagem Básica</t>.<br><br>\n"
+"        Sinta-se à vontade para inscrever-se novamente!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href="
+"\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
+"                Inscreva-se agora\n"
+"            </a>\n"
+"        </div>\n"
+"        Agradecemos por sua participação.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
