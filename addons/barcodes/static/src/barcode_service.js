@@ -4,6 +4,7 @@ import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { EventBus, whenReady } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 function isEditable(element) {
     return element.matches('input,textarea,[contenteditable="true"]');
@@ -30,8 +31,8 @@ export const barcodeService = {
     cleanBarcode: function(barcode) {
         return barcode.replace(/Alt|Shift|Control/g, '');
     },
-
-    start() {
+    dependencies: ["notification"],
+    start(_env, { notification }) {
         const bus = new EventBus();
         let timeout = null;
 
@@ -58,6 +59,8 @@ export const barcodeService = {
                     ev.preventDefault();
                 }
                 handleBarcode(str, currentTarget);
+            } else {
+                notification.add(_t("Barcode must be at least 3 characters: %s", str), { type: "danger" });
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
