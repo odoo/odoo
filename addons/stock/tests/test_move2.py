@@ -2190,9 +2190,12 @@ class TestSinglePicking(TestStockCommon):
         picking = picking.save()
         self.assertEqual(picking.state, 'assigned')
 
-        picking = Form(picking)
-        picking.move_ids_without_package.remove(0)
-        picking = picking.save()
+        picking_form = Form(picking)
+        picking_form.move_ids_without_package.remove(0)
+        with self.assertRaises(UserError):
+            picking_form.save()
+        picking.action_cancel()
+        picking = picking_form.save()
         self.assertEqual(len(picking.move_ids_without_package), 0)
 
     def test_additional_move_1(self):
