@@ -14,21 +14,22 @@
 # Antoine Demany, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2025-09-14 21:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base/es/"
-">\n"
+"PO-Revision-Date: 2025-09-17 17:20+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base/es/>"
+"\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: base
@@ -1746,11 +1747,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_reports
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"Informes contables para China\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2614,11 +2619,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_reports
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports:\n"
 "- Corporate Tax Report\n"
 msgstr ""
+"\n"
+"Informes contables:\n"
+"- Informe de impuestos sobre sociedades\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -3332,10 +3341,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_iot
+#, fuzzy
 msgid ""
 "\n"
 "Allows using a compatible printer to print Event badges upon checking in.\n"
 msgstr ""
+"\n"
+"Permite utilizar una impresora compatible para imprimir acreditaciones para "
+"eventos al hacer el registro.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -5489,6 +5502,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi
+#, fuzzy
 msgid ""
 "\n"
 "EDI Chilean Localization\n"
@@ -5552,6 +5566,71 @@ msgid ""
 "factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf).\n"
 "\n"
 msgstr ""
+"\n"
+"Localización chilena para EDI\n"
+"========================\n"
+"Este módulo facilita la generación del DTE (Documento Tributario Electrónico)"
+" para la facturación chilena. Las funciones clave son:\n"
+"- DTE en formato XML: el documento está estructurado en formato XML para "
+"transacciones electrónicas estandarizadas.\n"
+"- Comunicación directa con el SII: activa una interacción directa con el "
+"Servicio de Impuestos Internos (SII) para enviar facturas y otros documentos "
+"tributarios relacionados a las ventas.\n"
+"- Comunicación con el cliente: envía DTE de venta a clientes.\n"
+"- Comunicación con el proveedor: acepta DTE de proveedores.\n"
+"- Notificaciones del SII: informa al SII sobre si se aceptó o rechazó una "
+"factura de proveedor o cualquier otro DTE.\n"
+"\n"
+"Nota: para mostrar códigos de barras en facturas, necesita la biblioteca "
+"`pdf417gen`.\n"
+"\n"
+"Cumplimiento con las boletas electrónicas\n"
+"==============================\n"
+"\n"
+"A solicitud del SII, a partir de marzo del 2021 todas las transacciones de "
+"boletas deben enviarse al SII con un servicio web diferente al que se usa "
+"para las facturas electrónicas. Antes solo se solicitaba un informe diario.\n"
+"\n"
+"Cambios recientes\n"
+"==============\n"
+"\n"
+"- Se eliminó el requisito del libro de ventas diarias: desde el 1 de agosto, "
+"2022 las autoridades ya no requieren el Libro de ventas diarias, por lo que "
+"se eliminó de esta versión de Odoo.\n"
+"\n"
+"Diferencias en los flujos de trabajo de boletas electrónicas y facturas "
+"electrónicas\n"
+"=========================================================================\n"
+"\n"
+"1. Servidores especiales para boletas:\n"
+"- Entorno de producción: `palena.sii.cl`\n"
+"- Entorno de prueba: `maullin.sii.cl`\n"
+"\n"
+"2. Servicios de estado y autenticación diferentes:\n"
+"- Los servicios y métodos de autenticación para consultar el estado de la "
+"entrega y del documento difieren entre boletas electrónicas y facturas "
+"electrónicas.\n"
+"\n"
+"3. Token de autenticación:\n"
+"- El proceso para obtener tokens de autenticación varía.\n"
+"\n"
+"4. Esquema XML actualizado:\n"
+"- Se incorporaron nuevas etiquetas al esquema XML para boletas electrónicas."
+"\n"
+"\n"
+"5. Diagnóstico de validación:\n"
+"- Las boletas electrónicas reciben diagnósticos de validación mediante un "
+"servicio web REST usando el track-i de entrega.\n"
+"- Las facturas electrónicas siguen recibiendo diagnósticos a través del "
+"correo electrónico.\n"
+"\n"
+"6. Tamaño del Track-ID:\n"
+"- Boletas electrónicas: 15 dígitos\n"
+"- Facturas electrónicas: 10 dígitos\n"
+"\n"
+"Para más información, consulte el [instructivo del SII](https://www.sii.cl/"
+"factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf).\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -7498,10 +7577,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "\n"
 "It can be installed running: %s"
 msgstr ""
+"\n"
+"Se puede instalar si se ejecuta: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -10491,6 +10573,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_pos
+#, fuzzy
 msgid ""
 "\n"
 "The Austrian Cash Security Regulation (RKSV - "
@@ -10514,6 +10597,30 @@ msgid ""
 "\n"
 "We have implemented all this using Fiskaly.\n"
 msgstr ""
+"\n"
+"Regulación austriaca de seguridad para cajas registradoras (RKSV - "
+"Registrierkassensicherheitsverordnung 2017).\n"
+"=========================================================================================="
+"\n"
+"* Creación de las bases para una operación inviolable de cajas registradoras "
+"en Austria.\n"
+"* Cumplimiento con las regulaciones legales de RKSV.\n"
+"* Recibos emitidos en Austria deben tener al menos la siguiente información:"
+"\n"
+"\n"
+"    * número de identificación fiscal\n"
+"    * fecha y hora de emisión del recibo\n"
+"    * cantidad del pago en efectivo por tipo impositivo\n"
+"    * esta información se debe incluir en el código QR\n"
+"    * contenido de código que sea legible por máquinas\n"
+"\n"
+"* Protocolo de recolección de datos DEP7 (Datenerfassungsprotokoll). El "
+"efectivo individual de cada transacción de la caja registradora se debe "
+"registrar y guardar.\n"
+"\n"
+"    * Puede exportar los informes DEP7 de la sesión\n"
+"\n"
+"Implementamos todo lo anterior con Fiskaly.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_saft
@@ -15599,12 +15706,17 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in "
 "['one2many', 'many2many']\">to</span>\n"
 "                                <span invisible=\"evaluation_type != "
 "'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">to</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'sequence'\">con</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15639,6 +15751,7 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid ""
 "<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
 "class=\"o_actions_server_set_a_value text-muted\">Set a value...</span>\n"
@@ -15647,6 +15760,13 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
+"class=\"o_actions_server_set_a_value text-muted\">Establezca un "
+"valor...</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'equation'\">\n"
+"                                    para esta expresión Python:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -19429,8 +19549,9 @@ msgstr "Argentina - Punto de venta con documentación argentina"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
+#, fuzzy
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "Argentina - Inventario"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -25884,8 +26005,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
+#, fuzzy
 msgid "Duplicate %(record)s"
-msgstr ""
+msgstr "Duplicar %(record)s"
 
 #. module: base
 #. odoo-python
@@ -26439,8 +26561,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_theme_enark
 #: model:ir.module.module,shortdesc:base.module_theme_enark
+#, fuzzy
 msgid "Enark Theme"
-msgstr ""
+msgstr "Tema Enark"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -27449,8 +27572,9 @@ msgstr "Tema Experts Business"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_odoo_experts
+#, fuzzy
 msgid "Experts Theme"
-msgstr ""
+msgstr "Tema Experts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
@@ -32823,8 +32947,9 @@ msgstr "Estilo de vida"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
+#, fuzzy
 msgid "Light colours, thin text, clean and sharp design."
-msgstr ""
+msgstr "Colores claros, texto delgado, diseño claro y moderno."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -41885,8 +42010,9 @@ msgstr "Restantes"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
+#, fuzzy
 msgid "Remote Work"
-msgstr ""
+msgstr "Teletrabajo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking_calendar
