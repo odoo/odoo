@@ -134,8 +134,8 @@ class PosController(PortalAccount):
 
             if errors:
                 errors['generic'] = _("Please fill all the required fields.")
-            elif len(form_values['pos_reference']) < 14:
-                errors['pos_reference'] = _("The Ticket Number should be at least 14 characters long.")
+            elif len(form_values['pos_reference']) < 12:
+                errors['pos_reference'] = _("The Ticket Number should be at least 12 characters long.")
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
