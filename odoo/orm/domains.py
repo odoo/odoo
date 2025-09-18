@@ -924,11 +924,14 @@ class DomainCondition(Domain):
         """
         assert level == self._opt_level + 1, f"Trying to skip optimization level after {self._opt_level}"
 
-        # optimize path
-        field, property_name = self.__get_field(model)
-        if property_name and field.relational:
-            sub_domain = DomainCondition(property_name, self.operator, self.value)
-            return DomainCondition(field.name, 'any', sub_domain)
+        if level == OptimizationLevel.BASIC:
+            # optimize path
+            field, property_name = self.__get_field(model)
+            if property_name and field.relational:
+                sub_domain = DomainCondition(property_name, self.operator, self.value)
+                return DomainCondition(field.name, 'any', sub_domain)
+        else:
+            field = self._field(model)
 
         if level == OptimizationLevel.FULL:
             # resolve inherited fields
