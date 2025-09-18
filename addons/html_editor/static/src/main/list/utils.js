@@ -1,3 +1,5 @@
+import { unwrapContents } from "@html_editor/utils/dom";
+import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { getFontSizeOrClass } from "@html_editor/utils/formatting";
 
 export function createList(document, mode) {
@@ -16,24 +18,33 @@ export function insertListAfter(document, afterNode, mode, content = []) {
     list.append(
         ...content.map((c) => {
             const li = document.createElement("LI");
-            let fontSizeStyle;
-            if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
-                li.style.color = c[0].style.color;
-                li.append(...c[0].childNodes);
-            } else if (
-                c.length === 1 &&
-                c[0].tagName === "SPAN" &&
-                (fontSizeStyle = getFontSizeOrClass(c[0]))
-            ) {
-                if (fontSizeStyle.type === "font-size") {
-                    li.style.fontSize = fontSizeStyle.value;
-                } else if (fontSizeStyle.type === "class") {
-                    li.classList.add(fontSizeStyle.value);
+            li.append(...[].concat(c));
+            if (c.length === 1 && c[0].nodeType === Node.ELEMENT_NODE) {
+                const firstLeafNode = firstLeaf(c[0]);
+                const lastLeafNode = lastLeaf(c[0]);
+                const firstClosestFont = closestElement(firstLeafNode, "font");
+                const lastClosestFont = closestElement(lastLeafNode, "font");
+                if (firstClosestFont && lastClosestFont && firstClosestFont === lastClosestFont) {
+                    li.style.color = firstClosestFont.style.color;
+                    unwrapContents(firstClosestFont);
                 }
-                li.style.listStylePosition = "inside";
-                li.append(...c[0].childNodes);
-            } else {
-                li.append(...[].concat(c));
+                const firstClosestSpan = closestElement(firstLeafNode, "span");
+                const lastClosestSpan = closestElement(lastLeafNode, "span");
+                let fontSizeStyle;
+                if (
+                    firstClosestSpan &&
+                    lastClosestSpan &&
+                    firstClosestSpan === lastClosestSpan &&
+                    (fontSizeStyle = getFontSizeOrClass(firstClosestSpan))
+                ) {
+                    if (fontSizeStyle.type === "font-size") {
+                        li.style.fontSize = fontSizeStyle.value;
+                    } else if (fontSizeStyle.type === "class") {
+                        li.classList.add(fontSizeStyle.value);
+                    }
+                    li.style.listStylePosition = "inside";
+                    unwrapContents(firstClosestSpan);
+                }
             }
             return li;
         })
