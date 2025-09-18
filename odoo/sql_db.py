@@ -363,9 +363,12 @@ class Cursor(BaseCursor):
         else:
             self.__caller = False
         self._closed = False   # real initialization value
-        # See the docstring of this class.
-        self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
-        self.connection.set_session(readonly=pool.readonly)
+        self._cnx.set_session(
+            # See the docstring of this class.
+            isolation_level=ISOLATION_LEVEL_REPEATABLE_READ,
+            readonly=pool.readonly,
+            autocommit=False,
+        )
 
         if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
             self.execute("SET search_path = public, pg_catalog;")
