@@ -180,14 +180,14 @@
                                     <div class="o_input_box">
                                         <field name="days_to_prepare_mo"/>
                                         <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
-                                        <button name="action_compute_bom_days" type="object"
-                                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
-                                                class="btn btn-link o_input_box_overlay_end fa fa-calculator"/>
+                                        <button class="btn btn-link o_input_box_overlay_end" type="button">
+                                            <field name="json_popover" widget="mrp_bom_popover"/>
+                                        </button>
                                     </div>
                                     <field name="enable_batch_size" widget="boolean_toggle"/>
                                     <div class="o_input_box" invisible="type != 'normal'">
                                         <field name="batch_size" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
-                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size" class="o_input_box_overlay_end o_input_box_overlay_inline"/>
+                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size" class="o_input_box_overlay_end o_input_box_inline"/>
                                     </div>
                                 </group>
                                 <group>

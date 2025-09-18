@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 from datetime import timedelta
 
 from odoo import exceptions, fields
@@ -2452,16 +2453,15 @@ class TestBoM(TestMrpCommon):
         # the filter is applied because there are attachements on the product.template and on the product.product
         self.assertTrue(action['context']['search_default_context_variant'])
 
-    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
-        """
-        Checks that a notification is sent when at least one component can not be resupplied.
+    def test_compute_json_popover_from_mo_if_unavailable(self):
+        """Test to ensure that the popover shows the correct information when at least one component can not be resupplied.
         """
         bom = self.bom_1
-        product = bom.product_id
-        product.route_ids = [Command.set([self.route_manufacture.id])]
-        notification = bom.action_compute_bom_days()
-        self.assertEqual(bom.days_to_prepare_mo, 0.0)
-        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
+        bom.product_id.route_ids = [Command.set([self.route_manufacture.id])]
+        popover_data = json.loads(bom.json_popover)
+        # The popover displays "Not Available: Missing route info for components." because the delay is not set on the BoM.
+        self.assertNotIn('delay', popover_data)
+        self.assertEqual(popover_data.get('bom_id'), bom._origin.id)
 
     def test_bom_never_attribute(self):
         # We create 4 bom lines, 4 operations and 4 byproducts, each with:

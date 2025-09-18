@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from datetime import timedelta
 from unittest import skip
@@ -634,53 +635,38 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             [('product_id', '=', product.id)])
         self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
 
-    def test_compute_bom_days_00(self):
-        """ Check Days to prepare Manufacturing Order are correctly computed when Days to Purchase is set. """
-        purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
-        manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
-        vendor = self.env['res.partner'].create({'name': 'super vendor'})
-
-        company_1 = self.kit_parent.bom_ids.company_id
-        company_2 = self.env['res.company'].create({
-            'name': 'TestCompany2',
-        })
-
-        company_1.days_to_purchase = 0
-        company_2.days_to_purchase = 0
-
-        components = self.component_a | self.component_b | self.component_c | self.component_d | self.component_e | self.component_f | self.component_g
-        kits = self.kit_parent | self.kit_1 | self.kit_2 | self.kit_3
-        kits.route_ids = [(6, 0, manufacture_route.ids)]
-        components.write({
-            'route_ids': [(6, 0, purchase_route.ids)],
-            'seller_ids': [(0, 0, {
-                'partner_id': vendor.id,
-                'min_qty': 1,
-                'price': 1,
-                'delay': 1,
-            })],
-        })
-
-        bom_kit_parent = self.kit_parent.bom_ids
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
-
-        # set "Days to Purchase"
-        company_1.days_to_purchase = 10
-        company_2.days_to_purchase = 20
-
-        # check "Days to Purchase" will also be included if bom has company_id
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 1)
-
-        self.kit_1.bom_ids.company_id = company_2
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 20 + 1)
-
-        # check "Days to Purchase" won't be included if bom doesn't have company_id
-        kits.bom_ids.company_id = False
-        bom_kit_parent.action_compute_bom_days()
-        self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
+    def test_compute_bom_json_popover(self):
+        """Test to ensure json_popover data is correctly computed for BoM.
+        """
+        buy_route = self.warehouse.buy_pull_id.route_id
+        self.kit_1.route_ids = self.kit_3.route_ids = [Command.set([self.warehouse.manufacture_pull_id.route_id.id])]
+        bom1, bom2 = self.kit_1.bom_ids, self.kit_3.bom_ids
+        bom1.type = bom2.type = 'normal'
+        self.component_f.is_storable = self.component_g.is_storable = False
+        # CASE 1: Non-storable component shows -> Lead Time: 0 Days
+        popover_data = json.loads(bom2.json_popover)
+        self.assertEqual(popover_data.get('delay'), "0 Days")
+        self.assertEqual(popover_data.get('final_product_name'), self.kit_3.name)
+        # CASE 2: Max Lead Time calculation when multiple components are in BoM
+        for component, partner_id, delay in [
+            (self.component_a, self.partner_a.id, 2),
+            (self.component_b, self.partner_b.id, 5),
+            (self.component_c, self.partner_a.id, 11),
+        ]:
+            component.write({
+                'route_ids': [Command.link(buy_route.id)],
+                'seller_ids': [
+                    Command.create({
+                        'partner_id': partner_id,
+                        'min_qty': 1,
+                        'delay': delay,
+                    }),
+                ],
+            })
+        popover_data_max_delay = json.loads(bom1.json_popover)
+        self.assertEqual(popover_data_max_delay.get('delay'), f"{self.component_c.seller_ids.delay} Days")
+        self.assertEqual(popover_data_max_delay.get('component'), self.component_c.name)
+        self.assertEqual(popover_data_max_delay.get('final_product_name'), self.kit_1.name)
 
     # TODO: manufacturing_lead doesn't exist anymore, remove?
     def test_orderpoint_with_manufacture_security_lead_time(self):
