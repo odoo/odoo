@@ -198,7 +198,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             })],
         })
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.invoice_status, 'to invoice')
+        self.assertEqual(purchase_order.invoice_state, 'to invoice')
         # The section "purchase_order" should appear as the purchase order is validated, the total should be updated,
         # the "other_purchase_costs" shouldn't change, as we don't take into
         # account bills from purchase orders, as those are already taken into calculations
@@ -342,7 +342,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             })],
         })
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.invoice_status, 'to invoice')
+        self.assertEqual(purchase_order.invoice_state, 'to invoice')
         self.assertDictEqual(
             self.project._get_profitability_items(False)['costs'],
             {
@@ -362,7 +362,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
 
         # Invoice the purchase order
         self._create_invoice_for_po(purchase_order)
-        self.assertEqual(purchase_order.invoice_status, 'invoiced')
+        self.assertEqual(purchase_order.invoice_state, 'invoiced')
         self.assertDictEqual(
             self.project._get_profitability_items(False)['costs'],
             {
@@ -504,7 +504,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             })],
         })
         purchase_order_foreign.button_confirm()
-        self.assertEqual(purchase_order_foreign.invoice_status, 'to invoice')
+        self.assertEqual(purchase_order_foreign.invoice_state, 'to invoice')
 
         # The section "purchase_order" should appear because the purchase order is validated, the total should be updated,
         # but the "other_purchase_costs" shouldn't change, as we don't take into
@@ -541,7 +541,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             })],
         })
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.invoice_status, 'to invoice')
+        self.assertEqual(purchase_order.invoice_state, 'to invoice')
 
         # The section "purchase_order" should be updated with the new po values.
         items = project._get_profitability_items(with_action=False)['costs']
@@ -557,7 +557,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6, items['total']['billed'], 2), 0)
 
         self._create_invoice_for_po(purchase_order)
-        self.assertEqual(purchase_order.invoice_status, 'invoiced')
+        self.assertEqual(purchase_order.invoice_state, 'invoiced')
         # The section "purchase_order" should now appear because purchase_order was invoiced.
         # The purchase order of the main company has been billed. Its total should now be in the 'billed' section.
         items = project._get_profitability_items(with_action=False)['costs']
@@ -573,7 +573,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6 - self.product_order.standard_price * analytic_contribution * 3, items['total']['billed'], 2), 0)
 
         self._create_invoice_for_po(purchase_order_foreign)
-        self.assertEqual(purchase_order_foreign.invoice_status, 'invoiced')
+        self.assertEqual(purchase_order_foreign.invoice_state, 'invoiced')
         # The purchase order of the main company has been billed. Its total should now be in the 'billed' section.
         # The 'to bill' section of the purchase order should now be empty
         items = project._get_profitability_items(with_action=False)['costs']

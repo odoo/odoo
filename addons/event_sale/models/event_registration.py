@@ -32,7 +32,7 @@ class EventRegistration(models.Model):
                 registrations.sale_status = 'free'
                 registrations.filtered(lambda reg: not reg.state or reg.state == 'draft').state = "open"
             else:
-                sold_registrations = registrations.filtered(lambda reg: reg.sale_order_id.state == 'sale') - cancelled_registrations
+                sold_registrations = registrations.filtered(lambda reg: reg.sale_order_id.state == 'done') - cancelled_registrations
                 sold_registrations.sale_status = 'sold'
                 (registrations - sold_registrations).sale_status = 'to_pay'
                 sold_registrations.filtered(lambda reg: not reg.state or reg.state in {'draft', 'cancel'}).state = "open"
@@ -164,6 +164,6 @@ class EventRegistration(models.Model):
 
     def _get_event_registration_ids_from_order(self):
         self.ensure_one()
-        return self.sale_order_id.order_line.filtered(
+        return self.sale_order_id.line_ids.filtered(
             lambda line: line.event_id == self.event_id
         ).registration_ids.ids

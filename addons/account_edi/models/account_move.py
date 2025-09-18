@@ -270,12 +270,12 @@ class AccountMove(models.Model):
         for move in self:
             to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
             move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
-        self.button_cancel()
+        self.action_cancel()
 
-    def button_cancel(self):
+    def action_cancel(self):
         # OVERRIDE
         # Set the electronic document to be canceled and cancel immediately for synchronous formats.
-        res = super().button_cancel()
+        res = super().action_cancel()
 
         self.edi_document_ids.filtered(lambda doc: doc.state != 'sent').write({'state': 'cancelled', 'error': False, 'blocking_level': False})
         self.edi_document_ids.filtered(lambda doc: doc.state == 'sent').write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
@@ -288,7 +288,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return not self.edi_show_cancel_button
 
-    def button_draft(self):
+    def action_draft(self):
         # OVERRIDE
         for move in self:
             if not move._edi_allow_button_draft():
@@ -297,7 +297,7 @@ class AccountMove(models.Model):
                     "sent. Please use the 'Request EDI Cancellation' button instead.",
                     move.display_name))
 
-        res = super().button_draft()
+        res = super().action_draft()
 
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.edi_document_ids.filtered(lambda doc: doc.state == 'to_send').unlink()

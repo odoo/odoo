@@ -87,7 +87,7 @@ class AccountMoveLine(models.Model):
         help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
-    move_type = fields.Selection(related='move_id.move_type')
+    move_type = fields.Selection(related='move_id.move_type', store=True)
 
     # === Accountable fields === #
     account_id = fields.Many2one(
@@ -3478,7 +3478,7 @@ class AccountMoveLine(models.Model):
     def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
         return False
 
-    def get_parent_section_line(self):
+    def get_line_parent_section(self):
         if self.display_type == 'product' and self.parent_id.display_type == 'line_subsection':
             return self.parent_id.parent_id
 
@@ -3510,8 +3510,8 @@ class AccountMoveLine(models.Model):
         action['domain'] = [('id', 'in', ids)]
         return clean_action(action, self.env)
 
-    def action_open_business_doc(self):
-        return self.move_id.action_open_business_doc()
+    def action_view_business_doc(self):
+        return self.move_id.action_view_business_doc()
 
     def action_automatic_entry(self, default_action=None):
         action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')

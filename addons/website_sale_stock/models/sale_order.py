@@ -119,12 +119,12 @@ class SaleOrder(models.Model):
 
     def _get_common_product_lines(self, product_id=None):
         """Get all the lines of the current order with the given product."""
-        return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
+        return self.line_ids.filtered(lambda sol: sol.product_id.id == product_id)
 
     def _check_cart_is_ready_to_be_paid(self):
         values = [
             line.shop_warning
-            for line in self.order_line
+            for line in self.line_ids
             if not line._check_availability()
         ]
         if values:
@@ -139,6 +139,6 @@ class SaleOrder(models.Model):
 
     def _all_product_available(self):
         self.ensure_one()
-        if not (lines := self.order_line):
+        if not (lines := self.line_ids):
             return True
         return not any(product._is_sold_out() for product in lines.product_id)

@@ -24,7 +24,7 @@ class DeliveryCommon(TransactionCase):
             'categ_id': cls.delivery_categ.id,
             'sale_ok': False,
             'purchase_ok': False,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'list_price': 5.0,
         }
         return cls.env['product.product'].create(dict(default_values, **values))

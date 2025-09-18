@@ -25,7 +25,7 @@ class StockMove(models.Model):
         moves_to_compute = self.filtered(lambda move: not move.repair_line_type or move.repair_line_type == 'add')
         for move in (self - moves_to_compute):
             move.forecast_availability = move.product_qty
-            move.forecast_expected_date = False
+            move.date_planned_forecast = False
         return super(StockMove, moves_to_compute)._compute_forecast_information()
 
     @api.depends('repair_id.picking_type_id')
@@ -153,7 +153,7 @@ class StockMove(models.Model):
                 'product_uom_qty': product_qty, # When relying only on so_line compute method, the sol quantity is only updated on next sol creation
                 'product_uom_id': move.product_uom.id,
                 'move_ids': [Command.link(move.id)],
-                'qty_delivered': move.quantity if move.state == 'done' else 0.0,
+                'qty_transferred': move.quantity if move.state == 'done' else 0.0,
             })
             if move.repair_id.under_warranty:
                 so_line_vals[-1]['price_unit'] = 0.0

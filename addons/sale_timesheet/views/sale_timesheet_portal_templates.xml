@@ -3,7 +3,7 @@
 
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
-            <t t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale' and sale_order.env['account.analytic.line']._show_portal_timesheets()">
+            <t t-if="sale_order.timesheet_count > 0 and sale_order.state == 'done' and sale_order.env['account.analytic.line']._show_portal_timesheets()">
                 <a class="btn btn-light flex-grow-1" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name" title="View Timesheets" target="_blank" role="button">View Timesheets</a>
             </t>
         </xpath>
@@ -100,11 +100,11 @@
                         <t t-else=""><span t-esc="invoice_line.name"></span><span t-if="not invoice_line_last">,</span></t>
                     </span>
                 </div>
-                <div t-if="task.sale_line_id.untaxed_amount_invoiced > 0"><strong>Invoiced:</strong>
-                    <span t-field="task.sale_line_id.untaxed_amount_invoiced"/>
+                <div t-if="task.sale_line_id.amount_taxexc_invoiced > 0"><strong>Invoiced:</strong>
+                    <span t-field="task.sale_line_id.amount_taxexc_invoiced"/>
                 </div>
-                <div name="amount_due" t-if="task.sale_line_id.untaxed_amount_to_invoice > 0"><strong>Amount Due:</strong>
-                    <span t-field="task.sale_line_id.untaxed_amount_to_invoice"/>
+                <div name="amount_due" t-if="task.sale_line_id.amount_taxexc_to_invoice > 0"><strong>Amount Due:</strong>
+                    <span t-field="task.sale_line_id.amount_taxexc_to_invoice"/>
                 </div>
             </t>
         </xpath>

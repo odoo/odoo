@@ -8,7 +8,7 @@
         <field name="report_name">sale.report_saleorder</field>
         <field name="report_file">sale.report_saleorder</field>
         <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
-        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref="model_sale_order" />
         <field name="binding_type">report</field>
     </record>
 
@@ -19,9 +19,9 @@
         <field name="report_name">sale.report_saleorder_pro_forma</field>
         <field name="report_file">sale.report_saleorder_pro_forma</field>
         <field name="print_report_name">'PRO-FORMA - %s' % (object.name)</field>
-        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref="model_sale_order" />
         <field name="binding_type">report</field>
-        <field name="group_ids" eval="[(4, ref('sale.group_proforma_sales'))]"/>
+        <field name="group_ids" eval="[(4, ref('sale.group_proforma_sales'))]" />
     </record>
 
 </odoo>

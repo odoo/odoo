@@ -39,7 +39,7 @@ class TestSaleStockReports(TestReportsCommon):
             so_line.product_uom_qty = 5
         so_1 = so_form.save()
         so_1.action_confirm()
-        so_1.picking_ids.scheduled_date = today + timedelta(days=7)
+        so_1.picking_ids.date_planned = today + timedelta(days=7)
 
         # Create a second SO for tomorrow.
         so_form = Form(self.env['sale.order'])
@@ -50,7 +50,7 @@ class TestSaleStockReports(TestReportsCommon):
             so_line.product_uom_qty = 5
         so_2 = so_form.save()
         so_2.action_confirm()
-        so_2.picking_ids.scheduled_date = today + timedelta(days=1)
+        so_2.picking_ids.date_planned = today + timedelta(days=1)
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 2)

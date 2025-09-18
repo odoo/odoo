@@ -54,7 +54,7 @@ class StockMove(models.Model):
             'discount': 0.0,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
-            'qty_delivered': self.quantity,
+            'qty_transferred': self.quantity,
         }
 
     def _get_new_picking_values(self):
@@ -69,8 +69,8 @@ class StockMove(models.Model):
             'project_id': self[:1].sale_line_id.order_id.project_id.id,
         }
 
-    def _prepare_procurement_values(self):
-        res = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        res = super()._prepare_procurement_vals()
         project = self.sale_line_id.order_id.project_id
         if project:
             res['project_id'] = project.id

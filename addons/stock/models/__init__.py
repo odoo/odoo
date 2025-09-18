@@ -1,28 +1,33 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from . import barcode
-from . import ir_actions_report
-from . import product_strategy
-from . import res_company
-from . import res_partner
-from . import res_users
-from . import res_config_settings
-from . import stock_location
-from . import stock_move
-from . import stock_move_line
-from . import stock_orderpoint
-from . import stock_lot
-from . import stock_picking
-from . import stock_quant
-from . import stock_reference
-from . import stock_replenish_mixin
-from . import stock_rule
-from . import stock_warehouse
-from . import stock_scrap
-from . import product
-from . import product_catalog_mixin
-from . import stock_package_history
-from . import stock_package_type
-from . import stock_package
-from . import stock_storage_category
+from . import (
+    res_company,
+    res_partner,
+    res_users,
+    uom_uom,
+    product_catalog_mixin,
+    product_category,
+    product_removal,
+    product_template,
+    product_product,
+    barcode,
+    ir_actions_report,
+    stock_location,
+    stock_lot,
+    stock_move,
+    stock_move_line,
+    stock_orderpoint,
+    stock_picking_type,
+    stock_picking,
+    stock_procurement,
+    stock_putaway_rule,
+    stock_quant,
+    stock_reference,
+    stock_replenish_mixin,
+    stock_route,
+    stock_rule,
+    stock_warehouse,
+    stock_scrap,
+    stock_package_history,
+    stock_package_type,
+    stock_package,
+    stock_storage_category,
+)

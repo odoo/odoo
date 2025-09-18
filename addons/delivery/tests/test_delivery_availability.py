@@ -23,7 +23,7 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
 
         cls.non_restricted_carrier = cls._prepare_carrier(cls.carrier.product_id)
 
-        cls.product_line = cls.sale_order.order_line.filtered(
+        cls.product_line = cls.sale_order.line_ids.filtered(
             lambda sol: sol.product_id == cls.product,
         )
         cls.product_line.product_uom_qty = 1.0

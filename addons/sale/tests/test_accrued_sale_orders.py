@@ -18,15 +18,15 @@ class TestAccruedSaleOrders(TestSaleCommon):
 
         cls.other_currency = cls.setup_other_currency('EUR')
         cls.alt_inc_account = cls.company_data['default_account_revenue'].copy()
-        # set 'invoice_policy' to 'delivery' to take 'qty_delivered' into account when computing 'untaxed_amount_to_invoice'
+        # set 'invoice_policy' to 'transferred' to take 'qty_delivered' into account when computing 'untaxed_amount_to_invoice'
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with sale_stock installed
         cls.product_a.update({
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         cls.product_b.update({
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'property_account_income_id': cls.alt_inc_account.id,
         })
         cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})

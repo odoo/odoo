@@ -54,7 +54,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <field name="order_line" position="after">
+            <field name="line_ids" position="after">
                 <field name="project_id" groups="project.group_project_user"/>
             </field>
         </field>

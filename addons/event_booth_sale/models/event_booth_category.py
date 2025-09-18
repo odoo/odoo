@@ -111,7 +111,7 @@ class EventBoothCategory(models.Model):
                 'standard_price': 0,
                 'type': 'service',
                 'service_tracking': 'event_booth',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
             }).id
             self.env['ir.model.data'].create({
                 'name': 'product_product_event_booth',

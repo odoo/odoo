@@ -4,17 +4,28 @@ from odoo import api, fields, models
 
 
 class StockPackageDestination(models.TransientModel):
-    _name = 'stock.package.destination'
-    _description = 'Stock Package Destination'
+    _name = "stock.package.destination"
+    _description = "Stock Package Destination"
 
-    move_line_ids = fields.Many2many('stock.move.line', 'Products', required=True)
-    location_dest_id = fields.Many2one('stock.location', 'Destination location', required=True)
-    filtered_location = fields.One2many(comodel_name='stock.location', compute='_compute_filtered_location')
+    move_line_ids = fields.Many2many(
+        comodel_name="stock.move.line",
+        relation="Products",
+        required=True,
+    )
+    location_dest_id = fields.Many2one(
+        comodel_name="stock.location",
+        string="Destination location",
+        required=True,
+    )
+    filtered_location = fields.One2many(
+        comodel_name="stock.location",
+        compute="_compute_filtered_location",
+    )
 
-    @api.depends('move_line_ids')
+    @api.depends("move_line_ids")
     def _compute_filtered_location(self):
         for wizard in self:
-            wizard.filtered_location = wizard.move_line_ids.mapped('location_dest_id')
+            wizard.filtered_location = wizard.move_line_ids.mapped("location_dest_id")
 
     def action_done(self):
         # set the same location on each move line and pass again in action_put_in_pack

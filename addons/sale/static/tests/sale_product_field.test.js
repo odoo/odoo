@@ -31,7 +31,7 @@ defineModels({ ...saleModels, SaleOrderLine, ProductTemplateAttributeValue });
 
 saleModels.SaleOrder._views.form = /* xml */ `
     <form>
-        <field name="order_line" widget="sol_o2m" mode="list">
+        <field name="line_ids" widget="sol_o2m" mode="list">
             <list editable="bottom">
                 <field name="product_id" widget="sol_product_many2one"/>
                 <field name="product_template_id" widget="sol_product_many2one"/>
@@ -52,7 +52,7 @@ test("pressing tab with incomplete text will create a product", async () => {
         arch: `
                 <form>
                     <sheet>
-                        <field name="order_line">
+                        <field name="line_ids">
                             <list editable="bottom">
                                 <field name="product_template_id" widget="sol_product_many2one"/>
                                 <field name="product_id" optional="hide"/>
@@ -87,7 +87,7 @@ test("Hide product name if its not translated", async () => {
             Command.create({
                 product_id: product.id,
                 name: [product.name, "A description"].join("\n"),
-                translated_product_name: "Produit de test",
+                product_name_translated: "Produit de test",
             }),
         ],
     });
@@ -110,7 +110,7 @@ test("If translated product name already in the SOL name, should not hide the tr
             Command.create({
                 product_id: product.id,
                 name: [product.name, translatedProductName, "A description"].join("\n"),
-                translated_product_name: translatedProductName,
+                product_name_translated: translatedProductName,
             }),
         ],
     });
@@ -135,7 +135,7 @@ test("Editing the description shouldn't show the translated product name", async
             Command.create({
                 product_id: product.id,
                 name: [product.name, "something wrong"].join("\n"),
-                translated_product_name: translatedProductName,
+                product_name_translated: translatedProductName,
             }),
         ],
     });
@@ -164,7 +164,7 @@ test("No description should be shown if there does not exist one apart from the 
             Command.create({
                 product_id: product.id,
                 name: product.name,
-                translated_product_name: translatedProductName,
+                product_name_translated: translatedProductName,
             }),
         ],
     });
@@ -187,7 +187,7 @@ test("No description should be shown if there does not exist one apart from the 
             Command.create({
                 product_id: product.id,
                 name: translatedProductName,
-                translated_product_name: translatedProductName,
+                product_name_translated: translatedProductName,
             }),
         ],
     });

@@ -143,7 +143,7 @@ class StockMove(models.Model):
 
     @api.depends('raw_material_production_id.is_locked', 'production_id.is_locked')
     def _compute_is_locked(self):
-        super(StockMove, self)._compute_is_locked()
+        super()._compute_is_locked()
         for move in self:
             if move.raw_material_production_id:
                 move.is_locked = move.raw_material_production_id.is_locked
@@ -322,14 +322,14 @@ class StockMove(models.Model):
             if move.product_uom.compare(move.product_uom_qty, 0) > 0:
                 if move._should_bypass_reservation() \
                         or move.picking_type_id.reservation_method == 'at_confirm' \
-                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                        or (move.date_reservation and move.date_reservation <= fields.Date.today()):
                     to_assign |= move
 
             if move.procure_method == 'make_to_order' or move.rule_id.procure_method == 'mts_else_mto':
                 procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
                 possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
                 procurement_qty = max(procurement_qty, possible_reduceable_qty)
-                values = move._prepare_procurement_values()
+                values = move._prepare_procurement_vals()
                 procurements.append(self.env['stock.rule'].Procurement(
                     move.product_id, procurement_qty, move.product_uom,
                     move.location_id, move.reference, move.origin, move.company_id, values))
@@ -339,7 +339,7 @@ class StockMove(models.Model):
             self.env['stock.rule'].run(procurements)
 
     def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
+        res = super()._action_assign(force_qty=force_qty)
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
@@ -422,7 +422,7 @@ class StockMove(models.Model):
         return mo.with_context(child_field='move_byproduct_ids').action_add_from_catalog()
 
     def _action_cancel(self):
-        res = super(StockMove, self)._action_cancel()
+        res = super()._action_cancel()
         if not 'skip_mo_check' in self.env.context:
             mo_to_cancel = self.mapped('raw_material_production_id').filtered(lambda p: all(m.state == 'cancel' for m in p.move_raw_ids))
             if mo_to_cancel:
@@ -481,7 +481,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return {
             'state': 'draft' if self.state == 'draft' else 'confirmed',
-            'reservation_date': self.reservation_date,
+            'date_reservation': self.date_reservation,
             'date_deadline': self.date_deadline,
             'manual_consumption': self._is_manual_consumption(),
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
@@ -497,15 +497,15 @@ class StockMove(models.Model):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):
             return [(self.production_id, self.production_id.user_id, visited)]
         else:
-            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+            return super()._get_upstream_documents_and_responsibles(visited)
 
     def _delay_alert_get_documents(self):
-        res = super(StockMove, self)._delay_alert_get_documents()
+        res = super()._delay_alert_get_documents()
         productions = self.raw_material_production_id | self.production_id
         return res + list(productions)
 
     def _should_be_assigned(self):
-        res = super(StockMove, self)._should_be_assigned()
+        res = super()._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
     def _should_bypass_set_qty_producing(self):
@@ -523,7 +523,7 @@ class StockMove(models.Model):
         return vals
 
     def _key_assign_picking(self):
-        keys = super(StockMove, self)._key_assign_picking()
+        keys = super()._key_assign_picking()
         return keys + (self.created_production_id,)
 
     @api.model
@@ -600,8 +600,8 @@ class StockMove(models.Model):
         for picking in self.move_dest_ids.raw_material_production_id.picking_ids:
             candidate_moves_set.add(picking.move_ids)
 
-    def _prepare_procurement_values(self):
-        res = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        res = super()._prepare_procurement_vals()
         res['production_group_id'] = self.production_group_id.id
         res['bom_line_id'] = self.bom_line_id.id
         return res

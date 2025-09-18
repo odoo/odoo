@@ -47,10 +47,36 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_qty_received(self):
+    def _compute_qty_transferred(self):
+        kit_lines = self.env['purchase.order.line']
+        lines_stock = self.filtered(lambda l: l.qty_transferred_method == 'stock_move' and l.move_ids and l.state != 'cancel')
+        product_by_company = defaultdict(OrderedSet)
+        for line in lines_stock:
+            product_by_company[line.company_id].add(line.product_id.id)
+        kits_by_company = {
+            company: self.env['mrp.bom']._bom_find(self.env['product.product'].browse(product_ids), company_id=company.id, bom_type='phantom')
+            for company, product_ids in product_by_company.items()
+        }
+        for line in lines_stock:
+            kit_bom = kits_by_company[line.company_id].get(line.product_id)
+            if kit_bom:
+                moves = line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
+                order_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
+                filters = {
+                    'incoming_moves': lambda m:
+                        m._is_incoming() and
+                        (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                    'outgoing_moves': lambda m:
+                        m._is_outgoing() and m.to_refund,
+                }
+                line.qty_transferred = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
+                kit_lines += line
+        super(PurchaseOrderLine, self - kit_lines)._compute_qty_transferred()
+
+    def _prepare_qty_transferred(self):
         kit_invoiced_qties = defaultdict(float)
         kit_lines = self.env['purchase.order.line']
-        lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids and l.state != 'cancel')
+        lines_stock = self.filtered(lambda l: l.qty_transferred_method == 'stock_move' and l.move_ids and l.state != 'cancel')
         product_by_company = defaultdict(OrderedSet)
         for line in lines_stock:
             product_by_company[line.company_id].add(line.product_id.id)
@@ -72,12 +98,12 @@ class PurchaseOrderLine(models.Model):
                 }
                 kit_invoiced_qties[line] = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
                 kit_lines += line
-        invoiced_qties = super(PurchaseOrderLine, self - kit_lines)._prepare_qty_received()
+        invoiced_qties = super(PurchaseOrderLine, self - kit_lines)._prepare_qty_transferred()
         invoiced_qties.update(kit_invoiced_qties)
         return invoiced_qties
 
-    def _prepare_stock_moves(self, picking):
-        res = super()._prepare_stock_moves(picking)
+    def _prepare_stock_move_vals_list(self, picking):
+        res = super()._prepare_stock_move_vals_list(picking)
         if len(self.order_id.reference_ids.move_ids.production_group_id) == 1:
             for re in res:
                 re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
@@ -98,7 +124,7 @@ class PurchaseOrderLine(models.Model):
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
 
-    def _get_qty_procurement(self):
+    def _get_procurement_qty(self):
         self.ensure_one()
         # Specific case when we change the qty on a PO for a kit product.
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
@@ -107,14 +133,14 @@ class PurchaseOrderLine(models.Model):
         bom = self.env['mrp.bom'].sudo()._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom and 'previous_product_qty' in self.env.context:
             return self.env.context['previous_product_qty'].get(self.id, 0.0)
-        return super()._get_qty_procurement()
+        return super()._get_procurement_qty()
 
-    def _get_move_dests_initial_demand(self, move_dests):
+    def _get_stock_move_dests_initial_demand(self, move_dests):
         kit_bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if kit_bom:
             filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
             return move_dests._compute_kit_quantities(self.product_id, self.product_qty, kit_bom, filters)
-        return super()._get_move_dests_initial_demand(move_dests)
+        return super()._get_stock_move_dests_initial_demand(move_dests)
 
     def _get_sale_order_line_product(self):
         return False

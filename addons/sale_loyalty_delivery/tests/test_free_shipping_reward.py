@@ -332,7 +332,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'name': 'Test product',
             'type': 'consu',
             'list_price': 200.0,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         order = self.empty_order
         self.env['sale.order.line'].create({
@@ -341,7 +341,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         self._auto_rewards(order, program)
         self.assertNotEqual(order.reward_amount, 0)
-        self.assertEqual(order.invoice_status, 'no')
+        self.assertEqual(order.invoice_state, 'no')
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
             'default_order_id': order.id,
             'default_carrier_id': self.carrier.id
@@ -350,7 +350,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         choose_delivery_carrier.button_confirm()
         order.action_confirm()
         self.assertEqual(order.delivery_set, True)
-        self.assertEqual(order.invoice_status, 'no')
+        self.assertEqual(order.invoice_state, 'no')
 
     def test_delivery_shant_count_toward_quantity_bought(self):
 

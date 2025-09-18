@@ -5,30 +5,43 @@ from odoo import fields, models, tools
 
 
 class ReportStockQuantity(models.Model):
-    _name = 'report.stock.quantity'
+    _name = "report.stock.quantity"
     _auto = False
-    _description = 'Stock Quantity Report'
+    _description = "Stock Quantity Report"
 
     _depends = {
-        'product.product': ['product_tmpl_id'],
-        'product.template': ['type'],
-        'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
-        'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
-        'stock.warehouse': ['view_location_id'],
+        "product.product": ["product_tmpl_id"],
+        "product.template": ["type"],
+        "stock.location": ["parent_path"],
+        "stock.move": [
+            "company_id",
+            "date",
+            "location_dest_id",
+            "location_final_id",
+            "location_id",
+            "product_id",
+            "product_qty",
+            "state",
+        ],
+        "stock.quant": ["company_id", "location_id", "product_id", "quantity"],
+        "stock.warehouse": ["view_location_id"],
     }
 
-    date = fields.Date(string='Date', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', readonly=True)
-    product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    state = fields.Selection([
-        ('forecast', 'Forecasted Stock'),
-        ('in', 'Forecasted Receipts'),
-        ('out', 'Forecasted Deliveries'),
-    ], string='State', readonly=True)
-    product_qty = fields.Float(string='Quantity', readonly=True)
-    company_id = fields.Many2one('res.company', readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', readonly=True)
+    date = fields.Date(string="Date", readonly=True)
+    product_tmpl_id = fields.Many2one("product.template", readonly=True)
+    product_id = fields.Many2one("product.product", string="Product", readonly=True)
+    state = fields.Selection(
+        [
+            ("forecast", "Forecasted Stock"),
+            ("in", "Forecasted Receipts"),
+            ("out", "Forecasted Deliveries"),
+        ],
+        string="State",
+        readonly=True,
+    )
+    product_qty = fields.Float(string="Quantity", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
+    warehouse_id = fields.Many2one("stock.warehouse", readonly=True)
 
     def _get_product_qty_col(self):
         return "q.quantity"
@@ -46,7 +59,7 @@ class ReportStockQuantity(models.Model):
             - the dest warehouse is kept if the SM is not the duplicated one and is not an interwarehouse
                 OR the SM is the duplicated one and is an interwarehouse
         """
-        tools.drop_view_if_exists(self.env.cr, 'report_stock_quantity')
+        tools.drop_view_if_exists(self.env.cr, "report_stock_quantity")
         query = f"""
 CREATE or REPLACE VIEW report_stock_quantity AS (
 WITH
@@ -181,5 +194,9 @@ FROM (SELECT
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
-        report_period = self.env['ir.config_parameter'].sudo().get_param('stock.report_stock_quantity_period', default='3')
-        self.env.cr.execute(query, {'report_period': int(report_period)})
+        report_period = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("stock.report_stock_quantity_period", default="3")
+        )
+        self.env.cr.execute(query, {"report_period": int(report_period)})

@@ -103,10 +103,10 @@ class AccountMove(models.Model):
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    def button_cancel(self):
+    def action_cancel(self):
         # EXTENDS account
         # We need to override this method to remove the link with the move, else we cannot reimburse them anymore.
         # And cancelling the move != cancelling the expense
-        res = super().button_cancel()
+        res = super().action_cancel()
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return res

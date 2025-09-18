@@ -27,7 +27,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.assertEqual(po_dp_line.sequence, po_dp_section_line.sequence + 1)
 
         # This is not the normal flow, but we test the deduction of the downpayment
-        action_view_bill = po.action_create_invoice()
+        action_view_bill = po.create_invoice()
         generated_bill = self.env['account.move'].browse(action_view_bill['res_id'])
 
         self.assertRecordValues(generated_bill.invoice_line_ids, [
@@ -48,7 +48,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
         match_lines.action_match_lines()
 
-        self.assertEqual(final_bill.invoice_line_ids.purchase_order_id.invoice_status, 'invoiced')
+        self.assertEqual(final_bill.invoice_line_ids.purchase_order_id.invoice_state, 'done')
         self.assertRecordValues(po_dp_line, [{
             'qty_invoiced': 0,
             'invoice_lines': dp_bill.invoice_line_ids.ids + final_bill.invoice_line_ids[-1:].ids,

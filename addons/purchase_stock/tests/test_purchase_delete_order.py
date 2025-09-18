@@ -16,7 +16,7 @@ class TestDeleteOrder(PurchaseTestCommon):
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'state': 'purchase',
+            'state': 'done',
         })
         purchase_order_1 = purchase_order.with_user(self.res_users_purchase_user)
         with self.assertRaises(UserError):
@@ -25,7 +25,7 @@ class TestDeleteOrder(PurchaseTestCommon):
         # Delete 'cancelled' purchase order with user group
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'state': 'purchase',
+            'state': 'done',
         })
         purchase_order_2 = purchase_order.with_user(self.res_users_purchase_user)
         purchase_order_2.button_cancel()

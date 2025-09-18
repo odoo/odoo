@@ -376,7 +376,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
             ],
         })
         sale_order.action_confirm()
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'done')
         self.assertEqual(sale_order.picking_ids.state, 'waiting')
 
         mto_move = sale_order.picking_ids.move_ids.filtered(lambda m: m.product_id == self.mto_product)

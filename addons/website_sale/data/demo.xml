@@ -566,7 +566,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_1" model="sale.order.line">
@@ -583,7 +583,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_2" model="sale.order.line">
@@ -601,7 +601,7 @@
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2'))]"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_3" model="sale.order.line">
@@ -618,7 +618,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_4" model="sale.order.line">
@@ -635,7 +635,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_5" model="sale.order.line">
@@ -653,7 +653,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_6" model="sale.order.line">
@@ -671,7 +671,7 @@
             <field name="website_id" ref="website.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_7" model="sale.order.line">
@@ -689,7 +689,7 @@
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_8" model="sale.order.line">
@@ -766,7 +766,7 @@
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
+            <field name="state">draft</field>
         </record>
 
         <record id="website_sale_order_line_14" model="sale.order.line">
@@ -800,7 +800,7 @@
             <field name="website_id" ref="website.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
-            <field name="state">sale</field>
+            <field name="state">done</field>
         </record>
 
         <record id="website_sale_order_line_16" model="sale.order.line">
@@ -826,7 +826,7 @@
             <field name="product_id" ref="product.product_product_9"/>
             <field name="product_uom_qty">7</field>
             <field name="price_unit">47.0</field>
-            <field name="invoice_status">to invoice</field>
+            <field name="invoice_state">to do</field>
         </record>
 
         <record id="website_sale_order_18" model="sale.order">
@@ -845,7 +845,7 @@
             <field name="product_id" ref="product.product_product_9"/>
             <field name="product_uom_qty">3</field>
             <field name="price_unit">47.0</field>
-            <field name="invoice_status">to invoice</field>
+            <field name="invoice_state">to do</field>
         </record>
 
 
@@ -861,7 +861,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
             <field name="categ_id" ref="product.product_category_services"/>
-            <field name="invoice_policy">delivery</field>
+            <field name="invoice_policy">transferred</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.public_category_services')])]"/>
             <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>

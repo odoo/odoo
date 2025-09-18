@@ -128,7 +128,7 @@
                                 'default_type': 'service',
                                 'default_sale_ok': False,
                                 'default_purchase_ok': False,
-                                'default_invoice_policy': 'order',
+                                'default_invoice_policy': 'ordered',
                             }"/>
                             <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
                             <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>

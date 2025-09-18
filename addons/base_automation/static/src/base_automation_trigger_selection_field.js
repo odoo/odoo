@@ -29,7 +29,7 @@ const OPT_GROUPS = [
     },
     {
         group: { sequence: 40, key: "custom", label: _t("Custom") },
-        triggers: ["on_create", "on_create_or_write", "on_unlink", "on_change"],
+        triggers: ["on_create", "on_create_or_write", "on_unlink", "on_change", "on_hand"],
     },
     {
         group: { sequence: 50, key: "external", label: _t("External") },

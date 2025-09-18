@@ -66,10 +66,10 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         })
         timesheet._compute_so_line()
         so.order_line._compute_qty_delivered()
-        so.order_line._compute_invoice_status()
-        so._compute_invoice_status()
-        # Normally this method is called at the end of _compute_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        so.order_line._compute_invoice_state()
+        so._compute_invoice_state()
+        # Normally this method is called at the end of _compute_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
 
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 0, 'No upsell warning should appear in the SO.')
         timesheet.write({
@@ -77,10 +77,10 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         })
         timesheet._compute_so_line()
         so.order_line._compute_qty_delivered()
-        so.order_line._compute_invoice_status()
-        so._compute_invoice_status()
-        # Normally this method is called at the end of _compute_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        so.order_line._compute_invoice_state()
+        so._compute_invoice_state()
+        # Normally this method is called at the end of _compute_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
 
         # 5) Check if the SO has an 'mail.mail_activity_data_todo' activity.
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 1, 'A upsell warning should appear in the SO.')
@@ -148,8 +148,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
 
         # 5) Create Invoice of the SO
         so._create_invoices()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        # Normally this method is called at the end of _get_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
 
         # 6) Check if the SO has an 'mail.mail_activity_data_todo' activity.
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 0, 'No upsell warning should appear in the SO.')
@@ -215,8 +215,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
             'task_id': task.id,
         })
         so.order_line._compute_qty_delivered()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        # Normally this method is called at the end of _get_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 1, 'An upsell warning should appear in the SO.')
 
         # 5) Update the ordered quantity of the SOL to match its delivered quantity
@@ -229,8 +229,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
 
         # 7) Create Invoice of the SO
         so._create_invoices()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        # Normally this method is called at the end of _get_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
         # No 'mail.mail_activity_data_todo' activity should appear as it was marked as done
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 0, 'No upsell warning should appear in the SO.')
 
@@ -243,8 +243,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
             'task_id': task.id,
         })
         so.order_line._compute_qty_delivered()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
-        so._compute_field_value(so._fields['invoice_status'])
+        # Normally this method is called at the end of _get_invoice_state and other compute method. Here, we simulate for invoice_state field
+        so._compute_field_value(so._fields['invoice_state'])
 
         # 9) Check if the SO has an 'mail.mail_activity_data_todo' activity
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 1, 'A upsell warning should appear in the SO.')

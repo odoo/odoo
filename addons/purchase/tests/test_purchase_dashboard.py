@@ -84,7 +84,7 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
         # Confirm Orders with lines.
         rfqs.button_confirm()
         # Retrieve dashboard as User A to check 'my_{to_send, waiting, late}' values.
-        dashboard_result = rfqs.with_user(self.user_a).retrieve_dashboard()
+        dashboard_result = rfqs.with_user(self.user_a).prepare_dashboard()
 
         # Check dashboard values
         currency_id = self.env.company.currency_id

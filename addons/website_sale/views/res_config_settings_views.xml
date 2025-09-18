@@ -93,7 +93,7 @@
                 <setting
                     id="automatic_invoice_generation_setting"
                     help="Invoice automatically on payment."
-                    invisible="default_invoice_policy == 'delivery'"
+                    invisible="default_invoice_policy == 'transferred'"
                 >
                     <field name="automatic_invoice"/>
                     <div invisible="not automatic_invoice">

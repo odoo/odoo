@@ -4,29 +4,30 @@
 
 # don't try to be a good boy and sort imports alphabetically.
 # `product.template` should be initialised before `product.product`
-from . import product_template
-from . import product_product
-
-from . import ir_attachment
-from . import product_attribute
-from . import product_attribute_custom_value
-from . import product_attribute_value
-from . import product_catalog_mixin
-from . import product_category
-from . import product_combo
-from . import product_combo_item
-from . import product_document
-from . import product_pricelist
-from . import product_pricelist_item
-from . import product_supplierinfo
-from . import product_tag
-from . import product_template_attribute_line
-from . import product_template_attribute_exclusion
-from . import product_template_attribute_value
-from . import product_uom
-from . import res_company
-from . import res_config_settings
-from . import res_country_group
-from . import res_currency
-from . import res_partner
-from . import uom_uom
+from . import (
+    product_template,
+    product_product,
+    ir_attachment,
+    product_attribute,
+    product_attribute_custom_value,
+    product_attribute_value,
+    product_catalog_mixin,
+    product_category,
+    product_combo,
+    product_combo_item,
+    product_document,
+    product_pricelist,
+    product_pricelist_item,
+    product_supplierinfo,
+    product_tag,
+    product_template_attribute_line,
+    product_template_attribute_exclusion,
+    product_template_attribute_value,
+    product_uom,
+    res_company,
+    res_config_settings,
+    res_country_group,
+    res_currency,
+    res_partner,
+    uom_uom,
+)

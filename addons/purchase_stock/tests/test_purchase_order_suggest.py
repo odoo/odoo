@@ -218,12 +218,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         delivery_1 = self._create_and_process_delivery_at_date(
             [(product_4, 6)], today, to_validate=False
         )
-        delivery_1.scheduled_date = today + relativedelta(days=3)
+        delivery_1.date_planned = today + relativedelta(days=3)
 
         delivery_2 = self._create_and_process_delivery_at_date(
             [(product_5, 10)], today, to_validate=False
         )
-        delivery_2.scheduled_date = today + relativedelta(days=5)
+        delivery_2.date_planned = today + relativedelta(days=5)
 
         self._create_and_process_delivery_at_date(
             [(product_6, 10)], today
@@ -412,7 +412,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         delivery = self._create_and_process_delivery_at_date(
             [(product_ad, 12)], today, to_validate=False
         )
-        delivery.scheduled_date = today + relativedelta(days=3)
+        delivery.date_planned = today + relativedelta(days=3)
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
@@ -507,12 +507,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         delivery_1 = self._create_and_process_delivery_at_date(
             [(product_ad, 10)], today, to_validate=False, warehouse=main_warehouse
         )
-        delivery_1.scheduled_date = today + relativedelta(days=3)
+        delivery_1.date_planned = today + relativedelta(days=3)
 
         delivery_2 = self._create_and_process_delivery_at_date(
             [(product_ad, 9)], today, to_validate=False, warehouse=self.warehouse_1
         )
-        delivery_2.scheduled_date = today + relativedelta(days=5)
+        delivery_2.date_planned = today + relativedelta(days=5)
 
         context = {
             'to_date': fields.Datetime.now() + relativedelta(days=6),

@@ -68,7 +68,7 @@ class SaleOrderLine(models.Model):
     def _compute_name(self):
         """Override to add the compute dependency.
 
-        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
+        The custom name logic can be found below in _get_line_multiline_description_sale.
         """
         super()._compute_name()
 
@@ -85,10 +85,10 @@ class SaleOrderLine(models.Model):
                 so_line.event_booth_ids.sudo().action_set_paid()
         return True
 
-    def _get_sale_order_line_multiline_description_sale(self):
+    def _get_line_multiline_description_sale(self):
         if self.event_booth_pending_ids:
             return self.event_booth_pending_ids._get_booth_multiline_description()
-        return super()._get_sale_order_line_multiline_description_sale()
+        return super()._get_line_multiline_description_sale()
 
     def _use_template_name(self):
         """ We do not want configured description to get rewritten by template default"""
@@ -96,7 +96,7 @@ class SaleOrderLine(models.Model):
             return False
         return super()._use_template_name()
 
-    def _get_display_price(self):
+    def _get_price_display(self):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
             if not self.pricelist_item_id._show_discount():
@@ -106,4 +106,4 @@ class SaleOrderLine(models.Model):
                 total_price = sum(booth.price for booth in self.event_booth_pending_ids)
 
             return self._convert_to_sol_currency(total_price, company.currency_id)
-        return super()._get_display_price()
+        return super()._get_price_display()

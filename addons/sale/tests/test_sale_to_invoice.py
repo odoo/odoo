@@ -387,7 +387,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Check ordered quantity, quantity to invoice and invoiced quantity of SO lines
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, 'Quantity to invoice should be same as ordered quantity')
                 self.assertEqual(line.qty_invoiced, 0.0, 'Invoiced quantity should be zero as no any invoice created for SO')
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -416,7 +416,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # amount to invoice / invoiced should not have changed (amounts take only confirmed invoice into account)
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be zero")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as delivered lines are not delivered yet")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity (no confirmed invoice)")
@@ -450,7 +450,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -543,8 +543,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_invoice_combo_product(self):
         """ Test creating an invoice for a SO with a combo product. """
-        product_a = self._create_product(name="Horse-meat burger", invoice_policy='delivery')
-        product_b = self._create_product(name="French fries", invoice_policy='delivery')
+        product_a = self._create_product(name="Horse-meat burger", invoice_policy='transferred')
+        product_b = self._create_product(name="French fries", invoice_policy='transferred')
         combo_a = self.env['product.combo'].create({
             'name': "Burger",
             'combo_item_ids': [
@@ -595,7 +595,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(sale_order.order_line.mapped('qty_to_invoice'), [0.0, 0.0, 0.0])
         deliverables = sale_order.order_line.filtered(
-            lambda sol: sol.product_id.invoice_policy == 'delivery',
+            lambda sol: sol.product_id.invoice_policy == 'transferred',
         )
         self.assertEqual(
             deliverables,
@@ -918,8 +918,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
         self.assertEqual(self.sale_order.amount_total, 1240.0, 'Sale: total amount is wrong')
-        self.sale_order.order_line._compute_product_updatable()
-        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+        self.sale_order.order_line._compute_product_readonly()
+        self.assertFalse(self.sale_order.order_line[0].product_readonly)
         # send quotation
         email_act = self.sale_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
@@ -928,36 +928,37 @@ class TestSaleToInvoice(TestSaleCommon):
             subtype_xmlid='mail.mt_comment',
         )
         self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
-        self.sale_order.order_line._compute_product_updatable()
-        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+        self.sale_order.order_line._compute_product_readonly()
+        self.assertFalse(self.sale_order.order_line[0].product_readonly)
 
         # confirm quotation
         self.sale_order.action_confirm()
-        self.assertTrue(self.sale_order.state == 'sale')
-        self.assertTrue(self.sale_order.invoice_status == 'to invoice')
+        self.assertTrue(self.sale_order.state == 'done')
+        self.assertTrue(self.sale_order.invoice_state == 'to do')
 
         # create invoice: only 'invoice on order' products are invoiced
         invoice = self.sale_order._create_invoices()
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
         self.assertEqual(invoice.amount_total, 740.0, 'Sale: invoice total amount is wrong')
-        self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
+        self.assertTrue(self.sale_order.invoice_state == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 1, 'Sale: invoice is missing')
-        self.sale_order.order_line._compute_product_updatable()
-        self.assertFalse(self.sale_order.order_line[0].product_updatable)
+        self.sale_order.order_line._compute_product_readonly()
+        self.assertTrue(self.sale_order.order_line[0].product_readonly)
 
         # deliver lines except 'time and material' then invoice again
         for line in self.sale_order.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
-        self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
+        self.assertTrue(self.sale_order.invoice_state == 'to do', 'Sale: SO status after delivery should be "to do"')
         invoice2 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
         self.assertEqual(invoice2.amount_total, 500.0, 'Sale: second invoice total amount is wrong')
-        self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything should be "invoiced"')
+        self.assertTrue(self.sale_order.invoice_state == 'done', 'Sale: SO status after invoicing everything should be "done"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 2, 'Sale: invoice is missing')
 
-        # go over the sold quantity
+        # go over the sold quantity - creates upselling opportunity
         self.sol_serv_order.write({'qty_delivered': 10})
-        self.assertTrue(self.sale_order.invoice_status == 'upselling', 'Sale: SO status after increasing delivered qty higher than ordered qty should be "upselling"')
+        self.assertTrue(self.sale_order.invoice_state == 'done', 'Sale: SO invoice_state should remain "done" (all ordered qty invoiced)')
+        self.assertTrue(self.sale_order.has_upsell_opportunity, 'Sale: SO should have upselling opportunity when delivered qty exceeds ordered qty')
 
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
@@ -975,14 +976,15 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice3 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
         self.assertEqual(invoice3.amount_total, 720.0, 'Sale: second invoice total amount is wrong')
-        self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
+        self.assertTrue(self.sale_order.invoice_state == 'done', 'Sale: SO status after invoicing everything (including the upsell) should be "done"')
+        self.assertFalse(self.sale_order.has_upsell_opportunity, 'Sale: SO should no longer have upselling opportunity after increasing order qty')
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
         # Preparing test Data
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'taxes_id': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })

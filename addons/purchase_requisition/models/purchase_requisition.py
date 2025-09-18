@@ -120,7 +120,7 @@ class PurchaseRequisition(models.Model):
         for requisition in self:
             for requisition_line in requisition.line_ids:
                 requisition_line.supplier_info_ids.sudo().unlink()
-            requisition.purchase_ids.button_cancel()
+            requisition.purchase_ids.action_cancel()
             for po in requisition.purchase_ids:
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
         self.state = 'cancel'
@@ -185,8 +185,8 @@ class PurchaseRequisitionLine(models.Model):
         line_found = defaultdict(set)
         for line in self:
             total = 0.0
-            for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'purchase'):
-                for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
+            for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'done'):
+                for po_line in so.line_ids.filtered(lambda order_line: order_line.product_id == line.product_id):
                     if po_line.product_uom_id != line.product_uom_id:
                         total += po_line.product_uom_id._compute_quantity(po_line.product_qty, line.product_uom_id)
                     else:
@@ -216,7 +216,7 @@ class PurchaseRequisitionLine(models.Model):
     def create(self, vals_list):
         lines = super().create(vals_list)
         for line, vals in zip(lines, vals_list):
-            if line.requisition_id.requisition_type == 'blanket_order' and line.requisition_id.state not in ['draft', 'cancel', 'done']:
+            if line.requisition_id.requisition_type == 'blanket_order' and line.requisition_id.state not in ['draft', 'done', 'cancel']:
                 if vals['price_unit'] <= 0.0:
                     raise UserError(_("You cannot have a negative or unit price of 0 for an already confirmed blanket order."))
                 supplier_infos = self.env['product.supplierinfo'].search([
@@ -233,14 +233,14 @@ class PurchaseRequisitionLine(models.Model):
             return res
         if vals['price_unit'] <= 0.0 and any(
                 requisition.requisition_type == 'blanket_order' and
-                requisition.state not in ['draft', 'cancel', 'done'] for requisition in self.mapped('requisition_id')):
+                requisition.state not in ['draft', 'done', 'cancel'] for requisition in self.mapped('requisition_id')):
             raise UserError(_("You cannot have a negative or unit price of 0 for an already confirmed blanket order."))
         # If the price is updated, we have to update the related SupplierInfo
         self.supplier_info_ids.write({'price': vals['price_unit']})
         return res
 
     def unlink(self):
-        to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
+        to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'done', 'cancel'])
         to_unlink.supplier_info_ids.unlink()
         return super().unlink()
 

@@ -83,7 +83,7 @@
                            decoration-muted="state == 'draft'"
                            optional="show" widget="badge" class="text-dark"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="delay_alert_date" column_invisible="True"/>
+                    <field name="date_delay_alert" column_invisible="True"/>
                     <field name="is_delayed" column_invisible="True"/>
                     <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                 </list>
@@ -350,7 +350,7 @@
                                     help="Date at which you plan to start.
                                           Red if the scheduled end is forecasted after the production order deadline.
                                           Orange if the scheduled date is in the past."/>
-                                <field name="delay_alert_date" invisible="1"/>
+                                <field name="date_delay_alert" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
                             <field name="components_availability_state" invisible="1"/>
@@ -444,7 +444,7 @@
                                     <field name="product_uom_qty" force_save="1" string="To Consume" column_invisible="not parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="forecast_expected_date" column_invisible="True"/>
+                                    <field name="date_planned_forecast" column_invisible="True"/>
                                     <field name="quantity" string="Consumed"
                                         decoration-success="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
                                         decoration-warning="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
@@ -660,7 +660,7 @@
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                     <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', 'now'), ('state', '=', 'confirmed')]"/>
                     <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
-                        domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
+                        domain="['|', ('date_delay_alert', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
                     <filter string="Late Availability" name="late" domain="[('components_availability_state', '=', 'late')]"/>
                     <separator/>

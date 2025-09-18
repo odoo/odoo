@@ -34,7 +34,7 @@
             <field name="product_qty">25</field>
         </record>
 
-        <function model="purchase.order" name="button_confirm" eval="[[ref('rfq1')]]"/>
+        <function model="purchase.order" name="action_confirm" eval="[[ref('rfq1')]]"/>
 
         <record id="rfq2" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_1"/>

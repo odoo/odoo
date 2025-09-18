@@ -4,7 +4,7 @@
 <template id="website_sale_confirmation_slide" inherit_id="website_sale.confirmation">
     <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
         <t t-if="any(
-            product.service_tracking == 'course' for product in order.order_line.product_id
+            product.service_tracking == 'course' for product in order.line_ids.product_id
         )" t-call="website_sale_slides.course_purchased_confirmation_message"/>
     </xpath>
 </template>
@@ -12,12 +12,12 @@
 <template id="course_purchased_confirmation_message">
     <div>
         <h4>
-            <t t-if="order.state == 'sale'">You have gained access to the following course(s):</t>
+            <t t-if="order.state == 'done'">You have gained access to the following course(s):</t>
             <t t-else="">Once your order is paid &amp; confirmed, you will gain access to:</t>
         </h4>
     </div>
     <div class="mt-2">
-        <t t-foreach="order.order_line" t-as="line">
+        <t t-foreach="order.line_ids" t-as="line">
             <div t-foreach="line.product_id.channel_ids" t-as="course" class="row mx-0 my-2 border">
                 <div class="col-5 d-flex justify-content-center my-auto">
                     <span t-if="course.image_1920" t-field="course.image_1920" t-options="{'widget': 'image', 'class': 'my-2'}"/>

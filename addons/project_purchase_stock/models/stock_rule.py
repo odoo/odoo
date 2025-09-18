@@ -6,8 +6,8 @@ from odoo import models
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    def _prepare_purchase_order(self, company_id, origins, values):
-        res = super()._prepare_purchase_order(company_id, origins, values)
+    def _prepare_purchase_order_vals(self, company_id, origins, values):
+        res = super()._prepare_purchase_order_vals(company_id, origins, values)
         if values[0].get('project_id'):
             res['project_id'] = values[0].get('project_id')
         return res

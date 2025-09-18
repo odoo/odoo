@@ -83,7 +83,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay)
         out_date = deadline_picking - timedelta(days=company.security_lead)
         self.assertAlmostEqual(
-            order.picking_ids[0].scheduled_date, out_date,
+            order.picking_ids[0].date_planned, out_date,
             delta=timedelta(seconds=1),
             msg='Schedule date of picking should be equal to: Order date + Customer Lead Time - Sales Safety Days.'
         )
@@ -139,7 +139,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of ship type picking
         out = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.out_type_id)
-        out_min_date = fields.Datetime.from_string(out.scheduled_date)
+        out_min_date = fields.Datetime.from_string(out.date_planned)
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=out.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
             out_min_date, out_date,
@@ -149,7 +149,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of pack type picking
         pack = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pack_type_id)
-        pack_min_date = fields.Datetime.from_string(pack.scheduled_date)
+        pack_min_date = fields.Datetime.from_string(pack.date_planned)
         pack_date = out_date - timedelta(days=pack.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
             pack_min_date, pack_date,
@@ -159,7 +159,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of pick type picking
         pick = order.picking_ids.filtered(lambda r: r.picking_type_id == warehouse.pick_type_id)
-        pick_min_date = fields.Datetime.from_string(pick.scheduled_date)
+        pick_min_date = fields.Datetime.from_string(pick.date_planned)
         self.assertAlmostEqual(
             pick_min_date, pack_date,
             delta=timedelta(seconds=10),

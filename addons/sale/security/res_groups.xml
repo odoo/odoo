@@ -1,20 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
 
-     <record id="group_auto_done_setting" model="res.groups">
-        <field name="name">Lock Confirmed Sales</field>
-    </record>
+        <record id="group_warning_sale" model="res.groups">
+            <field name="name">A warning can be set on a product or a customer (Sale)</field>
+        </record>
 
-    <record id="group_discount_per_so_line" model="res.groups">
-        <field name="name">Discount on lines</field>
-    </record>
+        <record id="group_auto_done_setting" model="res.groups">
+            <field name="name">Lock Confirmed Sales</field>
+        </record>
 
-    <record id="group_warning_sale" model="res.groups">
-        <field name="name">A warning can be set on a product or a customer (Sale)</field>
-    </record>
+        <record id="group_order_lock" model="res.groups">
+            <field name="name">Lock Sale Orders</field>
+            <field name="comment">Users in this group can manually lock sale orders</field>
+        </record>
 
-    <record id="group_proforma_sales" model="res.groups">
-        <field name="name">Pro-forma Invoices</field>
-    </record>
+        <record id="group_order_unlock" model="res.groups">
+            <field name="name">Unlock Sale Orders</field>
+            <field name="comment">Users in this group can unlock locked sale orders</field>
+        </record>
+
+        <record id="group_discount_per_so_line" model="res.groups">
+            <field name="name">Discount on lines</field>
+        </record>
+
+        <record id="group_proforma_sales" model="res.groups">
+            <field name="name">Pro-forma Invoices</field>
+        </record>
+
+        <record id="sales_team.group_sale_manager" model="res.groups">
+            <field name="implied_ids"
+                eval="[
+                    (4, ref('group_order_lock')),
+                    (4, ref('group_order_unlock'))
+                ]" />
+        </record>
+
+    </data>
+
+    <data noupdate="1">
+    </data>
 
 </odoo>

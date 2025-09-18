@@ -91,10 +91,10 @@ patch(PosStore.prototype, {
         let previousProductLine = null;
 
         const converted_lines = await this.data.call("sale.order.line", "read_converted", [
-            sale_order.order_line.map((l) => l.id),
+            sale_order.line_ids.map((l) => l.id),
         ]);
 
-        for (const line of sale_order.order_line) {
+        for (const line of sale_order.line_ids) {
             if (line.display_type === "line_note") {
                 if (previousProductLine) {
                     const previousNote = previousProductLine.customer_note;
@@ -305,7 +305,7 @@ patch(PosStore.prototype, {
         if (!result) {
             return;
         }
-        const saleOrderLines = saleOrder.order_line.filter((soLine) => !soLine.display_type);
+        const saleOrderLines = saleOrder.line_ids.filter((soLine) => !soLine.display_type);
         const baseLines = [];
         for (const saleOrderLine of saleOrderLines) {
             baseLines.push(

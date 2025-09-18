@@ -11,10 +11,10 @@ class AccountMove(models.Model):
         self.expense_ids._sale_expense_reset_sol_quantities()
         return super()._reverse_moves(default_values_list, cancel)
 
-    def button_draft(self):
+    def action_draft(self):
         # EXTENDS sale
         self.expense_ids._sale_expense_reset_sol_quantities()
-        return super().button_draft()
+        return super().action_draft()
 
     def unlink(self):
         # EXTENDS sale

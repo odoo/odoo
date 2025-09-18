@@ -24,9 +24,9 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_service_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_to_purchase:
+        if self.state == 'done' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_to_purchase:
             if self.product_uom_qty < self._origin.product_uom_qty:
-                if self.product_uom_qty < self.qty_delivered:
+                if self.product_uom_qty < self.qty_transferred:
                     return {}
                 warning_mess = {
                     'title': _('Ordered quantity decreased!'),
@@ -44,7 +44,7 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         # Do not generate purchase when expense SO line since the product is already delivered
         lines.filtered(
-            lambda line: line.state == 'sale' and not line.is_expense
+            lambda line: line.state == 'done' and not line.is_expense
         )._purchase_service_generation()
         return lines
 
@@ -107,14 +107,14 @@ class SaleOrderLine(models.Model):
             if last_purchase_line.state in ['draft', 'sent', 'to approve']:  # update qty for draft PO lines
                 quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.product_uom_id)
                 last_purchase_line.write({'product_qty': quantity})
-            elif last_purchase_line.state in ['purchase', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
+            elif last_purchase_line.state in ['done', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
                 quantity = line.product_uom_id._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.product_uom_id)
                 line._purchase_service_create(quantity=quantity)
 
     def _purchase_get_date_order(self, supplierinfo):
         """ return the ordered date for the purchase order, computed as : SO commitment date - supplier delay """
-        commitment_date = fields.Datetime.from_string(self.order_id.commitment_date or fields.Datetime.now())
-        return commitment_date - relativedelta(days=int(supplierinfo.delay))
+        date_commitment = fields.Datetime.from_string(self.order_id.date_commitment or fields.Datetime.now())
+        return date_commitment - relativedelta(days=int(supplierinfo.delay))
 
     def _purchase_service_get_company(self):
         return self.company_id
@@ -199,7 +199,7 @@ class SaleOrderLine(models.Model):
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
         name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
 
-        line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
+        line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_line_multiline_description_variants()
         if line_description:
             name += line_description
 

@@ -154,7 +154,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
         tx._post_process()
 
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
 
     def test_auto_confirm_and_auto_invoice(self):
         """
@@ -177,7 +177,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         ):
             tx._post_process()
 
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
         self.assertEqual(len(self._new_mails), 2)
@@ -213,7 +213,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         ):
             tx._post_process()
 
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
         self.assertEqual(len(self._new_mails), 2)
@@ -252,7 +252,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         ):
             tx._post_process()
 
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
         self.assertEqual(len(self._new_mails), 2)
@@ -270,7 +270,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._post_process()
 
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
         self.assertTrue(self.sale_order.locked)
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
@@ -404,7 +404,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._post_process()
 
-        self.assertTrue(self.sale_order.state == 'sale')
+        self.assertTrue(self.sale_order.state == 'done')
 
     def test_downpayment_automatic_invoice(self):
         """
@@ -445,7 +445,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.amount = self.sale_order.amount_total / 2
 
         with patch(
-            'odoo.addons.sale.models.sale_order.SaleOrder._send_order_notification_mail',
+            'odoo.addons.sale.models.sale_order.SaleOrder._send_mail_order_notification',
         ) as notification_mail_mock:
             tx_pending = self._create_transaction(
                 flow='direct',
@@ -480,7 +480,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                 .get_param("sale.default_confirmation_template", self.env.ref("sale.mail_template_sale_confirmation").id)
             )
             notification_mail_mock.assert_called_with(self.env["mail.template"].browse(order_confirmation_mail_template_id))
-            self.assertEqual(self.sale_order.state, 'sale')
+            self.assertEqual(self.sale_order.state, 'done')
 
     def test_automatic_invoice_mail_author(self):
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')

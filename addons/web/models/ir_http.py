@@ -135,7 +135,9 @@ class IrHttp(models.AbstractModel):
         if is_internal_user:
             # We need sudo since a user may not have access to ancestor companies
             # We use `_get_company_ids` because it is cached and we sudo it because env.user return a sudo user.
-            user_companies = self.env['res.company'].browse(user._get_company_ids()).sudo()
+            # Use prefetch_fields=False to avoid prefetching all company fields during session init,
+            # making this resilient to schema changes (similar to res.users.context_get and ir.config_parameter.init)
+            user_companies = self.env(context=dict(self.env.context, prefetch_fields=False))['res.company'].browse(user._get_company_ids()).sudo()
             disallowed_ancestor_companies_sudo = user_companies.parent_ids - user_companies
             all_companies_in_hierarchy_sudo = disallowed_ancestor_companies_sudo + user_companies
             session_info.update({

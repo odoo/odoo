@@ -21,7 +21,7 @@ class StockMove(models.Model):
         product = self.env['product.product'].browse(context_data.get('default_product_id'))
         picking = self.env['stock.picking'].browse(context_data.get('default_picking_id'))
         if product.use_expiration_date:
-            from_date = picking.scheduled_date or fields.Datetime.today()
+            from_date = picking.date_planned or fields.Datetime.today()
             expiration_date = from_date + datetime.timedelta(days=product.expiration_time)
             for vals in vals_list:
                 vals['expiration_date'] = vals.get('expiration_date') or expiration_date

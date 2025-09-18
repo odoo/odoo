@@ -36,7 +36,7 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
             )
         res['discount_reward_amounts'] = [
             to_html(sum(lines.mapped('price_subtotal')))
-            for reward, lines in order.order_line.grouped('reward_id').items()
+            for reward, lines in order.line_ids.grouped('reward_id').items()
             if reward.reward_type == 'discount'
         ]
         return res

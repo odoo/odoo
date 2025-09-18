@@ -141,7 +141,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             orders = lines.order_id
         else:
             orders = self.env[active_model].with_company(self.company_id).browse(self.env.context['active_ids'])
-            lines = orders.order_line.filtered(lambda x: x.product_id)
+            lines = orders.line_ids.filtered(lambda x: x.product_id)
         is_purchase = orders._name == 'purchase.order'
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
@@ -153,7 +153,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         amounts_by_perpetual_account = defaultdict(float)
 
         for order, product_lines in lines.grouped('order_id').items():
-            if len(orders) == 1 and product_lines and self.amount and order.order_line:
+            if len(orders) == 1 and product_lines and self.amount and order.line_ids:
                 total_balance = self.amount
                 order_line = product_lines[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
@@ -166,7 +166,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     # We only want non-comment lines (no sections, notes, ...) and include all lines
                     # for purchase orders but exclude downpayment lines for sales orders.
                     lambda l: not l.display_type and not l.is_downpayment and
-                    l.id in order.order_line.ids and
+                    l.id in order.line_ids.ids and
                     fields.Float.compare(
                         l.amount_to_invoice_at_date,
                         0,
@@ -180,7 +180,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                         account = stock_variation_account if stock_variation_account else self._get_computed_account(order, order_line.product_id, is_purchase)
                         if any(tax.price_include for tax in order_line.tax_ids):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
-                            qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
+                            qty_to_invoice = order_line.qty_transferred_at_date - order_line.qty_invoiced_at_date
                             price_subtotal = order_line.tax_ids.compute_all(
                                 order_line.price_unit,
                                 currency=order_line.order_id.currency_id,
@@ -196,7 +196,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order=order.name,
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_billed=order_line.qty_invoiced_at_date,
-                            quantity_received=order_line.qty_received_at_date,
+                            quantity_received=order_line.qty_transferred_at_date,
                             unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
                         )
                     else:
@@ -209,7 +209,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order=order.name,
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_invoiced=order_line.qty_invoiced_at_date,
-                            quantity_delivered=order_line.qty_delivered_at_date,
+                            quantity_delivered=order_line.qty_transferred_at_date,
                             unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
                         )
                         if expense_account and stock_variation_account:
@@ -224,7 +224,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             # globalized counterpart for the whole orders selection
             analytic_distribution = {}
             total = sum(order.amount_total for order in orders)
-            for line in orders.order_line:
+            for line in orders.line_ids:
                 ratio = line.price_total / total
                 if not line.analytic_distribution:
                     continue

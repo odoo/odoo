@@ -688,10 +688,10 @@ class HrEmployee(models.Model):
         contracts_by_employee = defaultdict(lambda: self.env["hr.version"])
         for employee_id in contract_versions_by_employee:
             for contract_versions in contract_versions_by_employee[employee_id].values():
-                effective_date = date_end if use_latest_version else date_start
+                date_effective = date_end if use_latest_version else date_start
                 if use_latest_version:
-                    if effective_date:
-                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
+                    if date_effective:
+                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= date_effective)
                         contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
                     else:
                         contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]

@@ -55,12 +55,12 @@ class TestReorderingRule(TransactionCase):
         warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
 
         # Create and set specific buyer for partner
-        buyer_id = self.env['res.users'].create({
+        user_purchase_id = self.env['res.users'].create({
             'login': 'buyer1',
             'name': 'Buyer1',
             'email': 'buyer1@example.com',
         })
-        self.partner.buyer_id = buyer_id.id
+        self.partner.user_purchase_id = user_purchase_id.id
 
         # create reordering rule
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
@@ -112,7 +112,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
         self.assertEqual(purchase_order.order_line.product_qty, 10)
         self.assertEqual(purchase_order.order_line.name, 'Product A')
-        self.assertEqual(purchase_order.user_id, buyer_id)
+        self.assertEqual(purchase_order.user_id, user_purchase_id)
 
         # Increase the quantity on the RFQ before confirming it
         purchase_order.order_line.product_qty = 12
@@ -333,7 +333,7 @@ class TestReorderingRule(TransactionCase):
         })
         delivery.action_confirm()
         self.assertEqual(rr.deadline_date, today - td(days=3))
-        delivery.scheduled_date += td(days=4)
+        delivery.date_planned += td(days=4)
         self.assertEqual(rr.deadline_date, today + td(days=1))
 
         pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
@@ -875,7 +875,7 @@ class TestReorderingRule(TransactionCase):
         po_line = self.env['purchase.order.line'].search([('partner_id', '=', self.partner.id), ('product_id', '=', self.product_01.id)])
         self.assertEqual(po_line.product_qty, 5)
 
-    def test_change_of_scheduled_date(self):
+    def test_change_of_date_planned(self):
         """
         A user creates a delivery, an orderpoint is created. Its forecast
         quantity becomes -1 and the quantity to order is 1. Then the user
@@ -905,7 +905,7 @@ class TestReorderingRule(TransactionCase):
         orderpoint.invalidate_model(fnames=['qty_forecast', 'qty_to_order'])
         orderpoint.product_id.invalidate_model(fnames=['virtual_available'])
 
-        delivery.scheduled_date += td(days=7)
+        delivery.date_planned += td(days=7)
         self.assertRecordValues(orderpoint, [
             {'qty_forecast': 0, 'qty_to_order': 0},
         ])

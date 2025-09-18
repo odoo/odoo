@@ -63,7 +63,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today()"/>
+            <field name="date_planned" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -82,7 +82,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=15)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=15)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -101,7 +101,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=5)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -120,7 +120,7 @@
             <field name="user_id"></field>
             <field name="origin">your company warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today()"/>
+            <field name="date_planned" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -139,7 +139,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=7)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=7)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -158,7 +158,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=12)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=12)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -177,7 +177,7 @@
             <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=20)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="state">draft</field>
@@ -212,7 +212,7 @@
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=5)"/>
+            <field name="date_planned" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="state">draft</field>

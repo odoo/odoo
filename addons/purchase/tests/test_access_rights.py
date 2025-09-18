@@ -64,7 +64,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         purchase_order.button_confirm()
 
         purchase_order.order_line.qty_received = 4
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
             invoice.action_post()
@@ -90,7 +90,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         purchase_order_user2.button_confirm()
 
         purchase_order_user2.order_line.qty_received = 4
-        purchase_order_user2.action_create_invoice()
+        purchase_order_user2.create_invoice()
         vendor_bill_user2 = purchase_order_user2.invoice_ids
 
         # open purchase_order_user2 and vendor_bill_user2 with `self.purchase_user`
@@ -127,7 +127,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         self.assertEqual(order.state, 'to approve')
         self.purchase_user.group_ids += group_purchase_manager
         order.with_user(self.purchase_user).button_approve()
-        self.assertEqual(order.state, 'purchase')
+        self.assertEqual(order.state, 'done')
 
     def test_create_product_purchase_user(self):
         uom = self.env.ref('uom.product_uom_gram')

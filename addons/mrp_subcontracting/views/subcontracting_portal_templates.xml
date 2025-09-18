@@ -56,7 +56,7 @@
                     <tr>
                         <td><a t-attf-href="/my/productions/#{picking.id}?{{ keep_query() }}"><span t-field="picking.name"/></a></td>
                         <td class="text-end"><span t-field="picking.origin"/></td>
-                        <td class="text-end"><span t-field="picking.scheduled_date" t-options='{"widget": "date"}'/></td>
+                        <td class="text-end"><span t-field="picking.date_planned" t-options='{"widget": "date"}'/></td>
                         <td class="text-end"><span t-field="picking.date_deadline" t-options='{"widget": "date"}'/></td>
                         <td class="text-end"><span t-field="picking.state"/></td>
                     </tr>

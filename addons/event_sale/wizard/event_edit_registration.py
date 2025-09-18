@@ -22,11 +22,11 @@ class RegistrationEditor(models.TransientModel):
         sale_order = self.env['sale.order'].browse(res.get('sale_order_id'))
         registrations = self.env['event.registration'].search([
             ('sale_order_id', '=', sale_order.id),
-            ('event_slot_id', 'in', sale_order.mapped('order_line.event_slot_id').ids or [False]),
-            ('event_ticket_id', 'in', sale_order.mapped('order_line.event_ticket_id').ids),
+            ('event_slot_id', 'in', sale_order.mapped('line_ids.event_slot_id').ids or [False]),
+            ('event_ticket_id', 'in', sale_order.mapped('line_ids.event_ticket_id').ids),
             ('state', '!=', 'cancel')])
 
-        so_lines = sale_order.order_line.filtered('event_ticket_id')
+        so_lines = sale_order.line_ids.filtered('event_ticket_id')
         so_line_to_reg = registrations.grouped('sale_order_line_id')
         attendee_list = []
         for so_line in so_lines:
@@ -48,9 +48,9 @@ class RegistrationEditor(models.TransientModel):
                 'event_slot_id': so_line.event_slot_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_line_id': so_line.id,
-                'name': so_line.order_partner_id.name,
-                'email': so_line.order_partner_id.email,
-                'phone': so_line.order_partner_id.phone,
+                'name': so_line.partner_id.name,
+                'email': so_line.partner_id.email,
+                'phone': so_line.partner_id.phone,
             }] for _count in range(int(so_line.product_uom_qty) - len(registrations))]
         res['event_registration_ids'] = attendee_list
         res = self._convert_to_write(res)

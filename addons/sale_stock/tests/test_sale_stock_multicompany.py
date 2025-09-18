@@ -154,7 +154,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         self.product_a.write({
             'is_storable': 'True',
             'tracking': 'serial',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         self.product_a.tracking = 'serial'
         sn = self.env['stock.lot'].create({'name': 'SN0012', 'product_id': self.product_a.id})

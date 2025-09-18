@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('order_line')
+    @api.depends('line_ids')
     def _compute_website_order_line(self):
         # group saler.order.line to prefetch all in one query
         order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', self.ids)])
@@ -58,23 +58,23 @@ class SaleOrder(models.Model):
                 lambda sol: sol.order_id == order and sol._show_in_cart(),
             )
 
-    @api.depends('order_line.price_total', 'order_line.price_subtotal')
+    @api.depends('line_ids.price_total', 'line_ids.price_subtotal')
     def _compute_amount_delivery(self):
         self.amount_delivery = 0.0
         for order in self.filtered('website_id'):
-            delivery_lines = order.order_line.filtered('is_delivery')
+            delivery_lines = order.line_ids.filtered('is_delivery')
             if order.website_id.show_line_subtotals_tax_selection == 'tax_excluded':
                 order.amount_delivery = sum(delivery_lines.mapped('price_subtotal'))
             else:
                 order.amount_delivery = sum(delivery_lines.mapped('price_total'))
 
-    @api.depends('order_line.product_uom_qty', 'order_line.product_id')
+    @api.depends('line_ids.product_uom_qty', 'line_ids.product_id')
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(sol.product_id.type == 'service' for sol in order.website_order_line)
 
-    @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
+    @api.depends('website_id', 'date_order', 'line_ids', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         for order in self:
             # a quotation can be considered as an abandonned cart if it is linked to a website,
@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
                 # by default the expiration date is 1 hour if not specified on the website configuration
                 abandoned_delay = order.website_id.cart_abandoned_delay or 1.0
                 abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
-                order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.order_line)
+                order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.line_ids)
             else:
                 order.is_abandoned_cart = False
 
@@ -131,7 +131,7 @@ class SaleOrder(models.Model):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         return Domain.AND((
             Domain('state', '=', 'draft'),
-            Domain('order_line', '!=', False),
+            Domain('line_ids', '!=', False),
             Domain.OR(
                 [
                     ('website_id', '=', website_id['id']),
@@ -232,7 +232,7 @@ class SaleOrder(models.Model):
 
     def _get_non_delivery_lines(self):
         """Exclude delivery-related lines."""
-        return self.order_line.filtered(lambda line: not line.is_delivery)
+        return self.line_ids.filtered(lambda line: not line.is_delivery)
 
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped('price_total'))
@@ -255,11 +255,11 @@ class SaleOrder(models.Model):
         carts.with_context(force_user_recomputation=True)._compute_user_id()
         return super().action_confirm()
 
-    def _send_payment_succeeded_for_order_mail(self):
+    def _send_mail_order_payment_succeeded(self):
         if carts := self.filtered('website_id'):
             # Assign a salesman before sending payment confirmation mail.
             carts.with_context(force_user_recomputation=True)._compute_user_id()
-        return super()._send_payment_succeeded_for_order_mail()
+        return super()._send_mail_order_payment_succeeded()
 
     @api.model
     def _get_note_url(self):
@@ -393,7 +393,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        if not self.order_line:
+        if not self.line_ids:
             return self.env['sale.order.line']
 
         product = self.env['product.product'].browse(product_id)
@@ -408,7 +408,7 @@ class SaleOrder(models.Model):
             ('combo_item_id', '=', False),
         ]
 
-        filtered_sol = self.order_line.filtered_domain(domain)
+        filtered_sol = self.line_ids.filtered_domain(domain)
         if not filtered_sol:
             return self.env['sale.order.line']
 
@@ -438,7 +438,7 @@ class SaleOrder(models.Model):
 
         self = self.with_company(self.company_id)  # noqa: PLW0642
 
-        if not (order_line := self.order_line.filtered(lambda sol: sol.id == line_id)):
+        if not (order_line := self.line_ids.filtered(lambda sol: sol.id == line_id)):
             # If the line isn't found because of wrong parameters, or because the user updated
             # the cart in other tabs, a warning will be returned.
             # Note that if the cart is empty, the zero cart_quantity will trigger a page reload
@@ -581,7 +581,7 @@ class SaleOrder(models.Model):
         if not product:
             raise UserError(_("The given combination does not exist therefore it cannot be added to cart."))
 
-        if linked_line_id and linked_line_id not in self.order_line.ids:
+        if linked_line_id and linked_line_id not in self.line_ids.ids:
             # Make sure the provided parent line belongs to the current order.
             raise UserError(_("Invalid request parameters."))
 
@@ -656,7 +656,7 @@ class SaleOrder(models.Model):
             # Recompute the delivery rate.
             rate = self.carrier_id.rate_shipment(self)
             if rate['success']:
-                self.order_line.filtered('is_delivery').price_unit = rate['price']
+                self.line_ids.filtered('is_delivery').price_unit = rate['price']
             else:
                 self._remove_delivery_line()
 
@@ -668,7 +668,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         # Remove lines with inactive products
-        self.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+        self.line_ids.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
@@ -741,8 +741,8 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(
-            line._is_reorder_allowed() for line in self.order_line if line.product_id
+        return self.state == 'done' and any(
+            line._is_reorder_allowed() for line in self.line_ids if line.product_id
         )
 
     def _filter_can_send_abandoned_cart_mail(self):
@@ -750,7 +750,7 @@ class SaleOrder(models.Model):
         abandoned_datetime = datetime.utcnow() - relativedelta(hours=self.website_id.cart_abandoned_delay)
 
         sales_after_abandoned_date = self.env['sale.order'].search([
-            ('state', '=', 'sale'),
+            ('state', '=', 'done'),
             ('partner_id', 'in', self.partner_id.ids),
             ('create_date', '>=', abandoned_datetime),
             ('website_id', '=', self.website_id.id),
@@ -783,7 +783,7 @@ class SaleOrder(models.Model):
             lambda abandoned_sale_order:
             abandoned_sale_order.partner_id.email
             and not any(transaction.sudo().state == 'error' for transaction in abandoned_sale_order.transaction_ids)
-            and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.order_line)
+            and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.line_ids)
             and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
         )
 
@@ -793,7 +793,7 @@ class SaleOrder(models.Model):
         :return: Whether the order has deliverable products.
         :rtype: bool
         """
-        return bool(self.order_line.product_id) and not self.only_services
+        return bool(self.line_ids.product_id) and not self.only_services
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()

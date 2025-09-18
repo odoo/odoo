@@ -59,7 +59,7 @@
                         <div t-if="o.state" class="col col-3 mw-100 mb-2" name="div_sched_date">
                             <strong>Shipping Date</strong>
                             <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
-                            <div t-else="" t-field="o.scheduled_date" class="m-0"/>
+                            <div t-else="" t-field="o.date_planned" class="m-0"/>
                         </div>
                         <div t-if="o.user_id" class="col-auto" name="div_operator">
                             <strong>Operator:</strong>

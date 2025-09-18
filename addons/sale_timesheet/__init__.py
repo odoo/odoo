@@ -14,7 +14,7 @@ def _sale_timesheet_post_init(env):
     products = env['product.template'].search([
         ('type', '=', 'service'),
         ('service_tracking', 'in', ['no', 'task_global_project', 'task_in_project', 'project_only']),
-        ('invoice_policy', '=', 'order'),
+        ('invoice_policy', '=', 'ordered'),
         ('service_type', '=', 'manual'),
     ])
 

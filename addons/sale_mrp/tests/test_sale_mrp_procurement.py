@@ -236,7 +236,7 @@ class TestSaleMrpProcurement(TransactionCase):
                 })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'sale')
+        self.assertEqual(so.state, 'done')
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
@@ -324,7 +324,7 @@ class TestSaleMrpProcurement(TransactionCase):
                 })],
         })
         so.action_confirm()
-        self.assertEqual(so.state, 'sale')
+        self.assertEqual(so.state, 'done')
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)

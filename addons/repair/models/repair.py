@@ -281,7 +281,7 @@ class RepairOrder(models.Model):
         for repair in self:
             repair.recycle_location_id = repair.picking_type_id.default_recycle_location_dest_id
 
-    @api.depends('state', 'schedule_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
+    @api.depends('state', 'schedule_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.date_planned_forecast')
     def _compute_parts_availability(self):
         repairs = self.filtered(lambda ro: ro.state in ('confirmed', 'under_repair'))
         repairs.parts_availability_state = 'available'
@@ -299,7 +299,7 @@ class RepairOrder(models.Model):
                 repair.parts_availability = _('Not Available')
                 repair.parts_availability_state = 'late'
                 continue
-            forecast_date = max(repair.move_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+            forecast_date = max(repair.move_ids.filtered('date_planned_forecast').mapped('date_planned_forecast'), default=False)
             if not forecast_date:
                 continue
             repair.parts_availability = _('Exp %s', format_date(self.env, forecast_date))
@@ -411,7 +411,7 @@ class RepairOrder(models.Model):
                 lambda move: move.state in ('confirmed', 'partially_available')
                 and (move._should_bypass_reservation()
                     or move.picking_type_id.reservation_method == 'at_confirm'
-                    or (move.reservation_date and move.reservation_date <= fields.Date.today())))
+                    or (move.date_reservation and move.date_reservation <= fields.Date.today())))
             moves_to_reassign._action_assign()
         return res
 
@@ -510,7 +510,7 @@ class RepairOrder(models.Model):
                 ro_origin_product = repair.sale_order_line_id.product_template_id
                 # TODO: As 'service_policy' only appears with 'sale_project' module, isolate conditions related to this field in a 'sale_project_repair' module if it's worth
                 if ro_origin_product.type == 'service' and (no_service_policy or ro_origin_product.service_policy == 'ordered_prepaid'):
-                    repair.sale_order_line_id.qty_delivered = repair.sale_order_line_id.product_uom_qty
+                    repair.sale_order_line_id.qty_transferred = repair.sale_order_line_id.product_uom_qty
             if not repair.product_id:
                 continue
 
@@ -693,7 +693,7 @@ class RepairOrder(models.Model):
         for repair in self:
             add_moves = repair.move_ids.filtered(lambda m: m.repair_line_type == 'add' and m.sale_line_id)
             if repair.under_warranty:
-                add_moves.sale_line_id.write({'price_unit': 0.0, 'technical_price_unit': 0.0})
+                add_moves.sale_line_id.write({'price_unit': 0.0, 'price_unit_shadow': 0.0})
             else:
                 add_moves.sale_line_id._compute_price_unit()
 

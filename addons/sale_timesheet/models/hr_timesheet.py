@@ -24,10 +24,10 @@ class AccountAnalyticLine(models.Model):
 
     def _domain_so_line(self):
         domain = Domain.AND([
-            self.env['sale.order.line']._sellable_lines_domain(),
+            self.env['sale.order.line']._get_lines_sellable_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
-                ('order_partner_id.commercial_partner_id', '=', unquote('commercial_partner_id')),
+                ('partner_id.commercial_partner_id', '=', unquote('commercial_partner_id')),
             ],
         ])
         return str(domain)
@@ -58,13 +58,13 @@ class AccountAnalyticLine(models.Model):
                 if not timesheet.so_line:
                     invoice_type = 'non_billable' if timesheet.project_id.billing_type != 'manually' else 'billable_manual'
                 elif timesheet.so_line.product_id.type == 'service':
-                    if timesheet.so_line.product_id.invoice_policy == 'delivery':
+                    if timesheet.so_line.product_id.invoice_policy == 'transfered':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
                             invoice_type = 'timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else 'billable_time'
                         else:
                             service_type = timesheet.so_line.product_id.service_type
                             invoice_type = f'billable_{service_type}' if service_type in ['milestones', 'manual'] else 'billable_fixed'
-                    elif timesheet.so_line.product_id.invoice_policy == 'order':
+                    elif timesheet.so_line.product_id.invoice_policy == 'ordered':
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
             else:
@@ -101,7 +101,7 @@ class AccountAnalyticLine(models.Model):
 
     def _check_can_write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
-        if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
+        if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "transfered") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
             if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'date']):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
         return super()._check_can_write(values)
@@ -128,7 +128,7 @@ class AccountAnalyticLine(models.Model):
                 map_entry = self.project_id.sale_line_employee_ids.filtered(
                     lambda map_entry:
                         map_entry.employee_id == (self.employee_id or self.env.user.employee_id)
-                        and map_entry.sale_line_id.order_partner_id.commercial_partner_id == self.task_id.partner_id.commercial_partner_id
+                        and map_entry.sale_line_id.partner_id.commercial_partner_id == self.task_id.partner_id.commercial_partner_id
                 )
                 if map_entry:
                     return map_entry.sale_line_id

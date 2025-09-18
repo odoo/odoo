@@ -12,4 +12,4 @@ class ProductTemplate(models.Model):
     @api.onchange('service_tracking')
     def _onchange_type_event(self):
         if self.service_tracking == 'event':
-            self.invoice_policy = 'order'
+            self.invoice_policy = 'ordered'

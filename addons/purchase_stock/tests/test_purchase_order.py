@@ -54,13 +54,13 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.po = self.env['purchase.order'].create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
-        self.assertEqual(self.po.invoice_status, 'no', 'Purchase: PO invoice_status should be "Not purchased"')
+        self.assertEqual(self.po.invoice_state, 'no', 'Purchase: PO invoice_state should be "Not purchased"')
         self.assertEqual(self.po.order_line.mapped('qty_received'), [0.0, 0.0], 'Purchase: no product should be received"')
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [0.0, 0.0], 'Purchase: no product should be invoiced"')
 
         self.po.button_confirm()
-        self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase"')
-        self.assertEqual(self.po.invoice_status, 'to invoice', 'Purchase: PO invoice_status should be "Waiting Invoices"')
+        self.assertEqual(self.po.state, 'done', 'Purchase: PO state should be "Purchase"')
+        self.assertEqual(self.po.invoice_state, 'to do', 'Purchase: PO invoice_state should be "Waiting Invoices"')
 
         self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.partner_id == self.partner_a), 'Purchase: the partner should be in the list of the product suppliers')
 
@@ -79,7 +79,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_a
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-self.po.id)
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.match'].browse(-self.po.id)
         self.invoice = move_form.save()
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
@@ -96,12 +96,12 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [0.0, 0.0], 'Purchase: no product should be invoiced"')
 
         self.po.button_confirm()
-        self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase"')
-        self.assertEqual(self.po.invoice_status, 'to invoice', 'Purchase: PO invoice_status should be "Waiting Invoices"')
+        self.assertEqual(self.po.state, 'done', 'Purchase: PO state should be "Purchase"')
+        self.assertEqual(self.po.invoice_state, 'to do', 'Purchase: PO invoice_state should be "Waiting Invoices"')
 
         # Confirm the purchase order
         self.po.button_confirm()
-        self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
+        self.assertEqual(self.po.state, 'done', 'Purchase: PO state should be "Purchase')
         self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.move_line_ids.write({'quantity': 5.0})
@@ -113,7 +113,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_a
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-self.po.id)
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.match'].browse(-self.po.id)
         self.invoice = move_form.save()
         self.invoice.action_post()
 
@@ -424,7 +424,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
 
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.state, 'purchase')
+        self.assertEqual(purchase_order.state, 'done')
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
         self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 7)
@@ -539,7 +539,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
         po.button_confirm()
         picking = po.picking_ids
-        self.assertEqual(po.state, "purchase")
+        self.assertEqual(po.state, "done")
         self.assertEqual(picking.move_line_ids.location_dest_id.id, sub_loc_01.id)
         picking.move_line_ids.write({'quantity': 1})
         picking.move_ids.write({'picked': True})
@@ -742,7 +742,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.button_validate()
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.match'].browse(-po.id)
         invoice = move_form.save()
 
         self.assertEqual(invoice.currency_id, currency)

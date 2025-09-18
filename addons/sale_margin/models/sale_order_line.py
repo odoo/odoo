@@ -39,9 +39,9 @@ class SaleOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             # Find alternative calculation when line is added to order from delivery
-            if line.qty_delivered and not line.product_uom_qty:
-                calculated_subtotal = line.price_unit * line.qty_delivered
-                line.margin = calculated_subtotal - (line.purchase_price * line.qty_delivered)
+            if line.qty_transferred and not line.product_uom_qty:
+                calculated_subtotal = line.price_unit * line.qty_transferred
+                line.margin = calculated_subtotal - (line.purchase_price * line.qty_transferred)
                 line.margin_percent = calculated_subtotal and line.margin / calculated_subtotal
             else:
                 line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)

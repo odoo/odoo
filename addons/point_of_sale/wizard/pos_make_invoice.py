@@ -24,6 +24,7 @@ class PosMakeInvoice(models.TransientModel):
 
         is_single_order = len(selected_orders) == 1
 
+
         invalid_refund_orders = selected_orders.filtered(lambda o: o.refunded_order_id.account_move)
         if (not is_single_order) and invalid_refund_orders:
             # Normally it can't be encountered because when paying a refund order,

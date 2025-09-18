@@ -8,7 +8,7 @@ from odoo.tools import format_duration
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
+    qty_transferred_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Time Remaining on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
@@ -49,30 +49,35 @@ class SaleOrderLine(models.Model):
             is_time_product = line.product_uom_id and line.product_uom_id._has_common_reference(self.env.ref('uom.product_uom_hour'))
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
-    @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
+    @api.depends('qty_transferred', 'product_uom_qty', 'analytic_line_ids')
     def _compute_remaining_hours(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
             remaining_hours = None
             if line.remaining_hours_available:
-                qty_left = line.product_uom_qty - line.qty_delivered
+                qty_left = line.product_uom_qty - line.qty_transferred
                 remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
             line.remaining_hours = remaining_hours
 
     @api.depends('product_id')
-    def _compute_qty_delivered_method(self):
+    def _compute_qty_transferred_method(self):
         """ Sale Timesheet module compute delivered qty for product [('type', 'in', ['service']), ('service_type', '=', 'timesheet')] """
-        super()._compute_qty_delivered_method()
+        super()._compute_qty_transferred_method()
         for line in self:
             if not line.is_expense and line.product_id.type == 'service' and line.product_id.service_type == 'timesheet':
-                line.qty_delivered_method = 'timesheet'
+                line.qty_transferred_method = 'timesheet'
 
     @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type')
-    def _compute_qty_delivered(self):
-        super()._compute_qty_delivered()
+    def _compute_qty_transferred(self):
+        super()._compute_qty_transferred()
+        lines_by_timesheet = self.filtered(lambda sol: sol.qty_transferred_method == 'timesheet')
+        domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
+        mapping = lines_by_timesheet.sudo()._get_qty_delivered_by_analytic(domain)
+        for line in lines_by_timesheet:
+            line.qty_transferred = mapping.get(line.id or line._origin.id, 0.0)
 
-    def _prepare_qty_delivered(self):
-        delivered_qties = super()._prepare_qty_delivered()
+    def _prepare_qty_transferred(self):
+        delivered_qties = super()._prepare_qty_transferred()
         lines_by_timesheet = self.filtered(lambda sol: sol.qty_delivered_method == 'timesheet')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
@@ -119,7 +124,7 @@ class SaleOrderLine(models.Model):
         # dict of inverse factors for each relevant UoM found in SO
         factor_per_id = {
             uom.id: uom.factor
-            for uom in self.order_id.order_line.product_uom_id
+            for uom in self.order_id.line_ids.product_uom_id
         }
         # if sold as units, assume hours for time allocation
         factor_per_id[uom_unit.id] = uom_hour.factor
@@ -127,7 +132,7 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         # method only called once per project, so also allocate hours for
         # all lines in SO that will share the same project
-        for line in self.order_id.order_line:
+        for line in self.order_id.line_ids:
             if line.is_service \
                     and line.product_id.service_tracking in ['task_in_project', 'project_only'] \
                     and line.product_id.project_template_id == self.product_id.project_template_id \
@@ -169,16 +174,16 @@ class SaleOrderLine(models.Model):
             domain &= Domain('date', '>=', start_date)
         if end_date:
             domain &= Domain('date', '<=', end_date)
-        mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
+        mapping = lines_by_timesheet.sudo()._get_qty_delivered_by_analytic(domain)
 
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             else:
-                prev_inv_status = line.invoice_status
+                prev_inv_status = line.invoice_state
                 line.qty_to_invoice = qty_to_invoice
-                line.invoice_status = prev_inv_status
+                line.invoice_state = prev_inv_status
 
     def _get_action_per_item(self):
         """ Get action per Sales Order Item

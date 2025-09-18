@@ -1,21 +1,21 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models
 
 
 class SaleReport(models.Model):
     _inherit = "sale.report"
 
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
+    warehouse_id = fields.Many2one(
+        comodel_name="stock.warehouse",
+        string="Warehouse",
+        readonly=True,
+    )
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        res['warehouse_id'] = "s.warehouse_id"
-        return res
+    def _get_select_fields(self):
+        fields = super()._get_select_fields()
+        fields["warehouse_id"] = "o.warehouse_id"
+        return fields
 
-    def _group_by_sale(self):
-        res = super()._group_by_sale()
-        res += """,
-            s.warehouse_id"""
-        return res
+    def _get_group_by_fields(self):
+        fields = super()._get_group_by_fields()
+        fields.append("o.warehouse_id")
+        return fields

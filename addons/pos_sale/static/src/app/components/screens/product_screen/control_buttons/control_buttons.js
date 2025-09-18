@@ -11,7 +11,7 @@ patch(ControlButtons.prototype, {
 
         let domain = [
             ["state", "!=", "cancel"],
-            ["invoice_status", "!=", "invoiced"],
+            ["invoice_state", "!=", "invoiced"],
             ["currency_id", "=", this.pos.currency.id],
             ["amount_unpaid", ">", 0],
         ];

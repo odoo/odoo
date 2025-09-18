@@ -51,7 +51,7 @@ class PurchaseOrder(models.Model):
                 product = product_template._create_product_variant(combination)
                 # TODO replace the check on product_id by a first check on the ptavs and pnavs?
                 # and only create/require variant after no line has been found ???
-                order_lines = self.order_line.filtered(lambda line: (line._origin or line).product_id == product and (line._origin or line).product_no_variant_attribute_value_ids == no_variant_attribute_values)
+                order_lines = self.line_ids.filtered(lambda line: (line._origin or line).product_id == product and (line._origin or line).product_no_variant_attribute_value_ids == no_variant_attribute_values)
 
                 # if product variant already exist in order lines
                 old_qty = sum(order_lines.mapped('product_qty'))
@@ -68,7 +68,7 @@ class PurchaseOrder(models.Model):
                         if self.state in ['draft', 'sent']:
                             # Remove lines if qty was set to 0 in matrix
                             # only if PO state = draft/sent
-                            self.order_line -= order_lines
+                            self.line_ids -= order_lines
                         else:
                             order_lines.update({'product_qty': 0.0})
                     else:
@@ -92,12 +92,12 @@ class PurchaseOrder(models.Model):
                             # For now, an error is raised instead
                             # if len(order_lines) > 1:
                             #     # Remove 1+ lines
-                            #     self.order_line -= order_lines[1:]
+                            #     self.line_ids -= order_lines[1:]
                 else:
                     if not default_po_line_vals:
                         OrderLine = self.env['purchase.order.line']
                         default_po_line_vals = OrderLine.default_get(OrderLine._fields.keys())
-                    last_sequence = self.order_line[-1:].sequence
+                    last_sequence = self.line_ids[-1:].sequence
                     if last_sequence:
                         default_po_line_vals['sequence'] = last_sequence
                     new_lines.append((0, 0, dict(
@@ -109,10 +109,10 @@ class PurchaseOrder(models.Model):
             if product_ids:
                 if new_lines:
                     # Add new PO lines
-                    self.update(dict(order_line=new_lines))
+                    self.update(dict(line_ids=new_lines))
 
                 # Recompute prices for new/modified lines:
-                for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
+                for line in self.line_ids.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
 
     def _get_matrix(self, product_template):
@@ -125,9 +125,9 @@ class PurchaseOrder(models.Model):
         matrix = product_template._get_template_matrix(
             company_id=self.company_id,
             currency_id=self.currency_id)
-        if self.order_line:
+        if self.line_ids:
             lines = matrix['matrix']
-            order_lines = self.order_line.filtered(lambda line: line.product_template_id == product_template)
+            order_lines = self.line_ids.filtered(lambda line: line.product_template_id == product_template)
             for line in lines:
                 for cell in line:
                     if not cell.get('name', False):
@@ -142,11 +142,11 @@ class PurchaseOrder(models.Model):
         """Reporting method."""
         matrixes = []
         if self.report_grids:
-            grid_configured_templates = self.order_line.filtered('is_configurable_product').product_template_id
+            grid_configured_templates = self.line_ids.filtered('is_configurable_product').product_template_id
             # TODO is configurable product and product_variant_count > 1
             # configurable products are only configured through the matrix in purchase, so no need to check product_add_mode.
             for template in grid_configured_templates:
-                if len(self.order_line.filtered(lambda line: line.product_template_id == template)) > 1:
+                if len(self.line_ids.filtered(lambda line: line.product_template_id == template)) > 1:
                     matrix = self._get_matrix(template)
                     matrix_data = []
                     for row in matrix['matrix']:

@@ -28,10 +28,10 @@ class TestSaleService(TestCommonSaleTimesheet):
             'product_uom_qty': 50,
         })
 
-        self.assertTrue(sale_order_line.product_updatable)
+        self.assertFalse(sale_order_line.product_readonly)
         self.sale_order.action_confirm()
-        self.assertFalse(sale_order_line.product_updatable)
-        self.assertEqual(self.sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
+        self.assertTrue(sale_order_line.product_readonly)
+        self.assertEqual(self.sale_order.invoice_state, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
         # check task creation
         project = self.project_global
@@ -47,11 +47,11 @@ class TestSaleService(TestCommonSaleTimesheet):
             'unit_amount': 50,
             'employee_id': self.employee_manager.id,
         })
-        self.assertEqual(self.sale_order.invoice_status, 'to invoice', 'Sale Service: there should be sale_ordermething to invoice after registering timesheets')
+        self.assertEqual(self.sale_order.invoice_state, 'to invoice', 'Sale Service: there should be sale_ordermething to invoice after registering timesheets')
         self.sale_order._create_invoices()
 
         self.assertTrue(sale_order_line.product_uom_qty == sale_order_line.qty_delivered == sale_order_line.qty_invoiced, 'Sale Service: line should be invoiced completely')
-        self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Service: SO should be invoiced')
+        self.assertEqual(self.sale_order.invoice_state, 'invoiced', 'Sale Service: SO should be invoiced')
         self.assertEqual(self.sale_order.tasks_count, 1, "A task should have been created on SO confirmation.")
 
         # Add a line on the confirmed SO, and it should generate a new task directly
@@ -60,7 +60,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
@@ -114,7 +114,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
         })
         self.sale_order._create_invoices()
-        self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.assertEqual(self.sale_order.invoice_state, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_state of the so')
 
     def test_task_so_line_assignation(self):
         # create SO line and confirm it
@@ -279,7 +279,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'standard_price': 17,
             'list_price': 34,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI4',
             'service_type': 'timesheet',
@@ -839,7 +839,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             }])
 
             invoice = order._create_invoices()
-            hours_delivered = sol._get_delivered_quantity_by_analytic([])[sol.id]
+            hours_delivered = sol._get_qty_delivered_by_analytic([])[sol.id]
 
             self.assertEqual(
                 order.timesheet_total_duration,

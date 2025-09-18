@@ -792,7 +792,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _get_replenishment_receipt(self, doc_in, components):
         if doc_in._name == 'stock.picking':
-            return self._format_receipt_date('expected', doc_in.scheduled_date)
+            return self._format_receipt_date('expected', doc_in.date_planned)
 
         if doc_in._name == 'mrp.production':
             max_date_start = doc_in.date_start

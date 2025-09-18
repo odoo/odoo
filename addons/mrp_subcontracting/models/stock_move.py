@@ -185,12 +185,12 @@ class StockMove(models.Model):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
 
     def _prepare_move_split_vals(self, qty):
-        vals = super(StockMove, self)._prepare_move_split_vals(qty)
+        vals = super()._prepare_move_split_vals(qty)
         vals['location_id'] = self.location_id.id
         return vals
 
-    def _prepare_procurement_values(self):
-        res = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        res = super()._prepare_procurement_vals()
         if self.raw_material_production_id.subcontractor_id:
             res['warehouse_id'] = self.picking_type_id.warehouse_id
         return res

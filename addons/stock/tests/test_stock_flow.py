@@ -1979,9 +1979,9 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(outgoing_picking.company_id, company_3)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_3)
 
-    def test_picking_scheduled_date_readonlyness(self):
+    def test_picking_date_planned_readonlyness(self):
         """ As it seems we keep breaking this thing over and over this small
-        test ensure the scheduled_date is writable on a picking in state 'draft' or 'confirmed'
+        test ensure the date_planned is writable on a picking in state 'draft' or 'confirmed'
         """
         partner = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
@@ -1996,18 +1996,18 @@ class TestStockFlow(TestStockCommon):
         with f.move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 5
-        f.scheduled_date = fields.Datetime.now()
+        f.date_planned = fields.Datetime.now()
         picking = f.save()
 
         f = Form(picking, view='stock.view_picking_form')
-        f.scheduled_date = fields.Datetime.now()
+        f.date_planned = fields.Datetime.now()
         picking = f.save()
 
         self.assertEqual(f.state, 'draft')
         picking.action_confirm()
 
         f = Form(picking, view='stock.view_picking_form')
-        f.scheduled_date = fields.Datetime.now()
+        f.date_planned = fields.Datetime.now()
         picking = f.save()
 
         self.assertEqual(f.state, 'confirmed')
@@ -2181,7 +2181,7 @@ class TestStockFlow(TestStockCommon):
             self.MoveObj.create({
                 'sequence': sequence,
                 'date': fields.Datetime.add(fields.Datetime.now(), second=delay),
-                'reservation_date': fields.Date.today(),
+                'date_reservation': fields.Date.today(),
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
                 'product_uom': self.productA.uom_id.id,
@@ -2458,7 +2458,7 @@ class TestStockFlow(TestStockCommon):
             'product_uom': self.productA.uom_id.id,
             'product_uom_qty': 1,
             'picking_type_id': self.picking_type_out.id,
-            'reservation_date': fields.Date.today(),
+            'date_reservation': fields.Date.today(),
         })
         out_move._action_confirm()
 

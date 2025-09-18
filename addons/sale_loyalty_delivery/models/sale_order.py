@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         res = super()._compute_amount_total_without_delivery()
         return res - sum(
-            self.order_line.filtered(
+            self.line_ids.filtered(
                 lambda l: l.coupon_id and l.coupon_id.program_type in ['ewallet', 'gift_card']
             ).mapped('price_unit')
         )
@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
 
     def _get_no_effect_on_threshold_lines(self):
         res = super()._get_no_effect_on_threshold_lines()
-        return res + self.order_line.filtered(
+        return res + self.line_ids.filtered(
             lambda line: line.is_delivery or line.reward_id.reward_type == 'shipping')
 
     def _get_not_rewarded_order_lines(self):
@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
         return order_line.filtered(lambda line: not line.is_delivery)
 
     def _get_reward_values_free_shipping(self, reward, coupon, **kwargs):
-        delivery_line = self.order_line.filtered(lambda l: l.is_delivery)[:1]
+        delivery_line = self.line_ids.filtered(lambda l: l.is_delivery)[:1]
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         taxes = self.fiscal_position_id.map_tax(taxes)
         max_discount = reward.discount_max_amount or float('inf')
@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'order_id': self.id,
             'is_reward_line': True,
-            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=0) + 1,
+            'sequence': max(self.line_ids.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=0) + 1,
             'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in taxes],
         }]
 
@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
 
     def _get_claimable_rewards(self, forced_coupons=None):
         res = super()._get_claimable_rewards(forced_coupons)
-        if any(reward.reward_type == 'shipping' for reward in self.order_line.reward_id):
+        if any(reward.reward_type == 'shipping' for reward in self.line_ids.reward_id):
             # Allow only one reward of type shipping at the same time
             filtered_res = {}
             for coupon, rewards in res.items():

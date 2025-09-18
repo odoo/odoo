@@ -88,11 +88,11 @@ class SaleOrderLine(models.Model):
     def _compute_name(self):
         """Override to add the compute dependency.
 
-        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
+        The custom name logic can be found below in _get_line_multiline_description_sale.
         """
         super()._compute_name()
 
-    def _get_sale_order_line_multiline_description_sale(self):
+    def _get_line_multiline_description_sale(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
                 So in that case we use the description computed from the ticket, instead of the description computed from the product.
@@ -101,9 +101,9 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id:
             return self.event_ticket_id._get_ticket_multiline_description() + \
                 ('\n%s' % self.event_slot_id.display_name if self.event_slot_id else '') + \
-                self._get_sale_order_line_multiline_description_variants()
+                self._get_line_multiline_description_variants()
         else:
-            return super()._get_sale_order_line_multiline_description_sale()
+            return super()._get_line_multiline_description_sale()
 
     def _use_template_name(self):
         """ We do not want configured description to get rewritten by template default"""
@@ -111,7 +111,7 @@ class SaleOrderLine(models.Model):
             return False
         return super()._use_template_name()
 
-    def _get_display_price(self):
+    def _get_price_display(self):
         if self.event_ticket_id and self.event_id:
             event_ticket = self.event_ticket_id
             company = event_ticket.company_id or self.env.company
@@ -120,4 +120,4 @@ class SaleOrderLine(models.Model):
             else:
                 price = event_ticket.price
             return self._convert_to_sol_currency(price, company.currency_id)
-        return super()._get_display_price()
+        return super()._get_price_display()

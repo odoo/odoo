@@ -119,7 +119,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
         self.assertEqual(po.order_line[0].product_qty, 21)
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
 
     def test_sales_user_can_access_forecast_report(self):
         # `get_report_values` calls `_get_source_document`, which can be a PO, SO, MO, repair etc.

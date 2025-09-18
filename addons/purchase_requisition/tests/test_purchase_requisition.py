@@ -104,7 +104,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         po = po_form.save()
         po.button_confirm()
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should still be copied to purchase order')
-        self.assertEqual(po.state, "purchase")
+        self.assertEqual(po.state, "done")
 
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
@@ -213,7 +213,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(len(alt_po_2.alternative_po_ids), 3, "All alternative POs should be auto-linked to each other")
 
         # third flow: confirm one of the POs when alt POs are a mix of confirmed + RFQs
-        alt_po_2.write({'state': 'purchase'})
+        alt_po_2.write({'state': 'done'})
         action = orig_po.button_confirm()
         warning_wiz = Form(self.env['purchase.requisition.alternative.warning'].with_context(**action['context']))
         warning_wiz = warning_wiz.save()
@@ -221,7 +221,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
                          "POs not in a RFQ status should not be listed as possible to cancel")
         warning_wiz.action_cancel_alternatives()
         self.assertEqual(alt_po_1.state, 'cancel', "Alternative PO should have been cancelled")
-        self.assertEqual(orig_po.state, 'purchase', "Original PO should have been confirmed")
+        self.assertEqual(orig_po.state, 'done', "Original PO should have been confirmed")
 
     def test_08_purchases_multi_linkages(self):
         """Directly link POs to each other as 'Alternatives': check linking/unlinking
@@ -652,7 +652,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         po = po_form.save()
         self.assertEqual(po.requisition_id, requisition_2)
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
         (self.bo_requisition.line_ids | requisition_2.line_ids)._compute_ordered_qty()
         self.assertEqual(self.bo_requisition.line_ids.qty_ordered, 0)
         self.assertEqual(requisition_2.line_ids.qty_ordered, 10)

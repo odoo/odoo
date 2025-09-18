@@ -27,7 +27,7 @@ class SaleOrderLine(models.Model):
                         # If a specific description was set on the template, use it
                         # Otherwise the description is handled by the super call
                         lang = line.order_id.partner_id.lang
-                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_sale_order_line_multiline_description_variants()
+                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_line_multiline_description_variants()
                         break
 
     def _use_template_name(self):

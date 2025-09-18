@@ -16,7 +16,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'state': 'purchase',
+            'state': 'done',
             'order_line': [fields.Command.create({
                 'product_id': self.product_1.id,
             })],

@@ -109,7 +109,7 @@ class DeliveryCarrier(models.Model):
         packages = []
 
         total_cost = 0
-        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
+        for line in order.line_ids.filtered(lambda line: not line.is_delivery and not line.display_type):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
 
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
@@ -207,14 +207,14 @@ class DeliveryCarrier(models.Model):
     def _get_commodities_from_order(self, order):
         commodities = []
 
-        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type and line.product_id.type == 'consu'):
+        for line in order.line_ids.filtered(lambda line: not line.is_delivery and not line.display_type and line.product_id.type == 'consu'):
             unit_quantity = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
             commodities.append(DeliveryCommodity(
                 line.product_id,
                 amount=rounded_qty,
-                monetary_value=line.price_reduce_taxinc,
+                monetary_value=line.price_unit_discounted_taxinc,
                 country_of_origin=country_of_origin,
             ))
 

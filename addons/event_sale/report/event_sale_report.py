@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
-from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
+from odoo.addons.sale import const
 
 
 class EventSaleReport(models.Model):
@@ -34,7 +34,7 @@ class EventSaleReport(models.Model):
     sale_order_date = fields.Datetime('Order Date', readonly=True)
     sale_order_partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     sale_order_state = fields.Selection(
-        selection=SALE_ORDER_STATE, string='Sale Order Status', readonly=True)
+        selection=const.ORDER_STATE, string='Sale Order Status', readonly=True)
     sale_order_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     sale_order_line_id = fields.Many2one('sale.order.line', readonly=True)
     sale_price = fields.Float('Revenues', readonly=True)

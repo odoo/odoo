@@ -56,7 +56,7 @@ class PosOrder(models.Model):
         pos_orders = self.browse([o['id'] for o in data["pos.order"]])
         for pos_order in pos_orders:
             # TODO: the way to retrieve the sale order in not consistent... is it a bad code or intended?
-            used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids
+            used_pos_lines = pos_order.lines.sale_order_origin_id.line_ids.pos_order_line_ids
             downpayment_pos_order_lines = pos_order.lines.filtered(lambda line: (
                 line not in used_pos_lines
                 and line.product_id == pos_order.config_id.down_payment_product_id
@@ -85,9 +85,9 @@ class PosOrder(models.Model):
                     sale_order.action_confirm()
 
             # update the demand qty in the stock moves related to the sale order line
-            # flush the qty_delivered to make sure the updated qty_delivered is used when
+            # flush the qty_transferred to make sure the updated qty_transferred is used when
             # updating the demand value
-            so_lines.flush_recordset(['qty_delivered'])
+            so_lines.flush_recordset(['qty_transferred'])
             # track the waiting pickings
             waiting_picking_ids = set()
             for so_line in so_lines:
@@ -104,8 +104,8 @@ class PosOrder(models.Model):
                                         so_line.pos_order_line_ids if so_line.product_id.type != 'service'), 0)
                         return 0
 
-                    qty_delivered = max(so_line.qty_delivered, get_expected_qty_to_ship_later())
-                    new_qty = so_line.product_uom_qty - qty_delivered
+                    qty_transferred = max(so_line.qty_transferred, get_expected_qty_to_ship_later())
+                    new_qty = so_line.product_uom_qty - qty_transferred
                     if stock_move.product_uom.compare(new_qty, 0) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
@@ -183,13 +183,13 @@ class PosOrderLine(models.Model):
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order", index='btree_not_null')
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line", index='btree_not_null')
     down_payment_details = fields.Text(string="Down Payment Details")
-    qty_delivered = fields.Float(
+    qty_transferred = fields.Float(
         string="Delivery Quantity",
-        compute="_compute_qty_delivered",
+        compute="_compute_qty_transferred",
         store=True, readonly=False, copy=False)
 
     @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
-    def _compute_qty_delivered(self):
+    def _compute_qty_transferred(self):
         product_qty_left_to_assign = {}
         for order_line in self:
             if order_line.order_id.state in ['paid', 'done']:
@@ -203,17 +203,17 @@ class PosOrderLine(models.Model):
                     )
                     qty_left = product_qty_left_to_assign.get(order_line.product_id.id, False)
                     if (qty_left):
-                        order_line.qty_delivered = min(order_line.qty, qty_left)
-                        product_qty_left_to_assign[order_line.product_id.id] -= order_line.qty_delivered
+                        order_line.qty_transferred = min(order_line.qty, qty_left)
+                        product_qty_left_to_assign[order_line.product_id.id] -= order_line.qty_transferred
                     else:
-                        order_line.qty_delivered = min(order_line.qty, sum(moves.mapped('quantity')))
-                        product_qty_left_to_assign[order_line.product_id.id] = sum(moves.mapped('quantity')) - order_line.qty_delivered
+                        order_line.qty_transferred = min(order_line.qty, sum(moves.mapped('quantity')))
+                        product_qty_left_to_assign[order_line.product_id.id] = sum(moves.mapped('quantity')) - order_line.qty_transferred
 
                 elif outgoing_pickings:
                     # If the order is not delivered later, and in a "paid", "done" or "invoiced" state, it fully delivered
-                    order_line.qty_delivered = order_line.qty
+                    order_line.qty_transferred = order_line.qty
                 else:
-                    order_line.qty_delivered = 0
+                    order_line.qty_transferred = 0
 
     @api.model
     def _load_pos_data_fields(self, config):

@@ -85,7 +85,7 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='button_cancel']" position="after">
+                <xpath expr="//button[@name='action_cancel']" position="after">
                     <field name="edi_show_cancel_button" invisible="1"/>
                     <field name="edi_show_abandon_cancel_button" invisible="1"/>
                     <field name="edi_show_force_cancel_button" invisible="1"/>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_automation_runtime_line_tree" model="ir.ui.view">
+        <field name="name">automation.runtime.line.tree</field>
+        <field name="model">automation.runtime.line</field>
+        <field name="arch" type="xml">
+            <list string="Workflow Steps">
+                <field name="sequence" widget="handle" />
+                <field name="runtime_id" />
+                <field name="name" />
+                <field name="action_id" />
+                <field name="state" widget="badge"
+                    decoration-info="state == 'waiting'"
+                    decoration-success="state == 'ready'"
+                    decoration-primary="state == 'in_progress'"
+                    decoration-muted="state == 'done'"
+                    decoration-danger="state == 'error'" />
+                <field name="created_record_ref" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_automation_runtime_line_form" model="ir.ui.view">
+        <field name="name">automation.runtime.line.form</field>
+        <field name="model">automation.runtime.line</field>
+        <field name="arch" type="xml">
+            <form string="Workflow Step">
+                <header>
+                    <button
+                        name="action_mark_ready"
+                        string="Mark Ready"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'waiting'"
+                    />
+                    <button
+                        name="action_execute"
+                        string="Execute"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'in_progress'"
+                    />
+                    <button
+                        name="action_mark_done"
+                        string="Mark Done"
+                        type="object"
+                        class="btn-success"
+                        invisible="state != 'in_progress'"
+                    />
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        type="object"
+                        invisible="state in ['done', 'cancel']"
+                    />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="waiting,ready,in_progress,done"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_document"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not created_record_ref">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">View Document</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="runtime_id" />
+                            <field name="action_id" />
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                        <group>
+                            <field name="is_ready" />
+                            <field name="created_record_ref" />
+                        </group>
+                    </group>
+                    <group string="Dependencies"
+                        invisible="not predecessor_ids and not successor_ids">
+                        <group>
+                            <field name="predecessor_ids" widget="many2many_tags" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="successor_ids" widget="many2many_tags" readonly="1" />
+                        </group>
+                    </group>
+                    <group string="Error Details" invisible="state != 'error'">
+                        <field name="error_message" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

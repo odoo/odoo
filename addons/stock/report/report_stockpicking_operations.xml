@@ -80,9 +80,9 @@
                                         <strong>Done Date:</strong>
                                         <p t-field="o.date_done" t-options='{"widget": "date"}'>2023-09-24</p>
                                     </t>
-                                    <t t-elif="o.state != 'done' and o.scheduled_date">
+                                    <t t-elif="o.state != 'done' and o.date_planned">
                                         <strong>Scheduled Date:</strong>
-                                        <p t-field="o.scheduled_date" t-options='{"widget": "date"}'>2023-09-24</p>
+                                        <p t-field="o.date_planned" t-options='{"widget": "date"}'>2023-09-24</p>
                                     </t>
                                 </div>
                                 <div name="div_warn" t-if="o.picking_warning_text">

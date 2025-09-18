@@ -8,7 +8,7 @@ class SaleReport(models.Model):
 
     project_id = fields.Many2one(comodel_name='project.project', readonly=True)
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        res['project_id'] = 's.project_id'
-        return res
+    def _get_select_fields(self):
+        fields = super()._get_select_fields()
+        fields['project_id'] = 'o.project_id'
+        return fields

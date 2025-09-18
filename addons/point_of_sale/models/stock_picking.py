@@ -165,7 +165,7 @@ class StockMove(models.Model):
         return vals
 
     def _key_assign_picking(self):
-        keys = super(StockMove, self)._key_assign_picking()
+        keys = super()._key_assign_picking()
         return keys + (self.reference_ids.pos_order_ids,)
 
     @api.model

@@ -29,7 +29,7 @@ class SaleOrderLine(models.Model):
         if kwargs.get("check_is_expense", True):
             domain.append(('is_expense', '=', False))
         if kwargs.get("check_state", True):
-            domain.append(('state', '=', 'sale'))
+            domain.append(('state', '=', 'done'))
         return domain
 
     @api.depends('product_id.type')

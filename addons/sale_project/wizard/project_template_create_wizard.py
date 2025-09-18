@@ -49,13 +49,13 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             project = self._create_project_from_template()
         else:
             sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
-            so_line = sale_order.order_line[:1]
+            so_line = sale_order.line_ids[:1]
             product = so_line.product_id
             values = {
                 'partner_id': sale_order.partner_id.id,
                 'company_id': sale_order.company_id.id,
             }
-            if len(sale_order.order_line) == 1:
+            if len(sale_order.line_ids) == 1:
                 values['name'] = (
                     f"{sale_order.name} - [{product.default_code}] {product.name}"
                     if product.default_code

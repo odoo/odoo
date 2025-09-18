@@ -65,9 +65,9 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         #     elif self.purchase_vendor_bill_id.purchase_order_id:
         #         self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
         #     self.purchase_vendor_bill_id = False
-        # purchase_vendor_bill_id = fields.Many2one('purchase.bill.union'
+        # purchase_vendor_bill_id = fields.Many2one('purchase.bill.match'
         # class PurchaseBillUnion(models.Model):
-        #     _name = 'purchase.bill.union'
+        #     _name = 'purchase.bill.match'
         #     ...
         #     def init(self):
         #         self.env.cr.execute("""
@@ -79,7 +79,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         #                 ...
         #             )""")
         #     ...
-        f.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        f.purchase_vendor_bill_id = self.env['purchase.bill.match'].browse(-po.id)
         invoice = f.save()
         invoice.action_post()
         po.flush_model()
@@ -91,7 +91,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         ])
 
         # check that report will convert dozen to unit or not
-        self.assertEqual(res_product1.qty_ordered, 12.0, 'UoM conversion is not working')
+        self.assertEqual(res_product1.product_uom_qty, 12.0, 'UoM conversion is not working')
         # report should show in company currency (amount/rate) = (100/2)
         self.assertEqual(res_product1.price_total, 50.0, 'Currency conversion is not working')
 
@@ -101,7 +101,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             ('company_id', '=', self.company_data['company'].id),
         ])
 
-        self.assertEqual(res_product2.qty_ordered, 1.0, 'No conversion needed since product_b is already a dozen')
+        self.assertEqual(res_product2.product_uom_qty, 1.0, 'No conversion needed since product_b is already a dozen')
         # report should show in company currency (amount/rate) = (200/2)
         self.assertEqual(res_product2.price_total, 100.0, 'Currency conversion is not working')
 
@@ -197,7 +197,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             PO:
                 - 10 unit of product A -> price $50
                 - 1 unit of product A -> price $10
-            Total qty_ordered: 11
+            Total product_uom_qty: 11
             avergae price: 46.36 = ((10 * 50) + (10 * 1)) / 11
         """
         po = self.env['purchase.order'].create({
@@ -220,9 +220,9 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         report = self.env['purchase.report'].formatted_read_group(
             [('product_id', '=', self.product_a.id)],
             ['product_id'],
-            ['qty_ordered:sum', 'price_average:avg'],
+            ['product_uom_qty:sum', 'price_average:avg'],
         )
-        self.assertEqual(report[0]['qty_ordered:sum'], 11)
+        self.assertEqual(report[0]['product_uom_qty:sum'], 11)
         self.assertEqual(round(report[0]['price_average:avg'], 2), 46.36)
 
     def test_purchase_report_multi_uom(self):

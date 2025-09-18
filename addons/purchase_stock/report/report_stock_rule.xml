@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <template id="purchase_report_stock_rule" inherit_id="stock.report_stock_rule">
         <xpath expr="//div[hasclass('o_report_stock_rule_rule')]/t" position="before">
             <t t-if="rule[0].action == 'buy'">
@@ -29,4 +30,5 @@
             </div>
         </xpath>
     </template>
+
 </odoo>

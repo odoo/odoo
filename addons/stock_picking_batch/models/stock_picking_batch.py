@@ -51,8 +51,8 @@ class StockPickingBatch(models.Model):
         'stock.warehouse', related='picking_type_id.warehouse_id')
     picking_type_code = fields.Selection(
         related='picking_type_id.code')
-    scheduled_date = fields.Datetime(
-        'Scheduled Date', copy=False, store=True, readonly=False, compute="_compute_scheduled_date",
+    date_planned = fields.Datetime(
+        'Scheduled Date', copy=False, store=True, readonly=False, compute="_compute_date_planned",
         help="""Scheduled date for the transfers to be processed.
               - If manually set then scheduled date for all transfers in batch will automatically update to this date.
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
@@ -123,7 +123,7 @@ class StockPickingBatch(models.Model):
     def _compute_move_ids(self):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_ids
-            batch.show_check_availability = any(m.state not in ['assigned', 'cancel', 'done'] for m in batch.move_ids)
+            batch.show_check_availability = any(m.state not in ['assigned', 'done', 'cancel'] for m in batch.move_ids)
 
     @api.depends('picking_ids', 'picking_ids.move_line_ids')
     def _compute_move_line_ids(self):
@@ -143,7 +143,7 @@ class StockPickingBatch(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
-        batchs = self.filtered(lambda batch: batch.state not in ['cancel', 'done'])
+        batchs = self.filtered(lambda batch: batch.state not in ['done', 'cancel'])
         for batch in batchs:
             if not batch.picking_ids:
                 continue
@@ -151,18 +151,18 @@ class StockPickingBatch(models.Model):
             if all(picking.state == 'cancel' for picking in batch.picking_ids):
                 batch.state = 'cancel'
             # Batch picking is marked as done if all its not canceled transfers are done.
-            elif all(picking.state in ['cancel', 'done'] for picking in batch.picking_ids):
+            elif all(picking.state in ['done', 'cancel'] for picking in batch.picking_ids):
                 batch.state = 'done'
 
-    @api.depends('picking_ids', 'picking_ids.scheduled_date')
-    def _compute_scheduled_date(self):
+    @api.depends('picking_ids', 'picking_ids.date_planned')
+    def _compute_date_planned(self):
         for rec in self:
-            rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+            rec.date_planned = min(rec.picking_ids.filtered('date_planned').mapped('date_planned'), default=False)
 
-    @api.onchange('scheduled_date')
-    def onchange_scheduled_date(self):
-        if self.scheduled_date:
-            self.picking_ids.scheduled_date = self.scheduled_date
+    @api.onchange('date_planned')
+    def onchange_date_planned(self):
+        if self.date_planned:
+            self.picking_ids.date_planned = self.date_planned
 
     def _set_move_line_ids(self):
         new_move_lines = self[0].move_line_ids
@@ -246,7 +246,7 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         self._check_company()
         # Empty 'assigned' or 'waiting for another operation' pickings will be removed from the batch when it is validated.
-        pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
+        pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('done', 'cancel'))
         empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: (p.state in ('waiting', 'confirmed') and has_no_quantity(p)) or (p.state == 'assigned' and is_empty(p)))
         pickings = pickings - empty_waiting_pickings
 
@@ -339,7 +339,7 @@ class StockPickingBatch(models.Model):
 
         target_batch = self[:1]
         other_batches = self[1:]
-        earliest_batch = self.filtered(lambda b: b.scheduled_date).sorted(key=lambda b: b.scheduled_date)[0]
+        earliest_batch = self.filtered(lambda b: b.date_planned).sorted(key=lambda b: b.date_planned)[0]
         merged_batch_vals = earliest_batch._get_merged_batch_vals()
         target_batch.move_line_ids |= other_batches.move_line_ids
         target_batch.picking_ids |= other_batches.picking_ids
@@ -474,5 +474,5 @@ class StockPickingBatch(models.Model):
         return {
             'user_id': self.user_id.id,
             'description': self.description,
-            'scheduled_date': self.scheduled_date,
+            'date_planned': self.date_planned,
         }

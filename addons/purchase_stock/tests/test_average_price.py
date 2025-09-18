@@ -51,7 +51,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         purchase_order_1.button_confirm()
 
         # Check the "Approved" status of purchase order 1
-        self.assertEqual(purchase_order_1.state, 'purchase', "Wrong state of purchase order!")
+        self.assertEqual(purchase_order_1.state, 'done', "Wrong state of purchase order!")
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]

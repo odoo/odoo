@@ -6,7 +6,7 @@ from odoo import api, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    @api.depends('analytic_line_ids.amount', 'qty_delivered_method')
+    @api.depends('analytic_line_ids.amount', 'qty_transferred_method')
     def _compute_purchase_price(self):
         # filter out the sale.order.lines called by this override of _compute_purchase_price for which
         # we don't want the purchase price to be recomputed. Without filtring out the sale.order.lines
@@ -14,10 +14,10 @@ class SaleOrderLine(models.Model):
         service_non_timesheet_sols = self.filtered(
             lambda sol: not sol.is_expense and sol.is_service and
             sol.product_id.service_policy == 'ordered_prepaid' and
-            sol.state == 'sale' and sol.purchase_price != 0
+            sol.state == 'done' and sol.purchase_price != 0
         )
         timesheet_sols = self.filtered(
-            lambda sol: sol.qty_delivered_method == 'timesheet' and not sol.product_id.standard_price
+            lambda sol: sol.qty_transferred_method == 'timesheet' and not sol.product_id.standard_price
         )
         super(SaleOrderLine, self - timesheet_sols - service_non_timesheet_sols)._compute_purchase_price()
         if timesheet_sols:

@@ -1,13 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.http import request, route, Controller
+from odoo.http import Controller, request, route
 
 
 class ProductCatalogController(Controller):
 
-    @route('/product/catalog/order_lines_info', auth='user', type='jsonrpc', readonly=True)
-    def product_catalog_get_order_lines_info(self, res_model, order_id, product_ids, **kwargs):
-        """ Returns products information to be shown in the catalog.
+    @route(
+        "/product/catalog/order_lines_info", auth="user", type="jsonrpc", readonly=True
+    )
+    def product_catalog_get_order_lines_info(
+        self, res_model, order_id, product_ids, **kwargs
+    ):
+        """Returns products information to be shown in the catalog.
 
         :param string res_model: The order model.
         :param int order_id: The order id.
@@ -27,13 +31,18 @@ class ProductCatalogController(Controller):
             }
         """
         order = request.env[res_model].browse(order_id)
-        return order.with_company(order.company_id)._get_product_catalog_order_line_info(
-            product_ids, **kwargs,
+        return order.with_company(
+            order.company_id
+        )._get_product_catalog_order_line_info(
+            product_ids,
+            **kwargs,
         )
 
-    @route('/product/catalog/update_order_line_info', auth='user', type='jsonrpc')
-    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, **kwargs):
-        """ Update order line information on a given order for a given product.
+    @route("/product/catalog/update_order_line_info", auth="user", type="jsonrpc")
+    def product_catalog_update_order_line_info(
+        self, res_model, order_id, product_id, quantity=0, **kwargs
+    ):
+        """Update order line information on a given order for a given product.
 
         :param string res_model: The order model.
         :param int order_id: The order id.
@@ -44,5 +53,7 @@ class ProductCatalogController(Controller):
         """
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._update_order_line_info(
-            product_id, quantity, **kwargs,
+            product_id,
+            quantity,
+            **kwargs,
         )

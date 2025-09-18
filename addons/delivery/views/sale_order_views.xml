@@ -15,7 +15,7 @@
                     string="Add shipping"
                     name="action_open_delivery_wizard"
                     type="object"
-                    invisible="is_all_service or not order_line or delivery_set"/>
+                    invisible="is_all_service or not line_ids or delivery_set"/>
                 <button
                     string="Update shipping cost"
                     name="action_open_delivery_wizard"
@@ -30,10 +30,10 @@
                     type="object"
                     invisible="is_all_service or recompute_delivery_price or not delivery_set"/>
             </div>
-            <xpath expr="//field[@name='order_line']/list" position="attributes">
+            <xpath expr="//field[@name='line_ids']/list" position="attributes">
                 <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
             </xpath>
-            <label for="commitment_date" position="before">
+            <label for="date_commitment" position="before">
                 <field name="shipping_weight" readonly="True"/>
             </label>
         </field>

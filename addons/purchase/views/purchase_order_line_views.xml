@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_line_search" model="ir.ui.view">
+        <field name="name">purchase.order.line.search</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Purchase Order">
+                <field name="order_id" />
+                <field name="product_id" />
+                <field name="partner_id" string="Vendor" />
+                <filter name="hide_cancelled" string="Hide cancelled lines"
+                    domain="[('state', '!=', 'cancel')]" />
+                <filter string="Status" name="purchase_state" domain="[('state', '=', 'done')]" />
+                <separator />
+                <filter name="filter_date_order" date="date_order" default_period="month" />
+                <filter name="order_date_last_year" string="Order Date: Last 365 Days"
+                    domain="[
+                            ('date_order', '>', 'today -1y')
+                        ]"
+                    invisible="1" />
+                <group>
+                    <filter name="groupby_supplier" string="Vendor" domain="[]"
+                        context="{'group_by' : 'partner_id'}" />
+                    <filter name="groupby_product" string="Product" domain="[]"
+                        context="{'group_by' : 'product_id'}" />
+                    <filter string="Order Reference" name="order_reference" domain="[]"
+                        context="{'group_by' :'order_id'}" />
+                    <separator />
+                    <filter string="Order Date" name="group_by_date_order"
+                        context="{'group_by': 'date_order'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_tree" model="ir.ui.view">
+        <field name="name">purchase.order.line.list</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Order Lines" create="false">
+                <field name="order_id" />
+                <field name="name" />
+                <field name="partner_id" string="Vendor" />
+                <field name="product_id" />
+                <field name="price_unit" />
+                <field name="product_qty" />
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" />
+                <field name="price_subtotal" widget="monetary" />
+                <field name="currency_id" column_invisible="True" />
+                <field name="date_planned" />
+            </list>
+        </field>
+    </record>
+
+    <record id="purchase_history_tree" model="ir.ui.view">
+        <field name="name">purchase.history.list</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <list create="false" default_order="order_id asc"
+                decoration-info="order_id == context.get('active_id')"
+                action="action_open_order" type="object">
+                <field name="currency_id" column_invisible="True" />
+                <field name="order_id" widget="many2one" />
+                <field name="date_confirmed" />
+                <field name="partner_id" string="Vendor" />
+                <field name="company_id" optional="show" groups="base.group_multi_company" />
+                <field name="product_uom_qty" string="Quantity" />
+                <field name="price_unit_product_uom" widget="monetary" string="Unit Price"/>                <field name="price_subtotal" widget="monetary" string="Total Untaxed" />
+                <field name="state" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="purchase_history_pivot" model="ir.ui.view">
+        <field name="name">purchase.history.pivot</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="price_total" string="Total purchased amount" type="measure" />
+                <field name="product_uom_qty" string="Total Qty purchased" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="purchase_history_graph" model="ir.ui.view">
+        <field name="name">purchase.history.graph</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <graph type="line">
+                <field name="date_order" interval="month" />
+                <field name="product_uom_qty" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_purchase_history" model="ir.actions.act_window">
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="view_id" ref="purchase.purchase_history_tree" />
+        <field name="context">{
+            'search_default_order_date_last_year': 1,
+            'search_default_groupby_product': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order were made for this product yet!
+            </p>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_form2" model="ir.ui.view">
+        <field name="name">purchase.order.line.form2</field>
+        <field name="model">purchase.order.line</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <form string="Purchase Order Line" create="false">
+                <sheet>
+                    <label for="order_id" />
+                    <h1>
+                        <field name="order_id" class="oe_inline" />
+                        <label string="," for="date_order" invisible="not date_order" />
+                        <field name="date_order" class="oe_inline" />
+                    </h1>
+                    <label for="partner_id" />
+                    <h2>
+                        <field name="partner_id" />
+                    </h2>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="1" />
+                            <label for="product_qty" />
+                            <div class="o_row">
+                                <field name="product_qty" readonly="1" />
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom" />
+                            </div>
+                            <field name="price_unit" />
+                        </group>
+                        <group>
+                            <field name="tax_ids" widget="many2many_tax_tags"
+                                domain="[('type_tax_use', '=', 'purchase')]" />
+                            <field name="date_planned" readonly="1" />
+                            <field name="company_id" groups="base.group_multi_company"
+                                options="{'no_create': True}" />
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                groups="analytic.group_analytic_accounting"
+                                options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}" />
+                        </group>
+                    </group>
+                    <field name="name" />
+                    <separator string="Manual Invoices" />
+                    <field name="invoice_line_ids" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

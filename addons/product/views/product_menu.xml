@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem
+        id="product_menu_root"
+        name="Products"
+        web_icon="product,static/description/icon.png"
+        sequence="22"
+        groups="base.group_user"
+    >
+        <menuitem
+            id="menu_product_template"
+            name="Products"
+            action="product.product_template_action_all"
+            sequence="20"
+        />
+        <menuitem
+            id="menu_product_product"
+            name="Variants"
+            action="product.product_normal_action"
+            sequence="40"
+            groups="product.group_product_variant"
+        />
+        <menuitem
+            id="menu_pricelists"
+            name="Pricelists"
+            sequence="50"
+        >
+            <menuitem
+                id="menu_product_pricelist"
+                name="Sale pricelists"
+                action="product.product_pricelist_action2"
+                sequence="10"
+                groups="product.group_product_pricelist"
+            />
+            <menuitem
+                id="menu_product_supplierinfo"
+                name="Vendor pricelists"
+                action="product.product_supplierinfo_type_action"
+                sequence="20"
+            />
+        </menuitem>
+
+        <menuitem
+            id="menu_configuration"
+            name="Configuration"
+            sequence="80"
+        >
+            <menuitem
+                id="menu_configuration_settings"
+                name="Settings"
+                action="base_setup.action_general_configuration"
+                sequence="10"
+                groups="base.group_system"
+            />
+            <menuitem
+                id="menu_configuration_product"
+                name="Products"
+                sequence="20"
+            >
+                <menuitem
+                    id="menu_product_category"
+                    name="Product Categories"
+                    action="product.product_category_action_form"
+                    sequence="20"
+                />
+                <menuitem
+                    id="menu_product_tag"
+                    name="Product Tags"
+                    action="product.product_tag_action"
+                    sequence="30"
+                />
+                <menuitem
+                    id="menu_product_attribute"
+                    name="Product Attributes"
+                    action="product.attribute_action"
+                    sequence="40"
+                    groups="product.group_product_variant"
+                />
+            </menuitem>
+
+            <menuitem
+                id="menu_configuration_logistics"
+                name="Logistics"
+                sequence="30"
+                groups="uom.group_uom"
+            >
+                <menuitem
+                    id="menu_uom_uom"
+                    name="Units of measure"
+                    action="uom.product_uom_form_action"
+                    sequence="60"
+                    groups="uom.group_uom"
+                />
+            </menuitem>
+        </menuitem>
+    </menuitem>
+
+</odoo>

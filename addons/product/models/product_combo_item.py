@@ -5,29 +5,47 @@ from odoo.exceptions import ValidationError
 
 
 class ProductComboItem(models.Model):
-    _name = 'product.combo.item'
+    _name = "product.combo.item"
     _description = "Product Combo Item"
     _check_company_auto = True
 
-    company_id = fields.Many2one(related='combo_id.company_id', precompute=True, store=True)
-    combo_id = fields.Many2one(comodel_name='product.combo', ondelete='cascade', required=True, index=True)
+    company_id = fields.Many2one(
+        related="combo_id.company_id",
+        store=True,
+        precompute=True,
+    )
+    combo_id = fields.Many2one(
+        comodel_name="product.combo",
+        required=True,
+        ondelete="cascade",
+        index=True,
+    )
     product_id = fields.Many2one(
+        comodel_name="product.product",
         string="Options",
-        comodel_name='product.product',
-        ondelete='restrict',
-        domain=[('type', '!=', 'combo')],
         required=True,
         check_company=True,
+        domain=[("type", "!=", "combo")],
+        ondelete="restrict",
     )
-    currency_id = fields.Many2one(comodel_name='res.currency', related='product_id.currency_id')
+    currency_id = fields.Many2one(
+        related="product_id.currency_id",
+        comodel_name="res.currency",
+    )
     lst_price = fields.Float(
+        related="product_id.lst_price",
         string="Original Price",
-        digits='Product Price',
-        related='product_id.lst_price',
+        digits="Product Price",
     )
-    extra_price = fields.Float(string="Extra Price", digits='Product Price', default=0.0)
+    extra_price = fields.Float(
+        string="Extra Price",
+        digits="Product Price",
+        default=0.0,
+    )
 
-    @api.constrains('product_id')
+    @api.constrains("product_id")
     def _check_product_id_no_combo(self):
-        if any(combo_item.product_id.type == 'combo' for combo_item in self):
-            raise ValidationError(_("A combo choice can't contain products of type \"combo\"."))
+        if any(combo_item.product_id.type == "combo" for combo_item in self):
+            raise ValidationError(
+                _('A combo choice can\'t contain products of type "combo".')
+            )

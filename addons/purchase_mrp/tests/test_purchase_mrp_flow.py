@@ -1271,7 +1271,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             })],
         })
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, "done")
         self.assertEqual(self.component_a.standard_price, 0)
         picking = po.picking_ids
         move_line = picking.move_line_ids.filtered(lambda m:m.product_id == self.component_a)

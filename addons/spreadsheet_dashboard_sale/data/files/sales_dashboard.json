@@ -1362,7 +1362,7 @@
         [
           "state",
           "in",
-          ["draft", "sent", "sale"]
+          ["draft", "sale"]
         ]
       ],
       "id": "11",
@@ -1397,7 +1397,7 @@
         [
           "state",
           "in",
-          ["draft", "sent", "sale"]
+          ["draft", "sale"]
         ]
       ],
       "id": "12",
@@ -1499,9 +1499,9 @@
       "fieldMatching": {
         "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
-        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "order_line.product_id", "type": "many2one" },
+        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "line_ids.product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "order_line.product_id.categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "line_ids.product_id.categ_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },
@@ -1521,16 +1521,16 @@
       "context": {},
       "orderBy": [
         { "name": "amount_untaxed", "asc": false },
-        { "name": "invoice_status", "asc": true }
+        { "name": "invoice_state", "asc": true }
       ],
       "id": "2",
       "name": "Sales Orders by Untaxed Amount",
       "fieldMatching": {
         "13d30fda-b14d-4a56-b186-25468af3b1e9": { "chain": "date_order", "type": "datetime", "offset": 0 },
         "e6db018b-19ec-42c3-b29e-11b1e3910916": { "chain": "partner_id.country_id", "type": "many2one" },
-        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "order_line.product_id", "type": "many2one" },
+        "dbb716a1-5977-47ee-a53e-ca5716303433": { "chain": "line_ids.product_id", "type": "many2one" },
         "7d95fe28-fd13-4805-948c-95742e7d6733": { "chain": "partner_id", "type": "many2one" },
-        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "order_line.product_id.categ_id", "type": "many2one" },
+        "27e323f4-cd70-4345-82fa-dfc855707bc1": { "chain": "line_ids.product_id.categ_id", "type": "many2one" },
         "b75963ca-ab5f-4da5-9c90-67526517e5e7": { "chain": "team_id", "type": "many2one" },
         "4181e8e3-2e7e-42be-a88b-f24acb7d03e7": { "chain": "user_id", "type": "many2one" },
         "ec466626-f54a-4955-9611-eaa2719f1afb": { "chain": "source_id", "type": "many2one" },

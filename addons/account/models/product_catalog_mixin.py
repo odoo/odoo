@@ -9,7 +9,7 @@ class ProductCatalogMixin(models.AbstractModel):
     def _create_section(self, child_field, name, position, **kwargs):
         """Create a new section in order.
 
-        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param str child_field: Field name of the order's lines (e.g., 'line_ids').
         :param str name: The name of the section to create.
         :param str position: The position of the section where it should be created, either 'top'
                               or 'bottom'.
@@ -48,7 +48,7 @@ class ProductCatalogMixin(models.AbstractModel):
     def _get_new_line_sequence(self, child_field, section_id):
         """Compute the sequence number for inserting a new line into the order.
 
-        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param str child_field: Field name of the order's lines (e.g., 'line_ids').
         :param int section_id: ID of the section line to insert after.
         :rtype: int
         :return: Computed sequence number.
@@ -80,7 +80,7 @@ class ProductCatalogMixin(models.AbstractModel):
     def _get_sections(self, child_field, **kwargs):
         """Return section data for the product catalog display.
 
-        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param str child_field: Field name of the order's lines (e.g., 'line_ids').
         :param dict kwargs: Additional values given for inherited models.
         :rtype: list
         :return: List of section dicts with 'id', 'name', 'sequence', and 'line_count'.
@@ -97,7 +97,7 @@ class ProductCatalogMixin(models.AbstractModel):
                     'line_count': 0,
                 }
             elif self._is_line_valid_for_section_line_count(line):
-                sec_id = line.get_parent_section_line().id
+                sec_id = line.get_line_parent_section().id
                 if sec_id and sec_id in sections:
                     sections[sec_id]['line_count'] += 1
                 else:
@@ -147,7 +147,7 @@ class ProductCatalogMixin(models.AbstractModel):
         """Resequence the order content based on the new sequence order.
 
         :param list sections: A list of dictionaries containing move and target sections.
-        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param str child_field: Field name of the order's lines (e.g., 'line_ids').
         :param dict kwargs: Additional values given for inherited models.
         :return: A dictonary containing the new sequences of all the sections of order.
         :rtype: dict

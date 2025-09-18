@@ -10,7 +10,7 @@ patch(OrderPaymentValidation.prototype, {
             const orders = [...new Set(lines.map((e) => e.sale_order_origin_id))];
             await this.pos.data.read(
                 "sale.order.line",
-                orders.flatMap((o) => o.order_line).map((ol) => ol.id)
+                orders.flatMap((o) => o.line_ids).map((ol) => ol.id)
             );
         }
         await super.afterOrderValidation();

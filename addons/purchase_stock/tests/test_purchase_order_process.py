@@ -22,7 +22,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         po_edit_with_user.button_confirm()
 
         # Check the "Approved" status  after confirmed RFQ.
-        self.assertEqual(po_edit_with_user.state, 'purchase', 'Purchase: PO state should be "Purchase')
+        self.assertEqual(po_edit_with_user.state, 'done', 'Purchase: PO state should be "Purchase')
 
         # First cancel receptions related to this order if order shipped.
         po_edit_with_user.picking_ids.action_cancel()
@@ -97,7 +97,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         self.assertEqual(picking.state, 'done', "Done pickings should not change state.")
 
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
         self.assertEqual(len(po.picking_ids), 1, "No new pickings should be created for a fulfilled PO.")
 
     def test_cancel_redraft_backordered(self):
@@ -139,7 +139,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         self.assertEqual(po.state, 'draft', "The PO should gracefully return to draft state.")
 
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
         self.assertEqual(len(po.picking_ids), 3, "A new picking should be created to compensate for the cancelled backorder.")
 
         new_picking = po.picking_ids - picking - backorder

@@ -21,7 +21,7 @@ export class SaleOrder extends models.Model {
     name = fields.Char({ string: "name" });
     partner_id = fields.Many2one({ string: "Customer", relation: "res.partner" });
     project_id = fields.Many2one({ string: "Project", relation: "project.project" });
-    order_line = fields.One2many({ relation: "sale.order.line" });
+    line_ids = fields.One2many({ relation: "sale.order.line" });
 
     _records = [{ id: 1, name: "Sales Order 1" }];
 }

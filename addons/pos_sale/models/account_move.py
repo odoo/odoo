@@ -15,8 +15,8 @@ class AccountMove(models.Model):
                         elif not isCancelled and "(Cancelled)" in pos_order_line.sale_order_line_id.name:
                             pos_order_line.sale_order_line_id.name = pos_order_line.sale_order_line_id.name.replace(" (Cancelled)", "")
 
-    def button_cancel(self):
-        res = super().button_cancel()
+    def action_cancel(self):
+        res = super().action_cancel()
         self.reflect_cancelled_sol(True)
         return res
 

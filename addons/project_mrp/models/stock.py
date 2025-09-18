@@ -16,8 +16,8 @@ class StockRule(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    def _prepare_procurement_values(self):
-        res = super()._prepare_procurement_values()
+    def _prepare_procurement_vals(self):
+        res = super()._prepare_procurement_vals()
         if res.get('group_id') and len(res['group_id'].mrp_production_ids) == 1:
             res['project_id'] = res['group_id'].mrp_production_ids.project_id.id
         return res

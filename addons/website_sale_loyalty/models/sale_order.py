@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
                 or coupon.program_id.is_nominative
                 or (rewards.reward_type == 'product' and rewards.multi_product)
                 or rewards in self.disabled_auto_rewards
-                or rewards in self.order_line.reward_id
+                or rewards in self.line_ids.reward_id
             ):
                 continue
 
@@ -118,7 +118,7 @@ class SaleOrder(models.Model):
         super()._compute_website_order_line()
         for order in self:
             grouped_order_lines = defaultdict(lambda: self.env['sale.order.line'])
-            for line in order.order_line:
+            for line in order.line_ids:
                 if line.reward_id and line.coupon_id:
                     grouped_order_lines[(line.reward_id, line.coupon_id, line.reward_identifier_code)] |= line
             new_lines = self.env['sale.order.line']
@@ -196,7 +196,7 @@ class SaleOrder(models.Model):
 
     def _get_free_shipping_lines(self):
         self.ensure_one()
-        return self.order_line.filtered(lambda l: l.reward_id.reward_type == 'shipping')
+        return self.line_ids.filtered(lambda l: l.reward_id.reward_type == 'shipping')
 
     def _allow_nominative_programs(self):
         if not request or not hasattr(request, 'website'):
@@ -233,7 +233,7 @@ class SaleOrder(models.Model):
         global_discount_reward = self._get_applied_global_discount()
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
-            for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
+            for reward in coupon.program_id.reward_ids - self.line_ids.reward_id:
                 if (
                     reward.is_global_discount
                     and global_discount_reward

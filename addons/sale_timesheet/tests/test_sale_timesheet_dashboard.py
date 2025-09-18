@@ -15,7 +15,7 @@ class TestSaleTimesheetDashboard(Common):
             'standard_price': 11,
             'list_price': 13,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
             'uom_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI1',
             'service_type': 'timesheet',

@@ -64,7 +64,7 @@ class TestEventCrm(TestEventFullCommon):
         # SO is confirmed -> missing registrations should be automatically added
         # and added to the lead as part of the same group
         customer_so.action_confirm()
-        self.assertEqual(customer_so.state, 'sale')
+        self.assertEqual(customer_so.state, 'done')
         self.assertEqual(len(self.test_event.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
         self.assertEqual(len(self.test_rule_order.lead_ids), 1)  # no new lead created
         self.assertEqual(self.test_rule_order_done.lead_ids, self.env['crm.lead'])  # this one still not triggered
@@ -145,7 +145,7 @@ class TestEventCrm(TestEventFullCommon):
         # SO is confirmed -> missing registrations should be automatically added
         # BUT as public user -> no email -> not taken into account by rule
         customer_so.action_confirm()
-        self.assertEqual(customer_so.state, 'sale')
+        self.assertEqual(customer_so.state, 'done')
         self.assertEqual(len(self.test_event.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
         self.assertLeadConvertion(self.test_rule_order, t1_registrations, partner=None)
 

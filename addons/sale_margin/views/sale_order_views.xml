@@ -19,10 +19,10 @@
                     </div>
                 </div>
             </field>
-            <xpath expr="//field[@name='order_line']//form//field[@name='price_unit']" position="after">
+            <xpath expr="//field[@name='line_ids']//form//field[@name='price_unit']" position="after">
                 <field name="purchase_price" groups="base.group_user"/>
             </xpath>
-           <xpath expr="//field[@name='order_line']//list//field[@name='price_unit']" position="after">
+           <xpath expr="//field[@name='line_ids']//list//field[@name='price_unit']" position="after">
                 <field name="purchase_price" optional="hide"/>
                 <field name="margin" optional="hide"/>
                 <field name="margin_percent"

@@ -7,8 +7,8 @@ from odoo import fields, models
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    def _prepare_purchase_order(self, company_id, origins, values):
-        res = super(StockRule, self)._prepare_purchase_order(company_id, origins, values)
+    def _prepare_purchase_order_vals(self, company_id, origins, values):
+        res = super(StockRule, self)._prepare_purchase_order_vals(company_id, origins, values)
         values = values[0]
         res['partner_ref'] = values['supplier'].purchase_requisition_id.name
         res['requisition_id'] = values['supplier'].purchase_requisition_id.id
@@ -36,4 +36,4 @@ class StockMove(models.Model):
         if requisition_lines_sudo:
             return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in requisition_lines_sudo if requisition_line.requisition_id.state not in ('done', 'cancel')]
         else:
-            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+            return super()._get_upstream_documents_and_responsibles(visited)

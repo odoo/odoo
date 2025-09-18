@@ -16,7 +16,7 @@ class ProjectProject(models.Model):
             self.env['purchase.order']._read_group(
                 domain=[
                     ('project_id', 'in', self.ids),
-                    ('order_line', '!=', False),
+                    ('line_ids', '!=', False),
                 ],
                 groupby=['project_id'],
                 aggregates=['id:array_agg'],
@@ -141,7 +141,7 @@ class ProjectProject(models.Model):
         if self.account_id:
             purchase_lines = self.env['purchase.order.line'].sudo().search([
                 ('analytic_distribution', 'in', self.account_id.ids),
-                ('state', 'in', 'purchase')
+                ('state', 'in', 'done')
             ])
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and (
@@ -160,7 +160,7 @@ class ProjectProject(models.Model):
                         if str(self.account_id.id) in ids.split(',')
                     ) / 100.
                     purchase_line_amount_to_invoice = price_subtotal * analytic_contribution
-                    invoice_lines = purchase_line.invoice_lines.filtered(
+                    invoice_lines = purchase_line.invoice_line_ids.filtered(
                         lambda l:
                         l.parent_state != 'cancel'
                         and l.analytic_distribution

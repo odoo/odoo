@@ -7,17 +7,17 @@
             <search string="Sales">
                 <field name="website_id" groups="website.group_multi_website"/>
                 <field name="product_id"/>
-                <field name="categ_id"/>
+                <field name="product_category_id"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <filter string="Confirmed Orders" name="confirmed" domain="[('state', '=', 'sale')]"/>
+                <filter string="Confirmed Orders" name="confirmed" domain="[('state', '=', 'done')]"/>
                 <separator/>
-                <filter name="filter_date" date="date" default_period="month"/>
+                <filter name="filter_date" date="date_order" default_period="month"/>
                 <group>
                     <filter string="Website" name="groupby_website" context="{'group_by':'website_id'}" groups="website.group_multi_website"/>
                     <filter string="Product" name="groupby_product" context="{'group_by':'product_id'}"/>
-                    <filter string="Product Category" name="groupby_product_category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Product Category" name="groupby_product_category" context="{'group_by':'product_category_id'}"/>
                     <filter string="Customer" name="groupby_customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="groupby_country" context="{'group_by':'country_id'}"/>
                     <filter string="Status" name="groupby_status" context="{'group_by':'state'}"/>
@@ -27,11 +27,11 @@
                         context="{'group_by': 'public_categ_ids'}"
                     />
                     <separator orientation="vertical"/>
-                    <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date'}"/>
+                    <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date_order'}"/>
                     <!-- Dashboard filter - used by context -->
-                    <filter string="Last Week" invisible="1" name="week" domain="[('date','&gt;=', 'today -7d')]"/>
-                    <filter string="Last Month" invisible="1" name="month" domain="[('date','&gt;=', 'today -30d')]"/>
-                    <filter string="Last Year" invisible="1"  name="year" domain="[('date','&gt;=', 'today -365d')]"/>
+                    <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;=', 'today -7d')]"/>
+                    <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;=', 'today -30d')]"/>
+                    <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;=', 'today -365d')]"/>
                 </group>
             </search>
         </field>
@@ -42,7 +42,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <pivot string="Sales Analysis" sample="1">
-                <field name="date" type="row"/>
+                <field name="date_order" type="row"/>
                 <field name="state" type="col"/>
                 <field name="price_subtotal" type="measure"/>
             </pivot>
@@ -54,7 +54,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <graph string="Sale Analysis" sample="1">
-                <field name="date"/>
+                <field name="date_order"/>
                 <field name="price_subtotal" type='measure'/>
             </graph>
         </field>

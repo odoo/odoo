@@ -11,7 +11,7 @@ class PurchaseOrder(models.Model):
         "Count of Subcontracting Resupply", compute='_compute_subcontracting_resupply_picking_count',
         help="Count of Subcontracting Resupply for component")
 
-    @api.depends('order_line.move_ids')
+    @api.depends('line_ids.move_ids')
     def _compute_subcontracting_resupply_picking_count(self):
         for purchase in self:
             purchase.subcontracting_resupply_picking_count = len(purchase._get_subcontracting_resupplies())
@@ -20,7 +20,7 @@ class PurchaseOrder(models.Model):
         return self._get_action_view_picking(self._get_subcontracting_resupplies())
 
     def _get_subcontracting_resupplies(self):
-        moves_subcontracted = self.order_line.move_ids.filtered(lambda m: m.is_subcontract)
+        moves_subcontracted = self.line_ids.move_ids.filtered(lambda m: m.is_subcontract)
         subcontracted_productions = moves_subcontracted.move_orig_ids.production_id
         return subcontracted_productions.picking_ids
 

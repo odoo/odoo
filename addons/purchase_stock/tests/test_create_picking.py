@@ -46,7 +46,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         # Purchase order confirm
         self.po.button_confirm()
-        self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
+        self.assertEqual(self.po.state, 'done', 'Purchase: PO state should be "Purchase')
         self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created')
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'One move should be created')
         # Change purchase order line product quantity
@@ -88,7 +88,7 @@ class TestCreatePicking(ProductVariantsCommon):
         # PO approved by manager
         self.po.env.user.group_ids += self.env.ref("purchase.group_purchase_manager")
         self.po.button_approve()
-        self.assertEqual(self.po.state, 'purchase', 'PO state should be "Purchase".')
+        self.assertEqual(self.po.state, 'done', 'PO state should be "Purchase".')
 
     def test_02_check_mto_chain(self):
         """ Simulate a mto chain with a purchase order. Cancel the
@@ -521,7 +521,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         # Now check scheduled date and deadline of delivery order.
         self.assertNotEqual(
-            purchase_order_line.date_planned, delivery_order.scheduled_date,
+            purchase_order_line.date_planned, delivery_order.date_planned,
             'Scheduled delivery order date should not changed.')
         self.assertEqual(
             purchase_order_line.date_planned, delivery_order.date_deadline,
@@ -556,7 +556,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         pickings = self.env['stock.picking'].search([('reference_ids', '=', po.reference_ids.id)])
         for picking in pickings:
-            self.assertEqual(picking.scheduled_date.date(), date.today())
+            self.assertEqual(picking.date_planned.date(), date.today())
 
     def test_update_quantity_and_return(self):
         po = self.env['purchase.order'].create(self.po_vals)
@@ -696,8 +696,8 @@ class TestCreatePicking(ProductVariantsCommon):
 
         # Confirm Purchase order
         purchase_order.button_confirm()
-        # Check purchase order state, it should be "purchase".
-        self.assertEqual(purchase_order.state, 'purchase', 'Purchase order should be in purchase state.')
+        # Check purchase order state, it should be "done".
+        self.assertEqual(purchase_order.state, 'done', 'Purchase order should be in purchase state.')
         # Make sure that picking has been created
         self.assertEqual(len(purchase_order.picking_ids), 1)
         # check that the price list has been applied

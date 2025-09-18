@@ -357,7 +357,7 @@ class StockValuationAdjustmentLines(models.Model):
 
         return self._create_account_move_line(credit_account_id, debit_account_id, remaining_qty)
 
-    def _prepare_account_move_line_values(self):
+    def _prepare_aml_vals(self):
         return {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -371,7 +371,7 @@ class StockValuationAdjustmentLines(models.Model):
         AccountMoveLine = []
         if not remaining_qty:
             return AccountMoveLine
-        base_line = self._prepare_account_move_line_values()
+        base_line = self._prepare_aml_vals()
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
         diff = self.additional_landed_cost * (remaining_qty / self.quantity)

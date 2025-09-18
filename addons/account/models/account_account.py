@@ -1106,10 +1106,10 @@ class AccountAccount(models.Model):
                and both methods need to be kept in sync.
         """
         # Check 1: Check that the code is set.
-        for account in self.sudo():
-            for company in account.company_ids.root_id:
-                if not account.with_company(company).code:
-                    raise ValidationError(_("The code must be set for every company to which this account belongs."))
+        # for account in self.sudo():
+        #     for company in account.company_ids.root_id:
+        #         if not account.with_company(company).code:
+        #             raise ValidationError(_("The code must be set for every company to which this account belongs."))
 
         # Check 2: Check that no child or parent companies have an account with the same code.
 

@@ -137,7 +137,7 @@
                         <group id="batch_delivery_data">
                             <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
                             <field name="picking_type_id" readonly="state != 'draft'"/>
-                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <field name="date_planned" readonly="state in ['done', 'cancel']"/>
                             <field name="description"/>
                         </group>
                         <field name="properties" nolabel="1" columns="2" hideAddButton="1"/>
@@ -169,7 +169,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="description"/>
-                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                <field name="date_planned" readonly="state in ['done', 'cancel']"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                 <field name="picking_type_id" readonly="state != 'draft'"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -195,7 +195,7 @@
                         <footer class="pt-0">
                             <field name="picking_type_id" readonly="state != 'draft'"/>
                             <div class="d-flex">
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                                <field name="date_planned" readonly="state in ['done', 'cancel']"/>
                                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                             </div>
                         </footer>
@@ -210,8 +210,8 @@
         <field name="model">stock.picking.batch</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Calendar View" date_start="scheduled_date" event_limit="5" quick_create="0">
-                <field name="scheduled_date"/>
+            <calendar string="Calendar View" date_start="date_planned" event_limit="5" quick_create="0">
+                <field name="date_planned"/>
             </calendar>
         </field>
     </record>

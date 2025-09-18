@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top menu item -->
+    <menuitem
+        id="menu_purchase_root"
+        name="Purchase"
+        web_icon="purchase,static/description/icon.png"
+        sequence="135"
+        groups="group_purchase_manager,group_purchase_user" />
+
+    <menuitem
+        id="menu_procurement_management"
+        name="Orders"
+        parent="menu_purchase_root"
+        sequence="1" />
+
+    <!--Supplier menu-->
+    <menuitem
+        id="menu_procurement_management_supplier_name"
+        name="Vendors"
+        parent="menu_procurement_management"
+        sequence="15"
+        action="account.res_partner_action_supplier" />
+
+    <menuitem
+        id="menu_purchase_config"
+        name="Configuration"
+        parent="menu_purchase_root"
+        sequence="100"
+        groups="group_purchase_manager" />
+
+    <menuitem
+        id="menu_purchase_general_settings"
+        name="Settings"
+        parent="menu_purchase_config"
+        sequence="0"
+        action="action_purchase_configuration"
+        groups="base.group_system" />
+
+    <menuitem
+        id="menu_product_pricelist_action2_purchase"
+        parent="menu_purchase_config"
+        sequence="1"
+        action="product.product_supplierinfo_type_action" />
+
+    <menuitem
+        id="menu_product_in_config_purchase"
+        name="Products"
+        parent="menu_purchase_config"
+        sequence="30" />
+
+    <record id="menu_product_in_config_purchase" model="ir.ui.menu">
+        <field name="group_ids" eval="False" />
+    </record>
+
+    <menuitem
+        id="menu_product_attribute_action"
+        name="Attributes"
+        parent="menu_product_in_config_purchase"
+        sequence="1"
+        action="product.attribute_action"
+        groups="product.group_product_variant" />
+
+    <menuitem
+        id="menu_product_category_config_purchase"
+        parent="menu_product_in_config_purchase"
+        sequence="3"
+        action="product.product_category_action_form" />
+
+    <menuitem
+        id="menu_purchase_uom_form_action"
+        name="Units &amp; Packagings"
+        parent="menu_product_in_config_purchase"
+        sequence="10"
+        action="uom.product_uom_form_action"
+        groups="uom.group_uom" />
+
+    <!-- Products Control Menu -->
+    <menuitem
+        id="menu_purchase_products"
+        name="Products"
+        parent="menu_purchase_root"
+        sequence="5" />
+
+    <!-- Product menu-->
+    <menuitem
+        id="menu_procurement_partner_contact_form"
+        name="Products"
+        parent="menu_purchase_products"
+        sequence="20"
+        action="product_normal_action_puchased" />
+
+    <menuitem
+        id="product_product_menu"
+        name="Product Variants"
+        parent="menu_purchase_products"
+        sequence="21"
+        action="product_product_action"
+        groups="product.group_product_variant" />
+
+    <menuitem
+        id="menu_purchase_rfq"
+        parent="menu_procurement_management"
+        sequence="0"
+        action="purchase_rfq" />
+
+    <menuitem
+        id="menu_purchase_form_action"
+        parent="menu_procurement_management"
+        sequence="6"
+        action="purchase_form_action" />
+
+    <menuitem
+        id="purchase_report_main"
+        name="Reporting"
+        parent="menu_purchase_root"
+        sequence="99"
+        groups="purchase.group_purchase_manager" />
+
+    <menuitem
+        id="purchase_report"
+        name="Purchase"
+        parent="purchase_report_main"
+        sequence="99" groups="purchase.group_purchase_manager"
+        action="action_purchase_order_report_all" />
+
+</odoo>

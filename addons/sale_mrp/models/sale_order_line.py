@@ -8,30 +8,127 @@ from odoo.tools import float_compare
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
-    def _compute_qty_to_deliver(self):
-        """The inventory widget should now be visible in more cases if the product is consumable."""
-        super(SaleOrderLine, self)._compute_qty_to_deliver()
-        for line in self:
+    def _get_relevant_phantom_bom(self, retry=False):
+        self.ensure_one()
+        boms = self.env['mrp.bom']
+        if self.state == 'draft':
+            boms = boms._bom_find(
+                self.product_id,
+                company_id=self.company_id.id,
+                bom_type='phantom',
+            )[self.product_id]
+        elif self.state == 'done':
+            move_ids = self.move_ids.filtered(lambda m: m.state != 'cancel')
+            boms = move_ids.bom_line_id.bom_id if move_ids.bom_line_id else boms
+
+        # Filter to get only phantom BOMs matching this exact product
+        relevant_bom = boms.filtered(
+            lambda b: b.type == 'phantom'
+            and (
+                b.product_id == self.product_id
+                or (
+                    b.product_tmpl_id == self.product_id.product_tmpl_id
+                    and not b.product_id
+                )
+            ),
+        )
+
+        # Fallback to _bom_find if requested and no relevant BOM found
+        if not relevant_bom and retry:
+            relevant_bom = self.env['mrp.bom']._bom_find(
+                self.product_id,
+                company_id=self.company_id.id,
+                bom_type='phantom',
+            )[self.product_id]
+
+        return boms, relevant_bom
+
+    def _compute_display_qty_widget(self):
+        """The inventory widget should now be visible in more cases"""
+        super()._compute_display_qty_widget()
+        for line in self.filtered(lambda x: x.product_id and x.product_id.is_storable):
             # Hide the widget for kits since forecast doesn't support them.
-            boms = self.env['mrp.bom']
-            if line.state == 'sale':
-                boms = line.move_ids.mapped('bom_line_id.bom_id')
-            elif line.state in ['draft', 'sent'] and line.product_id:
-                boms = boms._bom_find(line.product_id, company_id=line.company_id.id, bom_type='phantom')[line.product_id]
-            relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
-                    (b.product_id == line.product_id or
-                    (b.product_tmpl_id == line.product_id.product_tmpl_id and not b.product_id)))
+            _boms, relevant_bom = line._get_relevant_phantom_bom()
+
             if relevant_bom:
                 line.display_qty_widget = False
                 continue
+
             if line.state == 'draft' and line.product_type == 'consu':
                 components = line.product_id.get_components()
                 if components and components != [line.product_id.id]:
                     line.display_qty_widget = True
 
-    def _prepare_qty_delivered(self):
-        delivered_qties = super()._prepare_qty_delivered()
+    def _compute_qty_transferred(self):
+        lines_by_stock_move = self.filtered(
+            lambda line: line.qty_transferred_method == "stock_move",
+        )
+        super(SaleOrderLine, self - lines_by_stock_move)._compute_qty_transferred()
+
+        for line in lines_by_stock_move:
+
+            if not line.move_ids:
+                super(SaleOrderLine, line)._compute_qty_transferred()
+                continue
+
+            dropship = any(m._is_dropshipped() for m in line.move_ids)
+            # We fetch the BoMs of type kits linked to the line,
+            # then we keep only the one related to the finished produst.
+            # This bom should be the only one since bom_line_id was written on the moves
+            boms, relevant_bom = line._get_relevant_phantom_bom(retry=True)
+
+            if not boms and not relevant_bom:
+                super(SaleOrderLine, line)._compute_qty_transferred()
+                continue
+
+            if relevant_bom:
+                # not written on a move coming from a PO: all moves (to customer) must be done
+                # and the returns must be delivered back to the customer
+                # FIXME: if the components of a kit have different suppliers, multiple PO
+                # are generated. If one PO is confirmed and all the others are in draft, receiving
+                # the products for this PO will set the qty_transferred. We might need to check the
+                # state of all PO as well... but sale_mrp doesn't depend on purchase.
+                if dropship:
+                    moves = line.move_ids.filtered(lambda m: m.state != 'cancel')
+
+                    if any((m.location_dest_id.usage == 'customer' and m.state != 'done')
+                            or (m.location_dest_id.usage != 'customer'
+                            and m.state == 'done'
+                            and float_compare(m.quantity,
+                                                sum(sub_m.product_uom._compute_quantity(sub_m.quantity, m.product_uom) for sub_m in m.returned_move_ids if sub_m.state == 'done'),
+                                                precision_rounding=m.product_uom.rounding) > 0)
+                            for m in moves) or not moves:
+                        line.qty_transferred = 0
+                    else:
+                        line.qty_transferred = line.product_uom_qty
+
+                    continue
+
+                moves = line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
+                filters = {
+                    # in/out perspective w/ respect to moves is flipped for sale order document
+                    'incoming_moves': lambda m:
+                        m._is_outgoing() and
+                        (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                    'outgoing_moves': lambda m:
+                        m._is_incoming() and m.to_refund,
+                }
+                order_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, relevant_bom.product_uom_id)
+                qty_transferred = moves._compute_kit_quantities(line.product_id, order_qty, relevant_bom, filters)
+                line.qty_transferred += relevant_bom.product_uom_id._compute_quantity(qty_transferred, line.product_uom_id)
+
+            # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
+            # when the product sold is made only of kits. In this case, the BOM of the stock moves
+            # do not correspond to the product sold => no relevant BOM.
+            elif boms:
+                # if the move is ingoing, the product **sold** has delivered qty 0
+                if all(m.state == 'done' and m.location_dest_id.usage == 'customer' for m in line.move_ids):
+                    line.qty_transferred = line.product_uom_qty
+                else:
+                    line.qty_transferred = 0.0
+
+    def _prepare_qty_transferred(self):
+        delivered_qties = super()._prepare_qty_transferred()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').bom_line_id.bom_id
@@ -151,7 +248,7 @@ class SaleOrderLine(models.Model):
             ),
         }
 
-    def _get_qty_procurement(self, previous_product_uom_qty=False):
+    def _get_procurement_qty(self, previous_product_uom_qty=False):
         self.ensure_one()
         # Specific case when we change the qty on a SO for a kit product.
         # We don't try to be too smart and keep a simple approach: we use the quantity of entire
@@ -166,4 +263,4 @@ class SaleOrderLine(models.Model):
             return bom.product_uom_id._compute_quantity(qty, self.product_uom_id)
         elif bom and previous_product_uom_qty:
             return previous_product_uom_qty.get(self.id)
-        return super()._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+        return super()._get_procurement_qty(previous_product_uom_qty=previous_product_uom_qty)

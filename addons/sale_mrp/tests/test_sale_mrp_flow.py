@@ -470,7 +470,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         product = self.env['product.product'].create({
             'name': 'Table Kit',
             'type': 'consu',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
         product.write({'route_ids': [(6, 0, [self.company_data['default_warehouse'].manufacture_pull_id.route_id.id])]})
@@ -522,16 +522,16 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # invoice in on delivery, nothing should be invoiced
         with self.assertRaises(UserError):
             so._create_invoices()
-        self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
+        self.assertEqual(so.invoice_state, 'no', 'Sale MRP: so invoice_state should be "nothing to invoice" after invoicing')
 
-        # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
+        # deliver partially (1 of each instead of 5), check the so's invoice_state and delivered quantities
         pick = so.picking_ids
         pick.move_ids.write({'quantity': 1, 'picked': True})
         Form.from_action(self.env, pick.button_validate()).save().process()
-        self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
+        self.assertEqual(so.invoice_state, 'no', 'Sale MRP: so invoice_state should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
-        # deliver remaining products, check the so's invoice_status and delivered quantities
+        # deliver remaining products, check the so's invoice_state and delivered quantities
         self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = so.picking_ids.filtered('backorder_id')
         for move in pick_2.move_ids:
@@ -543,7 +543,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
-        self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
+        self.assertEqual(so.invoice_state, 'to invoice', 'Sale MRP: so invoice_state should be "to invoice" after complete delivery of a kit')
 
     def test_02_sale_mrp_anglo_saxon(self):
         """Test the price unit of a kit"""
@@ -582,7 +582,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                 'name': 'Finished product',
                 'is_storable': True,
                 'uom_id': self.uom_unit.id,
-                'invoice_policy': 'delivery',
+                'invoice_policy': 'transferred',
                 'categ_id': self.category.id})
         self.component1 = Product.create({
                 'name': 'Component 1',
@@ -1038,7 +1038,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.qty_available_virtual_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
         qty_to_process = {
@@ -1061,7 +1061,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.qty_available_virtual_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
         qty_to_process = {
@@ -1273,7 +1273,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(virtual_available_wh_order, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.qty_available_virtual_at_date - order_line.product_uom_qty, 0) == -1)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
         # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
@@ -1286,7 +1286,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(line.product_uom_id.compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0) == -1)
+        self.assertTrue(line.product_uom_id.compare(order_line.qty_available_virtual_at_date - order_line.product_uom_qty, 0) == -1)
         kit_uom_in_kit.with_context(warehouse_id=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEqual(virtual_available_wh_order, 3)
@@ -1780,7 +1780,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'name': 'Template A',
             'is_storable': True,
             'uom_id': self.uom_unit.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'categ_id': self.category.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_test.id,
@@ -1921,7 +1921,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'name': 'Template A',
             'is_storable': True,
             'uom_id': self.uom_unit.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'categ_id': self.category.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_test.id,
@@ -2333,7 +2333,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'is_storable': True,
             'standard_price': price,
             'categ_id': self.stock_account_product_categ.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         } for name, price in [
             ('Compo 01', 10),
             ('Compo 02', 20),

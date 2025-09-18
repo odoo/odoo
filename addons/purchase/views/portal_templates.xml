@@ -101,11 +101,11 @@
                   <tr>
                       <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
                       <td id="order_confirmation" class="text-end">
-                          <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                          <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
+                          <span t-field="order.date_confirmed" t-options="{'widget': 'date'}"/>&amp;nbsp;
+                          <span class='d-none d-md-inline' t-field="order.date_confirmed" t-options="{'time_only': True}"/>
                       </td>
                       <td id="order_badge" class="text-center">
-                          <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
+                          <span t-if="order.invoice_state == 'to do'" class="badge rounded-pill text-bg-info">
                               <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
                           <span t-if="order.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
@@ -232,7 +232,7 @@
                     <t t-if="order.state in ['draft', 'sent']">
                       <strong>Request For Quotation Date:</strong>
                     </t>
-                    <t t-if="order.state in ['purchase', 'cancel']">
+                    <t t-if="order.state in ['done', 'cancel']">
                       <strong>Order Date:</strong>
                     </t>
                     <span t-field="order.date_order" t-options='{"widget": "date"}'/>
@@ -242,8 +242,8 @@
                   <div class="col-lg-6">
                     <strong class="d-block mb-1">From:</strong>
                     <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    <t t-if="order.date_approve">
-                      <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
+                    <t t-if="order.date_confirmed">
+                      <strong>Confirmation Date:</strong> <span t-field="order.date_confirmed" t-options='{"widget": "date"}'/><br/>
                     </t>
                     <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
                       <strong>Receipt Date:</strong><span class="ms-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
@@ -280,7 +280,7 @@
 
               <div class="table-responsive">
                 <table t-att-data-order-id="order.id" t-att-data-token="order.access_token" class="table table-sm" id="purchase_order_table">
-                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state == 'purchase'"/>
+                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state == 'done'"/>
                     <thead class="bg-100">
                         <tr>
                             <th class="text-start">Products</th>
@@ -300,7 +300,7 @@
 
                           <t t-set="current_subtotal" t-value="0"/>
 
-                          <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
+                          <t t-foreach="order.line_ids.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
 
                               <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
@@ -344,7 +344,7 @@
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div t-field="line.discount" class="text-end"/>
                                     </td>
-                                    <td class="text-end" t-if="not update_dates and order.state == 'purchase'">
+                                    <td class="text-end" t-if="not update_dates and order.state == 'done'">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                     </td>
                                 </t>
@@ -361,7 +361,7 @@
                                     </td>
                                 </t>
                             </tr>
-                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type in ('line_section', 'line_subsection')) and order.state == 'purchase'">
+                            <t t-if="current_section and (line_last or order.line_ids[line_index+1].display_type in ('line_section', 'line_subsection')) and order.state == 'done'">
                                 <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
@@ -377,7 +377,7 @@
                 </table>
               </div>
 
-              <div id="total" t-if="order.state == 'purchase'" class="row" name="total" style="page-break-inside: avoid;">
+              <div id="total" t-if="order.state == 'done'" class="row" name="total" style="page-break-inside: avoid;">
                   <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ms-auto">
                       <t t-call="purchase.purchase_order_portal_content_totals_table"/>
                   </div>

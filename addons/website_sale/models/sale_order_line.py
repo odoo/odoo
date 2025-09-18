@@ -34,13 +34,13 @@ class SaleOrderLine(models.Model):
         # not display_name because we don't want the combination name or the code.
         return self.product_id.name
 
-    def _get_order_date(self):
+    def _get_date_order(self):
         self.ensure_one()
         if self.order_id.website_id and self.state == 'draft':
             # cart prices must always be computed based on the current time, not on the order
             # creation date.
             return fields.Datetime.now()
-        return super()._get_order_date()
+        return super()._get_date_order()
 
     def _get_shop_warning(self, clear=True):
         self.ensure_one()
@@ -53,10 +53,10 @@ class SaleOrderLine(models.Model):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
         is_combo = self.product_type == 'combo'
-        unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
+        unit_price = self._get_price_display_regular_item() if is_combo else self.price_unit
 
         return self.tax_ids.compute_all(
-            unit_price, self.currency_id, 1, self.product_id, self.order_partner_id,
+            unit_price, self.currency_id, 1, self.product_id, self.partner_id,
         )[tax_display]
 
     def _get_selected_combo_items(self):

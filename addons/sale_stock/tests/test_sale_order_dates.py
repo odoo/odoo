@@ -16,7 +16,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 @tagged('post_install', '-at_install')
 class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
-    def test_sale_order_expected_date(self):
+    def test_sale_order_date_planned(self):
         """ Test expected date and effective date of Sales Orders """
         Product = self.env['product.product']
 
@@ -55,15 +55,15 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
         # if Shipping Policy is set to `direct`(when SO is in draft state) then expected date should be
         # current date + shortest lead time from all of it's order lines
-        expected_date = fields.Datetime.now() + timedelta(days=5)
-        self.assertAlmostEqual(expected_date, sale_order.expected_date,
+        date_planned = fields.Datetime.now() + timedelta(days=5)
+        self.assertAlmostEqual(date_planned, sale_order.date_planned,
             msg="Wrong expected date on sale order!", delta=timedelta(seconds=1))
 
         # if Shipping Policy is set to `one`(when SO is in draft state) then expected date should be
         # current date + longest lead time from all of it's order lines
         sale_order.write({'picking_policy': 'one'})
-        expected_date = fields.Datetime.now() + timedelta(days=15)
-        self.assertAlmostEqual(expected_date, sale_order.expected_date,
+        date_planned = fields.Datetime.now() + timedelta(days=15)
+        self.assertAlmostEqual(date_planned, sale_order.date_planned,
             msg="Wrong expected date on sale order!", delta=timedelta(seconds=1))
 
         sale_order.action_confirm()
@@ -75,15 +75,15 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
         # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
         # SO confirmation date + longest lead time from all of it's order lines
-        expected_date = confirm_date + timedelta(days=15)
-        self.assertAlmostEqual(expected_date, sale_order.expected_date,
+        date_planned = confirm_date + timedelta(days=15)
+        self.assertAlmostEqual(date_planned, sale_order.date_planned,
             msg="Wrong expected date on sale order!", delta=timedelta(seconds=1))
 
         # if Shipping Policy is set to `direct`(when SO is confirmed) then expected date should be
         # SO confirmation date + shortest lead time from all of it's order lines
         sale_order.write({'picking_policy': 'direct'})
-        expected_date = confirm_date + timedelta(days=5)
-        self.assertAlmostEqual(expected_date, sale_order.expected_date,
+        date_planned = confirm_date + timedelta(days=5)
+        self.assertAlmostEqual(date_planned, sale_order.date_planned,
             msg="Wrong expected date on sale order!", delta=timedelta(seconds=1))
 
         # Check effective date, it should be date on which the first shipment successfully delivered to customer
@@ -119,7 +119,6 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         for line in new_order.order_line:
             self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")
 
-    @freeze_time('2025-10-10')
     def test_expected_date_with_storable_product(self):
         ''' This test ensures the expected date is computed based on only goods(consu) products.
         It's avoiding computation for non-goods products.
@@ -137,7 +136,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         })
 
         # Ensure that expected date is correctly computed based on the consu product's sale delay.
-        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
+        self.assertEqual(sale_order.date_planned, fields.Datetime.now() + timedelta(days=sale_delay))
 
         # Add a service product and ensure the expected date remains unchanged.
         sale_order.write({
@@ -146,7 +145,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 'product_uom_qty': 1000,
             })],
         })
-        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
+        self.assertEqual(sale_order.date_planned, fields.Datetime.now() + timedelta(days=sale_delay))
 
     def test_invoice_delivery_date(self):
         self.env['stock.quant']._update_available_quantity(

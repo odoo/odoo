@@ -325,7 +325,7 @@ class ProductFeed(models.Model):
             start_date = combination_info['discount_start_date']
             end_date = combination_info['discount_end_date']
             if start_date and end_date:
-                price_info['sale_price_effective_date'] = '/'.join(
+                price_info['sale_price_date_effective'] = '/'.join(
                     map(utils.gmc_format_date, (start_date, end_date)),
                 )
 

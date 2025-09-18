@@ -1121,7 +1121,7 @@ class PosSession(models.Model):
         outstanding_line = account_payment.move_id.line_ids.filtered(lambda line: line.account_id.id == source_vals['account_id'])
         new_balance = outstanding_line.balance + self._amount_converter(diff_amount, self.stop_at, False)
         new_balance_compare_to_zero = self.currency_id.compare_amounts(new_balance, 0)
-        account_payment.move_id.button_draft()
+        account_payment.move_id.action_draft()
         account_payment.move_id.write({
             'line_ids': [
                 Command.create(dest_vals),

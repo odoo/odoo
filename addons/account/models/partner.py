@@ -1055,7 +1055,7 @@ class ResPartner(models.Model):
                     partner.account_move_count += count
                 partner = partner.parent_id
 
-    def action_open_business_doc(self):
+    def action_view_business_doc(self):
         return self._get_records_action()
 
     @api.model

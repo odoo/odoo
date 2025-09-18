@@ -134,4 +134,4 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
         )
 
         order.with_user(self.sale_user).with_company(branch_a.id).sudo(False).action_confirm()
-        self.assertEqual(order.state, 'sale')
+        self.assertEqual(order.state, 'done')

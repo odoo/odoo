@@ -863,9 +863,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 1.0
         po = po_form.save()
         po.button_confirm()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
         po.print_quotation()
-        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(po.state, 'done')
         po.button_cancel()
         self.assertEqual(po.state, 'cancel')
         po.print_quotation()
@@ -906,7 +906,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         group_warning_purchase = self.env.ref('purchase.group_warning_purchase')
         self.env.user.group_ids.implied_ids = [Command.link(group_warning_purchase.id)]
         purchase_order2.button_confirm()
-        purchase_order2.action_create_invoice()
+        purchase_order2.create_invoice()
         invoice = Form(purchase_order2.invoice_ids[0])
 
         expected_warnings = ('Test Partner - Highly infectious disease',

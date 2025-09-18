@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">product.view.search.catalog.inherit.purchase</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="seller_ids" string="Vendor" />
+            </xpath>
+            <xpath expr="//filter[@name='goods']" position="after">
+                <separator />
+                <filter string="In the Order"
+                    name="products_in_purchase_order"
+                    domain="[('is_in_purchase_order', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_product_supplier_inherit" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="seller_ids" position="attributes">
+                <attribute name="context">{'default_product_tmpl_id': product_tmpl_id,
+                    'product_template_invisible_variant': True, 'default_price': standard_price,
+                    'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+            </field>
+            <field name="variant_seller_ids" position="attributes">
+                <attribute name="context">{'model': 'product.product', 'active_id': id,
+                    'default_price': standard_price,
+                    'list_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_inherit_purchase" model="ir.ui.view">
+        <field name="name">product.product.purchase.order</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_view_po"
+                    groups="purchase.group_purchase_user"
+                    type="object" icon="fa-credit-card" invisible="not purchase_ok"
+                    help="Purchased in the last 365 days">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="purchased_product_qty" widget="statinfo" nolabel="1"
+                                class="oe_inline" />
+                            <field name="uom_name" class="oe_inline" groups="uom.group_uom" />
+                        </span>
+                        <span class="o_stat_text">Purchased</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Product catalog -->
+    <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.purchase</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">purchase_product_kanban_catalog</attribute>
+                <attribute name="sample">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_action" model="ir.actions.act_window">
+        <field name="name">Product Variants</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="search_view_id" ref="product.product_search_form_view" />
+        <field name="context">{"search_default_filter_to_purchase": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
+            </p>
+            <p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+</odoo>

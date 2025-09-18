@@ -576,7 +576,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today
+        delivery_form.date_planned = today
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -586,7 +586,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today + one_hours
+        delivery_form.date_planned = today + one_hours
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -596,7 +596,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today - one_hours
+        delivery_form.date_planned = today - one_hours
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -606,7 +606,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today + one_day
+        delivery_form.date_planned = today + one_day
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -616,7 +616,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today - one_day
+        delivery_form.date_planned = today - one_day
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -626,7 +626,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today + one_month
+        delivery_form.date_planned = today + one_month
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -636,7 +636,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = today - one_month
+        delivery_form.date_planned = today - one_month
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -661,7 +661,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = today + one_month
+        receipt_form.date_planned = today + one_month
         with receipt_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -671,7 +671,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = today - one_month
+        receipt_form.date_planned = today - one_month
         with receipt_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
@@ -681,7 +681,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = today - one_hours
+        receipt_form.date_planned = today - one_hours
         with receipt_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 10
@@ -1174,7 +1174,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        delivery_form.scheduled_date = date.today()
+        delivery_form.date_planned = date.today()
         with delivery_form.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 200
@@ -1182,11 +1182,11 @@ class TestReports(TestReportsCommon):
         delivery1.action_confirm()
 
         # Creation of one receipt with date 'today + 1' and smaller qty than the delivery
-        scheduled_date1 = datetime.now() + timedelta(days=1)
+        date_planned1 = datetime.now() + timedelta(days=1)
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = scheduled_date1
+        receipt_form.date_planned = date_planned1
         with receipt_form.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 150
@@ -1195,11 +1195,11 @@ class TestReports(TestReportsCommon):
         self.assertEqual(delivery1.move_ids.forecast_availability, -50.0)
 
         # Creation of an identical receipt which should lead to a positive forecast availability
-        scheduled_date2 = datetime.now() + timedelta(days=3)
+        date_planned2 = datetime.now() + timedelta(days=3)
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = scheduled_date2
+        receipt_form.date_planned = date_planned2
         with receipt_form.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 50
@@ -1209,19 +1209,19 @@ class TestReports(TestReportsCommon):
         # Check forecast_information of delivery1
         delivery1.move_ids._compute_forecast_information()  # Because depends not "complete"
         self.assertEqual(delivery1.move_ids.forecast_availability, 200)
-        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date2)
+        self.assertEqual(delivery1.move_ids.forecast_expected_date, date_planned2)
 
         receipt2.move_ids.quantity = receipt2.move_ids.product_uom_qty
         receipt2.move_ids.picked = True
         receipt2.button_validate()
-        # Check forecast_information of delivery1, because the receipt2 as been validate the forecast_expected_date == receipt1.scheduled_date
+        # Check forecast_information of delivery1, because the receipt2 as been validate the forecast_expected_date == receipt1.date_planned
         delivery1.move_ids._compute_forecast_information()
         self.assertEqual(delivery1.move_ids.forecast_availability, 200)
-        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date1)
+        self.assertEqual(delivery1.move_ids.forecast_expected_date, date_planned1)
 
         delivery2 = delivery1.copy()
         delivery2_form = Form(delivery2)
-        delivery2_form.scheduled_date = datetime.now() + timedelta(days=1)
+        delivery2_form.date_planned = datetime.now() + timedelta(days=1)
         delivery2 = delivery2_form.save()
         delivery2.action_confirm()
         delivery2.move_ids.quantity = delivery1.move_ids.quantity
@@ -1245,9 +1245,9 @@ class TestReports(TestReportsCommon):
         Checks replenishment lines are correctly sorted by the flollowing criteria:
             - If the reservation date is in the past at any time T, use the priority and scheduled date
             - If the reservation date is in the future, use reservation date, priority and scheduled date
-            'manual': always last (no reservation_date)
-            'at_confirm': reservation_date = time of creation
-            'by_date': reservation_date = scheduled_date - reservation_days_before(_priority)
+            'manual': always last (no date_reservation)
+            'at_confirm': date_reservation = time of creation
+            'by_date': date_reservation = date_planned - reservation_days_before(_priority)
         """
 
         picking_type_manual = self.picking_type_out.copy()
@@ -1264,33 +1264,33 @@ class TestReports(TestReportsCommon):
         picking_type_at_confirm.reservation_method = 'at_confirm'
         picking_type_at_confirm.sequence_code = 'confirm'
 
-        # 'manual' reservation => no reservation_date
+        # 'manual' reservation => no date_reservation
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_manual
-        delivery_form.scheduled_date = datetime.now() - timedelta(days=10)
+        delivery_form.date_planned = datetime.now() - timedelta(days=10)
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_manual = delivery_form.save()
         delivery_manual.action_confirm()
 
-        # 'by_date' reservation => reservation_date = 1 day before today
+        # 'by_date' reservation => date_reservation = 1 day before today
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_by_date
-        delivery_form.scheduled_date = datetime.now() + timedelta(days=5)
+        delivery_form.date_planned = datetime.now() + timedelta(days=5)
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_by_date = delivery_form.save()
         delivery_by_date.action_confirm()
 
-        # 'by_date' reservation (priority) => reservation_date = 1 day after today
+        # 'by_date' reservation (priority) => date_reservation = 1 day after today
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_by_date
-        delivery_form.scheduled_date = datetime.now() + timedelta(days=5)
+        delivery_form.date_planned = datetime.now() + timedelta(days=5)
         with delivery_form.move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
@@ -1302,7 +1302,7 @@ class TestReports(TestReportsCommon):
         delivery_by_date_priority = delivery_form.save()
         delivery_by_date_priority.action_confirm()
 
-        # 'at_confirm' reservation => reservation_date = today
+        # 'at_confirm' reservation => date_reservation = today
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_at_confirm
@@ -1327,7 +1327,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = date.today() + timedelta(days=1)
+        receipt_form.date_planned = date.today() + timedelta(days=1)
         with receipt_form.move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 6

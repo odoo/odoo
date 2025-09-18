@@ -4,7 +4,7 @@
     <record id="product_template_form_view_invoice_policy_inherit_sale_project" model="ir.ui.view">
         <field name="name">product.template.inherit.sale.projectform</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="inherit_id" ref="sale.product_template_view_form"/>
         <field name="arch" type="xml">
             <field name="invoice_policy" position="attributes">
                 <attribute name="invisible" separator="or" add="type == 'service'"/>
@@ -49,7 +49,7 @@
     <record id="product_template_form_view_inherit_sale_project" model="ir.ui.view">
         <field name="name">product.template.sale.project.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="inherit_id" ref="sale.product_template_view_form"/>
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">

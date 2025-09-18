@@ -16,7 +16,7 @@ class OpenMoveWidget extends Component {
         this.action.doActionButton({
             type: "object",
             resId: this.props.record.resId,
-            name: "action_open_business_doc",
+            name: "action_view_business_doc",
             resModel: this.props.record.resModel,
         });
     }

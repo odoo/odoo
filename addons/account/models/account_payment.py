@@ -449,7 +449,7 @@ class AccountPayment(models.Model):
     def _get_method_codes_needing_bank_account(self):
         return []
 
-    def action_open_business_doc(self):
+    def action_view_business_doc(self):
         return {
             'name': _("Payment"),
             'type': 'ir.actions.act_window',
@@ -900,7 +900,7 @@ class AccountPayment(models.Model):
         return res
 
     def unlink(self):
-        self.move_id.filtered(lambda m: m.state != 'draft').button_draft()
+        self.move_id.filtered(lambda m: m.state != 'draft').action_draft()
         self.move_id.unlink()
 
         linked_invoices = self.reconciled_invoice_ids
@@ -1080,14 +1080,14 @@ class AccountPayment(models.Model):
         self.state = 'canceled'
         draft_moves = self.move_id.filtered(lambda m: m.state == 'draft')
         draft_moves.unlink()
-        (self.move_id - draft_moves).button_cancel()
+        (self.move_id - draft_moves).action_cancel()
 
     def button_request_cancel(self):
         return self.move_id.button_request_cancel()
 
     def action_draft(self):
         self.state = 'draft'
-        self.move_id.button_draft()
+        self.move_id.action_draft()
 
     def button_open_invoices(self):
         ''' Redirect the user to the invoice(s) paid by this payment.

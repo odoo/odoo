@@ -29,7 +29,7 @@ class EventEvent(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids), ('price_total', '!=', 0), ('state', '=', 'sale')],
+            [('event_id', 'in', self.ids), ('price_total', '!=', 0), ('state', '=', 'done')],
             ['event_id', 'currency_id'],
             ['price_total:sum'],
         )
@@ -49,7 +49,7 @@ class EventEvent(models.Model):
         """ Redirects to only the confirmed orders linked to the current events """
         sale_order_action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         sale_order_action.update({
-            'domain': [('state', '=', 'sale'), ('order_line.event_id', 'in', self.ids)],
+            'domain': [('state', '=', 'done'), ('line_ids.event_id', 'in', self.ids)],
             'context': {'create': 0},
         })
         return sale_order_action

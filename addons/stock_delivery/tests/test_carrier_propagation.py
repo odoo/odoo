@@ -28,7 +28,7 @@ class TestCarrierPropagation(TransactionCase):
         cls.product_uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product_delivery_normal = cls.env['product.product'].create({
             'name': 'Normal Delivery Charges',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'type': 'service',
             'list_price': 10.0,
             'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
@@ -43,14 +43,14 @@ class TestCarrierPropagation(TransactionCase):
         cls.output_location = cls.env.ref("stock.stock_location_output")
         cls.super_product = cls.ProductProduct.create({
             'name': 'Super Product',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         mto_route = cls.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         cls.warehouse.mto_pull_id.procure_method = "make_to_stock"
         cls.mto_product = cls.ProductProduct.create({
             'name': 'MTO Product',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'route_ids': [(6, 0, mto_route.ids)],
         })
         cls.rule_pack = cls.warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse.pack_type_id)
@@ -227,7 +227,7 @@ class TestCarrierPropagation(TransactionCase):
         })
         super_product_2 = self.ProductProduct.create({
             'name': 'Super Product 2',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
         })
         sale_orders = self.env['sale.order'].create([
             {

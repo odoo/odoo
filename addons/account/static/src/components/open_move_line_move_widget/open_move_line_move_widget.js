@@ -24,7 +24,7 @@ class LineOpenMoveWidget extends Component {
         return this.action.doActionButton({
             type: "object",
             resId: this.props.record.data[this.props.name].id,
-            name: "action_open_business_doc",
+            name: "action_view_business_doc",
             resModel: "account.move.line",
         });
     }

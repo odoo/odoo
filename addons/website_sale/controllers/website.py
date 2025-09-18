@@ -78,7 +78,7 @@ class Website(main.Website):
     def change_lang(self, lang, **kwargs):
         if cart := request.cart:
             request.env.add_to_compute(
-                cart.order_line._fields['name'],
-                cart.order_line.with_context(lang=lang),
+                cart.line_ids._fields['name'],
+                cart.line_ids.with_context(lang=lang),
             )
         return super().change_lang(lang, **kwargs)

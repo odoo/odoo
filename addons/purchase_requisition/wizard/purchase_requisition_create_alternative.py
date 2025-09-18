@@ -34,15 +34,15 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 partner = partner.parent_id
             if partner and partner.purchase_warn_msg:
                 self.purchase_warn_msg = _("Warning for %(partner)s:\n%(warning_message)s\n", partner=partner.name, warning_message=partner.purchase_warn_msg)
-            if self.copy_products and self.origin_po_id.order_line:
-                for line in self.origin_po_id.order_line:
+            if self.copy_products and self.origin_po_id.line_ids:
+                for line in self.origin_po_id.line_ids:
                     if line.product_id.purchase_line_warn_msg:
                         self.purchase_warn_msg += _("Warning for %(product)s:\n%(warning_message)s\n", product=line.product_id.name, warning_message=line.product_id.purchase_line_warn_msg)
 
     def action_create_alternative(self):
         vals = self._get_alternative_values()
         alt_purchase_orders = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
-        alt_purchase_orders.order_line._compute_tax_id()
+        alt_purchase_orders.line_ids._compute_tax_id()
         action = {
             'type': 'ir.actions.act_window',
             'view_mode': 'list,kanban,form,calendar',
@@ -62,7 +62,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
         partner_product_tmpl_dict = {}
         if self.copy_products and origin_po:
             supplierinfo = self.env['product.supplierinfo'].search([
-                ('product_tmpl_id', 'in', origin_po.order_line.product_id.product_tmpl_id.ids),
+                ('product_tmpl_id', 'in', origin_so.line_ids.product_id.product_tmpl_id.ids),
                 ('partner_id', 'in', self.partner_ids.ids),
                 '|', ('product_code', '!=', False), ('product_name', '!=', False)
             ])
@@ -82,7 +82,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 'payment_term_id': partner.property_supplier_payment_term_id.id,
             }
             if self.copy_products and origin_po:
-                val['order_line'] = [Command.create(self._get_alternative_line_value(line, product_tmpl_ids_with_description)) for line in origin_po.order_line]
+                val['line_ids'] = [Command.create(self._get_alternative_line_value(line, product_tmpl_ids_with_description)) for line in origin_so.line_ids]
             vals.append(val)
 
         return vals

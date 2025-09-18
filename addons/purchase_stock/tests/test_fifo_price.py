@@ -47,7 +47,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         purchase_order_1.button_confirm()
 
         # Check the "Purchase" status of purchase order 1
-        self.assertEqual(purchase_order_1.state, 'purchase')
+        self.assertEqual(purchase_order_1.state, 'done')
 
         # Process the reception of purchase order 1 and set date
         picking = purchase_order_1.picking_ids[0]
@@ -342,7 +342,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         })
 
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.state, 'purchase')
+        self.assertEqual(purchase_order.state, 'done')
 
         picking = purchase_order.picking_ids[0]
         picking.button_validate()

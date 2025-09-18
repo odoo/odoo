@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         insufficient_stock_data = {}
-        for product, ols in self.order_line.grouped('product_id').items():
+        for product, ols in self.line_ids.grouped('product_id').items():
             if not product.is_storable or product.allow_out_of_stock_order:
                 continue
             free_qty = product.with_context(warehouse_id=wh_id).free_qty

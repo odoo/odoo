@@ -54,10 +54,10 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_replenishment_receipt(self, doc_in, components):
         res = super()._get_replenishment_receipt(doc_in, components)
         if doc_in._name == 'purchase.order':
-            if doc_in.state != 'purchase':
+            if doc_in.state != "done":
                 return self._format_receipt_date('estimated', doc_in.date_planned)
             in_pickings = doc_in.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
-            planned_date = max(in_pickings.mapped('scheduled_date')) if in_pickings else doc_in.date_planned
+            planned_date = max(in_pickings.mapped('date_planned')) if in_pickings else doc_in.date_planned
             return self._format_receipt_date('expected', planned_date)
         return res
 
@@ -75,7 +75,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _is_doc_in_done(self, doc_in):
         if doc_in._name == 'purchase.order':
-            return doc_in.state == 'purchase' and all(move.state in ('done', 'cancel') for move in doc_in.order_line.move_ids)
+            return doc_in.state == "done" and all(move.state in ('done', 'cancel') for move in doc_in.line_ids.move_ids)
         return super()._is_doc_in_done(doc_in)
 
     def _get_origin(self, move):

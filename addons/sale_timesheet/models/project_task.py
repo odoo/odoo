@@ -15,7 +15,7 @@ class ProjectTask(models.Model):
             if self.env.user._is_portal() and not self.env.user._is_internal():
                 related_project = related_project.sudo()
             if related_project.pricing_type == 'employee_rate':
-                return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
+                return related_project.sale_line_employee_ids.sale_line_id.partner_id[:1]
         return res
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -75,7 +75,7 @@ class ProjectTask(models.Model):
             if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task.sudo().last_sol_of_customer
 
-    @api.depends('sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
+    @api.depends('sale_line_id.partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         super()._compute_sale_line()
         for task in self:
@@ -102,7 +102,7 @@ class ProjectTask(models.Model):
             SaleOrderLine._domain_sale_line_service(),
             [
                 ('company_id', '=?', self.company_id.id),
-                ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
+                ('partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
                 ('remaining_hours', '>', 0),
             ],
         ])

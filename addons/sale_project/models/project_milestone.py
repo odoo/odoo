@@ -12,7 +12,7 @@ class ProjectMilestone(models.Model):
         if sale_line_id:
             return self.env['sale.order.line'].search([
                 ('id', '=', sale_line_id),
-                ('qty_delivered_method', '=', 'milestones'),
+                ('qty_transferred_method', '=', 'milestones'),
             ], limit=1)
 
         project_id = self.env.context.get('default_project_id')
@@ -21,7 +21,7 @@ class ProjectMilestone(models.Model):
         project = self.env['project.project'].browse(project_id)
         return self.env['sale.order.line'].search([
             ('order_id', '=', project.sale_order_id.id),
-            ('qty_delivered_method', '=', 'milestones'),
+            ('qty_transferred_method', '=', 'milestones'),
         ], limit=1)
 
     allow_billable = fields.Boolean(related='project_id.allow_billable', export_string_translation=False)
@@ -29,7 +29,7 @@ class ProjectMilestone(models.Model):
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, help='Sales Order Item that will be updated once the milestone is reached.',
         index='btree_not_null',
-        domain="[('order_partner_id', '=?', project_partner_id), ('qty_delivered_method', '=', 'milestones')]")
+        domain="[('partner_id', '=?', project_partner_id), ('qty_transferred_method', '=', 'milestones')]")
     quantity_percentage = fields.Float('Quantity (%)', compute="_compute_quantity_percentage", store=True, help='Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.')
 
     sale_line_display_name = fields.Char("Sale Line Display Name", related='sale_line_id.display_name', export_string_translation=False)

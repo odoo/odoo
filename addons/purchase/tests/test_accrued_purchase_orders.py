@@ -86,7 +86,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ])
 
         # received products billed, nothing to bill left
-        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move = self.env['account.move'].browse(self.purchase_order.create_invoice()['res_id'])
         move.invoice_date = '2020-01-01'
         move.action_post()
 
@@ -149,7 +149,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
     def test_accrued_order_returned(self):
         self.purchase_order.order_line.qty_received = 10
         # received products billed, nothing to bill left
-        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move = self.env['account.move'].browse(self.purchase_order.create_invoice()['res_id'])
         move.invoice_date = '2020-01-01'
         move.action_post()
 

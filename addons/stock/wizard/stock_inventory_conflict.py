@@ -5,13 +5,15 @@ from odoo import fields, models
 
 
 class StockInventoryConflict(models.TransientModel):
-    _name = 'stock.inventory.conflict'
-    _description = 'Conflict in Inventory'
+    _name = "stock.inventory.conflict"
+    _description = "Conflict in Inventory"
 
     quant_ids = fields.Many2many(
-        'stock.quant', 'stock_conflict_quant_rel', string='Quants')
-    quant_to_fix_ids = fields.Many2many(
-        'stock.quant', string='Conflicts')
+        comodel_name="stock.quant",
+        relation="stock_conflict_quant_rel",
+        string="Quants",
+    )
+    quant_to_fix_ids = fields.Many2many(comodel_name="stock.quant", string="Conflicts")
 
     def action_keep_counted_quantity(self):
         for quant in self.quant_ids:

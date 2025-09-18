@@ -240,7 +240,7 @@ class PosOrder(models.Model):
             'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(line_values),
         }
 
-    def _prepare_invoice_lines(self, move_type):
+    def _prepare_aml_vals(self, move_type):
         """ Prepare a list of orm commands containing the dictionaries to fill the
         'invoice_line_ids' field when creating an invoice.
 
@@ -356,10 +356,10 @@ class PosOrder(models.Model):
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
-    invoice_status = fields.Selection([
+    invoice_state = fields.Selection([
         ('invoiced', 'Fully Invoiced'),
         ('to_invoice', 'To Invoice'),
-    ], string='Invoice Status', compute='_compute_invoice_status')
+    ], string='Invoice Status', compute='_compute_invoice_state')
     reversed_move_ids = fields.One2many(
         'account.move',
         'reversed_pos_order_id',
@@ -399,9 +399,9 @@ class PosOrder(models.Model):
                     vals['last_order_preparation_change'] = json.dumps(local_change)
 
     @api.depends('account_move')
-    def _compute_invoice_status(self):
+    def _compute_invoice_state(self):
         for order in self:
-            order.invoice_status = 'invoiced' if len(order.account_move) else 'to_invoice'
+            order.invoice_state = 'invoiced' if len(order.account_move) else 'to_invoice'
 
     @api.depends('session_id')
     def _compute_order_config_id(self):
@@ -890,7 +890,7 @@ class PosOrder(models.Model):
             'invoice_date': invoice_date.astimezone(timezone).date(),
             'invoice_user_id': self.user_id.id,
             'fiscal_position_id': fiscal_position.id,
-            'invoice_line_ids': self._prepare_invoice_lines(move_type),
+            'invoice_line_ids': self._prepare_aml_vals(move_type),
             'invoice_payment_term_id': invoice_payment_term_id,
             'invoice_cash_rounding_id': rounding_method.id,
         }
@@ -1693,7 +1693,7 @@ class PosOrderLine(models.Model):
             'pos_order_ids': [Command.link(self.order_id.id)],
         }
 
-    def _prepare_procurement_values(self):
+    def _prepare_procurement_vals(self):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         coming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
@@ -1736,7 +1736,7 @@ class PosOrderLine(models.Model):
                 reference_ids = self.env['stock.reference'].create(line._prepare_reference_vals())
                 line.order_id.stock_reference_ids = [Command.set(reference_ids.ids)]
 
-            values = line._prepare_procurement_values()
+            values = line._prepare_procurement_vals()
             product_qty = line.qty
 
             procurement_uom = line.product_id.uom_id

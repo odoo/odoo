@@ -21,8 +21,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_invoicing_timesheet_enabled(self):
         for wizard in self:
             wizard.invoicing_timesheet_enabled = bool(
-                wizard.sale_order_ids.order_line.filtered(
-                    lambda sol: sol.invoice_status == 'to invoice'
+                wizard.sale_order_ids.line_ids.filtered(
+                    lambda sol: sol.invoice_state == 'to invoice'
                 ).product_id.filtered(
                     lambda p: p._is_delivered_timesheet()
                 )
@@ -40,7 +40,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         """
         if self.advance_payment_method == 'delivered' and self.invoicing_timesheet_enabled:
             if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
-                sale_orders.order_line._recompute_qty_to_invoice(
+                sale_orders.line_ids._recompute_qty_to_invoice(
                     self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
             return sale_orders.with_context(

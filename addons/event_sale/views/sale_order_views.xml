@@ -14,7 +14,7 @@
                     <field name="attendee_count" widget="statinfo" string="Attendees"/>
                 </button>
             </div>
-            <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='line_ids']//form//field[@name='product_id']" position="after">
                 <field
                     name="event_id"
                     domain="[
@@ -41,7 +41,7 @@
                     required="service_tracking == 'event' and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']" position="after">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='product_template_id']" position="after">
                 <field name="event_id"
                     column_invisible="True"
                     domain="[

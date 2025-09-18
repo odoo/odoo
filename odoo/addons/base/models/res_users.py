@@ -696,8 +696,9 @@ class ResUsers(models.Model):
     def context_get(self):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
+        # use prefetch_fields=False to prevent fetching fields that may not have DB columns yet
         try:
-            context = self.env.user.read(['lang', 'tz'], load=False)[0]
+            context = self.env.user.with_context(prefetch_fields=False).read(['lang', 'tz'], load=False)[0]
         except IndexError:
             # user not found, no context information
             return frozendict()

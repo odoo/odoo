@@ -37,7 +37,7 @@ class X2ManyButtons extends Component {
     }
 
     async openFormAndDiscard(id) {
-        const action = await this.orm.call(this.currentField.resModel, "action_open_business_doc", [id], {});
+        const action = await this.orm.call(this.currentField.resModel, "action_view_business_doc", [id], {});
         await this.props.record.discard();
         this.action.doAction(action);
     }

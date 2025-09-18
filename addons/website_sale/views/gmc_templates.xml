@@ -21,9 +21,9 @@
 
                         <!-- Optional -->
                         <g:sale_price t-if="'sale_price' in item" t-out="item['sale_price']"/>
-                        <g:sale_price_effective_date
-                            t-if="'sale_price_effective_date' in item"
-                            t-out="item['sale_price_effective_date']"
+                        <g:sale_price_date_effective
+                            t-if="'sale_price_date_effective' in item"
+                            t-out="item['sale_price_date_effective']"
                         />
                         <g:unit_pricing_measure
                             t-if="'unit_pricing_measure' in item"

@@ -19,7 +19,7 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
                     Would you like to complete your purchase?<br/><br/>
-                    <t t-if="object.order_line">
+                    <t t-if="object.line_ids">
                         <t t-foreach="object.website_order_line" t-as="line">
                             <hr/>
                             <table width="100%">

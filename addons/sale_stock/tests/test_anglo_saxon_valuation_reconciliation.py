@@ -14,7 +14,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         cls.other_currency = cls.setup_other_currency('EUR')
 
         # Set the invoice_policy to delivery to have an accurate COGS entry.
-        cls.test_product_delivery.invoice_policy = 'delivery'
+        cls.test_product_delivery.invoice_policy = 'transferred'
 
     def _create_sale(self, product, date, quantity=1.0):
         order = self.env['sale.order'].sudo().create({

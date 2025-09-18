@@ -41,7 +41,7 @@ patch(PosOrderline.prototype, {
         } else {
             this.setQuantity(
                 saleOrderLine.product_uom_qty -
-                    Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced)
+                    Math.max(saleOrderLine.qty_transferred, saleOrderLine.qty_invoiced)
             );
         }
     },

@@ -58,7 +58,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'standard_price': 11,
             'list_price': 13,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_hour.id,
             'default_code': 'SERV-ORDERED1',
             'service_tracking': 'no',
@@ -69,7 +69,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
@@ -80,7 +80,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'standard_price': 10,
             'list_price': 20,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_tracking': 'task_in_project',
@@ -91,7 +91,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'standard_price': 15,
             'list_price': 30,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_hour.id,
             'default_code': 'SERV-ORDERED4',
             'service_tracking': 'project_only',
@@ -757,7 +757,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'standard_price': 10,
             'list_price': 20,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': self.uom_hour.id,
             'default_code': 'c1',
             'service_tracking': 'task_in_project',
@@ -831,7 +831,7 @@ class TestSaleProject(TestSaleProjectCommon):
         service_with_project_template = self.env['product.product'].create({
             'name': 'Service with archived project template',
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'service_tracking': 'task_in_project',
             'project_template_id': self.archived_project_template.id,
         })
@@ -1131,7 +1131,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id': self.project_global.id,
         })
         task.write({'sale_line_id': sale_order_line.id})
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'done')
 
     def test_confirm_sale_order_on_project_creation(self):
         sale_order = self.env['sale.order'].create({
@@ -1148,7 +1148,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'name': 'Project',
             'sale_line_id': sale_order_line.id,
         })
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'done')
 
     def test_create_project_on_fly(self):
         """
@@ -1409,7 +1409,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertEqual(sale_order.project_id, self.project_global)
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'done')
         self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
 
         sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
@@ -1789,14 +1789,14 @@ class TestSaleProject(TestSaleProjectCommon):
             {
                 'name': 'Product with Project Template 1',
                 'type': 'service',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'service_tracking': 'project_only',
                 'project_template_id': template_1.id,
             },
             {
                 'name': 'Product with Project Template 2',
                 'type': 'service',
-                'invoice_policy': 'order',
+                'invoice_policy': 'ordered',
                 'service_tracking': 'project_only',
                 'project_template_id': template_2.id,
             },

@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "click send by email",
-        trigger: '.btn[name="action_quotation_send"]',
+        trigger: '.btn[name="action_send_quotation"]',
         run: "click",
     },
     {

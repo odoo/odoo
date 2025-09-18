@@ -24,7 +24,7 @@ class TestProjectProfitabilityCommon(Common):
             'type': 'consu',
             'standard_price': 5,
             'list_price': 10,
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'uom_id': uom_unit_id,
         })
 
@@ -35,7 +35,7 @@ class TestProjectProfitabilityCommon(Common):
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'manual',
             'uom_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
@@ -146,7 +146,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             'standard_price': 30,
             'list_price': 90,
             'type': 'service',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'service_type': 'manual',
             'uom_id': self.uom_hour.id,
             'default_code': 'SERV-ORDERED2',

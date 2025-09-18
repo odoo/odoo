@@ -26,8 +26,8 @@ class MrpBom(models.Model):
         if not product_ids:
             return
         lines = self.env['sale.order.line'].sudo().search([
-            ('state', '=', 'sale'),
-            ('invoice_status', 'in', ('no', 'to invoice')),
+            ('state', '=', 'done'),
+            ('invoice_state', 'in', ('no', 'to invoice')),
             ('product_id', 'in', product_ids),
             ('move_ids.state', '!=', 'cancel'),
         ])

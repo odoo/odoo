@@ -49,7 +49,7 @@ class PaymentProvider(models.Model):
         # Show on-site payment providers only if in-store delivery methods exist and the order
         # contains physical products.
         if order.carrier_id.delivery_type != 'in_store' or not any(
-            product.type == 'consu' for product in order.order_line.product_id
+            product.type == 'consu' for product in order.line_ids.product_id
         ):
             unfiltered_providers = compatible_providers
             compatible_providers = compatible_providers.filtered(

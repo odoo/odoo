@@ -397,7 +397,11 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_install(self):
-        company_countries = self.env['res.company'].search([]).country_id
+        # During module installation, models may have new fields in Python
+        # but not yet in database schema. Use prefetch_fields=False to prevent
+        # fetching fields that don't have columns yet (same mechanism used in _auto_init)
+        env_no_prefetch = self.env(context=dict(self.env.context, prefetch_fields=False))
+        company_countries = env_no_prefetch['res.company'].search([]).country_id
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
 

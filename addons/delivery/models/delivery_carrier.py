@@ -204,7 +204,7 @@ class DeliveryCarrier(models.Model):
     def _match_must_have_tags(self, source):
         self.ensure_one()
         if source._name == 'sale.order':
-            products = source.order_line.product_id
+            products = source.line_ids.product_id
         elif source._name == 'stock.picking':
             products = source.move_ids.with_prefetch().mapped('product_id')
         else:
@@ -217,7 +217,7 @@ class DeliveryCarrier(models.Model):
     def _match_excluded_tags(self, source):
         self.ensure_one()
         if source._name == 'sale.order':
-            products = source.order_line.product_id
+            products = source.line_ids.product_id
         elif source._name == 'stock.picking':
             products = source.move_ids.with_prefetch().mapped('product_id')
         else:
@@ -229,7 +229,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             total_weight = sum(
                 line.product_id.weight * line.product_qty
-                for line in source.order_line
+                for line in source.line_ids
             )
         elif source._name == 'stock.picking':
             total_weight = sum(
@@ -245,7 +245,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             total_volume = sum(
                 line.product_id.volume * line.product_qty
-                for line in source.order_line
+                for line in source.line_ids
             )
         elif source._name == 'stock.picking':
             total_volume = sum(
@@ -454,7 +454,7 @@ class DeliveryCarrier(models.Model):
         order = order.sudo()
         total = weight = volume = quantity = wv = 0
         total_delivery = 0.0
-        for line in order.order_line:
+        for line in order.line_ids:
             if line.state == 'cancel':
                 continue
             if line.is_delivery:

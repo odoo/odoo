@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         },
         {
             isActive: ["auto", "mobile"],
-            trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']",
+            trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_send_rfq']",
         },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",

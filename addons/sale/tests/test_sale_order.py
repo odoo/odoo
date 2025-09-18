@@ -86,8 +86,8 @@ class TestSaleOrder(SaleCommon):
 
     def test_sale_order_standard_flow(self):
         self.assertEqual(self.sale_order.amount_total, 725.0, 'Sale: total amount is wrong')
-        self.sale_order.order_line._compute_product_updatable()
-        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+        self.sale_order.order_line._compute_product_readonly()
+        self.assertFalse(self.sale_order.order_line[0].product_readonly)
 
         # send quotation
         email_act = self.sale_order.action_quotation_send()
@@ -97,13 +97,13 @@ class TestSaleOrder(SaleCommon):
             subtype_xmlid='mail.mt_comment',
         )
         self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
-        self.sale_order.order_line._compute_product_updatable()
-        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+        self.sale_order.order_line._compute_product_readonly()
+        self.assertFalse(self.sale_order.order_line[0].product_readonly)
 
         # confirm quotation
         self.sale_order.action_confirm()
-        self.assertTrue(self.sale_order.state == 'sale')
-        self.assertTrue(self.sale_order.invoice_status == 'to invoice')
+        self.assertTrue(self.sale_order.state == 'done')
+        self.assertTrue(self.sale_order.invoice_state == 'to invoice')
 
     def test_sale_order_send_to_self(self):
         # when sender(logged in user) is also present in recipients of the mail composer,
@@ -152,21 +152,21 @@ class TestSaleOrder(SaleCommon):
         # SO in state 'cancel' can be deleted
         so_copy = self.sale_order.copy()
         so_copy.action_confirm()
-        self.assertTrue(so_copy.state == 'sale', 'Sale: SO should be in state "sale"')
+        self.assertTrue(so_copy.state == 'done', 'Sale: SO should be in state "done"')
         so_copy._action_cancel()
         self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
         with self.assertRaises(AccessError):
             so_copy.with_user(self.sale_user).unlink()
         self.assertTrue(so_copy.unlink(), 'Sale: deleting a cancelled SO should be possible')
 
-        # SO in state 'sale' cannot be deleted
+        # SO in state 'done' cannot be deleted
         self.sale_order.action_confirm()
-        self.assertTrue(self.sale_order.state == 'sale', 'Sale: SO should be in state "sale"')
+        self.assertTrue(self.sale_order.state == 'done', 'Sale: SO should be in state "done"')
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
         self.sale_order.action_lock()
-        self.assertTrue(self.sale_order.state == 'sale')
+        self.assertTrue(self.sale_order.state == 'done')
         self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.unlink()
@@ -302,13 +302,13 @@ class TestSaleOrder(SaleCommon):
 
         self.env.user.group_ids += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.action_confirm()
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
         self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.action_confirm()
 
         self.sale_order.action_unlock()
-        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(self.sale_order.state, 'done')
 
     def test_sol_name_search(self):
         # Shouldn't raise
@@ -414,7 +414,7 @@ class TestSaleOrder(SaleCommon):
         """ Test that the order status email is sent synchronously when nothing is configured. """
         self.env['ir.config_parameter'].set_param('sale.async_emails', 'False')
 
-        self.sale_order._send_order_notification_mail(self.confirmation_email_template)
+        self.sale_order._send_mail_order_notification(self.confirmation_email_template)
         self.assertFalse(
             self.env['ir.cron.trigger'].search_count([('cron_id', '=', self.async_emails_cron.id)]),
             msg="The email should be sent synchronously when the system parameter is not set.",
@@ -424,7 +424,7 @@ class TestSaleOrder(SaleCommon):
         """ Test that the order status email is sent asynchronously when configured. """
         self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
 
-        self.sale_order._send_order_notification_mail(self.confirmation_email_template)
+        self.sale_order._send_mail_order_notification(self.confirmation_email_template)
         self.assertTrue(
             self.sale_order.pending_email_template_id,
             msg="The email template should be saved on the sales order.",
@@ -460,7 +460,7 @@ class TestSaleOrder(SaleCommon):
             mark_so_as_sent=True,
         ).new({
             'body': '<h1>Your Sales Order</h1>',
-            'scheduled_date': fields.Datetime.now() + timedelta(days=1),
+            'date_planned': fields.Datetime.now() + timedelta(days=1),
         })
         composer.action_schedule_message()
 
@@ -493,10 +493,10 @@ class TestSaleOrder(SaleCommon):
             so_form.company_id = self.env['res.company']
 
     def test_so_is_not_invoiceable_if_only_discount_line_is_to_invoice(self):
-        self.sale_order.order_line.product_id.invoice_policy = 'delivery'
+        self.sale_order.order_line.product_id.invoice_policy = 'transferred'
         self.sale_order.action_confirm()
 
-        self.assertEqual(self.sale_order.invoice_status, 'no')
+        self.assertEqual(self.sale_order.invoice_state, 'no')
         standard_lines = self.sale_order.order_line
 
         self.env['sale.order.discount'].create({
@@ -507,21 +507,21 @@ class TestSaleOrder(SaleCommon):
 
         # Only the discount line is invoiceable (there are lines not invoiced and not invoiceable)
         discount_line = self.sale_order.order_line - standard_lines
-        self.assertEqual(discount_line.invoice_status, 'to invoice')
-        self.assertEqual(self.sale_order.invoice_status, 'no')
+        self.assertEqual(discount_line.invoice_state, 'to invoice')
+        self.assertEqual(self.sale_order.invoice_state, 'no')
 
     def test_so_is_invoiceable_if_only_discount_line_remains_to_invoice(self):
-        self.sale_order.order_line.product_id.invoice_policy = 'delivery'
+        self.sale_order.order_line.product_id.invoice_policy = 'transferred'
         self.sale_order.action_confirm()
 
-        self.assertEqual(self.sale_order.invoice_status, 'no')
+        self.assertEqual(self.sale_order.invoice_state, 'no')
         standard_lines = self.sale_order.order_line
 
         for sol in standard_lines:
             sol.qty_delivered = sol.product_uom_qty
         self.sale_order._create_invoices()
 
-        self.assertEqual(self.sale_order.invoice_status, 'invoiced')
+        self.assertEqual(self.sale_order.invoice_state, 'invoiced')
 
         self.env['sale.order.discount'].create({
             'sale_order_id': self.sale_order.id,
@@ -531,8 +531,8 @@ class TestSaleOrder(SaleCommon):
 
         # Only the discount line is invoiceable (there are no other lines remaining to invoice)
         discount_line = (self.sale_order.order_line - standard_lines)
-        self.assertEqual(discount_line.invoice_status, 'to invoice')
-        self.assertEqual(self.sale_order.invoice_status, 'to invoice')
+        self.assertEqual(discount_line.invoice_state, 'to invoice')
+        self.assertEqual(self.sale_order.invoice_state, 'to invoice')
 
     def test_so_with_fixed_discount_zero_amount(self):
         """ Applying a fixed discount of 0.0 should have no effect on the order total. """
@@ -808,7 +808,7 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         })
         sale_order.action_confirm()
         sale_order._create_invoices(final=True)
-        self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
+        self.assertTrue(sale_order.invoice_state == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
 
 
 @tagged('post_install', '-at_install')

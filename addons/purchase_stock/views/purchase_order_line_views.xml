@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_line_view_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.line.form.inherit</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                <separator string="Stock Moves" />
+                <field name="move_ids" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

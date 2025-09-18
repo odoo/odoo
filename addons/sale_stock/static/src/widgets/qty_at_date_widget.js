@@ -56,14 +56,14 @@ export class QtyAtDateWidget extends Component {
     initCalcData() {
         // calculate data not in record
         const { data } = this.props.record;
-        if (data.scheduled_date) {
+        if (data.date_planned) {
             // TODO: might need some round_decimals to avoid errors
-            if (data.state === 'sale') {
-                this.calcData.will_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
+            if (data.state === 'done') {
+                this.calcData.will_be_fulfilled = data.qty_free_today >= data.qty_to_transfer;
             } else {
-                this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
+                this.calcData.will_be_fulfilled = data.qty_available_virtual_at_date >= data.qty_to_transfer;
             }
-            this.calcData.will_be_late = data.forecast_expected_date && data.forecast_expected_date > data.scheduled_date;
+            this.calcData.will_be_late = data.date_planned_forecast && data.date_planned_forecast > data.date_planned;
             if (['draft', 'sent'].includes(data.state)) {
                 // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
                 this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled && !data.is_mto;
@@ -89,8 +89,8 @@ export class QtyAtDateWidget extends Component {
             productUom = (await this.orm.searchRead("uom.uom", [["id", "=", lineProduct[0].uom_id[0]]], ["factor", "name"]))[0];
         }
         if (lineUom && productUom) {
-            this.calcData.product_uom_virtual_available_at_date = roundPrecision(data.virtual_available_at_date * lineUom.factor / productUom.factor, 1);
-            this.calcData.product_uom_free_qty_today = roundPrecision(data.free_qty_today * lineUom.factor / productUom.factor, 1);
+            this.calcData.product_uom_qty_available_virtual_at_date = roundPrecision(data.qty_available_virtual_at_date * lineUom.factor / productUom.factor, 1);
+            this.calcData.product_uom_qty_free_today = roundPrecision(data.qty_free_today * lineUom.factor / productUom.factor, 1);
             this.calcData.product_uom_name = productUom.name;
         }
     }
@@ -98,12 +98,12 @@ export class QtyAtDateWidget extends Component {
     updateCalcData() {
         // popup specific data
         const { data } = this.props.record;
-        if (!data.scheduled_date) {
+        if (!data.date_planned) {
             return;
         }
-        this.calcData.delivery_date = formatDateTime(data.scheduled_date, { format: localization.dateFormat });
-        if (data.forecast_expected_date) {
-            this.calcData.forecast_expected_date_str = formatDateTime(data.forecast_expected_date, { format: localization.dateFormat });
+        this.calcData.delivery_date = formatDateTime(data.date_planned, { format: localization.dateFormat });
+        if (data.date_planned_forecast) {
+            this.calcData.date_planned_forecast_str = formatDateTime(data.date_planned_forecast, { format: localization.dateFormat });
         }
     }
 
@@ -122,14 +122,14 @@ export const qtyAtDateWidget = {
     component: QtyAtDateWidget,
     fieldDependencies: [
         { name: 'display_qty_widget', type: 'boolean'},
-        { name: 'free_qty_today', type: 'float'},
-        { name: 'forecast_expected_date', type: 'datetime'},
+        { name: 'qty_free_today', type: 'float'},
+        { name: 'date_planned_forecast', type: 'datetime'},
         { name: 'is_mto', type: 'boolean'},
         { name: 'move_ids', type: 'one2many'},
         { name: 'qty_available_today', type: 'float'},
-        { name: 'qty_to_deliver', type: 'float'},
-        { name: 'scheduled_date', type: 'datetime'},
-        { name: 'virtual_available_at_date', type: 'float'},
+        { name: 'qty_to_transfer', type: 'float'},
+        { name: 'date_planned', type: 'datetime'},
+        { name: 'qty_available_virtual_at_date', type: 'float'},
         { name: 'warehouse_id', type: 'many2one'},
     ],
 };

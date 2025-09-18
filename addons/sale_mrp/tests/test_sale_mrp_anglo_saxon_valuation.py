@@ -127,7 +127,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'name': 'Product Template',
             'is_storable': True,
             'uom_id': self.uom_unit.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transferred',
             'categ_id': self.stock_account_product_categ.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
@@ -320,7 +320,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         kit = self._create_product(name='Simple Kit', is_storable=True, standard_price=0)
         component = self._create_product(name='Compo A', is_storable=True, standard_price=0)
-        (kit + component).invoice_policy = 'delivery'
+        (kit + component).invoice_policy = 'transferred'
         kit.property_account_expense_id = self.company_data['default_account_expense']
 
         self.env['mrp.bom'].create({
@@ -418,7 +418,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         compo02 = self._create_product(name='Compo 02', is_storable=True, standard_price=20)
         kit = self._create_product(name='Kit', is_storable=True, standard_price=0)
 
-        (compo01 + compo02 + kit).invoice_policy = 'delivery'
+        (compo01 + compo02 + kit).invoice_policy = 'transferred'
 
         self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
@@ -468,7 +468,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         compo02 = self._create_product(name='Compo 02', is_storable=True, standard_price=20)
         kit = self._create_product(name='Kit', is_storable=True, standard_price=0)
 
-        (compo01 + compo02 + kit).invoice_policy = 'delivery'
+        (compo01 + compo02 + kit).invoice_policy = 'transferred'
 
         self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
@@ -624,7 +624,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         compo01 = self._create_product(name="Compo 01", is_storable=True, standard_price=10)
         compo02 = self._create_product(name="Compo 02", is_storable=True, standard_price=20)
         kit = self._create_product(name="Kit", is_storable=True, standard_price=30)
-        (compo01 + compo02 + kit).write({'invoice_policy': 'order'})
+        (compo01 + compo02 + kit).write({'invoice_policy': 'ordered'})
         warehouse = self.company_data['default_warehouse']
         self.env['stock.quant']._update_available_quantity(compo01, warehouse.lot_stock_id, 1.0)
         self.env['stock.quant']._update_available_quantity(compo02, warehouse.lot_stock_id, 2.0)

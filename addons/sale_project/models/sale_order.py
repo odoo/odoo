@@ -38,17 +38,17 @@ class SaleOrder(models.Model):
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
-            [('sale_line_id', 'in', self.order_line.ids)],
+            [('sale_line_id', 'in', self.line_ids.ids)],
             ['sale_line_id'],
             ['__count'],
         )
         line_data = {sale_line.id: count for sale_line, count in read_group}
         for order in self:
-            order.milestone_count = sum(line_data.get(line.id, 0) for line in order.order_line)
+            order.milestone_count = sum(line_data.get(line.id, 0) for line in order.line_ids)
 
     def _compute_is_product_milestone(self):
         for order in self:
-            order.is_product_milestone = order.order_line.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
+            order.is_product_milestone = order.line_ids.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
 
     def _compute_show_project_and_task_button(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         query = self.env['project.task']._search(task_domain)
         return [('id', 'in', query.subselect('sale_order_id'))]
 
-    @api.depends('order_line.product_id.project_id')
+    @api.depends('line_ids.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
             domain=self._tasks_ids_domain(),
@@ -104,29 +104,29 @@ class SaleOrder(models.Model):
             remaining_orders.tasks_count = 0
             remaining_orders.closed_task_count = 0
 
-    @api.depends('order_line.product_id.service_tracking')
+    @api.depends('line_ids.product_id.service_tracking')
     def _compute_visible_project(self):
         """ Users should be able to select a project_id on the SO if at least one SO line has a product with its service tracking
         configured as 'task_in_project' """
         for order in self:
             order.visible_project = any(
-                service_tracking == 'task_in_project' for service_tracking in order.order_line.mapped('product_id.service_tracking')
+                service_tracking == 'task_in_project' for service_tracking in order.line_ids.mapped('product_id.service_tracking')
             )
 
-    @api.depends('order_line.product_id', 'order_line.project_id')
+    @api.depends('line_ids.product_id', 'line_ids.project_id')
     def _compute_project_ids(self):
         projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
             projects_per_so[project.sale_order_id.id or project.reinvoiced_sale_order_id.id] |= project
         for order in self:
-            projects = order.order_line.filtered(
+            projects = order.line_ids.filtered(
                 lambda sol:
                     sol.is_service
                     and not (sol._is_line_optional() and sol.product_uom_qty == 0)
                 ).mapped('product_id.project_id')
             projects |= order.project_id
-            projects |= order.order_line.mapped('project_id')
+            projects |= order.line_ids.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
             projects = projects._filtered_access('read')
             order.project_ids = projects
@@ -139,25 +139,25 @@ class SaleOrder(models.Model):
 
         if len(self.company_id) == 1:
             # All orders are in the same company
-            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+            self.line_ids.sudo().with_company(self.company_id)._timesheet_service_generation()
         else:
             # Orders from different companies are confirmed together
             for order in self:
-                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
+                order.line_ids.sudo().with_company(order.company_id)._timesheet_service_generation()
 
         # If the order has exactly one project and that project comes from a template, set the company of the template
         # on the project.
         for order in self.sudo(): # Salesman may not have access to projects
             if len(order.project_ids) == 1:
                 project = order.project_ids[0]
-                for sol in order.order_line:
+                for sol in order.line_ids:
                     if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
                         project.sudo().company_id = project_template.sudo().company_id
                         break
         return super()._action_confirm()
 
     def _tasks_ids_domain(self):
-        return ['&', ('is_template', '=', False), ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
+        return ['&', ('is_template', '=', False), ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.line_ids.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
 
     def action_create_project(self):
         self.ensure_one()
@@ -171,7 +171,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-        sorted_line = self.order_line.sorted('sequence')
+        sorted_line = self.line_ids.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line
             if sol.product_id.type == 'service' and not sol.is_downpayment
@@ -192,16 +192,16 @@ class SaleOrder(models.Model):
                 'default_company_id': self.company_id.id,
                 'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
                 'default_name': self.name,
-                'default_allow_milestones': 'delivered_milestones' in self.order_line.product_id.mapped('service_policy'),
+                'default_allow_milestones': 'delivered_milestones' in self.line_ids.product_id.mapped('service_policy'),
             },
         }
 
     def action_view_project_ids(self):
         self.ensure_one()
-        if not self.order_line:
+        if not self.line_ids:
             return {'type': 'ir.actions.act_window_close'}
 
-        sorted_line = self.order_line.sorted('sequence')
+        sorted_line = self.line_ids.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line if sol.product_id.type == 'service'
         ), self.env['sale.order.line'])
@@ -240,7 +240,7 @@ class SaleOrder(models.Model):
     def action_view_milestone(self):
         self.ensure_one()
         default_project = self.project_ids and self.project_ids[0]
-        sorted_line = self.order_line.sorted('sequence')
+        sorted_line = self.line_ids.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line
                 if sol.is_service and sol.product_id.service_policy == 'delivered_milestones'
@@ -248,7 +248,7 @@ class SaleOrder(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Milestones'),
-            'domain': [('sale_line_id', 'in', self.order_line.ids)],
+            'domain': [('sale_line_id', 'in', self.line_ids.ids)],
             'res_model': 'project.milestone',
             'views': [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list')],
             'view_mode': 'list',
@@ -272,7 +272,7 @@ class SaleOrder(models.Model):
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
         task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
         if project or task:
-            service_sol = next((sol for sol in created_records.order_line if sol.is_service), self.env['sale.order.line'])
+            service_sol = next((sol for sol in created_records.line_ids if sol.is_service), self.env['sale.order.line'])
             if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:
@@ -294,13 +294,13 @@ class SaleOrder(models.Model):
             so.completed_task_percentage = so.tasks_count and so.closed_task_count / so.tasks_count
 
     def action_confirm(self):
-        if len(self) == 1 and self.env.context.get('create_for_project_id') and self.state == 'sale':
+        if len(self) == 1 and self.env.context.get('create_for_project_id') and self.state == 'done':
             # do nothing since the SO has been automatically confirmed during its creation
             return True
         return super().action_confirm()
 
     def get_first_service_line(self):
-        line = next((sol for sol in self.order_line if sol.is_service), False)
+        line = next((sol for sol in self.line_ids if sol.is_service), False)
         if not line:
             raise UserError(self.env._('The Sales Order must contain at least one service product.'))
         return line

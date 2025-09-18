@@ -21,7 +21,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'standard_price': 100,
             'list_price': 150,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'is_published': True,
         })
 

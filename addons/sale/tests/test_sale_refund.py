@@ -71,7 +71,7 @@ class TestSaleRefund(TestSaleCommon):
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -106,7 +106,7 @@ class TestSaleRefund(TestSaleCommon):
         # At this time, the invoice 1 is opend (validated) and its refund is in draft, so the amounts invoiced are not zero for
         # invoiced sale line. The amounts only take validated invoice/refund into account.
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO line based on delivered qty")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -130,7 +130,7 @@ class TestSaleRefund(TestSaleCommon):
         invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -164,7 +164,7 @@ class TestSaleRefund(TestSaleCommon):
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -198,7 +198,7 @@ class TestSaleRefund(TestSaleCommon):
         # At this time, the invoice 1 and its refund are confirmed, so the amounts invoiced are zero. The third invoice
         # (2nd customer inv) is in draft state.
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -230,7 +230,7 @@ class TestSaleRefund(TestSaleCommon):
         invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
+            if line.product_id.invoice_policy == 'transferred':
                 self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
                 self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
                 self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
@@ -268,13 +268,13 @@ class TestSaleRefund(TestSaleCommon):
             'discount': 0.0,
             'product_uom_qty': 5.0,
             'qty_to_invoice': 0.0,
-            'invoice_status': 'no',
+            'invoice_state': 'no',
         }])
 
         sale_order_refund.action_confirm()
 
         self.assertEqual(sol_product.qty_to_invoice, 5.0)
-        self.assertEqual(sol_product.invoice_status, 'to invoice')
+        self.assertEqual(sol_product.invoice_state, 'to invoice')
 
         so_context = {
             'active_model': 'sale.order',
@@ -296,7 +296,7 @@ class TestSaleRefund(TestSaleCommon):
         self.assertRecordValues(sol_downpayment, [{
             'price_unit': 700.0,
             'discount': 0.0,
-            'invoice_status': 'to invoice',
+            'invoice_state': 'to invoice',
             'untaxed_amount_to_invoice': -700.0,
             'untaxed_amount_invoiced': 700.0,
             'product_uom_qty': 0.0,
@@ -331,5 +331,51 @@ class TestSaleRefund(TestSaleCommon):
         self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As the downpayment was invoiced separately, it will still have to be deducted from the total invoice (hence -1.0), after the refund.")
         self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be 1 as, with the refund, the products are not invoiced anymore, but the downpayment still is")
         self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -(sol_product.price_unit * 5)/2, "Amount to invoice decreased as the refund is now confirmed")
-        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, (sol_product.price_unit * 5)/2, "Amount invoiced is now set as half of all products' total amount to invoice, as refund is validated")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, (sol_product.price_unit * 5)/2, "Amount invoiced is now set as half of all products' total amount to invoke, as refund is validated")
         self.assertEqual(len(sol_downpayment.invoice_lines), 3, "The product line is invoiced, so it should be linked to 3 invoice lines (downpayment invoice, partial invoice and refund)")
+
+    def test_orphan_refund_inclusion(self):
+        """Test that refunds created from invoices are included even if unlinked from SO lines.
+
+        This tests the scenario where a refund is created via the Credit Note button
+        on an invoice, and then the sale_line_ids are manually removed from the refund
+        invoice lines (orphan refund). The SO should still include this refund in its
+        invoice_ids through the reversed_entry_id relationship.
+        """
+        # Validate the invoice
+        self.invoice.action_post()
+
+        # Create a credit note using the reversal wizard
+        credit_note_wizard = self.env['account.move.reversal'].with_context({
+            'active_ids': [self.invoice.id],
+            'active_id': self.invoice.id,
+            'active_model': 'account.move'
+        }).create({
+            'reason': 'Test orphan refund',
+            'journal_id': self.invoice.journal_id.id,
+        })
+        credit_note_wizard.refund_moves()
+
+        # Get the refund that was just created
+        refund = self.sale_order.invoice_ids.filtered(lambda m: m.move_type == 'out_refund')
+        self.assertEqual(len(refund), 1, "Should have exactly one refund")
+
+        # Verify the refund is linked to the SO before breaking the link
+        initial_invoice_count = self.sale_order.invoice_count
+        self.assertEqual(initial_invoice_count, 2, "SO should have 2 invoices (invoice + refund)")
+        self.assertIn(refund, self.sale_order.invoice_ids, "Refund should be in SO invoice_ids")
+
+        # Simulate breaking the link by removing sale_line_ids from refund lines
+        # This creates an "orphan" refund that's not directly linked to SO lines
+        refund.invoice_line_ids.write({'sale_line_ids': [Command.clear()]})
+
+        # Force recomputation of invoice_ids
+        self.sale_order.invalidate_recordset(['invoice_ids', 'invoice_count'])
+
+        # Verify the orphan refund is still included via reversed_entry_id
+        self.assertEqual(self.sale_order.invoice_count, 2,
+                        "SO should still have 2 invoices (invoice + orphan refund)")
+        self.assertIn(refund, self.sale_order.invoice_ids,
+                     "Orphan refund should still be in SO invoice_ids via reversed_entry_id")
+        self.assertEqual(refund.reversed_entry_id, self.invoice,
+                        "Refund should have reversed_entry_id pointing to original invoice")

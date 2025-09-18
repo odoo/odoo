@@ -1632,7 +1632,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(self._get_shop_path())
 
-        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'sale' else []
+        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'done' else []
         if errors:
             first_error = errors[0]  # only display first error
             error_msg = f"{first_error[0]}\n{first_error[1]}"
@@ -1642,7 +1642,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(self._get_shop_path())
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
+        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'done':
             order_sudo._check_cart_is_ready_to_be_paid()
             # Only confirm the order if it wasn't already confirmed.
             order_sudo._validate_order()
@@ -1725,7 +1725,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect(self._get_shop_path())
 
         # Check that the cart is not empty.
-        if not order_sudo.order_line:
+        if not order_sudo.line_ids:
             return request.redirect('/shop/cart')
 
         # Check that public orders are allowed.
@@ -1868,9 +1868,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'value': order.amount_total,
             'tax': order.amount_tax,
             'currency': order.currency_id.name,
-            'items': self.order_lines_2_google_api(order.order_line),
+            'items': self.order_lines_2_google_api(order.line_ids),
         }
-        delivery_line = order.order_line.filtered('is_delivery')
+        delivery_line = order.line_ids.filtered('is_delivery')
         if delivery_line:
             tracking_cart_dict['shipping'] = delivery_line.price_unit
         return tracking_cart_dict

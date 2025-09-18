@@ -35,7 +35,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
         # Check scheduled and deadline date of In Type shipment
-        self.assertEqual(purchase.picking_ids.scheduled_date, schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
+        self.assertEqual(purchase.picking_ids.date_planned, schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
         self.assertEqual(purchase.picking_ids.date_deadline, schedule_date, 'Deadline date of should be equal to: schedule date of purchase order.')
 
     def test_01_product_level_delay(self):
@@ -76,7 +76,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of In Type shipment
         picking_schedule_date = min(date_planned1, date_planned2)
-        self.assertEqual(purchase2.picking_ids.scheduled_date, picking_schedule_date,
+        self.assertEqual(purchase2.picking_ids.date_planned, picking_schedule_date,
                          'Schedule date of In type shipment should be same as schedule date of purchase order.')
 
         # Check deadline of pickings

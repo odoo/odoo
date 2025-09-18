@@ -75,7 +75,7 @@ class StockMoveLine(models.Model):
                 'move_ids': [],
                 'move_line_ids': [],
                 'batch_id': wave.id,
-                'scheduled_date': picking.scheduled_date,
+                'date_planned': picking.date_planned,
             })[0]
             split_pickings_ids.add(picking.id)
             for move, move_lines in line_by_move.items():

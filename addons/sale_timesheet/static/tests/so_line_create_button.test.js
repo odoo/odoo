@@ -18,7 +18,7 @@ class SaleOrder extends saleTimesheetModels.SaleOrder {
                 </group>
                 <notebook>
                     <page string="Order Lines" name="order_lines">
-                        <field name="order_line">
+                        <field name="line_ids">
                             <list editable="bottom">
                                 <field name="product_id"/>
                             </list>

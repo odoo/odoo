@@ -15,12 +15,12 @@ class ProjectUpdate(models.Model):
                     project._get_domain_from_section_id(section["id"]),
                 )
                 sols = all_sols.with_context(with_price_unit=True)._read_format([
-                    'name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'
+                    'name', 'product_uom_qty', 'qty_transferred', 'qty_invoiced', 'product_uom_id', 'product_id'
                 ])
                 for sol in sols:
                     if sol['product_uom_id'][1] == 'Hours':
                         sol['product_uom_qty'] = format_duration(sol['product_uom_qty'])
-                        sol['qty_delivered'] = format_duration(sol['qty_delivered'])
+                        sol['qty_transferred'] = format_duration(sol['qty_transferred'])
                         sol['qty_invoiced'] = format_duration(sol['qty_invoiced'])
                 section["sol"] = sols
         return template_values

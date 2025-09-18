@@ -6186,7 +6186,7 @@ class TestStockMove(TestStockCommon):
             {'location_dest_id': child_location.id, 'product_id': self.productA.id, 'quantity': 2},
         ])
 
-    def test_scheduled_date_after_backorder(self):
+    def test_date_planned_after_backorder(self):
         today = fields.Datetime.today()
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
@@ -6205,7 +6205,7 @@ class TestStockMove(TestStockCommon):
         move_product.date = today + relativedelta(day=5)
         move_consu = picking.move_ids.filtered(lambda m: m.product_id == self.product_consu)
         move_consu.date = today + relativedelta(day=10)
-        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
+        self.assertEqual(picking.date_planned, today + relativedelta(day=5))
         picking.action_confirm()
 
         # Complete one move and create a backorder with the remaining move
@@ -6214,8 +6214,8 @@ class TestStockMove(TestStockCommon):
         Form.from_action(self.env, picking.button_validate()).save().with_user(self.user_stock_user).process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
 
-        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
-        self.assertEqual(backorder.scheduled_date, today + relativedelta(day=10))
+        self.assertEqual(picking.date_planned, today + relativedelta(day=5))
+        self.assertEqual(backorder.date_planned, today + relativedelta(day=10))
 
     def test_internal_transfer_with_tracked_product(self):
         """

@@ -3183,7 +3183,7 @@ class TestAutoAssign(TestStockCommon):
         4. Check that only the correct outgoing pickings are auto_assigned
         5. Additionally check that auto-assignment at confirmation correctly works when products are in stock
         Note, default reservation method is expected to be covered by other tests.
-        Also check reservation_dates are as expected
+        Also check date_reservations are as expected
         """
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
@@ -3210,7 +3210,7 @@ class TestAutoAssign(TestStockCommon):
         # 'by_date' picking w/ 1 day before scheduled date auto-assign setting, set to 5 days in advance => shouldn't auto-assign
         customer_picking2 = customer_picking1.copy({'name': "Delivery 2",
                                                     'picking_type_id': picking_type_out2.id,
-                                                    'scheduled_date': customer_picking1.scheduled_date + timedelta(days=5)})
+                                                    'date_planned': customer_picking1.date_planned + timedelta(days=5)})
         # 'by_date' picking w/ 10 days before scheduled date auto-assign setting, set to 5 days in advance => should auto-assign
         customer_picking3 = customer_picking2.copy({'name': "Delivery 3", 'picking_type_id': picking_type_out3.id})
         customer_picking4 = customer_picking3.copy({'name': "Delivery 4", 'picking_type_id': picking_type_out3.id})
@@ -3255,10 +3255,10 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(customer_picking2.move_ids.quantity, 0, "There should be no products available to reserve yet.")
         self.assertEqual(customer_picking3.move_ids.quantity, 0, "There should be no products available to reserve yet.")
 
-        self.assertFalse(customer_picking1.move_ids.reservation_date, "Reservation Method: 'manual' shouldn't have a reservation_date")
-        self.assertEqual(customer_picking2.move_ids.reservation_date, (customer_picking2.scheduled_date - timedelta(days=1)).date(),
-                         "Reservation Method: 'by_date' should have a reservation_date = scheduled_date - reservation_days_before")
-        self.assertFalse(customer_picking5.move_ids.reservation_date, "Reservation Method: 'at_confirm' shouldn't have a reservation_date until confirmed")
+        self.assertFalse(customer_picking1.move_ids.date_reservation, "Reservation Method: 'manual' shouldn't have a date_reservation")
+        self.assertEqual(customer_picking2.move_ids.date_reservation, (customer_picking2.date_planned - timedelta(days=1)).date(),
+                         "Reservation Method: 'by_date' should have a date_reservation = date_planned - reservation_days_before")
+        self.assertFalse(customer_picking5.move_ids.date_reservation, "Reservation Method: 'at_confirm' shouldn't have a date_reservation until confirmed")
 
         # create supplier picking and move
         supplier_picking = self.env['stock.picking'].create({

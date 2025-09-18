@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_search_view_purchase" model="ir.ui.view">
+        <field name="name">product.template.search.purchase</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="seller_ids" string="Vendor" />
+            </field>
+            <filter name="filter_to_sell" position="after">
+                <filter name="filter_to_purchase" string="Purchase"
+                    domain="[('purchase_ok', '=', True)]" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_product_supplier_inherit" model="ir.ui.view">
+        <field name="name">product.template.supplier.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase']" position="attributes">
+                <attribute name="invisible" remove="1" separator="or" />
+                <attribute name="groups">purchase.group_purchase_user</attribute>
+            </xpath>
+            <group name="purchase" position="before">
+                <field name="seller_ids"
+                    context="{'default_product_tmpl_id': id, 'default_price': standard_price, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}"
+                    nolabel="1" invisible="product_variant_count &gt; 1"
+                    readonly="product_variant_count &gt; 1" />
+                <field name="variant_seller_ids"
+                    context="{'model': 'product.template', 'active_id': id, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}"
+                    nolabel="1" invisible="product_variant_count &lt;= 1"
+                    readonly="product_variant_count &lt;= 1" />
+            </group>
+            <group name="bill" position="attributes">
+                <attribute name="groups">purchase.group_purchase_manager</attribute>
+            </group>
+            <group name="bill" position="inside">
+                <field name="bill_policy" widget="radio" />
+            </group>
+            <group name="purchase" position="inside">
+                <group col="1">
+                    <group string="Purchase Description">
+                        <field name="description_purchase" nolabel="1" colspan="2"
+                            placeholder="This note is added to purchase orders." />
+                    </group>
+                    <group string="Warning on Purchase Orders"
+                        groups="purchase.group_warning_purchase">
+                        <field name="purchase_line_warn_msg"
+                            placeholder="e.g. There is a newer version of this product."
+                            nolabel="1" colspan="2" />
+                    </group>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
+        <field name="name">product.template.purchase.button.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <button name="action_open_documents" position="after">
+                <button class="oe_stat_button" name="action_view_po"
+                    groups="purchase.group_purchase_user"
+                    type="object" icon="fa-credit-card" invisible="not purchase_ok"
+                    help="Purchased in the last 365 days">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="purchased_product_qty" widget="statinfo" nolabel="1"
+                                class="oe_inline" />
+                            <field name="uom_name" class="oe_inline" groups="uom.group_uom" />
+                        </span>
+                        <span class="o_stat_text">Purchased</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_normal_action_puchased" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="path">purchase-products</field>
+        <field name="view_ids"
+            eval="[Command.clear(),
+            Command.create({'view_mode': 'kanban'}),
+            Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_purchasable_inherit')}),
+            Command.create({'view_mode': 'form'}),
+            Command.create({'view_mode': 'activity'})]" />
+        <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template":
+            1}</field>
+        <field name="search_view_id" ref="product.product_template_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No product found. Let's create one!
+            </p>
+            <p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+</odoo>

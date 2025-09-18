@@ -71,7 +71,7 @@ export class PurchaseFileUploader extends Component {
         try {
             action = await this.orm.call(
                 resModel,
-                "action_create_invoice",
+                "create_invoice",
                 [ids, this.attachmentIdsToProcess],
                 { context: { ...this.env.searchModel.context } }
             );

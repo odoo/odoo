@@ -8,7 +8,7 @@
                     <templates>
                         <div t-name="activity-box" class="d-block">
                             <field name="name" display="full" class="o_text_block o_text_bold"/>
-                            <field name="scheduled_date"/>
+                            <field name="date_planned"/>
                         </div>
                     </templates>
                 </activity>
@@ -20,7 +20,7 @@
             <field name="model">stock.picking</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5" quick_create="0">
+                <calendar string="Calendar View" date_start="date_planned" color="partner_id" event_limit="5" quick_create="0">
                     <field name="partner_id" filters="1"/>
                     <field name="origin"/>
                     <field name="picking_type_id"/>
@@ -35,7 +35,7 @@
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
-                    <field name="scheduled_date"/>
+                    <field name="date_planned"/>
                     <field name="picking_type_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
@@ -53,8 +53,8 @@
                                     <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                                 </div>
                                 <div class="d-flex ms-auto mt-1 align-items-center">
-                                    <field name="scheduled_date" options="{'show_time': false}"/>
-                                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" readonly="state in ['cancel', 'done']" class="ms-1"/>
+                                    <field name="date_planned" options="{'show_time': false}"/>
+                                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" readonly="state in ['done', 'cancel']" class="ms-1"/>
                                 </div>
                             </footer>
                         </t>
@@ -77,10 +77,10 @@
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
-                    <field name="partner_id" optional="show" readonly="state in ['cancel', 'done']"/>
+                    <field name="partner_id" optional="show" readonly="state in ['done', 'cancel']"/>
                     <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
-                    <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
-                    <field name="scheduled_date" optional="show" widget="remaining_days" invisible="state in ('done', 'cancel')" readonly="state in ['cancel', 'done']"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['done', 'cancel']"/>
+                    <field name="date_planned" optional="show" widget="remaining_days" invisible="state in ('done', 'cancel')" readonly="state in ['done', 'cancel']"/>
                     <field name="picking_type_code" column_invisible="True"/>
                     <field name="products_availability_state" column_invisible="True" options='{"lazy": true}'/>
                     <field name="products_availability" options='{"lazy": true}'
@@ -91,7 +91,7 @@
                         decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ('done', 'cancel')"/>
                     <field name="date_done" string="Effective Date" optional="hide"/>
-                    <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
+                    <field name="origin" optional="show" readonly="state in ['done', 'cancel']"/>
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -222,7 +222,7 @@
                                 <label for="partner_id" string="Contact" style="font-weight:bold;"
                                        invisible="picking_type_code in ['incoming', 'outgoing']"/>
                             </div>
-                            <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']" placeholder="e.g. Lumber Inc"/>
+                            <field name="partner_id" nolabel="1" readonly="state in ['done', 'cancel']" placeholder="e.g. Lumber Inc"/>
                             <field name="picking_type_id" options="{'no_open': True}"
                                    readonly="state in ('done', 'cancel')"
                                    domain="[('code', 'in', ('incoming', 'outgoing', 'internal'))]" />
@@ -234,12 +234,12 @@
                             <field name="use_create_lots" invisible="1"/> <!-- used by embedded stock.move list view below -->
                         </group>
                         <group>
-                            <label for="scheduled_date"/>
+                            <label for="date_planned"/>
                             <div class="o_row">
-                                <field name="scheduled_date" readonly="not is_date_editable" required="id"
-                                    decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
-                                    decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
-                                    decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
+                                <field name="date_planned" readonly="not is_date_editable" required="id"
+                                    decoration-warning="state not in ('done', 'cancel') and date_planned &lt; now"
+                                    decoration-danger="state not in ('done', 'cancel') and date_planned &lt; current_date"
+                                    decoration-bf="state not in ('done', 'cancel') and (date_planned &lt; current_date or date_planned &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
                             <field name="date_deadline"
@@ -253,10 +253,10 @@
                                 decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                             <field name="date_done" string="Effective Date" invisible="state != 'done'" readonly="not is_date_editable"/>
-                            <field name="origin" placeholder="e.g. PO0032" readonly="state in ['cancel', 'done']"/>
+                            <field name="origin" placeholder="e.g. PO0032" readonly="state in ['done', 'cancel']"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    invisible="picking_type_code != 'incoming'"
-                                   readonly="state in ['cancel', 'done']"/>
+                                   readonly="state in ['done', 'cancel']"/>
                         </group>
                     </group>
                     <field name="picking_properties" columns="2"/>
@@ -266,7 +266,7 @@
                                 widget="stock_move_one2many"
                                 add-label="Add a Product"
                                 readonly="state == 'done' and is_locked"
-                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id, 'picking_state': state}">
+                                context="{'default_company_id': company_id, 'default_date': date_planned, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id, 'picking_state': state}">
                                 <list decoration-muted="scrap_id or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <control>
                                         <create string="Add a Product"/>
@@ -286,7 +286,7 @@
                                     <field name="has_tracking" column_invisible="True"/>
                                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1" widget="move_product_label_field"/>
                                     <field name="forecast_availability" string="" widget="forecast_widget"
-                                           column_invisible="parent.state in ('cancel', 'done') or parent.picking_type_code not in ['internal', 'outgoing']"/>
+                                           column_invisible="parent.state in ('done', 'cancel') or parent.picking_type_code not in ['internal', 'outgoing']"/>
                                     <field name="packaging_uom_qty" optional="hide" groups="uom.group_uom"/>
                                     <field name="packaging_uom_id" optional="hide" groups="uom.group_uom"/>
                                     <field name="location_final_id" optional="hide" groups="stock.group_stock_multi_locations"/>
@@ -302,7 +302,7 @@
                                     <field name="has_lines_without_result_package" column_invisible="True"/>
                                     <field name="package_ids" optional="show" widget="package_m2m" groups="stock.group_tracking_lot" width="200px" readonly="1"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
-                                    <field name="forecast_expected_date" column_invisible="True"/>
+                                    <field name="date_planned_forecast" column_invisible="True"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
                                     <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
@@ -326,8 +326,8 @@
                         <page string="Additional Info" name="extra">
                             <group>
                                 <group string="Other Information" name="other_infos">
-                                    <field name="move_type" invisible="picking_type_code == 'incoming'" readonly="state in ['cancel', 'done']"/>
-                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" readonly="state in ['cancel', 'done']"/>
+                                    <field name="move_type" invisible="picking_type_code == 'incoming'" readonly="state in ['done', 'cancel']"/>
+                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" readonly="state in ['done', 'cancel']"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
                                 </group>
                             </group>
@@ -373,7 +373,7 @@
                     <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('date_planned', '&lt;', current_date)]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
                     <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
@@ -399,7 +399,7 @@
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                        <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
+                        <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'date_planned'}"/>
                         <filter string="Source Document" name="origin" domain="[]" context="{'group_by': 'origin'}"/>
                         <filter string="Destination Country" name="partner_country" context="{'group_by': 'partner_country_id'}"/>
                         <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
@@ -698,6 +698,7 @@
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
+
         <record id="stock_split_picking" model="ir.actions.server">
             <field name="name">Split</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
@@ -706,4 +707,5 @@
             <field name="state">code</field>
             <field name="code">action = records.action_split_transfer()</field>
         </record>
+
 </odoo>

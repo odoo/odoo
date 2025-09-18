@@ -150,7 +150,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         final_product = self.product_a
         final_product.write({
             'categ_id': self.categ_avco_auto.id,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
         })
         comp_product = self.product_b
         comp_product.write({

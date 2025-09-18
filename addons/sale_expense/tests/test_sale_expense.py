@@ -52,7 +52,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'expense_policy': 'sales_price',
             'type': 'service',
             'can_be_expensed': True,
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'transfered',
             'list_price': 0.50,
             'uom_id': self.env.ref('uom.product_uom_km').id,
             'standard_price': 0.15,
@@ -88,7 +88,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'name': 'test product',
             'can_be_expensed': True,
             'type': 'service',
-            'invoice_policy': 'order',
+            'invoice_policy': 'ordered',
             'standard_price': 100,
             'expense_policy': 'cost',
         })

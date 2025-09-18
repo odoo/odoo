@@ -20,12 +20,12 @@ class SaleOrder(models.Model):
 
     def _action_cancel(self):
         res = super()._action_cancel()
-        self.order_line._cancel_repair_order()
+        self.line_ids._cancel_repair_order()
         return res
 
     def _action_confirm(self):
         res = super()._action_confirm()
-        self.order_line._create_repair_order()
+        self.line_ids._create_repair_order()
         return res
 
     def action_show_repair(self):
@@ -50,18 +50,15 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _prepare_qty_delivered(self):
-        repair_delivered_qties = defaultdict(float)
+    def _compute_qty_delivered(self):
         remaining_so_lines = self
         for so_line in self:
             move = so_line.move_ids.sudo().filtered(lambda m: m.repair_id and m.state == 'done')
             if len(move) != 1:
                 continue
             remaining_so_lines -= so_line
-            repair_delivered_qties[so_line] = move.quantity
-        delivered_qties = super(SaleOrderLine, remaining_so_lines)._prepare_qty_delivered()
-        delivered_qties.update(repair_delivered_qties)
-        return delivered_qties
+            so_line.qty_delivered = move.quantity
+        return super(SaleOrderLine, remaining_so_lines)._compute_qty_delivered()
 
     @api.model_create_multi
     def create(self, vals_list):
