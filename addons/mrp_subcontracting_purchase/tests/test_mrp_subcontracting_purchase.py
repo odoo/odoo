@@ -555,7 +555,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         )
 
         # Case 2: Vendor lead time < Manufacturing lead time + DTPMO on BOM
-        self.bom.action_compute_bom_days()
         self.assertEqual(self.bom.days_to_prepare_mo, 10 + 5,
             "DTPMO = Purchase lead time(comp1) + Days to Purchase")
 
@@ -589,7 +588,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         for component in bom_data['components']:
             self.assertEqual(component['availability_state'], 'available')
         # Case 2: Vendor lead time < Manufacturing lead time + DTPMO on BOM
-        self.bom.action_compute_bom_days()
         self.assertEqual(self.bom.days_to_prepare_mo, 10 + 5,
             "DTPMO = Purchase lead time(comp1) + Days to Purchase")
         bom_data = self.env['report.mrp.report_bom_structure']._get_bom_data(self.bom, self.warehouse, self.finished)

@@ -685,7 +685,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
 
         bom_kit_parent = self.kit_parent.bom_ids
-        bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
         # set "Days to Purchase"
@@ -693,16 +692,13 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         company_2.days_to_purchase = 20
 
         # check "Days to Purchase" will also be included if bom has company_id
-        bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 1)
 
         self.kit_1.bom_ids.company_id = company_2
-        bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 20 + 1)
 
         # check "Days to Purchase" won't be included if bom doesn't have company_id
         kits.bom_ids.company_id = False
-        bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
     # TODO: manufacturing_lead doesn't exist anymore, remove?
