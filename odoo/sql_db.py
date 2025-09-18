@@ -659,9 +659,7 @@ class ConnectionPool:
                     cnx.reset()
                 except psycopg2.OperationalError:
                     self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
-                    # psycopg2 2.4.4 and earlier do not allow closing a closed connection
-                    if not cnx.closed:
-                        cnx.close()
+                    cnx.close()
                     continue
                 cnx._pool_in_use = True
                 self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
