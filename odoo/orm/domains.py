@@ -800,10 +800,7 @@ class DomainCondition(Domain):
         """Validate `self` and return it if correct, otherwise raise an exception."""
         if not isinstance(self.field_expr, str) or not self.field_expr:
             self._raise("Empty field name", error=TypeError)
-        operator = self.operator.lower()
-        if operator != self.operator:
-            warnings.warn(f"Deprecated since 19.0, the domain condition {(self.field_expr, self.operator, self.value)!r} should have a lower-case operator", DeprecationWarning)
-            return DomainCondition(self.field_expr, operator, self.value).checked()
+        operator = self.operator
         if operator not in CONDITION_OPERATORS:
             self._raise("Invalid operator")
         # check already the consistency for domain manipulation
