@@ -28,7 +28,7 @@ patch(TicketScreen.prototype, {
         const orderline = this.getSelectedOrder().lines.find(
             (line) => line.id == selectedOrderlineId
         );
-        if (orderline.product_id.id === this.pos.config.discount_product_id?.id) {
+        if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
             return this.dialog.add(AlertDialog, {
                 title: _t("Error"),
                 body: _t("You cannot edit a discount line."),
