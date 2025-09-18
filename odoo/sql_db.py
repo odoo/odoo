@@ -354,7 +354,7 @@ class Cursor(BaseCursor):
         if _logger.isEnabledFor(logging.DEBUG):
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
-            self.__caller = False
+            self.__caller = None
         self._closed = False   # real initialization value
         self._cnx.set_session(
             # See the docstring of this class.
@@ -419,7 +419,7 @@ class Cursor(BaseCursor):
 
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
-            raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
+            raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
 
         start = real_time()
         try:
@@ -512,7 +512,7 @@ class Cursor(BaseCursor):
 
     def close(self) -> None:
         if not self.closed:
-            return self._close(False)
+            self._close(False)
 
     def _close(self, leak: bool = False) -> None:
         if not self._obj:
@@ -807,7 +807,6 @@ def db_connect(to: str, allow_uri=False, readonly=False) -> Connection:
     global _Pool, _Pool_readonly  # noqa: PLW0603 (global-statement)
 
     maxconn = (tools.config['db_maxconn_gevent'] if hasattr(odoo, 'evented') and odoo.evented else 0) or tools.config['db_maxconn']
-    _Pool_readonly if readonly else _Pool
     if readonly:
         if _Pool_readonly is None:
             _Pool_readonly = ConnectionPool(int(maxconn), readonly=True)
