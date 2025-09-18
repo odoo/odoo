@@ -698,7 +698,9 @@ export class LinkPlugin extends Plugin {
                         { anchorNode, anchorOffset },
                         { normalize: false }
                     );
-                    link.remove();
+                    if (!this.isUnremovable(link)){
+                        link.remove();
+                    }
                 } else if (cursors) {
                     cursors.restore();
                 } else {
