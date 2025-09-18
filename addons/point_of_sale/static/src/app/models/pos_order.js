@@ -362,6 +362,7 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.metadata = {
             serverDate: serializeDateTime(DateTime.now()),
         };
+        this._markDirty();
     }
 
     isEmpty() {
