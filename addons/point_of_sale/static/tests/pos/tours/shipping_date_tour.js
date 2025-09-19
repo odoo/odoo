@@ -4,6 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import { registry } from "@web/core/registry";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
     steps: () =>
@@ -12,8 +13,6 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test with Address"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             {
@@ -23,9 +22,9 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
             },
             {
                 content: "pick a date",
-                trigger: '.modal-body input[type="date"]',
+                trigger: ".modal-body .o_datetime_input",
                 run: () => {
-                    const input = document.querySelector('.modal-body input[type="date"]');
+                    const input = document.querySelector(".modal-body .o_datetime_input");
                     const nextYear = new Date().getFullYear() + 1;
                     input.value = `${nextYear}-05-30`;
                     input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -45,13 +44,15 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
                         ...document.querySelectorAll(".payment-buttons .d-flex .btn span"),
                     ];
                     const nextYear = new Date().getFullYear() + 1;
-                    const expectedDate = `05/30/${nextYear}`;
+                    const expectedDate = `5/30/${nextYear}`;
                     if (!spans.some((span) => span.innerText === expectedDate)) {
                         throw new Error("Expected shipping date is not set");
                     }
                 },
             },
             PaymentScreen.clickValidate(),
+            Dialog.confirm(),
+            PartnerList.clickPartner("Partner Test with Address"),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 is_shipping_date: true,
