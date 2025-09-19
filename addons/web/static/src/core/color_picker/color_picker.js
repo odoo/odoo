@@ -190,14 +190,16 @@ export class ColorPicker extends Component {
     }
 
     onColorHover(ev) {
-        if (!this.isColorButton(this.getTarget(ev))) {
+        const target = this.getTarget(ev);
+        if (!this.isColorButton(target) || target.contains(ev.relatedTarget)) {
             return;
         }
         this.onColorPreview(ev);
     }
 
     onColorHoverOut(ev) {
-        if (!this.isColorButton(this.getTarget(ev))) {
+        const target = this.getTarget(ev);
+        if (!this.isColorButton(target) || target.contains(ev.relatedTarget)) {
             return;
         }
         this.applyColorResetPreview();

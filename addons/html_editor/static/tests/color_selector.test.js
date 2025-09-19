@@ -616,6 +616,62 @@ test("should be able to select farthest-corner option in radial gradient", async
     expect("button[title='Extend to the farthest corner']").toHaveClass("active");
 });
 
+test.tags("desktop");
+test("should be able to show preview when hovering radial type button", async () => {
+    const gradientBefore = `radial-gradient(circle closest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)`;
+    const gradientAfter = `radial-gradient(circle farthest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)`;
+
+    const { el } = await setupEditor(
+        `<p>a<font style="background-image: ${gradientBefore};">[bcd]</font>e</p>`
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+
+    const gradientButton = queryOne(".o_custom_gradient_button");
+
+    // Hover for preview
+    await hover("button[title='Extend to the farthest side']");
+    await animationFrame();
+    expect(gradientButton.style.backgroundImage).toBe(gradientAfter);
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientAfter};">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").toHaveClass("active");
+
+    // Hover out
+    await hover(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(gradientButton.style.backgroundImage).toBe(gradientBefore);
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientBefore};">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
+
+    // Hover again, click and hover out
+    await hover("button[title='Extend to the farthest side']");
+    await animationFrame();
+    await click("button[title='Extend to the farthest side']");
+    await animationFrame();
+    await hover(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+
+    expect(gradientButton.style.backgroundImage).toBe(gradientAfter);
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientAfter};">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").toHaveClass("active");
+});
+
 test("solid tab color navigation using keys", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();
