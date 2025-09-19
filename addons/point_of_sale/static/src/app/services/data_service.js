@@ -927,10 +927,7 @@ export class PosData extends Reactive {
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
             .map((rel) => rel.name);
-        const recordsToDelete = Object.entries(record)
-            .filter(([idx, values]) => relationsToDelete.includes(idx) && values)
-            .map(([idx, values]) => values)
-            .flat();
+        const recordsToDelete = relationsToDelete.flatMap((relation) => record[relation]);
 
         // Delete all children records before main record
         this.indexedDB.delete(recordModel, [record.uuid]);
