@@ -261,7 +261,7 @@ export class PosOrder extends Base {
             label_discounts: _t("Discounts"),
             show_rounding: !floatIsZero(order_rounding, this.currency.decimal_places),
             order_rounding: order_rounding,
-            show_change: !floatIsZero(order_change, this.currency.decimal_places),
+            show_change: !floatIsZero(order_change, this.currency.decimal_places) && this.finalized,
             order_change: order_change,
             paymentlines,
             amount_total: this.get_total_with_tax(),
