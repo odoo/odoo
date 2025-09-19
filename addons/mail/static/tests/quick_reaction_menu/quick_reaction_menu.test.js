@@ -24,7 +24,7 @@ test("can toggle reaction from quick reaction menu", async () => {
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "👍" });
     await contains(".o-mail-MessageReaction", { text: "👍1" });
-    await click("[title='Add a Reaction']");
+    await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "👍" });
     await contains(".o-mail-MessageReaction", { text: "👍1", count: 0 });
 });
@@ -59,7 +59,7 @@ test("show default emojis when no frequent emojis are available", async () => {
     }
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await click(".o-Emoji", { text: "🤢" });
-    await click("[title='Add a Reaction']");
+    await click(".o-mail-Message-actions [title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji", {
         text: QuickReactionMenu.DEFAULT_EMOJIS.at(-1),
         count: 0,
