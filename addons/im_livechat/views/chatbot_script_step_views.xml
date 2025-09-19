@@ -22,13 +22,7 @@
                             <field name="chatbot_script_id" invisible="1"/>
                             <field name="step_type"/>
                             <field name="operator_expertise_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}" invisible="step_type != 'forward_operator'"/>
-                            <field name="triggering_answer_ids" widget="chatbot_triggering_answers_widget"
-                                    options="{'no_create': True}">
-                                <list>
-                                    <!-- added only to correctly fetch the display_name for the tag display -->
-                                    <field name="display_name" column_invisible="True"/>
-                                </list>
-                            </field>
+                            <field name="triggering_answer_ids" widget="many2many_tags" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="answer_ids" invisible="step_type != 'question_selection'" nolabel="1">

@@ -35,7 +35,7 @@ class ChatbotScriptStep(models.Model):
         'chatbot.script.answer', 'script_step_id',
         copy=True, string='Answers')
     triggering_answer_ids = fields.Many2many(
-        'chatbot.script.answer', domain="[('script_step_id.sequence', '<', sequence)]",
+        'chatbot.script.answer', domain="[('script_step_id.sequence', '<', sequence), ('script_step_id.chatbot_script_id', '=', chatbot_script_id)]",
         compute='_compute_triggering_answer_ids', readonly=False, store=True,
         copy=False,  # copied manually, see chatbot.script#copy
         string='Only If', help='Show this step only if all of these answers have been selected.')
