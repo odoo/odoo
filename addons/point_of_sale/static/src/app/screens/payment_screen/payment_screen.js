@@ -255,15 +255,15 @@ export class PaymentScreen extends Component {
         pLine.setAmount(pLine.getAmount() + tipToAdd);
     }
     async toggleShippingDatePicker() {
-        if (!this.currentOrder.getShippingDate()) {
+        if (!this.currentOrder.shipping_date) {
             this.dialog.add(DatePickerPopup, {
                 title: _t("Select the shipping date"),
                 getPayload: (shippingDate) => {
-                    this.currentOrder.setShippingDate(shippingDate);
+                    this.currentOrder.shipping_date = shippingDate;
                 },
             });
         } else {
-            this.currentOrder.setShippingDate(false);
+            this.currentOrder.shipping_date = false;
         }
     }
     deletePaymentLine(uuid) {

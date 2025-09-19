@@ -142,11 +142,11 @@
                     t-on-click="openCashbox">
                     <i class="fa fa-archive me-2" />Open Cashbox 
                 </button>
-                <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
+                <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.shipping_date }"
                     t-on-click="toggleShippingDatePicker">
-                    <span t-attf-class="{{currentOrder.getShippingDate() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
-                    <span t-if="currentOrder.getShippingDate()">
-                        <t t-esc="currentOrder.getShippingDate()" />
+                    <span t-attf-class="{{currentOrder.shipping_date ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
+                    <span t-if="currentOrder.shipping_date">
+                        <t t-esc="currentOrder.formatDateOrTime('shipping_date', 'date')" />
                     </span>
                 </button>
             </div>

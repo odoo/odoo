@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime } from "@web/core/l10n/dates";
 import { getStrNotes } from "./utils/order_change";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 
@@ -26,7 +26,7 @@ export class PosOrder extends PosOrderAccounting {
         this.name = vals.name || "/";
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
-        this.setShippingDate(vals.shipping_date);
+        this.shipping_date = vals.shipping_date;
         this.state = vals.state || "draft";
 
         if (!vals.last_order_preparation_change) {
@@ -652,16 +652,6 @@ export class PosOrder extends PosOrderAccounting {
         if (!this.config.use_presets || !this.preset_id?.pricelist_id) {
             this.setPricelist(newPartnerPricelist);
         }
-    }
-
-    /* ---- Ship later --- */
-    //FIXME remove this
-    setShippingDate(shippingDate) {
-        this.shipping_date = shippingDate;
-    }
-    //FIXME remove this
-    getShippingDate() {
-        return formatDate(this.shipping_date);
     }
 
     getHasRefundLines() {

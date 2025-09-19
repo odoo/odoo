@@ -1,10 +1,12 @@
 import { Dialog } from "@web/core/dialog/dialog";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { _t } from "@web/core/l10n/translation";
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
+const { DateTime } = luxon;
 
 export class DatePickerPopup extends Component {
     static template = "point_of_sale.DatePickerPopup";
-    static components = { Dialog };
+    static components = { Dialog, DateTimeInput };
     static props = {
         title: { type: String, optional: true },
         confirmLabel: { type: String, optional: true },
@@ -18,17 +20,24 @@ export class DatePickerPopup extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ shippingDate: this._today() });
-        this.inputRef = useRef("input");
-        onMounted(() => this.inputRef.el.focus());
+        this.state = useState({
+            shippingDate: DateTime.now(),
+        });
+        onMounted(() => {
+            const input = document.querySelector(".shipping-date-selector input");
+            if (input) {
+                input.classList.remove("o_input");
+                input.classList.add("form-control", "form-control-lg");
+                input.focus();
+            }
+        });
+    }
+    onDateChange(date) {
+        this.state.shippingDate = date;
     }
     confirm() {
-        this.props.getPayload(
-            this.state.shippingDate < this._today() ? this._today() : this.state.shippingDate
-        );
+        const selected = this.state.shippingDate.toISODate();
+        this.props.getPayload(selected);
         this.props.close();
-    }
-    _today() {
-        return new Date().toISOString().split("T")[0];
     }
 }
