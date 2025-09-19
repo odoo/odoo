@@ -95,6 +95,35 @@ class TestQWebTField(TransactionCase):
         doc = etree.fromstring(rendered)
         self.assertEqual(len(doc.xpath('//script')), 1)
 
+    def test_url_xss(self):
+        # Fully static nodes allow for javascript scheme
+        rendered = self.env['ir.qweb']._render(etree.fromstring('''<a href="javascript:alert('Hello World!')"/>'''))
+        self.assertIn('href="javascript:', rendered)
+
+        # Dynamic nodes DO NOT allow for javascript scheme
+        rendered = self.env['ir.qweb']._render(etree.fromstring('''<a href="javascript:alert('Hello World!')" t-out="name"/>'''), values={"name": "Hello"})
+        self.assertNotIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript:alert('Hello World!')"})
+        self.assertNotIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": " javascript:alert('Hello World!')"})
+        self.assertNotIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-attf-href="#{url}"/>'), values={"url": "javascript:alert('Hello World!')"})
+        self.assertNotIn('href="javascript:', rendered)
+
+        # history.back() exception
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript:window.history.back()"})
+        self.assertIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript: window.history.back()"})
+        self.assertIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript:history.back()"})
+        self.assertIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript: history.back()"})
+        self.assertIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript:alert('Hello World!');window.history.back()"})
+        self.assertNotIn('href="javascript:', rendered)
+        rendered = self.env['ir.qweb']._render(etree.fromstring('<a t-att-href="url"/>'), values={"url": "javascript:window.history.back();alert('Hello World!')"})
+        self.assertNotIn('href="javascript:', rendered)
+
     def test_default_value(self):
         Partner = self.env['res.partner']
         t = self.env['ir.ui.view'].create({
