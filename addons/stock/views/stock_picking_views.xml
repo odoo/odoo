@@ -595,15 +595,6 @@
             <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
         </record>
 
-        <record id="action_get_picking_type_ready_moves" model="ir.actions.act_window">
-            <field name="name">Ready Moves</field>
-            <field name="res_model">stock.move</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_move_search"/>
-            <field name="domain">[('picking_type_id', '=', active_id)]</field>
-            <field name="context">{'search_default_ready': 1}</field>
-        </record>
-
         <template id="help_message_template" name="Help Message" groups="base.group_user">
             <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
                 <t name="receipt_message">
