@@ -49,6 +49,9 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
+    show_copy_operations_button = fields.Boolean(
+        compute="_compute_operation_count",
+        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.")
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -320,8 +323,10 @@ class MrpBom(models.Model):
 
     @api.depends('operation_ids')
     def _compute_operation_count(self):
+        operation_count = self.env['mrp.routing.workcenter'].search_count([])
         for bom in self:
             bom.operation_count = len(bom.operation_ids)
+            bom.show_copy_operations_button = bool(operation_count)
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
@@ -643,6 +648,10 @@ class MrpBom(models.Model):
                 'bom_id_invisible': True,
             },
         }
+
+    def action_copy_existing_operations(self):
+        self.ensure_one()
+        return self.env['mrp.routing.workcenter'].with_context(bom_id=self.id).copy_existing_operations()
 
 
 class MrpBomLine(models.Model):
