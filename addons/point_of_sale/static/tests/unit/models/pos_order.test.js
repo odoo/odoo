@@ -219,12 +219,11 @@ test("setShippingDate and getShippingDate with Luxon", async () => {
     const order = store.addNewOrder();
 
     const testDate = "2019-03-11";
-    order.setShippingDate(testDate);
+    order.shipping_date = testDate;
 
     expect(order.shipping_date.toISODate()).toBe(testDate);
-    expect(typeof order.getShippingDate()).toBe("string");
-    order.setShippingDate(null);
-    expect(order.getShippingDate()).toBeEmpty();
+    order.shipping_date = null;
+    expect(order.shipping_date).toBeEmpty();
 });
 
 test("[get prices] check prices and taxes", async () => {

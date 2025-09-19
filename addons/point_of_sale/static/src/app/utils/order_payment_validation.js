@@ -276,25 +276,25 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if (
-            (this.order.isToInvoice() || this.order.getShippingDate()) &&
-            !this.order.getPartner()
-        ) {
+        if ((this.order.isToInvoice() || this.order.shipping_date) && !this.order.getPartner()) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
-                body: _t(
-                    "You need to select the customer before you can invoice or ship an order."
-                ),
+                body: _t("Select a customer with a valid address."),
+                confirmLabel: _t("Customer"),
             });
             if (confirmed) {
-                this.pos.selectPartner();
+                const partner = await this.pos.selectPartner();
+                if (!partner) {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            return false;
         }
 
         const partner = this.order.getPartner();
         if (
-            this.order.getShippingDate() &&
+            this.order.shipping_date &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
             this.pos.dialog.add(AlertDialog, {

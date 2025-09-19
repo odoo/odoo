@@ -10,7 +10,7 @@ patch(PosOrderline.prototype, {
         // that some fields has already been assigned. Therefore, we only set the options
         // when the original value is falsy.
         if (this.sale_order_origin_id?.shipping_date) {
-            this.order_id.setShippingDate(this.sale_order_origin_id.shipping_date);
+            this.order_id.shipping_date = this.sale_order_origin_id.shipping_date;
         }
     },
     get saleDetails() {
