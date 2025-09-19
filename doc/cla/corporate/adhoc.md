@@ -50,3 +50,4 @@ Felipe García Suez feg@adhoc.inc https://github.com/feg-adhoc
 Franco Leyes lef@adhoc.inc https://github.com/lef-adhoc
 Julia Elizondo jue@adhoc.inc https://github.com/jue-adhoc
 Matias Peralta mnp@adhoc.inc https://github.com/matiasperalta1
+Manuela Cepeda cem@adhoc.inc https://github.com/cem-adhoc
