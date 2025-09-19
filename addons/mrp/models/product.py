@@ -232,8 +232,20 @@ class ProductProduct(models.Model):
         # pre-compute bom lines and identify missing kit components to prefetch
         bom_sub_lines_per_kit = {}
         prefetch_component_ids = set()
+
+        # Perf: cache template IDs for BOM w/o specific variant
+        templates = {}
         for product in bom_kits:
-            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+            # For BOMs w/o prod_id, explode based only on tmpl_id
+            prod_id = bom_kits[product].product_id.id
+            if not prod_id:
+                tmpl_id = bom_kits[product].product_tmpl_id.id
+                if tmpl_id not in templates:
+                    templates[tmpl_id] = bom_kits[product].explode(product, 1)
+                __, bom_sub_lines = templates[tmpl_id]
+            else:
+                __, bom_sub_lines = bom_kits[product].explode(product, 1)
+
             bom_sub_lines_per_kit[product] = bom_sub_lines
             for bom_line, __ in bom_sub_lines:
                 if bom_line.product_id.id not in qties:
