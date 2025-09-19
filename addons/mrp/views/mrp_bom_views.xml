@@ -135,9 +135,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center" invisible="operation_ids.length != 0">
+                                <div class="d-flex justify-content-center gap-1" invisible="operation_ids.length != 0">
                                     <button name="action_open_operation_form" type="object" class="btn btn-primary">
                                         <span class="o_stat_text">Add Operation</span>
+                                    </button>
+                                    <button name="action_copy_existing_operations" type="object" invisible="not show_copy_operations_button">
+                                        <span class="o_stat_text">Copy Existing Operations</span>
                                     </button>
                                 </div>
                         </page>
