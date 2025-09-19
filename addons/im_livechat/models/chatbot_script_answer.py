@@ -37,22 +37,11 @@ class ChatbotScriptAnswer(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        """
-        Search the records whose name or step message are matching the ``name`` pattern.
-        The chatbot_script_id is also passed to the context through the custom widget
-        ('chatbot_triggering_answers_widget') This allows to only see the question_answer
-        from the same chatbot you're configuring.
-        """
-        domain = Domain.TRUE
+        """Search the records whose name or step message are matching the ``name`` pattern."""
         if value and operator == 'ilike':
             # search on both name OR step's message (combined with passed args)
-            domain = Domain('name', operator, value) | Domain('script_step_id.message', operator, value)
-
-        force_domain_chatbot_script_id = self.env.context.get('force_domain_chatbot_script_id')
-        if force_domain_chatbot_script_id:
-            domain &= Domain('chatbot_script_id', '=', force_domain_chatbot_script_id)
-
-        return domain
+            return Domain('name', operator, value) | Domain('script_step_id.message', operator, value)
+        return super()._search_display_name(operator, value)
 
     def _store_script_answer_fields(self, res: Store.FieldList):
         res.extend(["name", "redirect_link"])
