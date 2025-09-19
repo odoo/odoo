@@ -17,6 +17,8 @@ export class GradientPicker extends Component {
         setOperationCallbacks: { type: Function, optional: true },
         selectedGradient: { type: String, optional: true },
         noTransparency: { type: Boolean, optional: true },
+        onColorPointerOver: { type: Function, optional: true },
+        onColorPointerOut: { type: Function, optional: true },
     };
 
     setup() {
@@ -125,6 +127,13 @@ export class GradientPicker extends Component {
     onSizeChange(size) {
         this.state.size = size;
         this.onColorGradientChange();
+    }
+
+    getRadialGradient(size) {
+        const gradientColors = this.colors
+            .map((color) => `${color.hex} ${color.percentage}%`)
+            .join(", ");
+        return `radial-gradient(circle ${size} at ${this.positions.x}% ${this.positions.y}%, ${gradientColors})`;
     }
 
     onColorPercentageChange(colorIndex, ev) {
