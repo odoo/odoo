@@ -124,7 +124,6 @@ class StockPickingType(models.Model):
     count_picking_waiting = fields.Integer(compute='_compute_picking_count')
     count_picking_late = fields.Integer(compute='_compute_picking_count')
     count_picking_backorders = fields.Integer(compute='_compute_picking_count')
-    count_move_ready = fields.Integer(compute='_compute_move_count')
     hide_reservation_method = fields.Boolean(compute='_compute_hide_reservation_method')
     barcode = fields.Char('Barcode', copy=False)
     company_id = fields.Many2one(
@@ -267,15 +266,6 @@ class StockPickingType(models.Model):
             count = {picking_type.id: count for picking_type, count in data}
             for record in self:
                 record[field_name] = count.get(record.id, 0)
-
-    def _compute_move_count(self):
-        data = self.env['stock.move']._read_group(
-            [('state', '=', 'assigned'), ('picking_type_id', 'in', self.ids)],
-            ['picking_type_id'], ['__count']
-        )
-        count = {picking_type.id: count for picking_type, count in data}
-        for record in self:
-            record['count_move_ready'] = count.get(record.id, 0)
 
     @api.depends('warehouse_id')
     def _compute_display_name(self):
@@ -467,9 +457,6 @@ class StockPickingType(models.Model):
         if self.code == 'internal':
             return self._get_action('stock.action_picking_tree_internal')
         return self._get_action('stock.stock_picking_action_picking_type')
-
-    def get_action_picking_type_ready_moves(self):
-        return self._get_action('stock.action_get_picking_type_ready_moves')
 
     def _get_aggregated_records_by_date(self):
         """
