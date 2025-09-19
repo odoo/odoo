@@ -22,9 +22,9 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
             },
             {
                 content: "pick a date",
-                trigger: '.modal-body input[type="date"]',
+                trigger: ".modal-body .o_datetime_input",
                 run: () => {
-                    const input = document.querySelector('.modal-body input[type="date"]');
+                    const input = document.querySelector(".modal-body .o_datetime_input");
                     const nextYear = new Date().getFullYear() + 1;
                     input.value = `${nextYear}-05-30`;
                     input.dispatchEvent(new Event("input", { bubbles: true }));
