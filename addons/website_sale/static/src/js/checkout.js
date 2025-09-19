@@ -455,6 +455,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             if (checkedRadio) {
                 await this._updateDeliveryMethod(checkedRadio);
                 this._enableMainButton();
+                await this._showPickupLocation(checkedRadio);
             }
         }
         // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
