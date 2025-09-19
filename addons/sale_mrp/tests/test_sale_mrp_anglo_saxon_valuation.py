@@ -628,6 +628,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         compo01 = self._create_product(name="Compo 01", is_storable=True, standard_price=10)
         compo02 = self._create_product(name="Compo 02", is_storable=True, standard_price=20)
         kit = self._create_product(name="Kit", is_storable=True, standard_price=30)
+        (compo01 + compo02 + kit).write({'invoice_policy': 'order'})
         warehouse = self.company_data['default_warehouse']
         self.env['stock.quant']._update_available_quantity(compo01, warehouse.lot_stock_id, 1.0)
         self.env['stock.quant']._update_available_quantity(compo02, warehouse.lot_stock_id, 2.0)
