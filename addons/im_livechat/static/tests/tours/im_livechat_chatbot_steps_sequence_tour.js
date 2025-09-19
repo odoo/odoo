@@ -133,3 +133,41 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
     ],
 });
+
+registry
+    .category("web_tour.tours")
+    .add("im_livechat_chatbot_triggering_answer_dropdown_excludes_other_answers_tour", {
+        steps: () => [
+            stepUtils.showAppsMenuItem(),
+            {
+                trigger: '.o_app[data-menu-xmlid="im_livechat.menu_livechat_root"]',
+                run: "click",
+            },
+            {
+                trigger: 'button[data-menu-xmlid="im_livechat.livechat_config"]',
+                run: "click",
+            },
+            {
+                trigger: 'a[data-menu-xmlid="im_livechat.chatbot_config"]',
+                run: "click",
+            },
+            {
+                trigger: "td.o_data_cell:contains(Chatbot 2)",
+                run: "click",
+            },
+            {
+                trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
+                run: "click",
+            },
+            {
+                trigger: ".modal input#triggering_answer_ids_0",
+                run: "click",
+            },
+            {
+                trigger: ".o-autocomplete--dropdown-menu:contains(Answer 2)",
+            },
+            {
+                trigger: ".o-autocomplete--dropdown-menu:not(:contains(Answer 1))",
+            },
+        ],
+    });
