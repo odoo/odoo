@@ -451,6 +451,7 @@ export class Checkout extends Interaction {
             if (checkedRadio) {
                 await this.waitFor(this._updateDeliveryMethod(checkedRadio));
                 this._enableMainButton();
+                await this._showPickupLocation(checkedRadio);
             }
         }
         // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
