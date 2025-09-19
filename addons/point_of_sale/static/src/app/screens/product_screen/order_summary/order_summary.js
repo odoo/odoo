@@ -44,6 +44,7 @@ export class OrderSummary extends Component {
     }
 
     clickLine(ev, orderline) {
+        ev.stopPropagation();
         this.numberBuffer.reset();
 
         if (!orderline.isSelected()) {
