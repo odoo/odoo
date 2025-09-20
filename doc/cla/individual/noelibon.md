@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Noé Libon noe.libon@student.uclouvain.be https://github.com/noelibon
+Noé Libon noe@libon.eu https://github.com/noelibon
