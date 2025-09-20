@@ -790,7 +790,7 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
         return db_name, {'dsn': db_or_uri, 'application_name': app_name}
 
     connection_info = {'database': db_or_uri, 'application_name': app_name}
-    for p in ('host', 'port', 'user', 'password', 'sslmode'):
+    for p in ('host', 'port', 'user', 'password', 'sslmode', 'sslrootcert'):
         cfg = tools.config['db_' + p]
         if readonly:
             cfg = tools.config.get('db_replica_' + p, cfg)

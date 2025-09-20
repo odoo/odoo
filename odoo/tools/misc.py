@@ -185,6 +185,8 @@ def exec_pg_environ():
         env['PGAPPNAME'] = config['db_app_name'].replace('{pid}', f'env{os.getpid()}')[:63]
     if config['db_sslmode']:
         env['PGSSLMODE'] = config['db_sslmode']
+    if config['db_sslrootcert']:
+        env['PGSSLROOTCERT'] = config['db_sslrootcert']
     return env
 
 

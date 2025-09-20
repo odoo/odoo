@@ -383,6 +383,15 @@ class configmanager:
         group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer', env_name='PGSSLMODE',
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
+        group.add_option("--db_sslrootcert", dest="db_sslrootcert", my_default='',
+                 env_name='PGSSLROOTCERT',
+                 help="Path to the SSL root certificate file for database connection")
+        group.add_option("--db_sslcert", dest="db_sslcert", my_default='',
+                        env_name='PGSSLCERT',
+                        help="Path to the SSL client certificate file (for mutual TLS)")
+        group.add_option("--db_sslkey", dest="db_sslkey", my_default='',
+                        env_name='PGSSLKEY',
+                        help="Path to the SSL client key file (for mutual TLS)")
         group.add_option("--db_app_name", dest="db_app_name", my_default="odoo-{pid}", env_name='PGAPPNAME',
                          help="specify the application name in the database, {pid} is substituted by the process pid")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,

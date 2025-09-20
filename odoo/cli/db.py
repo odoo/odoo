@@ -45,6 +45,7 @@ class Db(Command):
         parser.add_argument('--db_host')
         parser.add_argument('--db_port')
         parser.add_argument('--db_sslmode')
+        parser.add_argument('--db_sslrootcert')
         parser.set_defaults(func=lambda _: exit(parser.format_help()))
 
         subs = parser.add_subparsers()
