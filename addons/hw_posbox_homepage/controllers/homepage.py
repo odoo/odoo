@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.main import iot_devices
+from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.web.controllers.home import Home
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -249,6 +249,16 @@ class IotBoxOwlHomePage(Home):
         return json.dumps({
             'status': 'success',
             'message': 'IoT Handlers cleared successfully',
+        })
+
+    @http.route('/hw_posbox_homepage/send_iot_devices', auth="none", type="http", cors='*')
+    def send_iot_devices(self):
+        """Manually send the list of all connected IoT devices to the connected Odoo database"""
+        manager.send_alldevices()
+
+        return json.dumps({
+            'status': 'success',
+            'message': 'IoT devices sent to Odoo database',
         })
 
     # ---------------------------------------------------------- #

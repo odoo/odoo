@@ -41,6 +41,16 @@ export class DeviceDialog extends Component {
         }, {});
     }
 
+    async sendIoTDevices() {
+        try {
+            await this.store.rpc({
+                url: "/hw_posbox_homepage/send_iot_devices",
+            });
+        } catch {
+            console.warn("Error while sending IoT devices to server");
+        }
+    }
+
     static template = xml`
         <BootstrapDialog identifier="'device-list'" btnName="'Show'" isLarge="true">
             <t t-set-slot="header">
@@ -74,6 +84,7 @@ export class DeviceDialog extends Component {
                 </div>
             </t>
             <t t-set-slot="footer">
+                <button t-if="this.store.advanced" class="btn btn-info btn-sm" t-on-click="sendIoTDevices">Send to Server</button>
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
