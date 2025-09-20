@@ -1,4 +1,4 @@
-<Belgium>, <2025-09-20>
+Belgium, 2025-09-20
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-<Noé Libon> <noe.libon@student.uclouvain.be> https://github.com/<noelibon>
+Noé Libon noe.libon@student.uclouvain.be https://github.com/noelibon
