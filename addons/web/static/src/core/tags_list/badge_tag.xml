@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BadgeTag">
+        <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge rounded-pill lh-1" tabindex="-1" t-att-class="this.cssClass" t-att-data-color="this.props.color" t-att-data-tooltip="this.props.tooltip or this.props.text" t-att-aria-label="this.props.tooltip or this.props.text" t-on-click="(ev) => this.props.onClick?.(ev)" t-ref="ref">
+            <t t-slot="default">
+                <div class="o_tag_badge_text o_badge_text" t-out="this.props.text"/>
+            </t>
+            <t t-if="this.props.onDelete">
+                <a class="o_delete d-flex align-items-center opacity-100-hover ps-1 opacity-75" href="#" tabindex="-1" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
+                    <i class="oi oi-close align-text-center"/>
+                </a>
+            </t>
+        </span>
+    </t>
+
+</templates>
