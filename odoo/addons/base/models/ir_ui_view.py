@@ -455,7 +455,7 @@ actual arch.
 
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
-                    if self.pool._init and sibling_primary_views:
+                    if self.pool._init and sibling_primary_views and self.pool._init_modules:
                         query = sibling_primary_views._get_filter_xmlid_query()
                         sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
