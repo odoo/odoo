@@ -330,8 +330,8 @@
                 <field name="allow_billable" column_invisible="True"/>
                 <field name="sale_line_id" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="sale_line_id" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
-                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" groups="!sales_team.group_sale_salesman"/>
-                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" readonly="0" groups="sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" readonly="not sale_line_id" groups="!sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" readonly="not sale_line_id" groups="sales_team.group_sale_salesman"/>
                 <field name="product_uom_qty" optional="hide" groups="!sales_team.group_sale_salesman" readonly="1"/>
                 <field name="product_uom_qty" optional="hide" groups="sales_team.group_sale_salesman"/>
             </xpath>
