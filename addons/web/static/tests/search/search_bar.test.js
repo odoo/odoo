@@ -770,9 +770,9 @@ test("checks that an arrowUp always selects an item", async () => {
 test("many2one_reference fields are supported in search view", async () => {
     Partner._fields.res_id = fields.Many2oneReference({
         string: "Resource ID",
-        model_field: "bar",
-        relation: "partner",
+        model_field: "res_model",
     });
+    Partner._fields.res_model = fields.Char();
 
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
