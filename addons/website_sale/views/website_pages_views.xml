@@ -14,7 +14,10 @@
                 <attribute name="action">open_website_url</attribute>
             </xpath>
 
-            <field name="is_published" position="replace"/>
+            <field name="is_published" position="replace">
+                <field name="website_published" invisible="publish_on and website_published"/>
+                <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
+            </field>
 
             <field name="default_code" position="attributes">
                 <attribute name="optional">hide</attribute>
@@ -31,8 +34,6 @@
             </field>
             <xpath expr="//list">
                 <field name="is_seo_optimized"/>
-                <field name="is_published"/>
-
                 <field name="website_id" position="move"/>
             </xpath>
         </field>
@@ -50,6 +51,9 @@
                 <attribute name="type">object</attribute>
                 <attribute name="action">open_website_url</attribute>
             </kanban>
+            <xpath expr="//kanban" position="inside">
+                <field name="publish_on"/>
+            </xpath>
             <xpath expr="//main/div/div" position="after">
                 <div class="d-flex flex-column mb-1">
                     <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
@@ -61,8 +65,9 @@
             </xpath>
             <xpath expr="//main" position="inside">
                 <footer>
-                    <field name="is_published" widget="boolean_toggle"/>
-                    <span t-if="record.is_published.raw_value">Published</span>
+                    <field name="website_published" widget="boolean_toggle"/>
+                    <span t-if="record.publish_on.raw_value">Scheduled</span>
+                    <span t-elif="record.website_published.raw_value">Published</span>
                     <span t-else="">Not Published</span>
                 </footer>
             </xpath>
