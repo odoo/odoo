@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_view_list_manager_inherit_validation" model="ir.ui.view">
+        <field name="name">hr.leave.view.list.manager.inherit.validation</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="invisible">state != 'validate1' or uid != 6</attribute>
+                <attribute name="groups"/>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button string="Refuse" name="action_refuse" type="object" icon="fa-times"
+                        invisible="state != 'confirm'"
+                        groups="hr_holidays.group_hr_holidays_responsible"/>
+                <button string="Refuse" name="action_refuse" type="object" icon="fa-times"
+                        invisible="state != 'validate1' or uid != 6"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

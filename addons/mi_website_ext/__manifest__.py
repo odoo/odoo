@@ -86,7 +86,8 @@
         "views/mail_systray.xml",
         "data/ir_cron.xml",
         'views/manual_viewer_modal.xml',
-        'views/mandatory_policies_modal.xml'
+        'views/mandatory_policies_modal.xml',
+        'views/hr_leave_views.xml'
     ],
     "installable": True,
     "application": True,
