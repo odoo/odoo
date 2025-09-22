@@ -119,7 +119,10 @@ export class UseSuggestion {
         if (this.search.position !== undefined && this.search.position < start) {
             candidatePositions.push(this.search.position);
         }
-        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(this.thread);
+        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
+            this.thread,
+            this.comp.env
+        );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
