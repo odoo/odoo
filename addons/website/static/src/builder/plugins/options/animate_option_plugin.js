@@ -21,8 +21,8 @@ export class AnimateOptionPlugin extends Plugin {
         getEffectsItems: this.getEffectsItems.bind(this),
         canHaveHoverEffect: async (el) => {
             const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-            const allowed = (await Promise.all(proms)).filter((allowed) => allowed != null);
-            return allowed.length && allowed.every(Boolean);
+            const settledProms = await Promise.all(proms);
+            return settledProms.length && settledProms.every(Boolean);
         },
     };
     resources = {

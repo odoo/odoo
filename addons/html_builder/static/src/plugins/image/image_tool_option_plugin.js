@@ -1,13 +1,8 @@
-import {
-    cropperDataFieldsWithAspectRatio,
-    isGif,
-    loadImage,
-    loadImageInfo,
-} from "@html_editor/utils/image_processing";
+import { cropperDataFieldsWithAspectRatio, loadImage } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
-import { isImageCorsProtected, getMimetype } from "@html_editor/utils/image";
+import { isImageCorsProtected } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
     REPLACE_MEDIA,
@@ -118,35 +113,8 @@ class ImageToolOptionPlugin extends Plugin {
     setup() {
         this.htmlStyle = getHtmlStyle(this.document);
     }
-
-    async canHaveHoverEffect(img) {
-        const getDataset = async () => Object.assign({}, img.dataset, await loadImageInfo(img));
-        return img.tagName === "IMG"
-            ? !this.isDeviceShape(img) &&
-                  !this.isAnimatedShape(img) &&
-                  this.isImageSupportedForShapes(img, await getDataset()) &&
-                  !(await isImageCorsProtected(img))
-            : null;
-    }
-    isDeviceShape(img) {
-        const shapeName = img.dataset.shape;
-        if (!shapeName) {
-            return false;
-        }
-        const shapeCategory = shapeName.split("/")[1];
-        return shapeCategory === "devices";
-    }
-    isAnimatedShape(img) {
-        // todo: to implement while implementing the animated shapes
-        return false;
-    }
-    isImageSupportedForShapes(img, dataset = img.dataset) {
-        // todo: The hover effect code should probably be define somewhere else.
-        const isHoverEffect = !!dataset["hoverEffect"];
-        return (
-            isHoverEffect ||
-            (dataset.originalId && isImageSupportedForProcessing(getMimetype(img, dataset)))
-        );
+    async canHaveHoverEffect(imgEl) {
+        return imgEl.tagName === "IMG" && !(await isImageCorsProtected(imgEl));
     }
     migrateImages(rootEl) {
         for (const el of selectElements(
@@ -306,16 +274,3 @@ export class AltAction extends BuilderAction {
 }
 
 registry.category("builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
-
-/**
- * @param {String} mimetype
- * @param {Boolean} [strict=false] if true, even partially supported images (GIFs)
- *     won't be accepted.
- * @returns {Boolean}
- */
-function isImageSupportedForProcessing(mimetype, strict = false) {
-    if (isGif(mimetype)) {
-        return !strict;
-    }
-    return ["image/jpeg", "image/png", "image/webp"].includes(mimetype);
-}
