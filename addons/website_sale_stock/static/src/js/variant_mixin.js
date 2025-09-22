@@ -33,7 +33,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
     }
 
     const addQtyInput = parent.querySelector('input[name="add_qty"]');
-    let qty = addQtyInput.value;
+    const qty = parseFloat(addQtyInput?.value) || 1;
     const ctaWrapper = parent.querySelector('#o_wsale_cta_wrapper');
     ctaWrapper.classList.replace('d-none', 'd-flex');
     ctaWrapper.classList.remove('out_of_stock');
@@ -41,25 +41,25 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
     if (!combination.allow_out_of_stock_order) {
         const unavailableQty = await this.waitFor(VariantMixin._getUnavailableQty(combination));
         combination.free_qty -= unavailableQty;
-        addQtyInput.dataset.max = combination.free_qty || 1;
         if (combination.free_qty < 0) {
             combination.free_qty = 0;
         }
-        if (qty > combination.free_qty) {
-            qty = combination.free_qty || 1;
-            addQtyInput.value = qty;
+        if (addQtyInput) {
+            addQtyInput.dataset.max = combination.free_qty || 1;
+            if (qty > combination.free_qty) {
+                addQtyInput.value = addQtyInput.dataset.max;
+            }
         }
         if (combination.free_qty < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
         }
-    }
-
-    if (has_max_combo_quantity) {
-        addQtyInput.dataset.max = combination.max_combo_quantity || 1;
-        if (qty > combination.max_combo_quantity) {
-            qty = combination.max_combo_quantity || 1;
-            addQtyInput.value = qty;
+    } else if (has_max_combo_quantity) {
+        if (addQtyInput) {
+            addQtyInput.dataset.max = combination.max_combo_quantity || 1;
+            if (qty > combination.max_combo_quantity) {
+                addQtyInput.value = addQtyInput.dataset.max;
+            }
         }
         if (combination.max_combo_quantity < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
