@@ -26,7 +26,6 @@
                 <separator/>
                 <filter string="Unscheduled" name="unscheduled" domain="[('stage_id.done', '=', False), ('schedule_date', '=', False)]"/>
                 <separator/>
-                <filter name="filter_request_date" date="request_date"/>
                 <filter name="filter_schedule_date" date="schedule_date"/>
                 <filter name="filter_close_date" date="close_date"/>
                 <separator/>
@@ -104,7 +103,6 @@
                             <field name="owner_user_id" string="Requested By" invisible="1"/>
                             <field name="equipment_id"  context="{'default_company_id':company_id, 'default_category_id':category_id}"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
-                            <field name="request_date" readonly="True"/>
                             <field name="done" invisible="1"/>
                             <field name="close_date" readonly="True" invisible="not done"/>
                             <field name="archive" invisible="1"/>
@@ -194,7 +192,6 @@
             <list string="Maintenance Request" multi_edit="1" sample="1">
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="name"/>
-                <field name="request_date" groups="base.group_no_one"/>
                 <field name="owner_user_id"/>
                 <field name="user_id"/>
                 <field name="category_id" readonly="1" groups="maintenance.group_equipment_manager"/>
@@ -966,14 +963,6 @@
         action="hr_equipment_request_action"
         groups="group_equipment_manager,base.group_user"
         sequence="1"/>
-
-    <menuitem
-        id="menu_m_request_calendar"
-        name="Maintenance Calendar"
-        parent="menu_m_request"
-        action="hr_equipment_request_action_cal"
-        groups="group_equipment_manager,base.group_user"
-        sequence="2"/>
 
     <menuitem
         id="menu_equipment_form"
