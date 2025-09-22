@@ -252,6 +252,12 @@ const FormEditor = options.Class.extend({
         template.content.querySelectorAll("[data-name]").forEach(el => {
             el.dataset.name = this._getQuotesEncodedName(el.dataset.name);
         });
+        // TODO remove this part in master and add offset classes in xml
+        template.content.querySelectorAll('.s_website_form_field').forEach(el => {
+            if (field.formatInfo.offset) {
+                el.classList.add(field.formatInfo.offset);
+            };
+        });
         return template.content.firstElementChild;
     },
 });
@@ -318,6 +324,7 @@ const FieldEditor = FormEditor.extend({
             labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
             multiPosition: multipleInput && multipleInput.dataset.display || 'horizontal',
             col: [...this.$target[0].classList].filter(el => el.match(/^col-/g)).join(' '),
+            offset: [...this.$target[0].classList].filter(el => el.match(/^offset-/g)).join(' '),
             requiredMark: requiredMark,
             optionalMark: optionalMark,
             mark: mark && mark.textContent,
