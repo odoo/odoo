@@ -224,7 +224,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 for child in spec.getiterator('attribute'):
                     # The element should only have attributes:
                     # - name (mandatory),
-                    # - add, remove, separator, megre
+                    # - add, remove, separator, merge
                     # - any attribute that starts with data-oe-*
                     unknown = [
                         key
