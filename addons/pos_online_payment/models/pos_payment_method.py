@@ -129,3 +129,6 @@ class PosPaymentMethod(models.Model):
                         pos_config_id=pos_config_id,
                     ))
         return payment_method_id
+
+    def _is_online_payment(self):
+        return self.is_online_payment
