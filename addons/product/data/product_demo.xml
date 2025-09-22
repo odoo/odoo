@@ -16,7 +16,6 @@
             <field name="list_price">14.0</field>
             <field name="standard_price">8.0</field>
             <field name="type">service</field>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
         </record>
 
         <record id="expense_hotel" model="product.product">
@@ -25,7 +24,6 @@
             <field name="standard_price">400.0</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_day"/>
-            <field name="categ_id" eval="ref('product_category_expenses', raise_if_not_found=False)"/>
         </record>
 
         <!-- Service products -->

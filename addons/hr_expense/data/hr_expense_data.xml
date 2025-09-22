@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record id="product_category_expenses" model="product.category">
+            <field name="name">Expenses</field>
+        </record>
+
         <!-- sgv note - icons will be replaced. Design task is ongoing -->
         <record id="expense_product_meal" model="product.product">
             <field name="name">Meals</field>
@@ -12,7 +16,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/food.svg"/>
         </record>
         <record id="expense_product_travel_accommodation" model="product.product">
@@ -26,7 +30,7 @@
             <field name="purchase_ok" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/transport.svg"/>
         </record>
         <record id="uom.product_uom_km" model="uom.uom">
@@ -41,7 +45,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/mileage.svg"/>
         </record>
         <record id="expense_product_gift" model="product.product">
@@ -54,7 +58,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/gift.svg"/>
         </record>
         <record id="expense_product_communication" model="product.product">
@@ -67,7 +71,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/communication.svg"/>
         </record>
         <record id="product_product_no_cost" model="product.product">
@@ -75,7 +79,7 @@
             <field name="standard_price">0.0</field>
             <field name="type">service</field>
             <field name="default_code">EXP_GEN</field>
-            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="categ_id" eval="ref('hr_expense.product_category_expenses', raise_if_not_found=False)"/>
             <field name="can_be_expensed" eval="True"/>
             <field name="purchase_ok" eval="True"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/other.svg"/>
