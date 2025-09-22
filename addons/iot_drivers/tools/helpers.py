@@ -7,6 +7,7 @@ from importlib import util
 import inspect
 import io
 import logging
+import netifaces
 from pathlib import Path
 import re
 import requests
@@ -219,6 +220,15 @@ def get_identifier():
         update_conf({'generated_identifier': identifier})
 
     return identifier
+
+
+def get_mac_address():
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
+            addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
+            if addr != '00:00:00:00:00:00':
+                return addr
 
 
 def get_path_nginx():
