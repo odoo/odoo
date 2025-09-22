@@ -893,3 +893,16 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    def test_channel_create_should_notify_creator(self):
+        self._reset_bus()
+        channel = self.env["discuss.channel"].create({"name": "test channel"})
+        self.assertBusNotifications(
+            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [
+                {
+                    "type": "mail.record/insert",
+                    "payload": Store(channel).get_result(),
+                }
+            ]
+        )

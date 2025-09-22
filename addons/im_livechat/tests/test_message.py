@@ -338,6 +338,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 ],
             )
 
+        self._reset_bus()
         with self.assertBus(get_params=_get_feedback_bus):
             self.make_jsonrpc_request(
                 "/im_livechat/feedback",
