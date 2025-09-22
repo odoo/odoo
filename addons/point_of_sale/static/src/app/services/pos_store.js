@@ -33,7 +33,7 @@ import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -2217,20 +2217,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
     }
-    orderUsageUTCtoLocal(data) {
-        const result = {};
-        for (const [datetime, usage] of Object.entries(data)) {
-            const dt = deserializeDateTime(datetime);
-            const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
-            result[formattedDt] = usage;
-        }
-        return result;
-    }
     async syncPresetSlotAvaibility(preset) {
         try {
             const result = await this.data.call("pos.preset", "get_available_slots", [preset.id]);
-            const localUsage = this.orderUsageUTCtoLocal(result.usage_utc);
-            preset.computeAvailabilities(localUsage);
+            preset.computeAvailabilities(result.usage_utc);
         } catch {
             // Compute locally if the server is not reachable
             preset.computeAvailabilities();

@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -58,16 +59,26 @@ export class PosPreset extends Base {
         );
     }
 
+    orderUsageUTCtoLocal(data) {
+        const result = {};
+        for (const [datetime, usage] of Object.entries(data)) {
+            const dt = deserializeDateTime(datetime);
+            const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+            result[formattedDt] = usage;
+        }
+        return result;
+    }
+
     computeAvailabilities(usages = {}) {
         this.generateSlots();
-
+        const usagesUTCtoLocal = this.orderUsageUTCtoLocal(usages);
         const allSlots = Object.values(this.uiState.availabilities).reduce(
             (acc, curr) => Object.assign(acc, curr),
             {}
         );
 
         for (const [datetime, slot] of Object.entries(allSlots)) {
-            const usage = usages[datetime];
+            const usage = usagesUTCtoLocal[datetime];
             slot.order_ids = new Set([...slot.order_ids, ...(usage || [])]);
             slot.isFull = slot.order_ids.size >= this.slots_per_interval;
         }

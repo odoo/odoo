@@ -202,8 +202,7 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 preset_id: this.currentOrder?.preset_id?.id,
             });
-
-            preset.computeAvailabilities(presetAvailabilities);
+            preset.computeAvailabilities(presetAvailabilities.usage_utc);
         } catch {
             console.info("Offline mode, cannot update the slot avaibility");
         }

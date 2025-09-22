@@ -93,6 +93,10 @@ export class PresetInfoPopup extends Component {
         );
     }
 
+    getFilteredSlots(slots) {
+        return slots.filter((s) => !s.isFull && s.datetime > DateTime.now());
+    }
+
     get countries() {
         return this.selfOrder.models["res.country"].getAll();
     }
