@@ -155,7 +155,6 @@
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
-            'html_editor/static/tests/_helpers/selection.js',
             'mass_mailing/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
