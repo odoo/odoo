@@ -340,6 +340,7 @@ class HrApplicant(models.Model):
                 Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
                 Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
                 Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+                Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
             ])
         ])
         if ignore_talent:
