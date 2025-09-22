@@ -152,9 +152,10 @@ class Query:
         self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
 
     @property
-    def table(self) -> str:
-        """ Return the query's main table, i.e., the first one in the FROM clause. """
-        return next(iter(self._joins))
+    def table(self) -> TableSQL:
+        """ The query's main table, i.e., the first one in the FROM clause. """
+        alias = next(iter(self._joins))
+        return TableSQL(alias, self._model, self)
 
     @property
     def from_clause(self) -> SQL:
@@ -176,7 +177,7 @@ class Query:
 
     def select(self, *args: SQL | LiteralString) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
-        select_clause = SQL(", ").join(map(SQL, args)) if args else SQL.identifier(self.table, 'id')
+        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id
         return SQL(
             "%s%s%s%s%s%s%s%s",
             SQL("SELECT %s", select_clause),
@@ -207,7 +208,7 @@ class Query:
             # in this case, the ORDER BY clause is necessary
             return SQL("(%s)", self.select(*args))
 
-        select_clause = SQL(", ").join(map(SQL, args)) if args else SQL.identifier(self.table, 'id')
+        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id
         return SQL(
             "(%s%s%s%s%s)",
             SQL("SELECT %s", select_clause),
@@ -244,13 +245,13 @@ class Query:
             #       ON ("stuff"."id" = "stuff__ids"."unnest")
             #   ORDER BY "stuff__ids"."ordinality"
             alias = self.join(
-                self.table, 'id',
+                self.table._alias, 'id',
                 SQL('(SELECT * FROM unnest(%s) WITH ORDINALITY)', list(ids)), 'unnest',
                 'ids',
             )
             self.order = SQL.identifier(alias, 'ordinality')
         else:
-            self.add_where(SQL("%s IN %s", SQL.identifier(self.table, 'id'), ids))
+            self.add_where(SQL("%s IN %s", self.table.id, ids))
         self._ids = ids
 
     def __str__(self) -> str:

@@ -1274,8 +1274,8 @@ class AccountAccount(models.Model):
             with contextlib.suppress(ValueError):
                 query = Query(self.env[model])
                 return query.select(
-                    SQL('%s AS id', self.env[model]._field_to_sql(query.table, 'id')),
-                    SQL('%s AS company_id', self.env[model]._field_to_sql(query.table, company_id_field, query)),
+                    SQL('%s AS id', query.table.id),
+                    SQL('%s AS company_id', query.table[company_id_field]),
                 )
 
         # Step 1: Check access rights.

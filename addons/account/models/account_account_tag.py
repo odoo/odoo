@@ -41,9 +41,9 @@ class AccountAccountTag(models.Model):
         self.check_access('read')
         query = self._as_query(ordered=False)
         id2expression = {tag_id: vals for tag_id, *vals in self.env.execute_query(query.select(
-            SQL.identifier(query.table, 'id'),
-            self._field_to_sql(query.table, 'report_expression_id', query),
-            self._field_to_sql(query.table, 'balance_negate', query),
+            query.table.id,
+            query.table.report_expression_id,
+            query.table.balance_negate,
         ))}
         for tag in self:
             tag.report_expression_id, tag.balance_negate = id2expression.get(tag._origin.id, (False, False))
