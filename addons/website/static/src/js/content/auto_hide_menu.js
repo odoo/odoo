@@ -37,7 +37,9 @@ async function autoHideMenu(el, options) {
         .filter(suffix => navbar.classList.contains(`navbar-expand-${suffix}`)) : [];
     const isNoHamburgerMenu = !!navbar && navbar.classList.contains('navbar-expand');
     const minSize = BREAKPOINT_SIZES[breakpoint];
-    let isExtraMenuOpen = false;
+    let wasExtraMenuOpenBefore = false;
+    const docSelection = el.ownerDocument.getSelection();
+    let { anchorNode, anchorOffset, focusNode, focusOffset } = docSelection;
 
     options = Object.assign({
         unfoldable: 'none',
@@ -141,7 +143,8 @@ async function autoHideMenu(el, options) {
         // The goal here is to get the state of the extra menu dropdown if it is
         // there, which will be restored after the menu adaptation.
         const extraMenuEl = _getExtraMenuEl();
-        isExtraMenuOpen = extraMenuEl && extraMenuEl.classList.contains("show");
+        wasExtraMenuOpenBefore = extraMenuEl && extraMenuEl.classList.contains("show");
+        ({ anchorNode, anchorOffset, focusNode, focusOffset } = docSelection);
         _restore();
 
         // Ignore invisible/toggleable top menu element & small viewports.
@@ -278,8 +281,14 @@ async function autoHideMenu(el, options) {
 
     function _endAutoMoreMenu() {
         const extraMenuEl = _getExtraMenuEl();
-        if (extraMenuEl && isExtraMenuOpen) {
-            extraMenuEl.click();
+        const setSelection = () =>
+            docSelection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+        const anchorInExtra = anchorNode?.parentElement.closest(".o_extra_menu_items .dropdown-menu");
+        if (extraMenuEl && (anchorInExtra || wasExtraMenuOpenBefore)) {
+            if (anchorInExtra) {
+                el.addEventListener("shown.bs.dropdown", setSelection, { once: true });
+            }
+            window.Dropdown.getOrCreateInstance(extraMenuEl).show();
         }
         el.classList.remove(...options.loadingStyleClasses);
     }
