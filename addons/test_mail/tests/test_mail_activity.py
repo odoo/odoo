@@ -30,6 +30,104 @@ class TestActivityCommon(ActivityScheduleCase):
 
 
 @tests.tagged('mail_activity')
+class TestActivitySearch(TestActivityCommon):
+
+    @freeze_time("2025-09-15 10:00:00")
+    def test_search_on_date_done_includes_archived(self):
+        """
+        Test that searching on 'date_done' on mail.activity includes archived (done)
+        activities, as implemented in the custom _search method.
+        """
+        active_activity, done_activity = self.env['mail.activity'].create([{
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            'summary': 'Active To-Do',
+            'date_deadline': '2025-09-01',
+        }, {
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            'summary': 'Done To-Do',
+            'date_deadline': '2025-09-02',
+        }])
+
+        archived_record = self.env['mail.test.activity'].create({'name': 'Archived Test Record', 'active': False})
+        done_activity_on_archived_record = self.env['mail.activity'].create({
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'res_id': archived_record.id,
+            'user_id': self.user_employee.id,
+            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            'summary': 'Done To-Do on Archived Record',
+            'date_deadline': '2025-09-03',
+        })
+        (done_activity + done_activity_on_archived_record).action_done()
+
+        all_activities = active_activity + done_activity + done_activity_on_archived_record
+        all_records = self.test_record + archived_record
+
+        activity_test_cases = [
+            (
+                "Default search finds the only active activity",
+                [('id', 'in', all_activities.ids)],
+                active_activity,
+            ),
+            (
+                "Search on 'date_done' finds archived (done) activities",
+                [('id', 'in', all_activities.ids), ('date_done', '=', '2025-09-15')],
+                done_activity + done_activity_on_archived_record,
+            ),
+        ]
+
+        for case, domain, expected in activity_test_cases:
+            with self.subTest(model='mail.activity', domain=domain):
+                found = self.env['mail.activity'].search(domain)
+                self.assertEqual(found, expected, case)
+
+        record_test_cases = [
+            (
+                "Search on related active activity finds parent record",
+                [('id', 'in', all_records.ids), ('activity_ids', '=', active_activity.id)],
+                self.test_record,
+                {},
+            ),
+            (
+                "Search on related archived (done) activities finds active parent record",
+                [('id', 'in', all_records.ids), ('activity_ids.date_done', '=', '2025-09-15')],
+                self.test_record,
+                {},
+            ),
+            (
+                "Complex search on related archived (done) activities finds active parent record",
+                [
+                    ('id', 'in', all_records.ids),
+                    ('activity_ids', 'any', [
+                        '&', '&',
+                        ('date_done', '=', '2025-09-15'),
+                        ('date_deadline', '>=', '2025-09-01'),
+                        ('date_deadline', '<', '2025-09-05'),
+                    ]),
+                ],
+                self.test_record,
+                {},
+            ),
+            (
+                "Search with context on related archived (done) activities finds active and archived parent records",
+                [('id', 'in', all_records.ids), ('activity_ids.date_done', '=', '2025-09-15')],
+                self.test_record + archived_record,
+                {'active_test': False},
+            ),
+        ]
+
+        for case, domain, expected, context in record_test_cases:
+            with self.subTest(model='mail.test.activity', domain=domain):
+                found = self.env['mail.test.activity'].with_context(**context).search(domain)
+                self.assertEqual(found, expected, case)
+
+
+@tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
     def test_activity_action_open_document_no_access(self):
