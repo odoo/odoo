@@ -256,7 +256,10 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                 'move_type': 'out_invoice',
                 'partner_id': self.partner_a.id,
                 'invoice_line_ids': [
-                    Command.create({'product_id': self.product_a.id}),
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                    }),
                 ],
             })
 
@@ -332,7 +335,10 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                 'move_type': 'out_invoice',
                 'partner_id': self.partner_a.id,
                 'invoice_line_ids': [
-                    Command.create({'product_id': self.product_a.id}),
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                    }),
                 ],
             })
 
