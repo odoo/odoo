@@ -57,3 +57,23 @@ test("Use the overlay buttons of a timeline card", async () => {
     expect(".o_overlay_options .fa-angle-right").toHaveCount(0);
     expect(".o_overlay_options .fa-angle-left").toHaveCount(1);
 });
+
+test("last timeline element cannot be removed", async () => {
+    await setupWebsiteBuilderWithSnippet("s_timeline");
+    await contains(":iframe .s_timeline_row").click();
+
+    // The first row (Milestone) of a fresh snippet is removable.
+    expect("[data-container-title='Milestone'] .oe_snippet_remove").not.toHaveAttribute("disabled");
+
+    // Remove rows until only one row remains.
+    await contains("[data-container-title='Milestone'] .oe_snippet_remove").click();
+    await contains("[data-container-title='Milestone'] .oe_snippet_remove").click();
+
+    // The last row cannot be removed.
+    expect("[data-container-title='Milestone'] .oe_snippet_remove").toHaveAttribute("disabled");
+    // The last card (Milestone Event) cannot be removed.
+    await contains(":iframe .s_timeline_card").click();
+    expect("[data-container-title='Milestone Event'] .oe_snippet_remove").toHaveAttribute(
+        "disabled"
+    );
+});
