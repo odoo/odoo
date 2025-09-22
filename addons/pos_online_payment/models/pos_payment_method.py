@@ -145,3 +145,6 @@ class PosPaymentMethod(models.Model):
     def _onchange_is_online_payment(self):
         """Reset method to hide widget `pos_payment_provider_cards` in form view."""
         self.payment_method_type = 'none'
+
+    def _is_online_payment(self):
+        return self.is_online_payment
