@@ -764,10 +764,10 @@ class AccountMoveLine(models.Model):
         query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
         sql_order = self._order_to_sql(self.env.context.get('order_cumulated_balance'), query, reverse=True)
         result = dict(self.env.execute_query(query.select(
-            SQL.identifier(query.table, "id"),
+            query.table.id,
             SQL(
                 "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
-                SQL.identifier(query.table, "balance"),
+                query.table.balance,
                 sql_order,
             ),
         )))
