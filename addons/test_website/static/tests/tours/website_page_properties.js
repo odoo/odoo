@@ -121,7 +121,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
                 trigger: `:visible :iframe #top_menu a[href="${modifiedUrl}"]`,
             },
             stepUtils.goToUrl(getClientActionUrl("/")),
-            ...assertPageCanonicalUrlIs(modifiedUrl),
+            ...assertPageCanonicalUrlIs("/"),
             stepUtils.goToUrl(getClientActionUrl(modifiedUrl)),
         ],
         teardown: [
