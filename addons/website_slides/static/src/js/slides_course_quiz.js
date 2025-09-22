@@ -252,7 +252,7 @@
                 var $question = $(this);
                 var questionId = $question.data('questionId');
                 var isCorrect = self.quiz.answers[questionId].is_correct;
-                $question.find('a.o_wslides_quiz_answer').each(function () {
+                $question.find('button.o_wslides_quiz_answer').each(function () {
                     var $answer = $(this);
                     $answer.find('i.fa').addClass('d-none');
                     if ($answer.find('input[type=radio]')[0].checked) {
