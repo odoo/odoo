@@ -762,8 +762,7 @@ function orderByField(model, orderBy, records) {
                 v2 = Number(v2);
                 break;
             }
-            case "many2one":
-            case "many2one_reference": {
+            case "many2one": {
                 v1 &&= valuesMap.get(v1[0]);
                 v2 &&= valuesMap.get(v2[0]);
                 break;
