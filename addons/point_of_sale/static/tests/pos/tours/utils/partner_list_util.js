@@ -44,6 +44,30 @@ export function clickSettleOrderName(prefix, suffix = "", checkCurrentYear = fal
     };
 }
 
+export function settleCustomerAccount(
+    partner,
+    dueAmount,
+    orderPrefix,
+    orderSuffix = "",
+    checkYear = false,
+    orderSettlement = false
+) {
+    const steps = [
+        {
+            trigger: `tr:contains(${partner}) .partner-due:contains(${dueAmount})`,
+        },
+        clickPartnerOptions(`${partner}`),
+    ];
+    const buttonText = orderSettlement ? "Settle orders" : "Settle invoices";
+    steps.push(
+        ...[
+            clickDropDownItemText(buttonText),
+            clickSettleOrderName(orderPrefix, orderSuffix, checkYear),
+        ]
+    );
+    return steps;
+}
+
 export function checkContactValues(name, address = "", phone = "", email = "") {
     const steps = [
         {
