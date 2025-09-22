@@ -89,7 +89,12 @@ async function autoHideMenu(el, options) {
         }
     };
 
-    window.addEventListener('resize', throttleAdapt);
+    const observer = new ResizeObserver(throttleAdapt);
+    for (const child of el.parentElement.children) {
+        observer.observe(child);
+    }
+    observer.observe(el.parentElement);
+    observer.observe(navbar);
 
     function _restore() {
         if (!extraItemsToggle) {
