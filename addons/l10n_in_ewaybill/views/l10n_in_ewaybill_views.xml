@@ -37,6 +37,9 @@
                             groups="base.group_no_one"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
                 </header>
+                <div role="alert" invisible="not l10n_in_ewaybill_warning">
+                    <field name="l10n_in_ewaybill_warning" widget="actionable_errors" class="w-100"/>
+                </div>
                 <div class="alert alert-danger"
                      role="alert"
                      style="margin-bottom:0px;"

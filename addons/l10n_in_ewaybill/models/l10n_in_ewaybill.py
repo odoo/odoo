@@ -130,6 +130,7 @@ class L10nInEwaybill(models.Model):
         ("warning", "Warning"),
         ("error", "Error")],
         string="Blocking Level", readonly=True)
+    l10n_in_ewaybill_warning = fields.Json(compute='_compute_l10n_in_ewaybill_warning')
 
     content = fields.Binary(compute='_compute_content', compute_sudo=True)
     cancel_reason = fields.Selection(selection=[
@@ -270,6 +271,43 @@ class L10nInEwaybill(models.Model):
         """when transportation mode is ship then vehicle type should be Over Dimensional Cargo (ODC)"""
         for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending' and ewb.mode == "4"):
             ewaybill.vehicle_type = 'O'
+
+    @api.depends('account_move_id', 'state')
+    def _compute_l10n_in_ewaybill_warning(self):
+        _ = self.env._
+        self.l10n_in_ewaybill_warning = False
+        for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending'):
+            warnings = {}
+            if (products := self.account_move_id.invoice_line_ids.filtered(
+                lambda line: line.product_id and len(line.product_id.name) > 100
+            ).mapped('product_id')):
+                warnings['l10n_in_ewaybill_product_name_warning'] = {
+                    'message': _(
+                        "Some product names exceed the 100-character limit required for e-waybill "
+                        "and will be automatically trimmed if you proceed."
+                    ),
+                    'action_text': _("View Product(s)"),
+                    'action': products._get_records_action(name=_("Check Product(s)")),
+                }
+            if (lines := self.account_move_id.invoice_line_ids.filtered(
+                lambda line: line.name and len(line.name) > 100
+            )):
+                warnings['l10n_in_ewaybill_line_description_warning'] = {
+                    'message': _(
+                        "Some invoice line descriptions exceed the 100-character limit required for e-waybill "
+                        "and will be automatically trimmed if you proceed."
+                    ),
+                    'action_text': _("View Invoice Line(s)"),
+                    'action': lines._get_records_action(
+                        name=_("Check Invoice Line(s)"),
+                        domain=[('id', 'in', lines.ids)],
+                        views=[(
+                            self.env.ref('l10n_in.view_move_line_tree_hsn_l10n_in').id,
+                            'list',
+                        )],
+                    ),
+                }
+            ewaybill.l10n_in_ewaybill_warning = warnings
 
     def action_export_content_json(self):
         self.ensure_one()
@@ -569,9 +607,9 @@ class L10nInEwaybill(models.Model):
         round_value = self.env['account.move']._l10n_in_round_value
         tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get('tax_details', {}))
         line_details = {
-            'productName': line.product_id.name,
+            'productName': line.product_id.name[:100] if line.product_id else "",
             'hsnCode': extract_digits(line.l10n_in_hsn_code),
-            'productDesc': line.name,
+            'productDesc': line.name[:100] if line.name else "",
             'quantity': line.quantity,
             'qtyUnit': line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split('-')[0] or 'OTH',
             'taxableAmount': round_value(line.balance * sign),
