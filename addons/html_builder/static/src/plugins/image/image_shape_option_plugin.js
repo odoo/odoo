@@ -2,7 +2,13 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { getShapeURL } from "@html_builder/plugins/image/image_helpers";
-import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
+import {
+    activateCropper,
+    createDataURL,
+    loadImage,
+    loadImageInfo,
+    isGif,
+} from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "@html_builder/plugins/image/image_shapes_definition";
 import {
@@ -11,6 +17,7 @@ import {
 } from "@html_editor/main/media/image_post_process_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getMimetype } from "@html_editor/utils/image";
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -49,10 +56,38 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
         process_image_post_handlers: this.processImagePost.bind(this),
+        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
     };
     setup() {
         this.shapeSvgTextCache = {};
         this.imageShapes = this.makeImageShapes();
+    }
+    async canHaveHoverEffect(imgEl) {
+        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        return (
+            imgEl.tagName === "IMG" &&
+            !this.isDeviceShape(imgEl) &&
+            !this.isAnimableShape(dataset.shape) &&
+            this.isImageSupportedForShapes(imgEl, dataset)
+        );
+    }
+    isDeviceShape(img) {
+        const shapeName = img.dataset.shape;
+        if (!shapeName) {
+            return false;
+        }
+        const shapeCategory = shapeName.split("/")[1];
+        return shapeCategory === "devices";
+    }
+    isImageSupportedForShapes(img, dataset = img.dataset) {
+        // todo: The hover effect and shape code should probably be define somewhere else.
+        if (!!dataset.hoverEffect || !!dataset.shape) {
+            return true;
+        }
+        if (!dataset.originalId) {
+            return false;
+        }
+        return isImageSupportedForProcessing(getMimetype(img, dataset));
     }
     async getShapeSvgText(shapeName) {
         let shapeSvgText = this.shapeSvgTextCache[shapeName];
@@ -468,3 +503,16 @@ export class ToggleImageShapeRatioAction extends BuilderAction {
 }
 
 registry.category("builder-plugins").add(ImageShapeOptionPlugin.id, ImageShapeOptionPlugin);
+
+/**
+ * @param {String} mimetype
+ * @param {Boolean} [strict=false] if true, even partially supported images (GIFs)
+ *     won't be accepted.
+ * @returns {Boolean}
+ */
+function isImageSupportedForProcessing(mimetype, strict = false) {
+    if (isGif(mimetype)) {
+        return !strict;
+    }
+    return ["image/jpeg", "image/png", "image/webp"].includes(mimetype);
+}
