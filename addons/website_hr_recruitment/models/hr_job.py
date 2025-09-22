@@ -47,18 +47,12 @@ class HrJob(models.Model):
         help="Complementary information that will appear on the job submission page",
         sanitize_attributes=False,
         default=_get_default_job_details)
-    published_date = fields.Date(compute='_compute_published_date', store=True)
     full_url = fields.Char('job URL', compute='_compute_full_url')
 
     @api.depends('website_url')
     def _compute_full_url(self):
         for job in self:
             job.full_url = url_join(job.get_base_url(), (job.website_url or '/jobs'))
-
-    @api.depends('website_published')
-    def _compute_published_date(self):
-        for job in self:
-            job.published_date = job.website_published and fields.Date.today()
 
     @api.onchange('website_published')
     def _onchange_website_published(self):
@@ -76,14 +70,14 @@ class HrJob(models.Model):
             job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
 
     def set_open(self):
-        self.write({'website_published': False})
+        self.write({'website_published': False, 'publish_on': False})
         return super().set_open()
 
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id
 
     def action_archive(self):
-        self.filtered('active').website_published = False
+        self.filtered('active').write({'website_published': False, 'publish_on': False})
         return super().action_archive()
 
     @api.model

@@ -43,7 +43,6 @@ class WebsitePage(models.Model):
         related='view_id.write_date')
 
     website_indexed = fields.Boolean('Is Indexed', default=True)
-    date_publish = fields.Datetime('Publishing Date')
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_in_menu = fields.Boolean(compute='_compute_website_menu')
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
@@ -61,9 +60,7 @@ class WebsitePage(models.Model):
 
     def _compute_visible(self):
         for page in self:
-            page.is_visible = page.website_published and (
-                not page.date_publish or page.date_publish < fields.Datetime.now()
-            )
+            page.is_visible = page.website_published
 
     @api.depends('menu_ids')
     def _compute_website_menu(self):

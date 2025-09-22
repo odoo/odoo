@@ -15,6 +15,14 @@ class WebsitePagePropertiesBase(models.TransientModel):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_inverse_is_homepage', string='Homepage')
     can_publish = fields.Boolean(compute='_compute_can_publish')
     is_published = fields.Boolean(compute='_compute_is_published', inverse='_inverse_is_published')
+    published_date = fields.Datetime(compute='_compute_published_date', inverse='_inverse_published_date', readonly=False)
+    publish_on = fields.Datetime(compute='_compute_publish_on', inverse='_inverse_publish_on', readonly=False)
+
+    def action_unschedule(self):
+        for record in self:
+            target = record.target_model_id
+            if target and 'publish_on' in target._fields:
+                target.publish_on = False
 
     def _selection_target_model_id(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
@@ -31,6 +39,38 @@ class WebsitePagePropertiesBase(models.TransientModel):
         else:
             domain += [('url', '=', url_to_check)]
         return domain
+
+    @api.depends('target_model_id')
+    def _compute_published_date(self):
+        for record in self:
+            target = record.target_model_id
+            if target and 'published_date' in target._fields:
+                record.published_date = target.published_date
+            else:
+                record.published_date = False
+
+    def _inverse_published_date(self):
+        for record in self:
+            target = record.target_model_id
+            if target and 'published_date' in target._fields:
+                target.published_date = record.published_date
+
+    @api.depends('target_model_id')
+    def _compute_publish_on(self):
+        for record in self:
+            target = record.target_model_id
+            if target and 'publish_on' in target._fields:
+                record.publish_on = target.publish_on
+            else:
+                record.publish_on = False
+
+    def _inverse_publish_on(self):
+        for record in self:
+            target = record.target_model_id
+            if target and 'publish_on' in target._fields:
+                target.publish_on = record.publish_on
+                if record.publish_on:
+                    target.is_published = False
 
     @api.depends('url', 'website_id')
     def _compute_menu_ids(self):
@@ -155,7 +195,6 @@ class WebsitePageProperties(models.TransientModel):
     target_model_id = fields.Many2one('website.page')
     name = fields.Char(related='target_model_id.name', readonly=False)
     url = fields.Char(related='target_model_id.url', readonly=False)
-    date_publish = fields.Datetime(related='target_model_id.date_publish', readonly=False)
     website_indexed = fields.Boolean(related='target_model_id.website_indexed', readonly=False)
     visibility = fields.Selection(related='target_model_id.visibility', readonly=False)
     visibility_password_display = fields.Char(related='target_model_id.visibility_password_display', readonly=False)

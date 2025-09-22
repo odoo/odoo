@@ -8,6 +8,9 @@ class RedirectField extends Component {
     static template = "website.RedirectField";
     static props = { ...standardFieldProps };
     get info() {
+        if (Object.hasOwn(this.props.record.data, "publish_on") && this.props.record.data.publish_on) {
+            return _t("Scheduled");
+        }
         return this.props.record.data[this.props.name] ? _t("Published") : _t("Unpublished");
     }
 

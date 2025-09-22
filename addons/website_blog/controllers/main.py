@@ -5,7 +5,7 @@ import pytz
 import babel.dates
 from collections import defaultdict
 
-from odoo import http, fields, tools, models
+from odoo import http, tools, models
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.fields import Domain
 from odoo.http import request
@@ -32,13 +32,12 @@ class WebsiteBlog(http.Controller):
 
     def nav_list(self, blog=None):
         dom = blog and [('blog_id', '=', blog.id)] or []
-        if not request.env.user.has_group('website.group_website_designer'):
-            dom += [('post_date', '<=', fields.Datetime.now())]
+        dom += [('website_published', '=', True)]
         groups = request.env['blog.post']._read_group(
-            dom, groupby=['post_date:month'])
+            dom, groupby=['published_date:month'])
 
         locale = get_lang(request.env).code
-        tzinfo = request.env.tz
+        tzinfo = pytz.timezone(request.env.context.get('tz', 'utc') or 'utc')
         fmt = tools.DEFAULT_SERVER_DATETIME_FORMAT
 
         res = defaultdict(list)
@@ -79,7 +78,7 @@ class WebsiteBlog(http.Controller):
             domain &= Domain('blog_id', '=', blog.id)
 
         if date_begin and date_end:
-            domain &= Domain("post_date", ">=", date_begin) & Domain("post_date", "<=", date_end)
+            domain &= Domain("published_date", ">=", date_begin) & Domain("published_date", "<=", date_end)
         active_tag_ids = tags and [request.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
         active_tags = BlogTag
         if active_tag_ids:
@@ -92,17 +91,24 @@ class WebsiteBlog(http.Controller):
                     return request.redirect(new_url, 301)
             domain &= Domain('tag_ids', 'in', active_tags.ids)
 
+        published_count = 0
+        unpublished_count = 0
+        scheduled_count = 0
         if request.env.user.has_group('website.group_website_designer'):
-            count_domain = domain & Domain("website_published", "=", True) & Domain("post_date", "<=", fields.Datetime.now())
+            count_domain = domain & Domain("website_published", "=", True)
+            scheduled_domain = domain & Domain("publish_on", "!=", False)
             published_count = BlogPost.search_count(count_domain)
-            unpublished_count = BlogPost.search_count(domain) - published_count
+            scheduled_count = BlogPost.search_count(scheduled_domain)
+            unpublished_count = BlogPost.search_count(domain) - published_count - scheduled_count
 
             if state == "published":
-                domain &= Domain("website_published", "=", True) & Domain("post_date", "<=", fields.Datetime.now())
+                domain &= Domain("website_published", "=", True)
             elif state == "unpublished":
-                domain &= Domain("website_published", "=", False) | ("post_date", ">", fields.Datetime.now())
+                domain &= Domain("website_published", "=", False) & Domain("publish_on", "=", False)
+            elif state == "scheduled":
+                domain &= Domain("publish_on", "!=", False)
         else:
-            domain &= Domain("post_date", "<=", fields.Datetime.now())
+            domain &= Domain("website_published", "=", True)
 
         offset = (page - 1) * self._blog_post_per_page
 
@@ -115,7 +121,7 @@ class WebsiteBlog(http.Controller):
             **post
         )
         total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
-            limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
+            limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]
 
@@ -157,7 +163,7 @@ class WebsiteBlog(http.Controller):
             'tag': tags,
             'active_tag_ids': active_tags.ids,
             'domain': domain,
-            'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
+            'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count, "scheduled": scheduled_count},
             'blogs': blogs,
             'blog': blog,
             'search': fuzzy_search_term or search,
@@ -209,7 +215,10 @@ class WebsiteBlog(http.Controller):
         v = {}
         v['blog'] = blog
         v['base_url'] = blog.get_base_url()
-        v['posts'] = request.env['blog.post'].search([('blog_id', '=', blog.id)], limit=min(int(limit), 50), order="post_date DESC")
+        v['posts'] = request.env['blog.post'].search([
+            ('blog_id', '=', blog.id),
+            ('website_published', '=', True),
+        ], limit=min(int(limit), 50), order="published_date DESC")
         v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
@@ -257,7 +266,7 @@ class WebsiteBlog(http.Controller):
         # Find next Post
         blog_post_domain = [('blog_id', '=', blog.id)]
         if not request.env.user.has_group('website.group_website_designer'):
-            blog_post_domain += [('post_date', '<=', fields.Datetime.now())]
+            blog_post_domain += [('website_published', '=', True)]
 
         all_post = BlogPost.search(blog_post_domain)
 

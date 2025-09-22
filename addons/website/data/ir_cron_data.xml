@@ -8,4 +8,18 @@
         <field name="interval_number">1</field>
         <field name="interval_type">weeks</field>
     </record>
+    <!--
+        Static cron used together with ir.cron.trigger to publish scheduled
+        content (website pages, blog posts, products, ...).
+        The interval is deliberately large as triggers define the actual
+        execution dates.
+    -->
+    <record id="ir_cron_publish_scheduled_pages" model="ir.cron">
+        <field name="name">Website Publish Mixin: Publish scheduled page</field>
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="model_id" ref="model_website_controller_page"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_publish_scheduled_pages()</field>
+    </record>
 </odoo>

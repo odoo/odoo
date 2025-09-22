@@ -9,7 +9,10 @@
                 <attribute name="default_order">is_published desc, is_favorite desc, create_date DESC</attribute>
             </xpath>
             <xpath expr="//t[@t-name='card']/div" position="before">
-                <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published"/>
+                <field name="website_published" invisible="1"/>
+                <field name="publish_on" invisible="1"/> <!-- Needed for web_ribbon widget -->
+                <widget name="web_ribbon" title="Scheduled" bg_color="text-bg-warning" invisible="not publish_on"/>
+                <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published or publish_on"/>
             </xpath>
             <xpath expr="//button[@name='%(hr_recruitment.action_hr_job_applications)d']" position="replace">
                 <a type="object" name="open_website_url" class="btn btn-primary" role="button">

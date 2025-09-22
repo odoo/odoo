@@ -52,7 +52,8 @@
                                         <div class="card-body p-4">
                                             <div class="mt0 d-flex justify-content-between align-items-center">
                                                 <h3 t-field="job.name"/>
-                                                <span t-if="not job.website_published" class="badge pagination text-bg-danger mb8">unpublished</span>
+                                                <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
+                                                <span t-elif="not job.website_published" class="badge pagination text-bg-danger mb8">unpublished</span>
                                             </div>
                                             <h5 t-if="job.no_of_recruitment >= 1" class="text-reset">
                                                 <span t-field="job.no_of_recruitment"/>
@@ -119,7 +120,7 @@
         <div id="wrap" class="js_hr_recruitment">
             <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
                 <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
-                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date"/>
+                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date and job.published_date.isoformat()"/>
                 <meta itemprop="title" t-att-content="job.name"/>
                 <meta itemprop="directApply" content="true"/>
                 <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
