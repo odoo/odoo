@@ -11,3 +11,4 @@ from . import reorder
 from . import sale
 from . import variant
 from . import website
+from . import wishlist

@@ -9,7 +9,7 @@ It allows for comparing products from the wishlist
     """,
     'depends': [
         'website_sale_comparison',
-        'website_sale_wishlist',
+        'website_sale',
     ],
     'data': [
         'views/templates.xml',

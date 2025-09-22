@@ -2,13 +2,13 @@ import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
 import { Interaction } from '@web/public/interaction';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wishlistUtils from '@website_sale/js/website_sale_wishlist_utils';
 
 export class ProductWishlist extends Interaction {
     static selector = '.wishlist-section';
     dynamicContent = {
         '.o_wish_rm': { 't-on-click': this.removeProduct },
-        ".o_wish_add": { "t-on-click": this.locked(this.addToCart, true) },
+        '.o_wish_add': { 't-on-click': this.addToCart },
     };
 
     /**
@@ -74,4 +74,4 @@ export class ProductWishlist extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_wishlist.product_wishlist', ProductWishlist);
+    .add('website_sale.product_wishlist', ProductWishlist);

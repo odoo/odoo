@@ -141,6 +141,18 @@
                                     >
                                         Remove
                                     </a>
+                                    <t t-if="line._is_sellable()">
+                                        <span class="text-300">|</span>
+                                        <a
+                                            href="#"
+                                            class="o_add_wishlist js_delete_product small"
+                                            t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                                            t-att-data-product-product-id="line.product_id.id"
+                                            data-action="o_wishlist"
+                                        >
+                                            Save for Later
+                                        </a>
+                                    </t>
                                     <div t-if="is_combo" class="d-none d-md-block ms-auto"><t t-call="website_sale.cart_lines_quantity"/></div>
                                 </div>
                             </div>
@@ -161,6 +173,16 @@
                                 title="Remove"
                             >
                                 <i class="fa fa-fw fa-trash-o"/>
+                            </button>
+                            <button
+                                t-if="line._is_sellable()"
+                                class="o_add_wishlist js_delete_product btn btn-link d-inline-block d-md-none px-2"
+                                t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                                t-att-data-product-product-id="line.product_id.id"
+                                data-action="o_wishlist"
+                                title="Wishlist"
+                            >
+                                <i class="fa fa-fw fa-heart-o"/>
                             </button>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
     'description': """
 Allow users to add a product to wishlist if the product is not available for the selected pickup location.
     """,
-    'depends': ['website_sale_wishlist', 'website_sale_collect'],
+    'depends': ['website_sale', 'website_sale_collect'],
     'data': [
         'views/delivery_form_templates.xml',
     ],

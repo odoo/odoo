@@ -265,7 +265,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_additional_shop_values(self, values, **kwargs):
         """ Hook to update values used for rendering website_sale.products template """
-        return {}
+        values['products_in_wishlist'] = request.env['product.wishlist'].current().product_id.product_tmpl_id
+        return values
 
     def _get_product_query_params(self, **kwargs):
         """Allow to configure the product page URL's query string."""
@@ -1787,7 +1788,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
-        current_website = request.env['website'].get_current_website()
+        current_website = request.env['website'].get_current_website()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
         # Restrict options we can write to.
         writable_fields = {
             'shop_page_container', 'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
@@ -1795,7 +1796,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product_page_image_layout', 'product_page_image_width', 'product_page_grid_columns',
             'product_page_image_spacing', 'product_page_image_ratio',
             'product_page_image_ratio_mobile', 'product_page_cols_order',
-            'product_page_image_roundness', 'product_page_cta_design'
+            'product_page_image_roundness', 'product_page_cta_design',
+            'wishlist_opt_products_design_classes', 'wishlist_grid_columns', 'wishlist_mobile_columns', 'wishlist_gap'
         }
         # Default ppg to 1.
         if 'ppg' in options and not options['ppg']:

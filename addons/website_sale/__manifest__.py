@@ -67,6 +67,7 @@
         'views/website_sale_menus.xml',
         'views/website_sale_visitor_views.xml',
         'views/website_views.xml',
+        'views/website_sale_wishlist_template_svg.xml',
 
         # Website snippets
         'templates/snippets/snippets.xml',
@@ -102,6 +103,8 @@
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/product_tile.scss',
             'website_sale/static/src/scss/website_sale.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.options.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
@@ -112,6 +115,8 @@
             'website_sale/static/src/scss/product_configurator.scss',
 
             'website_sale/static/src/js/cart_service.js',
+            'website_sale/static/src/js/variant_mixin.js',
+            'website_sale/static/src/js/website_sale_wishlist_utils.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',

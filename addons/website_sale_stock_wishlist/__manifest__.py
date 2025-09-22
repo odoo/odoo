@@ -9,7 +9,7 @@ Allow the user to select if he wants to receive email notifications when a produ
     """,
     'depends': [
         'website_sale_stock',
-        'website_sale_wishlist',
+        'website_sale',
     ],
     'data': [
         'views/website_sale_stock_wishlist_templates.xml',

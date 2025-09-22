@@ -35,7 +35,7 @@ class ProductWishlist(models.Model):
         return wish.filtered(
             lambda wish:
                 wish.sudo().product_id.product_tmpl_id.website_published
-                and wish.sudo().product_id.product_tmpl_id._is_add_to_cart_possible()
+                and wish.sudo().product_id.product_tmpl_id._can_be_added_to_cart()
         )
 
     @api.model
@@ -71,25 +71,3 @@ class ProductWishlist(models.Model):
             ("create_date", "<", fields.Datetime.to_string(datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5)))),
             ("partner_id", "=", False),
         ]).unlink()
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    wishlist_ids = fields.One2many('product.wishlist', 'partner_id', string='Wishlist', domain=[('active', '=', True)])
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    def _is_in_wishlist(self):
-        self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
-
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    def _is_in_wishlist(self):
-        self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id')

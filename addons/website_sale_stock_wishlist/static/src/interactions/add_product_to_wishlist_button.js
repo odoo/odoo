@@ -1,7 +1,7 @@
 import { patch } from '@web/core/utils/patch';
 import {
     AddProductToWishlistButton
-} from '@website_sale_wishlist/interactions/add_product_to_wishlist_button';
+} from '@website_sale/interactions/add_product_to_wishlist_button';
 
 patch(AddProductToWishlistButton.prototype, {
     /**

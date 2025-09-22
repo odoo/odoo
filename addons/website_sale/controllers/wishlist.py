@@ -3,7 +3,7 @@
 from odoo.http import Controller, request, route
 
 
-class WebsiteSaleWishlist(Controller):
+class Wishlist(Controller):
 
     @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
     def add_to_wishlist(self, product_id, **kw):
@@ -37,7 +37,7 @@ class WebsiteSaleWishlist(Controller):
         wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
 
         return request.render(
-            'website_sale_wishlist.product_wishlist',
+            'website_sale.product_wishlist',
             {
                 'wishes': wishes,
             }

@@ -2,7 +2,7 @@ import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wishlistUtils from '@website_sale/js/website_sale_wishlist_utils';
 
 export class AddProductToWishlistButton extends Interaction {
     static selector = '.o_add_wishlist, .o_add_wishlist_dyn';
@@ -31,6 +31,12 @@ export class AddProductToWishlistButton extends Interaction {
         wishlistUtils.addWishlistProduct(productId);
         wishlistUtils.updateWishlistNavBar();
         wishlistUtils.updateDisabled(el, true);
+        await wSaleUtils.animateClone(
+            $(document.querySelector('.o_wsale_my_wish')),
+            $(document.querySelector('#product_detail_main') ?? el.closest('.o_cart_product') ?? form),
+            25,
+            40,
+        );
         if (el.classList.contains('o_add_wishlist')) {
             const iconEl = el.querySelector('.fa');
             if (iconEl) {
@@ -43,4 +49,4 @@ export class AddProductToWishlistButton extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_wishlist.add_product_to_wishlist_button', AddProductToWishlistButton);
+    .add('website_sale.add_product_to_wishlist_button', AddProductToWishlistButton);

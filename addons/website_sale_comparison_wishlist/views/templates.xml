@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
+    <template id="product_wishlist" inherit_id="website_sale.product_wishlist">
         <xpath expr="//div[hasclass('o_wsale_product_action_row')]" position="inside">
             <t t-if="is_view_active('website_sale_comparison.add_to_compare')">
                 <t t-set="categories" t-value="wish.product_id.product_tmpl_id.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>

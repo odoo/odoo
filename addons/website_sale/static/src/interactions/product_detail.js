@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wishlistUtils from '@website_sale/js/website_sale_wishlist_utils';
 
 export class ProductDetail extends Interaction {
     static selector = '#product_detail';
@@ -27,4 +27,4 @@ export class ProductDetail extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_wishlist.product_detail', ProductDetail);
+    .add('website_sale.product_detail', ProductDetail);

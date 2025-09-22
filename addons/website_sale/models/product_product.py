@@ -147,6 +147,10 @@ class ProductProduct(models.Model):
             return False
         return request.website.has_ecommerce_access()
 
+    def _is_in_wishlist(self):
+        self.ensure_one()
+        return self in self.env['product.wishlist'].current().mapped('product_id')
+
     @api.onchange('public_categ_ids')
     def _onchange_public_categ_ids(self):
         if self.public_categ_ids:

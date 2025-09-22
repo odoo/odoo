@@ -9,7 +9,7 @@ class WishlistPageOptionPlugin extends Plugin {
     static id = "wishlistPageOption";
     resources = {
         builder_options: {
-            template: "website_sale_wishlist.WishlistPageOption",
+            template: "website_sale.WishlistPageOption",
             selector: ".o_wishlist_table",
             editableOnly: false,
             title: _t("Wishlist Page"),
