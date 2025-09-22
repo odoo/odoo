@@ -551,3 +551,24 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.finalizeOrder("Cash", "575.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_specific_discount_dont_apply_on_others", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("$ 10 per order on your order"),
+            ProductScreen.clickDisplayedProduct("Magnetic Board"),
+            PosLoyalty.orderTotalIs("80.00"),
+            PosLoyalty.enterCode("free"),
+            PosLoyalty.hasRewardLine("$ 50 per order on Magnetic Board", "-50.00"),
+            PosLoyalty.orderTotalIs('30.00'),
+        ].flat(),
+});

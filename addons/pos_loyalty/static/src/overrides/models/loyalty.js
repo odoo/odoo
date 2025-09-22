@@ -1215,7 +1215,8 @@ patch(Order.prototype, {
                             applicableProducts.has(product)
                         ) &&
                         lineReward.reward_type === 'discount' &&
-                        lineReward.discount_mode != 'percent'
+                        lineReward.discount_mode != 'percent' &&
+                        !lineReward.all_discount_product_ids.has(line.get_product().id)
                     )
                 ) {
                     linesToDiscount.push(line);

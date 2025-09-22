@@ -2643,3 +2643,88 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_max_usage_partner_with_point",
             login="pos_user",
         )
+
+    def test_specific_discount_dont_apply_on_others(self):
+        """
+        Tests that a discount in percentage on a specific product does not
+        take other discounts into account if they are unrelated to the
+        product.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.desk_organizer.list_price = 40
+        self.magnetic_board.list_price = 50
+
+        self.loyalty_program, self.loyalty_program2 = self.env['loyalty.program'].create([
+            {
+                'name': 'Loyalty',
+                'program_type': 'loyalty',
+                'trigger': 'auto',
+                'applies_on': 'both',
+                'pos_ok': True,
+                'pos_config_ids': [Command.link(self.main_pos_config.id)],
+                'rule_ids': [(0, 0, {
+                    'product_ids': [self.desk_organizer.id],
+                    'reward_point_mode': 'order',
+                    'reward_point_amount': 1,
+                    'minimum_qty': 1,
+                })],
+                'reward_ids': [
+                    Command.create({
+                        'reward_type': 'discount',
+                        'discount_mode': 'per_order',
+                        'required_points': 1,
+                        'discount': 10,
+                        'discount_applicability': 'order',
+                    }),
+                ]
+            }, {
+                'name': 'Coupons',
+                'program_type': 'coupons',
+                'trigger': 'with_code',
+                'applies_on': 'both',
+                'pos_ok': True,
+                'pos_config_ids': [Command.link(self.main_pos_config.id)],
+                'rule_ids': [(0, 0, {
+                    'reward_point_mode': 'order',
+                    'reward_point_amount': 1,
+                    'minimum_qty': 1,
+                })],
+                'reward_ids': [
+                    Command.create({
+                        'reward_type': 'discount',
+                        'discount_mode': 'per_order',
+                        'required_points': 1,
+                        'discount': 50,
+                        'discount_applicability': 'specific',
+                        'discount_product_ids': [self.magnetic_board.id],
+                    }),
+                ]
+            }
+        ])
+        self.env["loyalty.generate.wizard"].with_context({"active_id": self.loyalty_program2.id}).create({
+            "coupon_qty": 1,
+            "points_granted": 1,
+        }).generate_coupons()
+        self.coupon1 = self.loyalty_program2.coupon_ids
+        self.coupon1.write({"code": "free"})
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create([
+            {
+                'partner_id': partner_aaa.id,
+                'program_id': self.loyalty_program.id,
+                'points': 30,
+            }, {
+                'partner_id': partner_aaa.id,
+                'program_id': self.loyalty_program2.id,
+                'points': 30,
+            }
+        ])
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_specific_discount_dont_apply_on_others",
+            login="pos_user"
+        )
