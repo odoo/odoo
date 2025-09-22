@@ -438,7 +438,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model_cls in self.models.values():
                 if model_cls._setup_done__:
                     models_field_depends_done.add(model_cls)
-                else:
+                elif not model_cls._abstract:
                     todo.extend(model_cls._fields.values())
 
             done = set()
@@ -474,6 +474,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # determine field_depends and field_depends_context
         for model_cls in self.models.values():
+            if model_cls._abstract:
+                continue
             if model_cls in models_field_depends_done:
                 continue
             model = model_cls(env, (), ())
