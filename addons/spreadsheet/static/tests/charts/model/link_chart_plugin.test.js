@@ -1,6 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
-import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import {
+    createBasicChart,
+    createCarousel,
+    addChartFigureToCarousel,
+} from "@spreadsheet/../tests/helpers/commands";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
@@ -87,4 +91,28 @@ test("Links of standard charts are duplicated when duplicating a sheet", async f
     expect(model.getters.getChartOdooMenu(newChartId)).toEqual(
         model.getters.getChartOdooMenu(chartId)
     );
+});
+
+test("Link to menu id is preserved when duplicating a carousel chart", async () => {
+    const { model } = await createSpreadsheetWithChart();
+    const sheetId = model.getters.getActiveSheetId();
+    const chartFigureId = model.getters.getFigures(sheetId)[0].id;
+    createCarousel(model, { items: [] }, "carouselId");
+    addChartFigureToCarousel(model, "carouselId", chartFigureId);
+
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId, odooMenuId: 1 });
+    expect(model.getters.getChartOdooMenu(chartId)?.id).toBe(1);
+
+    model.dispatch("DUPLICATE_CAROUSEL_CHART", {
+        chartId,
+        duplicatedChartId: "duplicatedChartId",
+        carouselId: "carouselId",
+        sheetId,
+    });
+
+    const carouselItems = model.getters.getCarousel("carouselId").items;
+    expect(carouselItems).toHaveLength(2);
+    expect(carouselItems[1]).toMatchObject({ type: "chart", chartId: "duplicatedChartId" });
+    expect(model.getters.getChartOdooMenu("duplicatedChartId")?.id).toBe(1);
 });

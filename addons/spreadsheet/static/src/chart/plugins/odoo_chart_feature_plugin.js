@@ -43,6 +43,16 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
                 this.overwrittenGranularities[cmd.chartId] = cmd.granularity;
                 break;
             }
+            case "DUPLICATE_CAROUSEL_CHART": {
+                const menu = this.getters.getChartOdooMenu(cmd.chartId);
+                if (menu) {
+                    this.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                        chartId: cmd.duplicatedChartId,
+                        odooMenuId: menu.xmlid || menu.id,
+                    });
+                }
+                break;
+            }
         }
     }
 
