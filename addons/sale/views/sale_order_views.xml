@@ -164,12 +164,14 @@
                     decoration-primary="state == 'sent'"
                     widget="badge"
                     optional="hide"/>
-                <field name="invoice_status"
-                    decoration-success="invoice_status == 'invoiced'"
+                <field
+                    name="invoice_status"
+                    decoration-success="invoice_status == 'invoiced' and not is_manually_closed"
                     decoration-info="invoice_status == 'to invoice'"
-                    decoration-warning="invoice_status == 'upselling'"
+                    decoration-warning="(invoice_status == 'invoiced' and is_manually_closed) or invoice_status == 'upselling'"
                     widget="badge"
-                    optional="show"/>
+                    optional="show"
+                />
                 <field name="client_order_ref" optional="hide"/>
                 <field name="validity_date" optional="hide"/>
             </list>
@@ -376,6 +378,13 @@
                         invisible="locked or state != 'sale'"
                         groups="sales_team.group_sale_manager"/>
                 </t>
+                <button
+                    string="Reopen Invoicing"
+                    name="action_reopen_order"
+                    type="object"
+                    class="btn-primary"
+                    invisible="not is_manually_closed or state != 'sale'"
+                />
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
             <div class="alert alert-warning" role="alert" invisible="not sale_warning_text">
@@ -1224,5 +1233,14 @@
         <field name="context">{'default_res_model': 'sale.order', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_view_types">list,kanban</field>
+    </record>
+
+    <record id="action_close_invoicing_server" model="ir.actions.server">
+        <field name="name">Close Invoicing</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_close_invoicing()</field>
     </record>
 </odoo>
