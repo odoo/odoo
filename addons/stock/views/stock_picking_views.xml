@@ -69,7 +69,6 @@
             <field name="arch" type="xml">
                 <list string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
                     <header>
-                        <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
@@ -237,7 +236,7 @@
                             <label for="scheduled_date"/>
                             <div class="o_row">
                                 <field name="scheduled_date" readonly="not is_date_editable" required="id"
-                                    decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
+                                    decoration-warning="id and state not in ('done', 'cancel') and scheduled_date &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
@@ -466,7 +465,7 @@
             <field name="name">Unreserve</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">form</field>
+            <field name="binding_view_types">form,list</field>
             <field name="state">code</field>
             <field name="code">
             if records:
