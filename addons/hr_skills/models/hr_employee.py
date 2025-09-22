@@ -155,7 +155,7 @@ class HrEmployee(models.Model):
             raise AccessError(self.env._("You cannot access the resume of this employee."))
         res = []
         employee_versions = self.env['hr.employee'].sudo().browse(res_id).version_ids
-        if len(employee_versions) == 1:
+        if len(employee_versions) == 1 and employee_versions[0].job_title:
             return [{
                 'id': employee_versions[0].id,
                 'job_title': employee_versions[0].job_title,
@@ -166,7 +166,7 @@ class HrEmployee(models.Model):
         for i in range(len(employee_versions) - 1):
             current_version = employee_versions[i]
             next_version = employee_versions[i + 1]
-            if current_version.job_title != next_version.job_title:
+            if current_version.job_title != next_version.job_title and current_version.job_title:
                 res.append({
                     'id': current_version.id,
                     'job_title': current_version.job_title,
@@ -174,7 +174,7 @@ class HrEmployee(models.Model):
                     'date_end': next_version.date_start - relativedelta(days=1),
                 })
                 current_date_start = next_version.date_start
-            if i == len(employee_versions) - 2:
+            if i == len(employee_versions) - 2 and next_version.job_title:
                 # Last version, add it to the result
                 res.append({
                     'id': next_version.id,
