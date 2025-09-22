@@ -231,11 +231,11 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
     await click("button[name='icon_spin']");
     await animationFrame();
     expect("span.fa-glass.fa-spin").toHaveCount(1);
-    expect(".btn-group[name='icon_spin'] button").toHaveClass("active");
+    await expectElementCount(".btn-group[name='icon_spin'] button.active", 1);
     undo(editor);
     await animationFrame();
     expect("span.fa-glass.fa-spin").toHaveCount(0);
-    expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
+    await expectElementCount(".btn-group[name='icon_spin'].active", 0);
     expect("span.fa-glass").toHaveCount(1);
     expect("span.fa-glass.fa-spin").toHaveCount(0);
 });
