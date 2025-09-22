@@ -119,6 +119,11 @@ function selectAttribute(productName, attributeName, attributeValue, attributeTy
                 run: 'click',
             };
         case 'multi':
+            return {
+                content: content,
+                trigger: `${ptalSelector}:has(label:contains(/^${attributeValue}$/)) input[type="checkbox"]`,
+                run: "click",
+            };
         case 'pills':
         case 'radio':
             return {
