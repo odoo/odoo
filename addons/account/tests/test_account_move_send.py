@@ -308,6 +308,49 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
     @users('user_account')
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_move_composer_single_archived_user(self):
+        """ Test single mode with archived user email change """
+        test_move = self.test_account_moves[0].with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
+
+        def _create_composer():
+            return self.env['account.move.send'].with_context(
+                active_model='account.move',
+                active_ids=test_move.ids
+            ).create({
+                'mail_template_id': move_template.id,
+            })
+
+        composer = _create_composer()
+        # First send mail and check author_id
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app():
+            composer.action_send_and_print(allow_fallback_pdf=True)
+            self.env.cr.flush()
+
+        print_msg = self._new_msgs[0]
+        original_author_id = print_msg.author_id
+        self.assertEqual(original_author_id, self.user_account_other.partner_id)
+
+        # Create new partner and archive invoice_user_id, change its partner email
+        new_partner = self.env['res.partner'].create({'name': 'A', 'email': 'a@example.com'})
+        test_move.invoice_user_id.sudo().write({'active': False})
+        test_move.invoice_user_id.partner_id.email = new_partner.email
+
+        # Send mail again
+        composer2 = _create_composer()
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app():
+            composer2.action_send_and_print(allow_fallback_pdf=True)
+            self.env.cr.flush()
+
+        # Check that author_id is same as test_move.invoice_user_id's partner_id
+        new_print_msg = self._new_msgs[0]
+        self.assertEqual(new_print_msg.author_id, test_move.invoice_user_id.partner_id)
+
+    @users('user_account')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_move_composer_single_lang(self):
         """ Test single with another language """
         test_move = self.test_account_moves[1].with_env(self.env)

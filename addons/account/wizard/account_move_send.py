@@ -481,6 +481,7 @@ class AccountMoveSend(models.TransientModel):
 
         new_message = move\
             .with_context(
+                active_test=False,
                 no_document=True,
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
