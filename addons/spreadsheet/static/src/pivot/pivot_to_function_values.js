@@ -45,6 +45,7 @@ pivotToFunctionValueRegistry
     .replace("integer", _toNumber)
     .add("monetary", _toNumber)
     .add("many2one", _toNumber)
+    .add("many2one_reference", _toNumber)
     .add("many2many", _toNumber)
     .add("float", _toNumber)
     .replace("date", _toDate)
