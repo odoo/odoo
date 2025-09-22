@@ -7,9 +7,11 @@
             <div class="w-100 py-2 ps-3 pe-5 border border-start-0 rounded-end text-break">
                 <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-2 me-2" aria-label="Close" t-on-click="close"/>
                 <div class="o_notification_body d-flex align-items-center">
-                    <!-- TODO-IPB: at the end, title has to be removed, but the change is too important to do all in once now -->
-                    <span t-if="props.title" class="me-auto o_notification_content w-100" t-out="props.title + '. ' + props.message"/>
-                    <span t-else="" class="me-auto o_notification_content w-100" t-out="props.message"/>
+                    <span class="me-auto o_notification_content w-100">
+                        <!-- TODO-IPB: at the end, title has to be removed, but the change is too important to do all in once now -->
+                        <t t-if="props.title"><t t-out="props.title"/>. </t>
+                        <t t-out="props.message"/>
+                    </span>
                     <div t-if="props.buttons.length" class="o_notification_buttons justify-content-end w-50">
                         <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn btn-link" t-on-click="button.onClick">
                             <t t-if="button.icon">
