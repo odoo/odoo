@@ -91,12 +91,15 @@ class MaintenanceMixin(models.AbstractModel):
             if record.maintenance_team_id.company_id and record.maintenance_team_id.company_id.id != record.company_id.id:
                 record.maintenance_team_id = False
 
-    @api.depends('effective_date', 'maintenance_ids.stage_id', 'maintenance_ids.close_date', 'maintenance_ids.request_date')
+    @api.depends('effective_date', 'maintenance_ids.stage_id', 'maintenance_ids.close_date', 'maintenance_ids.schedule_date')
     def _compute_maintenance_request(self):
         for record in self:
             maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.stage_id.done)
-            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) if request.close_date and request.request_date else 0 for request in maintenance_requests) / len(maintenance_requests)) or 0
-            record.latest_failure_date = max((request.request_date for request in maintenance_requests), default=False)
+            failure_dates = [(request.schedule_date or request.create_date).date() for request in maintenance_requests]
+            record.mttr = len(maintenance_requests) and sum((request.close_date - failure_date).days
+                if request.close_date else 0
+                for request, failure_date in zip(maintenance_requests, failure_dates)) / len(maintenance_requests)
+            record.latest_failure_date = max(failure_dates, default=False)
             record.mtbf = record.latest_failure_date and (record.latest_failure_date - record.effective_date).days / len(maintenance_requests) or 0
             record.estimated_next_failure = record.mtbf and record.latest_failure_date + relativedelta(days=record.mtbf) or False
 
@@ -208,8 +211,6 @@ class MaintenanceRequest(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
     description = fields.Html('Description')
-    request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
-                               help="Date requested for the maintenance to happen")
     owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True, index='btree_not_null')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
