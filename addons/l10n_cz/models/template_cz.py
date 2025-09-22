@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import api, models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -38,3 +38,29 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_cz_21_receipt_domestic_supplies',
             },
         }
+
+    @api.model
+    def _get_demo_data_move(self, company=False):
+        data = super()._get_demo_data_move(company)
+        if company and company.account_fiscal_country_id.code == 'CZ':
+            for key in (
+                'demo_invoice_1',
+                'demo_invoice_2',
+                'demo_invoice_3',
+                'demo_invoice_followup',
+                'demo_invoice_5',
+                'demo_invoice_equipment_purchase',
+                'demo_move_auto_reconcile_1',
+                'demo_move_auto_reconcile_2',
+                'demo_move_auto_reconcile_3',
+                'demo_move_auto_reconcile_4',
+                'demo_move_auto_reconcile_5',
+                'demo_move_auto_reconcile_6',
+                'demo_move_auto_reconcile_7',
+                'demo_move_auto_reconcile_8',
+                'demo_move_auto_reconcile_9',
+            ):
+                vals = data[key]
+                if invoice_date := vals.get('invoice_date'):
+                    vals['taxable_supply_date'] = invoice_date
+        return data
