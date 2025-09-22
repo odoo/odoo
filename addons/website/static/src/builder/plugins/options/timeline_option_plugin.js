@@ -14,6 +14,9 @@ export const TIMELINE = after(WEBSITE_BACKGROUND_OPTIONS);
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
 }
+function isTimelineRow(el) {
+    return el.matches(".s_timeline_row");
+}
 
 export class TimelineOption extends BaseOptionComponent {
     static template = "website.TimelineOption";
@@ -55,6 +58,11 @@ class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        remove_disabled_reason_providers: ({ el, reasons }) => {
+            if (this.isLastTimelineItem(el)) {
+                reasons.push(_t("You can't remove the last item."));
+            }
+        },
         builder_options: [
             withSequence(TIMELINE, TimelineOption),
             withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
@@ -119,6 +127,21 @@ class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+    }
+
+    isLastTimelineItem(el) {
+        const timelineEl = el.closest(".s_timeline");
+        if (timelineEl) {
+            // Check if it's the last row
+            if (isTimelineRow(el)) {
+                return timelineEl.querySelectorAll(".s_timeline_row").length === 1;
+            }
+            // Check if it's the last card
+            if (isTimelineCard(el)) {
+                return timelineEl.querySelectorAll(".s_timeline_card").length === 1;
+            }
+        }
+        return false;
     }
 }
 

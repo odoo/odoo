@@ -3,6 +3,7 @@ import { after, SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/uti
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export const TIMELINE = after(WEBSITE_BACKGROUND_OPTIONS)
@@ -32,6 +33,11 @@ class TimelineListOptionPlugin extends Plugin {
     static id = "timelineListOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        remove_disabled_reason_providers: ({ el, reasons }) => {
+            if (this.isLastTimelineListItem(el)) {
+                reasons.push(_t("You can't remove the last item."));
+            }
+        },
         builder_options: [
             // TODO AGAU: alignment option sequence doesn't match master, must split template
             withSequence(TIMELINE, TimelineListOption),
@@ -45,6 +51,11 @@ class TimelineListOptionPlugin extends Plugin {
         },
         is_movable_selector: { selector: ".s_timeline_list_row", direction: "vertical" },
     };
+
+    isLastTimelineListItem(el) {
+        const wrapperEl = el.closest(".s_timeline_list_wrapper > div");
+        return wrapperEl && wrapperEl.childElementCount === 1;
+    }
 }
 
 registry.category("website-plugins").add(TimelineListOptionPlugin.id, TimelineListOptionPlugin);
