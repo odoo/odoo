@@ -13,11 +13,4 @@ export class ReceiptHeader extends Component {
     get logoUrl() {
         return this.order.config.receiptLogoUrl;
     }
-
-    get partnerAddress() {
-        return this.order.partner_id.pos_contact_address
-            .split("\n")
-            .filter((line) => line.trim() !== "")
-            .join(", ");
-    }
 }
