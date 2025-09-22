@@ -76,6 +76,7 @@ export class Thread extends Record {
          */
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
+    can_react = true;
     chat_window = fields.One("ChatWindow", {
         inverse: "thread",
     });

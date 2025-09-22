@@ -60,7 +60,6 @@ patch(Thread, threadStaticPatch);
 const threadPatch = {
     setup() {
         super.setup();
-        this.can_react = true;
         this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "channel_id",
             onDelete: (r) => r.delete(),
