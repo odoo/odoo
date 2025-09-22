@@ -42,10 +42,5 @@
                 <t t-out="order.preset_id.name"/>: <t t-out="order.presetDateTime"/>
             </span>
         </div>
-        <div t-if="order.preset_id?.identification === 'address'" t-attf-class="{{ order?.presetDateTime ? '' : 'pt-2'}}">
-            <div class="text-break">
-                <span class="fw-bolder" t-out="order.partner_id.name"/> (<span t-out="partnerAddress"/>)
-            </div>
-        </div>
     </t>
 </templates>
