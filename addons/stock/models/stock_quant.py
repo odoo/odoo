@@ -1697,7 +1697,7 @@ class QuantPackage(models.Model):
         for package in self:
             weight = package.package_type_id.base_weight or 0.0
             if picking_id:
-                res[package] = weight + package_weights[package.id]
+                res[package] = weight + package_weights[package._origin.id]
             else:
                 for quant in package.quant_ids:
                     weight += quant.quantity * quant.product_id.weight
