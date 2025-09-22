@@ -152,10 +152,10 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
             form = Form(self.env['maintenance.equipment'].browse(equipment.id))
             self.assertEqual(form.name, equipment_name)
 
-    def test_done_maintenance_no_close_or_request_date(self):
+    def test_done_maintenance_no_close_or_schedule_date(self):
         """
         Ensure equipment with done maintenance requests that have
-        `close_date` or `request_date` set to False can still be opened.
+        `close_date` or `schedule_date` set to False can still be opened.
         In theory this should never happen, but we should fail gracefully
         in case these dates are forced set to False.
         """
@@ -168,11 +168,11 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
         form.equipment_id = equipment
         form.maintenance_type = 'corrective'
         maintenance = form.save()
-        self.assertTrue(maintenance.request_date)
+        self.assertFalse(maintenance.schedule_date)
         self.assertFalse(maintenance.close_date)
 
         maintenance.stage_id = self.ref('maintenance.stage_3')
-        self.assertTrue(maintenance.request_date)
+        self.assertFalse(maintenance.schedule_date)
         self.assertTrue(maintenance.close_date)
         form = Form(equipment)
 
@@ -180,7 +180,6 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
         maintenance.close_date = False
         form = Form(equipment)
         maintenance.close_date = fields.Date.today()
-        maintenance.request_date = False
         form = Form(equipment)
         maintenance.close_date = False
         form = Form(equipment)
