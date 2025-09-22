@@ -610,10 +610,7 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.clickPartnerOptions("AAA Partner"),
-            PartnerList.clickDropDownItemText("Settle invoices"),
-            PartnerList.clickSettleOrderName("TSJ/"),
-            ProductScreen.totalAmountIs("10.00"),
+            PartnerList.settleCustomerAccount("AAA Partner", "10.00", "TSJ/"),
         ].flat(),
 });
 
