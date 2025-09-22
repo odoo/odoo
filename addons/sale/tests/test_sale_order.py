@@ -803,6 +803,75 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         sale_order._create_invoices(final=True)
         self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
 
+    def test_action_close_invoicing(self):
+        """Test manually closing invoicing for sales orders."""
+        # Test with 0 records
+        self.env['sale.order'].action_close_invoicing()
+
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 5})],
+        })
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 3})],
+        })
+
+        # Draft orders cannot be closed
+        with self.assertRaises(UserError, msg="Draft orders cannot be closed"):
+            sale_order_1.action_close_invoicing()
+
+        (sale_order_1 | sale_order_2).action_confirm()
+
+        # Test closing 1 record
+        sale_order_1.action_close_invoicing()
+        self.assertTrue(sale_order_1.invoicing_closed)
+        self.assertEqual(sale_order_1.invoice_status, 'invoiced')
+        self.assertTrue(sale_order_1.message_ids.filtered(lambda m: 'Invoicing closed' in m.body))
+
+        # Test closing 2+ records
+        (sale_order_1 | sale_order_2).action_close_invoicing()
+        self.assertTrue(sale_order_2.invoicing_closed)
+
+        # Already closed orders don't duplicate messages
+        message_count = len(sale_order_1.message_ids)
+        sale_order_1.action_close_invoicing()
+        self.assertEqual(len(sale_order_1.message_ids), message_count)
+
+    def test_action_reopen_order(self):
+        """Test reopening invoicing for manually closed sales orders."""
+        # Test with 0 records
+        self.env['sale.order'].action_reopen_order()
+
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 5})],
+        })
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 3})],
+        })
+
+        (sale_order_1 | sale_order_2).action_confirm()
+
+        # Reopening non-closed orders does nothing
+        message_count = len(sale_order_1.message_ids)
+        sale_order_1.action_reopen_order()
+        self.assertEqual(len(sale_order_1.message_ids), message_count)
+
+        # Close and reopen 1 record
+        (sale_order_1 | sale_order_2).action_close_invoicing()
+        sale_order_1.action_reopen_order()
+        self.assertFalse(sale_order_1.invoicing_closed)
+        self.assertTrue(sale_order_2.invoicing_closed)
+        self.assertTrue(sale_order_1.message_ids.filtered(lambda m: 'Invoicing reopened' in m.body))
+
+        # Reopen 2+ records
+        (sale_order_1 | sale_order_2).action_close_invoicing()
+        (sale_order_1 | sale_order_2).action_reopen_order()
+        self.assertFalse(sale_order_1.invoicing_closed)
+        self.assertFalse(sale_order_2.invoicing_closed)
+
 
 @tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):

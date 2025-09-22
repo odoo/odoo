@@ -78,6 +78,11 @@ class SaleOrder(models.Model):
         default=False,
         copy=False,
         tracking=True)
+    invoicing_closed = fields.Boolean(
+        string="Manually Closed For Invoicing",
+        help="If enabled, the order is considered fully invoiced regardless of lines.",
+        copy=False,
+    )
     has_archived_products = fields.Boolean(compute="_compute_has_archived_products")
 
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
@@ -619,7 +624,7 @@ class SaleOrder(models.Model):
             ('move_id', operator, value),
         ])]
 
-    @api.depends('state', 'order_line.invoice_status')
+    @api.depends('state', 'order_line.invoice_status', 'invoicing_closed')
     def _compute_invoice_status(self):
         """
         Compute the invoice status of a SO. Possible statuses:
@@ -631,17 +636,20 @@ class SaleOrder(models.Model):
         """
         confirmed_orders = self.filtered(lambda so: so.state == 'sale')
         (self - confirmed_orders).invoice_status = 'no'
-        if not confirmed_orders:
+        closed_orders = confirmed_orders.filtered('invoicing_closed')
+        closed_orders.invoice_status = 'invoiced'
+        orders_to_compute = confirmed_orders - closed_orders
+        if not orders_to_compute:
             return
         lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
         line_invoice_status_all = [
             (order.id, invoice_status)
             for order, invoice_status in self.env['sale.order.line']._read_group(
-                lines_domain + [('order_id', 'in', confirmed_orders.ids)],
+                lines_domain + [('order_id', 'in', orders_to_compute.ids)],
                 ['order_id', 'invoice_status']
             )
         ]
-        for order in confirmed_orders:
+        for order in orders_to_compute:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
             if order.state != 'sale':
                 order.invoice_status = 'no'
@@ -1308,6 +1316,30 @@ class SaleOrder(models.Model):
             remaining_time = self.env['ir.cron']._commit_progress(processed=1)
             if not remaining_time:
                 break
+
+    def action_close_invoicing(self):
+        """Mark sales orders as manually closed for invoicing."""
+        draft_orders = self.filtered(lambda o: o.state != 'sale')
+        if draft_orders:
+            orders_name = ', '.join(draft_orders.mapped('name'))
+            raise UserError(
+                self.env._("Cannot close %(orders_name)s: must be in 'Sales Order' state.",
+                orders_name=orders_name,
+            )
+        )
+        orders_to_close = self.filtered(lambda o: not o.invoicing_closed)
+        self.invoicing_closed = True
+        orders_to_close._message_log_batch(
+            bodies={order.id: _("Invoicing closed") for order in orders_to_close}
+        )
+
+    def action_reopen_order(self):
+        """Reopen invoicing for manually closed sales orders."""
+        orders_to_reopen = self.filtered('invoicing_closed')
+        orders_to_reopen.invoicing_closed = False
+        orders_to_reopen._message_log_batch(
+            bodies={order.id: _("Invoicing reopened") for order in orders_to_reopen}
+        )
 
     def action_lock(self):
         self.locked = True
