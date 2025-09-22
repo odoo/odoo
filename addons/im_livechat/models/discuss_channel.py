@@ -428,6 +428,11 @@ class DiscussChannel(models.Model):
             *self.env["res.partner"]._get_store_livechat_username_fields()
         ]
 
+    def _get_store_partner_name_fields(self):
+        if self.channel_type == "livechat":
+            return self.env["res.partner"]._get_store_livechat_username_fields()
+        return super()._get_store_partner_name_fields()
+
     def _to_store_defaults(self, target: Store.Target):
         fields = [
             "chatbot_current_step",

@@ -351,26 +351,27 @@ class DiscussChannelMember(models.Model):
             fields = [
                 *self.env["res.partner"]._get_store_avatar_fields(),
                 *self.env["res.partner"]._get_store_im_status_fields(),
-                "name"
             ]
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
-            Store.Attr(
+            Store.One(
                 "partner_id",
-                lambda m: Store.One(
-                    m.partner_id.sudo(),
-                    (p_fields := m._get_store_partner_fields(fields)),
-                    extra_fields=self.env["res.partner"]._get_store_mention_fields()
-                    if p_fields or p_fields is None
-                    else None,
-                ),
+                fields,
+                dynamic_fields=lambda m: [
+                    *m._get_store_partner_extra_fields(),
+                    *m.channel_id._get_store_partner_name_fields(),
+                ] if fields != [] else [],
+                extra_fields=self.env["res.partner"]._get_store_mention_fields() if fields != [] else [],
                 predicate=lambda m: m.partner_id,
+                sudo=True
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
-            Store.Attr(
+            Store.One(
                 "guest_id",
-                lambda m: Store.One(m.guest_id.sudo(), m._get_store_guest_fields(fields)),
+                fields,
+                dynamic_fields=lambda m: m._get_store_guest_extra_fields() if fields != [] else [],
                 predicate=lambda m: m.guest_id,
+                sudo=True
             ),
         ]
 
@@ -384,13 +385,13 @@ class DiscussChannelMember(models.Model):
             *self.env["discuss.channel.member"]._to_store_persona(),
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _get_store_partner_extra_fields(self):
         self.ensure_one()
-        return fields
+        return []
 
-    def _get_store_guest_fields(self, fields):
+    def _get_store_guest_extra_fields(self):
         self.ensure_one()
-        return fields
+        return []
 
     # --------------------------------------------------------------------------
     # RTC (voice/video)

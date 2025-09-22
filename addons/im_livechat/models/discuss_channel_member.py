@@ -151,33 +151,19 @@ class DiscussChannelMember(models.Model):
             )
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _get_store_partner_extra_fields(self):
         self.ensure_one()
-        if self.channel_id.channel_type == 'livechat':
-            new_fields = [
-                "active",
-                Store.One("country_id", ["code", "name"]),
-                "is_public",
-                *self.env["res.partner"]._get_store_avatar_fields(),
-                *self.env["res.partner"]._get_store_im_status_fields(),
-                *self.env["res.partner"]._get_store_livechat_username_fields(),
-            ]
-            if self.livechat_member_type == "visitor":
-                new_fields += ["offline_since", "email"]
-            return new_fields
-        return super()._get_store_partner_fields(fields)
+        fields = super()._get_store_guest_extra_fields()
+        if self.channel_id.channel_type == "livechat" and self.livechat_member_type == "visitor":
+            fields += ["offline_since", "email"]
+        return fields
 
-    def _get_store_guest_fields(self, fields):
+    def _get_store_guest_extra_fields(self):
         self.ensure_one()
-        if self.channel_id.channel_type == 'livechat':
-            return [
-                Store.One("country_id", ["code", "name"]),
-                "name",
-                "offline_since",
-                *self.env["mail.guest"]._get_store_avatar_fields(),
-                *self.env["mail.guest"]._get_store_im_status_fields(),
-            ]
-        return super()._get_store_guest_fields(fields)
+        fields = super()._get_store_guest_extra_fields()
+        if self.channel_id.channel_type == "livechat":
+            fields += ["offline_since"]
+        return fields
 
     def _get_rtc_invite_members_domain(self, *a, **kw):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)
