@@ -844,10 +844,8 @@ class TestMailScheduleInternals(EventMailCommon):
             "The duplicate configuration (first one from event_type.event_type_mail_ids which has same configuration as the sent one) should not have been added")
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_archived_event_mail_schedule(self):
+    def test_scheduler_on_archived_event(self):
         """ Test mail scheduling for archived events """
-        event_cron_id = self.env.ref('event.event_mail_scheduler')
-
         # deactivate other schedulers to avoid messing with crons
         self.env['event.mail'].search([]).unlink()
 
@@ -904,3 +902,60 @@ class TestMailScheduleInternals(EventMailCommon):
 
         # check that scheduler is not executed
         self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    def test_scheduler_on_done_event(self):
+        """ Test mail scheduling for done events """
+        # deactivate other schedulers to avoid messing with crons
+        self.env['event.mail'].search([]).unlink()
+
+        # freeze some datetimes, and ensure more than 1D+1H before event starts
+        # to ease time-based scheduler check
+        now = datetime(2023, 7, 24, 14, 30, 15)
+        event_date_begin = datetime(2023, 7, 26, 8, 0, 0)
+        event_date_end = datetime(2023, 7, 28, 18, 0, 0)
+
+        with self.mock_datetime_and_now(now):
+            test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
+                'name': 'TestEventMail',
+                'date_begin': event_date_begin,
+                'date_end': event_date_end,
+                'event_mail_ids': [
+                    (0, 0, {  # 3 hours after subscription
+                        'interval_nbr': 3,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_sub',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                    (0, 0, {  # 3 hours after event end
+                        'interval_nbr': 3,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_event',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+                ]
+            })
+
+        # check event scheduler
+        scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id)])
+        self.assertEqual(len(scheduler), 2, 'event: wrong scheduler creation')
+
+        event_after_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
+
+        with self.mock_datetime_and_now(event_date_begin), self.mock_mail_gateway():
+            self.env['event.registration'].create([
+                {
+                    'event_id': test_event.id,
+                    'name': f'Reg.{idx}',
+                    'email': f'reg{idx}@example.com',
+                } for idx in range(3)
+            ])
+        # no mails sent directly, should wait a few hours
+        self.assertNotSentEmail()
+
+        # for some reasons, event is ended before emails effectively go out
+        self.execute_event_cron(freeze_date=event_date_end + relativedelta(hours=1))
+        self.assertEqual(len(self._new_mails), 0, 'Registration emails should not be send once event is over, used mainly for tickets / reminders')
+
+        # post-event should be sent even if event ended
+        self.execute_event_cron(freeze_date=event_date_end + relativedelta(hours=3))
+        self.assertEqual(len(self._new_mails), 3)
+        self.assertTrue(event_after_scheduler.mail_done)
