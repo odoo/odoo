@@ -209,3 +209,7 @@ class TestSaleOrderDiscount(SaleCommon):
         })
         self.wizard.action_apply_discount()
         self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.9)
+        discount_line = self.sale_order.order_line.filtered(lambda ol: ol._is_discount_line())
+        # Double the discount by changing the quantity instead of the value
+        discount_line.product_uom_qty = 2
+        self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.8)
