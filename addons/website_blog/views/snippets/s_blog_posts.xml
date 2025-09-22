@@ -323,7 +323,7 @@
 
 <!-- Blog Post Date (optional for Card, Horizontal and List layouts) -->
 <template id="website_blog.s_dynamic_snippet_template_date" name="Blog Post Date">
-    <span t-if="blog_posts_post_date_active" t-attf-class="s_blog_posts_post_date text-muted {{ date_custom_class }}" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+    <span t-if="blog_posts_post_date_active" t-attf-class="s_blog_posts_post_date text-muted {{ date_custom_class }}" t-field="record.published_date" t-options='{"format": "MMM d, yyyy"}' />
 </template>
 
 <!-- Blog Post Category (optional) -->

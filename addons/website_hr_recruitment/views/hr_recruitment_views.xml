@@ -20,7 +20,13 @@
                 <field name="is_published" widget="website_redirect_button"/>
             </div>
             <label name="no_of_recruitment_label" position="before">
-                <field name="website_published" string="Published" widget="boolean_toggle"/>
+                <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
+                <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                <label invisible="website_published" for="publish_on" string="Publish on"/>
+                <div invisible="website_published" class="o_row">
+                    <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                    <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                </div>
             </label>
             <group name="hiring_process" position="inside">
                 <field name="website_id" placeholder="All websites" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>

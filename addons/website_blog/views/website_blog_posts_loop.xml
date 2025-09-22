@@ -15,7 +15,7 @@ according to the enabled options.
         <!-- Check for active options -->
         <t t-set="opt_posts_loop_show_cover" t-value="is_view_active('website_blog.opt_posts_loop_show_cover')"/>
 
-        <div groups="website.group_website_designer" t-if="state_info and (state_info['published'] > 0 and state_info['unpublished'] > 0)">
+        <div groups="website.group_website_designer" t-if="state_info and ((state_info['published'] > 0 and state_info['unpublished'] > 0) or state_info['scheduled'] > 0)">
             <div class="bg-200 py-2 mb-4 alert alert-dismissable">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <span class="me-1">Show:</span>
@@ -29,6 +29,11 @@ according to the enabled options.
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
                         <i t-attf-class="fa me-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Unpublished (<t t-out="state_info['unpublished']" />)
+                    </a>
+                    <a t-attf-class="btn #{state == 'scheduled' and 'btn-success' or 'btn-default bg-white border'}"
+                       t-attf-href="#{state == 'scheduled' and blog_url(state='') or blog_url(state='scheduled')}">
+                        <i t-attf-class="fa me-1 #{state == 'scheduled' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        Scheduled (<t t-out="state_info['scheduled']" />)
                     </a>
                 </div>
                 <div class="pt-1 fst-italic small">This box will not be visible to your visitors</div>
@@ -136,8 +141,12 @@ according to the enabled options.
                                 <t t-call="website_blog.post_info"></t>
                             </div>
                         </t>
-                        <!-- Add 'unpublished' badge -->
-                        <span t-if="not blog_post.website_published" class="bg-danger small py-1 px-2 position-absolute o_not_editable" style="top:0; right:0">unpublished</span>
+                        <!-- Add 'unpublished' or 'scheduled' badge -->
+                        <t t-if="blog_post.publish_on" t-set="badge" t-value="'Scheduled'"/>
+                        <t t-elif="not blog_post.website_published" t-set="badge" t-value="'Unpublished'"/>
+                        <t t-else="" t-set="badge" t-value="False"/>
+                        <span t-if="badge" style="top:0; right:0;" t-out="badge"
+                            t-attf-class="small py-1 px-2 position-absolute o_not_editable {{ 'bg-warning' if badge == 'Scheduled' else 'bg-danger' }}"/>
                     </article>
                 </div>
                 <!-- List-View Design, add <hr> after post -->
@@ -165,7 +174,8 @@ according to the enabled options.
 <template id="post_info">
     <div class="d-flex small flex-wrap mb-1 w-100">
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
-            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <time t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <time t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-out="len(blog_post.message_ids)"/></b>
                 <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-out="blog_post.visits"/></b>

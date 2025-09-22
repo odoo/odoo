@@ -222,12 +222,6 @@ function testWebsitePageProperties() {
             run: "click",
         },
         {
-            // TODO: this needs to be tested
-            content: "Change date published",
-            trigger: "#date_publish_0",
-            run: "edit 02/01/2005 01:00:00 && press enter",
-        },
-        {
             content: "Don't index",
             trigger: "#website_indexed_0",
             run: "uncheck",
@@ -278,16 +272,6 @@ function testWebsitePageProperties() {
             content: `Change url back to /new-page`,
             trigger: "#url_0",
             run: `edit new-page && press Enter`,
-        },
-        {
-            content: "Open date published popup",
-            trigger: "#date_publish_0",
-            run: "click",
-        },
-        {
-            content: "Reset date published",
-            trigger: "button[title='Clear']",
-            run: "click",
         },
         {
             content: "Do index",

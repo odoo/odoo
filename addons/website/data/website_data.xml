@@ -217,6 +217,7 @@
         <field name="url">/contactus-thank-you</field>
         <field name="website_indexed" eval="False"/>
         <field name="is_published">True</field>
+        <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="key">website.contactus_thanks</field>
         <field name="arch" type="xml">
             <t name="Thanks (Contact us)" t-name="website.contactus_thanks">
@@ -535,6 +536,7 @@
         <!-- Default pagese -->
         <record id="homepage_page" model="website.page">
             <field name="is_published">True</field>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="url">/</field>
             <field name="view_id" ref="homepage"/>
             <field name="track">True</field>
@@ -543,6 +545,7 @@
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
             <field name="is_published">True</field>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="view_id" ref="contactus"/>
             <field name="track">True</field>
             <field name="website_meta_description">This is the contact us page of the website</field>

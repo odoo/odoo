@@ -356,8 +356,12 @@
                                 <small t-if="event.is_participating" class="o_wevent_participating position-absolute bottom-0 px-3 py-2 w-100 text-bg-success">
                                     <i class="fa fa-check me-2"/>Registered
                                 </small>
+                                <!-- Scheduled -->
+                                <small t-if="event.publish_on" class="o_wevent_scheduled  position-absolute bottom-0 px-3 py-2 w-100 text-bg-warning">
+                                    Scheduled for <span t-field="event.with_context(tz=event.date_tz).publish_on" />
+                                </small>
                                 <!-- Unpublished -->
-                                <small t-if="not event.website_published" class="o_wevent_unpublished position-absolute bottom-0 px-3 py-2 w-100 text-bg-danger">
+                                <small t-elif="not event.website_published" class="o_wevent_unpublished position-absolute bottom-0 px-3 py-2 w-100 text-bg-danger">
                                     <i class="fa fa-ban me-2"/>Unpublished
                                 </small>
                             </t>

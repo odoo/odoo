@@ -46,15 +46,24 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             self.user_public.partner_id, self.test_blog_post.message_partner_ids,
             'website_blog: subscribing to a blog should not subscribe to its posts')
 
-        # Publish the blog
-        self.test_blog_post.write({'website_published': True})
+        # Publish the blog post at a future date
+        self.test_blog_post.write({"website_published": False, "publish_on": '2050-01-01 00:00:00', "published_date": False})
+
+        publish_message = next((m for m in self.test_blog_post.blog_id.message_ids if m.subtype_id.id == self.ref('website_blog.mt_blog_blog_published')), None)
+        self.assertTrue(
+            not publish_message or publish_message.notified_partner_ids != (self.user_employee.partner_id | self.user_public.partner_id),
+            'website_blog: people following a blog should not be notified of a post that will be published in the future')
+
+        # Publish the blog post now
+        self.test_blog_post.write({"website_published": True, "publish_on": False, "published_date": False})
 
         # Check publish message has been sent to blog followers
         publish_message = next((m for m in self.test_blog_post.blog_id.message_ids if m.subtype_id.id == self.ref('website_blog.mt_blog_blog_published')), None)
+        self.assertTrue(publish_message)
         self.assertEqual(
             publish_message.notified_partner_ids,
             self.user_employee.partner_id | self.user_public.partner_id,
-            'website_blog: peuple following a blog should be notified of a published post')
+            'website_blog: people following a blog should be notified of a published post')
 
         # Armand posts a message -> becomes follower
         self.test_blog_post.with_user(self.user_employee).message_post(
