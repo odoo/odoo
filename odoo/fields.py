@@ -44,6 +44,7 @@ from .tools.mimetypes import guess_mimetype
 from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
+from lxml import etree
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -1879,7 +1880,7 @@ class _String(Field):
                     old_term_text = self.get_text_content(old_term)
                     matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
-                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                        closest_term = get_term_close_match(old_term, text2terms[matches[0]], 0)
                         if closest_term in translation_dictionary:
                             continue
                         old_is_text = is_text(old_term)
@@ -5232,6 +5233,38 @@ def apply_required(model, field_name):
     if field.store and field.required:
         sql.set_not_null(model.env.cr, model._table, field_name)
 
+
+def get_term_close_match(src, terms, cutoff=0.6):
+    """ Return the best term that matches a translation one (if it exists).
+    This should also take into consideration that in some situations, as in
+    `<select/>` elements, a change in the inner DOM structure should make
+    the compared terms 'totally different' (e.g. when an `<option/>` is
+    removed or added).
+    """
+    def selection_matches(src_sel, match_sel):
+        src_sel_options = [el.attrib.get('value', '') for el in src_sel.xpath('//option')]
+        match_sel_options = [el.attrib.get('value', '') for el in match_sel.xpath('//option')]
+        # We still consider two selections similar, if only the order
+        # of the options changed.
+        return sorted(src_sel_options) == sorted(match_sel_options)
+
+    matches = get_close_matches(src, terms, 1, cutoff)
+
+    if matches:
+        match = matches[0]
+        try:
+            src_el = etree.fromstring(src)
+            match_el = etree.fromstring(match)
+        except etree.LxmlError:
+            # A "simple string" term cannot be parsed.
+            return match
+        is_selection_translation = src_el.tag == match_el.tag == 'select'
+        if (
+            not is_selection_translation
+            or is_selection_translation and selection_matches(src_el, match_el)
+        ):
+            return match
+    return None
 
 # imported here to avoid dependency cycle issues
 # pylint: disable=wrong-import-position
