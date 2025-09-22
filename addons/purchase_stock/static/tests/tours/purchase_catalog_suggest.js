@@ -1,13 +1,11 @@
 import { registry } from "@web/core/registry";
 import { assert } from "@stock/../tests/tours/tour_helper";
 import {
-    goToCatalogFromPO,
-    goToPOFromCatalog,
     toggleSuggest,
     setSuggestParameters,
     checkKanbanRecordHighlight,
 } from "./tour_helper";
-import { selectPOVendor, selectPOWarehouse } from "@purchase/../tests/tours/tour_helper";
+import { productCatalog, purchaseForm } from "@purchase/../tests/tours/tour_helper";
 
 /**
  * Checks that the Suggest UI in the search panel works well
@@ -27,8 +25,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: ".o_list_button_add",
             run: "click",
         },
-        ...selectPOVendor("Julia Agrolait"),
-        ...goToCatalogFromPO(),
+        ...purchaseForm.selectVendor("Julia Agrolait"),
+        ...purchaseForm.openCatalog(),
         {
             content: "Check suggest fields hidden when suggest is off (should be OFF by default)",
             trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view",
@@ -39,15 +37,15 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 assert(els.length, 0, "Toggle did not hide elements");
             },
         },
-        ...goToPOFromCatalog(),
-        ...goToCatalogFromPO(),
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.openCatalog(),
         { trigger: 'div[name="search-suggest-toggle"] input:not(:checked)' }, // Should still be off
         ...toggleSuggest(true),
         ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
-        ...goToPOFromCatalog(),
-        ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
-        ...goToCatalogFromPO(),
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.selectWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
+        ...purchaseForm.openCatalog(),
         { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
         { trigger: 'div[name="search-suggest-toggle"] input:checked' }, // Should still be ON
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
@@ -58,7 +56,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: 'button[name="suggest_add_all"]',
             run: "click",
         }, // Should save suggest params when "ADD ALL"
-        ...goToPOFromCatalog(),
+        ...productCatalog.goBackToOrder(),
         {
             content: "Check test_product was added to PO",
             trigger: "div.o_field_product_label_section_and_note_cell span",
@@ -73,9 +71,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             run: "click",
         },
         { trigger: ".o_form_view.o_purchase_order" },
-        ...selectPOVendor("Julia Agrolait"),
-        ...selectPOWarehouse("Base Warehouse: Receipts"),
-        ...goToCatalogFromPO(),
+        ...purchaseForm.selectVendor("Julia Agrolait"),
+        ...purchaseForm.selectWarehouse("Base Warehouse: Receipts"),
+        ...purchaseForm.openCatalog(),
         {
             content: "Check number days saved",
             trigger: "input.o_PurchaseSuggestInput:eq(0)",
@@ -139,7 +137,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
         ...setSuggestParameters({ factor: 50 }),
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
-        ...goToPOFromCatalog(),
+        ...productCatalog.goBackToOrder(),
         {
             content: "Go back to the dashboard",
             trigger: ".o_menu_brand",
