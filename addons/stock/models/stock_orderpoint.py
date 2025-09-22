@@ -13,7 +13,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -431,10 +431,66 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_default_rule(self):
         self.ensure_one()
+<<<<<<< dc07555035268c27046dd7f232caeba076704ea4
         return self.env['stock.rule']._get_rule(self.product_id, self.location_id, {
             'route_ids': self.route_id,
             'warehouse_id': self.warehouse_id,
         })
+||||||| 9cfe396da51362e6b50c242b904e618e47f4f611
+        visibility_days = self.visibility_days
+        if force_visibility_days is not False:
+            # Accepts falsy values such as 0.
+            visibility_days = force_visibility_days
+        qty_to_order = 0.0
+        qty_in_progress_by_orderpoint = qty_in_progress_by_orderpoint or {}
+        qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
+        if qty_in_progress is None:
+            qty_in_progress = self._quantity_in_progress()[self.id]
+        rounding = self.product_uom.rounding
+        # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+        # there is a already something to ressuply base on lead times.
+        if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
+            product_context = self._get_product_context(visibility_days=visibility_days)
+            qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
+            qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
+            qty_multiple = self.replenishment_uom_id._compute_quantity(1, self.product_uom) if self.replenishment_uom_id else 0.0
+            remainder = (qty_multiple > 0.0 and qty_to_order % qty_multiple) or 0.0
+            if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
+                    and float_compare(qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
+                if float_is_zero(self.product_max_qty, precision_rounding=rounding):
+                    qty_to_order += qty_multiple - remainder
+                else:
+                    qty_to_order -= remainder
+        return qty_to_order
+=======
+        visibility_days = self.visibility_days
+        if force_visibility_days is not False:
+            # Accepts falsy values such as 0.
+            visibility_days = force_visibility_days
+        qty_to_order = 0.0
+        qty_in_progress_by_orderpoint = qty_in_progress_by_orderpoint or {}
+        qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
+        if qty_in_progress is None:
+            qty_in_progress = self._quantity_in_progress()[self.id]
+        rounding = self.product_uom.rounding
+        # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+        # there is a already something to ressuply base on lead times.
+        if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
+            product_context = self._get_product_context(visibility_days=visibility_days)
+            qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
+            qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
+            qty_multiple = self.replenishment_uom_id._compute_quantity(1, self.product_uom, round=False) if self.replenishment_uom_id else 0.0
+            remainder = (qty_multiple > 0.0 and qty_to_order % qty_multiple) or 0.0
+            qty_multiple_rounded = float_round(qty_multiple, precision_rounding=self.product_uom.rounding)
+            remainder_rounded = float_round(remainder, precision_rounding=self.product_uom.rounding)
+            if (float_compare(remainder_rounded, 0.0, precision_rounding=rounding) > 0
+                    and float_compare(qty_multiple_rounded - remainder_rounded, 0.0, precision_rounding=rounding) > 0):
+                if float_is_zero(self.product_max_qty, precision_rounding=rounding):
+                    qty_to_order += qty_multiple_rounded - remainder_rounded
+                else:
+                    qty_to_order -= remainder_rounded
+        return qty_to_order
+>>>>>>> b8e5230a7be9cc6306afe8c109ca26b0dbe2913e
 
     def _get_default_route(self):
         self.ensure_one()
