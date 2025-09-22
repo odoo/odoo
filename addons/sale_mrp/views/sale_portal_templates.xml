@@ -20,10 +20,6 @@
                                     <span class="text-muted"
                                         t-field="mo.date_finished"
                                         t-options="{'date_only': True}"/>
-                                    <span t-if="mo.state in ['draft', 'confirmed', 'progress', 'to_close']"
-                                        class="text-muted"
-                                        t-field="mo.date_finished"
-                                        t-options="{'date_only': True}"/>
                                 </div>
                             </div>
                             <span t-if="mo.state in ['to_close', 'done']"
