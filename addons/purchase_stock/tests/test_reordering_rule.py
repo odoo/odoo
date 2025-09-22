@@ -1556,3 +1556,41 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(purchase_order_line, [
             {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}
         ])
+
+    def test_reordering_rule_replenishment_multiple_repeating_decimal(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        out_type = warehouse.out_type_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        pack_2 = self.env['uom.uom'].create({
+            'name': 'Product Serial 1 Packaging',
+            'relative_factor': 2,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        pack_6 = self.env.ref('uom.product_uom_pack_6')
+        self.product_01.uom_id = pack_6
+        self.product_01.uom_ids = pack_2
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'replenishment_uom_id': pack_2.id,
+        })
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': 1,
+                'product_uom': pack_6.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
+        self.assertEqual(pol.product_uom_qty, 1.0)
