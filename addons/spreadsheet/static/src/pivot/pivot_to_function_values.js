@@ -41,6 +41,7 @@ function _toNumber(value) {
 pivotToFunctionValueRegistry
     .add("text", _toString)
     .add("selection", _toString)
+    .add("reference", _toString)
     .add("char", _toString)
     .add("integer", _toNumber)
     .add("monetary", _toNumber)
