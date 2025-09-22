@@ -27,6 +27,11 @@ export class TimelineOptionPlugin extends Plugin {
         }),
         is_movable_selectors: { selector: ".s_timeline_row", direction: "vertical" },
         auto_unfold_container_providers: { selector: ".s_timeline_row", target: ".s_timeline" },
+        remove_disabled_reason_providers: (el) => {
+            if (this.isLastTimelineItem(el)) {
+                return _t("You cannot remove the last item.");
+            }
+        },
     };
 
     setup() {
@@ -61,6 +66,18 @@ export class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+    }
+
+    isLastTimelineItem(el) {
+        // Check if it's the last row
+        if (el.matches(".s_timeline_row:only-child")) {
+            return true;
+        }
+        // Check if it's the last card in the last present row
+        if (el.matches(".s_timeline_row:only-child .s_timeline_card")) {
+            return el.closest(".s_timeline_row").querySelectorAll(".s_timeline_card").length === 1;
+        }
+        return false;
     }
 }
 
