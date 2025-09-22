@@ -3684,7 +3684,7 @@ class BaseModel(metaclass=MetaModel):
         return True
 
     def write(self, vals: ValuesType) -> typing.Literal[True]:
-        """ Uppdate all records in ``self`` with the provided values.
+        """ Update all records in ``self`` with the provided values.
 
         :param vals: fields to update and the value to set on them
         :raise AccessError: if user is not allowed to modify the specified records/fields
