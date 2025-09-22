@@ -5,7 +5,7 @@ from unittest.mock import patch
 import odoo
 from odoo import Command, fields
 from odoo.tests.common import users
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
@@ -136,18 +136,19 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        self._create_chat(livechat_channel, first_operator)
-        self._create_chat(livechat_channel, first_operator)
-        # Previous operator is not in a call so it should be available, even if
-        # he already has two ongoing chats.
-        self.assertEqual(
-            first_operator, livechat_channel._get_operator(previous_operator_id=first_operator.partner_id.id)
-        )
-        self._create_chat(livechat_channel, first_operator, in_call=True)
-        # Previous operator is in a call so it should not be available anymore.
-        self.assertEqual(
-            second_operator, livechat_channel._get_operator(previous_operator_id=first_operator.partner_id.id)
-        )
+        with freeze_all_time():
+            self._create_chat(livechat_channel, first_operator)
+            self._create_chat(livechat_channel, first_operator)
+            # Previous operator is not in a call so it should be available, even if
+            # he already has two ongoing chats.
+            self.assertEqual(
+                first_operator, livechat_channel._get_operator(previous_operator_id=first_operator.partner_id.id)
+            )
+            self._create_chat(livechat_channel, first_operator, in_call=True)
+            # Previous operator is in a call so it should not be available anymore.
+            self.assertEqual(
+                second_operator, livechat_channel._get_operator(previous_operator_id=first_operator.partner_id.id)
+            )
 
     def test_priority_by_number_of_chat(self):
         first_operator = self._create_operator()
@@ -172,9 +173,10 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        self._create_chat(livechat_channel, first_operator, in_call=True)
-        self._create_chat(livechat_channel, second_operator)
-        self.assertEqual(second_operator, livechat_channel._get_operator())
+        with freeze_all_time():
+            self._create_chat(livechat_channel, first_operator, in_call=True)
+            self._create_chat(livechat_channel, second_operator)
+            self.assertEqual(second_operator, livechat_channel._get_operator())
 
     def test_priority_by_number_of_chat_with_call_limit_not_exceeded(self):
         first_operator = self._create_operator()
@@ -185,10 +187,11 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        self._create_chat(livechat_channel, first_operator, in_call=True)
-        self._create_chat(livechat_channel, second_operator)
-        self._create_chat(livechat_channel, second_operator)
-        self.assertEqual(first_operator, livechat_channel._get_operator())
+        with freeze_all_time():
+            self._create_chat(livechat_channel, first_operator, in_call=True)
+            self._create_chat(livechat_channel, second_operator)
+            self._create_chat(livechat_channel, second_operator)
+            self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_priority_by_number_of_chat_all_operators_exceed_limit(self):
         first_operator = self._create_operator()
@@ -199,12 +202,13 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        self._create_chat(livechat_channel, first_operator, in_call=True)
-        self._create_chat(livechat_channel, first_operator)
-        self._create_chat(livechat_channel, second_operator, in_call=True)
-        self._create_chat(livechat_channel, second_operator)
-        self._create_chat(livechat_channel, second_operator)
-        self.assertEqual(first_operator, livechat_channel._get_operator())
+        with freeze_all_time():
+            self._create_chat(livechat_channel, first_operator, in_call=True)
+            self._create_chat(livechat_channel, first_operator)
+            self._create_chat(livechat_channel, second_operator, in_call=True)
+            self._create_chat(livechat_channel, second_operator)
+            self._create_chat(livechat_channel, second_operator)
+            self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_get_by_expertise(self):
         dog_expert = self.env["im_livechat.expertise"].create({"name": "dog"})
@@ -298,8 +302,9 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             "max_sessions": 2,
         }
         livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
-        self._create_chat(livechat_channel, operator, in_call=True)
-        self.assertFalse(livechat_channel.available_operator_ids)
+        with freeze_all_time():
+            self._create_chat(livechat_channel, operator, in_call=True)
+            self.assertFalse(livechat_channel.available_operator_ids)
 
     @users("employee")
     def test_max_sessions_mode_multi_channel(self):
