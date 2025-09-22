@@ -18,7 +18,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="redirect_type"/>
-                                <field name="url_from" invisible="redirect_type == '308'"/>
+                                <field name="url_from" invisible="redirect_type == '308'" widget="oninput_action_char"/>
                                 <field name="route_id" string="URL from" options="{'no_create': True, 'no_open': True}" invisible="redirect_type != '308'"/>
                                 <field name="url_to" invisible="redirect_type == '404'"/>
                             </group>

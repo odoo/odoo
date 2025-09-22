@@ -4,6 +4,9 @@ import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import {registry} from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { Component, useEffect, useRef } from "@odoo/owl";
+import { charField, CharField } from "@web/views/fields/char/char_field";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -110,3 +113,31 @@ export const imageRadioField = {
 };
 
 registry.category("fields").add("image_radio", imageRadioField);
+
+/**
+ * A Char field that updates its value on input.
+ */
+export class OnInputActionCharField extends CharField {
+    static template = "website.OnInputActionCharField";
+
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+        this.updateRecord = debounce(async (value) => {
+            this.props.record.update({ [this.props.name]: value });
+        }, 500);
+    }
+
+    onInput(ev) {
+        if (this.props.record.data.url_from !== ev.target.value.trim()) {
+            this.updateRecord(ev.target.value);
+        }
+    }
+}
+
+export const onInputActionCharField = {
+    ...charField,
+    component: OnInputActionCharField,
+};
+
+registry.category("fields").add("oninput_action_char", onInputActionCharField);
