@@ -43,6 +43,7 @@ pivotToFunctionValueRegistry
     .add("selection", _toString)
     .replace("char", _toString)
     .replace("integer", _toNumber)
+    .add("reference", _toString)
     .add("monetary", _toNumber)
     .add("many2one", _toNumber)
     .add("many2one_reference", _toNumber)
