@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: 'a:contains("Join this Course")',
+            trigger: 'button:contains("Join this Course")',
             run: "click",
             expectUnloadPage: true,
         },
@@ -119,11 +119,11 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: ".o_wslides_js_lesson_quiz_question:first .list-group a:first",
+            trigger: ".o_wslides_js_lesson_quiz_question:first .list-group button:first",
             run: "click",
         },
         {
-            trigger: ".o_wslides_js_lesson_quiz_question:last .list-group a:first",
+            trigger: ".o_wslides_js_lesson_quiz_question:last .list-group button:first",
             run: "click",
         },
         {
