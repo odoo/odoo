@@ -10,6 +10,7 @@ from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -364,11 +365,28 @@ class MailActivity(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
-        """ Override that adds specific access rights of mail.activity, to remove
-        ids uid could not see according to our custom rules. Please refer to
-        :meth:`_check_access` for more details about those rules.
+        """Implement custom access rules and `active_test` behavior.
 
-        The method is inspired by what has been done on mail.message. """
+        This method enhances the standard search in two ways:
+
+        1.  **Archived Records Search**: If the search domain includes a filter on
+            the 'Done Date' (`date_done`) field, the search automatically includes
+            archived records (`active_test=False`). This allows users to find
+            past activities that have been completed and subsequently archived.
+
+        2.  **Custom Access Rights**: It filters search results to only include
+            activities the current user is allowed to see. An activity is
+            accessible if the user is the assignee (`user_id`), or if they have
+            read access to the related document (`res_model`, `res_id`). This
+            logic is detailed in :meth:`~._check_access`.
+            Superusers bypass this and perform a standard search.
+        """
+
+        if any(
+            condition.field_expr == 'date_done' and condition.value
+            for condition in Domain(domain).iter_conditions()
+        ):
+            kwargs['active_test'] = False
 
         # Rules do not apply to administrator
         if self.env.is_superuser() or bypass_access:
