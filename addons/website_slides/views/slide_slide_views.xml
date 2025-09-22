@@ -126,7 +126,7 @@
                                             <span> hours</span>
                                         </div>
                                         <field name="slide_resource_downloadable" invisible="slide_category != 'document' or source_type != 'local_file'"/>
-                                        <field name="date_published" string="Published Date" invisible="not date_published" groups="base.group_no_one"/>
+                                        <field name="published_date" string="Published Date" invisible="not published_date" groups="base.group_no_one"/>
                                         <field name="is_preview"/>
                                         <field name="public_views"/>
                                         <field name="total_views"/>
@@ -263,7 +263,7 @@
                     <field name="category_id" readonly="1" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="is_published"/>
-                    <field name="date_published" readonly="1"/>
+                    <field name="published_date" readonly="1"/>
                     <field name="completion_time" sum="Total" readonly="1" widget="float_time"/>
                 </list>
             </field>
@@ -279,7 +279,7 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="channel_id"/>
                     <field name="category_id" optional="hide"/>
-                    <field name="date_published"/>
+                    <field name="published_date"/>
                     <field name="total_views" string="# Views" sum="Total Views"/>
                     <field name="questions_count" string="# Questions" sum="Total Questions"/>
                     <field name="completion_time" sum="Total Duration" widget="float_time"/>

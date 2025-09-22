@@ -89,6 +89,16 @@ class TestWishlistProcess(HttpCase):
         bottle.product_variant_ids[:1].action_archive()
         self.start_tour("/", 'website_sale_wishlist.archived_variant')
         bottle.product_variant_ids.action_archive()
+        # Republish the template after archiving all variants so the product
+        # page stays reachable.
+        # The with_context(active_test=False) write flips the template back to
+        # active=True and website_published=True, countering the new
+        # WebsitePublishedMixin behavior that unpublishes records when they're
+        # archived.
+        bottle.with_context(active_test=False).write({
+            'active': True,
+            'website_published': True,
+        })
         self.start_tour(
             bottle.website_url,
             'website_sale_wishlist.no_valid_combination'

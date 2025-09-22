@@ -12,7 +12,7 @@
         <field name="category_id" ref="website_slides.slide_category_demo_5_0"/>
         <field name="survey_id" ref="website_slides_survey.furniture_certification"/>
         <field name="is_published" eval="True"/>
-        <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
+        <field name="published_date" eval="datetime.now() - timedelta(days=8)"/>
         <field name="is_preview" eval="False"/>
         <field name="description">Now that you have completed the course, it's time to test your knowledge!</field>
     </record>
@@ -28,7 +28,7 @@
         <field name="category_id" eval="False"/>
         <field name="survey_id" ref="website_slides_survey.furniture_certification"/>
         <field name="is_published" eval="True"/>
-        <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
+        <field name="published_date" eval="datetime.now() - timedelta(days=8)"/>
         <field name="is_preview" eval="False"/>
         <field name="description">It's time to test your knowledge!</field>
     </record>

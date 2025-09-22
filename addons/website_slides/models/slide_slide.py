@@ -35,7 +35,7 @@ class SlideSlide(models.Model):
         'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
-        'latest': 'date_published desc',
+        'latest': 'published_date desc',
     }
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
@@ -142,7 +142,6 @@ class SlideSlide(models.Model):
     vimeo_id = fields.Char('Video Vimeo ID', compute='_compute_vimeo_id')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date', readonly=True, tracking=False, copy=False)
     likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
@@ -183,10 +182,10 @@ class SlideSlide(models.Model):
             elif not slide.image_1920:
                 slide.image_1920 = False
 
-    @api.depends('date_published', 'is_published')
+    @api.depends('published_date', 'is_published')
     def _compute_is_new_slide(self):
         for slide in self:
-            slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
+            slide.is_new_slide = slide.published_date > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
 
     def _get_placeholder_filename(self, field):
         return self.channel_id._get_placeholder_filename(field)
@@ -561,13 +560,13 @@ class SlideSlide(models.Model):
             # Do not publish slide if user has not publisher rights
             if vals['channel_id'] not in can_publish_channel_ids:
                 # 'website_published' is handled by mixin
-                vals['date_published'] = False
+                vals['published_date'] = False
 
             if vals.get('is_category'):
                 vals['is_preview'] = True
                 vals['is_published'] = True
-            if vals.get('is_published') and not vals.get('date_published'):
-                vals['date_published'] = datetime.datetime.now()
+            if vals.get('is_published') and not vals.get('published_date'):
+                vals['published_date'] = datetime.datetime.now()
 
         slides = super().create(vals_list)
 
@@ -608,7 +607,7 @@ class SlideSlide(models.Model):
         res = super().write(values)
 
         if values.get('is_published'):
-            self.date_published = datetime.datetime.now()
+            self.published_date = datetime.datetime.now()
             self._post_publication()
 
         # avoid fetching external metadata when installing the module (i.e. for demo data)

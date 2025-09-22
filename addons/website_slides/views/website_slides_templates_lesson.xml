@@ -24,7 +24,7 @@
                                 </h1>
                                 <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
                                     <span class="fw-normal">Last update:</span>
-                                    <t t-out="slide.date_published" t-options="{'widget': 'date'}"/>
+                                    <t t-out="slide.published_date" t-options="{'widget': 'date'}"/>
                                 </div>
                                 <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
                                     <div class="progress w-50 bg-black-25" style="height: 10px;">

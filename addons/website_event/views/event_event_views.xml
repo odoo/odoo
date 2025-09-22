@@ -9,6 +9,13 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
+                <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
+                <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                <label invisible="website_published" for="publish_on" string="Publish on"/>
+                <div invisible="website_published" class="o_row">
+                    <field name="publish_on" widget="datetime"/>
+                    <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                </div>
                 <label for="website_visibility" string="Visibility"/>
                 <div class="d-flex row">
                     <div class="col-5 pe-0">
@@ -47,7 +54,6 @@
             <field name="tag_ids" position="after">
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" invisible="website_id"></field>
             </field>
-            
         </field>
     </record>
 

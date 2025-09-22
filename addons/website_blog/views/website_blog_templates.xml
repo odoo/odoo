@@ -410,14 +410,14 @@ list of filtered posts (by date or tag).
     <title t-out="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-out="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-out="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
+    <updated t-out="str(posts[0].published_date).replace(' ', 'T') + 'Z' if posts and posts[0].published_date else ''"/>
     <entry t-foreach="posts" t-as="post">
         <title t-out="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
         <id t-out="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-out="post.sudo().author_id.name"/></author>
         <summary t-out="html2plaintext(post.teaser)"/>
-        <updated t-out="str(post.post_date).replace(' ', 'T') + 'Z'"/>
+        <updated t-out="post.published_date and str(post.published_date).replace(' ', 'T') + 'Z' or ''"/>
     </entry>
 </feed>
 </template>

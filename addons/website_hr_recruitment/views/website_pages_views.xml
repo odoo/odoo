@@ -20,10 +20,12 @@
         </field>
         <xpath expr="//list">
             <field name="is_seo_optimized"/>
-            <field name="is_published" position="move"/>
-
             <field name="website_id" groups="website.group_multi_website"/>
         </xpath>
+        <field name="is_published" position="replace">
+            <field name="website_published" invisible="publish_on and website_published"/>
+            <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
+        </field>
     </field>
 </record>
 

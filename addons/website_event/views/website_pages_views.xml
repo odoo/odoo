@@ -29,7 +29,8 @@
         </field>
         <field name="stage_id" position="before">
             <field name="is_seo_optimized"/>
-            <field name="is_published"/>
+            <field name="website_published" invisible="publish_on and website_published"/>
+            <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
 
             <field name="website_id" position="move"/>
         </field>
@@ -59,6 +60,7 @@
         </xpath>
         <xpath expr="//kanban" position="inside">
             <field name="website_url"/>
+            <field name="publish_on"/>
         </xpath>
         <xpath expr="//main" position="inside">
             <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
@@ -68,8 +70,9 @@
         </xpath>
         <xpath expr="//main" position="inside">
             <div class="d-flex border-top mt-2 pt-2">
-                <field name="is_published" widget="boolean_toggle"/>
-                <t t-if="record.is_published.raw_value">Published</t>
+                <field name="website_published" widget="boolean_toggle"/>
+                <t t-if="record.publish_on.raw_value">Scheduled</t>
+                <t t-elif="record.website_published.raw_value">Published</t>
                 <t t-else="">Not Published</t>
             </div>
         </xpath>
