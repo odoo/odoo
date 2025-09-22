@@ -217,6 +217,14 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         trigger: ':iframe section.s_website_form form[data-model_name="mail.mail"]',
         run: "click",
     }, {
+        content: "Set the offset and width of the Phone Number field",
+        trigger: ':iframe input[name="phone"]',
+        run: function () {
+            const fieldEl = this.anchor.closest('.s_website_form_field');
+            fieldEl.classList.add('offset-lg-3');
+            fieldEl.classList.add('col-lg-9');
+        },
+    }, {
         content: 'Edit the Phone Number field',
         trigger: ':iframe input[name="phone"]',
         run: "click",
@@ -554,6 +562,19 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         content: 'Verify that phone field is still auto-fillable',
         trigger: ':iframe .s_website_form_field input[data-fill-with="phone"]:value("+1 555-555-5555")',
         run: "click",
+    },
+    {
+        content: "Check that the offset and width of the Phone Number field are still correct",
+        trigger: ':iframe .s_website_form_field input[data-fill-with="phone"]',
+        run: function () {
+            const fieldEl = this.anchor.closest('.s_website_form_field');
+            if (!fieldEl.classList.contains('offset-lg-3')) {
+                throw new Error("The offset of the Phone Number field should have been kept");
+            }
+            if (!fieldEl.classList.contains('col-lg-9')) {
+                throw new Error("The width of the Phone Number field should have been kept");
+            }
+        },
     },
     // Check that the resulting form behavior is correct.
     {
