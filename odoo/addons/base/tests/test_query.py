@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.models import Query, TableSQL
+from odoo.models import Query
 from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import SQL
 
@@ -125,7 +125,7 @@ class TestQuery(TransactionCase):
 
     def test_raw_aliases(self):
         query = Query(None, 'foo', SQL('SELECT id FROM table'))
-        table = TableSQL(query.table, None, query)
+        table = query.table
         self.assertEqual(table._alias, 'foo')
         self.assertIsInstance(table, SQL)
         self.assertEqual(table._sql_tuple[0], '"foo"')
@@ -145,7 +145,7 @@ class TestQuery(TransactionCase):
     def test_model_aliases(self):
         model = self.env['res.partner.category']
         query = Query(model)
-        category = TableSQL(query.table, model, query)
+        category = query.table
         self.assertIsInstance(category, SQL)
         self.assertEqual(category._alias, model._table)
         self.assertIs(category._model, model)
@@ -166,7 +166,7 @@ class TestQuery(TransactionCase):
 
         model = self.env['res.partner']
         query = Query(model)
-        partner = TableSQL(query.table, model, query)
+        partner = query.table
 
         field = partner.company_id
         code, params, to_flush = field._sql_tuple

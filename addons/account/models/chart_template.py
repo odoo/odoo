@@ -1408,15 +1408,16 @@ class AccountChartTemplate(models.AbstractModel):
             query = self.env[model]._search([(company_id_field, 'in', company_ids)], bypass_access=True)
 
             # We only want records that have at least 1 missing translation in any of its translatable fields
+            raw_table = query.table._with_model(query.table._model.with_context(prefetch_langs=True))
             missing_translation_clauses = [
-                SQL("(%s ->> %s) IS NULL", SQL.identifier(query.table, field), lang)
+                SQL("(%s ->> %s) IS NULL", raw_table[field], lang)
                 for field in translatable_fields
                 for lang in langs
             ]
 
             translatable_field_column_args = []
             for field in translatable_fields:
-                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier(query.table, field)))
+                translatable_field_column_args.extend((SQL("%s", field), raw_table[field]))
 
             queries.append(SQL(
                 """
@@ -1433,7 +1434,7 @@ class AccountChartTemplate(models.AbstractModel):
                 model=model,
                 translatable_field_column_args=SQL(", ").join(translatable_field_column_args),
                 from_clause=query.from_clause,
-                model_id=SQL.identifier(query.table, 'id'),
+                model_id=query.table.id,
                 where_clause=query.where_clause or SQL("TRUE"),
                 missing_translation_clauses=SQL(" OR ").join(missing_translation_clauses),
             ))

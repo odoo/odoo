@@ -848,7 +848,7 @@ class _RelationalMulti(_Relational):
             domain = field_domain.optimize_full(comodel)
             if not domain.is_true():
                 # TODO should clone/copy Query value
-                value.add_where(domain._to_sql(comodel, value.table, value))
+                value.add_where(domain._to_sql(comodel, value.table._alias, value))
             return value
         raise NotImplementedError(f"Cannot build query for {value}")
 
@@ -1177,10 +1177,7 @@ class One2many(_RelationalMulti):
                 value &= Domain(inverse_field.name, 'not in', {False})
             else:
                 coquery = super()._get_query_for_condition_value(model, comodel, operator, value)
-                coquery.add_where(SQL(
-                    "%s IS NOT NULL",
-                    comodel._field_to_sql(coquery.table, inverse_field.name, coquery),
-                ))
+                coquery.add_where(SQL("%s IS NOT NULL", coquery.table[inverse_field.name]))
                 return coquery
         return super()._get_query_for_condition_value(model, comodel, operator, value)
 
@@ -1208,7 +1205,7 @@ class One2many(_RelationalMulti):
             )
 
         subselect = coquery.subselect(
-            SQL("%s AS __inverse", comodel._field_to_sql(coquery.table, inverse_field.name, coquery))
+            SQL("%s AS __inverse", coquery.table[inverse_field.name]),
         )
         return SQL(
             "%sEXISTS(SELECT FROM %s AS __sub WHERE __inverse = %s)",
