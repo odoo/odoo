@@ -100,12 +100,16 @@ class HrVersion(models.Model):
             employees_by_calendar[version.resource_calendar_id] |= version.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
-            result.update(calendar._attendance_intervals_batch(
-                start_dt,
-                end_dt,
-                resources=employees.resource_id,
-                tz=pytz.timezone(calendar.tz) if calendar.tz else pytz.utc
-            ))
+            if not calendar:
+                for employee in employees:
+                    result.update({employee.resource_id.id: Intervals()})
+            else:
+                result.update(calendar._attendance_intervals_batch(
+                    start_dt,
+                    end_dt,
+                    resources=employees.resource_id,
+                    tz=pytz.timezone(calendar.tz) if calendar.tz else pytz.utc
+                ))
         return result
 
     def _get_lunch_intervals(self, start_dt, end_dt):
@@ -452,7 +456,7 @@ class HrVersion(models.Model):
             for version_sudo in self.sudo():
                 date_from = max(version_sudo.date_start, version_sudo.date_generated_from.date())
                 date_to = min(version_sudo.date_end or date.max, version_sudo.date_generated_to.date())
-                if date_from != date_to and self.employee_id:
+                if date_from != date_to and self.employee_id and self.resource_calendar_id:
                     version_sudo._recompute_work_entries(date_from, date_to)
         return result
 
