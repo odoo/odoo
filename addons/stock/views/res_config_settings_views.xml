@@ -33,13 +33,13 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="annual_inventory_date" groups='stock.group_stock_manager' string="Annual Inventory Day and Month" help="Day and month that annual inventory counts should occur.">
+                            <setting id="annual_inventory_date" groups='stock.group_stock_manager' string="Annual Inventory Date" help="By default, next physical inventory will be scheduled at this date">
                                 <div class="content-group">
                                     <field name="annual_inventory_day" class="o_light_label" style="width: 30px;"/>
                                     <field name="annual_inventory_month" class="o_light_label"/>
                                 </div>
                             </setting>
-                            <setting id="reception_report" help="View and allocate received quantities.">
+                            <setting id="reception_report" help="View and allocate received quantities">
                                 <field name="group_stock_reception_report"/>
                             </setting>
                         </block>
@@ -61,7 +61,7 @@
                             <setting id="stock_fleet" help="Transport management: organize packs in your fleet, or carriers.">
                                 <field name="module_stock_fleet"/>
                             </setting>
-                            <setting id="stock_move_email" company_dependent="1" string="Email Confirmation" help="Send an automatic confirmation email when Delivery Orders are done">
+                            <setting id="stock_move_email" company_dependent="1" string="Confirmation Email" help="Send an automatic confirmation email when Delivery Orders are done">
                                 <field name="stock_move_email_validation"/>
                             </setting>
                             <setting id="stock_text_confirmation" company_dependent="1" help="Send an automatic confirmation Text Message when Delivery Orders are done" string="Text Confirmation">
