@@ -888,12 +888,13 @@ export class TablePlugin extends Plugin {
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
-            const targetedNodes = this.dependencies.selection.getTargetedNodes();
+            const selectedNodes = this.dependencies.selection
+                .getTargetedNodes()
+                .filter(this.dependencies.selection.areNodeContentsFullySelected);
             const cellContents = descendants(startTd);
-            /** @todo Test. Should probably use areNodeContentsFullySelected. */
             const areCellContentsFullySelected = cellContents
                 .filter((d) => !isBlock(d))
-                .every((child) => targetedNodes.includes(child));
+                .every((child) => selectedNodes.includes(child));
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
                 if (!this._mouseMovePositionWhenAllContentsSelected) {
