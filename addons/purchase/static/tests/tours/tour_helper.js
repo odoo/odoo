@@ -21,9 +21,7 @@ export const purchaseForm = {
             };
             for (const key in values) {
                 if (!Object.keys(fieldAndLabelDict).includes(key)) {
-                    throw new Error(
-                        `'checkPurchaseOrderLineValues' is called with unsupported key: ${key}`
-                    );
+                    throw new Error(`'checkLineValues' is called with unsupported key: ${key}`);
                 }
                 const value = values[key];
                 const { fieldName, label } = fieldAndLabelDict[key];
@@ -40,6 +38,18 @@ export const purchaseForm = {
             }
         };
         return [{ trigger, run }];
+    },
+
+    displayOptionalField(fieldName) {
+        return [
+            {
+                trigger:
+                    ".o_form_renderer .o_list_view.o_field_x2many .o_optional_columns_dropdown button",
+                run: "click",
+            },
+            { trigger: `input[name="${fieldName}"]:not(:checked)`, run: "click" },
+            { trigger: `th[data-name="${fieldName}"]` },
+        ];
     },
 
     /**
@@ -104,8 +114,20 @@ export const purchaseForm = {
 
 export const productCatalog = {
     addProduct(productName) {
-        const trigger = `.o_kanban_record:contains("${productName}") button:has(.fa-plus,.fa-shopping-cart)`;
+        const trigger = `.o_kanban_record:contains("${productName}") button:has(.oi-plus,.fa-shopping-cart)`;
         return [{ trigger, run: "click" }];
+    },
+
+    checkProductPrice(productName, price) {
+        const trigger = `.o_kanban_record:contains("${productName}") .o_product_catalog_price:contains("${price}")`;
+        const content = `Check that the kanban record card for product "${productName}" has a price of ${price}`;
+        return [{ content, trigger }];
+    },
+
+    checkProductUoM(productName, uom) {
+        const trigger = `.o_kanban_record:contains("${productName}") .o_product_catalog_quantity:contains("${uom}")`;
+        const content = `Check that the kanban record card for product "${productName}" uses ${uom} as the UoM`;
+        return [{ content, trigger }];
     },
 
     /** Remove a product from the PO by clicking the "trash" button */
