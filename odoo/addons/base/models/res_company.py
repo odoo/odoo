@@ -61,7 +61,7 @@ class Company(models.Model):
         string="Fed. State", domain="[('country_id', '=?', country_id)]"
     )
     bank_ids = fields.One2many(related='partner_id.bank_ids', readonly=False)
-    country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
+    country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', search='_search_country_id', string="Country")
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -124,6 +124,12 @@ class Company(models.Model):
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact']).sudo()
                 company.update(company._get_company_address_update(partner))
+
+    def _search_country_id(self, operator, value):
+        if operator not in ('=', '!=', 'in', 'not in'):
+            raise UserError(_('Operation not supported'))
+        companies = self.env['res.company']._search([('partner_id.country_id', operator, value)])
+        return [('id', 'in', companies)]
 
     def _inverse_street(self):
         for company in self:
