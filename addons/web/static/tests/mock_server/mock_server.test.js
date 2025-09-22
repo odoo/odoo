@@ -1082,6 +1082,37 @@ test("performRPC: formatted_read_group, group by many2one_reference", async () =
     ]);
 });
 
+test("performRPC: formatted_read_group, group by reference", async () => {
+    Bar._records = [
+        { id: 1, partner_ref: "res.partner,1" },
+        { id: 2, partner_ref: "res.partner,2" },
+    ];
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "formatted_read_group",
+            kwargs: {
+                domain: [],
+                groupby: ["partner_ref"],
+                aggregates: ["__count"],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            partner_ref: "res.partner,1",
+            __extra_domain: [["partner_ref", "=", "res.partner,1"]],
+            __count: 1,
+        },
+        {
+            partner_ref: "res.partner,2",
+            __extra_domain: [["partner_ref", "=", "res.partner,2"]],
+            __count: 1,
+        },
+    ]);
+});
+
 test("performRPC: formatted_read_group, group by id", async () => {
     Bar._records = [
         { id: 1, name: "A" },
@@ -1166,9 +1197,9 @@ test("performRPC: formatted_read_group, group by selection", async () => {
             },
         })
     ).resolves.toEqual([
-        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
         { select: "dev", __extra_domain: [["select", "=", "dev"]], __count: 1 },
         { select: "done", __extra_domain: [["select", "=", "done"]], __count: 2 },
+        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
     ]);
 });
 

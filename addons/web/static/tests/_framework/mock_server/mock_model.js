@@ -20,13 +20,7 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const {
-    DEFAULT_FIELD_VALUES,
-    DEFAULT_RELATIONAL_FIELD_VALUES,
-    DEFAULT_SELECTION_FIELD_VALUES,
-    S_FIELD,
-    isComputed,
-} = fields;
+const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, isComputed } = fields;
 
 /**
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
@@ -732,9 +726,6 @@ function orderByField(model, orderBy, records) {
                 }
             })
         );
-    } else if (field.type in DEFAULT_SELECTION_FIELD_VALUES) {
-        // Selection order is determined by the index of each value
-        valuesMap = new Map(field.selection.map((v, i) => [v[0], i]));
     }
 
     // Actual sorting
@@ -779,12 +770,6 @@ function orderByField(model, orderBy, records) {
             case "datetime": {
                 v1 = Array.isArray(v1) ? new Date(v1[0]).getTime() : v1;
                 v2 = Array.isArray(v2) ? new Date(v2[0]).getTime() : v2;
-                break;
-            }
-            case "reference":
-            case "selection": {
-                v1 &&= valuesMap.get(v1);
-                v2 &&= valuesMap.get(v2);
                 break;
             }
         }
