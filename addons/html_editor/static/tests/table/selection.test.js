@@ -1786,6 +1786,7 @@ describe("single cell selection", () => {
             </table>`
         );
     });
+<<<<<<< 6aabfa1866a7314361967f50186518430a692881
 
     test("should not select single cell via mouse movement if content is not fully selected", async () => {
         const content = unformat(`
@@ -1851,6 +1852,73 @@ describe("single cell selection", () => {
         await animationFrame();
         expect(firstTd).not.toHaveClass("o_selected_td");
     });
+||||||| b4edfdfe60c579c8159b1cc171f0e46809a119ce
+=======
+    test("should not select single cell via mouse movement if content is not fully selected", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>abcd</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el } = await setupEditor(content);
+
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+
+        // Get bounding rect of selection range at the end of text.
+        const range = document.createRange();
+        range.setStart(textNode, nodeSize(textNode));
+        range.setEnd(textNode, nodeSize(textNode));
+        const rangeRect = range.getBoundingClientRect();
+
+        // Simulate mousedown at the end of text.
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+
+        // Put cursor at the end of text.
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: nodeSize(textNode),
+        });
+        await animationFrame();
+
+        // Simulate attempt to select single cell.
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mouseup", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+
+        await animationFrame();
+        expect(firstTd).not.toHaveClass("o_selected_td");
+    });
+>>>>>>> edc0cc0307a4ee4711607af7f61ed923a65e8bdf
 });
 
 describe("deselecting table", () => {
