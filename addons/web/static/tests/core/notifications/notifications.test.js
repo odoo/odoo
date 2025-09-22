@@ -54,6 +54,23 @@ test("can display a notification with markup content", async () => {
     expect(".o_notification_content").toHaveInnerHTML("<b>I'm a <i>markup</i> notification</b>");
 });
 
+test("can display a notification with title and markup content", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+    getService("notification").add(markup`<b>I'm a <i>markup</i> notification</b>`, {
+        title: "I'm a title",
+    });
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification_content").toHaveInnerHTML(
+        "I'm a title. <b>I'm a <i>markup</i> notification</b>"
+    );
+    expect(".o_notification_content").toHaveText("I'm a title. I'm a markup notification");
+});
+
 test("can display a notification of type danger", async () => {
     await makeMockEnv();
     const { Component: NotificationContainer, props } = registry
