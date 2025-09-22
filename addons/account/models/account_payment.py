@@ -849,7 +849,7 @@ class AccountPayment(models.Model):
         accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
 
         for i, (pay, vals) in enumerate(zip(payments, vals_list)):
-            if not accounting_installed and not pay.outstanding_account_id:
+            if (not accounting_installed and not pay.outstanding_account_id) or self.env.context.get('force_payment_move'):
                 outstanding_account = pay._get_outstanding_account(pay.payment_type)
                 pay.outstanding_account_id = outstanding_account.id
 
