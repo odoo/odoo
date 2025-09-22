@@ -4,6 +4,7 @@ from datetime import datetime
 from freezegun import freeze_time
 from lxml import etree
 
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import file_open
 
@@ -341,6 +342,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
                 'product_uom_qty': 1,
                 'price_unit': 100,
                 'currency_id': self.other_currency.id,
+                'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
             })],
         }).sudo(False)
         sale_order.action_confirm()
