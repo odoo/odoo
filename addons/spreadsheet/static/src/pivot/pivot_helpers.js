@@ -109,7 +109,9 @@ export async function getRelationalFieldDefinition(resModel, fieldName, fieldSer
     const { modelsInfo, names } = await fieldService.loadPath(resModel, fieldName);
     return {
         ...modelsInfo.at(-1).fieldDefs[fieldName.split(".").at(-1)],
-        string: names.map((name, i) => modelsInfo[i].fieldDefs[name].string).join(" > "),
+        string: names
+            .map((name, i) => modelsInfo[i].fieldDefs[name]?.string || _t("Unnamed Field"))
+            .join(" > "),
         name: fieldName,
     };
 }
