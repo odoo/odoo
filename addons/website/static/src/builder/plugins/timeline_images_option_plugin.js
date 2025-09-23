@@ -8,6 +8,10 @@ import { registry } from "@web/core/registry";
 
 export const TIMELINE = after(WEBSITE_BACKGROUND_OPTIONS);
 
+function isTimelineImagesColumn(el) {
+    return el.matches(".s_timeline_images_content .row > div");
+}
+
 export class TimelineImagesOption extends BaseOptionComponent {
     static template = "website.TimelineImagesOption";
     static selector = ".s_timeline_images";
@@ -32,6 +36,8 @@ class TimelineImagesOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the last item."));
             }
         },
+        on_will_remove_handlers: this.onWillRemove.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         builder_options: [
             withSequence(TIMELINE, TimelineImagesOption),
             withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
@@ -43,6 +49,24 @@ class TimelineImagesOptionPlugin extends Plugin {
         },
         is_movable_selector: { selector: ".s_timeline_images_row", direction: "vertical" },
     };
+
+    onWillRemove(toRemoveEl) {
+        // If the removed element is last Column Element, store the parent row
+        // element (Milestone) for `onRemoved`.
+        if (isTimelineImagesColumn(toRemoveEl)) {
+            const parentContentRowEl = toRemoveEl.closest(".s_timeline_images_content .row");
+            if (parentContentRowEl && parentContentRowEl.childElementCount === 1) {
+                this.removableRow = parentContentRowEl.closest(".s_timeline_images_row");
+            }
+        }
+    }
+
+    onRemoved() {
+        // If the removed element is last Column Element, remove empty parent
+        // row element (Milestone).
+        this.removableRow?.remove();
+        delete this.removableRow;
+    }
 
     isLastTimelineImageItem(el) {
         const timelineEl = el.closest(".s_timeline_images");

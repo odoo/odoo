@@ -63,6 +63,8 @@ class TimelineOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the last item."));
             }
         },
+        on_will_remove_handlers: this.onWillRemove.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         builder_options: [
             withSequence(TIMELINE, TimelineOption),
             withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
@@ -98,6 +100,24 @@ class TimelineOptionPlugin extends Plugin {
                 .querySelector(".o_container_small div")
                 ?.classList.add("s_timeline_row_container");
         });
+    }
+
+    onWillRemove(toRemoveEl) {
+        // If the removed element is last Milestone Event Element, store the
+        // parent row element (Milestone) for `onRemoved`.
+        if (isTimelineCard(toRemoveEl)) {
+            const parentRowEl = toRemoveEl.closest(".s_timeline_row");
+            if (parentRowEl && parentRowEl.querySelectorAll(".s_timeline_card").length === 1) {
+                this.removableRow = parentRowEl;
+            }
+        }
+    }
+
+    onRemoved() {
+        // If the removed element is last Milestone Event Element, remove empty
+        // parent row element (Milestone).
+        this.removableRow?.remove();
+        delete this.removableRow;
     }
 
     getActiveOverlayButtons(target) {
