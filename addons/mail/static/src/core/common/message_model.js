@@ -73,6 +73,15 @@ export class Message extends Record {
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
+    hasMailNotificationSummary = Record.attr(false, {
+        compute() {
+            return Boolean(
+                createDocumentFragmentFromContent(this.body).querySelector(
+                    '[summary="o_mail_notification"]'
+                )
+            );
+        },
+    });
     /** @type {number|string} */
     id;
     /** @type {Array[Array[string]]} */
@@ -316,6 +325,8 @@ export class Message extends Record {
     isTranslatable(thread) {
         return (
             !this.isEmpty &&
+            !this.isBodyEmpty &&
+            !this.hasMailNotificationSummary &&
             this.store.hasMessageTranslationFeature &&
             !["discuss.channel", "mail.box"].includes(thread?.model)
         );
