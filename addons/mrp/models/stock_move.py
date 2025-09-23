@@ -498,12 +498,8 @@ class StockMove(models.Model):
                 factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
-            _dummy, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
-            for bom_line, line_data in lines:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
-                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
-                else:
-                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
+            lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)[1]
+            phantom_moves_vals_list += self._generate_all_phantom_moves(lines, move)
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
 
@@ -571,6 +567,17 @@ class StockMove(models.Model):
             'picked': self.picked,
             'bom_line_id': bom_line.id,
         }
+
+    def _generate_all_phantom_moves(self, exploded_lines_data, move):
+        move.ensure_one()
+        phantom_moves_vals_list = []
+        for bom_line, line_data in exploded_lines_data:
+            if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
+                phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
+            else:
+                phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
+
+        return phantom_moves_vals_list
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
         vals = []

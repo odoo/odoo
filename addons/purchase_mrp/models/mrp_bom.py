@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 
 class MrpBom(models.Model):
@@ -21,6 +21,32 @@ class MrpBom(models.Model):
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 
+    def explode(self, product, quantity, picking_type=False, never_attribute_values=False):
+        boms_done, lines_done = super().explode(product, quantity, picking_type, never_attribute_values)
+        total_cumul = 0.0
+
+        # Don't use cumulative cost share for single level BoM to avoid rounding issues
+        if not any(line_done[1]['parent_line'] for line_done in lines_done):
+            return boms_done, lines_done
+
+        for bom_line, line_done in lines_done:
+            cumul_cost_share = bom_line._get_cost_share()
+            parent_line = line_done['parent_line']
+            while parent_line:
+                cumul_cost_share *= parent_line._get_cost_share()
+                for bom_done in boms_done:
+                    bom_data = bom_done[1]
+                    if bom_data['parent_line'] == parent_line:
+                        parent_line = bom_data['real_parent_line']
+                        break
+            if line_done is lines_done[-1][1]:
+                cumul_cost_share = (1.0 - total_cumul)
+            cumul_cost_share = float_round(cumul_cost_share, precision_digits=2)
+            total_cumul += cumul_cost_share
+            line_done['cost_share'] = cumul_cost_share
+
+        return boms_done, lines_done
+
 
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
@@ -32,7 +58,7 @@ class MrpBomLine(models.Model):
 
     def _get_cost_share(self):
         self.ensure_one()
-        if self.cost_share:
+        if self.cost_share or any(bom_line.cost_share != 0.0 for bom_line in self.bom_id.bom_line_ids):
             return self.cost_share / 100
         bom = self.bom_id
         bom_lines_without_cost_share = bom.bom_line_ids.filtered(lambda bl: not bl.cost_share)
