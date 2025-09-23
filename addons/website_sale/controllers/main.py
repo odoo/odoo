@@ -1788,7 +1788,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
-        current_website = request.env['website'].get_current_website()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        current_website = request.env['website'].get_current_website()
         # Restrict options we can write to.
         writable_fields = {
             'shop_page_container', 'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
