@@ -476,13 +476,14 @@ class Many2one(_Relational):
         comodel, coalias = self.join(model, alias, query)
         return TableSQL(coalias, comodel, query)[property_name]
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
             # for other operators than 'any', just generate condition based on column type
-            return super().condition_to_sql(field_expr, operator, value, model, alias, query)
+            return super().condition_to_sql(table, field_expr, operator, value)
 
+        model = table._model
         comodel = model.env[self.comodel_name]
-        sql_field = model._field_to_sql(alias, field_expr, query)
+        sql_field = table[field_expr]
         can_be_null = self not in model.env.registry.not_null_fields
         bypass_access = operator in ('any!', 'not any!') or self.bypass_search_access
         positive = operator in ('any', 'any!')
@@ -506,13 +507,13 @@ class Many2one(_Relational):
 
         if left_join:
             assert bypass_access
-            comodel, coalias = self.join(model.sudo(), alias, query)
+            comodel, coalias = self.join(model.sudo(), table._alias, table._query)
             comodel = comodel.with_env(model.env)
             if not positive:
                 value = (~value).optimize_full(comodel)
-            sql = value._to_sql(TableSQL(coalias, comodel, query))
+            sql = value._to_sql(TableSQL(coalias, comodel, table._query))
             if self.company_dependent:
-                sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+                sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
             if can_be_null:
                 if positive:
                     sql = SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
@@ -537,7 +538,7 @@ class Many2one(_Relational):
         if can_be_null and not positive:
             sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
         if self.company_dependent:
-            sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+            sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
         return sql
 
     def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
@@ -792,9 +793,9 @@ class _RelationalMulti(_Relational):
         # not allowed, since using it changes the cardinality of the query
         raise ValueError(f"Cannot generate SQL for multi-relational field {self}")
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
-        comodel = model.env[self.comodel_name]
+        comodel = table._model.env[self.comodel_name]
         if not self.store:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
@@ -817,8 +818,8 @@ class _RelationalMulti(_Relational):
                     in_operator = 'in' if exists else 'not in'
                     return SQL(
                         "(%s OR %s)" if exists else "(%s AND %s)",
-                        self.condition_to_sql(field_expr, in_operator, (False,), model, alias, query),
-                        self.condition_to_sql(field_expr, in_operator, value - {False}, model, alias, query),
+                        self.condition_to_sql(table, field_expr, in_operator, (False,)),
+                        self.condition_to_sql(table, field_expr, in_operator, value - {False}),
                     )
                 #  in (False) => not any (Domain.TRUE)
                 #  not in (False) => any (Domain.TRUE)
@@ -830,8 +831,8 @@ class _RelationalMulti(_Relational):
             # wrap SQL into a simple query
             comodel = comodel.sudo()
             value = Domain('id', 'any', value)
-        coquery = self._get_query_for_condition_value(model, comodel, operator, value)
-        return self._condition_to_sql_relational(model, alias, exists, coquery, query)
+        coquery = self._get_query_for_condition_value(table._model, comodel, operator, value)
+        return self._condition_to_sql_relational(table, exists, coquery)
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator: str, value: Domain | Query) -> Query:
         """ Return Query run on the comodel with the field.domain injected."""
@@ -852,7 +853,7 @@ class _RelationalMulti(_Relational):
             return value
         raise NotImplementedError(f"Cannot build query for {value}")
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         raise NotImplementedError
 
 
@@ -1181,10 +1182,11 @@ class One2many(_RelationalMulti):
                 return coquery
         return super()._get_query_for_condition_value(model, comodel, operator, value)
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         if coquery.is_empty():
-            return Domain(not exists)._to_sql(TableSQL(alias, model, query))
+            return SQL("FALSE") if exists else SQL("TRUE")
 
+        model = table._model
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
         if not (inverse_field.store or inverse_field.compute_sql):
@@ -1199,7 +1201,7 @@ class One2many(_RelationalMulti):
             subselect = inverses._as_query(ordered=False).subselect()
             return SQL(
                 "%s%s%s",
-                SQL.identifier(alias, 'id'),
+                table.id,
                 SQL_OPERATORS['in' if exists else 'not in'],
                 subselect,
             )
@@ -1211,7 +1213,7 @@ class One2many(_RelationalMulti):
             "%sEXISTS(SELECT FROM %s AS __sub WHERE __inverse = %s)",
             SQL() if exists else SQL("NOT "),
             subselect,
-            SQL.identifier(alias, 'id'),
+            table.id,
         )
 
 
@@ -1719,11 +1721,11 @@ class Many2many(_RelationalMulti):
                 if invf.model_name == self.comodel_name
             ])
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
-        rel_alias = query.make_alias(alias, self.name)
+        rel_alias = table._make_alias(self.name)
         if not coquery.where_clause:
             # case: no constraints on table and we have foreign keys
             # so we can inverse the operator and check existence
@@ -1732,17 +1734,17 @@ class Many2many(_RelationalMulti):
                 "%sEXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s)",
                 SQL("NOT ") if exists else SQL(),
                 SQL.identifier(rel_table),
-                SQL.identifier(rel_alias),
-                SQL.identifier(rel_alias, rel_id1),
-                SQL.identifier(alias, 'id'),
+                rel_alias,
+                rel_alias[rel_id1],
+                table.id,
             )
         return SQL(
             "%sEXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s AND %s IN %s)",
             SQL("NOT ") if not exists else SQL(),
             SQL.identifier(rel_table),
-            SQL.identifier(rel_alias),
-            SQL.identifier(rel_alias, rel_id1),
-            SQL.identifier(alias, 'id'),
-            SQL.identifier(rel_alias, rel_id2),
+            rel_alias,
+            rel_alias[rel_id1],
+            table.id,
+            rel_alias[rel_id2],
             coquery.subselect(),
         )
