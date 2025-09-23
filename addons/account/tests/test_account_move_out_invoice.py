@@ -925,7 +925,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # == Test with a fiscal position ==
 
         fiscal_position = self.env['account.fiscal.position'].create({'name': 'fiscal_position'})
-        self.env['account.tax'].create({'name': 'Useless Tax', 'fiscal_position_ids': [Command.link(fiscal_position.id)]})
+        tax.fiscal_position_ids = [Command.link(fiscal_position.id)]
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
         move_form.invoice_date = fields.Date.from_string('2017-01-01')
         move_form.partner_id = self.partner_a

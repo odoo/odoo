@@ -124,6 +124,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos.id})
+        self.taxes['tax10'].fiscal_position_ids = self.fpos  # if tax not in FP it will be removed
 
         def _before_closing_cb():
             # check values before closing the session
@@ -211,6 +212,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos_no_tax_dest.id})
+        self.taxes['tax10'].fiscal_position_ids = self.fpos_no_tax_dest  # if tax not in FP it will be removed
 
         def _before_closing_cb():
             # check values before closing the session
@@ -297,6 +299,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos.id})
+        self.taxes['tax10'].fiscal_position_ids = self.fpos  # if tax not in FP it will be removed
 
         def _before_closing_cb():
             # check values before closing the session

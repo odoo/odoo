@@ -248,6 +248,7 @@ class TestFiscalPosition(common.TransactionCase):
         )
         fp = self.env['account.fiscal.position'].create({
             'name': 'FP Self',
+            'country_id': self.env.company.country_id.id,
         })
         tax = self.env['account.tax'].create({
             'name': 'Source Dest Tax',
