@@ -61,10 +61,4 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
         return razorpay_cancel_response
 
     def call_bus_service(self, order, payment_result):
-        order.config_id._notify('PAYMENT_STATUS', {
-            'payment_result': payment_result,
-            'data': {
-                'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-            }
-        })
+        order._send_payment_result(payment_result)

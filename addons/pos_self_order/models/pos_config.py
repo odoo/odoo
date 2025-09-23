@@ -435,3 +435,13 @@ class PosConfig(models.Model):
             'redirect_url': url_form,
             'zip_archive': base64.b64encode(zip_buffer.read()).decode('utf-8'),
         }
+
+    def _supported_kiosk_payment_terminal(self):
+        return ['adyen', 'razorpay', 'stripe', 'pine_labs']
+
+    def has_valid_self_payment_method(self):
+        """ Checks if the POS config has a valid payment method (terminal or online). """
+        self.ensure_one()
+        if self.self_ordering_mode == 'mobile':
+            return False
+        return any(pm.use_payment_terminal in self._supported_kiosk_payment_terminal() for pm in self.payment_method_ids)
