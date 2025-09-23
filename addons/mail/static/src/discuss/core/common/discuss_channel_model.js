@@ -16,6 +16,7 @@ export class DiscussChannel extends Record {
     channel_member_ids = fields.Many("discuss.channel.member", {
         sort: (m1, m2) => m1.id - m2.id,
     });
+    country_id = fields.One("res.country");
     self_member_id = fields.One("discuss.channel.member");
     /** @type {number|undefined} */
     member_count = undefined;

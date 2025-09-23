@@ -7,9 +7,9 @@
                         <i class="fa fa-comment-o me-1" aria-label="Lang"/>
                         <t t-esc="member.getLangName()"/>
                     </span>
-                    <span t-if="member.persona?.country_id or props.thread.country_id">
+                    <span t-if="member.persona?.country_id or props.thread.channel?.country_id">
                         <i class="fa fa-globe me-1" aria-label="country"/>
-                        <t t-esc="member.persona?.country_id?.name ?? props.thread.country_id.name"/>
+                        <t t-esc="member.persona?.country_id?.name ?? props.thread.channel?.country_id.name"/>
                     </span>
                 </div>
         </xpath>

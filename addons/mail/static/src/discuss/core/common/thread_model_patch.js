@@ -73,6 +73,7 @@ const threadPatch = {
                         avatar_cache_key: this.avatar_cache_key,
                         firstUnreadMessage: this.firstUnreadMessage,
                         default_display_mode: this.default_display_mode,
+                        country_id: this.country_id,
                     };
                 }
                 return undefined;
