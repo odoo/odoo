@@ -1912,3 +1912,28 @@ def _optimize_same_conditions(cls, conditions, model):
         if a == b:
             continue
         yield b
+
+
+@nary_optimization
+def _optimize_common_terms(cls, conditions, model):
+    """Identify common terms in nary conditions.
+
+        x & (a | b) & (a | c) => x & (a | (b & c))
+    """
+    inv = cls.INVERSE
+    inv_conditions, other_conditions = partition(lambda c: isinstance(c, inv), conditions)
+    if len(inv_conditions) < 2:
+        return conditions
+    common_conditions = inv_conditions[0].children
+    for condition in inv_conditions[1:]:
+        common_conditions = [c for c in common_conditions if c in condition.children]
+    if not common_conditions:
+        return conditions
+    # build the result
+    new_nary_conditions = cls.apply(
+        inv.apply(c for c in condition.children if c not in common_conditions)
+        for condition in inv_conditions
+    )
+    return [*other_conditions, inv.apply(
+        [*common_conditions, new_nary_conditions]
+    )]
