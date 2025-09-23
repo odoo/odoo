@@ -4,7 +4,6 @@ import ast
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 
@@ -111,11 +110,6 @@ class HrDepartment(models.Model):
         plans_count = {department.id: count for department, count in plans_data}
         for department in self:
             department.plans_count = plans_count.get(department.id, 0) + plans_count.get(False, 0)
-
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive departments.'))
 
     @api.model_create_multi
     def create(self, vals_list):

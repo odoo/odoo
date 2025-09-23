@@ -4375,7 +4375,13 @@ class BaseModel(metaclass=MetaModel):
             if prefix:
                 parent_ids = {int(label) for label in prefix.split('/')[:-1]}
                 if not parent_ids.isdisjoint(records._ids):
-                    raise UserError(_("Recursion Detected."))
+                    ir_model = self.env['ir.model']._get(self._name)
+                    raise UserError(_(
+                        "You are creating a loop in your '%s' records. "
+                        "A record cannot be a child of itself or one of its own sub-items. "
+                        "Please select a different parent.",
+                        ir_model.name,
+                    ))
 
             # update parent_path of all records and their descendants
             updated = dict(self.env.execute_query(SQL(

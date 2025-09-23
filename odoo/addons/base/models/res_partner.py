@@ -153,11 +153,6 @@ class ResPartnerCategory(models.Model):
     parent_path = fields.Char(index=True)
     partner_ids: ResPartner = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(_('You can not create recursive tags.'))
-
     @api.depends('parent_id')
     def _compute_display_name(self):
         """ Return the categories' display name, including their direct
