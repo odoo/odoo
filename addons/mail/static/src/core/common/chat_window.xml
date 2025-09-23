@@ -46,7 +46,7 @@
                 <t t-out="thread.importantCounter"/>
             </div>
             <div class="ms-1 flex-grow-1"/>
-            <div class="d-flex flex-shrink-0 o-me-1_5">
+            <div class="d-flex flex-shrink-0 me-1">
                 <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true" thread="thread"/>
             </div>
             <t t-if="this.store.inPublicPage and !this.store.self_partner">
