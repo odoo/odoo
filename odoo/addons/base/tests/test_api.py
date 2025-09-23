@@ -368,8 +368,11 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(prefetch_ids, (partners & ners)._prefetch_ids)
         self.assertEqual(prefetch_ids, (partners - ners)._prefetch_ids)
 
-        self.assertEqual(prefetch_ids, (part + ners)._prefetch_ids)
-        self.assertEqual(prefetch_ids, (part | ners)._prefetch_ids)
+        # those are not the same prefetch object, but they return the same ids
+        self.assertNotEqual(prefetch_ids, (part + ners)._prefetch_ids)
+        self.assertNotEqual(prefetch_ids, (part | ners)._prefetch_ids)
+        self.assertEqual(set(prefetch_ids), set((part + ners)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set((part | ners)._prefetch_ids))
 
         # combining concatenation and union with relational fields
         child_ids = partners.child_ids._ids
@@ -382,8 +385,8 @@ class TestAPI(SavepointCaseWithUserDemo):
         for child in children:
             self.assertEqual(set(prefetch_ids), set(child._prefetch_ids))
 
-        self.assertNotEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
-        self.assertNotEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
 
     @mute_logger('odoo.models')
     def test_60_prefetch_read(self):

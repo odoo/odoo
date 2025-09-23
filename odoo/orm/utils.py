@@ -145,3 +145,19 @@ class OriginIds(Reversible):
         for id_ in reversed(self.ids):
             if id_ := id_ or id_.origin:
                 yield id_
+
+
+class ConcatIds(Reversible):
+    """ A reversible iterable returning the union of collections of ``ids``. """
+    __slots__ = ['_iterables']
+
+    def __init__(self, iterables):
+        self._iterables = tuple(iterables)
+
+    def __iter__(self):
+        for iterable in self._iterables:
+            yield from iterable
+
+    def __reversed__(self):
+        for iterable in reversed(self._iterables):
+            yield from reversed(iterable)
