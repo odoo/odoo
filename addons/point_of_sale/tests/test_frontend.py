@@ -2132,6 +2132,21 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_click_all_orders_keep_customer', login="pos_user")
 
+    def test_default_pricelist_when_creating_partner(self):
+        """
+        When creating a new partner from the PoS, the pricelist displayed by default should
+        be the default pricelist set in the PoS configuration.
+        """
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist'
+        })
+        self.main_pos_config.write({
+            'available_pricelist_ids': [Command.set([pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_default_pricelist_when_creating_partner', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

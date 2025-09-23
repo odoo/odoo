@@ -490,6 +490,79 @@ class TestTaxesComputation(TestTaxCommon):
         )
         self._run_js_tests()
 
+    def test_batch_for_taxes_computation(self):
+        tax_percent_5 = self.percent_tax(5.0)
+        tax_percent_10 = self.percent_tax(10.0)
+        tax_percent_15 = self.percent_tax(15.0)
+        taxes = tax_percent_5 + tax_percent_10 + tax_percent_15
+
+        # No tax affecting another one.
+        # tax               price_incl      incl_base_amount    is_base_affected
+        # -----------------------------------------------------------------------
+        # tax_percent_5                                         T
+        # tax_percent_10                                        T
+        # tax_percent_15                                        T
+        self.assert_taxes_computation(
+            taxes,
+            100.0,
+            {
+                'total_included': 130.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 5.0),
+                    (100.0, 10.0),
+                    (100.0, 15.0),
+                ),
+            },
+        )
+
+        # Tax affecting the following taxes but in batch using 'is_base_affected'.
+        # We expect 2 batches here: (tax_percent_5, tax_percent_10) & tax_percent_15
+        # tax               price_incl      incl_base_amount    is_base_affected
+        # -----------------------------------------------------------------------
+        # tax_percent_5                     T                   T
+        # tax_percent_10                    T
+        # tax_percent_15                    T                   T
+        taxes.include_base_amount = True
+        tax_percent_10.is_base_affected = False
+        self.assert_taxes_computation(
+            taxes,
+            100.0,
+            {
+                'total_included': 132.25,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 5.0),
+                    (100.0, 10.0),
+                    (115.0, 17.25),
+                ),
+            },
+        )
+
+        # Tax affecting the following taxes but there is no following tax.
+        # tax               price_incl      incl_base_amount    is_base_affected
+        # -----------------------------------------------------------------------
+        # tax_percent_5     T                                   T
+        # tax_percent_10    T                                   T
+        # tax_percent_15    T               T                   T
+        taxes.is_base_affected = True
+        taxes.price_include_override = 'tax_included'
+        (tax_percent_5 + tax_percent_10).include_base_amount = False
+        self.assert_taxes_computation(
+            taxes,
+            100.0,
+            {
+                'total_included': 100.0,
+                'total_excluded': 76.92,
+                'taxes_data': (
+                    (76.92, 3.85),
+                    (76.92, 7.69),
+                    (76.92, 11.54),
+                ),
+            },
+        )
+        self._run_js_tests()
+
     def test_fixed_tax_price_included_affect_base_on_0(self):
         tax = self.fixed_tax(0.05, price_include_override='tax_included', include_base_amount=True)
         self.assert_taxes_computation(

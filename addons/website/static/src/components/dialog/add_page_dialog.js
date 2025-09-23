@@ -7,7 +7,7 @@ import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
 import { WebsiteDialog } from '@website/components/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
-import { applyTextHighlight } from "@website/js/text_processing";
+import { applyTextHighlight, removeTextHighlight } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
 import wUtils from '@website/js/utils';
 
@@ -280,6 +280,11 @@ export class AddPageTemplatePreview extends Component {
         const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
         for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview, .s_dialog_preview")) {
             previewEl.remove();
+        }
+        // Remove highlighted text content from the cloned page. The full
+        // highlight structure will be restored on page load.
+        for (const textHighlightEl of wrapEl.querySelectorAll(".o_text_highlight")) {
+            removeTextHighlight(textHighlightEl);
         }
         this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name));
     }
