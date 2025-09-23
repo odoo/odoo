@@ -25,7 +25,7 @@ from .utils import COLLECTION_TYPES, SQL_OPERATORS
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
     from .models import BaseModel
-    from .query import Query
+    from .query import Query, TableSQL
 
 
 class BaseString(Field[str | typing.Literal[False]]):
@@ -411,11 +411,12 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         return getter
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         # build the condition
+        model = table._model
         if self.translate and model.env.context.get('prefetch_langs'):
             model = model.with_context(prefetch_langs=False)
-        base_condition = super().condition_to_sql(field_expr, operator, value, model, alias, query)
+        base_condition = super().condition_to_sql(table._with_model(model), field_expr, operator, value)
 
         # faster SQL for index trigrams
         if (
@@ -441,7 +442,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             if value == '%':
                 return base_condition
 
-            raw_sql_field = self.to_sql(model.with_context(prefetch_langs=True), alias, query)
+            raw_sql_field = self.to_sql(model.with_context(prefetch_langs=True), table._alias)
             sql_left = SQL("jsonb_path_query_array(%s, '$.*')::text", raw_sql_field)
             sql_operator = SQL_OPERATORS['like' if operator == 'in' else operator]
             sql_right = SQL("%s", self.convert_to_column(value, model, validate=False))

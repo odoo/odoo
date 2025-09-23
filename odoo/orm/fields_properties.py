@@ -12,14 +12,14 @@ from operator import attrgetter
 from odoo.exceptions import AccessError, UserError, MissingError
 from odoo.tools import SQL, OrderedSet, is_list_of, html_sanitize
 from odoo.tools.misc import frozendict, has_list_types
-from odoo.tools.translate import _
 
 from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
+
 if typing.TYPE_CHECKING:
-    from .query import Query
+    from .query import Query, TableSQL
 
 NoneType = type(None)
 
@@ -675,12 +675,12 @@ class Properties(Field):
         check_property_field_value_name(property_name)
         return SQL("(%s -> %s)", field_sql, property_name)
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         fname, property_name = parse_field_expr(field_expr)
         if not property_name:
             raise ValueError(f"Missing property name for {self}")
-        raw_sql_field = model._field_to_sql(alias, fname, query)
-        sql_left = model._field_to_sql(alias, field_expr, query)
+        raw_sql_field = table[fname]
+        sql_left = raw_sql_field[property_name]
 
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES)
@@ -743,7 +743,7 @@ class Properties(Field):
         unaccent = lambda x: x  # noqa: E731
         if operator.endswith('like'):
             if operator.endswith('ilike'):
-                unaccent = model.env.registry.unaccent
+                unaccent = table._model.env.registry.unaccent
             if '=' in operator:
                 value = str(value)
             else:

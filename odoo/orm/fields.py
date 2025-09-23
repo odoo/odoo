@@ -23,13 +23,14 @@ from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
 
 from .domains import Domain
 from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
 
     from .environments import Environment
     from .identifiers import IdType
+    from .query import TableSQL
     from .registry import Registry
     from .types import BaseModel, DomainType, ModelType, Self, ValuesType
     M = typing.TypeVar("M", bound=BaseModel)
@@ -1284,7 +1285,7 @@ class Field(typing.Generic[T]):
         """
         raise ValueError(f"Invalid field property {property_name!r} on {self}")
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         """ Return an :class:`SQL` object that represents the domain condition
         given by the triple ``(field_expr, operator, value)`` with the given
         table alias, and in the context of the given query.
@@ -1292,21 +1293,24 @@ class Field(typing.Generic[T]):
         This method should use the model to resolve the SQL and check access
         of the field.
         """
-        sql_expr = self._condition_to_sql(field_expr, operator, value, model, alias, query)
+        sql_expr = self._condition_to_sql(table, field_expr, operator, value)
         if self.company_dependent:
-            sql_expr = self._condition_to_sql_company(sql_expr, field_expr, operator, value, model, alias, query)
+            sql_expr = self._condition_to_sql_company(table, sql_expr, field_expr, operator, value)
         return sql_expr
 
-    def _condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
-        sql_field = model._field_to_sql(alias, field_expr, query)
+    def _condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
+        model = table._model
+        fname, property_name = parse_field_expr(field_expr)
+        sql_field = table[fname]
 
-        if field_expr == self.name:
+        if not property_name:
             def _value_to_column(v):
                 return self.convert_to_column(v, model, validate=False)
         else:
             # reading a property, keep value as-is
             def _value_to_column(v):
                 return v
+            sql_field = sql_field[property_name]
 
         # support for SQL value
         if operator in SQL_OPERATORS and isinstance(value, SQL):
@@ -1403,15 +1407,16 @@ class Field(typing.Generic[T]):
 
         raise NotImplementedError(f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}")
 
-    def _condition_to_sql_company(self, sql_expr: SQL, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _condition_to_sql_company(self, table: TableSQL, sql_expr: SQL, field_expr: str, operator: str, value) -> SQL:
         """ Add a not null condition on the field for company-dependent fields to use an existing index for better performance."""
+        model = table._model
         if (
             self.company_dependent
             and self.index == 'btree_not_null'
             and not (self.type in ('datetime', 'date') and field_expr != self.name)  # READ_GROUP_NUMBER_GRANULARITY is not supported
             and model.env['ir.default']._evaluate_condition_with_fallback(model._name, field_expr, operator, value) is False
         ):
-            return SQL('(%s IS NOT NULL AND %s)', SQL.identifier(alias, self.name), sql_expr)
+            return SQL('(%s IS NOT NULL AND %s)', SQL.identifier(table._alias, self.name), sql_expr)
         return sql_expr
 
     ############################################################################

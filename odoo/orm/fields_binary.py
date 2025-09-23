@@ -19,7 +19,7 @@ from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
-    from .query import Query
+    from .query import TableSQL
 
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
@@ -236,15 +236,15 @@ class Binary(Field):
             else:
                 atts.unlink()
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if not self.attachment or field_expr != self.name:
-            return super().condition_to_sql(field_expr, operator, value, model, alias, query)
+            return super().condition_to_sql(table, field_expr, operator, value)
         assert operator in ('in', 'not in') and set(value) == {False}, "Should have been done in Domain optimization"
         return SQL(
             "%s%s(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
-            model._field_to_sql(alias, 'id', query),
+            table.id,
             SQL_OPERATORS['not in' if operator in ('in', '=') else 'in'],
-            model._name,
+            table._model._name,
             self.name,
         )
 

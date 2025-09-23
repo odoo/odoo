@@ -1101,7 +1101,7 @@ class DomainCondition(Domain):
         model = table._model
         field = self._field(model)
         model._check_field_access(field, 'read')
-        return field.condition_to_sql(field_expr, operator, value, model, table._alias, table._query)
+        return field.condition_to_sql(table, field_expr, operator, value)
 
 
 # --------------------------------------------------
