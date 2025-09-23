@@ -558,7 +558,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': "FP-POS-2M",
         })
 
-        src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
+        src_tax = env['account.tax'].create({
+            'name': "SRC",
+            'amount': 10,
+            'fiscal_position_ids': main_company.domestic_fiscal_position_id,
+        })
         env['account.tax'].create({'name': "DST", 'amount': 5, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
         env['account.tax'].create({'name': "DST2", 'amount': 10, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
 

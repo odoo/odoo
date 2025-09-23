@@ -15,7 +15,10 @@ export class AccountFiscalPosition extends Base {
                 for (const mapTaxId of this.tax_map[tax.id]) {
                     newTaxIds.push(mapTaxId);
                 }
-            } else {
+            } else if (
+                !tax.fiscal_position_ids?.length ||
+                tax.fiscal_position_ids.some((taxFp) => taxFp.id === this.id)
+            ) {
                 newTaxIds.push(tax.id);
             }
         }

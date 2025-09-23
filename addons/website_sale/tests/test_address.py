@@ -629,7 +629,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 'name': "15% excl",
                 'amount': 15,
                 'price_include_override': 'tax_included',
-                'fiscal_position_ids': fpos_be.ids,
+                'fiscal_position_ids': (fpos_be | self.env.company.domestic_fiscal_position_id).ids,
             },
             {
                 'name': "0%",
