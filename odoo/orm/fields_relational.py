@@ -17,7 +17,7 @@ from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
-from .query import Query, TableSQL
+from .query import FieldSQL, Query, TableSQL
 from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
@@ -456,10 +456,10 @@ class Many2one(_Relational):
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
                 invf._update_cache(corecord, ids1)
 
-    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
-        sql_field = super().to_sql(model, alias, query)
+    def to_sql(self, table: TableSQL) -> SQL:
+        sql_field = super().to_sql(table)
         if self.company_dependent:
-            comodel = model.env[self.comodel_name]
+            comodel = table._model.env[self.comodel_name]
             sql_field = SQL(
                 '''(SELECT %(cotable_alias)s.id
                     FROM %(cotable)s AS %(cotable_alias)s
@@ -470,11 +470,12 @@ class Many2one(_Relational):
             )
         return sql_field
 
-    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+    def property_to_sql(self, field_sql: FieldSQL, property_name: str) -> SQL:
         # accessing a property on a many2one traverses the model
         # we can do this because it keeps the cardinality of the query the same
-        comodel, coalias = self.join(model, alias, query)
-        return TableSQL(coalias, comodel, query)[property_name]
+        table = field_sql._table
+        comodel, coalias = self.join(table._model, table._alias, table._query)
+        return TableSQL(coalias, comodel, table._query)[property_name]
 
     def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
@@ -789,7 +790,7 @@ class _RelationalMulti(_Relational):
             return comodel.sudo(False).with_user(comodel.env.transaction.default_env.uid)
         return comodel
 
-    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+    def to_sql(self, table):
         # not allowed, since using it changes the cardinality of the query
         raise ValueError(f"Cannot generate SQL for multi-relational field {self}")
 

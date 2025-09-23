@@ -19,7 +19,7 @@ from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
 
 if typing.TYPE_CHECKING:
-    from .query import Query, TableSQL
+    from .query import TableSQL
 
 NoneType = type(None)
 
@@ -671,7 +671,7 @@ class Properties(Field):
             return lambda rec: getter(rec).filtered_domain(domain)
         return super().filter_function(records, field_expr, operator, value)
 
-    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+    def property_to_sql(self, field_sql: SQL, property_name: str) -> SQL:
         check_property_field_value_name(property_name)
         return SQL("(%s -> %s)", field_sql, property_name)
 

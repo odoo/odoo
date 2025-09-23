@@ -30,7 +30,7 @@ if typing.TYPE_CHECKING:
 
     from .environments import Environment
     from .identifiers import IdType
-    from .query import TableSQL
+    from .query import FieldSQL, TableSQL
     from .registry import Registry
     from .types import BaseModel, DomainType, ModelType, Self, ValuesType
     M = typing.TypeVar("M", bound=BaseModel)
@@ -1235,25 +1235,26 @@ class Field(typing.Generic[T]):
     # SQL generation methods
     #
 
-    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+    def to_sql(self, table: TableSQL) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias.
 
         The query object is necessary for fields that need to add tables to the query.
         """
+        model = table._model
         model._check_field_access(self, 'read')
         if self.compute_sql:
             if self.compute_sudo:
                 model = model.sudo()
-            sql_field = determine(self.compute_sql, model, alias, query)
+            sql_field = determine(self.compute_sql, model, table._alias, table._query)
             assert isinstance(sql_field, SQL), f"{self} invalid return of compute_sql"
             return sql_field
         if not self.store or not self.column_type:
             if self.related and not self.store:
-                model, field, alias = self.traverse_related_sql(model, alias, query)
-                return model._field_to_sql(alias, field.name, query)
+                model, field, alias = self.traverse_related_sql(table._model, table._alias, table._query)
+                return model._field_to_sql(alias, field.name, table._query)
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
-        sql_field = SQL.identifier(alias, self.name, to_flush=self)
+        sql_field = SQL.identifier(table._alias, self.name, to_flush=self)
         if self.company_dependent:
             fallback = self.get_company_dependent_fallback(model)
             fallback = self.convert_to_column(self.convert_to_write(fallback, model), model)
@@ -1277,7 +1278,7 @@ class Field(typing.Generic[T]):
 
         return sql_field
 
-    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+    def property_to_sql(self, field_sql: FieldSQL, property_name: str) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         expression from the given table alias.
 

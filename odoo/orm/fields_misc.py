@@ -12,8 +12,7 @@ from .fields import Field
 from .identifiers import IdType
 
 if typing.TYPE_CHECKING:
-    from .models import BaseModel
-    from .query import Query, TableSQL
+    from .query import TableSQL
 
 # integer needs to be imported before Id because of `type` attribute clash
 from . import fields_numeric  # noqa: F401
@@ -119,11 +118,11 @@ class Id(Field[IdType | typing.Literal[False]]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return value
 
-    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+    def to_sql(self, table: TableSQL) -> SQL:
         # do not flush, just return the identifier
         assert self.store, 'id field must be stored'
         # id is never flushed
-        return SQL.identifier(alias, self.name)
+        return SQL.identifier(table._alias, self.name)
 
     def expression_getter(self, field_expr):
         if field_expr != 'id.origin':

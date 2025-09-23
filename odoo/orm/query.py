@@ -348,15 +348,14 @@ class FieldSQL(SQL):
         self._field = field
         # Generate the SQL eagerly, it may be used multiple times and is easier
         # to debug than generating it lazily.
-        self.__sql_tuple = field.to_sql(table._model, table._alias, table._query)._sql_tuple
+        self.__sql_tuple = field.to_sql(table)._sql_tuple
 
     @property
     def _sql_tuple(self):
         return self.__sql_tuple
 
     def __getitem__(self, name: str) -> SQL:
-        table = self._table
-        return self._field.property_to_sql(self, name, table._model, table._alias, table._query)
+        return self._field.property_to_sql(self, name)
 
     __getattr__ = __getitem__
 
