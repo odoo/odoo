@@ -37,7 +37,6 @@
         'views/templates/sale_portal_templates.xml',
         'views/templates/shop_page_templates.xml',
         'views/templates/templates_svg.xml',
-        'views/templates/variant_templates.xml',
         'views/templates/website_templates.xml',
 
         # Qweb templates -> checkout
