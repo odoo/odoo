@@ -6056,10 +6056,8 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(key, str):
             # important: one must call the field's getter
             return self._fields[key].__get__(self)
-        elif isinstance(key, slice):
-            return self.browse(self._ids[key])
-        else:
-            return self.browse((self._ids[key],))
+        ids = self._ids[key] if isinstance(key, slice) else (self._ids[key],)
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
