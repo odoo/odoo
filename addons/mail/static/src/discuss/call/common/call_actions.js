@@ -26,7 +26,7 @@ export function registerCallAction(id, definition) {
     callActionsRegistry.add(id, definition);
 }
 
-registerCallAction("mute", {
+export const muteAction = {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
@@ -47,7 +47,8 @@ registerCallAction("mute", {
         }
         return tags;
     },
-});
+};
+registerCallAction("mute", muteAction);
 registerCallAction("deafen", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
@@ -60,7 +61,7 @@ registerCallAction("deafen", {
     sequenceGroup: 100,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
-registerCallAction("camera-on", {
+export const cameraOnAction = {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
@@ -85,8 +86,9 @@ registerCallAction("camera-on", {
         }
         return tags;
     },
-});
-registerCallAction("switch-camera", {
+};
+registerCallAction("camera-on", cameraOnAction);
+export const switchCameraAction = {
     condition: ({ store, thread }) =>
         thread?.eq(store.rtc?.channel) && isMobileOS() && store.rtc.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
@@ -95,7 +97,8 @@ registerCallAction("switch-camera", {
     onSelected: ({ store }) => store.rtc.toggleCameraFacingMode(),
     sequence: 40,
     sequenceGroup: 100,
-});
+};
+registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
@@ -133,7 +136,7 @@ registerCallAction("auto-focus", {
     sequence: 50,
     sequenceGroup: 200,
 });
-registerCallAction("blur-background", {
+export const blurBackgroundAction = {
     condition: ({ store, thread }) =>
         !isBrowserSafari() &&
         thread?.eq(store.rtc?.channel) &&
@@ -145,7 +148,8 @@ registerCallAction("blur-background", {
     onSelected: ({ store }) => (store.settings.useBlur = !store.settings.useBlur),
     sequence: 60,
     sequenceGroup: 200,
-});
+};
+registerCallAction("blur-background", blurBackgroundAction);
 registerCallAction("fullscreen", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
@@ -183,7 +187,7 @@ registerCallAction("picture-in-picture", {
     sequence: 70,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
-registerCallAction("accept-with-camera", {
+export const acceptWithCamera = {
     condition: ({ thread }) =>
         thread?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof thread?.useCameraByDefault !== "boolean",
@@ -194,7 +198,8 @@ registerCallAction("accept-with-camera", {
     sequence: 100,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
-});
+};
+registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
     btnClass: "text-nowrap pe-2 rounded-pill",
     condition: ({ store, thread }) =>
@@ -223,7 +228,7 @@ registerCallAction("join-with-camera", {
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
-registerCallAction("join", {
+export const joinAction = {
     condition: ({ store, thread }) =>
         !thread?.eq(store.rtc?.channel) && typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
@@ -233,8 +238,9 @@ registerCallAction("join", {
     sequence: 130,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
-});
-registerCallAction("reject", {
+};
+registerCallAction("join", joinAction);
+export const rejectAction = {
     btnClass: ({ thread }) =>
         typeof thread?.useCameraByDefault === "boolean" ? "pe-2 rounded-pill" : undefined,
     condition: ({ thread }) => thread?.self_member_id?.rtc_inviting_session_id,
@@ -254,7 +260,8 @@ registerCallAction("reject", {
     sequence: 140,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
-});
+};
+registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
     condition: ({ store, thread }) =>
         thread?.eq(store.rtc?.channel) && !thread?.self_member_id?.rtc_inviting_session_id,
