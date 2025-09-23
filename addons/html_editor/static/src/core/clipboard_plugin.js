@@ -174,7 +174,10 @@ export class ClipboardPlugin extends Plugin {
      */
     onPaste(ev) {
         let selection = this.dependencies.selection.getEditableSelection();
-        if (!selection.anchorNode.isConnected) {
+        if (
+            !selection.anchorNode.isConnected ||
+            !closestElement(selection.anchorNode).isContentEditable
+        ) {
             return;
         }
         ev.preventDefault();
