@@ -3072,7 +3072,7 @@ class MrpProduction(models.Model):
             else:
                 entity.unlink()
         elif quantity > 0:
-            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, **kwargs)
+            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, child_field=child_field, **kwargs)
             command = Command.create(new_line_vals)
             self.write({child_field: [command]})
             new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product_id)[-1:]
@@ -3084,9 +3084,11 @@ class MrpProduction(models.Model):
         line.product_uom_qty = quantity
 
     def _get_new_catalog_line_values(self, product_id, quantity, **kwargs):
+        child_field = kwargs.get('child_field')
         return {
             'product_id': product_id,
             'product_uom_qty': quantity,
+            'sequence': (self[child_field][-1:].sequence or 1) + 1,
         }
 
     def _is_display_stock_in_catalog(self):
