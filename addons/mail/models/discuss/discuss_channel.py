@@ -423,7 +423,8 @@ class DiscussChannel(models.Model):
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
-
+        if not self.env.context.get("install_mode") and not self.env.user._is_public():
+            Store(bus_channel=self.env.user).add(channels).bus_send()
         return channels
 
     @api.ondelete(at_uninstall=False)
@@ -1492,7 +1493,6 @@ class DiscussChannel(models.Model):
         new_channel.group_public_id = group.id if group else None
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        Store(bus_channel=self.env.user).add(new_channel).bus_send()
         return new_channel
 
     @api.model
