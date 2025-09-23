@@ -1,13 +1,15 @@
-import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useState, xml } from "@odoo/owl";
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
+import { highlightText } from "@web/core/utils/html";
 import { useDebounced } from "@web/core/utils/timing";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { rpc } from "@web/core/network/rpc";
+import { NavigableList } from "@mail/core/common/navigable_list";
 
 export class ConversationTagEdit extends Component {
-    static components = {};
+    static components = { NavigableList };
     static props = ["thread", "autofocus?", "close?"];
     static template = "im_livechat.ConversationTagEdit";
 
@@ -48,6 +50,21 @@ export class ConversationTagEdit extends Component {
         return this.state.selectableTags.filter(
             (tag) => !tag.in(this.props.thread.livechat_conversation_tag_ids)
         );
+    }
+
+    get navigableListProps() {
+        return {
+            onSelect: (ev, option) => {
+                this.toggleSelectedTag(option.tag);
+                this.state.searchStr = "";
+            },
+            optionTemplate: xml`<t t-out="option.label"/>`,
+            options: this.remainingSelectableTags.map((tag) => ({
+                tag,
+                label: highlightText(this.state.searchStr.trim(), tag.name, "text-primary"),
+                buttonClass: "btn",
+            })),
+        };
     }
 
     async toggleSelectedTag(tag) {

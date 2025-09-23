@@ -25,6 +25,7 @@ export class LivechatChannelInfoList extends Component {
         this.tagEditPopover = usePopover(ConversationTagEdit, {
             closeOnClickAway: true,
             position: "left",
+            useBottomSheet: this.ui.isSmall,
         });
         this.tagsContainer = useRef("tagsContainer");
         useSubEnv({ inLivechatInfoPanel: true });
