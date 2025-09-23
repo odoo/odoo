@@ -4762,7 +4762,7 @@ class BaseModel(metaclass=MetaModel):
             return self.browse()._as_query()
         query = Query(self)
         if not domain.is_true():
-            query.add_where(domain._to_sql(self, self._table, query))
+            query.add_where(domain._to_sql(query.table))
 
         # security access domain
         if check_access:
@@ -4772,7 +4772,7 @@ class BaseModel(metaclass=MetaModel):
             if sec_domain.is_false():
                 return self.browse()._as_query()
             if not sec_domain.is_true():
-                query.add_where(sec_domain._to_sql(self_sudo, self._table, query))
+                query.add_where(sec_domain._to_sql(query.table._with_model(self_sudo)))
 
         # add order and limits
         if order:
