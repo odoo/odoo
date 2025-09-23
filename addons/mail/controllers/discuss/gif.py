@@ -1,17 +1,29 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import requests
+import urllib3
 import werkzeug.urls
+from werkzeug.exceptions import BadRequest
 
 from odoo.http import request, route, Controller
+
+_logger = logging.getLogger(__name__)
 
 
 class DiscussGifController(Controller):
     def _request_gifs(self, endpoint):
-        response = requests.get(
-            f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
-        )
-        response.raise_for_status()
+        response = None
+        try:
+            response = requests.get(
+                f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
+            )
+            response.raise_for_status()
+        except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
+            _logger.error("Exceeded the request's maximum size for a searching term.")
+
+        if not response:
+            raise BadRequest()
         return response
 
     @route("/discuss/gif/search", type="json", auth="user")
