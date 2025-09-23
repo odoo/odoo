@@ -16,7 +16,7 @@ import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "./call_actions";
 
 let sequence = 1;
@@ -824,6 +824,14 @@ export class Rtc extends Record {
                 audio: audio ? this.store.settings.audioConstraints : false,
                 video: video ? this.store.settings.cameraConstraints : false,
             });
+            if (isBrowserSafari() || isMobileOS()) {
+                if (audio) {
+                    this.microphonePermission = "granted";
+                }
+                if (video) {
+                    this.cameraPermission = "granted";
+                }
+            }
             closeStream(stream);
         } catch {
             this.showMediaUnavailableWarning({ microphone: audio, camera: video });
