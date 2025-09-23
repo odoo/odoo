@@ -15,9 +15,6 @@ class DashboardDataRoute(http.Controller):
         dashboard = dashboard.exists()
         if not dashboard:
             raise request.not_found()
-        cids_str = request.cookies.get('cids', str(request.env.user.company_id.id))
-        cids = [int(cid) for cid in cids_str.split('-')]
-        dashboard = dashboard.with_context(allowed_company_ids=cids)
         if dashboard._dashboard_is_empty() and dashboard.sample_dashboard_file_path:
             sample_data = dashboard._get_sample_dashboard()
             if sample_data:
