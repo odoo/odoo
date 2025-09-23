@@ -2,9 +2,9 @@ import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { ReceiptHeader } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt_header/receipt_header";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
-import { qrCodeSrc } from "@point_of_sale/utils";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency } from "@web/core/currency";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 export class OrderReceipt extends Component {
     static template = "point_of_sale.OrderReceipt";
@@ -35,11 +35,8 @@ export class OrderReceipt extends Component {
 
     get qrCode() {
         const baseUrl = this.order.config._base_url;
-        return (
-            this.order.company.point_of_sale_use_ticket_qr_code &&
-            this.order.finalized &&
-            qrCodeSrc(`${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`)
-        );
+        const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
+        return generateQRCodeDataUrl(url);
     }
 
     get paymentLines() {
