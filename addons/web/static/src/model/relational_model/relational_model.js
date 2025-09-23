@@ -701,6 +701,7 @@ export class RelationalModel extends Model {
     }
 
     async _webReadGroup(config, firstGroupByName, orderBy) {
+        const type = config.fields[config.groupBy[0]]?.type;
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
@@ -712,6 +713,7 @@ export class RelationalModel extends Model {
                 offset: config.offset,
                 limit: config.limit,
                 context: config.context,
+                is_relational: ["many2one", "one2many", "many2many"].includes(type),
             }
         );
     }

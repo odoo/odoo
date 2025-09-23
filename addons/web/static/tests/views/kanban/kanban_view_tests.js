@@ -15124,4 +15124,62 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.isNotVisible(target.querySelector(".o_cp_pager"));
     });
+
+//     QUnit.test("webReadGroup method with archived field", async (assert) => {
+//         assert.expect(4); // Won't work due to the mockServer way of applying domains
+//         serverData.models.category.fields.active = {
+//             string: "Active",
+//             type: "char",
+//             default: true,
+//         };
+
+//         debugger;
+
+//         // patchWithCleanup(KanbanRenderer.prototype, {
+//         //     _webReadGroup() {
+//         //         debugger;
+//         //         super._webReadGroup(...arguments);
+//         //         // assert.step("_webReadGroup");
+//         //         debugger;
+//         //     },
+//         // });
+
+//         serverData.models.category.records[0].active = false;
+//         serverData.models.category.records[1].active = true;
+
+//         const kanban = await makeView({
+//             type: "kanban",
+//             resModel: "partner",
+//             serverData,
+//             arch: `
+//                 <kanban class="o_kanban_test">
+//                     <field name="foo"/>
+//                     <templates>
+//                         <t t-name="kanban-box">
+//                             <div>
+//                                 <field name="foo"/>
+//                             </div>
+//                         </t>
+//                     </templates>
+//                 </kanban>`,
+//             groupBy: ["category_ids"],
+//             async mockRPC(route, args) {
+//                 if (args.method === "web_read_group") {
+//                     // assert.step("web_read_group");
+//                     debugger;
+//                 }
+//             },
+//         });
+
+//         assert.containsN(target, ".o_kanban_group", 3);
+
+//         debugger;
+//         serverData.models.category.records[0].active = false;
+//         // serverData.models.category.records[1].active = true;
+
+//         await reload(kanban, { groupBy: ["category_ids"] });
+
+//         assert.containsN(target, ".o_kanban_group", 2);
+
+//     });
 });

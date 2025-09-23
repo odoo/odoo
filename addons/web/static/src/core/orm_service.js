@@ -240,10 +240,24 @@ export class ORM {
         validateArray("domain", domain);
         validatePrimitiveList("fields", "string", fields);
         validatePrimitiveList("groupby", "string", groupby);
+        const extendedDomain = [...domain];
+        const { is_relational, ...realKwargs } = kwargs;
+        if (is_relational) {
+            groupby.forEach(field => {
+                const activeField = field + ".active";
+                if (!extendedDomain.find(d => d[0] === activeField)) {
+                    extendedDomain.push(
+                        '|',
+                        [field, '=', false],
+                        [activeField, '=', true]
+                    );
+                }
+            });
+        }
         return this.call(model, "web_read_group", [], {
-            ...kwargs,
+            ...realKwargs,
             groupby,
-            domain,
+            domain: extendedDomain,
             fields,
         });
     }
