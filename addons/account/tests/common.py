@@ -5,6 +5,7 @@ from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.account.tests.move_builder import Builders
 
 import json
 import base64
@@ -190,6 +191,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                 Command.link(cls.env.ref('account.group_account_user').id),
             ],
         })
+
+        cls.B = Builders(cls.env, partner=cls.partner_a)
 
     @classmethod
     def change_company_country(cls, company, country):
