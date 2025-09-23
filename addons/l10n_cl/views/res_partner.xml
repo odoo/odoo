@@ -9,9 +9,6 @@
             <field name="street2" position="attributes">
                 <attribute name="placeholder">Additional data address and city</attribute>
             </field>
-            <field name="city" position="attributes">
-                <attribute name="placeholder">Commune</attribute>
-            </field>
             <field name="state_id" position="attributes">
                 <attribute name="placeholder">Region</attribute>
             </field>
@@ -22,4 +19,14 @@
         </field>
     </record>
 
+    <record id="address_street_extended_city_form_l10n_cl" model="ir.ui.view">
+        <field name="name">partner.form.address.extended.city_id.l10n_cl</field>
+        <field name="inherit_id" ref="base_address_extended.address_street_extended_city_form"/>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <field name="city_id" position="attributes">
+                <attribute name="placeholder">Commune</attribute>
+            </field>
+        </field>
+    </record>
 </odoo>
