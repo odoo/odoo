@@ -14,16 +14,19 @@ export const LivechatLookingForHelpReloadMixin = (ViewController) =>
             const busService = useService("bus_service");
             this.reloadDebounced = useDebounced(() => this.model.load(), RELOAD_DEBOUNCE_DELAY);
             this.lookingForHelpOnUpdate = this.lookingForHelpOnUpdate.bind(this);
+            this.tagsOnUpdate = this.tagsOnUpdate.bind(this);
             busService.addChannel("im_livechat.looking_for_help");
             busService.subscribe(
                 "im_livechat.looking_for_help/update",
                 this.lookingForHelpOnUpdate
             );
+            busService.subscribe("im_livechat.looking_for_help/tags", this.tagsOnUpdate);
             onWillDestroy(() => {
                 busService.unsubscribe(
                     "im_livechat.looking_for_help/update",
                     this.lookingForHelpOnUpdate
                 );
+                busService.unsubscribe("im_livechat.looking_for_help/tags", this.tagsOnUpdate);
                 busService.deleteChannel("im_livechat.looking_for_help");
             });
         }
@@ -42,6 +45,16 @@ export const LivechatLookingForHelpReloadMixin = (ViewController) =>
                 .filter(Boolean);
             if (recordIdsToRemove.length) {
                 this.model.root._removeRecords(recordIdsToRemove);
+            }
+        }
+
+        tagsOnUpdate({ channel_id, tag_ids }) {
+            const channel = this.model.root.records.find((r) => r.resId === channel_id);
+            if (
+                JSON.stringify(channel?.data.livechat_conversation_tag_ids._currentIds) !==
+                JSON.stringify(tag_ids)
+            ) {
+                channel?.load();
             }
         }
     };
