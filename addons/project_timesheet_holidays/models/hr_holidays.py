@@ -83,7 +83,7 @@ class Holidays(models.Model):
     def _timesheet_create_lines(self):
         vals_list = []
         for leave in self:
-            if not leave.employee_id:
+            if not leave.employee_id or leave.holiday_status_id.time_type == 'other':
                 continue
             work_hours_data = leave.employee_id.list_work_time_per_day(
                 leave.date_from,
