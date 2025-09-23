@@ -1,7 +1,8 @@
-import { useSubEnv, useComponent, useState } from "@odoo/owl";
+import { useSubEnv, useComponent, useState, useChildSubEnv } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { PinnedMessagesPanel } from "@mail/core/common/pinned_messages_panel";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
 import { Action, UseActions } from "@mail/core/common/action";
@@ -57,6 +58,32 @@ registerThreadAction("rename-thread", {
     open: ({ owner }) => (owner.state.editingName = true),
     sequence: 30,
     sequenceGroup: 20,
+});
+registerThreadAction("pinned-messages", {
+    actionPanelComponent: PinnedMessagesPanel,
+    condition:({ owner, thread }) =>
+        thread?.model !== "mail.box" &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
+    panelOuterClass: "o-mail-PinnedMessagesPanel bg-inherit",
+    icon: "fa fa-fw fa-thumb-tack",
+    iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
+    name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
+    sequence: 20,
+    sequenceGroup: 10,
+    setup() {
+        useChildSubEnv({
+            pinMenu: {
+                open: () => this.open(),
+                close: () => {
+                    if (this.isActive) {
+                        this.close();
+                    }
+                },
+            },
+        });
+    },
+    toggle: true,
 });
 registerThreadAction("close", {
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,

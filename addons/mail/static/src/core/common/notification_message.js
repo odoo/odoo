@@ -33,6 +33,9 @@ export class NotificationMessage extends Component {
     async onClickNotificationMessage(ev) {
         this.store.handleClickOnLink(ev, this.props.thread);
         const { oeType, oeId } = ev.target.dataset;
+        if (oeType === "pin-menu") {
+            this.env.pinMenu?.open();
+        }
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(
                 this.store["mail.message"].insert({

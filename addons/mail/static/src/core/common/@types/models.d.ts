@@ -47,6 +47,12 @@ declare module "models" {
     export interface MailMessageSubtype extends MailMessageSubtypeClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
+    export interface Message extends MessageClass {
+        pin: () => Deferred<boolean>;
+        pinned_at: luxon.DateTime;
+        unpin: () => Deferred<boolean>;
+    }
+    export interface MailGuest extends MailGuestClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
@@ -58,7 +64,11 @@ declare module "models" {
     export interface ResRole extends ResRoleClass {}
     export interface ResUsers extends ResUsersClass {}
     export interface Settings extends SettingsClass {}
-    export interface Thread extends ThreadClass {}
+    export interface Thread extends ThreadClass {
+        fetchPinnedMessages: () => Promise<void>;
+        pinnedMessages: Message[];
+        pinnedMessagesState: "loaded"|"loading"|"error"|undefined;
+    }
     export interface Volume extends VolumeClass {}
 
     export interface Store {

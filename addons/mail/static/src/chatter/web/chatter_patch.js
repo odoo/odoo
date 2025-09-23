@@ -1,6 +1,7 @@
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { MessageCardList } from "@mail/core/common/message_card_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -34,6 +35,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    MessageCardList,
     RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
@@ -88,6 +90,7 @@ patch(Chatter.prototype, {
         Object.assign(this.state, {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
+            isPinnedMessagesActive: false,
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
@@ -172,7 +175,15 @@ patch(Chatter.prototype, {
             () => [this.props.isChatterAside]
         );
     },
+    
+    onClickPinnedMessages() {
+        this.state.ispinnedMessagesActive = !this.state.ispinnedMessagesActive;
+    },
 
+    get hasPinnedMessages() {
+        return this.state.thread?.pinnedMessages?.length > 0;
+    },
+    
     async updateRecipients(record, mode = this.state.composerType) {
         if (!record) {
             return;
@@ -299,6 +310,10 @@ patch(Chatter.prototype, {
             this.messageSearch.thread = this.state.thread;
             this.closeSearch();
         }
+    },
+
+    closePinnedMessages() {
+        this.state.ispinnedMessagesActive = false;
     },
 
     closeSearch() {

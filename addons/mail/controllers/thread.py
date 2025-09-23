@@ -71,6 +71,20 @@ class ThreadController(http.Controller):
             "messages": messages.ids,
         }
 
+    @http.route("/mail/thread/pinned_messages", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
+    @add_guest_to_context
+    def mail_thread_pins(self, thread_model, thread_id):
+        thread = self._get_thread_with_access(thread_model, thread_id, mode="read")
+        if not thread:
+            raise NotFound()
+        domain = [
+            ("res_id", "=", int(thread_id)),
+            ("model", "=", thread_model),
+            ("pinned_at", "!=", False),
+        ]
+        messages = request.env["mail.message"].search(domain).sorted(key="pinned_at", reverse=True)
+        return Store().add(messages).get_result()
+
     @http.route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients(self, thread_model, thread_id, message_id=None):
         """ Fetch discussion-based suggested recipients, creating partners on the fly """

@@ -2925,6 +2925,29 @@ class MailThread(models.AbstractModel):
                        for record in self]
         return self.sudo()._message_create(values_list)
 
+    def set_message_pin(self, message_id, pinned):
+        """ (Un)pin a message on the thread and send a notification to the
+        members.
+        :param message_id: id of the message to be pinned.
+        :param pinned: whether the message should be pinned or unpinned.
+        """
+        self.ensure_one()
+        message_to_update = self.env["mail.message"].search([
+            ["id", "=", message_id],
+            ["model", "=", self._name],
+            ["res_id", "=", self.id],
+            ["pinned_at", "=" if pinned else "!=", False],
+        ])
+        if not message_to_update:
+            return
+        message_to_update.flush_recordset(["pinned_at"])
+        # Use SQL because by calling write method, write_date is going to be updated, but we don't want pin/unpin
+        # a message changes the write_date
+        self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
+                            (fields.Datetime.now() if pinned else None, message_to_update.id))
+        message_to_update.invalidate_recordset(["pinned_at"])
+        Store(bus_channel=message_to_update._bus_channel()).add(message_to_update, "pinned_at").bus_send()
+
     # ------------------------------------------------------------
     # MAIL.MESSAGE HELPERS
     # ------------------------------------------------------------
