@@ -14,8 +14,8 @@ class L10nBRPortalAccount(L10nLatamBasePortalAccount):
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
         if self._is_brazilean_fiscal_country():
             rendering_values.update({
-                'city_sudo': partner_sudo.city_id,
-                'cities_sudo': request.env['res.city'].sudo().search([
+                'city': partner_sudo.city_id,
+                'state_cities': request.env['res.city'].sudo().search([
                     ('country_id.code', '=', 'BR'),
                 ]),
             })
@@ -25,8 +25,8 @@ class L10nBRPortalAccount(L10nLatamBasePortalAccount):
         mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
         if country_sudo.code == 'BR' and self._is_brazilean_fiscal_country():
             mandatory_fields.update({
-                'street_name', 'street2', 'street_number', 'city_id',
+                'street_name', 'street2', 'street_number',
             })
-            mandatory_fields -= {'street', 'city'}  # Brazil uses the base_extended_address fields added above
+            mandatory_fields.remove('street')
 
         return mandatory_fields

@@ -2,28 +2,9 @@
 <odoo>
 
     <template id="address_form_fields" inherit_id="portal.address_form_fields">
-        <!-- o_city must remain in DOM, otherwise the standard portal js breaks. -->
-        <input id="o_city" position="attributes">
-            <attribute name="class" separator=" " add="o_standard_address"/>
-        </input>
-        <input id="o_city" position="after">
-            <div t-if="res_company.account_fiscal_country_id.code == 'BR'" class="o_select_city">
-                <!-- will be replaced with SelectMenuWrapper -->
-                <select id="o_city_id" name="city_id" class="form-select">
-                    <option value="">City...</option>
-                    <option
-                        t-foreach="cities_sudo"
-                        t-as="c"
-                        t-att-value="c.id"
-                        t-att-selected="c.id == city_sudo.id"
-                        t-att-code="c.id"
-                        t-att-state-id="c.state_id.id"
-                        t-att-zip-ranges="c.l10n_br_zip_ranges"
-                        t-out="c.name"
-                    />
-                </select>
-            </div>
-        </input>
+        <xpath expr="//select[@name='city_id']/option[not(@value='')]" position="attributes">
+            <attribute name="t-att-zip-ranges" add="c.l10n_br_zip_ranges"/>
+        </xpath>
         <!-- put base_address_extended fields separately to be more user-friendly -->
         <div id="div_street" position="attributes">
             <attribute name="class" separator=" " add="o_standard_address"/>

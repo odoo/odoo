@@ -27,6 +27,6 @@ class ResPartner(models.Model):
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
-        frontend_writable_fields.update({'city_id', 'l10n_pe_district'})
+        frontend_writable_fields.add('l10n_pe_district')
 
         return frontend_writable_fields
