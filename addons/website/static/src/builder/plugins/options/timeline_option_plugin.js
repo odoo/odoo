@@ -1,3 +1,4 @@
+import { isElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -30,6 +31,11 @@ export class TimelineOptionPlugin extends Plugin {
         remove_disabled_reason_providers: (el) => {
             if (this.isLastTimelineItem(el)) {
                 return _t("You cannot remove the last item.");
+            }
+        },
+        is_node_empty_predicates: (el) => {
+            if (isElement(el) && el.matches(".s_timeline_row")) {
+                return !el.querySelector(".s_timeline_card");
             }
         },
     };
