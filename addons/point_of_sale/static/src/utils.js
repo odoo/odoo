@@ -1,3 +1,5 @@
+/* global QRCode */
+
 import { session } from "@web/session";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -190,4 +192,33 @@ export function orderUsageUTCtoLocalUtil(data) {
         result[formattedDt] = usage;
     }
     return result;
+}
+
+/**
+ * Generates a QR code as a data URL in SVG format for a given URL.
+ *
+ * @param {string} url - The URL or text to encode in the QR code.
+ * @param {Object} [options={}] - Optional configuration for the QR code.
+ * @param {number} [options.width=150] - The width of the QR code.
+ * @param {number} [options.height=150] - The height of the QR code.
+ * @param {number} [options.correctLevel=QRCode.CorrectLevel.L] - The error correction level for the QR code.
+ * @param {boolean} [options.useSVG=true] - Whether to generate the QR code as SVG.
+ * @param {Object} [options.rest] - Additional options to pass to the QRCode constructor.
+ * @returns {string} The QR code as a data URL in SVG format.
+ */
+export function generateQRCodeDataUrl(
+    url,
+    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+) {
+    const tempDiv = document.createElement("div");
+    const options = { width, height, correctLevel, ...rest };
+
+    new QRCode(tempDiv, { text: url, useSVG: true, ...options });
+
+    const svg = tempDiv.querySelector("svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+
+    const qr_code_svg = new XMLSerializer().serializeToString(svg);
+    return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
 }

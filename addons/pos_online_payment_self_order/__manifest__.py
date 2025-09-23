@@ -16,7 +16,7 @@
     'assets': {
         'pos_self_order.assets': [
             'pos_online_payment_self_order/static/src/app/**/*',
-            'web/static/lib/zxing-library/zxing-library.js',
+            'point_of_sale/static/lib/qrcode.js',
         ],
         'point_of_sale._assets_pos': [
             'pos_online_payment_self_order/static/src/overrides/**/*',
