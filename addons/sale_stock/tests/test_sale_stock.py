@@ -1962,6 +1962,34 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # check the qty delivered in the SOL
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
+    def test_sale_order_cancel_with_cyclic_returns(self):
+        """ Test Sale Order cancellation after recursive return creation causes cyclic stock moves. """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                })],
+        })
+
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.state, 'sale')
+
+        picking = sale_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+        self.assertTrue(picking, "Delivery picking should exist.")
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking')
+        return_wiz_1 = return_wizard.create({})
+        return_res_1 = return_wiz_1.action_create_returns_all()
+        return_picking_1 = self.env['stock.picking'].browse(return_res_1['res_id'])
+
+        return_wizard2 = self.env['stock.return.picking'].with_context(active_id=return_picking_1.id, active_model='stock.picking')
+        return_wiz_2 = return_wizard2.create({})
+        return_wiz_2.action_create_returns_all()
+
+        sale_order._action_cancel()
+        self.assertEqual(sale_order.state, 'cancel')
+
     def test_sol_reserved_qty_wizard_3_steps_delivery(self):
         """
         Check that the reserved qty wizard related to a sol is computed from

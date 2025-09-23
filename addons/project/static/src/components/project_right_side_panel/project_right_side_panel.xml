@@ -14,7 +14,7 @@
                         class="oe_button_box o-form-buttonbox d-print-none d-grid"
                         t-attf-style="grid-template-columns: repeat({{ state.gridTemplateColumns }}, 1fr);"
                     >
-                        <t t-foreach="state.data.buttons" t-as="button" t-key="button.sequence">
+                        <t t-foreach="state.data.buttons" t-as="button" t-key="button_index">
                             <ViewButton
                                 t-if="button.show"
                                 defaultRank="'oe_stat_button'"

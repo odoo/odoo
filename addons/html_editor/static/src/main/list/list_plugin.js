@@ -247,6 +247,10 @@ export class ListPlugin extends Plugin {
         // Apply changes.
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
+                // Clean before preserving cursors otherwise the saved cursors
+                // might reference a node that will be removed when setTagName
+                // eventually calls clean of its own.
+                this.dispatchTo("clean_handlers", list);
                 const cursors = this.dependencies.selection.preserveSelection();
                 const newList = this.switchListMode(list, mode);
                 cursors.remapNode(list, newList).restore();
