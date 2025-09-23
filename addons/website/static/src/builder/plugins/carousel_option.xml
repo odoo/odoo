@@ -84,7 +84,7 @@
             t-on-click="addSlide">
         <span class="oi fa-fw oi-plus"/>
     </button>
-    <button class="btn btn-danger py-0 px-1"
+    <button t-attf-class="btn py-0 px-1 #{ this.props.isRemoveAllowed(this.env.getEditingElement()) ? 'btn-danger' : 'btn-secondary' }"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="removeSlide">
