@@ -2005,9 +2005,10 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         field = self._fields[fname]
+        field_type = field.type
 
         if field.type == 'properties':
-            sql_expr = self._read_group_groupby_properties(alias, field, seq_fnames, query)
+            sql_expr, field_type = self._read_group_groupby_properties(alias, field, seq_fnames, query)
 
         elif seq_fnames:
             if field.type != 'many2one':
@@ -2059,10 +2060,10 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
             if granularity in READ_GROUP_NUMBER_GRANULARITY:
-                sql_expr = field.property_to_sql(sql_expr, granularity, self, alias, query)
+                sql_expr = field._generic_property_to_sql(field.type, sql_expr, granularity, self)
             elif field.type == 'datetime':
                 # set the timezone only
-                sql_expr = field.property_to_sql(sql_expr, 'tz', self, alias, query)
+                sql_expr = field.property_to_sql('datetime', sql_expr, 'tz', self)
 
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
@@ -2296,7 +2297,7 @@ class BaseModel(metaclass=MetaModel):
             sql = sql[property_name]
         return sql
 
-    def _read_group_groupby_properties(self, alias: str, field: Field, property_name: str, query: Query) -> SQL:
+    def _read_group_groupby_properties(self, alias: str, field: Field, property_name: str, query: Query) -> tuple[SQL, str]:
         fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
@@ -2342,7 +2343,7 @@ class BaseModel(metaclass=MetaModel):
                 condition,
             )
 
-            return SQL.identifier(property_alias)
+            sql = SQL.identifier(property_alias)
 
         elif property_type == 'selection':
             options = [option[0] for option in definition.get('selection') or ()]
@@ -2356,7 +2357,7 @@ class BaseModel(metaclass=MetaModel):
                 SQL("%s->>0 = %s", sql_property, SQL.identifier(property_alias)),
             )
 
-            return SQL.identifier(property_alias)
+            sql = SQL.identifier(property_alias)
 
         elif property_type == 'many2one':
             comodel = self.env.get(definition.get('comodel'))
@@ -2366,7 +2367,7 @@ class BaseModel(metaclass=MetaModel):
                     property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
                 ))
 
-            return SQL(
+            sql = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'number'
                          AND (%(property)s)::int IN (SELECT id FROM %(table)s)
@@ -2378,7 +2379,7 @@ class BaseModel(metaclass=MetaModel):
             )
 
         elif property_type == 'date':
-            return SQL(
+            sql = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'string'
                         THEN (%(property)s->>0)::DATE
@@ -2388,7 +2389,7 @@ class BaseModel(metaclass=MetaModel):
             )
 
         elif property_type == 'datetime':
-            return SQL(
+            sql = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'string'
                         THEN to_timestamp(%(property)s->>0, 'YYYY-MM-DD HH24:MI:SS')
@@ -2400,8 +2401,10 @@ class BaseModel(metaclass=MetaModel):
         elif property_type == 'html':
             raise UserError(_('Grouping by HTML properties is not supported.'))
 
-        # if the key is not present in the dict, fallback to false instead of none
-        return SQL("COALESCE(%s, 'false')", sql_property)
+        else:
+            # if the key is not present in the dict, fallback to false instead of none
+            sql = SQL("COALESCE(%s, 'false')", sql_property)
+        return sql, property_type
 
     @api.model
     def get_property_definition(self, full_name: str) -> dict:
