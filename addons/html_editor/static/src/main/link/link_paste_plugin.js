@@ -2,13 +2,13 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { URL_REGEX, cleanZWChars } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
-import { leftPos } from "@html_editor/utils/position";
+import { childNodeIndex } from "@html_editor/utils/position";
 
 export class LinkPastePlugin extends Plugin {
     static id = "linkPaste";
     static dependencies = ["link", "clipboard", "selection", "dom"];
     resources = {
-        before_paste_handlers: this.removeFullySelectedLink.bind(this),
+        before_paste_handlers: this.selectFullySelectedLink.bind(this),
         paste_text_overrides: this.handlePasteText.bind(this),
     };
 
@@ -98,17 +98,18 @@ export class LinkPastePlugin extends Plugin {
     /**
      * @param {EditorSelection} selection
      */
-    removeFullySelectedLink(selection) {
-        // Replace entire link if its label is fully selected.
+    selectFullySelectedLink(selection) {
         const link = closestElement(selection.anchorNode, "a");
-        if (link && cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText)) {
-            const start = leftPos(link);
-            link.remove();
-            // @doto @phoenix do we still want normalize:false?
+        if (
+            link?.parentElement?.isContentEditable &&
+            cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText) &&
+            !this.getResource("unremovable_node_predicates").some((p) => p(link))
+        ) {
             this.dependencies.selection.setSelection({
-                anchorNode: start[0],
-                anchorOffset: start[1],
-                normalize: false,
+                anchorNode: link.parentElement,
+                anchorOffset: childNodeIndex(link) + (selection.direction ? 0 : 1),
+                focusNode: link.parentElement,
+                focusOffset: childNodeIndex(link) + (selection.direction ? 1 : 0),
             });
         }
     }

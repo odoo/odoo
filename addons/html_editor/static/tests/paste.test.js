@@ -3051,6 +3051,28 @@ describe("link", () => {
             });
         });
 
+        test("should paste plain text content inside a link if all of its contents is selected but link is inside non-editable (not collapsed)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p contenteditable="false">a<a href="#" contenteditable="true">[xyz]</a>d</p>',
+                stepFunction: async (editor) => {
+                    pasteText(editor, "bc");
+                },
+                contentAfter:
+                    '<p contenteditable="false">a<a href="#" contenteditable="true">bc[]</a>d</p>',
+            });
+        });
+
+        test("should paste plain text content inside a link if all of its contents is selected but link is unremovable (not collapsed)", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="#" class="oe_unremovable">[xyz]</a>d</p>',
+                stepFunction: async (editor) => {
+                    pasteText(editor, "bc");
+                },
+                contentAfter: '<p>a<a href="#" class="oe_unremovable">bc[]</a>d</p>',
+            });
+        });
+
         test("should paste and transform plain text content over a link if all of its contents is selected (not collapsed)", async () => {
             await testEditor({
                 contentBefore: '<p><a href="#">[xyz]</a></p>',
