@@ -538,6 +538,7 @@ class MrpBom(models.Model):
             command = Command.create({
                 'product_qty': quantity,
                 'product_id': product_id,
+                'sequence': (self[child_field][-1:].sequence or 1) + 1,
             })
             self.write({child_field: [command]})
 
