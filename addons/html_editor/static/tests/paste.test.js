@@ -431,6 +431,15 @@ describe("Simple text", () => {
             });
         });
     });
+    test("should not paste a text when in contenteditable=false", async () => {
+        await testEditor({
+            contentBefore: '<div contenteditable="false">a[b]c</div>',
+            stepFunction: async (editor) => {
+                pasteText(editor, "xyz");
+            },
+            contentAfter: '<div contenteditable="false">a[b]c</div>',
+        });
+    });
 });
 
 describe("Simple html span", () => {
