@@ -10,7 +10,7 @@ from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon, assert_virtual_leaves_equal
 
 
 @tagged('post_install', '-at_install', 'accruals')
@@ -4014,3 +4014,115 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 28, "The carryover did not expire yet so the remaining leaves should be 28")
         allocation_data = leave_type.get_allocation_data(self.employee_emp, '2031-09-01')
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "The carryover expired after 6 month so the remaining leaves should be 23")
+
+    def _get_allocation_sample(self, leave_type, accrual_plan, date_from, date_to=False):
+        with Form(self.env['hr.leave.allocation'], 'hr_holidays.hr_leave_allocation_view_form_manager') as f:
+            f.name = 'Accrual allocation for employee'
+            f.allocation_type = 'accrual'
+            f.accrual_plan_id = accrual_plan
+            f.employee_id = self.employee_emp
+            f.holiday_status_id = leave_type
+            f.date_from = date_from
+            if date_to:
+                f.date_to = date_to
+        return f.record
+
+    def _get_leave_type_day_sample1(self):
+        return self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+        })
+
+    def _get_accrual_plan_sample0(self, added_value, accrued_gain_time):
+        return self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': accrued_gain_time,
+            'carryover_date': 'allocation',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value_type': 'day',
+                'added_value': added_value,
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'accrual_validity': True,
+                'accrual_validity_count': 3,
+                'accrual_validity_type': 'month',
+            })],
+        })
+
+    def test_accrual_plan_start_carryover_expiring_3_months(self):
+        """
+            Assert that days expires correctly for a monthly accrual plan granting days
+            at the start of the month (with a carryover validity of 3 months).
+
+            - Create an accrual plan:
+                - Carryover date: allocation start
+                - One level:
+                    - Accrues 2 days monthly at the start of each month
+                    - Carryover policy: all days carry over
+                    - Carried over days validity: 3 months.
+            - Create an allocation that uses the above accrual plan on 23/09/2025:
+                - Starts on 01/07/2024
+
+            Expected behavior: As the allocation was created on 23/09/2025, 24 days should've
+                been accrued from 01/07/2024 to 30/06/2025 (it will expire on 01/10/2025).
+        """
+        with freeze_time('2025-09-23'):
+            accrued_days = 2
+            accrual_plan = self._get_accrual_plan_sample0(accrued_days, 'start')
+            leave_type_day = self._get_leave_type_day_sample1()
+            allocation = self._get_allocation_sample(leave_type_day, accrual_plan, '2025-07-01')
+            allocation.action_approve()
+
+        assertions = [
+            # 13 months accruals
+            ('2026-07-01', 13 * accrued_days, 24),
+            # The day before 24 days should expire
+            ('2026-09-30', 15 * accrued_days, 24),
+            # Carryover expires + new monthly accrual
+            ('2026-10-01', 16 * accrued_days - 24, 0),
+            # Accrual keeps going
+            ('2026-11-01', 17 * accrued_days - 24, 0),
+        ]
+
+        for test_date, remaining_leaves, expiring_days in assertions:
+            with freeze_time(test_date):
+                assert_virtual_leaves_equal(self, test_date, allocation, leave_type_day, remaining_leaves, self.employee_emp, digits=2)
+                self.assertAlmostEqual(allocation.expiring_carryover_days, expiring_days, 2, msg=f'Incorrect number of expiring days for {test_date}')
+
+    def test_accrual_plan_end_carryover_expiring_3_months(self):
+        """
+            Same test than `test_accrual_plan_start_carryover_expiring_3_months`, but for an
+            accrual plan that grants days at the end of the month.
+
+            Expected behavior: As the allocation was created on 23/09/2025, 22 days should've
+                been accrued from 01/07/2024 to 30/06/2025 (it will expire on 01/10/2025).
+        """
+        with freeze_time('2025-09-23'):
+            accrued_days = 2
+            accrual_plan = self._get_accrual_plan_sample0(accrued_days, 'end')
+            leave_type_day = self._get_leave_type_day_sample1()
+            allocation = self._get_allocation_sample(leave_type_day, accrual_plan, '2025-07-01')
+            allocation.action_approve()
+
+        assertions = [
+            # 12 months accruals
+            # Do not include the 2 accrued days for 2026-07-01
+            # (otherwise it would be like wasting the days the employee earned trough the last month)
+            ('2026-07-01', 12 * accrued_days, 22),
+            # The day before 22 days should expire
+            ('2026-09-30', 14 * accrued_days, 22),
+            # Carryover expires + new monthly accrual
+            ('2026-10-01', 15 * accrued_days - 22, 0),
+            # Accrual keeps going
+            ('2026-11-01', 16 * accrued_days - 22, 0),
+        ]
+
+        for test_date, remaining_leaves, expiring_days in assertions:
+            with freeze_time(test_date):
+                assert_virtual_leaves_equal(self, test_date, allocation, leave_type_day, remaining_leaves, self.employee_emp, digits=2)
+                self.assertAlmostEqual(allocation.expiring_carryover_days, expiring_days, 2, msg=f'Incorrect number of expiring days for {test_date}')

@@ -61,3 +61,14 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
+
+
+def assert_virtual_leaves_equal(test, date, allocation, leave_type, value, employee, digits=False):
+    allocation._update_accrual()
+    allocation_data = leave_type.get_allocation_data(employee)
+    if digits:
+        test.assertAlmostEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            digits, f"Virtual leaves for date '{date}' are incorrect.")
+    else:
+        test.assertEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            f"Virtual leaves for date '{date}' are incorrect.")
