@@ -208,13 +208,17 @@ export class PosStore extends WithLazyGetterTrap {
         this.navigate(page, params);
     }
 
-    get defaultPage() {
+    get productScreenPage() {
         return {
             page: "ProductScreen",
             params: {
                 orderUuid: this.openOrder.uuid,
             },
         };
+    }
+
+    get defaultPage() {
+        return this.productScreenPage;
     }
 
     get firstPage() {
@@ -231,7 +235,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.resetCashier();
         }
 
-        return !this.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
+        return !this.cashier ? { page: "LoginScreen", params: {} } : this.productScreenPage;
     }
 
     get idleTimeout() {

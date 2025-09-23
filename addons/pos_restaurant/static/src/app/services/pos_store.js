@@ -18,17 +18,6 @@ patch(PosStore.prototype, {
         this.tableSelectorState = false;
         await super.setup(...arguments);
     },
-    get firstPage() {
-        const screen = super.firstPage;
-
-        if (!this.config.module_pos_restaurant) {
-            return screen;
-        }
-
-        return screen.page === "LoginScreen"
-            ? { page: "LoginScreen", params: {} }
-            : this.defaultPage;
-    },
     get openOrder() {
         if (this.config.module_pos_restaurant) {
             return (
