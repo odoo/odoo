@@ -159,15 +159,16 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         purchase1.button_confirm()
 
-        # Check order date of purchase order
-
-        date = fields.Datetime.from_string('2025-09-16 10:00:00')
+        # Check date deadline and date planned of purchase order. Supplier of product 2 has a delay of 2 days.
+        # The purchase order is planned on Tuesday 16th, so the date deadline is 2 days before, on Sunday 14th.
+        date_p = fields.Datetime.from_string('2025-09-16 10:00:00')
+        date_d = fields.Datetime.from_string('2025-09-14 10:00:00')
         self.assertRecordValues(purchase1, [{
-            'date_planned': date, 'date_order': date,
+            'date_planned': date_p, 'date_order': date_d,
         }])
         self.assertRecordValues(purchase1.order_line, [
-            {'date_planned': date, 'date_order': date},
-            {'date_planned': date, 'date_order': date},
+            {'date_planned': date_p},
+            {'date_planned': date_p},
         ])
 
     def test_merge_po_line(self):
