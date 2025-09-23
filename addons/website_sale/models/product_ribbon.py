@@ -34,8 +34,8 @@ class ProductRibbon(models.Model):
         string="Assign",
         selection=[
             ('manual', "Manually"),
-            ('sale', "on sale"),
-            ('new', "when new"),
+            ('sale', "On Sale"),
+            ('new', "When New"),
         ],
         required=True,
         default='manual',
