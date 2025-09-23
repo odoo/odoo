@@ -55,7 +55,9 @@ class AccountMoveSend(models.AbstractModel):
 
                 if invoice.l10n_ro_edi_document_ids:
                     # If a document is on the invoice, we shouldn't send it again
-                    invoice_data['error'] = _("The CIUS-RO E-Factura has already been sent")
+                    invoice_data['error'] = {
+                        'error_title': _("The CIUS-RO E-Factura has already been sent"),
+                    }
                     continue
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
@@ -63,7 +65,9 @@ class AccountMoveSend(models.AbstractModel):
                 elif invoice.ubl_cii_xml_id:
                     xml_data = invoice.ubl_cii_xml_id.raw
                 else:
-                    invoice_data['error'] = _("The CIUS-RO E-Factura could not be found")
+                    invoice_data['error'] = {
+                        'error_title': _("The CIUS-RO E-Factura could not be found"),
+                    }
                     continue
 
                 if errors := invoice._l10n_ro_edi_send_invoice(xml_data):
