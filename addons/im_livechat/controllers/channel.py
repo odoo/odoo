@@ -50,3 +50,12 @@ class LivechatChannelController(ChannelController):
             channel.sudo().livechat_conversation_tag_ids = [
                 Command.unlink(tag_id) for tag_id in tag_ids
             ]
+        if channel.livechat_status == "need_help":
+            request.env.ref("im_livechat.im_livechat_group_user")._bus_send(
+                "im_livechat.looking_for_help/tags",
+                {
+                    "channel_id": channel.id,
+                    "tag_ids": channel.sudo().livechat_conversation_tag_ids.ids,
+                },
+                subchannel="LOOKING_FOR_HELP",
+            )

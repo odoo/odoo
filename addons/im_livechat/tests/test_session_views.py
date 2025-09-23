@@ -68,34 +68,6 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
             login="operator",
         )
 
-    def test_looking_for_help_real_time_update(self):
-        bob = new_test_user(
-            self.env,
-            login="bob_looking_for_help",
-            groups="base.group_user,im_livechat.im_livechat_group_user",
-        )
-        self.livechat_channel.user_ids |= bob
-        self.authenticate(None, None)
-        data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {"channel_id": self.livechat_channel.id, "previous_operator_id": bob.partner_id.id},
-        )
-        chat = self.env["discuss.channel"].browse(data["channel_id"])
-        chat.livechat_status = "need_help"
-        looking_for_help_action = self.env.ref(
-            "im_livechat.discuss_channel_looking_for_help_action"
-        )
-        self.start_tour(
-            f"/odoo/action-{looking_for_help_action.id}",
-            "im_livechat.looking_for_help_list_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
-        self.start_tour(
-            f"/odoo/action-{looking_for_help_action.id}?view_type=kanban",
-            "im_livechat.looking_for_help_kanban_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
-
     def test_partner_display_name(self):
         user = new_test_user(self.env, login="agent", name="john")
         company = self.env["res.partner"].create({"name": "TestCompany", "is_company": True})
@@ -105,3 +77,53 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
             "john",
         )
         self.assertEqual(user.partner_id.display_name, "TestCompany, john")
+
+
+class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.bob = new_test_user(
+            cls.env,
+            login="bob_looking_for_help",
+            groups="base.group_user,im_livechat.im_livechat_group_user",
+        )
+        cls.livechat_channel.user_ids |= cls.bob
+        cls.looking_for_help_action = cls.env.ref(
+            "im_livechat.discuss_channel_looking_for_help_action"
+        )
+
+    def start_needhelp_session(self):
+        self.authenticate(None, None)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id, "previous_operator_id": self.bob.partner_id.id},
+        )
+        chat = self.env["discuss.channel"].browse(data["channel_id"])
+        chat.livechat_status = "need_help"
+
+    def test_looking_for_help_list_real_time_update(self):
+        self.start_needhelp_session()
+        self.start_tour(
+            f"/odoo/action-{self.looking_for_help_action.id}",
+            "im_livechat.looking_for_help_list_real_time_update_tour",
+            login="bob_looking_for_help",
+        )
+
+    def test_looking_for_help_kanban_real_time_update(self):
+        self.start_needhelp_session()
+        self.start_tour(
+            f"/odoo/action-{self.looking_for_help_action.id}?view_type=kanban",
+            "im_livechat.looking_for_help_kanban_real_time_update_tour",
+            login="bob_looking_for_help",
+        )
+
+    def test_looking_for_help_tags_real_time_update(self):
+        self.start_needhelp_session()
+        self.start_tour(
+            f"/odoo/action-{self.looking_for_help_action.id}",
+            "im_livechat.looking_for_help_tags_real_time_update_tour",
+            login="bob_looking_for_help",
+        )
