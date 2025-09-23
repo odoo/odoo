@@ -65,11 +65,6 @@ class IrUiMenu(models.Model):
         except FileNotFoundError:
             return False
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(self.env._('Error! You cannot create recursive menus.'))
-
     @api.model
     @tools.ormcache('frozenset(self.env.user._get_group_ids())', 'debug')
     def _visible_menu_ids(self, debug=False):

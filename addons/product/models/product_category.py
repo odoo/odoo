@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 
 
 class ProductCategory(models.Model):
@@ -42,11 +41,6 @@ class ProductCategory(models.Model):
             for sub_categ_id in categ.search([('id', 'child_of', categ.ids)]).ids:
                 product_count += group_data.get(sub_categ_id, 0)
             categ.product_count = product_count
-
-    @api.constrains('parent_id')
-    def _check_category_recursion(self):
-        if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive categories.'))
 
     @api.model
     def name_create(self, name):

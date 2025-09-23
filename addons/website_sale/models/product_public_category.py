@@ -115,13 +115,6 @@ class ProductPublicCategory(models.Model):
                 or any(category.mapped('child_id.has_published_products'))
             )
 
-    # === CONSTRAINT METHODS === #
-
-    @api.constrains('parent_id')
-    def check_parent_id(self):
-        if self._has_cycle():
-            raise ValueError(self.env._("Error! You cannot create recursive categories."))
-
     # === SEARCH METHODS === #
 
     @api.model
