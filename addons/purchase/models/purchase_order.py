@@ -1295,7 +1295,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         pol = self.order_line.filtered(
             lambda l: l.product_id.id == product_id
-            and l.get_parent_section_line().id == section_id,
+            and l.get_parent_section_line().id == section_id
         )
         if pol:
             if quantity != 0:
