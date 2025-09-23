@@ -18,10 +18,12 @@ export class NavigableList extends Component {
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
         position: { type: String, optional: true },
+        closeOnSelect: { type: Boolean, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
     static defaultProps = {
         position: "bottom",
+        closeOnSelect: true,
         isLoading: false,
     };
 
@@ -81,8 +83,10 @@ export class NavigableList extends Component {
     }
 
     close() {
-        this.state.open = false;
-        this.state.activeIndex = null;
+        if (this.props.closeOnSelect) {
+            this.state.open = false;
+            this.state.activeIndex = null;
+        }
     }
 
     selectOption(ev, index, params = {}) {
