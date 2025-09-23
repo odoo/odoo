@@ -4,10 +4,6 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { registry } from "@web/core/registry";
-
-// Add a to-do category for the command palette
-registry.category("command_categories").add("to-do", {}, { sequence: 105 });
 
 patch(ActivityMenu.prototype, {
     setup() {
@@ -21,7 +17,7 @@ patch(ActivityMenu.prototype, {
                 this.createActivityTodo();
             },
             {
-                category: "to-do",
+                category: "activity",
                 hotkey: "alt+shift+t",
                 global: true,
             }
