@@ -2472,7 +2472,11 @@ export class PosStore extends WithLazyGetterTrap {
                     productIds.add(p.id);
                 }
             }
-            allProducts = this.models["product.template"].filter((p) => productIds.has(p.id));
+            allProducts = this.models["product.template"].filter(
+                (p) =>
+                    productIds.has(p.id) ||
+                    this.session._pos_special_display_products_ids?.includes(p.id)
+            );
         }
         let list = [];
 
@@ -2520,7 +2524,11 @@ export class PosStore extends WithLazyGetterTrap {
                 continue;
             }
 
-            if (availableCateg.size && !p.pos_categ_ids.some((c) => availableCateg.has(c.id))) {
+            if (
+                availableCateg.size &&
+                !this.session._pos_special_display_products_ids?.includes(p.id) &&
+                !p.pos_categ_ids.some((c) => availableCateg.has(c.id))
+            ) {
                 continue;
             }
 

@@ -23,6 +23,9 @@ class ProductTemplate(models.Model):
             # Filter out products that can be loaded in the PoS but are not loaded yet
             product_ids_to_hide = product_ids_to_hide - product_ids_to_hide.filtered_domain(self._load_pos_data_domain(data))
         data['pos.session'][0]['_pos_special_products_ids'] += product_ids_to_hide.product_variant_id.ids
+
+        # Identify special loyalty products (e.g., gift cards, e-wallets) to be displayed in the POS
+        data['pos.session'][0]['_pos_special_display_products_ids'] = trigger_products.product_tmpl_id.ids
         res.extend(missing_product_templates)
 
         return res
