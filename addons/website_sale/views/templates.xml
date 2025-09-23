@@ -2129,7 +2129,7 @@
                                         </div>
                                     </div>
                                     <t
-                                        t-if="not is_fullwidth_content"
+                                        t-if="not is_fullwidth_content and is_view_active('website_sale.product_terms_and_conditions')"
                                         t-call="website_sale.product_terms_and_conditions"
                                     />
                                 </div>
@@ -2139,7 +2139,7 @@
                                 >
                                     <div class="o_wsale_product_sticky_col position-sticky">
                                         <t t-call="website_sale.cta_wrapper"/>
-                                        <t t-call="website_sale.product_terms_and_conditions"/>
+                                        <t t-if="is_view_active('website_sale.product_terms_and_conditions')" t-call="website_sale.product_terms_and_conditions"/>
                                     </div>
                                 </div>
                             </div>
