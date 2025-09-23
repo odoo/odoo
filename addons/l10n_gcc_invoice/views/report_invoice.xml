@@ -282,7 +282,7 @@
                                         <span t-field="line.quantity" class="text-nowrap"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td name="account_invoice_line_name">
+                                    <td class="text-end" name="account_invoice_line_name">
                                         <t t-if="line.product_id">
                                             <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
                                             <t t-set="arabic_name" t-value="line.with_context(lang=o.env['res.lang']._get_code('ar_001')).product_id.display_name"/>
