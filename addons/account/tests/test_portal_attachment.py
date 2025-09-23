@@ -48,8 +48,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 },
                 files={"ufile": file},
             )
-        self.assertEqual(res.status_code, 404)
-        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertEqual(res.status_code, 403)
+        self.assertIn("Forbidden", res.text)
 
         # Test public user can create attachment with token
         with file_open("addons/web/__init__.py") as file:
