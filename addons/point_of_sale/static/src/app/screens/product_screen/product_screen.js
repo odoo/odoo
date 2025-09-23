@@ -351,7 +351,11 @@ export class ProductScreen extends Component {
                     productIds.add(p.id);
                 }
             }
-            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+            return this.pos.models["product.product"].filter(
+                (p) =>
+                    productIds.has(p.id) ||
+                    this.pos.session._pos_special_display_products_ids?.includes(p.id)
+            );
         }
         return this.pos.models["product.product"].getAll();
     }

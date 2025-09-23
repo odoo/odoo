@@ -37,6 +37,9 @@ class ProductProduct(models.Model):
             self._process_pos_ui_product_product(products, config_id)
 
             data['pos.session']['data'][0]['_pos_special_products_ids'] += [product.id for product in reward_products if product.id not in [p["id"] for p in res['data']]]
+
+            # Identify special loyalty products (e.g., gift cards, e-wallets) to be displayed in the POS
+            data['pos.session']['data'][0]['_pos_special_display_products_ids'] = trigger_products.ids
             res['data'].extend(products)
         except AccessError as e:
             _logger.warning('Cannot load loyalty products into the PoS \n%s', e)
