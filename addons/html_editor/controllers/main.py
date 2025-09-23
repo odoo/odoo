@@ -314,6 +314,16 @@ class HTML_Editor(Controller):
             # the token, so we need to generate it using sudo
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
+
+            if request.env.user.share:
+                max_portal_file_size = int(request.env["ir.config_parameter"].sudo().get_int(
+                    "html_editor.max_portal_file_size",
+                    100_000_000,
+                ))
+                if not (attachment.mimetype or '').startswith('image/'):
+                    raise AccessError(request.env._("Non-internal users can only upload image."))
+                if attachment.file_size >= max_portal_file_size:
+                    raise AccessError(request.env._("Non-internal users can't upload large files."))
         else:
             attachment = get_existing_attachment(IrAttachment, attachment_data) \
                 or IrAttachment.create(attachment_data)

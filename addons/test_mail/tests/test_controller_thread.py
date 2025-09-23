@@ -1,3 +1,4 @@
+import base64
 import json
 
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
@@ -164,3 +165,26 @@ class TestMessageController(MailControllerThreadCommon):
             files={"ufile": b""},
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_thread_post_no_access(self):
+        """Test the case where the user tries to upload on a record he can't access."""
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        partner = self.env["res.partner"].create({"name": "partner"})
+
+        self.env['ir.rule'].create({
+            'name': 'Access Partner',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'domain_force': f"[('id', '!=', {partner.id})]"
+        })
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+
+        response = self.url_open(
+            "/mail/attachment/upload",
+            {
+                "csrf_token": self.csrf_token(),
+                "thread_id": partner.id,
+                "thread_model": "res.partner",
+            },
+            files={"ufile": base64.b64decode(b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")},
+        )
+        self.assertEqual(response.status_code, 404)
