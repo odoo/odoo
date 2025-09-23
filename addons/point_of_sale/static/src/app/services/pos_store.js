@@ -2573,7 +2573,11 @@ export class PosStore extends WithLazyGetterTrap {
                 continue;
             }
 
-            if (availableCateg.size && !p.pos_categ_ids.some((c) => availableCateg.has(c.id))) {
+            if (
+                availableCateg.size &&
+                !this.config._pos_special_display_products_ids?.includes(p.id) &&
+                !p.pos_categ_ids.some((c) => availableCateg.has(c.id))
+            ) {
                 continue;
             }
 
