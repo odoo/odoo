@@ -7,12 +7,12 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests.common import tagged, users
+from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
 
 
 @tagged("RTC", "post_install", "-at_install")
-class TestChannelRTC(MailCommon):
+class TestChannelRTC(MailCommon, HttpCase):
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -1286,3 +1286,10 @@ class TestChannelRTC(MailCommon):
         self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
         self.assertFalse(outdated_rtc_sessions.exists())
+
+    def test_07_call_invitation_ui(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
+        channel = self.env["discuss.channel"].with_user(bob)._create_group(partners_to=(bob | john).partner_id.ids)
+        channel.with_user(bob).self_member_id.sudo()._rtc_join_call()
+        self.start_tour("/odoo", "discuss_call_invitation.js", login="john")
