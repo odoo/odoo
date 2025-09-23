@@ -40,7 +40,7 @@
                 <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="member.avatarUrl"/>
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (member.isTyping ? 'ms-n2' : 'ms-n1')" size="'md'"/>
             </div>
-            <div t-ref="displayName" class="d-flex overflow-hidden flex-column">
+            <div t-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
             </div>
             <span class="ms-auto">
