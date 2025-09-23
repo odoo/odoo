@@ -2,38 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallInvitation">
-        <div class="o-discuss-CallInvitation d-flex flex-column m-2 rounded-3 border align-items-center position-relative" t-attf-class="{{ className }}" t-ref="root" t-att-class="{
-            'o-cameraPreview': state.videoStream,
-        }">
-            <div class="position-relative d-flex justify-content-center position-absolute h-100 w-100 rounded-3">
-                <video class="shadow rounded h-100 w-100 object-fit-cover rounded-3" autoplay="" t-ref="video"/>
-            </div>
-            <div t-if="props.thread.self_member_id?.rtc_inviting_session_id" class="o-discuss-CallInvitation-correspondent d-flex justify-content-around align-items-center text-nowrap px-3 mb-2 z-1" t-att-class="{
-                'align-self-start mt-3': state.videoStream,
-                'flex-column mt-4': !state.videoStream,
-            }">
-                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer object-fit-cover"
-                    t-att-src="props.thread.self_member_id?.rtc_inviting_session_id?.channel_member_id.avatarUrl"
-                    t-on-click="onClickAvatar"
-                    alt="Avatar"/>
-                <div class="d-flex pb-2 flex-column" t-att-class="{
-                    'justify-content-start ps-2': state.videoStream,
-                    'justify-content-center': !state.videoStream,
-                }">
-                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.self_member_id?.rtc_inviting_session_id.channel_member_id.name"/>
-                    <span class="opacity-75 smaller">
-                        <t t-if="props.thread.self_member_id?.rtc_inviting_session_id?.is_camera_on">Incoming Video Call...</t>
-                        <t t-else="">Incoming Call...</t>
-                    </span>
+        <div class="o-discuss-CallInvitation align-self-center o-rounded-bubble overflow-hidden shadow-sm" t-att-class="{'o-preview-open': state.showCameraPreview, 'o-chat': props.thread.channel_type === 'chat', 'border border-light': !store.isOdooWhiteTheme}">
+            <div class="d-flex flex-colum d-flex flex-column">
+                <div class="o-discuss-CallInvitation-main" t-ref="root">
+                    <div class="ms-1 position-relative d-flex justify-content-between p-2">
+                        <div class="d-flex align-items-center" style="min-width: 0;">
+                            <div class="o-mail-CallInvitation-avatar flex-shrink-0 cursor-pointer d-flex align-items-center justify-content-center rounded-circle overflow-hidden" t-att-class="{'bg-primary': !inviter}" t-on-click="() => props.thread.open()" t-att-title="avatarTitle">
+                                <img t-if="inviter" class="object-fit-cover h-100 w-100" t-att-src="inviter.avatarUrl" alt="Avatar"/>
+                                <i t-else="" class="fa fa-phone"/>
+                            </div>
+                            <div class="ms-2 me-3 flex-grow-1 overflow-hidden">
+                                <p class="o-discuss-CallInvitation-channelName m-0 fw-bold small text-truncate" t-esc="props.thread.displayName"/>
+                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1" t-esc="incomingCallText"/>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-shrink-0">
+                            <ActionList actions="acceptOrRejectActions" inline="true" hasBtnBg="true"/>
+                            <ActionList actions="otherActions" inline="true"/>
+                        </div>
+                    </div>
+                    <div class="o-discuss-CallInvitation-cameraPreview" t-att-class="{'o-opened': state.showCameraPreview}">
+                        <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center w-100 px-3 mt-auto gap-2 z-1" t-att-class="{ 'pb-3': state.videoStream }">
-                <ActionList actions="callActions.actions" inline="true" hasBtnBg="true"/>
-            </div>
-            <div t-if="!state.videoStream" class="py-3 z-1">
-                <span class="fw-bold smaller px-3 opacity-50 opacity-75-hover cursor-pointer" t-on-click="onClickPreviewCamera">Preview my camera</span>
             </div>
         </div>
     </t>
-
 </templates>
