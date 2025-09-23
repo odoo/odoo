@@ -35,9 +35,9 @@ class TestManual(common.TestAr):
         self.assertEqual(invoice.sequence_number, 1)
 
     def test_02_fiscal_position(self):
-        # ADHOC SA > IVA Responsable Inscripto > Without Fiscal Positon
+        # ADHOC SA > IVA Responsable Inscripto > Domestic
         invoice = self._create_invoice_ar({'partner': self.partner})
-        self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
+        self.assertEqual(invoice.fiscal_position_id, self.env.company.domestic_fiscal_position_id)
 
         # Consumidor Final > IVA Responsable Inscripto > Without Fiscal Positon
         invoice = self._create_invoice_ar({'partner': self.partner_cf})

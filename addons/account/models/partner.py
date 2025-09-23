@@ -168,12 +168,18 @@ class AccountFiscalPosition(models.Model):
     def map_tax(self, taxes):
         if not self:
             return taxes
+        self.ensure_one()
         if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
             return self.env['account.tax']
         return self.env['account.tax'].browse(unique(
             tax_id
             for tax in taxes
-            for tax_id in (self.tax_map or {}).get(tax.id, [tax.id])
+            for tax_id in self.tax_map.get(
+                tax.id,
+                # If not in tax_map, a tax is mapped to itself if it has 'self' as fiscal position
+                # or it has no fiscal position. Else it's removed.
+                [tax.id] if self in tax.fiscal_position_ids or not tax.fiscal_position_ids else [],
+            )
         ))
 
     def map_account(self, account):
