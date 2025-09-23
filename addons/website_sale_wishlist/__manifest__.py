@@ -10,10 +10,11 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
     'version': '1.0',
     'depends': ['website_sale'],
     'data': [
-        'security/website_sale_wishlist_security.xml',
+        'security/ir_rule.xml',
         'security/ir.model.access.csv',
-        'views/website_sale_wishlist_template.xml',
-        'views/website_sale_wishlist_template_svg.xml',
+
+        'views/templates.xml',
+        'views/svg_templates.xml',
     ],
     'installable': True,
     'assets': {
