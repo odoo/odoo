@@ -152,17 +152,18 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start mx-1"
+    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': isAlignedRight,
-            'o-mt-0_5': message.bubbleColor and !props.asCard and !isMobileOS,
+            'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
             'my-n2': !message.bubbleColor and !props.asCard and !isMobileOS,
+            'gap-1': isMobileOS,
+            'mx-1': !isMobileOS,
             'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen
         }"
     >
         <t t-if="isMobileOS">
-            <t t-call="mail.Message.emptyQuickAction"/>
             <Dropdown state="optionsDropdown" menuClass="store.discussDropdownMenuClass(this)">
                 <button class="d-none"/>
                 <t t-set-slot="content">
@@ -171,17 +172,19 @@
             </Dropdown>
         </t>
         <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
+        <t t-if="isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
             <ActionList actions="actions" inline="true" fw="false" groupClass="'gap-1'"/>
             <t t-foreach="Array.from({ length: quickActionCount - quickActions.length - 1 })" t-as="emptyQuickAction" t-key="emptyQuickAction_index">
                 <t t-call="mail.Message.emptyQuickAction"/>
             </t>
         </div>
+        <t t-if="isMobileOS and !isReverse" t-call="mail.Message.emptyQuickAction"/>
     </div>
 </t>
 
 <t t-name="mail.Message.emptyQuickAction">
-    <button class="btn border-0 p-0 rounded-0 opacity-0 pe-none">
+    <button class="btn border-0 o-p-0_5 rounded-0 opacity-0 pe-none">
         <i class="fa-lg fa fa-question"/>
     </button>
 </t>
