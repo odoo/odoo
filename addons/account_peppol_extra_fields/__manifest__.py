@@ -8,7 +8,7 @@ by the 'account_peppol_advanced_fields' module
     'author': "Odoo S.A.",
     'category': 'Accounting/Accounting',
     'version': '0.1',
-    'depends': ['account_peppol_advanced_fields'],
+    'depends': ['account_peppol_advanced_fields', 'account_peppol'],
     'data': [
         'views/account_move_views.xml',
         'views/account_tax_views.xml',

@@ -10,8 +10,13 @@ class AccountMove(models.Model):
     peppol_additional_document_reference = fields.Char(string="Additional Reference")
 
     ubl_cii_xml_filename = fields.Char(compute=False)
+    enable_ubl_cii_xml_file = fields.Boolean(compute='_compute_enable_ubl_cii_xml_file')
 
     def _compute_filename(self):
         # OVERRIDE account_edi_ubl_cii
         # To be removed in master
         pass
+
+    def _compute_enable_ubl_cii_xml_file(self):
+        for move in self:
+            move.enable_ubl_cii_xml_file = move.journal_id.type != 'purchase' if move.journal_id else False

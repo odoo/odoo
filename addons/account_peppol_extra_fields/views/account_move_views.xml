@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <field name="ubl_cii_xml_file" position="attributes">
                     <attribute name="widget">binary</attribute>
-                    <attribute name="options">{'accepted_file_extensions': '.xml', 'allowed_mime_type': 'application/xml'}</attribute>
+                    <attribute name="options">{'accepted_file_extensions': '.xml'}</attribute>
+                    <attribute name="groups">base.group_no_one</attribute>
+                    <attribute name="invisible">not enable_ubl_cii_xml_file</attribute>
                 </field>
             </field>
         </record>

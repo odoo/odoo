@@ -14,13 +14,13 @@
 
             <group name="advanced_booleans" position="after">
                 <group name="einvoicing" string="E-Invoicing">
-                    <field name="ubl_cii_tax_category_code"/>
+                    <field name="ubl_cii_tax_category_code" invisible="amount_type == 'fixed'"/>
                     <field name="ubl_cii_tax_exemption_reason_code"
-                           invisible="not ubl_cii_requires_exemption_reason"
+                           invisible="amount_type == 'fixed' or not ubl_cii_requires_exemption_reason"
                            required="ubl_cii_requires_exemption_reason"/>
                     <field name="ubl_cii_allowance_reason_code"
                            widget="value_label_selection_field"
-                           invisible="amount_type == 'percent' or amount &gt; 0.0"/>
+                           invisible="amount_type == 'percent' or amount &gt;= 0.0"/>
                     <field name="ubl_cii_charge_reason_code"
                            widget="value_label_selection_field"
                            invisible="amount_type == 'percent' or amount &lt; 0.0"/>
