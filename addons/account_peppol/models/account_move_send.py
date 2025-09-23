@@ -166,7 +166,9 @@ class AccountMoveSend(models.AbstractModel):
             if 'peppol' in invoice_data['sending_methods']:
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
+                    invoice_data['error'] = {
+                        'error_title': _('The partner is missing Peppol EAS and/or Endpoint identifier.')
+                    }
                     continue
 
                 if (peppol_verification_state := self.env['res.partner']._get_peppol_verification_state(
@@ -177,9 +179,12 @@ class AccountMoveSend(models.AbstractModel):
                 )) != 'valid':
                     invoice.peppol_move_state = 'error'
                     if peppol_verification_state == 'not_valid_format':
-                        invoice_data['error'] = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
+                        error_title = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
                     else:
-                        invoice_data['error'] = _('Please verify partner configuration in partner settings.')
+                        error_title = _('Please verify partner configuration in partner settings.')
+                    invoice_data['error'] = {
+                        'error_title': error_title,
+                    }
                     continue
 
                 if not self._is_applicable_to_move('peppol', invoice, **invoice_data):
@@ -221,13 +226,15 @@ class AccountMoveSend(models.AbstractModel):
         except AccountEdiProxyError as e:
             for invoice, invoice_data in invoices_data_peppol.items():
                 invoice.peppol_move_state = 'error'
-                invoice_data['error'] = e.message
+                invoice_data['error'] = {'error_title': e.message}
         else:
             if error_vals := response.get('error'):
                 # at the moment the only error that can happen here is ParticipantNotReady error
                 for invoice, invoice_data in invoices_data_peppol.items():
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = edi_user._get_peppol_error_message(error_vals)
+                    invoice_data['error'] = {
+                        'error_title': edi_user._get_peppol_error_message(error_vals),
+                    }
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move

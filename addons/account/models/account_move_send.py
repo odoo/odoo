@@ -332,31 +332,25 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _format_error_text(self, error):
-        """ Format the error that can be either a dict (complex format needed) or a string (simple format) into a
-        regular string.
+        """ Format the error that can be a dict (complex format needed)
 
         :param error: the error to format.
         :return: a text formatted error.
         """
-        if isinstance(error, dict):
-            errors = '\n- '.join(error['errors'])
-            return f"{error['error_title']}\n- {errors}" if errors else error['error_title']
-        else:
-            return error
+        errors = '\n- '.join(error.get('errors', ''))
+        return f"{error['error_title']}\n- {errors}" if errors else error['error_title']
 
     @api.model
     def _format_error_html(self, error):
-        """ Format the error that can be either a dict (complex format needed) or a string (simple format) into a
-        valid html format.
+        """ Format the error that can be a dict (complex format needed)
 
         :param error: the error to format.
         :return: a html formatted error.
         """
-        if isinstance(error, dict):
-            errors = Markup().join(Markup("<li>%s</li>") % error for error in error['errors'])
-            return Markup("%s<ul>%s</ul>") % (error['error_title'], errors)
-        else:
-            return error
+        if 'errors' not in error:
+            return error['error_title']
+        errors = Markup().join(Markup("<li>%s</li>") % error for error in error['errors'])
+        return Markup("%s<ul>%s</ul>") % (error['error_title'], errors)
 
     # -------------------------------------------------------------------------
     # SENDING METHODS

@@ -881,7 +881,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         def call_web_service_after_invoice_pdf_render(record, invoices_data):
             for invoice_data in invoices_data.values():
-                invoice_data['error'] = "turlututu"
+                invoice_data['error'] = {'error_title': "turlututu"}
 
         with patch(
                 'odoo.addons.account.models.account_move_send.AccountMoveSend._call_web_service_after_invoice_pdf_render',
@@ -902,7 +902,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=['email'])
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-            invoice_data['error'] = 'test_proforma_pdf'
+            invoice_data['error'] = {'error_title': 'test_proforma_pdf'}
 
         # Process.
         with patch(
@@ -923,7 +923,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=['email'])
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-            invoice_data['error'] = 'prout'
+            invoice_data['error'] = {'error_title': 'prout'}
             invoice_data['error_but_continue'] = True
 
         # Process.
@@ -986,7 +986,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         def _call_web_service_after_invoice_pdf_render(self, invoices_data):
             for move_data in invoices_data.values():
-                move_data['error'] = 'service_failed_after'
+                move_data['error'] = {'error_title': 'service_failed_after'}
 
         # Process.
         with patch(
@@ -1008,7 +1008,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         def _call_web_service_before_invoice_pdf_render(self, invoices_data):
             for move_data in invoices_data.values():
-                move_data['error'] = 'service_failed_before'
+                move_data['error'] = {'error_title': 'service_failed_before'}
 
         # Process.
         with patch(
@@ -1065,7 +1065,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
             if invoice.id in invoices_error.ids:
-                invoice_data['error'] = 'blblblbl'
+                invoice_data['error'] = {'error_title': 'blblblbl'}
 
         self.assertTrue(all(invoice.sending_data for invoice in invoices_success + invoices_error))
         self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_1.id for invoice in invoices_success))
