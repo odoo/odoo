@@ -71,11 +71,30 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Confirm the new menu entry without a url",
         trigger: '.modal-footer .btn-primary',
     },
+    // menu item with spaces in the URL
     {
         content: "It didn't save without a url. Fill url input.",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
-        run: 'text #',
+        run: 'text Page url with spaces',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: ".modal-footer .btn-primary",
+    },
+    {
+        content: "Open edit mode again to check that the url was slugified",
+        trigger: ".modal-dialog .o_website_dialog li:contains('Random!') .js_edit_menu",
+        run: "click",
+    },
+    {
+        content: "Verify slugified url",
+        trigger: ".modal-dialog .o_website_dialog input#url_input",
+        run() {
+            if (this.$anchor[0]["value"] !== "page-url-with-spaces") {
+                console.error("The url should have been slugified to 'page-url-with-spaces'");
+            }
+        },
     },
     {
         content: "Confirm the new menu entry",

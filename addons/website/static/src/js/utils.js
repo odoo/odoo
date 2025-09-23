@@ -461,6 +461,30 @@ export function cloneContentEls(content, keepScripts = false) {
     return copyFragment;
 }
 
+/**
+ * Converts a plain string to a SEO-friendly URL slug.
+ *
+ * - Trims whitespace
+ * - Normalizes Unicode (NFKD)
+ * - Converts to lowercase
+ * - Replaces whitespace with hyphens
+ * - Removes non-word characters except hyphens
+ * - Collapses multiple hyphens
+ *
+ * @param {string} value - The input string to slugify
+ * @returns {string} - The slugified string
+ */
+function slugify(value) {
+    return value
+        .trim()
+        .normalize("NFKD") // `NFKD` as in `http_routing` python `slugify()`
+        .toLowerCase()
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w-]+/g, "") // Remove all non-word chars
+        .replace(/--+/g, "-") // Replace multiple - with single -
+        .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -476,4 +500,5 @@ export default {
     isMobile: isMobile,
     getParsedDataFor: getParsedDataFor,
     cloneContentEls: cloneContentEls,
+    slugify: slugify,
 };

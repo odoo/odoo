@@ -68,6 +68,13 @@ export class MenuDialog extends Component {
             }
         }
     }
+
+    _updateInputValue(ev) {
+        // slugify the URL if it contains spaces
+        if (/\s/.test(ev.target.value)) {
+            this.url.input.value = wUtils.slugify(ev.target.value);
+        }
+    }
 }
 MenuDialog.template = 'website.MenuDialog';
 MenuDialog.props = {
