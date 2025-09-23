@@ -97,7 +97,7 @@ class AccountMove(models.Model):
             Send new 11 that has not yet been sent, it should have gotten index AB but did not receive it.
             => In the messages, 2 invoices with name 11 and both index AA and AB.
         """
-        invoice_names = {message['answer']['invoice']['name'] for message in sent_invoices_accepted_messages if 'error' not in message}
+        invoice_names = {message['answer']['invoice']['name'] for message in sent_invoices_accepted_messages if 'error' not in message['answer']}
         invoice_indexes = [message['id_solicitare'] for message in sent_invoices_accepted_messages]
         domain = expression.AND([
             [('company_id', '=', self.env.company.id)],
@@ -121,7 +121,7 @@ class AccountMove(models.Model):
 
             if not invoice:
                 # The move related to the message does not have an index
-                if 'error' in message or not name_to_move.get(message['answer']['invoice']['name']):
+                if 'error' in message['answer'] or not name_to_move.get(message['answer']['invoice']['name']):
                     continue
 
                 # An invoice with the same name has been found
@@ -131,11 +131,11 @@ class AccountMove(models.Model):
                 # timeout for unknown reasons during the upload
                 invoice.l10n_ro_edi_index = message['id_solicitare']
 
-            if 'error' in message:
+            if 'error' in message['answer']:
                 document_ids_to_delete += invoice._l10n_ro_edi_get_sending_and_failed_documents().ids
                 error_message = _(
                     "Error when trying to download the E-Factura data from the SPV: %s",
-                    message['error'],
+                    message['answer']['error'],
                 )
                 invoice._l10n_ro_edi_create_document_invoice_sending_failed(error_message)
                 continue
@@ -180,11 +180,11 @@ class AccountMove(models.Model):
             if not invoice:
                 continue
 
-            if 'error' in message:
+            if 'error' in message['answer']:
                 document_ids_to_delete += invoice._l10n_ro_edi_get_sending_and_failed_documents().ids
                 error_message = _(
                     "Error when trying to download the E-Factura data from the SPV: %s",
-                    message['error']
+                    message['answer']['error']
                 )
                 invoice._l10n_ro_edi_create_document_invoice_sending_failed(error_message)
                 continue
@@ -217,7 +217,7 @@ class AccountMove(models.Model):
                             ('invoice_date', 'in', [message['answer']['invoice']['date'], False])
                         ]
                         for message in received_bills_messages
-                        if 'error' not in message
+                        if 'error' not in message['answer']
                     ]),
                 ]),
                 [('l10n_ro_edi_index', 'in', [message['id_solicitare'] for message in received_bills_messages])],
@@ -233,7 +233,7 @@ class AccountMove(models.Model):
         }
 
         for message in received_bills_messages:
-            if 'error' in message:
+            if 'error' in message['answer']:
                 continue
 
             if message['id_solicitare'] in indexed_similar_bills:
