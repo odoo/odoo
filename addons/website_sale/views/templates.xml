@@ -2139,6 +2139,7 @@
                                             t-call="website_sale.cta_wrapper"
                                         />
                                         <t
+                                            t-if="is_view_active('website_sale.product_terms_and_conditions')"
                                             t-call="website_sale.product_terms_and_conditions"
                                         />
                                     </div>
