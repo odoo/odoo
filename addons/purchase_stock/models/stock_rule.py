@@ -156,9 +156,10 @@ class StockRule(models.Model):
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         *procurement, po))
                     # Check if we need to advance the order date for the new line
-                    order_date_planned = procurement.values['date_planned'] - relativedelta(
+                    date_planned = po.date_planned or min(v['date_planned'] for v in po_line_values)
+                    order_date_planned = date_planned - relativedelta(
                         days=procurement.values['supplier'].delay)
-                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order) and partner.group_rfq != 'week':
+                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
 
             self.env['purchase.order.line'].sudo().create(po_line_values)
@@ -331,10 +332,6 @@ class StockRule(models.Model):
         values = values[0]
         partner = values['supplier'].partner_id
         currency = values['supplier'].currency_id
-
-        if partner.group_rfq == 'week' and partner.group_on != 'default':
-            delta_days = (7 + int(partner.group_on) - purchase_date.isoweekday()) % 7
-            purchase_date += relativedelta(days=delta_days)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
