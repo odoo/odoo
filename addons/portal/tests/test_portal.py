@@ -96,6 +96,8 @@ class TestUsersHttp(HttpCase):
             'type': 'invoice',
             'parent_id': portal_user.commercial_partner_id.id,
         })
+        if 'enforce_cities' in self.env['res.country']._fields:
+            self.env.company.country_id.enforce_cities = False
         common_data = {
             'phone': '1234567890',
             'email': 'anonymous-user@example.com',

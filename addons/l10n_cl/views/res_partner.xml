@@ -1,25 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="cl_partner_address_form" model="ir.ui.view">
+        <field name="name">partner.form.address.extended</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="country_enforce_cities" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="street" placeholder="Street..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="street2" placeholder="Additional data address and city" class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="city_id"
+                           placeholder="Commune"
+                           class="o_address_city"
+                           domain="[('country_id', '=', country_id)]"
+                           invisible="not country_enforce_cities"
+                           readonly="type == 'contact' and parent_id"
+                           context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+                    <field name="city"
+                           placeholder="Commune"
+                           class="o_address_city"
+                           invisible="country_enforce_cities and (city_id or city in ('', False))"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="state_id"
+                           class="o_address_state"
+                           placeholder="Region"
+                           readonly="type == 'contact' and parent_id"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_country_id': country_id}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="country_id"
+                           placeholder="Country"
+                           class="o_address_country"
+                           readonly="type == 'contact' and parent_id"
+                           options="{'no_open': True, 'no_create': True}"/>
+                </div>
+            </form>
+        </field>
+    </record>
 
     <record id="view_move_form" model="ir.ui.view">
         <field name="name">res.partner.placeholders.l10n_cl.form</field>
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <field name="street2" position="attributes">
-                <attribute name="placeholder">Additional data address and city</attribute>
-            </field>
-            <field name="city" position="attributes">
-                <attribute name="placeholder">Commune</attribute>
-            </field>
-            <field name="state_id" position="attributes">
-                <attribute name="placeholder">Region</attribute>
-            </field>
             <field name="vat" position="after">
-                <field name="l10n_cl_sii_taxpayer_type" invisible="'CL' not in fiscal_country_codes" readonly="parent_id"/>
+                <field name="l10n_cl_sii_taxpayer_type" placeholder="Taxpayer Type" invisible="'CL' not in fiscal_country_codes" readonly="parent_id"/>
                 <field name="l10n_cl_activity_description" placeholder="Activity Description" invisible="'CL' not in fiscal_country_codes"/>
             </field>
         </field>
     </record>
-
 </odoo>

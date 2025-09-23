@@ -1,28 +1,7 @@
 import { patch } from '@web/core/utils/patch';
-import { patchDynamicContent } from '@web/public/utils';
 import { CustomerAddress } from '@portal/interactions/address';
-import { SelectMenuWrapper } from '@l10n_latam_base/components/select_menu_wrapper/select_menu_wrapper';
 
 patch(CustomerAddress.prototype, {
-    setup() {
-        super.setup();
-        patchDynamicContent(this.dynamicContent, {
-            'input[name="zip"]': { 't-on-input': this.onChangeZip.bind(this) },
-            '.o_select_city': { 't-on-change': this.onChangeBrazilianCity.bind(this) },
-        });
-
-        this.citySelect = this.el.querySelector('select[name="city_id"]');
-    },
-
-    async willStart() {
-        await this.waitFor(super.willStart());
-        if (this.countryCode !== 'BR') return;
-
-        this.mountComponent(
-            this.citySelect.parentElement, SelectMenuWrapper, { el: this.citySelect }
-        );
-        await this._onChangeCountry();
-    },
 
     _selectState(id) {
         this.addressForm.querySelector(
@@ -30,12 +9,13 @@ patch(CustomerAddress.prototype, {
         ).selected = 'selected';
     },
 
-    onChangeZip() {
+    async onChangeZip() {
+        await super.onChangeZip();
         if (this.countryCode !== 'BR' || this._getSelectedCountryCode() !== 'BR') return;
 
         const newZip = this.addressForm.zip.value.padEnd(5, '0');
 
-        for (const option of this.addressForm.querySelectorAll('.o_select_city option')) {
+        for (const option of this.addressForm.querySelectorAll('select[name="city_id"] option')) {
             const ranges = option.getAttribute('zip-ranges');
             if (ranges) {
                 // Parse the l10n_br_zip_ranges field (e.g. "[01000-001 05999-999] [08000-000 08499-999]").
@@ -48,7 +28,7 @@ patch(CustomerAddress.prototype, {
 
                     // Rely on lexicographical order to figure out if the new zip is in this range.
                     if (newZip >= start && newZip <= end) {
-                        this.citySelect.dispatchEvent(
+                        this.elementCities.dispatchEvent(
                             new CustomEvent('select', { detail: { value: option.value } })
                         );
                         option.selected = 'selected';
@@ -60,13 +40,14 @@ patch(CustomerAddress.prototype, {
         }
     },
 
-    onChangeBrazilianCity() {
+    async onChangeCity() {
+        await super.onChangeCity();
         if (this.countryCode !== 'BR' || this._getSelectedCountryCode() !== 'BR') return;
 
-        if (this.addressForm.city_id.value) {
+        if (this.elementCities.value) {
             this._selectState(
-                this.addressForm.city_id
-                    .querySelector(`option[value='${this.addressForm.city_id.value}']`)
+                this.elementCities
+                    .querySelector(`option[value='${this.elementCities.value}']`)
                     .getAttribute('state-id')
             );
         }
@@ -88,6 +69,15 @@ patch(CustomerAddress.prototype, {
 
             el.querySelectorAll('input').forEach((input) => (input.disabled = !should_show));
         });
+    },
+
+    async onChangeState() {
+        // For BR: don't want the standard behavior of reloading cities based on state
+        if (this.countryCode == 'BR' && this._getSelectedCountryCode() == 'BR') {
+            this.elementCities.value = '';
+            return;
+        }
+        return await super.onChangeState();
     },
 
     async _onChangeCountry(init=false) {
