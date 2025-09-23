@@ -368,8 +368,8 @@ class TestAPI(SavepointCaseWithUserDemo):
         ners = partners.browse(partners.ids[5:])
         self.assertNotEqual(part._prefetch_ids, ners._prefetch_ids)
 
-        self.assertNotEqual(set(prefetch_ids), set((partners & ners)._prefetch_ids))
-        self.assertNotEqual(set(prefetch_ids), set((partners - ners)._prefetch_ids))
+        self.assertEqual(prefetch_ids, (partners & ners)._prefetch_ids)
+        self.assertEqual(prefetch_ids, (partners - ners)._prefetch_ids)
 
         self.assertEqual(prefetch_ids, (part + ners)._prefetch_ids)
         self.assertEqual(prefetch_ids, (part | ners)._prefetch_ids)
