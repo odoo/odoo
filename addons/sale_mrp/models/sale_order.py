@@ -20,7 +20,9 @@ class SaleOrder(models.Model):
     @api.depends('stock_reference_ids.production_ids')
     def _compute_mrp_production_ids(self):
         for sale in self:
-            sale.mrp_production_ids = sale.stock_reference_ids.production_ids.filtered(lambda mo: mo.sale_line_id.order_id == sale)
+            # We want only manufacturing orders of first level
+            mos = sale.stock_reference_ids.production_ids
+            sale.mrp_production_ids = mos.filtered(lambda mo: not mo.production_group_id.parent_ids and mo.state != 'cancel')
             sale.mrp_production_count = len(sale.mrp_production_ids)
 
     def action_view_mrp_production(self):
