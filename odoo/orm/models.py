@@ -5908,7 +5908,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
-            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
+            ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
+            return self.__class__(self.env, ids, self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -5920,7 +5921,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
+            ids = {id_: None for id_ in self._ids if id_ in other_ids}
+            return self.__class__(self.env, tuple(ids), self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
