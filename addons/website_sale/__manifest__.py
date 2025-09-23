@@ -31,7 +31,6 @@
 
         # QWeb templates
         'views/templates/product_tile_templates.xml',
-        'views/templates/delivery_form_templates.xml',
         'views/templates/gmc_templates.xml',
         'views/templates/product_page_templates.xml',
         'views/templates/sale_portal_templates.xml',
