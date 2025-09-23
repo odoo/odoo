@@ -153,7 +153,7 @@
 </t>
 
 <t t-name="mail.Composer.moreActions">
-    <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}">
+    <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="more-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <ActionList inline="true" actions="[{
