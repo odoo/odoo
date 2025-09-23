@@ -102,12 +102,23 @@ test("composer should display a GIF button", async () => {
     await contains("button[title='Add GIFs']");
 });
 
-test("Composer GIF button should open the GIF picker", async () => {
+test("Composer GIF button should open the GIF picker (discuss app)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker");
+});
+
+test("Composer GIF button should open the GIF picker (chat window)", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains('General')");
+    await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
+    await click(".o-dropdown-item:contains('Add GIFs')");
     await contains(".o-discuss-GifPicker");
 });
 
