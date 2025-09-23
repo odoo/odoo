@@ -585,7 +585,7 @@
         <field name="res_model">hr.employee.skill</field>
         <field name="path">certifications</field>
         <field name="domain">[('is_certification', '=', True)]</field>
-        <field name="context">{'show_employee': True, 'search_default_group_by_type': 1}</field>
+        <field name="context">{'show_employee': True}</field>
         <field name="view_mode">list,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': False}),
@@ -599,12 +599,6 @@
         parent="hr.menu_config_employee"
         sequence="7"
         groups="hr.group_hr_user"/>
-
-        <menuitem
-        id="hr_employee_skill_report_menu"
-        name="Skills"
-        parent="hr.hr_menu_hr_reports"
-        sequence="15"/>
 
     <menuitem
         id="hr_skill_learning_menu"
