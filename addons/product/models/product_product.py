@@ -556,6 +556,16 @@ class ProductProduct(models.Model):
         action['context'] = {'default_product_ids': self.ids}
         return action
 
+    def action_open_product_template(self):
+        self.ensure_one()
+        return {
+            "name": "Product Template",
+            "type": "ir.actions.act_window",
+            "res_model": "product.template",
+            "view_mode": "form",
+            "res_id": self.product_tmpl_id.id,
+        }
+
     def open_pricelist_rules(self):
         self.ensure_one()
         domain = ['|',

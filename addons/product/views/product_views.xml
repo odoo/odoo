@@ -236,7 +236,14 @@
                         <button string="Print Labels" type="object" name="action_open_label_layout"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_product_template"
+                                    type="object"
+                                    icon="fa-cube"
+                                    class="oe_stat_button">
+                                <span t-out="'Template'"/>
+                            </button>
+                        </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
