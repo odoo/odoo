@@ -1,6 +1,6 @@
 [Unit]
 Description=Odoo IoT Box service
-After=cups.socket network-online.target NetworkManager.service
+After=cups.socket network-online.target NetworkManager.service rc-local.service
 Wants=network-online.target
 StartLimitIntervalSec=0 # infinetely wait for Odoo to start
 
