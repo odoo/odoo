@@ -5564,19 +5564,24 @@ class BaseModel(metaclass=MetaModel):
         if not func:
             # align with mapped()
             return self
+
         if callable(func):
             # normal function
             pass
         elif isinstance(func, str):
             if '.' in func:
-                return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if any(rec.mapped(func)))
-            # avoid costly mapped
-            func = self._fields[func].__get__
+                seq_fnames = func
+                func = lambda record: any(record.mapped(seq_fnames))  # noqa: E731
+            else:
+                # avoid costly mapped
+                func = self._fields[func].__get__
         elif isinstance(func, Domain):
             return self.filtered_domain(func)
         else:
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if func(rec))
+
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5621,7 +5626,8 @@ class BaseModel(metaclass=MetaModel):
         if not self or not domain:
             return self
         predicate = Domain(domain)._as_predicate(self)
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if predicate(rec))
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
