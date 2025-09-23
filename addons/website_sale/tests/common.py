@@ -61,6 +61,8 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
                 'name': 'Test Website',
                 'company_id': cls.env.company.id,
             })
+        if hasattr(cls.env.company.country_id, 'enforce_cities'):
+            cls.env.company.country_id.enforce_cities = False
 
         cls.public_user = cls.website.user_id
         cls.public_partner = cls.public_user.partner_id

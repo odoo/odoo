@@ -17,6 +17,8 @@ class TestUi(HttpCase):
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
+        if hasattr(self.env.company.country_id, 'enforce_cities'):
+            self.env.company.country_id.enforce_cities = False
 
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({

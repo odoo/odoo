@@ -21,6 +21,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             "zip": "07002",
             "state_id": cls.env.ref("base.state_us_5").id,
         })
+        if hasattr(cls.env.company.country_id, 'enforce_cities'):
+            cls.env.company.country_id.enforce_cities = False
 
     def test_01_portal_load_tour(self):
         self.start_tour("/", 'portal_load_homepage', login="portal")

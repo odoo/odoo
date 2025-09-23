@@ -1,0 +1,13 @@
+<odoo>
+    <record id="pe_partner_address_form" model="ir.ui.view">
+       <field name="name">pe.partner.address.extended</field>
+       <field name="model">res.partner</field>
+       <field name="inherit_id" ref="base_address_extended.address_street_extended_city_form"/>
+       <field name="arch" type="xml">
+             <field name="street2" position="after">
+                    <field name="l10n_pe_district" placeholder="District..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+             </field>
+       </field>
+    </record>
+</odoo>

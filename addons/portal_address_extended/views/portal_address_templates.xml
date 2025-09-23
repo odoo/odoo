@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_extended_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_state" position="after">
+            <input type="hidden" name="enforce_cities" t-att-value="res_company.country_id.enforce_cities"/>
+            <div
+                t-if="res_company.country_id.enforce_cities"
+                id="div_city_id"
+                class="col-lg-6 mb-2"
+                t-att-style="not country and 'display:none;'"
+            >
+                <label class="col-form-label label-optional" for="city_id">City</label>
+                <select id="o_city_id" name="city_id" class="form-select">
+                    <option value="">City...</option>
+                    <option
+                        t-foreach="state_cities"
+                        t-as="city"
+                        t-att-value="city.id"
+                        t-att-selected="city.id == partner_sudo.city_id.id"
+                        t-att-state-id="city.state_id.id"
+                        t-out="city.name"
+                    />
+                </select>
+            </div>
+        </div>
+        <div id="div_street" position="after">
+            <t t-if="res_company.country_id.enforce_cities">
+                <div
+                    id="div_street_name"
+                    t-attf-class="col-lg-8 mb-2"
+                    t-att-style="not country and 'display:none;'"
+                >
+                    <label class="col-form-label" for="o_street_name">Street</label>
+                    <input
+                        id="o_street_name"
+                        type="text"
+                        name="street_name"
+                        class="form-control"
+                        t-att-value="partner_sudo.street_name"
+                    />
+                </div>
+                <div
+                    id="div_street_number"
+                    t-attf-class="col-lg-4 mb-2"
+                    t-att-style="not country and 'display:none;'"
+                >
+                    <label class="col-form-label" for="o_street_number">House</label>
+                    <input
+                        id="o_street_number"
+                        type="text"
+                        name="street_number"
+                        class="form-control"
+                        t-att-value="partner_sudo.street_number"
+                    />
+                </div>
+                <div class="w-100"/>
+                <div
+                    id="div_street_number2"
+                    t-attf-class="col-lg-6 mb-2"
+                    t-att-style="not country and 'display:none;'"
+                >
+                    <label class="col-form-label label-optional" for="o_street_number2">
+                        Door
+                    </label>
+                    <input
+                        id="o_street_number2"
+                        type="text"
+                        name="street_number2"
+                        class="form-control"
+                        t-att-value="partner_sudo.street_number2"
+                    />
+                </div>
+                <div id="div_street2" position="move"/>
+            </t>
+        </div>
+        <xpath expr="//select[@name='country_id']/option[not(@value='')]" position="attributes">
+            <attribute name="t-att-enforce-cities"
+                       add="c.enforce_cities"/>
+        </xpath>
+    </template>
+</odoo>

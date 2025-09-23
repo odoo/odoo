@@ -119,6 +119,9 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Deco Addict',
         })
 
+        if hasattr(cls.env.company.country_id, 'enforce_cities'):
+            cls.env.company.country_id.enforce_cities = False
+
         cash_journal = journal_obj.create({
             'name': 'Cash Test',
             'type': 'cash',
