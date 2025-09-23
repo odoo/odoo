@@ -1284,6 +1284,7 @@ class PosOrder(models.Model):
             refund_order._compute_prices()
             refund_orders |= refund_order
             refund_order.config_id.notify_synchronisation(current_session.id, 0)
+        refund_orders._compute_prices()
         return refund_orders
 
     def refund(self):
