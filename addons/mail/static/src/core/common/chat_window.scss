@@ -35,8 +35,6 @@
 }
 
 .o-mail-ChatWindow-header {
-    --o-mail-ActionList-Button-height: auto;
-
     .o-mail-ActionList-group {
         gap: map-get($spacers, 3);
 
@@ -45,11 +43,7 @@
         }
 
         @include media-breakpoint-up(md) {
-            gap: map-get($spacers, 2);
-
-            button[name="fold-chat-window"] {
-                margin-inline-start: map-get($spacers, 2) !important;
-            }
+            gap: map-get($spacers, 1);
         }
     }
 
