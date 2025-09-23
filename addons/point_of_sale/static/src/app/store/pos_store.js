@@ -772,7 +772,8 @@ export class PosStore extends Reactive {
                 payload,
                 order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id")
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                this.currency
             );
 
             values.combo_line_ids = comboPrices.map((comboItem) => [
@@ -836,9 +837,6 @@ export class PosStore extends Reactive {
 
             if (!pack_lot_ids) {
                 return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
             }
         }
 
@@ -908,7 +906,7 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
-        if (product.tracking === "serial") {
+        if (product.isTracked()) {
             this.selectedOrder.get_selected_orderline().setPackLotLines({
                 modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
                 newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
@@ -2265,7 +2263,13 @@ export class PosStore extends Reactive {
 
     selectEmptyOrder() {
         const emptyOrders = this.models["pos.order"].filter(
-            (order) => order.is_empty() && !order.finalized
+            (order) =>
+                order.is_empty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
         );
         if (emptyOrders.length > 0) {
             this.set_order(emptyOrders[0]);

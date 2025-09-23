@@ -294,7 +294,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>b</td></tr></tbody></table>d');
                     },
-                    contentAfter: '<p>123a</p><table class="table table-bordered"><thead><tr><th>h</th></tr></thead><tbody><tr><td>b</td></tr></tbody></table><p>d[]</p>',
+                    contentAfter: '<p>123a</p><table class="table table-bordered"><tbody><tr><td>h</td></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
                 });
             });
             it('should not keep span', async () => {

@@ -192,11 +192,13 @@ messageActionsRegistry
         sequence: 55,
     })
     .add("toggle-translation", {
-        condition: (component) => component.props.message.isTranslatable(component.props.thread),
+        condition: (component) => component.props.message.isTranslatable(component.message.thread),
         icon: (component) =>
-            `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-        title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
-        onClick: (component) => component.onClickToggleTranslation(),
+            `fa fa-language ${
+                component.message.showTranslation ? "o-mail-Message-translated" : ""
+            }`,
+        title: (component) => (component.message.showTranslation ? _t("Revert") : _t("Translate")),
+        onClick: (component) => component.message.onClickToggleTranslation(),
         sequence: 100,
     })
     .add("copy-link", {

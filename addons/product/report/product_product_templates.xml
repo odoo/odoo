@@ -21,7 +21,7 @@
                             <div class="o_label_extra_data">
                                 <t t-out="extra_html"/>
                             </div>
-                            <strong class="o_label_price" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                            <strong class="o_label_price" t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                                     t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                         </div>
                         <div class="o_label_clear"></div>
@@ -39,7 +39,7 @@
                         <strong t-field="product.display_name"/>
                     </div>
                     <div class="text-end" style="padding-top:0;padding-bottom:0">
-                        <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                        <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                                 t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
                     <div class= "text-center o_label_small_barcode">
@@ -65,7 +65,7 @@
                         <span class="text-nowrap" t-field="product.default_code"/>
                     </div>
                     <div class="o_label_price_medium text-end">
-                        <strong t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                        <strong t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                             t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
                     <div class= "text-center o_label_small_barcode">
@@ -119,7 +119,7 @@
                         <small class="text-nowrap" t-field="product.default_code" style="font-size: 0.875em;"/>
                     </div>
                     <div class="text-end" style="padding: 0 4px;">
-                        <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                        <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                                 t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
                 </div>

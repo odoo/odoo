@@ -12,7 +12,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
+from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY, Intervals
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
@@ -367,6 +367,7 @@ class HolidaysRequest(models.Model):
                 date_to.date())
 
             for leave in self:
+                department_ids = leave.employee_id.department_id.ids
                 domain = [
                     ('start_date', '<=', leave.date_to.date()),
                     ('end_date', '>=', leave.date_from.date()),
@@ -374,6 +375,14 @@ class HolidaysRequest(models.Model):
                         ('resource_calendar_id', '=', False),
                         ('resource_calendar_id', '=', leave.resource_calendar_id.id),
                 ]
+                if department_ids:
+                    domain += [
+                        '|',
+                        ('department_ids', '=', False),
+                        ('department_ids', 'parent_of', department_ids),
+                    ]
+                else:
+                    domain += [('department_ids', '=', False)]
 
                 if leave.holiday_status_id.company_id:
                     domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
@@ -410,34 +419,49 @@ class HolidaysRequest(models.Model):
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
         # Precompute values in batch for performance purposes
         work_time_per_day_mapped = {
-            (date_from, date_to, calendar): employees.with_context(
+            (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
                     compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         work_days_data_mapped = {
-            (date_from, date_to, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
+            (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
-            if not leave.date_from or not leave.date_to or not calendar:
+            if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
                 result[leave.id] = (0, 0)
                 continue
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 if leave.employee_id.is_flexible and leave.date_to.date() == leave.date_from.date():
-                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours:
+                    public_holidays = self.env['resource.calendar.leaves'].search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ])
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = 0
+                        for start, stop, meta in real_leave_intervals:
+                            hours += (stop - start).total_seconds() / 3600
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    if not leave.request_unit_hours and not public_holidays:
                         days = 1 if not leave.request_unit_half else 0.5
                     else:
-                        days = (leave.date_to - leave.date_from).total_seconds() / 3600 / 24
+                        days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
-                    work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
                 else:
-                    work_days_data = work_days_data_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
+                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
             else:
                 today_hours = calendar.get_work_hours_count(

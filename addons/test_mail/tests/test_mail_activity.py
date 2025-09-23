@@ -34,6 +34,33 @@ class TestActivityCommon(MailCommon):
 @tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
+    def test_activity_action_open_document_no_access(self):
+        def _employee_no_access(records, operation):
+            """Simulates employee having no access to the document"""
+            if records.env.uid == self.user_employee.id and not records.env.su:
+                return records, lambda: exceptions.AccessError('Access denied to document')
+            return DEFAULT
+
+        test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+            'summary': 'Test Activity',
+        })
+
+        action = test_activity.with_user(self.user_employee).action_open_document()
+        self.assertEqual(action['res_model'], self.test_record._name)
+        self.assertEqual(action['res_id'], self.test_record.id)
+
+        # If user has no access to the record, should return activity view instead
+        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
+            self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
+
+            action = test_activity.with_user(self.user_employee).action_open_document()
+            self.assertEqual(action['res_model'], 'mail.activity')
+            self.assertEqual(action['res_id'], test_activity.id)
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_other(self):
         activity = self.test_record.with_user(self.user_employee).activity_schedule(
@@ -419,14 +446,31 @@ class TestActivityMixin(TestActivityCommon):
         archived_users.action_archive()
         active_users = test_users - archived_users
 
-        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
-        self.assertFalse(activities, "Activities of archived users should be deleted.")
+        # archive user with company disabled
+        user_admin = self.user_admin
+        user_employee_c2 = self.user_employee_c2
+        self.assertIn(self.company_2, user_admin.company_ids)
+        self.test_record.env['ir.rule'].create({
+            'model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'domain_force': "[('company_id', 'in', company_ids)]"
+        })
+        self.test_record.activity_schedule(user_id=user_employee_c2.id)
+        user_employee_c2.with_user(user_admin).with_context(
+            allowed_company_ids=(user_admin.company_ids - self.company_2).ids
+        ).action_archive()
+        archived_users += user_employee_c2
+
+        self.assertFalse(any(archived_users.mapped('active')), "Users should be archived.")
 
         # activities of active users shouldn't be touched, each has exactly 1 activity present
         activities = self.env['mail.activity'].search([('user_id', 'in', active_users.ids)])
         self.assertEqual(len(activities), 3, "We should have only 3 activities in total linked to our active users")
         self.assertEqual(activities.mapped('user_id'), active_users,
                          "We should have 3 different users linked to the activities of the active users")
+
+        # ensure the user's activities are removed
+        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
+        self.assertFalse(activities, "Activities of archived users should be deleted.")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):

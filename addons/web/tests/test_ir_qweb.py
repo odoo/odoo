@@ -72,3 +72,31 @@ class TestIrQweb(TransactionCase):
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertEqual(img.get("src"), "data:image/png;base64,%s" % jpeg_datas.decode())
+
+    def test_image_svg(self):
+        image = """<?xml version='1.0' encoding='UTF-8' ?>
+        <svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+            <rect fill='#ff0000' height='180' width='180'/>
+            <text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>H</text>
+        </svg>"""
+
+        b64_image = base64.b64encode(image.encode()).decode()
+        view = self.env["ir.ui.view"].create({
+            "key": "web.test_qweb",
+            "type": "qweb",
+            "arch": """<t t-name="test_qweb">
+                <span t-field="record.flag_image" t-options-widget="'image'" t-options-qweb_img_raw_data="True" />
+            </t>"""
+        })
+        partner = self.env["res.lang"].create({
+            "name": "test image partner",
+            "flag_image": b64_image,
+            "code": "TEST"
+        })
+
+        html = view._render_template(view.id, {"record": partner})
+        tree = etree.fromstring(html)
+        img = tree.find("img")
+        self.assertEqual(img.get("src"), f"data:image/svg+xml;base64,{b64_image}")
+        self.assertEqual(img.get("class"), "img img-fluid")
+        self.assertEqual(img.get("alt"), "test image partner")

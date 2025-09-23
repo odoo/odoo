@@ -651,6 +651,9 @@ export class Wysiwyg extends Component {
             this.snippetsMenuComponent = await this.getSnippetsMenuClass(options);
             await this._insertSnippetMenu();
             $(this.odooEditor.document.body).addClass('editor_enable');
+            if (localization.direction === "rtl") {
+                this.odooEditor.document.body.setAttribute("is-rtl-backend", "true");
+            }
 
             this._onBeforeUnload = (event) => {
                 if (this.isDirty()) {

@@ -1,24 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Tony Ng, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -30,7 +39,8 @@ msgstr "字母數字名稱"
 msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
-msgstr "FNC1的替代性正則表達式分隔符。分隔符不能與任何相關規則模式的開始/結束匹配。"
+msgstr ""
+"FNC1的替代性正則表達式分隔符。分隔符不能與任何相關規則模式的開始/結束匹配。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -176,8 +186,9 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"GS1內容類型定義了規則將把條形碼處理成什麼樣的數據。        * 日期：條形碼將被轉換為Odoo日期時間； * "
-"測量：條形碼的值與特定的計量單位有關； * 數字標識符：遵循特定編碼的固定長度的條形碼； * 英數名稱：可變長度的條形碼。"
+"GS1內容類型定義了規則將把條形碼處理成什麼樣的數據。        * 日期：條形碼將被"
+"轉換為Odoo日期時間； * 測量：條形碼的值與特定的計量單位有關； * 數字標識符："
+"遵循特定編碼的固定長度的條形碼； * 英數名稱：可變長度的條形碼。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -202,11 +213,14 @@ msgstr "規則格式「%(rule)s」不是有效的 Regex 正規表達式：%(erro
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "條碼規則“%s”模式有問題。\n"
-"如果此規則使用十進制，請檢查它不能在某個時間將數字作為應用程序標識符的最後一個字符。\n"
+"如果此規則使用十進制，請檢查它不能在某個時間將數字作為應用程序標識符的最後一"
+"個字符。\n"
 "還檢查可能的匹配值只能是數字，否則該值不能被轉換為度量。"
 
 #. module: barcodes_gs1_nomenclature

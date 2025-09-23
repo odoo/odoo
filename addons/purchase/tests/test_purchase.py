@@ -984,6 +984,12 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.env['purchase.order.line'].flush_model()
         result = vendor_bill.action_purchase_matching()
         matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
+
+        # Ensure that calling `action_add_to_po()` on multiple records
+        # does not raise a singleton ValueError when the vendor is an individual
+        # linked to a company.
+        matching_records.action_add_to_po()
+
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
@@ -1041,6 +1047,15 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'date_start': fields.Date.today() - timedelta(days=5),
                 'date_end': fields.Date.today() + timedelta(days=3),
                 'product_code': 'HHH',
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 20,
+                'price': 80,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() + timedelta(days=3),
+                'product_code': 'HHH-min_qty_20',
             },
         ])
         po_form = Form(self.env['purchase.order'])

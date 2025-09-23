@@ -167,7 +167,7 @@ class AccountEdiFormat(models.Model):
                 return {invoice: {
                     "success": False,
                     "error": error_message,
-                    "blocking_level": ("404" in error_codes) and "warning" or "error",
+                    "blocking_level": "warning" if {'404', 'timeout'} & set(error_codes) else "error",
                 }}
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))

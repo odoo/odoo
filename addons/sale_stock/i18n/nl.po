@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -63,23 +63,29 @@ msgstr "<span class=\"o_stat_text\">Verkoop</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Verzonden\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Verzonden\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Sommige leveringen zijn al gedaan. Retouren kunnen worden aangemaakt vanuit de leveringsbonnen.\n"
+"                    Sommige leveringen zijn al gedaan. Retouren kunnen "
+"worden aangemaakt vanuit de leveringsbonnen.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -101,17 +107,24 @@ msgstr "Een houdbaar product is een product waarvan je de voorraad beheert."
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productinstellingen, kan het geleverde aantal automatisch worden berekend met behulp van het mechanisme:\n"
+"Afhankelijk van de productinstellingen, kan het geleverde aantal automatisch "
+"worden berekend met behulp van het mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
-"  - Analytisch van declaraties: het aantal is de som van de geboekte declaraties\n"
-"  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
-"  - Voorraadverplaatsingen: het aantal komt van de bevestigd voorraadverplaatsingen\n"
+"  - Analytisch van declaraties: het aantal is de som van de geboekte "
+"declaraties\n"
+"  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor "
+"taken die aan deze verkoopregel zijn gekoppeld\n"
+"  - Voorraadverplaatsingen: het aantal komt van de bevestigd "
+"voorraadverplaatsingen\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -223,8 +236,8 @@ msgid ""
 msgstr ""
 "Leveringsdatum die je aan de klant kunt beloven, berekend vanaf de minimale "
 "levertijd van de orderregels in het geval van diensten-producten. In geval "
-"van verzending wordt rekening gehouden met het verzendbeleid van de order om"
-" de minimale of maximale levertijd van de orderregels te gebruiken."
+"van verzending wordt rekening gehouden met het verzendbeleid van de order om "
+"de minimale of maximale levertijd van de orderregels te gebruiken."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -308,8 +321,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Als je alle producten in één keer levert, wordt de levering gepland op basis"
-" van de langste levertijd van een product. Anders is deze gebaseerd op de "
+"Als je alle producten in één keer levert, wordt de levering gepland op basis "
+"van de langste levertijd van een product. Anders is deze gebaseerd op de "
 "kortste levertijd."
 
 #. module: sale_stock
@@ -414,8 +427,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Foutmarge op een leverdatum beloofd aan klanten. Producten worden ingepland "
 "voor aanvullen en levering, zo veel dagen eerder dan de werkelijk beloofde "
@@ -459,8 +472,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"Aantal dagen tussen het bevestigen van de order en het werkelijk leveren van"
-" de producten aan de klant."
+"Aantal dagen tussen het bevestigen van de order en het werkelijk leveren van "
+"de producten aan de klant."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -519,10 +532,12 @@ msgstr "RETOUR"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
-"                replenishment propositions, shipping connectors, barcode scanner, etc."
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
 msgstr ""
 "Verminder backorders met reserveringen, locatiebeheer, slimme\n"
-"                aanvullingsvoorstellen, verzendconnectoren, barcodescanners, enz."
+"                aanvullingsvoorstellen, verzendconnectoren, barcodescanners, "
+"enz."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -686,6 +701,11 @@ msgid "Stock Rules report"
 msgstr "Voorraadroutes rapport"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Voorraadregelrapportage"
@@ -701,19 +721,22 @@ msgstr "De levering"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Het afleveradres is gewijzigd op de verkooporder <br/>\n"
-" Van \"<strong>\" %(old_address)s\"</strong> naar <strong>\"%(new_address)s\"</strong>,\n"
+" Van \"<strong>\" %(old_address)s\"</strong> naar <strong>\"%"
+"(new_address)s\"</strong>,\n"
 " Je moet waarschijnlijk de partner in dit document bijwerken."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Het bestelde aantal kan niet lager worden dan het reeds geleverde aantal. "
 "Maak in plaats daarvan een retour aan."
@@ -725,8 +748,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"Het bestelde aantal kan niet lager zijn dan het reeds geleverde aantal. Maak"
-" liever een retourzending aan."
+"Het bestelde aantal kan niet lager zijn dan het reeds geleverde aantal. Maak "
+"liever een retourzending aan."
 
 #. module: sale_stock
 #. odoo-javascript

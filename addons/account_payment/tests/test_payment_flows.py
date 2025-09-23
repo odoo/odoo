@@ -9,6 +9,7 @@ from odoo.tests import tagged, JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.controllers.payment import PaymentPortal
+from odoo.addons.account_payment.controllers.portal import PortalAccount
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -204,3 +205,25 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
 
         self.assertEqual(resp['state'], 'done')
         self.assertTrue(invoice.payment_state == invoice._get_invoice_in_payment_state())
+
+    def test_out_invoice_get_page_view_values(self):
+        """Test the invoice-specific portal page view values of an out invoice"""
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner, amounts=[50.0], currency=self.currency,
+        )
+
+        def mock_get_page_view_values(self, document, access_token, values, *args, **kwargs):
+            return values
+
+        with patch.object(PortalAccount, '_get_page_view_values', mock_get_page_view_values):
+            values = PortalAccount()._invoice_get_page_view_values(
+                invoice, invoice.access_token, amount=26.0, payment=True,
+            )
+
+        self.assertEqual(values['page_name'], 'invoice')
+        self.assertEqual(values['invoice'], invoice)
+        self.assertEqual(values['amount_paid'], 0.0)
+        self.assertEqual(values['amount_due'], 50.0)
+        self.assertEqual(values['next_amount_to_pay'], 26.0)
+        self.assertEqual(values['payment_state'], 'not_paid')
+        self.assertTrue(values['payment'])

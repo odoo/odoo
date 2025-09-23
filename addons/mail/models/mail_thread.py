@@ -1887,9 +1887,22 @@ class MailThread(models.AbstractModel):
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             email_normalized = ','.join(email_normalize_all(partner.email))
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name or '', 'email': email_normalized})
+            recipient_data.update(
+                {
+                    "partner_id": partner.id,
+                    "name": partner.name or "",
+                    "email": email_normalized,
+                    "display_name": partner.display_name,
+                }
+            )
         elif partner:  # incomplete profile: id, name
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name})
+            recipient_data.update(
+                {
+                    "partner_id": partner.id,
+                    "name": partner.name,
+                    "display_name": partner.display_name,
+                }
+            )
         else:  # unknown partner, we are probably managing an email address
             _, parsed_email_normalized = parse_contact_from_email(email)
             partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
@@ -4709,15 +4722,9 @@ class MailThread(models.AbstractModel):
                 load=False,
             )[0]
             if is_request:
-                res["hasReadAccess"] = True
-                res["hasWriteAccess"] = False
+                res["hasReadAccess"] = thread.sudo(False).has_access("read")
+                res["hasWriteAccess"] = thread.sudo(False).has_access("write")
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
-            try:
-                thread.check_access("write")
-                if is_request:
-                    res["hasWriteAccess"] = True
-            except AccessError:
-                pass
             if (
                 request_list
                 and "activities" in request_list
@@ -4770,6 +4777,10 @@ class MailThread(models.AbstractModel):
         if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
             res["models"][self._name]["has_activities"] = True
         return res
+
+    @api.model
+    def _get_allowed_message_update_params(self):
+        return {"attachment_ids", "body", "partner_ids"}
 
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):

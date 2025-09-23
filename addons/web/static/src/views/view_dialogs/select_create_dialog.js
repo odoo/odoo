@@ -75,6 +75,7 @@ export class SelectCreateDialog extends Component {
         };
         if (type === "list") {
             props.allowSelectors = this.props.multiSelect;
+            props.allowOpenAction = false;
         } else if (type === "kanban") {
             props.forceGlobalClick = true;
         }

@@ -7,7 +7,8 @@ from unittest.mock import patch
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
+from odoo.addons.sms.models.sms_sms import SmsSms
+from odoo.addons.sms.tools.sms_api import SmsApi
 from odoo.tests import common
 
 
@@ -110,9 +111,10 @@ class MockSMS(common.HttpCase):
             return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
 
         try:
-            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
+            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap) as _sms_api_contact_iap_mock, \
                     patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create) as sms_create, \
                     patch.object(SmsSms, '_send', autospec=True, wraps=SmsSms, side_effect=_sms_sms_send):
+                self._sms_api_contact_iap_mock = _sms_api_contact_iap_mock
                 self._mock_sms_create = sms_create
                 yield
         finally:
@@ -168,7 +170,7 @@ class SMSCase(MockSMS):
                 for sms in self._new_sms
             )
             raise AssertionError(
-                f'sms.sms not found for {partner} (number: {number} / status {status})\n{debug_info}'
+                f'sms.sms not found for {partner} (number: {number} / status {status})\n--MOCKED DATA\n{debug_info}'
             )
         if len(sms) > 1:
             raise NotImplementedError(
@@ -177,8 +179,10 @@ class SMSCase(MockSMS):
         return sms
 
     def assertSMSIapSent(self, numbers, content=None):
-        """ Check sent SMS. Order is not checked. Each number should have received
-        the same content. Useful to check batch sending.
+        """ Check sent SMS (to IAP, but other providers like twilio should be
+        mocked to fill up 'self._sms', allowing tests to pass). Order is not
+        checked. Each number should have received the same content. Useful to
+        check batch sending.
 
         :param numbers: list of numbers;
         :param content: content to check for each number;
@@ -266,6 +270,22 @@ class SMSCase(MockSMS):
         self.assertEqual(notifications.mapped('res_partner_id'), partners)
 
         for recipient_info in recipients_info:
+            # sanity check
+            extra_keys = recipient_info.keys() - {
+                # notification
+                'failure_reason',
+                'failure_type',
+                'state',
+                # sms
+                'sms_fields_values',
+                # recipient
+                'number',
+                'partner',
+                'recipient_check_sms',
+            }
+            if extra_keys:
+                raise ValueError(f'Unsupported values: {extra_keys}')
+
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
             state = recipient_info.get('state', 'pending')
@@ -284,20 +304,24 @@ class SMSCase(MockSMS):
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
             for field_name, expected_value in (mail_message_values or {}).items():
                 self.assertEqual(notif.mail_message_id[field_name], expected_value)
+            if 'failure_reason' in recipient_info:
+                self.assertEqual(notif.failure_reason, recipient_info['failure_reason'])
             if state not in {'process', 'sent', 'ready', 'canceled', 'pending'}:
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
-            if check_sms:
+
+            if recipient_info.get('recipient_check_sms', check_sms):
+                fields_values = recipient_info.get('sms_fields_values') or {}
                 if state in {'process', 'pending', 'sent'}:
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
                     else:
-                        self.assertSMS(partner, number, state, content=content)
+                        self.assertSMS(partner, number, state, content=content, fields_values=fields_values)
                 elif state == 'ready':
-                    self.assertSMS(partner, number, 'outgoing', content=content)
+                    self.assertSMS(partner, number, 'outgoing', content=content, fields_values=fields_values)
                 elif state == 'exception':
-                    self.assertSMS(partner, number, 'error', failure_type=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'error', failure_type=recipient_info['failure_type'], content=content, fields_values=fields_values)
                 elif state == 'canceled':
-                    self.assertSMS(partner, number, 'canceled', failure_type=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'canceled', failure_type=recipient_info['failure_type'], content=content, fields_values=fields_values)
                 else:
                     raise NotImplementedError('Not implemented')
 

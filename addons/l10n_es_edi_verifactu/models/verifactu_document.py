@@ -314,7 +314,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
     def _check_record_values(self, vals):
         errors = []
 
-        company_NIF = vals['company'].partner_id._l10n_es_edi_verifactu_get_values()['NIF']
+        company_NIF = vals['company'].partner_id._l10n_es_edi_verifactu_get_values().get('NIF')
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(_("The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                             company_NIF=company_NIF))
@@ -1162,7 +1162,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         errors = []
         company = self.env.company  # sending company
 
-        company_NIF = company.partner_id._l10n_es_edi_verifactu_get_values()['NIF']
+        company_NIF = company.partner_id._l10n_es_edi_verifactu_get_values().get('NIF')
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(_("The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                             company_NIF=company_NIF))

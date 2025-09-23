@@ -237,7 +237,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     let partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Followers-counter", { text: "2" });
     partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(1);
@@ -262,7 +262,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     const partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(1);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await tick();
     await contains(".o-mail-Followers-counter", { text: "1" });
 });
@@ -318,4 +318,24 @@ test("suggested recipients should be added as follower when posting a message", 
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter", { text: "1" });
+});
+
+test("suggested recipients without name should show display_name instead", async () => {
+    const pyEnv = await startServer();
+    const [partner1, partner2] = pyEnv["res.partner"].create([
+        { name: "Test Partner" },
+        // Partner without name
+        { type: "invoice" },
+    ]);
+
+    pyEnv["res.partner"].write([partner2], { parent_id: partner1 });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partner2] });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-SuggestedRecipient", {
+        text: "Test Partner, Invoice Address",
+        contains: ["input[type=checkbox]:checked"],
+    });
 });

@@ -170,7 +170,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTemplate = env['product.template']
         dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
         dom += website.sale_product_domain()
-        for product in ProductTemplate.search(dom):
+        for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
             loc = '/shop/%s' % env['ir.http']._slug(product)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
@@ -1948,6 +1948,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
                 order._validate_order()
 
             # clean context and session, then redirect to the portal page

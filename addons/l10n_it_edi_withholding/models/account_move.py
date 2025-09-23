@@ -7,7 +7,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.addons.l10n_it_edi.models.account_move import get_float
-from odoo.tools import float_compare
+from odoo.tools import float_compare, html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -23,11 +23,16 @@ class AccountMove(models.Model):
     @api.depends('amount_total_signed')
     def _compute_amount_extended(self):
         for move in self:
-            totals = {None: 0.0, 'vat':0.0, 'withholding': 0.0, 'pension_fund': 0.0}
+            totals = {None: 0.0, 'vat': 0.0, 'withholding': 0.0, 'pension_fund': 0.0}
             if move.is_invoice(True):
                 for line in [line for line in move.line_ids if line.tax_line_id]:
-                    kind = line.tax_line_id._l10n_it_get_tax_kind()
-                    totals[kind] -= line.balance
+                    tax = line.tax_line_id
+                    if tax.l10n_it_pension_fund_type:
+                        totals['pension_fund'] -= line.balance
+                    elif tax.l10n_it_withholding_type:
+                        totals['withholding'] -= line.balance
+                    else:
+                        totals['vat'] -= line.balance
             move.l10n_it_amount_vat_signed = totals['vat']
             move.l10n_it_amount_withholding_signed = totals['withholding']
             move.l10n_it_amount_pension_fund_signed = totals['pension_fund']
@@ -131,7 +136,7 @@ class AccountMove(models.Model):
                 'aliquota_iva': grouping_key['vat_tax_amount_field'],
                 'ritenuta': 'SI' if grouping_key['has_withholding'] else None,
                 'natura': grouping_key['l10n_it_exempt_reason'],
-                'riferimento_amministrazione': grouping_key['description'],
+                'riferimento_amministrazione': html2plaintext(grouping_key['description']),
             })
 
         # Enasarco values.
@@ -175,20 +180,11 @@ class AccountMove(models.Model):
         })
         return template_values
 
-    def _l10n_it_edi_export_taxes_data_check(self):
-        """
-            Override to also allow pension_fund, withholding taxes.
-            Needs not to call super, because super checks for one tax only per line.
-        """
-        errors = []
-        for invoice_line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            all_taxes = invoice_line.tax_ids.flatten_taxes_hierarchy()
-            vat_taxes, withholding_taxes, pension_fund_taxes = (all_taxes._l10n_it_filter_kind(kind) for kind in
-                                                                ('vat', 'withholding', 'pension_fund'))
-            if len(vat_taxes.filtered(lambda x: x.amount >= 0)) != 1:
-                errors.append(_("Bad tax configuration for line %s, there must be one and only one VAT tax per line", invoice_line.name))
-            if len(pension_fund_taxes) > 1 or len(withholding_taxes) > 1:
-                errors.append(_("Bad tax configuration for line %s, there must be one Withholding tax and one Pension Fund tax at max.", invoice_line.name))
+    def _l10n_it_edi_export_taxes_check(self):
+        # EXTENDS l10n_it_edi
+        errors = super()._l10n_it_edi_export_taxes_check()
+        for kind_code, kind_desc in (('withholding', _('Withholding')), ('pension_fund', _('Pension Fund'))):
+            errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len=0))
         return errors
 
     # -------------------------------------------------------------------------

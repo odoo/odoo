@@ -3919,6 +3919,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
 
+    @freeze_time('2025-01-01')
     def test_accrual_allocation_date_in_the_future(self):
         vals = {
             'accrual_validity': True,

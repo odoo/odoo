@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.PaymentScreenValidate" t-inherit="point_of_sale.PaymentScreenValidate" t-inherit-mode="extension">
-        <xpath expr="//button[hasclass('button') and hasclass('next')]" position="attributes">
+        <xpath expr="//button[hasclass('validation-button') and hasclass('next')]" position="attributes">
             <attribute name="t-att-hidden">pos.config.set_tip_after_payment and !currentOrder.is_paid()</attribute>
         </xpath>
 
-        <xpath expr="//button[hasclass('button') and hasclass('next')]/span[hasclass('next_text')]" position="replace">
+        <xpath expr="//button[hasclass('validation-button') and hasclass('next')]/span" position="replace">
             <t t-if="pos.config.set_tip_after_payment and currentOrder.is_paid()">
                 <span class="back_text">Close Tab</span>
             </t>

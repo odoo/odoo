@@ -1,8 +1,9 @@
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import Command
 from odoo.tools import file_open
-from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -24,11 +25,27 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'email': 'info@company.trexample.com',
             'phone': '+90 501 234 56 78',
             'ref': 'Ulus',
-            'bank_ids': [(0, 0, {'acc_number': 'TR0123456789'})],
+            'bank_ids': [Command.create({'acc_number': 'TR0123456789'})],
         })
 
-        cls.partner_1 = cls.env['res.partner'].create({
-            'name': 'partner_1',
+        cls.einvoice_partner = cls.env['res.partner'].create({
+            'name': 'einvoice_partner',
+            'vat': '1729171602',
+            'street': 'Gökhane Sokak No:1',
+            'zip': '06934',
+            'city': 'Sincan/Ankara',
+            'state_id': cls.env.ref('base.state_tr_06').id,
+            'country_id': cls.env.ref('base.tr').id,
+            'email': 'info@tr_partner.com',
+            'phone': '+90 509 876 54 32',
+            'bank_ids': [Command.create({'acc_number': 'TR9876543210'})],
+            'invoice_edi_format': 'ubl_tr',
+            'ref': 'Ulus',
+            'l10n_tr_nilvera_customer_status': 'einvoice',
+        })
+
+        cls.earchive_partner = cls.env['res.partner'].create({
+            'name': 'earchive_partner',
             'vat': '17291716060',
             'street': 'Gökhane Sokak No:1',
             'zip': '06934',
@@ -37,10 +54,9 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.tr').id,
             'email': 'info@tr_partner.com',
             'phone': '+90 509 876 54 32',
-            'bank_ids': [(0, 0, {'acc_number': 'TR9876543210'})],
+            'bank_ids': [Command.create({'acc_number': 'TR9876543210'})],
             'invoice_edi_format': 'ubl_tr',
-            'ref': 'Ulus',
-            'l10n_tr_nilvera_customer_status': 'einvoice',  # Pretend that the customer status has been checked
+            'l10n_tr_nilvera_customer_status': 'earchive',
         })
 
         cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_wh_20_2_10')
@@ -58,11 +74,11 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
         })
 
-    def _generate_invoice_xml(self, **kwargs):
+    def _generate_invoice_xml(self, partner_id, **kwargs):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'company_id': self.company_data['company'].id,
-            'partner_id': self.partner_1.id,
+            'partner_id': partner_id.id,
             'name': 'EIN/998833/0',
             'invoice_date': '2025-03-03',
             'narration': '3 products',
@@ -83,52 +99,48 @@ class TestUBLTR(AccountTestInvoicingCommon):
 
     def test_xml_invoice_einvoice(self):
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_invoice_xml()
+            generated_xml = self._generate_invoice_xml(self.einvoice_partner)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(generated_xml),
-            self.get_xml_tree_from_string(expected_xml)
+            self.get_xml_tree_from_string(expected_xml),
         )
 
     def test_xml_invoice_einvoice_multicurrency(self):
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_invoice_xml(currency_id=self.env.ref('base.USD').id)
+            generated_xml = self._generate_invoice_xml(partner_id=self.einvoice_partner, currency_id=self.env.ref('base.USD').id)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_einvoice_multicurrency.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(generated_xml),
-            self.get_xml_tree_from_string(expected_xml)
+            self.get_xml_tree_from_string(expected_xml),
         )
 
     def test_xml_invoice_earchive(self):
-        self.partner_1.l10n_tr_nilvera_customer_status = 'earchive'
-
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_invoice_xml()
+            generated_xml = self._generate_invoice_xml(self.earchive_partner)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_earchive.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(generated_xml),
-            self.get_xml_tree_from_string(expected_xml)
+            self.get_xml_tree_from_string(expected_xml),
         )
 
     def test_xml_invoice_earchive_multicurrency(self):
-        self.partner_1.l10n_tr_nilvera_customer_status = 'earchive'
-
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_invoice_xml(currency_id=self.env.ref('base.USD').id)
+            generated_xml = self._generate_invoice_xml(self.earchive_partner, currency_id=self.env.ref('base.USD').id)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_earchive_multicurrency.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(generated_xml),
-            self.get_xml_tree_from_string(expected_xml)
+            self.get_xml_tree_from_string(expected_xml),
         )

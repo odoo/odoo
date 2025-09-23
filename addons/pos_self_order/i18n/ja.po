@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_self_order
@@ -31,7 +31,9 @@ msgstr "\"QRコード\""
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
-msgstr "%s は利用できなくなりました。そのため、オーダから削除されました。オーダ内容を再度ご確認下さい。"
+msgstr ""
+"%s は利用できなくなりました。そのため、オーダから削除されました。オーダ内容を"
+"再度ご確認下さい。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -65,7 +67,9 @@ msgstr "<sup title=\"Only works for kiosk and mobile\">?</sup>"
 msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
-msgstr "このユーザのアクセス権は、セッションが開かれていないときにセルフオーダウェブサイトにアクセスするときに使用されます。"
+msgstr ""
+"このユーザのアクセス権は、セッションが開かれていないときにセルフオーダウェブ"
+"サイトにアクセスするときに使用されます。"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -110,7 +114,8 @@ msgstr "全てのプロダクトがカートから削除されます。"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Allow self-order customers to set their order for takeout."
-msgstr "セルフオーダーの顧客に、テイクアウト用のオーダを設定できるようにします。"
+msgstr ""
+"セルフオーダーの顧客に、テイクアウト用のオーダを設定できるようにします。"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -398,11 +403,15 @@ msgstr "各オーダ"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"フロアプランの各テーブルには、設定に基づいて固有のQRコードが割当てられます。セキュリティ上の理由から\n"
-"以下の例に示すように、生成されるURLでは販売ポイントとテーブル名の両方が暗号化されます。"
+"フロアプランの各テーブルには、設定に基づいて固有のQRコードが割当てられます。"
+"セキュリティ上の理由から\n"
+"以下の例に示すように、生成されるURLでは販売ポイントとテーブル名の両方が暗号化"
+"されます。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -418,6 +427,13 @@ msgstr "編集"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "顧客値を入力"
@@ -425,9 +441,10 @@ msgstr "顧客値を入力"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
-msgstr "このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
+msgstr ""
+"このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_binary
@@ -453,6 +470,18 @@ msgstr "汎用"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Get a tracker and enter its number here"
 msgstr "トラッカーを手に取り、その番号をここに入力してください"
@@ -473,7 +502,9 @@ msgstr "紙あり"
 msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
-msgstr "プロダクトの作成またはpos_configへの追加を忘れているようです。セルフオーダを使う前にプロダクトを追加して下さい。"
+msgstr ""
+"プロダクトの作成またはpos_configへの追加を忘れているようです。セルフオーダを"
+"使う前にプロダクトを追加して下さい。"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -510,11 +541,15 @@ msgstr "このプロダクトがセルフオーダスクリーンで利用可能
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"カスタマイズされたQRコードが必要な場合は、関連するQRコードをスキャンしてURLを取得することから始めます。次に\n"
-"https://www.qrcode-monkey.com や https://www.qr-code-generator.com のようなQRコードジェネレータを使用します。"
+"カスタマイズされたQRコードが必要な場合は、関連するQRコードをスキャンしてURLを"
+"取得することから始めます。次に\n"
+"https://www.qrcode-monkey.com や https://www.qr-code-generator.com のようなQR"
+"コードジェネレータを使用します。"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -529,7 +564,9 @@ msgstr "セルフオーダ画面に表示する画像"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
-msgstr "セルフオーダモードでは、QRコードを生成するために少なくとも1つのテーブルが必要です。"
+msgstr ""
+"セルフオーダモードでは、QRコードを生成するために少なくとも1つのテーブルが必要"
+"です。"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -606,7 +643,9 @@ msgstr "読込中..."
 msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online or order with the QR codes on your tables"
-msgstr "テーブルのQRコードで、顧客は簡単にオンラインメニューを検索し、オーダできます。"
+msgstr ""
+"テーブルのQRコードで、顧客は簡単にオンラインメニューを検索し、オーダできま"
+"す。"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -774,7 +813,9 @@ msgstr "レジで払う"
 msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
-msgstr "1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソナライズします"
+msgstr ""
+"1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソ"
+"ナライズします"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -913,7 +954,8 @@ msgstr "QRコード"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
-msgstr "QRコードは、モバイルモードまたはコンサルテーションモードでのみ生成できます。"
+msgstr ""
+"QRコードは、モバイルモードまたはコンサルテーションモードでのみ生成できます。"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -979,10 +1021,12 @@ msgstr "テーブルを選択"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"どのPOSにこのリンクを表示するかを選択します。空白のままにしておくと、すべてのPOSに表示されます。'QRコードメニュー'機能が有効になっているPOSの中から選択する必要があります。"
+"どのPOSにこのリンクを表示するかを選択します。空白のままにしておくと、すべての"
+"POSに表示されます。'QRコードメニュー'機能が有効になっているPOSの中から選択す"
+"る必要があります。"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand

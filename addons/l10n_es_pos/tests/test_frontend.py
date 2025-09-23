@@ -153,3 +153,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_simplified_invoice_not_override_set_pricelist', login="pos_user")
         order = self.env['pos.order'].search([('partner_id', '=', self.main_pos_config.simplified_partner_id.id)])
         self.assertNotEqual(order.pricelist_id, self.main_pos_config.simplified_partner_id.property_product_pricelist)
+
+    def test_simplified_partner_inactive_case(self):
+        self.main_pos_config.simplified_partner_id.active = False
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id,
+                        'test_simplified_partner_inactive_case', login="pos_user")

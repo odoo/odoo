@@ -94,14 +94,14 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable'] or config['test_file']:
-    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
-else:
+if odoo.cli.COMMAND in ('server', 'start') and not (config['test_enable'] or config['test_file']):
     _logger.error(
         "Importing test framework"
         ", avoid importing from business modules and when not running in test mode",
         stack_info=True,
     )
+else:
+    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 
 
 # backward compatibility: Form was defined in this file
@@ -583,9 +583,6 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
             The second form is convenient when used with :func:`users`.
         """
-        if not 'is_query_count' in self.test_tags:
-            # change into warning in master
-            self._logger.info('assertQueryCount is used but the test is not tagged `is_query_count`')
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
@@ -818,9 +815,10 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         """Guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
         """
         additional_tags = []
-        method_source = inspect.getsource(test_method) if test_method else ''
-        if 'self.assertQueryCount' in method_source:
-            additional_tags.append('is_query_count')
+        if odoo.tools.config['test_tags'] and 'is_query_count' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method) if test_method else ''
+            if 'self.assertQueryCount' in method_source:
+                additional_tags.append('is_query_count')
         return additional_tags
 
 class Like:
@@ -1414,6 +1412,13 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
+            except websocket.WebSocketConnectionClosedException as e:
+                if not self._result.done():
+                    del self.ws
+                    self._result.set_exception(e)
+                    for f in self._responses.values():
+                        f.cancel()
+                return
             except Exception as e:
                 if isinstance(e, ConnectionResetError) and self._result.done():
                     return
@@ -1448,8 +1453,8 @@ class ChromeBrowser:
     def _websocket_request(self, method, *, params=None, timeout=10.0):
         assert threading.get_ident() != self._receiver.ident,\
             "_websocket_request must not be called from the consumer thread"
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
@@ -1462,8 +1467,8 @@ class ChromeBrowser:
 
         If ``with_future`` is set, returns a ``Future`` for the operation.
         """
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         result = None
         request_id = next(self._request_id)
@@ -1659,7 +1664,8 @@ which leads to stray network requests and inconsistencies."""
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
-        f.add_done_callback(handler)
+        if f:
+            f.add_done_callback(handler)
         return f
 
     def _save_screencast(self, prefix='failed'):
@@ -2244,9 +2250,6 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
-        if not 'is_tour' in self.test_tags:
-            # change it into warning in master
-            self._logger.info('start_tour was called from a test not tagged `is_tour`')
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
@@ -2280,9 +2283,10 @@ class HttpCase(TransactionCase):
         guess if the test_methods is a tour and adds an `is_tour` tag on the test
         """
         additional_tags = super().get_method_additional_tags(test_method)
-        method_source = inspect.getsource(test_method)
-        if 'self.start_tour' in method_source:
-            additional_tags.append('is_tour')
+        if odoo.tools.config['test_tags'] and 'is_tour' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method)
+            if 'self.start_tour' in method_source:
+                additional_tags.append('is_tour')
         return additional_tags
 
     def make_jsonrpc_request(self, route, params=None, headers=None):

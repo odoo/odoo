@@ -1,24 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -183,8 +192,8 @@ msgstr ""
 "يحدد نوع محتوى GS1 نوع البيانات التي سوف تقوم القاعدة بمعالجة البيانات "
 "الباركود على هيئتها:        * التاريخ: سوف يتم تحويل الباركود بتوقيت وتاريخ "
 "أودو؛        * القياس: قيمة الباركود مرتبطة بوحدة قياس محددة؛        * "
-"المعرف الرقمي: باركود ذو طول ثابت يتبع ترميزاً محدداً;        *اسم يحتوي على"
-" أحرف وأرقام: باركود ذو أطوال متفاوتة. "
+"المعرف الرقمي: باركود ذو طول ثابت يتبع ترميزاً محدداً;        *اسم يحتوي على "
+"أحرف وأرقام: باركود ذو أطوال متفاوتة. "
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -209,12 +218,16 @@ msgstr "نمط القاعدة '%(rule)s' ليس تعبيراً نمطياً صا
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "هناك خطأ ما في نمط قاعدة الباركود \"%s\".\n"
-"إذا كانت هذه القائمة تستخدم الفواصل العشرية، تحقق من أن الخانة الأخيرة تتكون من رقم وليس أي شيء آخر لمعرّف التطبيق.\n"
-"تأكد أيضاً من كون القيم المتطابقة المحتملة أرقاماً فقط، وإلا فلن تتم صياغة القيمة كوحدة قياس. "
+"إذا كانت هذه القائمة تستخدم الفواصل العشرية، تحقق من أن الخانة الأخيرة تتكون "
+"من رقم وليس أي شيء آخر لمعرّف التطبيق.\n"
+"تأكد أيضاً من كون القيم المتطابقة المحتملة أرقاماً فقط، وإلا فلن تتم صياغة "
+"القيمة كوحدة قياس. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -243,8 +256,7 @@ msgstr "لا يمكن تحليل هذا الباركود جزئياً أو كل�
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr ""
-"ستُطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة"
+msgstr "ستُطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type

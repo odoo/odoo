@@ -198,3 +198,78 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'request_date_from': datetime(2021, 11, 5),
             'request_date_to': datetime(2021, 11, 5),
         })
+
+    @freeze_time('2021-10-15')
+    def test_multiple_employees_mandatory_days(self):
+        production_department = self.env['hr.department'].create({
+            'name': 'Production Department',
+            'company_id': self.company.id,
+        })
+        post_production_department, deployment_department = self.env['hr.department'].create([{
+            'name': 'Post-Production Department',
+            'company_id': self.company.id,
+            'parent_id': production_department.id,
+        }, {
+            'name': 'Deployment Department',
+            'company_id': self.company.id,
+            'parent_id': production_department.id,
+        }])
+
+        employee_emp_2 = self.env['hr.employee'].create({
+            'name': 'Tototo Employee',
+            'company_id': self.company.id,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_id': deployment_department.id,
+        })
+
+        self.employee_emp.write({
+            'department_id': post_production_department.id
+        })
+
+        self.env['hr.leave.mandatory.day'].create([{
+            'name': 'Last Rush Before Launch (post-production)',
+            'company_id': self.company.id,
+            'start_date': datetime(2021, 11, 4),
+            'end_date': datetime(2021, 11, 4),
+            'color': 3,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_ids': [post_production_department.id],
+        }, {
+            'name': 'Last Rush Before Launch (deployment)',
+            'company_id': self.company.id,
+            'start_date': datetime(2021, 11, 5),
+            'end_date': datetime(2021, 11, 5),
+            'color': 4,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_ids': [deployment_department.id],
+        }])
+
+        mandatory_days = (self.employee_emp + employee_emp_2).get_mandatory_days('2021-11-01', '2021-11-30')
+
+        # Mandatory Days spanning multiple days should be split in single days
+        expected_data = {'2021-11-02': 1, '2021-11-04': 3, '2021-11-05': 4, '2021-11-08': 2, '2021-11-09': 2, '2021-11-10': 2, '2021-11-11': 2, '2021-11-12': 2}
+
+        # All mandatory days for both employees should be returned
+        self.assertEqual(len(mandatory_days), len(expected_data))
+        for day, color in expected_data.items():
+            self.assertTrue(day in mandatory_days)
+            self.assertEqual(color, mandatory_days[day])
+
+        # Check that has_mandatory_day is computed correctly for multiple leaves
+        leave_1, leave_2 = self.env['hr.leave'].with_user(self.manager_user.id).create([{
+            'name': 'have been given the black spot',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_emp.id,
+            'request_date_from': datetime(2021, 11, 3),
+            'request_date_to': datetime(2021, 11, 4),
+        },
+        {
+            'name': 'have been given the gray spot',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': employee_emp_2.id,
+            'request_date_from': datetime(2021, 11, 6),
+            'request_date_to': datetime(2021, 11, 6),
+        }])
+
+        self.assertTrue(leave_1.has_mandatory_day)
+        self.assertFalse(leave_2.has_mandatory_day)

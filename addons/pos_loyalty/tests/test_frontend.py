@@ -521,6 +521,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour1")
         # Check that gift cards are created
         self.assertEqual(len(gift_card_program.coupon_ids), 1)
+        gift_card_creation_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id)])
+        self.assertEqual(gift_card_creation_history.issued, 50.0, "The gift card should have 50 points issued.")
         # Change the code to 044123456 so that we can use it in the next tour.
         # Make sure it starts with 044 because it's the prefix of the loyalty cards.
         gift_card_program.coupon_ids.code = '044123456'
@@ -528,7 +530,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
-        loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
+        loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id), ('id', '!=', gift_card_creation_history.id)])
         self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
@@ -868,7 +870,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'A Test Partner'})
         card = self.env['loyalty.card'].create({
             'partner_id': partner.id,
             'program_id': loyalty_program.id,
@@ -1866,7 +1868,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'A Test Partner'})
 
         self.pos_user.write({
             'groups_id': [
@@ -2554,7 +2556,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
 
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'A Test Partner'})
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
@@ -2720,7 +2722,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_not_create_loyalty_card_expired_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'A Test Partner'})
 
         LoyaltyProgram = self.env['loyalty.program']
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
@@ -2741,7 +2743,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_not_create_loyalty_card_max_usage_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env['res.partner'].create({'name': 'Test Partner'})
-        self.env['res.partner'].create({'name': 'Test Partner 2'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -2790,7 +2792,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference and activate the gift_card_product_50
         LoyaltyProgram.search([]).write({'pos_ok': False})
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'A Test Partner'})
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
 
@@ -2866,7 +2868,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_scan_loyalty_card_select_customer(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.test_partner = self.env['res.partner'].create({'name': 'A Test Partner'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -2955,8 +2957,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         partners that already have points in the loyalty program cannot claim rewards anymore."""
 
         self.env['loyalty.program'].search([]).write({'active': False})
-        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
-        self.env['res.partner'].create({'name': 'Test Partner 2'})
+        test_partner = self.env['res.partner'].create({'name': 'AAA Test Partner 3'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -2990,5 +2992,58 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "test_max_usage_partner_with_point",
+            login="pos_user",
+        )
+
+    def test_multiple_reward_line_free_product(self):
+        """
+        Test that multiple reward lines with free product are correctly applied
+        when the product is added to the cart.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        products = self.env['product.product'].create([
+            {
+                'name': 'Product A',
+                'list_price': 10,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+            {
+                'name': 'Product B',
+                'list_price': 5,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+        ])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': products.ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': products[0].id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            }), (0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': products[1].id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_multiple_reward_line_free_product",
             login="pos_user",
         )

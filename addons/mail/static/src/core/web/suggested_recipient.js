@@ -20,6 +20,10 @@ export class SuggestedRecipient extends Component {
         this.dialogService = useService("dialog");
     }
 
+    get name() {
+        return this.props.recipient.name || this.props.recipient.display_name;
+    }
+
     get titleText() {
         return _t("Add as recipient and follower (reason: %s)", this.props.recipient.reason);
     }

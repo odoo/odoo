@@ -71,6 +71,7 @@ export class ProductScreen extends Component {
         });
 
         this.barcodeReader = useService("barcode_reader");
+        this.sound = useService("mail.sound_effects");
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -237,6 +238,7 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(code);
 
         if (!product) {
+            this.sound.play("error");
             this.barcodeReader.showNotFoundNotification(code);
             return;
         }

@@ -104,6 +104,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         }
         this.displayOverlayOptions = false;
         this._$toolbarContainer = $();
+        this.isRtl = this.options.direction === "rtl";
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -932,7 +933,7 @@ var SnippetEditor = publicWidget.Widget.extend({
                 const gridRowSize = gridUtils.rowSize;
                 const boundedYMousePosition = Math.min(args.y, targetRect.bottom - gridRowSize);
                 this.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
-                this.mousePositionXOnElement = args.x - targetRect.x;
+                this.mousePositionXOnElement = (args.x - targetRect.x) * (this.isRtl ? -1 : 1);
                 this._onDragAndDropStart(args);
             },
             onDragEnd: (...args) => {
@@ -1426,7 +1427,7 @@ var SnippetEditor = publicWidget.Widget.extend({
 
             const style = window.getComputedStyle(this.$target[0]);
             const top = parseFloat(style.top);
-            const left = parseFloat(style.left);
+            const left = parseFloat(this.isRtl ? style.right : style.left);
 
             const rowStart = Math.round(top / (gridProp.rowSize + gridProp.rowGap)) + 1;
             const columnStart = Math.round(left / (gridProp.columnSize + gridProp.columnGap)) + 1;
@@ -1744,10 +1745,11 @@ var SnippetEditor = publicWidget.Widget.extend({
         }
         const columnEl = this.$target[0];
         const rowEl = columnEl.parentNode;
+        const rowElRect = rowEl.getBoundingClientRect();
 
         // Computing the rowEl position.
-        const rowElTop = rowEl.getBoundingClientRect().top;
-        const rowElLeft = rowEl.getBoundingClientRect().left;
+        const rowElTop = rowElRect.top;
+        const rowElLeft = rowElRect.left;
 
         // Getting the column dimensions.
         const borderWidth = parseFloat(window.getComputedStyle(columnEl).borderWidth);
@@ -1757,14 +1759,25 @@ var SnippetEditor = publicWidget.Widget.extend({
         // Placing the column where the mouse is.
         let top = y - rowElTop - this.mousePositionYOnElement;
         const bottom = top + columnHeight;
-        let left = x - rowElLeft - this.mousePositionXOnElement;
+
+        let left;
+        if (this.isRtl) {
+            const rowElRight = rowElRect.right;
+            left = rowElRight - x - this.mousePositionXOnElement - columnWidth;
+        } else {
+            left = x - rowElLeft - this.mousePositionXOnElement;
+        }
 
         // Horizontal and top overflow.
         left = clamp(left, 0, rowEl.clientWidth - columnWidth);
         top = top < 0 ? 0 : top;
 
         columnEl.style.top = top + 'px';
-        columnEl.style.left = left + 'px';
+        if (this.isRtl) {
+            columnEl.style.right = left + 'px';
+        } else {
+            columnEl.style.left = left + 'px';
+        }
 
         // Computing the drag helper corresponding grid area.
         const gridProp = gridUtils._getGridProperties(rowEl);

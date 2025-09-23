@@ -2,7 +2,7 @@
 
 import { on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
-import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
+import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
@@ -526,7 +526,11 @@ export class Runner {
             try {
                 result = fn();
             } catch (err) {
-                error = String(err);
+                if (err instanceof HootError) {
+                    throw err;
+                } else {
+                    error = String(err);
+                }
             }
         }
         this.suiteStack.pop();
@@ -1418,9 +1422,13 @@ export class Runner {
     _erase(job, canEraseParent = false) {
         job.minimize();
         if (job instanceof Suite) {
-            this.suites.delete(job.id);
+            if (!job.reporting.failed) {
+                this.suites.delete(job.id);
+            }
         } else {
-            this.tests.delete(job.id);
+            if (job.results.every((result) => result.pass)) {
+                this.tests.delete(job.id);
+            }
         }
         if (canEraseParent && job.parent) {
             const jobIndex = job.parent.jobs.indexOf(job);
@@ -1794,7 +1802,12 @@ export class Runner {
         safePrevent(ev);
 
         // Log error
-        logger.error(error);
+        if (this.dry || error.global) {
+            // Stringify the error to avoid logging whole traceback on CI
+            logger.logGlobalError(String(error));
+        } else {
+            logger.error(error);
+        }
     }
 
     /**
@@ -1892,9 +1905,8 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(this.fixture.globalSetup);
+        this.beforeAll(defineRootNode.bind(null, this.fixture.get));
         this.afterAll(
-            this.fixture.globalCleanup,
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
@@ -1927,20 +1939,24 @@ export class Runner {
         let remaining = $keys(idSpecs);
         while (remaining.length) {
             const id = remaining.shift();
-            if ($abs(idSpecs[id]) !== INCLUDE_LEVEL.url) {
+            const value = idSpecs[id];
+            if ($abs(value) !== INCLUDE_LEVEL.url) {
                 continue;
             }
             const item = this.suites.get(id) || this.tests.get(id);
             if (!item) {
-                const applied = this._include(idSpecs, [id], 0);
-                if (applied) {
-                    logger.warn(
-                        `Test runner did not find job with ID "${id}": it has been removed from the URL`
-                    );
-                } else {
-                    logger.warn(
-                        `Test runner did not find job with ID "${id}": it has been ignored from the current run`
-                    );
+                const couldRemove = this._include(idSpecs, [id], 0);
+                if (value > 0) {
+                    // Only log warning for not-found *included* jobs
+                    if (couldRemove) {
+                        logger.warn(
+                            `Test runner did not find job with ID "${id}": it has been removed from the URL`
+                        );
+                    } else {
+                        logger.warn(
+                            `Test runner did not find job with ID "${id}": it has been ignored from the current run`
+                        );
+                    }
                 }
                 hasChanged = true;
             }
@@ -1949,9 +1965,7 @@ export class Runner {
                 continue;
             }
             const siblingIds = item.parent.jobs.map((job) => job.id);
-            if (
-                siblingIds.every((siblingId) => siblingId === id || remaining.includes(siblingId))
-            ) {
+            if (siblingIds.every((siblingId) => idSpecs[siblingId] === INCLUDE_LEVEL.url)) {
                 remaining = remaining.filter((id) => !siblingIds.includes(id));
                 this._include(idSpecs, [item.parent.id], INCLUDE_LEVEL.url, true);
                 this._include(idSpecs, siblingIds, 0, true);

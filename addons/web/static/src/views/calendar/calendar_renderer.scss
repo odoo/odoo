@@ -184,6 +184,20 @@
             background-color: rgba($gray-200, .5);
         }
 
+        .fc-daygrid-day-bottom {
+            display: flex;
+            justify-content: center;
+
+            .fc-more-link {
+                color: $link-color;
+                cursor: pointer;
+
+                &:hover {
+                    background: none;
+                }
+            }
+        }
+
         // ======  Specific agenda types ======
         // ====================================
 
@@ -478,15 +492,6 @@
 
             .fc-bg .fc-day-today:not(.o_calendar_disabled) {
                 background: none;
-            }
-
-            .fc-more-cell {
-                text-align: center;
-
-                .fc-more-link {
-                    color: $link-color;
-                    cursor: pointer;
-                }
             }
 
             .fc-event {

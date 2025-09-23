@@ -68,9 +68,14 @@ class StockValuationLayer(models.Model):
         ]).ids
         return [('id', 'in', layer_ids)]
 
+    # TODO: remove in master
     def _candidate_sort_key(self):
         self.ensure_one()
         return tuple()
+
+    def _get_related_product(self):
+        self.ensure_one()
+        return self.product_id
 
     def _validate_accounting_entries(self):
         am_vals = []
@@ -98,7 +103,7 @@ class StockValuationLayer(models.Model):
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        products_svl = groupby(self, lambda svl: (svl.product_id, svl.company_id.anglo_saxon_accounting))
+        products_svl = groupby(self, lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
         for (product, anglo_saxon_accounting), svls in products_svl:
             svls = self.browse(svl.id for svl in svls)
             moves = svls.stock_move_id

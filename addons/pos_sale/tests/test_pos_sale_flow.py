@@ -548,7 +548,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product_a.taxes_id = None
         self.product_a.available_in_pos = True
         self.product_a.name = 'Product A'
-        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        self.env['res.partner'].create({'name': 'A Test Partner AAA'})
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
             'order_line': [(0, 0, {
@@ -1144,7 +1144,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             })]
         })
         partner_test = self.env['res.partner'].create({
-            'name': 'Test Partner',
+            'name': 'A Test Partner',
             'property_payment_term_id': payment_term.id,
         })
 
@@ -1598,9 +1598,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'price_unit': self.product.lst_price,
             })],
         })
-        sale_order.action_confirm()
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_1', login="accountman")
+        sale_order.action_confirm()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_2', login="accountman")
         self.main_pos_config.current_session_id.action_pos_session_close()
         picking = sale_order.pos_order_line_ids.order_id.picking_ids
         self.assertEqual(picking.move_ids.quantity, 3)

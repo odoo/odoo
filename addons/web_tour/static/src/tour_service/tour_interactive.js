@@ -27,13 +27,17 @@ export class TourInteractive {
         Object.assign(this, data);
         this.steps = this.steps.map((step) => new TourStep(step, this));
         this.actions = this.steps.flatMap((s) => this.getSubActions(s));
+        this.isBusy = false;
     }
 
     /**
      * @param {import("@web_tour/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
-    start(pointer, onTourEnd) {
+    start(env, pointer, onTourEnd) {
+        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
+        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
+
         this.pointer = pointer;
         this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
         this.onTourEnd = onTourEnd;
@@ -457,7 +461,8 @@ export class TourInteractive {
                 this.pointer.hide();
                 if (
                     !hoot.queryFirst(".o_home_menu", { visible: true }) &&
-                    !hoot.queryFirst(".dropdown-item.o_loading", { visible: true })
+                    !hoot.queryFirst(".dropdown-item.o_loading", { visible: true }) &&
+                    !this.isBusy
                 ) {
                     this.backward();
                 }

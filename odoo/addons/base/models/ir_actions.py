@@ -1198,14 +1198,6 @@ class IrActionsActClient(models.Model):
             params = record.params
             record.params_store = repr(params) if isinstance(params, dict) else params
 
-    def _get_default_form_view(self):
-        doc = super(IrActionsActClient, self)._get_default_form_view()
-        params = doc.find(".//field[@name='params']")
-        params.getparent().remove(params)
-        params_store = doc.find(".//field[@name='params_store']")
-        params_store.getparent().remove(params_store)
-        return doc
-
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {

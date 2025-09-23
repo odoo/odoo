@@ -1258,3 +1258,46 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(order.picking_count, 1, 'Order should have one picking')
         self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
         self.assertEqual(self.env['account.move'].search_count([('ref', '=', order.name)]), 1, 'Order should have one invoice')
+
+    def test_refunded_order_id(self):
+        """
+        An order containing refunded lines from two different orders is no longer allowed,
+        but some legacy records of this kind may still exist.
+        This test ensures that the refunded_order_id is correctly computed in such cases.
+        """
+        current_session = self.open_new_session()
+        orders = list(self._create_orders([
+            {'pos_order_lines_ui_args': [(self.product1, 1)]},
+            {'pos_order_lines_ui_args': [(self.product2, 1)]}
+        ]).values())
+
+        refund_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'lines': [
+                (0, 0, {
+                    'product_id': self.product1.id,
+                    'price_unit': -10,
+                    'qty': 1,
+                    'tax_ids': [[6, False, []]],
+                    'price_subtotal': -10,
+                    'price_subtotal_incl': -10,
+                    'refunded_orderline_id': orders[0].lines[0].id
+                }),
+                (0, 0, {
+                    'product_id': self.product2.id,
+                    'price_unit': -10,
+                    'qty': 1,
+                    'tax_ids': [[6, False, []]],
+                    'price_subtotal': -10,
+                    'price_subtotal_incl': -10,
+                    'refunded_orderline_id': orders[1].lines[0].id
+                })
+            ],
+            'amount_paid': -10,
+            'amount_total': -10,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+
+        self.assertEqual(refund_order.refunded_order_id, orders[0])

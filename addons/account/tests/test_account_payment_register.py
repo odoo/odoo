@@ -358,7 +358,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': 'BILL/2017/01/0001, BILL/2017/01/0002',
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -401,7 +401,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': 'BILL/2017/01/0001, BILL/2017/01/0002',
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -557,7 +557,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         self.assertRecordValues(payments, [
             {
-                'memo': Like(f'BATCH/{self.current_year}/...'),
+                'memo': 'BILL/2017/01/0001, BILL/2017/01/0002, RBILL/2017/01/0001',
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
         ])
@@ -678,7 +678,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         self.assertRecordValues(payments, [
             {
-                'memo': Like(f'BATCH/{self.current_year}/...'),
+                'memo': 'BILL/2017/01/0001, BILL/2017/01/0002',
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
@@ -825,8 +825,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         we shouldn't sent email notification automatically.
         '''
         self.env['ir.config_parameter'].set_param('sale.automatic_invoice', True)
-        payment_token = self._create_token(provider_id=self._prepare_provider(code='demo').id,
-                                           demo_simulated_state='done')
+        if self.env['ir.module.module']._get('payment_demo').state == 'installed':
+            payment_token = self._create_token(provider_id=self._prepare_provider(code='demo').id,
+                                               demo_simulated_state='done')
+        else:
+            payment_token = self._create_token()
         payment_register = self.env['account.payment.register']\
                                .with_context(active_model='account.move', active_ids=self.out_invoice_4.ids)\
                                .create({'payment_token_id': payment_token.id})
@@ -1766,7 +1769,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             'installments_mode': 'next',
             'installments_switch_amount': 1333.33,
             'currency_id': self.company.currency_id.id,  # Different currencies, so we get the company's one
-            'communication': Like(f'BATCH/{self.current_year}/...'),
         }])
 
         wizard = self.env['account.payment.register'].with_context(
@@ -1803,7 +1805,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             'payment_difference': 0.5,
             'installments_mode': 'next',
             'installments_switch_amount': 357.83,  # 24.5 for in_invoice_epd_applied + 1000 / 3 (rate) for the second
-            'communication': Like(f'BATCH/{self.current_year}/...'),
         }])
 
         # Clicking on the button to full gets the amount from js, so we need to put it by hand here
@@ -1817,7 +1818,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             'payment_difference': 0.5,
             'installments_mode': 'full',
             'installments_switch_amount': 57.83,  # The previous 'next' amount
-            'communication': Like(f'BATCH/{self.current_year}/...'),
         }])
 
     def test_payment_register_with_next_payment_date(self):

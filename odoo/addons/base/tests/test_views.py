@@ -1591,6 +1591,42 @@ class TestTemplating(ViewCase):
             " the main view's"
         )
 
+    def test_branding_remove_add_text(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <item order="1">
+                    <item/>
+                </item>
+            </root>""",
+        })
+        view2 = self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+            <data>
+                <xpath expr="/root/item/item" position="replace" />
+                <xpath expr="/root/item" position="inside">A<div/>B</xpath>
+            </data>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        expected = etree.fromstring(f"""
+        <root>
+            <item order="1">
+                A
+                <div data-oe-id="{view2.id}" data-oe-xpath="/data/xpath[2]/div" data-oe-model="ir.ui.view" data-oe-field="arch"/>
+                B
+            </item>
+        </root>
+        """)
+        self.assertEqual(arch, expected)
 
 class TestViews(ViewCase):
 
@@ -1908,6 +1944,15 @@ class TestViews(ViewCase):
             arch,
             '''Field "not_a_field" does not exist in model "ir.ui.view"''',
         )
+
+    def test_invalid_type(self):
+        """Ensure invalid root tag infers an invalid type and raises ValidationError"""
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid_view',
+                'arch': '<template></template>',
+                'inherit_id': False,
+            })
 
     def test_context_in_view(self):
         arch = """

@@ -495,38 +495,39 @@ class IrModuleModule(models.Model):
         cache = self.env.cache
         View = self.env['ir.ui.view']
         field = self.env['ir.ui.view']._fields['arch_db']
-        # assume there are not too many records
+        batch_size = models.PREFETCH_MAX // 10
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
-                          FROM ir_ui_view generic
-                         INNER JOIN ir_ui_view specific
-                            ON generic.key = specific.key
-                         WHERE generic.website_id IS NULL AND generic.type = 'qweb'
-                         AND specific.website_id IS NOT NULL
-            """)
-        for generic_arch_db, specific_arch_db, specific_id in self.env.cr.fetchall():
-            if not generic_arch_db:
-                continue
-            langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
-            if not langs_update:
-                continue
-            # get dictionaries limited to the requested languages
-            generic_arch_db_en = generic_arch_db.get('en_US')
-            specific_arch_db_en = specific_arch_db.get('en_US')
-            generic_arch_db_update = {k: generic_arch_db[k] for k in langs_update}
-            specific_arch_db_update = {k: specific_arch_db.get(k, specific_arch_db_en) for k in langs_update}
-            generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db_update)
-            specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db_update)
-            # update specific_translation_dictionary
-            for term_en, specific_term_langs in specific_translation_dictionary.items():
-                if term_en not in generic_translation_dictionary:
+                                          FROM ir_ui_view generic
+                                         INNER JOIN ir_ui_view specific
+                                            ON generic.key = specific.key
+                                         WHERE generic.website_id IS NULL AND generic.type = 'qweb'
+                                         AND specific.website_id IS NOT NULL
+                                         AND generic.arch_db IS NOT NULL
+                                         AND specific.arch_db IS NOT NULL
+                            """)
+        while batch := self.env.cr.fetchmany(batch_size):
+            for generic_arch_db, specific_arch_db, specific_id in batch:
+                langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
+                if not langs_update:
                     continue
-                for lang, generic_term_lang in generic_translation_dictionary[term_en].items():
-                    if overwrite or term_en == specific_term_langs[lang]:
-                        specific_term_langs[lang] = generic_term_lang
-            for lang in langs_update:
-                specific_arch_db[lang] = field.translate(
-                    lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
-            cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
+                # get dictionaries limited to the requested languages
+                generic_arch_db_en = generic_arch_db.get('en_US')
+                specific_arch_db_en = specific_arch_db.get('en_US')
+                generic_arch_db_update = {k: generic_arch_db[k] for k in langs_update}
+                specific_arch_db_update = {k: specific_arch_db.get(k, specific_arch_db_en) for k in langs_update}
+                generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db_update)
+                specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db_update)
+                # update specific_translation_dictionary
+                for term_en, specific_term_langs in specific_translation_dictionary.items():
+                    if term_en not in generic_translation_dictionary:
+                        continue
+                    for lang, generic_term_lang in generic_translation_dictionary[term_en].items():
+                        if overwrite or term_en == specific_term_langs[lang]:
+                            specific_term_langs[lang] = generic_term_lang
+                for lang in langs_update:
+                    specific_arch_db[lang] = field.translate(
+                        lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
+                cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:

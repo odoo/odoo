@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project
-# 
+# * project
+#
 # Translators:
 # Tiffany Chang, 2024
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2024
@@ -36,20 +36,22 @@
 # Wil Odoo, 2025
 # Melih Melik Sonmez, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-27 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-08-26 14:54+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/project/"
+"tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project
 #. odoo-python
@@ -65,9 +67,11 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Hiçbir kilometre taşı bulunamadı!\n"
+"                    Hiçbir kilometre taşı bulunamadı. Haydi, bir tane "
+"oluşturalım!\n"
 "                </p><p>\n"
-"                   Başarıya ulaşmak için ulaşılması gereken önemli ilerleme noktalarını izleyin.\n"
+"                   Başarıya ulaşmak için ulaşılması gereken önemli ilerleme "
+"noktalarını izleyin.\n"
 "                </p>\n"
 "            "
 
@@ -130,6 +134,64 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends "
+"FormControllerWithHTMLExpander {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notification\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                sequence: 50,\n"
+"                icon: \"fa fa-history\",\n"
+"                description: _t(\"Sürüm Geçmişi\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = "
+"super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'description';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]"
+"?.[versionedFieldName];\n"
+"        if (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"Görev tanımında şu anda geri yüklenebilecek herhangi "
+"bir geçmiş içerik bulunmamaktadır.\"\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            HistoryDialog,\n"
+"            {\n"
+"                title: _t(\"Görev Açıklaması Geçmişi\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -155,13 +217,13 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(totalCount)s alt görevden %(closedCount)s adedi kapatıldı"
 
 #. module: project
 #. odoo-python
@@ -174,12 +236,13 @@ msgstr "%(closed_task_count)s / %(task_count)s"
 #: code:addons/project/models/project_project.py:0
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 msgstr ""
+"%(task_count)s görevden %(closed_task_count)s kapandı (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(count1)s/%(count2)s"
-msgstr ""
+msgstr "%(count1)s/%(count2)s"
 
 #. module: project
 #. odoo-python
@@ -191,7 +254,7 @@ msgstr "Kontrol Paneli"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Burndown Chart"
-msgstr "%(name)s's Burndown Chart"
+msgstr "%(name)s'nın Kapanış Grafiği"
 
 #. module: project
 #. odoo-python
@@ -279,6 +342,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"Dahili iletişim için <b>not kaydedin</b> <i>(bu görevi takip eden kişiler, "
+"onları özellikle etiketlemediğiniz sürece kaydettiğiniz not hakkında "
+"bilgilendirilmeyecek)</i>. Bir çalışma arkadaşınızı uyarmak için @ <b>bahis</"
+"b>, tüm bir ekibe ulaşmak için # <b>bahis</b> özelliğini kullanın."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -359,6 +426,115 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Merhaba <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<"
+"br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Merhaba,<br/><br/>\n"
+"            </t>\n"
+"            Lütfen <strong t-out=\"object.name or ''\">Planlama ve bütçe</"
+"strong> göreviyle ilgili hizmetlerimizi değerlendirmek için bir dakikanızı "
+"ayırın;\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                atanan kişi: <strong t-out="
+"\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style="
+"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Bize hizmetlerimiz ile ilgili düşüncelerinizi "
+"söyleyin</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">(bu ifadelerden birine tıklayın)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style="
+"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfied\" src="
+"\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Okay\" src="
+"\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Dissatisfied\" src="
+"\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Geri bildiriminiz için teşekkür ederiz. Bu, sürekli gelişmemize "
+"yardımcı olur.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bu memnuniyet "
+"anketi, göreviniz <b t-out=\"object.stage_id.name or ''\">'Devam ediyor'</b> "
+"aşamasına taşındığı için gönderildi.</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bu memnuniyet "
+"anketi, görev <b t-out=\"object.stage_id.name or ''\">’Devam ediyor’</b> "
+"aşamasında kaldığı sürece <b t-out="
+"\"object.project_id.rating_status_period or ''\">haftalık</b> olarak "
+"gönderilmektedir.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Saygılarımızla,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\""
+">YourCompany</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href="
+"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\""
+"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href="
+"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
+">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -402,6 +578,24 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Sayın <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
+"Freeman</t>,<br/><br/>\n"
+"    Bizimle iletişime geçtiğiniz için teşekkür ederiz. Ürünlerimize/"
+"hizmetlerimize gösterdiğiniz ilgi için minnettarız.<br/>\n"
+"    Ekibimiz şu anda talebinizi inceliyor ve en kısa sürede e-postanıza "
+"yanıt verecektir.<br/>\n"
+"    Bu süreçte başka sorularınız veya endişeleriniz olursa lütfen bize "
+"bildirmekten çekinmeyin. Size yardımcı olmak için buradayız.<br/><br/>\n"
+"    Sabır gösterdiğiniz için teşekkür ederiz.<br/>\n"
+"    Saygılarımızla,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br "
+"data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -535,6 +729,18 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible="
+"\"rating_status == 'periodic'\">Görev, üzerinde Puanlama E-posta Şablonunun "
+"tanımlı olduğu bir aşamaya ulaştığında puanlama isteği "
+"gönderilecektir.</span>\n"
+"                                                    <span invisible="
+"\"rating_status == 'stage'\">Görev, üzerinde Puanlama E-posta Şablonunun "
+"tanımlı olduğu bir aşamada kaldığı sürece puanlama istekleri "
+"gönderilecektir.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -593,13 +799,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "Yeni bir görev oluşturuldu ve herhangi bir projenin parçası değil."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "\"%(project_name)s\" projesinde yeni bir görev oluşturuldu."
 
 #. module: project
 #. odoo-python
@@ -614,12 +820,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "Özel bir görevin üst görevi olamaz."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "Bir alt görev yinelenen olamaz."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -709,6 +915,9 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"Etkinlik planları, birkaç tıklamayla bir etkinlik listesini atamak için "
+"kullanılır\n"
+"                    (\"İlerleme Raporu\", \"Günlük Toplantı\", ...)"
 
 #. module: project
 #. odoo-javascript
@@ -726,7 +935,7 @@ msgstr "Alt Görevler Ekle"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Add a sub-task"
-msgstr ""
+msgstr "Bir alt görev ekleyin"
 
 #. module: project
 #. odoo-javascript
@@ -742,7 +951,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "Bu görev hakkında ayrıntılar ekleyin..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -755,6 +964,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"Proje yönetim sürecinizi özelleştirmek için görevlere proje bazlı özel "
+"alanlar ekleyin."
 
 #. module: project
 #. odoo-javascript
@@ -937,7 +1148,7 @@ msgstr "Devam etmek istediğine emin misin?"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "Bu aşamaları silmek istediğinize emin misiniz?"
 
 #. module: project
 #. odoo-javascript
@@ -950,7 +1161,7 @@ msgstr "Bu kaydı silmek istediğinizden emin misiniz?"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Are you sure you want to restore this version ?"
-msgstr ""
+msgstr "Bu sürümü geri yüklemek istediğinize emin misiniz?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1002,7 +1213,7 @@ msgstr "Atananlar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "Atama Tarihi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1048,7 +1259,7 @@ msgstr "Ekler"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message"
-msgstr ""
+msgstr "Bir mesajdan gelmeyen ekler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -1072,6 +1283,12 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"Müşteri bu aşamaya ilişkin geri bildirim verdiğinde durumu otomatik olarak "
+"değiştirin.\n"
+" * Müşteriden gelen olumlu geri bildirim, durumu 'Onaylandı' (yeşil nokta) "
+"olarak güncelleyecektir.\n"
+" * Nötr veya olumsuz geri bildirim, kanban durumunu 'Değişiklik Talep "
+"Edildi' (turuncu nokta) olarak ayarlayacaktır.\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -1161,7 +1378,7 @@ msgstr "Beklenen Görevler"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "Engellenmiş Görevler"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1189,7 +1406,7 @@ msgstr "Bug"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Burndown Chart"
-msgstr "Açılış tablosu"
+msgstr "Kapanış Grafiği"
 
 #. module: project
 #. odoo-python
@@ -1222,6 +1439,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Projeniz için bir <b>isim</b> seçin. <i>Bir müşteri adı, ürün adı, ekip adı, "
+"şantiye adı vb. istediğiniz herhangi bir şey olabilir.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1246,12 +1465,12 @@ msgstr "Müşteri İncelemesi"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Close the sub-tasks list"
-msgstr ""
+msgstr "Alt görevler listesini kapat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "Bağımlı Görevler Kapandı"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1273,7 +1492,7 @@ msgstr "Kapalı durum"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
 msgid "Closed tasks"
-msgstr ""
+msgstr "Kapatılmış görevler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
@@ -1303,6 +1522,15 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"Müşterilerinizden, bir görev belirli bir aşamaya girdiğinde onlara puanlama "
+"isteği göndererek geri bildirim toplayın. Bunu yapmak için ilgili aşamalara "
+"bir puanlama e-posta şablonu tanımlayın.\n"
+"Aşama değiştirildiğinde puanlama: Görev, üzerinde puanlama e-posta "
+"şablonunun ayarlandığı aşamaya ulaştığında otomatik olarak bir e-posta "
+"gönderilecektir.\n"
+"Periyodik puanlama: Görev, üzerinde puanlama e-posta şablonunun ayarlandığı "
+"aşamada kaldığı sürece belirli aralıklarla otomatik olarak bir e-posta "
+"gönderilecektir."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1316,6 +1544,9 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"E-posta ağ geçidini kullanarak görev üzerinde müşterilerle iletişim kurun. "
+"Göreve logo tasarımlarını ekleyin, böylece bilgiler\n"
+"      tasarımcılardan tişörtü basan çalışanlara aktarılır."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1388,14 +1619,14 @@ msgstr "Kontak"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "Görevi Dönüştür"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "Göreve/Alt Göreve dönüştür"
 
 #. module: project
 #. odoo-javascript
@@ -1436,7 +1667,7 @@ msgstr "Proje Oluştur"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Bir Görev Aktivite Planı oluşturun"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1447,7 +1678,7 @@ msgstr "Görev iletim hattında yeni bir aşama oluştur"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Create a new sub-task"
-msgstr ""
+msgstr "Yeni bir alt görev oluştur"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1616,6 +1847,9 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Müşteriler e-posta ile geri bildirim gönderir; Odoo görevleri otomatik "
+"olarak oluşturur ve\n"
+"      siz doğrudan görev üzerinde iletişim kurabilirsiniz."
 
 #. module: project
 #. odoo-python
@@ -1651,6 +1885,10 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"Görevinizin durumunun en son değiştirildiği tarih.\n"
+"Bu bilgilere dayanarak ilerlemeyen görevleri belirleyebilir ve görevlerin "
+"bir aşamadan/durumdan diğerine taşınmasının genellikle ne kadar sürdüğüne "
+"dair istatistikler alabilirsiniz."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1754,7 +1992,7 @@ msgstr "Kilometre Taşı Sil"
 #: code:addons/project/models/project_project_stage.py:0
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "Proje Aşamasını Sil"
 
 #. module: project
 #. odoo-python
@@ -1790,7 +2028,7 @@ msgstr "Bağımlı Görevler"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_count
 msgid "Depending on Tasks"
-msgstr ""
+msgstr "Görevlere Bağlı"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1879,7 +2117,7 @@ msgstr "İsim Göster"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Display the sub-task in your pipeline"
-msgstr ""
+msgstr "Alt görevi pipeline'ınızda görüntüleyin"
 
 #. module: project
 #. odoo-python
@@ -1923,6 +2161,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"Her kullanıcının en az bir kişisel aşaması olmalıdır. Seçilen görevler "
+"silindikten sonra görevlerin aktarılabileceği yeni bir aşama oluşturun."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
@@ -2062,7 +2302,7 @@ msgstr "Favori"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Favori Projeler"
 
 #. module: project
 #. odoo-javascript
@@ -2091,12 +2331,12 @@ msgstr "Takip Et"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Projelerinizin görevlerini takip edin ve yorum yapın"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Projelerinizin ilerlemesini takip edin"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2167,12 +2407,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
 msgstr ""
+"Müşteri geri bildirimi alın ve çalışanlarınızın performansını değerlendirin"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr ""
+msgstr "Alt göreve bir <b>ad</b> verin"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2186,6 +2427,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Çalışanlara projelerinize veya görevlerinize erişim sağlamak için onları "
+"takipçi olarak ekleyin. Çalışanlar, atandıkları görevlere otomatik olarak "
+"erişim kazanır."
 
 #. module: project
 #. odoo-python
@@ -2213,6 +2457,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"Fikir toplama sürecinizi yeni Projenizin Görevleri içinde yönetin ve bunları "
+"görevlerin yazışma alanında tartışın."
 
 #. module: project
 #. odoo-javascript
@@ -2243,12 +2489,12 @@ msgstr "Merhaba"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "Kapatılmış görevleri gizle"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hide the sub-task in your pipeline"
-msgstr ""
+msgstr "Alt görevi pipeline'ınızda gizleyin"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -2264,12 +2510,12 @@ msgstr "Geçmiş"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history
 msgid "History data"
-msgstr ""
+msgstr "Geçmiş verileri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history_metadata
 msgid "History metadata"
-msgstr ""
+msgstr "Geçmiş metaverileri"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_13
@@ -2280,12 +2526,12 @@ msgstr "Ana Sayfa"
 #: model:account.analytic.account,name:project.analytic_construction
 #: model:project.project,name:project.project_home_construction
 msgid "Home Construction"
-msgstr ""
+msgstr "Ev İnşaatı"
 
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "Ev Yenileme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2442,7 +2688,7 @@ msgstr "Gelen Kutusu"
 #. module: project
 #: model:project.tags,name:project.project_tags_09
 msgid "Interior"
-msgstr ""
+msgstr "İç Mekan"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_04
@@ -2503,7 +2749,7 @@ msgstr "Faturalanan"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "Kapatıldı (Tamamlama Grafiği)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2518,7 +2764,7 @@ msgstr "Takipçi mi"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 msgid "Is toggle mode"
-msgstr ""
+msgstr "Geçiş modu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2659,13 +2905,13 @@ msgstr "Bir yorum yazın"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your first <b>project</b>."
-msgstr " İlk <b>projemizi</b> oluşturalım."
+msgstr "İlk <b>projenizi</b> oluşturalım."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "İlk <b>aşamanızı</b> oluşturalım."
 
 #. module: project
 #. odoo-javascript
@@ -2677,7 +2923,7 @@ msgstr "İlk <b>görevimizi</b> oluşturalım."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "İkinci <b>aşamanızı</b> oluşturalım."
 
 #. module: project
 #. odoo-javascript
@@ -2721,7 +2967,7 @@ msgstr "Amblem Tasarım"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Look for the"
-msgstr ""
+msgstr "Şunu ara:"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -2755,19 +3001,19 @@ msgstr "Yapıldı olarak işaretle"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "'Tamamlanmadı' olarak işaretle"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "'Ulaşıldı' olarak işaretle"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Görevi <b>İptal Edildi</b> olarak işaretleyin"
 
 #. module: project
 #. odoo-javascript
@@ -2952,7 +3198,7 @@ msgstr "Yeni Siparişler"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 msgid "New Project"
-msgstr ""
+msgstr "Yeni Proje"
 
 #. module: project
 #. odoo-javascript
@@ -3021,7 +3267,7 @@ msgstr "Sonraki Aktivitie Türü"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Customer"
-msgstr ""
+msgstr "Müşteri Yok"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3031,7 +3277,7 @@ msgstr "Kilometre Taşı Yok"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "Proje Yok"
 
 #. module: project
 #. odoo-python
@@ -3191,7 +3437,7 @@ msgstr "Ayda Bir Kez"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
+msgstr "Ek olarak yalnızca jpeg, png, bmp ve tiff görüntülerine izin verilir."
 
 #. module: project
 #. odoo-javascript
@@ -3212,7 +3458,7 @@ msgstr "Açık Görevler"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr ""
+msgstr "Alt görevler sekmesini aç"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
@@ -3240,7 +3486,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "Siparişler arasındaki öncelikleri şu yolla düzenleyin:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3310,18 +3556,18 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "Partner şirketi, kendisine atanan projelerin şirketinden farklı olamaz"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "Partner şirketi, kendisine atanan görevlerin şirketinden farklı olamaz"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Partnerin Görevleri"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3451,6 +3697,7 @@ msgstr "Önceki"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
 msgstr ""
+"Önemli olanları şu yöntemle işaretleyerek görevlerinizi önceliklendirin:"
 
 #. module: project
 #. odoo-python
@@ -3488,6 +3735,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
 msgstr ""
+"Özel görevler alt görevlere dönüştürülemez. Bu özelliğe erişmek için göreve "
+"bir proje atayın."
 
 #. module: project
 #. odoo-javascript
@@ -3566,12 +3815,12 @@ msgstr "Proje Paylaşımı"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Proje Paylaşımı İşbirlikçi Sihirbazı"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Proje Paylaşımı Tekrarı"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3608,7 +3857,7 @@ msgstr "Proje Etiketleri"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "Proje Görev Aşaması Silme Sihirbazı"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3754,6 +4003,9 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"Görevlerin onay veya değişiklik taleplerine ilişkin durumunu hızla kontrol "
+"edin ve bağımlılıklar çözülene kadar beklemede olanları kum saati simgesiyle "
+"belirleyin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -3770,7 +4022,7 @@ msgstr "Değerlendirme (/5)"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_pivot
 msgid "Rating (1-5)"
-msgstr ""
+msgstr "Değerlendirme (1-5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -3836,7 +4088,7 @@ msgstr "Ulaşıldı"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__read
 msgid "Read"
-msgstr ""
+msgstr "Oku"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -3890,7 +4142,7 @@ msgstr "Yinelenen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Yinelenen görevler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -3924,7 +4176,7 @@ msgstr "İlgili Döküman Modeli"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "İş Birlikçiyi Kaldır"
 
 #. module: project
 #. odoo-javascript
@@ -4004,6 +4256,8 @@ msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
 msgstr ""
+"Geri yükleme, mevcut içeriğin seçili sürümle değiştirilmesini sağlar. "
+"Kaydedilmemiş tüm değişiklikler kaybolur."
 
 #. module: project
 #. odoo-javascript
@@ -4035,13 +4289,13 @@ msgstr "Üzgün Yüz"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "Açıklamaya görselleri sürükleyebilmek için görevi kaydedin"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "Açıklamaya görselleri yapıştırabilmek için görevi kaydedin"
 
 #. module: project
 #. odoo-javascript
@@ -4111,7 +4365,7 @@ msgstr "Durumda Ara"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "%(left)s Görev Ara%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4123,7 +4377,7 @@ msgstr "Güvenlik Token"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "Menüden bir sorumlu seçin"
 
 #. module: project
 #. odoo-javascript
@@ -4178,13 +4432,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_priority_switch_field/project_task_priority_switch_field.js:0
 msgid "Set priority as %s"
-msgstr ""
+msgstr "Önceliği %s olarak ayarla"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 msgid "Set state as..."
-msgstr ""
+msgstr "Durumu şu şekilde ayarla..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4217,12 +4471,12 @@ msgstr "Projeyi Paylaş"
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
-msgstr ""
+msgstr "Görevi Paylaş"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__show_display_in_project
 msgid "Show Display In Project"
-msgstr ""
+msgstr "'Projede Göster’i görüntüle"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4234,7 +4488,7 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "Kapatılmış görevleri göster"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4263,6 +4517,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Seçilen bazı analitik hesaplar bir projeyle ilişkilendirilmiştir:\n"
+"%(accountList)s\n"
+"\n"
+"Bu hesapların arşivlenmesi, ilgili projeler için zaman çizelgesi kaydetme "
+"seçeneğini kaldırır.\n"
+"\n"
+"Devam etmek istediğinize emin misiniz?"
 
 #. module: project
 #. odoo-python
@@ -4279,6 +4540,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Görevlerinizi 'sprint' bazında; kilometre taşları, etiketler veya özel bir "
+"özellik kullanarak sıralayın. Her 'sprint'in sonunda, listenizde kalan "
+"görevleri seçin ve tümünü aynı anda bir sonraki 'sprint'e taşımak için "
+"sadece kilometre taşını, etiketi veya özelliği düzenleyin."
 
 #. module: project
 #. odoo-javascript
@@ -4320,7 +4585,7 @@ msgstr "Aşama"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "Aşama (Kapanış Grafiği)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4346,7 +4611,7 @@ msgstr "Aşama: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "Yıldızlı Görevler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4365,7 +4630,7 @@ msgstr "Durumu"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "Durum salt okunur"
 
 #. module: project
 #. odoo-javascript
@@ -4382,7 +4647,7 @@ msgstr "Durumu"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "Durum Güncellemesi - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4478,23 +4743,23 @@ msgstr "Görev Aktiviteleri"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "Görev Onaylandı"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "Görev İptal Edildi"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Görev İptal Edildi"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Görev, Yapılacak’tan dönüştürüldü"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4520,7 +4785,7 @@ msgstr "Görev Tamamlandı"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "Görev Devam Ediyor"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4580,23 +4845,25 @@ msgstr "Görev Başlığı..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
+"Görev, %(source_project)s projesinden %(destination_project)s projesine "
+"aktarıldı"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "Görev Beklemede"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "Görev onaylandı"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Görev iptal edildi"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4681,7 +4948,7 @@ msgstr "Testler"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "'Kapanış Grafiği'; Grafik tarihe göre gruplanmalıdır"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4747,7 +5014,7 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "Proje ve ilişkili partner, aynı şirkete bağlı olmalıdır."
 
 #. module: project
 #. odoo-python
@@ -4756,6 +5023,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
+"Bir projenin analitik hesabında analitik satırlar varsa veya birden fazla "
+"proje ile bağlantılıysa, o projenin şirketi değiştirilemez."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4770,19 +5039,22 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these"
 " groupings applied, the report will not provide relevant information."
 msgstr ""
+"Rapor, bir 'Kapanış Grafiği oluşturmak için \"Aşama\" ya da bir 'Tamamlama "
+"Grafiği' oluşturmak için \"Kapanış Durumu\"na göre gruplanmalıdır. Bu "
+"gruplamalardan biri uygulanmadığında rapor ilgili bilgileri sağlamaz."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "Arama, %(operator)s işlemcisini veya %(value)s değerini desteklemiyor."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "Görev ve ilişkili partner, aynı şirkete bağlı olmalıdır."
 
 #. module: project
 #. odoo-python
@@ -4792,12 +5064,15 @@ msgid ""
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Projenin gizliliği çok kısıtlı olduğundan görev alıcı(lar) ile paylaşılamaz. "
+"Görevin alıcı(lar) tarafından erişilebilir olması için projenin gizliliğini "
+"'%(visibility)s' olarak ayarlayın."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "Görev açıklaması o esnada boştu."
 
 #. module: project
 #. odoo-python
@@ -4806,6 +5081,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
+"Görünüm, tarih ve Aşama'ya göre gruplanmalıdır – 'Kapanış grafiği' veya "
+"'Kapalı mı – Tamamlama grafiği'"
 
 #. module: project
 #. odoo-javascript
@@ -4842,6 +5119,10 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders,"
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Paylaşılan proje görevlerini düzenleyebilir ve web sitenizde belirli "
+"belgeleri okuma modunda görüntüleyebilirler. Buna adaylar/fırsatlar, teklif/"
+"satış siparişleri, satın alma siparişleri, faturalar ve fişler, çalışma "
+"çizelgeleri ve talepler dahildir."
 
 #. module: project
 #. odoo-python
@@ -4872,6 +5153,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Bu analitik hesap aşağıdaki projelerle ilişkilidir:\n"
+"%(projectList)s\n"
+"\n"
+"Hesabın arşivlenmesi, bu projeler için zaman çizelgesi kaydetme seçeneğini "
+"kaldırır.\n"
+"\n"
+"Devam etmek istediğinize emin misiniz?"
 
 #. module: project
 #. odoo-javascript
@@ -4880,6 +5168,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Bu takipçi şu anda projeye katkı sunmaktadır. Onu kaldırmak, projeye olan "
+"portal erişimini iptal edecektir. Devam etmek istediğinize emin misiniz?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4887,6 +5177,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"Bu, proje müşterilerle paylaşıldığında ve düzenleme erişimine sahip "
+"olduklarında nasıl görüneceğinin ön izlemesidir."
 
 #. module: project
 #. odoo-python
@@ -4898,6 +5190,11 @@ msgid ""
 " stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
+"Bu proje %(project_company)s şirketi ile ilişkilendirilmişken, seçilen aşama "
+"%(stage_company)s şirketine aittir. Bu durumu çözmek için birkaç seçenek "
+"vardır: ya projeden ya da aşamadan şirket atamasını kaldırın. Alternatif "
+"olarak, bu kayıtların şirket bilgilerini güncelleyerek aynı şirkette "
+"hizalayabilirsiniz."
 
 #. module: project
 #. odoo-python
@@ -4920,24 +5217,28 @@ msgid ""
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"Bu proje herhangi bir şirketle ilişkilendirilmemişken, aşama %s şirketi ile "
+"ilişkilendirilmiştir. Düşünülebilecek birkaç çözüm vardır: ya projeyi "
+"aşamanın şirketiyle aynı olacak şekilde güncelleyin ya da aşamadan şirket "
+"atamasını kaldırın"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This task has sub-tasks, so it can't be private."
-msgstr ""
+msgstr "Bu görevin alt görevleri var, bu nedenle özel olamaz."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "Bu görev, tamamlanmamış başka bir görev tarafından engelleniyor"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "Bu görev şu anda şunun tarafından engelleniyor:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4973,19 +5274,21 @@ msgstr "İpucu: Gelen e-postalardan görevler oluşturun"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "İpucu: Projeye Özgü Alanlar"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
 msgstr ""
+"İpucu: Görevlerinizin ilerlemesini takip etmek için görev durumlarını "
+"kullanın"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "İpucu: Kendi Kişisel Kanban’ınız"
 
 #. module: project
 #. odoo-python
@@ -5036,6 +5339,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Bir görevi alt göreve dönüştürmek için bir üst görev seçin. Alternatif "
+"olarak, bir alt görevi bağımsız bir görev haline dönüştürmek için üst görev "
+"alanını boş bırakın."
 
 #. module: project
 #. odoo-python
@@ -5063,7 +5369,7 @@ msgstr "Toplam"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Toplam Maliyet"
 
 #. module: project
 #. odoo-javascript
@@ -5099,6 +5405,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"Proje ile ilişkili analitik hesabı ilgili belgelere atayarak proje "
+"maliyetlerini, gelirlerini ve kar marjını takip edin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5141,7 +5449,7 @@ msgstr "Kayıtlardaki istisna etkinliğinin türü."
 #. odoo-python
 #: code:addons/project/models/project_project_stage.py:0
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "Projeleri Arşivden Çıkar"
 
 #. module: project
 #. odoo-python
@@ -5237,6 +5545,8 @@ msgstr "Bunu Projem İçin Kullan"
 msgid ""
 "Use personal stages to organize your tasks and create your own workflow."
 msgstr ""
+"Görevlerinizi düzenlemek ve kendi iş akışınızı oluşturmak için kişisel "
+"aşamalar kullanın."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5452,12 +5762,15 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Bu aşama halihazırda %(project_company_name)s ile ilişkili projeler içerdiği "
+"için şirketi %(company_name)s olarak değiştiremezsiniz. Lütfen bu aşamanın "
+"yalnızca %(company_name)s ile bağlantılı projelerden oluştuğundan emin olun."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can change the sub-task state here!"
-msgstr ""
+msgstr "Alt görevin durumunu buradan değiştirebilirsiniz!"
 
 #. module: project
 #. odoo-python
@@ -5469,7 +5782,7 @@ msgstr "Yalnızca özel bir görevde kişisel aşama ayarlayabilirsiniz."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr ""
+msgstr "Alt görevleri kanban kartından açabilirsiniz!"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5477,6 +5790,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"Projeleri içeren aşamaları silemezsiniz. Bunları arşivleyebilir veya önce "
+"tüm projelerini silebilirsiniz."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5484,6 +5799,8 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
+"Projeleri içeren aşamaları silemezsiniz. Önce tüm projelerini silmeniz "
+"gerekir."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5506,13 +5823,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "Görevlerde aşağıdaki alanları okuyamazsınız: %(field_list)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot write on the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "Görevlerde aşağıdaki alanlara yazamazsınız: %(field_list)s"
 
 #. module: project
 #. odoo-python
@@ -5568,7 +5885,7 @@ msgstr "Olmalısın"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "Hangi geri bildirimlerin kabul edileceğine yöneticileriniz karar verir"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5606,7 +5923,7 @@ msgstr "avatar"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "button."
-msgstr ""
+msgstr "düğmesi."
 
 #. module: project
 #. odoo-javascript
@@ -5641,7 +5958,7 @@ msgstr "Örneğin. Davetiye Gönder"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "örn. Görevler"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
@@ -5650,7 +5967,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "örn. Yapılacak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5681,6 +5998,8 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"diğerlerini bekleyen görevleri görmek için simge. Bir görev tamamlandı veya "
+"iptal edildi olarak işaretlendiğinde, tüm bağımlılıkları kaldırılır."
 
 #. module: project
 #. odoo-javascript
@@ -5697,12 +6016,12 @@ msgstr "oturum açıldı"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "menü görünümü Benim Görevlerim"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "belirli aralıklarla"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5720,6 +6039,8 @@ msgstr "ulaşıldı olarak işaretlenmeye hazır"
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
+"bir görevde değişiklik talebi veya tartışma gerekliliğini belirtmek için "
+"durum."
 
 #. module: project
 #. odoo-javascript
@@ -5727,24 +6048,26 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"bir görevin bir sonraki aşama için onaylandığını iş arkadaşlarınıza "
+"bildirmek için durum."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "görevi iptal edilmiş olarak işaretlemek için durum."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "görevi tamamlanmış olarak işaretlemek için durum."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
-msgstr ""
+msgstr "alt görevler)"
 
 #. module: project
 #. odoo-python
@@ -5787,7 +6110,7 @@ msgstr "Fikrinizin mevcut durumunun ne olduğunu belirtmek için."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "belirli bir aşamaya ulaşıldığında"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5800,6 +6123,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Memnuniyet "
+"Anketi"
 
 #. module: project
 #. odoo-javascript

@@ -94,6 +94,7 @@ class ReturnPicking(models.TransientModel):
         return res
 
     picking_id = fields.Many2one('stock.picking')
+    picking_type_code = fields.Selection(related='picking_id.picking_type_code', readonly=True)
     product_return_moves = fields.One2many('stock.return.picking.line', 'wizard_id', 'Moves', compute='_compute_moves_locations', precompute=True, readonly=False, store=True)
     company_id = fields.Many2one(related='picking_id.company_id')
 
@@ -187,6 +188,11 @@ class ReturnPicking(models.TransientModel):
         for return_line in self.product_return_moves:
             return_line._process_line(exchange_picking)
 
+        # The exchange moves should be independent of their origin moves
+        exchange_picking.move_ids.write({
+            'origin_returned_move_id': False,
+            'move_orig_ids': False,
+        })
         exchange_picking.action_confirm()
         exchange_picking.action_assign()
         return exchange_picking

@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
         ('customer', 'Customer'),
         ('supplier', 'Vendor'),
     ], default='customer', tracking=True, required=True)
-    memo = fields.Char(string="Memo", tracking=True)
+    memo = fields.Char(string="Memo", tracking=True, inverse='_inverse_memo')
     payment_reference = fields.Char(string="Payment Reference", copy=False, tracking=True,
         help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
     currency_id = fields.Many2one(
@@ -411,6 +411,7 @@ class AccountPayment(models.Model):
 
     @api.depends('invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
+        payments_is_matched_to_recompute = self.env['account.payment']
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
@@ -423,7 +424,13 @@ class AccountPayment(models.Model):
                     'in_process'
                 )
             if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
+                # The access to invoice.payment_state will trigger a flush_model on account_payment.is_matched in its compute.
+                # This flush will then trigger _compute_reconciliation_status. However, the payment.state will then be changed by this next line of code.
+                # As the _compute_reconciliation_status was already tiggered once, we have to force the recompute after the payment state has been updated,
+                # since the values computed by that method depends on it.
                 payment.state = 'paid'
+                payments_is_matched_to_recompute |= payment
+        self.env.add_to_compute(self._fields['is_matched'], payments_is_matched_to_recompute)
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):
@@ -810,10 +817,15 @@ class AccountPayment(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
+    def _inverse_memo(self):
+        for payment in self:
+            move = payment.move_id
+            if move:
+                move.ref = payment.memo
+
     def _inverse_partner_id(self):
         # todo: remove in master
         pass
-
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS

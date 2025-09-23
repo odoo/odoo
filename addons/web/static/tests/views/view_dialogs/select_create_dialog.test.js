@@ -15,6 +15,7 @@ import {
     fields,
     getService,
     models,
+    mockService,
     mountView,
     mountWithCleanup,
     onRpc,
@@ -496,4 +497,73 @@ test("SelectCreateDialog empty list, noContentHelp props", async () => {
     expect(queryOne(".o_dialog .o_list_view .o_view_nocontent")).toHaveInnerHTML(
         `<div class="o_nocontent_help"><p class="custom_classname">Hello</p><p>I'm an helper</p></div>`
     );
+});
+
+test("SelectCreateDialog with open action", async () => {
+    Instrument._records = [];
+    for (let i = 0; i < 25; i++) {
+        Instrument._records.push({
+            id: i + 1,
+            name: "Instrument " + i,
+        });
+    }
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`, params);
+        },
+    });
+    Instrument._views["list"] = /* xml */ `
+        <list action="test_action" type="object">
+            <field name="name"/>
+        </list>
+    `;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="instrument"/>
+            </form>
+        `,
+    });
+    await contains(`.o_field_widget[name="instrument"] .dropdown input`).click();
+    await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
+    await contains(
+        `.o_list_renderer .o_data_row .o_field_cell.o_list_char[data-tooltip="Instrument 10"]`
+    ).click();
+    expect("input").toHaveValue("Instrument 10");
+    expect.verifySteps([]);
+});
+
+test("SelectCreateDialog: enable select when grouped with domain selection", async () => {
+    Partner._views["list"] = `
+        <list string="Partner">
+            <field name="name"/>
+            <field name="foo"/>
+        </list>
+    `;
+    Partner._views["search"] = `
+        <search>
+            <group expand="0" string="Group By">
+                <filter name="groupby_bar" context="{'group_by' : 'bar'}"/>
+            </group>
+        </search>
+    `;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        noCreate: true,
+        resModel: "partner",
+        domain: [["name", "like", "a"]],
+        context: {
+            search_default_groupby_bar: true,
+        },
+    });
+    await animationFrame();
+    await contains("thead .o_list_record_selector input").click();
+
+    await animationFrame();
+    expect(".o_select_button:not([disabled])").toHaveCount(1);
 });

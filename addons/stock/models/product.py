@@ -629,6 +629,14 @@ class Product(models.Model):
 
     def _get_dates_info(self, date, location, route_ids=False):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
+        if self.env.context.get('exclude_inter_wh_rules') and any(
+            loc.warehouse_id and loc.warehouse_id.lot_stock_id.parent_path in loc.parent_path
+            for loc in rules.location_src_id
+        ):
+            return {
+                'date_planned': date,
+                'date_order': date,
+            }
         delays, _ = rules.with_context(bypass_delay_description=True)._get_lead_days(self)
         return {
             'date_planned': date - relativedelta(days=delays['security_lead_days']),

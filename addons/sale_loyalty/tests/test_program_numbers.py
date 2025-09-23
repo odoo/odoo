@@ -590,6 +590,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         generated_coupon = order._get_reward_coupons()
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.points, 0, "The coupon should not have it's points already.")
+        self.assertFalse(order._get_claimable_rewards(), "No rewards should be claimable")
+
+        order.action_confirm()
+        self.assertEqual(
+            generated_coupon.points, 1,
+            "The coupon should have 1 point after confirmation",
+        )
+        self.assertFalse(
+            order._get_claimable_rewards(),
+            "Next-order coupon rewards shouldn't be claimable on current order",
+        )
 
     def test_coupon_rule_minimum_amount(self):
         """ Ensure coupon with minimum amount rule are correctly
@@ -1817,6 +1828,42 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(order.order_line[0].tax_id, tax_15pc_excl)
         self.assertEqual(order.order_line[1].tax_id, tax_15pc_excl)
         self.assertEqual(order.amount_total, 156.0, '140$ + 15% - 5$ = 156$')
+
+    def test_rounded_used_loyalty_points(self):
+        """Check that the loyalty points used in a reward are rounded according to the currency."""
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Test loyalty card',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [Command.set([])],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 0.03,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        order = self.empty_order
+        self.env['loyalty.card'].create([{
+            'program_id': loyalty_program.id,
+            'partner_id': order.partner_id.id,
+            'points': 3030,
+        }])
+        product_a = self._create_product(
+            name='product_a',
+            lst_price=3000.0,
+            taxes_id=[Command.set([])],
+        )
+        order.order_line = [Command.create({'product_id': product_a.id})]
+
+        coupon = loyalty_program.coupon_ids[0]
+        order._apply_program_reward(loyalty_program.reward_ids[0], coupon)
+        order.action_confirm()
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        used_points = coupon.history_ids[0].used
+        self.assertEqual(used_points, coupon.currency_id.round(used_points))
 
     def test_apply_order_and_specific_discounts(self):
         """Ensure you can apply a full-order discount, and then a product-specific discount."""

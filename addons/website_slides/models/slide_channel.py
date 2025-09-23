@@ -818,6 +818,7 @@ class Channel(models.Model):
                 ("author_id", "=", message.author_id.id),
                 ("model", "=", "slide.channel"),
                 ("subtype_id", "=", self.env.ref("mail.mt_comment").id),
+                ("rating_ids", "!=", False),
             ]
             if self.env["mail.message"].search_count(domain, limit=2) > 1:
                 raise ValidationError(_("Only a single review can be posted per course."))
@@ -1140,6 +1141,18 @@ class Channel(models.Model):
                 )
         return activities
 
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """ Instead of the classic form view, redirect to website if it is published. """
+        self.ensure_one()
+        if force_website or self.website_published:
+            return {
+                "type": "ir.actions.act_url",
+                "url": self.website_url,
+                "target": "self",
+                "target_type": "public",
+            }
+        return super()._get_access_action(access_uid=access_uid, force_website=force_website)
+
     # ---------------------------------------------------------
     # Data / Misc
     # ---------------------------------------------------------
@@ -1286,3 +1299,7 @@ class Channel(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True

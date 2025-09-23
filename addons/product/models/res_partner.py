@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -48,10 +47,7 @@ class ResPartner(models.Model):
                 partner.specific_property_product_pricelist = False if partner.property_product_pricelist.id == default_for_country.id else partner.property_product_pricelist.id
 
     def _commercial_fields(self):
-        return super()._commercial_fields() + ['property_product_pricelist']
-
-    def _company_dependent_commercial_fields(self):
         return [
-            *super()._company_dependent_commercial_fields(),
-            'specific_property_product_pricelist'
+            *super()._commercial_fields(),
+            'specific_property_product_pricelist',
         ]

@@ -220,3 +220,37 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ('holiday_id', '=', partially_covered_leave.id)
         ])
         self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')
+
+    def test_multi_day_public_holidays_for_flexible_schedule(self):
+        """
+        Test that _get_unusual_days return correct value for
+        multi-day holidays in flexible schedules
+        """
+
+        flex_cal = self.env['resource.calendar'].create({
+            'name': 'Flexible', 'tz': 'UTC', 'flexible_hours': True, 'hours_per_day': 8.0
+        })
+
+        # tuesday to thursday
+        self.env['resource.calendar.leaves'].create({
+            'name': '3 day holiday', 'calendar_id': flex_cal.id,
+            'date_from': datetime(2024, 3, 5), 'date_to': date(2024, 3, 7)
+        })
+
+        # monday to saturday
+        start = datetime(2024, 3, 4)
+        end = datetime(2024, 3, 10)
+
+        flex_days = flex_cal._get_unusual_days(start, end)
+
+        expected = {
+            '2024-03-04': False,
+            '2024-03-05': True,
+            '2024-03-06': True,
+            '2024-03-07': True,
+            '2024-03-08': False,
+            '2024-03-09': False,
+            '2024-03-10': False,
+        }
+        for day, value in expected.items():
+            self.assertEqual(flex_days.get(day), value, f"Day {day} should be {'unusual' if value else 'normal'}")

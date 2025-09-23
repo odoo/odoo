@@ -7,7 +7,7 @@ class CRMHelpers(models.Model):
     _description = 'Helper methods for crm_iap_mine modules'
 
     @api.model
-    def notify_no_more_credit(self, service_name, model_name, notification_parameter):
+    def _notify_no_more_credit(self, service_name, model_name, notification_parameter):
         """
         Notify about the number of credit.
         In order to avoid to spam people each hour, an ir.config_parameter is set

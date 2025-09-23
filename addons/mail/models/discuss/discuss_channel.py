@@ -272,7 +272,7 @@ class Channel(models.Model):
                                 field_name=field_name,
                             )
                         )
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
+            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0 and 'partner_id' in cmd[2]]
 
             partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
@@ -763,6 +763,22 @@ class Channel(models.Model):
         """ Do not allow follower subscription on channels. Only members are
         considered. """
         raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))
+
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """ Redirect to Discuss instead of form view. """
+        self.ensure_one()
+        if not self.env.user._is_internal() or force_website:
+            return {
+                "type": "ir.actions.act_url",
+                "url": f"/discuss/channel/{self.id}",
+                "target": "self",
+                "target_type": "public",
+            }
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/odoo/action-mail.action_discuss?active_id={self.id}",
+            "target": "self",
+        }
 
     # ------------------------------------------------------------
     # BROADCAST

@@ -645,6 +645,9 @@ export class Rtc extends Record {
      * @param {Boolean} [param2.important] if the log is important and should be kept even if logRtc is disabled
      */
     log(session, entry, { error, step, state, important, ...data } = {}) {
+        if (!session) {
+            return;
+        }
         session.logStep = entry;
         if (!this.store.settings.logRtc && !important) {
             return;

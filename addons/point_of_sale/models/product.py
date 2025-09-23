@@ -269,7 +269,7 @@ class ProductAttribute(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
+        return ['name', 'display_type', 'create_variant']
 
     @api.model
     def _load_pos_data_domain(self, data):

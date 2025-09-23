@@ -34,3 +34,12 @@ class InStoreDelivery(Delivery):
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         order_sudo._set_pickup_location(pickup_location_data)
+
+    @classmethod
+    def _get_delivery_methods_express_checkout(cls, order_sudo):
+        """Override to exclude `in_store` delivery methods from exress checkout delivery options."""
+        dm_rate_mapping = super()._get_delivery_methods_express_checkout(order_sudo)
+        for dm in list(dm_rate_mapping):
+            if dm.delivery_type == 'in_store':
+                del dm_rate_mapping[dm]
+        return dm_rate_mapping

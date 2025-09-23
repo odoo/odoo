@@ -76,9 +76,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.percentAmountIs("25%", "0.50"),
             TipScreen.clickPercentTip("20%"),
             TipScreen.inputAmountIs("0.40"),
-            TipScreen.clickSettle(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
 
