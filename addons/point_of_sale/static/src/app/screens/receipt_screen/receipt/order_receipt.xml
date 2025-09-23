@@ -75,11 +75,11 @@
                     </div>
                 </t>
 
-                <div t-if="qrCode" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
+                <div t-if="order.company.point_of_sale_use_ticket_qr_code and order.finalized" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
                     <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
-                        <img id="posqrcode" t-att-src="qrCode" class="pos-receipt-logo m-0 w-100"/>
+                        <img id="posqrcode" t-att-src="this.qrCode" class="m-0"/>
                     </div>
-                    <div class="w-100">
+                    <div class="w-100 ms-1">
                         <div class="fw-bolder">
                             Need an invoice?
                         </div>

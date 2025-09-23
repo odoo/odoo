@@ -30,7 +30,7 @@
                 (شامل ضريبة القيمة المضافة)
             </span>
         </span>
-        <xpath expr="//div[@t-if='qrCode']//div[hasclass('w-100')]" position="inside">
+        <xpath expr="//div[@t-if='order.company.point_of_sale_use_ticket_qr_code and order.finalized']//div[hasclass('w-100')]" position="inside">
             <div name="order_reference" t-if="order.isSACompany()">
                 <t t-if="!order.config_id.l10n_gcc_dual_language_receipt">
                     <span>Reference:</span><t t-out="order.pos_reference"/>

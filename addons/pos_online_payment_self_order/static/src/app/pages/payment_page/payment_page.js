@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page";
 import { _t } from "@web/core/l10n/translation";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 patch(PaymentPage.prototype, {
     async startPayment() {
@@ -26,9 +27,7 @@ patch(PaymentPage.prototype, {
         return paymentMethods && paymentMethods.is_online_payment;
     },
     generateQrcodeImg(url) {
-        const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-        const qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(url, 150, 150));
-        this.state.qrImage = "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
+        this.state.qrImage = generateQRCodeDataUrl(url);
     },
     async checkAndOpenPaymentPage(order) {
         if (order.state === "draft") {
