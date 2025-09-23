@@ -1,6 +1,6 @@
 import re
 import warnings
-from collections.abc import Reversible
+from collections.abc import Iterable, Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
@@ -131,13 +131,20 @@ def expand_ids(id0, ids):
 # The value of records._prefetch_ids must be iterable and reversible
 #
 
-class PrefetchRelational(Reversible):
+class PrefetchRelational(Reversible):  # noqa: PLW1641
     """ A prefetch object for the values of a relational field. """
     __slots__ = ('_field', '_records')
 
     def __init__(self, field, records):
         self._field = field
         self._records = records
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, PrefetchRelational)
+            and self._field is other._field
+            and self._records._prefetch_ids == other._records._prefetch_ids
+        )
 
     def __iter__(self):
         field_cache = self._field._get_cache(self._records.env)
@@ -162,7 +169,7 @@ class PrefetchRelational(Reversible):
                     yield from coids
 
 
-class OriginIds(Reversible):
+class OriginIds(Reversible):  # noqa: PLW1641
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
@@ -170,6 +177,9 @@ class OriginIds(Reversible):
 
     def __init__(self, ids):
         self.ids = ids
+
+    def __eq__(self, other):
+        return isinstance(other, OriginIds) and self.ids == other.ids
 
     def __iter__(self):
         for id_ in self.ids:
@@ -182,6 +192,46 @@ class OriginIds(Reversible):
                 yield id_
 
 
+class PrefetchUnion(Reversible):
+    """ A prefetch object for the concatenation/union of recordsets.
+    The constructor takes the `_prefetch_ids` of the recordsets in the
+    concatenation/union.
+    """
+    __slots__ = ('_prefetches',)
+
+    def __init__(self, prefetches: Iterable[Reversible]):
+        self._prefetches = prefetches
+
+    def __iter__(self):
+        prev_it = ()
+        # flatten out prefetches in order to avoid recursion errors
+        stack = list(reversed(self._prefetches))
+        while stack:
+            it = stack.pop()
+            if isinstance(it, PrefetchUnion):
+                stack.extend(reversed(it._prefetches))
+                continue
+            if it == prev_it:  # small optimization to deduplicate a bit
+                continue
+            yield from it
+            prev_it = it
+
+    def __reversed__(self):
+        prev_it = ()
+        # flatten out prefetches in order to avoid recursion errors
+        stack = list(self._prefetches)
+        while stack:
+            it = stack.pop()
+            if isinstance(it, PrefetchUnion):
+                stack.extend(it._prefetches)
+                continue
+            if it == prev_it:  # small optimization to deduplicate a bit
+                continue
+            yield from reversed(it)
+            prev_it = it
+
+
 class Prefetch:
     relational = PrefetchRelational
     origin = OriginIds
+    union = PrefetchUnion
