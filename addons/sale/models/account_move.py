@@ -153,7 +153,9 @@ class AccountMove(models.Model):
         """
         order_amount = 0
         for invoice in self:
-            prices = sum(invoice.line_ids.filtered(lambda x: order in x.sale_line_ids.order_id).mapped('price_total'))
+            prices = sum(invoice.line_ids.filtered(
+                lambda x: x.display_type not in ('line_note', 'line_section') and order in x.sale_line_ids.order_id
+            ).mapped('price_total'))
             order_amount += invoice.currency_id._convert(
                 prices * -invoice.direction_sign,
                 order.currency_id,
