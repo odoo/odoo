@@ -327,8 +327,6 @@ class TestAPI(SavepointCaseWithUserDemo):
         part = partners.browse(partners.ids[:5])
         self.assertNotEqual(prefetch_ids, partners.browse()._prefetch_ids)
         self.assertNotEqual(prefetch_ids, part._prefetch_ids)
-        self.assertNotEqual(set(prefetch_ids), set(partners[0]._prefetch_ids))
-        self.assertNotEqual(set(prefetch_ids), set(partners[:5]._prefetch_ids))
 
         # the recordset operations below share the prefetch set
         self.assertEqual(prefetch_ids, partners.browse(partners.ids)._prefetch_ids)
@@ -336,6 +334,8 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(prefetch_ids, partners.with_context(active_test=False)._prefetch_ids)
         self.assertEqual(prefetch_ids, part.with_prefetch(prefetch_ids)._prefetch_ids)
         self.assertEqual(prefetch_ids, partners.filtered('country_id')._prefetch_ids)
+        self.assertEqual(prefetch_ids, partners[0]._prefetch_ids)
+        self.assertEqual(prefetch_ids, partners[:5]._prefetch_ids)
 
         # iteration and relational fields should use the same prefetch set
         self.assertEqual(type(partners).country_id.type, 'many2one')
@@ -383,7 +383,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         prefetch_ids = partners.child_ids._prefetch_ids
         children = [partner.child_ids[:1] for partner in partners]
         for child in children:
-            self.assertNotEqual(set(prefetch_ids), set(child._prefetch_ids))
+            self.assertEqual(set(prefetch_ids), set(child._prefetch_ids))
 
         self.assertNotEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
         self.assertNotEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
