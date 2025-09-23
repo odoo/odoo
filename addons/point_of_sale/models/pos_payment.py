@@ -126,7 +126,7 @@ class PosPayment(models.Model):
         The introduced heuristics here is important for cases where the pos receivable account is the same
         as the receivable account of the customer.
 
-        - positive payment -> negative balance lines
+        - positive payment -> negative balance linesw
         - negative payment -> positive balance lines
         """
 
