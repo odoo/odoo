@@ -39,11 +39,9 @@ class HrEmployeePublic(models.Model):
     resource_id = fields.Many2one('resource.resource', readonly=True)
     tz = fields.Selection(related='resource_id.tz')
     color = fields.Integer(readonly=True)
-    hr_presence_state = fields.Selection([
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('archive', 'Archived'),
-        ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', default='out_of_working_hour')
+    hr_presence_state = fields.Selection(
+        selection='_get_selection_hr_presence_state',
+        compute='_compute_presence_state')
     hr_icon_display = fields.Selection(
         selection='_get_selection_hr_icon_display',
         compute='_compute_presence_icon')
@@ -76,6 +74,9 @@ class HrEmployeePublic(models.Model):
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
 
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+
+    def _get_selection_hr_presence_state(self):
+        return self.env['hr.employee']._fields['hr_presence_state']._description_selection(self.env)
 
     def _get_selection_hr_icon_display(self):
         return self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env)

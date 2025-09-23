@@ -100,7 +100,7 @@ class HrEmployee(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
         ('archive', 'Archived'),
-        ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', default='out_of_working_hour')
+        ('out_of_working_hour', 'Off-Hours')], store=True, compute='_compute_presence_state', default='out_of_working_hour')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     hr_icon_display = fields.Selection([
@@ -799,7 +799,7 @@ class HrEmployee(models.Model):
                     working_now += res_employee_ids.ids
         return working_now
 
-    @api.depends('user_id.im_status')
+    @api.depends('user_id.im_status', 'resource_calendar_id')
     def _compute_presence_state(self):
         """
         This method is overritten in several other modules which add additional
@@ -812,7 +812,7 @@ class HrEmployee(models.Model):
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'out_of_working_hour'
-            if employee.company_id.sudo().hr_presence_control_login:
+            if employee.company_id.hr_presence_control_login:
                 # sudo: res.users - can access presence of accessible user
                 presence_status = employee.user_id.sudo().presence_ids.status or "offline"
                 if presence_status == "online":
