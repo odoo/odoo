@@ -43,9 +43,17 @@ patch(OrderPaymentValidation.prototype, {
                         this.pos.config.pricelist_id?.id != this.order.pricelist_id?.id
                             ? this.order.pricelist_id
                             : false;
+                    const setFiscalPosition =
+                        this.pos.config.default_fiscal_position_id?.id !=
+                        this.order.fiscal_position_id?.id
+                            ? this.order.fiscal_position_id?.id
+                            : false;
                     this.order.setPartner(this.pos.config.simplified_partner_id);
                     if (setPricelist) {
                         this.order.setPricelist(setPricelist);
+                    }
+                    if (setFiscalPosition !== false) {
+                        this.order.update({ fiscal_position_id: setFiscalPosition });
                     }
                 }
             }
