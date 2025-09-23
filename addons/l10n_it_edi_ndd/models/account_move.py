@@ -96,10 +96,15 @@ class AccountMove(models.Model):
         if not res:
             return
         self = res
+        tree = data['xml_tree']
 
         #l10n_it_payment_method
-        if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+        if payment_method := get_text(tree, '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
             if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
                 self.l10n_it_payment_method = payment_method
+
+        document_type_code = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
+        if document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type_code)]):
+            self.l10n_it_document_type = document_type
 
         return self

@@ -54,6 +54,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
                 3: { id: 3, name: "Heroes TM", parent_id: false, child_ids: [] },
             },
             current_company: 1,
+            disallowed_ancestor_companies: {},
         });
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("company", companyService);
