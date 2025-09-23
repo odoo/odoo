@@ -379,6 +379,9 @@ function matchCondition(record, condition) {
         case "any":
         case "not any":
             return true;
+        case "child_of":
+        case "parent_of":
+            return true;
     }
     throw new InvalidDomainError("could not match domain");
 }
