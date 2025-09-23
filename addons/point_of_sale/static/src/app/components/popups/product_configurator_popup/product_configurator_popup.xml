@@ -96,7 +96,7 @@
                     <span class="d-flex flex-row justify-content-center align-items-center">
                         <label t-attf-class="configurator_color rounded-circle border position-relative {{ value.id == props.selected.id ? 'active border-3' : 'border-3 border-secondary' }}"
                             t-att-class="{'ptav-not-available' : value.excluded}"
-                            t-attf-style="{{ img_style or color_style }}" t-att-data-color="value.name">
+                            t-attf-style="{{ img_style or color_style }}" t-att-data-color="value.name" t-att-title="value.name">
                             <input 
                                 type="radio"
                                 t-att-checked="value.id === props.selected.id"
