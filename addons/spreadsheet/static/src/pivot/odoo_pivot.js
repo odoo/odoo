@@ -495,7 +495,7 @@ export class OdooPivot {
                         this._fields[dimension.fieldName] = {
                             ...modelsInfo.at(-1).fieldDefs[dimension.fieldName.split(".").at(-1)],
                             string: names
-                                .map((name, i) => modelsInfo[i].fieldDefs[name].string)
+                                .map((name, i) => modelsInfo[i].fieldDefs[name]?.string)
                                 .join(" > "),
                             name: dimension.fieldName,
                         };
