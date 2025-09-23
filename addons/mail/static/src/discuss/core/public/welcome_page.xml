@@ -10,34 +10,8 @@
         </h1>
         <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
         <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
-            <div t-if="showCallPreview" class="w-100 align-self-center" style="max-width: 640px;">
-                <div class="position-relative d-flex flex-column align-items-center" t-ref="root">
-                    <video class="shadow rounded-3 bg-dark object-fit-contain" t-attf-height="{{ui.isSmall ? 240 : 360}}" width="100%" autoplay="" t-ref="video"/>
-                    <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
-                        Camera is off
-                    </p>
-                    <p t-if="!hasRtcSupport" class="position-absolute bottom-50 text-light">
-                        Your browser does not support videoconference
-                    </p>
-                    <div class="position-absolute d-flex gap-3 mb-3 bottom-0">
-                        <button class="btn fa-stack p-0 rounded-circle fs-2 shadow" t-attf-class="{{ state.audioStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickMic">
-                            <i class="fa" t-attf-class="{{ state.audioStream ? 'fa-microphone' : 'fa-microphone-slash' }}"/>
-                            <span t-if="rtc.microphonePermission !== 'granted'" class="position-absolute text-dark fw-bolder mt-1 start-100 translate-middle p-1 badge rounded-circle bg-warning">
-                                <i class="fa fa-exclamation-triangle"/>
-                            </span>
-                        </button>
-                        <button class="btn fa-stack p-0 rounded-circle fs-2 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
-                            <i class="fa fa-camera"/>
-                            <span t-if="rtc.cameraPermission !== 'granted'" class="position-absolute text-dark fw-bolder mt-1 start-100 translate-middle p-1 badge rounded-circle bg-warning">
-                                <i class="fa fa-exclamation-triangle"/>
-                            </span>
-                        </button>
-                        <button t-if="state.videoStream" class="btn fa-stack p-0 rounded-circle fs-2 shadow" t-attf-class="{{ store.settings.useBlur ? 'btn-secondary' : 'btn-dark' }}" t-on-click="onClickBlur" t-att-title="blurButtonTitle">
-                            <i class="fa fa-photo" t-att-class="{ 'opacity-50': !store.settings.useBlur }"/>
-                        </button>
-                    </div>
-                    <audio autoplay="" t-ref="audio"/>
-                </div>
+            <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
+                <CallPreview onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
                 <div class="d-flex flex-column flex-md-row gap-2 text-muted mt-3">
                     <div class="w-100 text-uppercase">
                         <i class="fa fa-microphone"></i> Microphone
