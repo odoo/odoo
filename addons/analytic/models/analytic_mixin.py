@@ -95,17 +95,17 @@ class AnalyticMixin(models.AbstractModel):
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string
         if operator == 'in':
-            return Domain.custom(to_sql=lambda model, alias, query: SQL(
+            return Domain.custom(to_sql=lambda table: SQL(
                 "%s && %s",
-                self._query_analytic_accounts(alias),
+                self._query_analytic_accounts(table._alias),
                 ids,
             ))
         else:
-            return Domain.custom(to_sql=lambda model, alias, query: SQL(
+            return Domain.custom(to_sql=lambda table: SQL(
                 "(NOT %s && %s OR %s IS NULL)",
-                self._query_analytic_accounts(alias),
+                self._query_analytic_accounts(table._alias),
                 ids,
-                model._field_to_sql(alias, 'analytic_distribution', query),
+                table.analytic_distribution,
             ))
 
     def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:

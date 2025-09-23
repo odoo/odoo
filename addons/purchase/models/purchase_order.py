@@ -367,11 +367,7 @@ class PurchaseOrder(models.Model):
             return NotImplemented
         purchase_domain = Domain('state', '=', 'purchase') & Domain('date_planned', '<=', fields.Datetime.now())
         line_domain = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-            to_sql=lambda model, alias, query: SQL(
-                "%s < %s",
-                model._field_to_sql(alias, 'qty_received', query),
-                model._field_to_sql(alias, 'product_qty', query),
-            )
+            to_sql=lambda table: SQL("%s < %s", table.qty_received, table.product_qty),
         )
         return Domain('order_line', 'any', line_domain)
 
