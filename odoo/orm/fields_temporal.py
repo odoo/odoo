@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
     from .models import BaseModel
-    from .query import Query
+    from .query import FieldSQL
 
 T = typing.TypeVar("T")
 
@@ -77,9 +77,12 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
             f"Only {', '.join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported"
         )
 
-    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
-        sql_expr = field_sql
-        if self.type == 'datetime' and (timezone := model.env.context.get('tz')):
+    def property_to_sql(self, field_sql: FieldSQL, property_name: str) -> SQL:
+        return self._generic_property_to_sql(self.type, field_sql, property_name, field_sql._table._model)
+
+    @staticmethod
+    def _generic_property_to_sql(ftype: typing.Literal['date', 'datetime'], sql_expr: SQL, property_name: str, model: BaseModel) -> SQL:
+        if ftype == 'datetime' and (timezone := model.env.context.get('tz')):
             # only use the timezone from the context
             if timezone in pytz.all_timezones_set:
                 sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
