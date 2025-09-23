@@ -59,3 +59,15 @@ class PosOrder(models.Model):
         for config in config_ids:
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
             config._notify('ORDER_STATE_CHANGED', {})
+
+    def _send_payment_result(self, payment_result):
+        self.ensure_one()
+        self.config_id._notify('PAYMENT_STATUS', {
+            'payment_result': payment_result,
+            'data': {
+                'pos.order': self.read(self._load_pos_self_data_fields(self.config_id.id), load=False),
+                'pos.order.line': self.lines.read(self._load_pos_self_data_fields(self.config_id.id), load=False),
+            }
+        })
+        if payment_result == 'Success':
+            self._send_order()

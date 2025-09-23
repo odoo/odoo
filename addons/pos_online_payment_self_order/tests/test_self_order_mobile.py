@@ -23,6 +23,12 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
             'is_online_payment': True,
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
         })
+        # Needed to test online payments through the portal
+        cls.env['account.payment.method'].sudo().create({
+            'name': 'Dummy method',
+            'code': 'none',
+            'payment_type': 'inbound'
+        })
 
     def test_online_payment_self_pay_after_meal_table(self):
         """
