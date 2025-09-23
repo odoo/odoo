@@ -939,6 +939,18 @@ class HrApplicant(models.Model):
             })
         return email_keys_to_values
 
+    def _message_add_default_recipients(self):
+        # Not using partner_id as recipent because partner.email may not reflect changes in the applicant form."""
+        results = super()._message_add_default_recipients()
+        res = {}
+        for record in self:
+            res[record.id] = {
+                'email_cc_lst': results[record.id]['email_cc_lst'],
+                'email_to_lst': results[record.id]['email_to_lst'],
+                'partners': self.env['res.partner'],
+            }
+        return res
+
     @api.depends('partner_name')
     @api.depends_context('show_partner_name')
     def _compute_display_name(self):
