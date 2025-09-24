@@ -188,7 +188,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
             attendance_intervals = []
             for date, day_attendances in attendances.filtered(
-                lambda att: unusual_days[att.date.strftime('%Y-%m-%d')] == (self.timing_type == 'non_work_days')
+                lambda att: unusual_days.get(att.date.strftime('%Y-%m-%d'), None) == (self.timing_type == 'non_work_days')
             ).grouped('date').items():
                 tz = timezone(version_map[employee][date]._get_tz())
                 time_start = self._get_local_time_start(date, tz)
