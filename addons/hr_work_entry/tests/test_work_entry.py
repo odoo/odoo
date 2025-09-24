@@ -97,11 +97,20 @@ class TestWorkEntry(TestWorkEntryBase):
             'contract_date_end': False,
             'wage': 1000,
         })
+        self.env['resource.calendar.leaves'].create({
+            'date_from': pytz.timezone('Asia/Hong_Kong').localize(datetime(2023, 8, 2, 0, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': pytz.timezone('Asia/Hong_Kong').localize(datetime(2023, 8, 2, 23, 59, 59)).astimezone(pytz.utc).replace(tzinfo=None),
+            'calendar_id': hk_resource_calendar_id.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+        })
         self.env.company.resource_calendar_id = hk_resource_calendar_id
-        hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 1))
+        hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 2))
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_employee.id)])
+        self.assertEqual(len(work_entries), 2)
         self.assertEqual(work_entries[0].date, date(2023, 8, 1))
         self.assertEqual(work_entries[0].duration, 8)
+        self.assertEqual(work_entries[1].date, date(2023, 8, 2))
+        self.assertEqual(work_entries[1].duration, 8)
 
     def test_separate_overlapping_work_entries_by_type(self):
         calendar = self.env['resource.calendar'].create({'name': 'Calendar', 'tz': 'Europe/Brussels'})
