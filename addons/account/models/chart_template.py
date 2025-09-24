@@ -79,9 +79,19 @@ class AccountChartTemplate(models.AbstractModel):
             return callable(func) and hasattr(func, '_l10n_template')
         template_register = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))  # {demo: template: {model: [function, ...]}}
         cls = self.env.registry[self._name]
-        for _attr, func in getmembers(cls, is_template):
-            template, model, demo = func._l10n_template
-            template_register[demo][template][model].append(func)
+        # remember the first decorator of the function in the MRO
+        template_funcs = {
+            attr: func
+            for subclass in cls.__mro__
+            for attr, func in getmembers(subclass, is_template)
+        }
+
+        # register the top function in the MRO remembering the initial module
+        for attr, func in getmembers(cls):
+            if decorated_func := template_funcs.get(attr):
+                template, model, demo = decorated_func._l10n_template
+                func._module = decorated_func._module
+                template_register[demo][template][model].append(func)
         cls._template_register = template_register
         return template_register
 
@@ -263,7 +273,7 @@ class AccountChartTemplate(models.AbstractModel):
             self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)
             self_ctx._post_load_demo_data(company.chart_template)
 
-    def _pre_reload_data(self, company, template_data, data, force_create=True):
+    def _pre_reload_data(self, company, template_data, data, force_create=True, force_update=False):
         """Pre-process the data in case of reloading the chart of accounts.
 
         When we reload the chart of accounts, we only want to update fields that are main
@@ -274,7 +284,7 @@ class AccountChartTemplate(models.AbstractModel):
             if prop.startswith('property_'):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
-        if 'res.company' in data:
+        if 'res.company' in data and not force_update:
             data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
@@ -376,7 +386,7 @@ class AccountChartTemplate(models.AbstractModel):
                         continue
 
                 elif model_name == 'account.tax':
-                    if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                    if xmlid not in xmlid2tax or (tax_template_changed(xmlid2tax[xmlid], values) and not force_update):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
                             continue
@@ -428,32 +438,34 @@ class AccountChartTemplate(models.AbstractModel):
                                         repartition_line_values.clear()
                                         repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
-                    if  existing_current_year_earnings_account and values['account_type'] == 'equity_unaffected':
+                    if existing_current_year_earnings_account and values.get('account_type') == 'equity_unaffected':
                         skip_update.add((model_name, xmlid))
                         continue
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
-                    normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
-                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
-                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
-                        account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
-                        query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
-                        accounts = self.env['account.account'].browse(query)
-                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
-                        if existing_account:
-                            self.env['ir.model.data']._update_xmlids([{
-                                'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': existing_account,
-                                'noupdate': True,
-                            }])
-                            account = existing_account
+                    if 'code' in values:
+                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                        if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                            query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                            account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
+                            query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
+                            accounts = self.env['account.account'].browse(query)
+                            existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                            if existing_account:
+                                self.env['ir.model.data']._update_xmlids([{
+                                    'xml_id': f"account.{company.id}_{xmlid}",
+                                    'record': existing_account,
+                                    'noupdate': True,
+                                }])
+                                account = existing_account
 
                     # Prevents overriding user setting & raising a partial reconcile error.
-                    values.pop('reconcile', None)
+                    if account:
+                        values.pop('reconcile', None)
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
-                    elif account or not force_create:
+                    elif (account and not force_update) or (not account and not force_create):
                         skip_update.add((model_name, xmlid))
 
         for skip_model, skip_xmlid in skip_update:
@@ -808,7 +820,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_journal': 'product.category',
         }
 
-    def _get_chart_template_data(self, template_code, demo=False):
+    def _get_chart_template_data(self, template_code, demo=False, module=None):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
         translatable_model_fields = self._get_translatable_template_model_fields()
@@ -821,6 +833,8 @@ class AccountChartTemplate(models.AbstractModel):
                 translatable_fields = translatable_model_fields.get(model, [])
                 untranslatable_fields = untranslatable_model_fields.get(model, [])
                 for func in funcs:
+                    if module is not None and func._module != module:
+                        continue
                     data = func(self, template_code)
                     if data is not None:
                         if model == 'template_data':
