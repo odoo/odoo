@@ -56,7 +56,7 @@ export class DiscussCoreCommon {
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.thread) {
-                const { self_member_id } = message.thread;
+                const self_member_id = message.thread.channel?.self_member_id;
                 if (
                     message.id > self_member_id?.seen_message_id.id &&
                     notifId > self_member_id.message_unread_counter_bus_id
@@ -99,24 +99,27 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 thread.onNewSelfMessage(message);
             } else {
-                if (thread.isDisplayed && thread.self_member_id?.new_message_separator_ui === 0) {
-                    thread.self_member_id.new_message_separator_ui = message.id;
+                if (
+                    thread.isDisplayed &&
+                    thread.channel?.self_member_id?.new_message_separator_ui === 0
+                ) {
+                    thread.channel.self_member_id.new_message_separator_ui = message.id;
                 }
-                if (!thread.isDisplayed && thread.self_member_id) {
+                if (!thread.isDisplayed && thread.channel?.self_member_id) {
                     thread.scrollUnread = true;
                 }
                 if (
-                    notifId > thread.self_member_id?.message_unread_counter_bus_id &&
+                    notifId > thread.channel?.self_member_id?.message_unread_counter_bus_id &&
                     !message.isNotification
                 ) {
-                    thread.self_member_id.message_unread_counter++;
+                    thread.channel.self_member_id.message_unread_counter++;
                 }
             }
         }
         if (
             thread.channel?.channel_type !== "channel" &&
             this.store.self_partner &&
-            thread.self_member_id
+            thread.channel?.self_member_id
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons

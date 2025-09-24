@@ -54,7 +54,7 @@ registerThreadAction("notification-settings", {
     },
     close: ({ action }) => action.popover?.close(),
     icon: ({ thread }) =>
-        thread.self_member_id?.mute_until_dt
+        thread.channel?.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
             : "fa fa-fw fa-bell",
     name: _t("Notification Settings"),
@@ -151,8 +151,8 @@ registerThreadAction("member-list", {
 registerThreadAction("mark-read", {
     condition: ({ owner, thread }) =>
         thread?.self_member_id &&
-        thread.self_member_id.message_unread_counter > 0 &&
-        !thread.self_member_id.mute_until_dt &&
+        thread.channel?.self_member_id.message_unread_counter > 0 &&
+        !thread.channel?.self_member_id.mute_until_dt &&
         owner.isDiscussSidebarChannelActions,
     open: ({ owner }) => owner.thread.markAsRead(),
     icon: "fa fa-fw fa-check",

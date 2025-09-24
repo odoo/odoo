@@ -85,6 +85,9 @@ const threadPatch = {
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
+        this.self_member_id = fields.One("discuss.channel.member", {
+            inverse: "threadAsSelf",
+        });
         /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
         /** @type {Deferred<Thread|undefined>} */
@@ -95,11 +98,11 @@ const threadPatch = {
         this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
-                if (!this.self_member_id) {
+                if (!this.channel?.self_member_id) {
                     return null;
                 }
                 const messages = this.messages.filter((m) => !m.isNotification);
-                const separator = this.self_member_id.new_message_separator_ui;
+                const separator = this.channel?.self_member_id.new_message_separator_ui;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
                 }
@@ -120,7 +123,7 @@ const threadPatch = {
         this.lastInterestDt = fields.Datetime({
             /** @this {import("models").Thread} */
             compute() {
-                const selfMemberLastInterestDt = this.self_member_id?.last_interest_dt;
+                const selfMemberLastInterestDt = this.channel?.self_member_id?.last_interest_dt;
                 const lastInterestDt = this.last_interest_dt;
                 return compareDatetime(selfMemberLastInterestDt, lastInterestDt) > 0
                     ? selfMemberLastInterestDt
@@ -135,16 +138,13 @@ const threadPatch = {
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
-        this.self_member_id = fields.One("discuss.channel.member", {
-            inverse: "threadAsSelf",
-        });
         this.scrollUnread = true;
         this.toggleBusSubscription = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
                 return (
                     this.model === "discuss.channel" &&
-                    this.self_member_id?.memberSince >=
+                    this.channel?.self_member_id?.memberSince >=
                         this.store.env.services.bus_service.startedAt
                 );
             },
@@ -165,8 +165,8 @@ const threadPatch = {
         return res;
     },
     get displayName() {
-        if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
-            return this.self_member_id.custom_channel_name;
+        if (this.supportsCustomChannelName && this.channel?.self_member_id?.custom_channel_name) {
+            return this.channel?.self_member_id.custom_channel_name;
         }
         if (this.channel?.channel_type === "chat" && this.channel?.correspondent) {
             return this.channel.correspondent.name;
@@ -230,8 +230,8 @@ const threadPatch = {
     },
     /** @override */
     get importantCounter() {
-        if (this.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
-            return this.self_member_id.message_unread_counter_ui;
+        if (this.isChatChannel && this.channel?.self_member_id?.message_unread_counter_ui) {
+            return this.channel?.self_member_id.message_unread_counter_ui;
         }
         if (this.discussAppCategory?.id === "channels") {
             if (this.store.settings.channel_notifications === "no_notif") {
@@ -239,9 +239,9 @@ const threadPatch = {
             }
             if (
                 this.store.settings.channel_notifications === "all" &&
-                !this.self_member_id?.mute_until_dt
+                !this.channel?.self_member_id?.mute_until_dt
             ) {
-                return this.self_member_id?.message_unread_counter_ui;
+                return this.channel?.self_member_id?.message_unread_counter_ui;
             }
         }
         return super.importantCounter;
@@ -249,22 +249,22 @@ const threadPatch = {
     /** @override */
     isDisplayedOnUpdate() {
         super.isDisplayedOnUpdate(...arguments);
-        if (!this.self_member_id) {
+        if (!this.channel?.self_member_id) {
             return;
         }
         if (!this.isDisplayed) {
-            this.self_member_id.new_message_separator_ui =
-                this.self_member_id.new_message_separator;
+            this.channel.self_member_id.new_message_separator_ui =
+                this.channel?.self_member_id.new_message_separator;
             this.markedAsUnread = false;
         }
     },
     get isUnread() {
-        return this.self_member_id?.message_unread_counter > 0 || super.isUnread;
+        return this.channel?.self_member_id?.message_unread_counter > 0 || super.isUnread;
     },
     /** @override */
     markAsRead() {
         super.markAsRead(...arguments);
-        if (!this.self_member_id) {
+        if (!this.channel?.self_member_id) {
             return;
         }
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
@@ -272,8 +272,8 @@ const threadPatch = {
             return;
         }
         const alreadyReadBySelf =
-            this.self_member_id.seen_message_id?.id >= newestPersistentMessage.id &&
-            this.self_member_id.new_message_separator > newestPersistentMessage.id;
+            this.channel?.self_member_id.seen_message_id?.id >= newestPersistentMessage.id &&
+            this.channel?.self_member_id.new_message_separator > newestPersistentMessage.id;
         if (alreadyReadBySelf) {
             return;
         }
@@ -296,23 +296,27 @@ const threadPatch = {
     /** @override */
     get needactionCounter() {
         return this.isChatChannel
-            ? this.self_member_id?.message_unread_counter ?? 0
+            ? this.channel?.self_member_id?.message_unread_counter ?? 0
             : super.needactionCounter;
     },
     /** @override */
     onNewSelfMessage(message) {
-        if (!this.self_member_id || message.id < this.self_member_id.seen_message_id?.id) {
+        if (
+            !this.channel?.self_member_id ||
+            message.id < this.channel?.self_member_id.seen_message_id?.id
+        ) {
             return;
         }
-        this.self_member_id.seen_message_id = message;
-        this.self_member_id.new_message_separator = message.id + 1;
-        this.self_member_id.new_message_separator_ui = this.self_member_id.new_message_separator;
+        this.channel.self_member_id.seen_message_id = message;
+        this.channel.self_member_id.new_message_separator = message.id + 1;
+        this.channel.self_member_id.new_message_separator_ui =
+            this.channel?.self_member_id.new_message_separator;
         this.markedAsUnread = false;
     },
     /** @override */
     open(options) {
         if (this.model === "discuss.channel") {
-            if (!this.self_member_id) {
+            if (!this.channel?.self_member_id) {
                 this.store.env.services["bus_service"].addChannel(this.busChannel);
             }
             const res = this.openChannel();
@@ -347,7 +351,7 @@ const threadPatch = {
         return super.post(...arguments);
     },
     get showUnreadBanner() {
-        return this.self_member_id?.message_unread_counter_ui > 0;
+        return this.channel?.self_member_id?.message_unread_counter_ui > 0;
     },
     get unknownMembersCount() {
         return (this.member_count ?? 0) - this.channel?.channel_member_ids.length;
@@ -459,8 +463,8 @@ const threadPatch = {
                     { name: newName }
                 );
             } else if (this.supportsCustomChannelName) {
-                if (this.self_member_id) {
-                    this.self_member_id.custom_channel_name = newName;
+                if (this.channel?.self_member_id) {
+                    this.channel.self_member_id.custom_channel_name = newName;
                 }
                 await this.store.env.services.orm.call(
                     "discuss.channel",

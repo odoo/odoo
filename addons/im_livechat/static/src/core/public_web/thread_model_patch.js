@@ -30,7 +30,7 @@ patch(Thread.prototype, {
         if (
             this.channel_type !== "livechat" ||
             !this.channel?.correspondent ||
-            this.self_member_id?.custom_channel_name
+            this.channel?.self_member_id?.custom_channel_name
         ) {
             return super.displayName;
         }

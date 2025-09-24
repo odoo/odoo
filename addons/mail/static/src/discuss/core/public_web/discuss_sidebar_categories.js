@@ -103,10 +103,10 @@ export class DiscussSidebarChannel extends Component {
             "bg-inherit": this.thread.notEq(this.store.discuss.thread),
             "o-active": this.thread.eq(this.store.discuss.thread),
             "o-unread":
-                this.thread.self_member_id?.message_unread_counter > 0 &&
-                !this.thread.self_member_id?.mute_until_dt,
+                this.thread.channel?.self_member_id?.message_unread_counter > 0 &&
+                !this.thread.channel?.self_member_id?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
-            "opacity-50": this.thread.self_member_id?.mute_until_dt,
+            "opacity-50": this.thread.channel?.self_member_id?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "px-0": !this.store.discuss.isSidebarCompact,
@@ -134,11 +134,11 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread fw-bolder":
-                this.thread.self_member_id?.message_unread_counter > 0 &&
-                !this.thread.self_member_id?.mute_until_dt,
+                this.thread.channel?.self_member_id?.message_unread_counter > 0 &&
+                !this.thread.channel?.self_member_id?.mute_until_dt,
             "opacity-75 opacity-100-hover":
-                this.thread.self_member_id?.message_unread_counter === 0 ||
-                this.thread.self_member_id?.mute_until_dt,
+                this.thread.channel?.self_member_id?.message_unread_counter === 0 ||
+                this.thread.channel?.self_member_id?.mute_until_dt,
         };
     }
 
@@ -155,22 +155,25 @@ export class DiscussSidebarChannel extends Component {
         return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
     }
 
-    showThread(sub) {
-        if (sub.eq(this.store.discuss.thread)) {
+    showThread(subThread) {
+        if (subThread.eq(this.store.discuss.thread)) {
             return true;
         }
         if (!this.thread.discussAppCategory.open) {
             return false;
         }
         if (
-            !this.thread.self_member_id?.mute_until_dt ||
-            sub.self_member_id?.message_unread_counter > 0
+            !this.thread.channel?.self_member_id?.mute_until_dt ||
+            subThread.channel?.self_member_id?.message_unread_counter > 0
         ) {
             return true;
         }
         return (
             this.isSelfOrThreadActive &&
-            !(this.thread.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
+            !(
+                this.thread.channel?.self_member_id?.mute_until_dt &&
+                subThread.channel?.self_member_id?.mute_until_dt
+            )
         );
     }
 

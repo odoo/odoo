@@ -103,8 +103,8 @@ export class Thread extends Record {
     displayToSelf = fields.Attr(false, {
         compute() {
             return (
-                this.self_member_id?.is_pinned ||
-                (["channel", "group"].includes(this.channel_type) &&
+                this.channel?.self_member_id?.is_pinned ||
+                (["channel", "group"].includes(this.channel?.channel_type) &&
                     this.channel?.hasSelfAsMember &&
                     !this.parent_channel_id)
             );

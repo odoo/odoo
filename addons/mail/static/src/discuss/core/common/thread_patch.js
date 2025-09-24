@@ -14,14 +14,14 @@ const threadPatch = {
                 if (
                     loadNewer ||
                     !mountedAndLoaded ||
-                    !this.props.thread.self_member_id ||
+                    !this.props.thread.channel?.self_member_id ||
                     !this.scrollableRef.el
                 ) {
                     return;
                 }
                 const el = this.scrollableRef.el;
                 if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
-                    this.props.thread.self_member_id.hideUnreadBanner = true;
+                    this.props.thread.channel.self_member_id.hideUnreadBanner = true;
                 }
             },
             () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
@@ -29,7 +29,7 @@ const threadPatch = {
     },
     /** @override */
     applyScrollContextually(thread) {
-        if (thread.self_member_id && thread.scrollUnread) {
+        if (thread.channel?.self_member_id && thread.scrollUnread) {
             if (thread.channel.firstUnreadMessage) {
                 const messageEl = this.refByMessageId.get(thread.channel.firstUnreadMessage.id)?.el;
                 if (!messageEl) {
@@ -57,23 +57,26 @@ const threadPatch = {
     },
     /** @override */
     fetchMessages() {
-        if (this.props.thread.self_member_id && this.props.thread.scrollUnread) {
+        if (this.props.thread.channel?.self_member_id && this.props.thread.scrollUnread) {
             toRaw(this.props.thread).loadAround(
-                this.props.thread.self_member_id.new_message_separator
+                this.props.thread.channel?.self_member_id.new_message_separator
             );
         } else {
             super.fetchMessages();
         }
     },
     get newMessageBannerText() {
-        if (this.props.thread.self_member_id?.message_unread_counter > 1) {
-            return _t("%s new messages", this.props.thread.self_member_id.message_unread_counter);
+        if (this.props.thread.channel?.self_member_id?.message_unread_counter > 1) {
+            return _t(
+                "%s new messages",
+                this.props.thread.channel?.self_member_id.message_unread_counter
+            );
         }
         return _t("1 new message");
     },
     async onClickUnreadMessagesBanner() {
         await this.props.thread.loadAround(
-            this.props.thread.self_member_id.new_message_separator_ui
+            this.props.thread.channel?.self_member_id.new_message_separator_ui
         );
         this.messageHighlight?.highlightMessage(
             this.props.thread.channel.firstUnreadMessage,

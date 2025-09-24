@@ -175,18 +175,18 @@ export class DiscussCommandPalette {
             // selfPersona filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
-        const channels = Object.values(this.store.Thread.records)
+        const threads = Object.values(this.store.Thread.records)
             .filter(
                 (thread) =>
-                    thread.channel_type &&
-                    thread.channel_type !== "chat" &&
+                    thread.channel?.channel_type &&
+                    thread.channel?.channel_type !== "chat" &&
                     cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(thread))
             )
             .sort((c1, c2) => {
-                if (c1.self_member_id && !c2.self_member_id) {
+                if (c1.channel?.self_member_id && !c2.channel?.self_member_id) {
                     return -1;
-                } else if (!c1.self_member_id && c2.self_member_id) {
+                } else if (!c1.channel?.self_member_id && c2.channel?.self_member_id) {
                     return 1;
                 }
                 return c1.id - c2.id;
@@ -196,9 +196,9 @@ export class DiscussCommandPalette {
         const elligiblePersonas = [];
         const elligibleChannels = [];
         let i = 0;
-        while ((channels.length || partners.length) && i < remaining) {
+        while ((threads.length || partners.length) && i < remaining) {
             const p = partners.shift();
-            const c = channels.shift();
+            const c = threads.shift();
             if (p) {
                 elligiblePersonas.push(p);
                 i++;

@@ -52,10 +52,10 @@ export class DiscussCorePublicWeb {
                         id: data.id,
                     });
                     channel?.open({ focus: true });
-                    if (!data.joinCall || !channel || this.rtcService.state.channel?.eq(channel)) {
+                    if (!data.joinCall || !channel || this.rtcService.state.thread?.eq(channel)) {
                         return;
                     }
-                    if (this.rtcService.state.channel) {
+                    if (this.rtcService.state.thread) {
                         await this.rtcService.leaveCall();
                     }
                     this.rtcService.joinCall(channel);
