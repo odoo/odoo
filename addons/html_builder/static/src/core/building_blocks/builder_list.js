@@ -131,7 +131,9 @@ export class BuilderList extends Component {
 
     deleteItem(itemId) {
         const items = this.formatRawValue(this.state.value);
-        this.commit(items.filter((item) => item._id !== itemId));
+        if (items.length > 1) {
+            this.commit(items.filter((item) => item._id !== itemId));
+        }
     }
 
     reorderItem(itemId, previousId) {
