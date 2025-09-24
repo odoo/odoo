@@ -17,6 +17,8 @@ actions(Check in/Check out) performed by them.
     'website': 'https://www.odoo.com/app/employees',
     'depends': ['hr', 'barcodes', 'base_geolocalize'],
     'data': [
+        'data/hr_attendance_overtime_ruleset.xml',
+        'data/hr_attendance_overtime_rule.xml',
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
         'security/ir.model.access.csv',

@@ -12,7 +12,7 @@
                         <label for="name" string="Rule Name"/>
                         <h1><field name="name" placeholder="e.g. Over 8 hours daily"/></h1>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" invisible="1" />
                         </group>
                     </div>
                     <notebook>
@@ -146,7 +146,7 @@
         <field name="name">hr.attendance.overtime.ruleset.list</field>
         <field name="model">hr.attendance.overtime.ruleset</field>
         <field name="arch" type="xml">
-            <list>
+            <list js_class="hr_attendance_overime_ruleset_list">
                 <field name="name"/>
                 <field name="country_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="rate_combination_mode" string="Rate Mode"/>
