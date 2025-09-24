@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-23 22:38+0000\n"
+"PO-Revision-Date: 2025-09-24 22:27+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sms/es_419/>\n"
@@ -138,6 +138,23 @@ msgid ""
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                El mensaje se enviará como un SMS a los "
+"destinatarios de la plantilla \n"
+"                                y no aparecerá en el historial de mensajes.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                El SMS no se enviará, solo se registrará "
+"como una\n"
+"                                nota interna en el historial de mensajes.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                El mensaje se enviará como un SMS a los "
+"destinatarios de la\n"
+"                                plantilla y también se registrará como una "
+"nota interna\n"
+"                                en el historial de mensajes.\n"
+"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -783,7 +800,7 @@ msgstr "Mensaje"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error al enviar el mensaje"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -793,7 +810,7 @@ msgstr "Notificaciones de mensajes"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #. module: sms
 #. odoo-javascript
