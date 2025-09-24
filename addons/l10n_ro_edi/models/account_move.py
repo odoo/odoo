@@ -82,16 +82,14 @@ class AccountMove(models.Model):
     # Send Logics
     ################################################################################
 
-    def _l10n_ro_edi_get_pre_send_errors(self, xml_data):
-        """ Compute all possible common errors before sending the XML to the SPV """
+    def _l10n_ro_edi_invoice_validation_errors(self):
+        """ Compute all possible validation errors before sending/scheduling the invoice for SPV """
         self.ensure_one()
         errors = []
         if self.state != 'posted':
             errors.append(_('Only posted entries can be sent to SPV.'))
         if not self.company_id.l10n_ro_edi_access_token:
             errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
-        if not xml_data:
-            errors.append(_('CIUS-RO XML attachment not found.'))
         if self.l10n_ro_edi_document_ids:
             errors.append(_('The invoice has already been sent to the SPV.'))
         return errors
@@ -109,7 +107,9 @@ class AccountMove(models.Model):
         :return: the `list` of errors that occured during the sending and processing of data, if any
         """
         self.ensure_one()
-        if errors := self._l10n_ro_edi_get_pre_send_errors(xml_data):
+        if errors := self._l10n_ro_edi_invoice_validation_errors():
+            if not xml_data:
+                errors.append(_('CIUS-RO XML attachment not found.'))
             self.message_post(body=_("The invoice is not ready to be sent: %s", ", ".join(errors)))
             return errors
 

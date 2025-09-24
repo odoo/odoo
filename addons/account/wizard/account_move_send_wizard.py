@@ -597,6 +597,16 @@ class AccountMoveSendWizard(models.TransientModel):
                 **self._get_default_sending_settings(self.move_id, **sending_settings, allow_fallback_pdf=allow_fallback_pdf),
             }
         }
+
+        # Collect validation errors before scheduling the invoice.
+        move = self.move_id
+        self._hook_invoice_validation_errors(move, move_data.get(move, {}))
+
+        # Manage collected validation errors.
+        errors = {move: move_data for move, move_data in move_data.items() if move_data.get('error')}
+        if errors:
+            self._hook_if_errors(errors, allow_raising=not allow_fallback_pdf)
+
         # generating invoice pdf to show in the scheduled message.
         attachment_to_create = []
         if self.sending_methods and 'email' in self.sending_methods:

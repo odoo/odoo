@@ -321,7 +321,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if not self.env['res.company']._with_locked_records(records=self, allow_raising=False):
             return
-        if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields() or self._submit_to_jofotara():
+        if error_message := self._submit_to_jofotara():
             self.l10n_jo_edi_error = error_message
             return error_message
         else:

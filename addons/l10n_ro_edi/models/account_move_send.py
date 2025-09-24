@@ -41,6 +41,16 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHOD
     # -------------------------------------------------------------------------
 
+    def _hook_invoice_validation_errors(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_validation_errors(invoice, invoice_data)
+        if 'ro_edi' in invoice_data['extra_edis']:
+            if errors := invoice._l10n_ro_edi_invoice_validation_errors():
+                invoice_data['error'] = {
+                        'error_title': _("Error while validating invoice for SPV"),
+                        'errors': errors,
+                }
+
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         if 'ro_edi' in invoice_data['extra_edis']:
             invoice_data['invoice_edi_format'] = 'ciusro'
@@ -52,13 +62,6 @@ class AccountMoveSend(models.AbstractModel):
 
         for invoice, invoice_data in invoices_data.items():
             if 'ro_edi' in invoice_data['extra_edis']:
-
-                if invoice.l10n_ro_edi_document_ids:
-                    # If a document is on the invoice, we shouldn't send it again
-                    invoice_data['error'] = {
-                        'error_title': _("The CIUS-RO E-Factura has already been sent"),
-                    }
-                    continue
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']

@@ -60,9 +60,9 @@ class AccountMoveSend(models.AbstractModel):
             ('res_id', 'in', invoice.ids),
         ])
 
-    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+    def _hook_invoice_validation_errors(self, invoice, invoice_data):
         # EXTENDS 'account'
-        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+        super()._hook_invoice_validation_errors(invoice, invoice_data)
         if (
                 ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_file)
                 or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())

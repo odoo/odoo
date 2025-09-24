@@ -369,6 +369,14 @@ class AccountMoveSend(models.AbstractModel):
         return True
 
     @api.model
+    def _hook_invoice_validation_errors(self, invoice, invoices_data):
+        """ TO OVERRIDE - Hook allowing to add validation errors for the invoice.
+        :param invoice:         An account.move record.
+        :param invoices_data:   The collected data for invoices so far.
+        """
+        return
+
+    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         """ Hook allowing to add some extra data for the invoice passed as parameter before the rendering of the pdf
         report.
@@ -690,10 +698,8 @@ class AccountMoveSend(models.AbstractModel):
                                     proforma PDF report instead.
         """
         for invoice, invoice_data in invoices_data.items():
-            self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-            invoice_data['blocking_error'] = invoice_data.get('error') \
-                                             and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
-            invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
+            if not invoice_data.get('error'):
+                self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         invoices_data_web_service = {
             invoice: invoice_data
@@ -799,11 +805,25 @@ class AccountMoveSend(models.AbstractModel):
             for move in moves
         }
 
+        # Collect validation errors first.
+        for move, move_data in moves_data.items():
+            self._hook_invoice_validation_errors(move, move_data)
+            move_data['blocking_error'] = move_data.get('error') \
+                                          and not (allow_fallback_pdf and move_data.get('error_but_continue'))
+            move_data['error_but_continue'] = allow_fallback_pdf and move_data.get('error_but_continue')
+
+        # Manage collected validation errors.
+        validation_errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        if validation_errors:
+            self._hook_if_errors(validation_errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
+
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
 
-        # Manage errors.
-        errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        # Manage errors from invoice documents generation, except the validation errors which are already handled before.
+        validation_error_list = [move_data.get('error') for move, move_data in validation_errors.items()]
+        errors = {move: move_data for move, move_data in moves_data.items() \
+                 if move_data.get('error') and move_data.get('error') not in validation_error_list}
         if errors:
             self._hook_if_errors(errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
 
