@@ -18,6 +18,12 @@ patch(ProductPage.prototype, {
             '#product_stock_notification_form_submit_button': {
                 't-on-click': this.onClickSubmitProductStockNotificationForm.bind(this),
             },
+            '#wishlist_stock_notification_message': {
+                't-on-click': this.onClickWishlistStockNotificationMessage.bind(this),
+            },
+            '#wishlist_stock_notification_form_submit_button': {
+                't-on-click': this.onClickSubmitWishlistStockNotificationForm.bind(this),
+            },
         });
     },
 
@@ -32,6 +38,15 @@ patch(ProductPage.prototype, {
     onClickSubmitProductStockNotificationForm(ev) {
         const formEl = ev.currentTarget.closest('#stock_notification_form');
         const productId = parseInt(formEl.querySelector('input[name="product_id"]').value);
+        this._handleClickSubmitStockNotificationForm(ev, productId);
+    },
+
+    onClickWishlistStockNotificationMessage(ev) {
+        this._handleClickStockNotificationMessage(ev);
+    },
+
+    onClickSubmitWishlistStockNotificationForm(ev) {
+        const productId = ev.currentTarget.closest('article').dataset.productId;
         this._handleClickSubmitStockNotificationForm(ev, productId);
     },
 
@@ -145,5 +160,28 @@ patch(ProductPage.prototype, {
 
     async _getUnavailableQty(combination) {
         return parseInt(combination.cart_qty);
+    },
+
+    /**
+     * Override of `website_sale` to display additional info messages regarding the product's stock
+     * and the wishlist.
+     *
+     * @param {Event} ev
+     * @param {Element} parent
+     * @param {Object} combination
+     */
+    _onChangeCombination(ev, parent, combination) {
+        super._onChangeCombination(...arguments);
+        if (this.el.querySelector('.o_add_wishlist_dyn')) {
+            const messageEl = this.el.querySelector('div.availability_messages');
+            if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
+                this.services['public.interactions'].stopInteractions(messageEl);
+                messageEl.append(
+                    renderToElement('website_sale_stock_wishlist.product_availability', combination)
+                    || ''
+                );
+                this.services['public.interactions'].startInteractions(messageEl);
+            }
+        }
     },
 });
