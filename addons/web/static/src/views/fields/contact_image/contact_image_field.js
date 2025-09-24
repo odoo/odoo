@@ -29,6 +29,14 @@ export class ContactImageField extends ImageField {
         return super.getUrl(imageFieldName);
     }
 
+    get containerClass() {
+        let classes = super.containerClass;
+        if (!this.containsValidImage) {
+            return ["top-0", "start-0", "h-100", "z-1"].concat(classes.split(" ")).join(" ");
+        }
+        return classes;
+    }
+
     get imgClass() {
         let classes = super.imgClass;
         if (!this.props.record.data[this.props.name] || !this.state.isValid) {
