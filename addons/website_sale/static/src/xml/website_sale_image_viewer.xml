@@ -17,6 +17,7 @@
                             <img
                                 alt="Viewer"
                                 class="mw-100 mh-100 transition-base"
+                                t-att-class="{ 'zoomed-in': state.imageScale > 1 }"
                                 draggable="false"
                                 t-att-src="selectedImage.src"
                                 t-att-style="imageStyle"
