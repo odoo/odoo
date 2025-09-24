@@ -25,24 +25,6 @@ def exp_authenticate(db, login, password, user_agent_env):
         except AccessDenied:
             return False
 
-def exp_about(extended=False):
-    """Return information about the OpenERP Server.
-
-    @param extended: if True then return version info
-    @return string if extended is False else tuple
-    """
-
-    info = _('See http://openerp.com')
-
-    if extended:
-        return info, odoo.release.version
-    return info
-
-def exp_set_loglevel(loglevel, logger=None):
-    # TODO Previously, the level was set on the now deprecated
-    # `odoo.netsvc.Logger` class.
-    return True
-
 def dispatch(method, params):
     g = globals()
     exp_method_name = 'exp_' + method
