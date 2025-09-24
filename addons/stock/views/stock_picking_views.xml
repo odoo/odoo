@@ -126,9 +126,11 @@
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" invisible="state != 'assigned'" data-hotkey="o"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="k"/>
-                    <field name="state" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
-                    <field name="state" widget="statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done"/>
+                    <field name="state" widget="stock_picking_locked_statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
+                    <field name="state" widget="stock_picking_locked_statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done"/>
                     <button name="action_cancel" invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting')" string="Cancel" groups="base.group_user" type="object" confirm="Are you sure you want to cancel this transfer?" data-hotkey="x"/>
+                    <button name="action_toggle_is_locked" string="Lock" groups="stock.group_stock_manager" type="object" invisible="is_locked or state == 'cancel'" class="btn btn-primary"/>
+                    <button name="action_toggle_is_locked" string="Unlock" groups="stock.group_stock_manager" type="object" invisible="not is_locked or state not in ('done', 'cancel')"/>
                 </header>
                 <div class="alert alert-info" role="alert" invisible="not picking_warning_text">
                     <field name="picking_warning_text" class="fw-bold"/>
@@ -484,18 +486,6 @@
             if records:
                 action = records.action_open_label_type()
             </field>
-        </record>
-
-        <record id="action_toggle_is_locked" model="ir.actions.server">
-            <field name="name">Lock/Unlock</field>
-            <field name="model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">form</field>
-            <field name="state">code</field>
-            <field name="group_ids" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
-            <field name="code">
-            if records:
-                records.action_toggle_is_locked()</field>
         </record>
 
         <record id="action_scrap" model="ir.actions.server">
