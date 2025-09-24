@@ -2229,11 +2229,11 @@ class HrEmployee(models.Model):
             self.ensure_one()
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
         date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
-        employee_versions = self.env['hr.version'].sudo().search([
-            ('employee_id', '=', self.id),
-            ('active', '=', True),
-        ]).filtered(
-            lambda v: v._is_overlapping_period(date_from_date, date_to_date))
+        employee_versions = self.env['hr.version'].sudo().search(
+            Domain('employee_id', '=', self.id)
+            & Domain('active', '=', True)
+            & self.env['hr.version']._is_overlapping_period_domain(date_from_date, date_to_date),
+        )
         if not employee_versions:
             return _generate_unusual_days(date_from_date, date_to_date + timedelta(days=1))
         unusual_days = {}
