@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_export_mixin_form_view" model="ir.ui.view">
+        <field name="name">hr.export.mixin.form</field>
+        <field name="model">hr.export.mixin</field>
+        <field name="arch" type="xml">
+            <form string="HR Export">
+                <header>
+                    <button name="action_populate"
+                            type="object"
+                            string="Populate"
+                            class="btn-primary"
+                            data-hotkey="p"
+                            invisible="eligible_employee_count"/>
+                    <button name="action_export_file"
+                            type="object"
+                            string="Generate Export File"
+                            class="btn-primary"
+                            data-hotkey="z"
+                            invisible="export_file or not eligible_employee_count"/>
+                    <button name="action_populate"
+                            type="object"
+                            string="Populate"
+                            data-hotkey="p"
+                            invisible="not eligible_employee_count"/>
+                    <button name="action_export_file"
+                            type="object"
+                            string="Generate Export File"
+                            data-hotkey="z"
+                            invisible="not export_file or not eligible_employee_count"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employees"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="eligible_employee_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group name="export_group">
+                        <field name="export_filename" readonly="1" invisible="1"/>
+                        <field name="export_file" readonly="1" filename="export_filename" invisible="not export_file"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_export_mixin_list_view" model="ir.ui.view">
+        <field name="name">hr.export.mixin.list</field>
+        <field name="model">hr.export.mixin</field>
+        <field name="arch" type="xml">
+            <list string="Export Employee">
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="creation_date" />
+                <field name="period_start"/>
+                <field name="period_stop"/>
+                <field name="export_filename" column_invisible="True"/> <!-- needed for the widget -->
+                <field name="export_file" widget="binary" filename="export_filename"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_export_employee_mixin_list_view" model="ir.ui.view">
+        <field name="name">hr.export.employee.list</field>
+        <field name="model">hr.export.employee.mixin</field>
+        <field name="arch" type="xml">
+            <list string="Eligible Employees" type="object" editable="top">
+                <field name="export_id" column_invisible="1"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+            </list>
+        </field>
+    </record>
+</odoo>
