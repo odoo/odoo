@@ -89,6 +89,7 @@ class SaleOrderDiscount(models.TransientModel):
                 'name': so_line_description,
                 'product_id': base_line['product_id'].id,
                 'price_unit': base_line['price_unit'],
+                'technical_price_unit': 0,
                 'product_uom_qty': base_line['quantity'],
                 'tax_ids': [Command.set(base_line['tax_ids'].ids)],
                 'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
