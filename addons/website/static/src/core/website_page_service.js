@@ -17,7 +17,7 @@ registry.category("services").add("website_page", {
             },
             mainObject: {
                 model: match && match[1],
-                id: match && (match[2] | 0),
+                id: match && match[2] | 0,
             },
         };
     },

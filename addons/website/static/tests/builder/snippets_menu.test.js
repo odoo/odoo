@@ -43,7 +43,9 @@ test("navigate between builder tab don't fetch snippet description again", async
         "Style",
         "Theme",
     ]);
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+        "Blocks"
+    );
     expect.verifySteps(["render_public_asset"]);
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Theme)").click();
@@ -53,7 +55,9 @@ test("navigate between builder tab don't fetch snippet description again", async
     );
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Blocks)").click();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+        "Blocks"
+    );
     expect.verifySteps([]);
 });
 
@@ -89,7 +93,9 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Blocks");
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+        "Blocks"
+    );
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Style)").click();
     expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "Style"

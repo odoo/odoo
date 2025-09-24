@@ -11,6 +11,4 @@ export class MultirangeInput extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.multirange_input", MultirangeInput);
+registry.category("public.interactions").add("website.multirange_input", MultirangeInput);

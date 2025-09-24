@@ -11,7 +11,7 @@ export class TextHighlight extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         _root: {
-            "t-on-text_highlight_added": ({target}) => this.onTextHighlightAdded(target),
+            "t-on-text_highlight_added": ({ target }) => this.onTextHighlightAdded(target),
         },
     };
 
@@ -39,8 +39,8 @@ export class TextHighlight extends Interaction {
     _updateEntries(entries) {
         const closestToObserves = new Set();
         for (const { target, addedNodes = [], removedNodes = [] } of entries) {
-            const elements = [target, ...(addedNodes), ...(removedNodes)]
-                .map((el) => el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement)
+            const elements = [target, ...addedNodes, ...removedNodes]
+                .map((el) => (el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement))
                 .filter(Boolean);
             if (!elements.length) {
                 continue;
@@ -117,12 +117,8 @@ export class TextHighlight extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.text_highlight", TextHighlight);
+registry.category("public.interactions").add("website.text_highlight", TextHighlight);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.text_highlight", {
-        Interaction: TextHighlight,
-    });
+registry.category("public.interactions.edit").add("website.text_highlight", {
+    Interaction: TextHighlight,
+});

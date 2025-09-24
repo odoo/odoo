@@ -71,7 +71,7 @@ export class FormFieldOption extends BaseOptionComponent {
             };
         });
 
-        this.domStateCurrentFieldInput = useDomState(el => {
+        this.domStateCurrentFieldInput = useDomState((el) => {
             const currentFieldInputEl = getCurrentFieldInputEl(el);
             if (!currentFieldInputEl) {
                 return {
@@ -118,15 +118,7 @@ export class FormFieldOption extends BaseOptionComponent {
         // TODO select field's hack ?
     }
     get canHaveTextValidationCondition() {
-        return [
-            "text",
-            "email",
-            "tel",
-            "url",
-            "search",
-            "password",
-            "number",
-        ];
+        return ["text", "email", "tel", "url", "search", "password", "number"];
     }
     get isTextConditionValueVisible() {
         const el = this.env.getEditingElement();

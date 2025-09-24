@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 
@@ -27,5 +24,5 @@ test("plausible_push interaction notifies plausible if .js_plausible_push", asyn
     `);
     expect(core.interactions).toHaveLength(1);
     expect(window.plausible.q[0][0]).toBe("Lead Generation");
-    expect(window.plausible.q[0][1]).toEqual({ props: {"CTA": "Contact Us"} });
+    expect(window.plausible.q[0][1]).toEqual({ props: { CTA: "Contact Us" } });
 });

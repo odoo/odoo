@@ -10,12 +10,8 @@ export class HeaderDisappears extends BaseHeaderSpecial {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.header_disappears", HeaderDisappears);
+registry.category("public.interactions").add("website.header_disappears", HeaderDisappears);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.header_disappears", {
-        Interaction: HeaderDisappears,
-    });
+registry.category("public.interactions.edit").add("website.header_disappears", {
+    Interaction: HeaderDisappears,
+});

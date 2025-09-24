@@ -17,27 +17,29 @@ export class SearchBarResults extends Interaction {
             "t-att-style": () => {
                 const bcr = this.searchBarEl.getBoundingClientRect();
                 return {
-                    "position": "absolute !important",
+                    position: "absolute !important",
                     "max-width": `${bcr.width}px !important`,
-                    "max-height": `max(40vh, ${document.body.clientHeight - bcr.bottom - 16}px) !important`,
+                    "max-height": `max(40vh, ${
+                        document.body.clientHeight - bcr.bottom - 16
+                    }px) !important`,
                     "min-width": this.autocompleteMinWidth,
                 };
             },
             "t-att-class": () => ({
-                "show": true,
+                show: true,
             }),
-            "t-att-data-bs-popper": () => this.isDropup ? "" : undefined,
+            "t-att-data-bs-popper": () => (this.isDropup ? "" : undefined),
         },
         _searchbar: {
             "t-att-class": () => ({
-                "dropup": this.isDropup,
+                dropup: this.isDropup,
             }),
         },
         _window: {
-            "t-on-resize": () => { }, // Re-apply _root:t-att-style.
+            "t-on-resize": () => {}, // Re-apply _root:t-att-style.
         },
         _scrollingParent: {
-            "t-on-scroll": () => { }, // Re-apply _root:t-att-style.
+            "t-on-scroll": () => {}, // Re-apply _root:t-att-style.
         },
         ".dropdown-item": {
             "t-on-mousedown": this.onMousedown,
@@ -88,7 +90,9 @@ export class SearchBarResults extends Interaction {
                 // height has been reduced, we position it where most space is
                 // available
                 const searchPosition = this.searchBarEl.getBoundingClientRect();
-                this.isDropup = searchPosition.top > document.documentElement.offsetHeight - searchPosition.bottom;
+                this.isDropup =
+                    searchPosition.top >
+                    document.documentElement.offsetHeight - searchPosition.bottom;
             }
         }
     }
@@ -98,14 +102,18 @@ export class SearchBarResults extends Interaction {
         // to get around that behavior to avoid onFocusOut() from triggering
         // render(), as this would prevent the click from working.
         if (isBrowserSafari) {
-            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', { detail: { linkHasFocus: true } }));
+            this.searchBarEl.dispatchEvent(
+                new CustomEvent("safarihack", { detail: { linkHasFocus: true } })
+            );
         }
     }
 
     onMouseup() {
         // See comment in onMousedown.
         if (isBrowserSafari) {
-            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', { detail: { linkHasFocus: false } }));
+            this.searchBarEl.dispatchEvent(
+                new CustomEvent("safarihack", { detail: { linkHasFocus: false } })
+            );
         }
     }
 
@@ -115,7 +123,7 @@ export class SearchBarResults extends Interaction {
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp":
-            case "ArrowDown":
+            case "ArrowDown": {
                 ev.preventDefault();
                 const focusableEls = [this.inputEl, ...this.el.children];
                 const focusedEl = document.activeElement;
@@ -125,6 +133,7 @@ export class SearchBarResults extends Interaction {
                 const nextFocusedEl = focusableEls[nextIndex];
                 nextFocusedEl.focus();
                 break;
+            }
         }
     }
 
@@ -136,6 +145,4 @@ export class SearchBarResults extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.search_bar_results", SearchBarResults);
+registry.category("public.interactions").add("website.search_bar_results", SearchBarResults);

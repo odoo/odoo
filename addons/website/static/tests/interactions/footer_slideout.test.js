@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
@@ -31,7 +28,7 @@ test("footer_slideout adds a pixel if the effect is enabled on safari", async ()
     `);
     expect(core.interactions).toHaveLength(1);
     expect(queryAll("#wrapwrap > div")).toHaveLength(1);
-    expect("#wrapwrap > div").toHaveStyle({ "width": "1px" });
+    expect("#wrapwrap > div").toHaveStyle({ width: "1px" });
     core.stopInteractions();
     expect(core.interactions).toHaveLength(0);
     expect(queryFirst("#wrapwrap > div")).toBe(null);

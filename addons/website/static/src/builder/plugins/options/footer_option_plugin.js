@@ -2,7 +2,11 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
-import { SNIPPET_SPECIFIC_END, SNIPPET_SPECIFIC_NEXT, splitBetween } from "@html_builder/utils/option_sequence";
+import {
+    SNIPPET_SPECIFIC_END,
+    SNIPPET_SPECIFIC_NEXT,
+    splitBetween,
+} from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FooterTemplateChoice, FooterTemplateOption } from "./footer_template_option";
 import { reactive } from "@odoo/owl";
@@ -30,7 +34,7 @@ export {
     FOOTER_SCROLL_TO,
     FOOTER_COPYRIGHT,
     FOOTER_BORDER,
-}
+};
 
 class FooterOptionPlugin extends Plugin {
     static id = "footerOption";

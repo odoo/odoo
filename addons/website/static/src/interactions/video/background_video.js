@@ -15,7 +15,7 @@ export class BackgroundVideo extends Interaction {
         _document: {
             // We don't add the optional cookies warning for background videos
             // so that the fallback message doesn't appear behind the content.
-            "t-on-optionalCookiesAccepted.once": () => this.iframeEl.src = this.videoSrc,
+            "t-on-optionalCookiesAccepted.once": () => (this.iframeEl.src = this.videoSrc),
         },
         _window: {
             "t-on-resize": this.throttled(this.adjustIframe),
@@ -24,8 +24,8 @@ export class BackgroundVideo extends Interaction {
             "t-on-shown.bs.dropdown": this.throttled(this.adjustIframe),
         },
         _modal: {
-            "t-on-show.bs.modal": () => this.hideVideoContainer = true,
-            "t-on-shown.bs.modal": () => this.hideVideoContainer = false,
+            "t-on-show.bs.modal": () => (this.hideVideoContainer = true),
+            "t-on-shown.bs.modal": () => (this.hideVideoContainer = false),
         },
         ".o_bg_video_container": {
             "t-att-class": () => ({
@@ -65,25 +65,29 @@ export class BackgroundVideo extends Interaction {
 
         const wrapperWidth = this.el.clientWidth;
         const wrapperHeight = this.el.clientHeight;
-        const relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
+        const relativeRatio = wrapperWidth / wrapperHeight / (16 / 9);
 
         if (this.el.closest(".s_ecomm_categories_showcase_block")) {
             // Chrome-only: percentage sizing makes the video in "Categories
             // Showcase" snippet jitter on hover, so force pixel values while
             // keeping the ratio.
-            const iframeHeight = Math.round(relativeRatio >= 1 ? wrapperWidth * (9 / 16) : wrapperHeight);
-            const iframeWidth = Math.round(relativeRatio >= 1 ? wrapperWidth : wrapperHeight * (16 / 9));
+            const iframeHeight = Math.round(
+                relativeRatio >= 1 ? wrapperWidth * (9 / 16) : wrapperHeight
+            );
+            const iframeWidth = Math.round(
+                relativeRatio >= 1 ? wrapperWidth : wrapperHeight * (16 / 9)
+            );
             this.iframeEl.style.height = `${iframeHeight}px`;
             this.iframeEl.style.width = `${iframeWidth}px`;
         } else if (relativeRatio >= 1.0) {
             this.iframeEl.style.width = "100%";
-            this.iframeEl.style.height = (relativeRatio * 100) + "%";
+            this.iframeEl.style.height = relativeRatio * 100 + "%";
             this.iframeEl.style.insetInlineStart = "0";
-            this.iframeEl.style.insetBlockStart = (-(relativeRatio - 1.0) / 2 * 100) + "%";
+            this.iframeEl.style.insetBlockStart = (-(relativeRatio - 1.0) / 2) * 100 + "%";
         } else {
-            this.iframeEl.style.width = ((1 / relativeRatio) * 100) + "%";
+            this.iframeEl.style.width = (1 / relativeRatio) * 100 + "%";
             this.iframeEl.style.height = "100%";
-            this.iframeEl.style.insetInlineStart = (-((1 / relativeRatio) - 1.0) / 2 * 100) + "%";
+            this.iframeEl.style.insetInlineStart = (-(1 / relativeRatio - 1.0) / 2) * 100 + "%";
             this.iframeEl.style.insetBlockStart = "0";
         }
 
@@ -94,35 +98,42 @@ export class BackgroundVideo extends Interaction {
     appendBgVideo() {
         const allowedCookies = !this.el.dataset.needCookiesApproval;
 
-        const oldContainer = this.bgVideoContainer || this.el.querySelector(":scope > .o_bg_video_container");
+        const oldContainer =
+            this.bgVideoContainer || this.el.querySelector(":scope > .o_bg_video_container");
         oldContainer?.remove();
 
-        this.renderAt("website.background.video", {
-            videoSrc: allowedCookies ? this.videoSrc : "about:blank",
-            iframeID: this.iframeID,
-        }, this.el, "afterbegin");
+        this.renderAt(
+            "website.background.video",
+            {
+                videoSrc: allowedCookies ? this.videoSrc : "about:blank",
+                iframeID: this.iframeID,
+            },
+            this.el,
+            "afterbegin"
+        );
 
-        this.bgVideoContainer = this.el.querySelector(":scope > .o_bg_video_container")
+        this.bgVideoContainer = this.el.querySelector(":scope > .o_bg_video_container");
         this.iframeEl = this.bgVideoContainer.querySelector(".o_bg_video_iframe");
-        this.addListener(this.iframeEl, "load", () => {
-            this.bgVideoContainer.querySelector(".o_bg_video_loading")?.remove();
-            // When there is a "slide in (left or right) animation" element, we
-            // need to adjust the iframe size once it has been loaded, otherwise
-            // an horizontal scrollbar may appear.
-            this.adjustIframe();
-        }, { once: true });
+        this.addListener(
+            this.iframeEl,
+            "load",
+            () => {
+                this.bgVideoContainer.querySelector(".o_bg_video_loading")?.remove();
+                // When there is a "slide in (left or right) animation" element,
+                // we need to adjust the iframe size once it has been loaded,
+                // otherwise an horizontal scrollbar may appear.
+                this.adjustIframe();
+            },
+            { once: true }
+        );
 
         this.adjustIframe();
         triggerAutoplay(this.iframeEl);
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.background_video", BackgroundVideo);
+registry.category("public.interactions").add("website.background_video", BackgroundVideo);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.background_video", {
-        Interaction: BackgroundVideo,
-    });
+registry.category("public.interactions.edit").add("website.background_video", {
+    Interaction: BackgroundVideo,
+});

@@ -20,7 +20,9 @@ class TranslateToAction extends BuilderAction {
         try {
             translationState.isTranslating = true;
             const language = this.services.website.currentWebsite.metadata.langName;
-            const { translationChunks, translationMap } = this.generateTranslationChunks(this.editable);
+            const { translationChunks, translationMap } = this.generateTranslationChunks(
+                this.editable
+            );
             if (translationChunks) {
                 const responses = await this.runTranslationChunks(translationChunks, language);
                 const failedNodeCount = this.applyTranslationsToDOM(translationMap, responses);
@@ -73,13 +75,14 @@ class TranslateToAction extends BuilderAction {
     generateTranslationChunks(containerEl, limit = 2000) {
         const elements = Array.from(
             containerEl.querySelectorAll("[data-oe-translation-state='to_translate']")
-        ).filter(el => {
-            // TODO: fix `o_frontend_to_backend_buttons` to have no
-            // attribute `data-oe-translation-state`
-            return !el.closest(".o_not_editable, .o_frontend_to_backend_buttons")
+        ).filter(
+            (el) =>
+                // TODO: fix `o_frontend_to_backend_buttons` to have no
+                // attribute `data-oe-translation-state`
+                !el.closest(".o_not_editable, .o_frontend_to_backend_buttons") &&
                 // Skip attribute translations, will handle in task-5047714
-                && !el.classList.contains("o_translatable_attribute");
-        });
+                !el.classList.contains("o_translatable_attribute")
+        );
 
         const translationChunks = [];
         const translationMap = new Map();
@@ -154,8 +157,8 @@ class TranslateToAction extends BuilderAction {
             return rpc(
                 "/html_editor/generate_text",
                 {
-                    'prompt': prompt,
-                    'conversation_history': conversation,
+                    prompt: prompt,
+                    conversation_history: conversation,
                 },
                 { silent: true }
             );
@@ -284,5 +287,6 @@ export class CustomizeTranslationTabPlugin extends Plugin {
     }
 }
 
-registry.category("translation-plugins")
+registry
+    .category("translation-plugins")
     .add(CustomizeTranslationTabPlugin.id, CustomizeTranslationTabPlugin);

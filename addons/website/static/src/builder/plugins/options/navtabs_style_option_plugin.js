@@ -61,7 +61,11 @@ class NavTabsStyleOptionPlugin extends Plugin {
             const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
             buttons.push({
                 class: `fa fa-fw fa-angle-${direction}`,
-                title: isVertical ? _t("Move up") : this.isEditableRTL ? _t("Move right") : _t("Move left"),
+                title: isVertical
+                    ? _t("Move up")
+                    : this.isEditableRTL
+                    ? _t("Move right")
+                    : _t("Move left"),
                 handler: this.moveNavItem.bind(this, "prev"),
             });
         }
@@ -70,7 +74,11 @@ class NavTabsStyleOptionPlugin extends Plugin {
             const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
             buttons.push({
                 class: `fa fa-fw fa-angle-${direction}`,
-                title: isVertical ? _t("Move down") : this.isEditableRTL ? _t("Move left") : _t("Move right"),
+                title: isVertical
+                    ? _t("Move down")
+                    : this.isEditableRTL
+                    ? _t("Move left")
+                    : _t("Move right"),
                 handler: this.moveNavItem.bind(this, "next"),
             });
         }
