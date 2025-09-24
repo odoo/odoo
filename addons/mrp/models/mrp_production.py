@@ -1287,6 +1287,8 @@ class MrpProduction(models.Model):
                 continue
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            if move in self.move_raw_ids and float_compare(new_qty, move.quantity, precision_rounding=move.product_uom.rounding) > 0:
+                move._action_assign(new_qty - move.quantity)
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \

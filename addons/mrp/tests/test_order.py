@@ -5239,6 +5239,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_update_qty_producing_reassign_components(self):
+        """
+        Check that components are reassigned when the quantity is automatically
+        updated by a qty_producing change on the MO.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], order='id', limit=1)
+        stock_location = warehouse.lot_stock_id
+        self.product_2.tracking = 'lot'
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_2, stock_location, 10, lot_id=lot_1)
+        bom = self.bom_1
+        bom.product_id.uom_id = self.env.ref('uom.product_uom_unit')
+        bom.bom_line_ids = bom.bom_line_ids[0]
+        bom.product_qty = 2
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 10,
+        })
+        mo.action_confirm()
+        mo.qty_producing = 6.0
+        mo._onchange_producing()
+        mo.qty_producing = 8.0
+        mo._onchange_producing()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'quantity': 8, 'lot_id': lot_1.id},
+        ])
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
