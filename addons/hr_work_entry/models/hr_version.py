@@ -46,11 +46,6 @@ class HrVersion(models.Model):
         attendance = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
-    @ormcache()
-    def _get_default_work_entry_type_overtime_id(self):
-        attendance = self.env.ref('hr_work_entry.work_entry_type_overtime', raise_if_not_found=False)
-        return attendance.id if attendance else False
-
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
 
