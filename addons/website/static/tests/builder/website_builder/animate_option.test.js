@@ -197,7 +197,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onScroll']").not.toHaveCount();
 });
-test.skip("visibility of animation animation=onHover", async () => {
+test("visibility of animation animation=onHover", async () => {
     function expectOnHoverOptions(options) {
         const labels = [
             "Effect",
