@@ -47,6 +47,9 @@
                 font-size: 18px;
                 font-weight: bolder;
             }
+            .bg-dark-blue {
+                background-color: rgb(43, 59, 88) !important;
+            }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
@@ -78,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="s_text_block o_mail_snippet_general pb16 pt32" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
+        <div class="s_text_block o_mail_snippet_general pb16 pt32 bg-dark-blue" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p><font style="color: rgb(255, 255, 255);">Hi there!</font></p>
                 <p><font style="color: rgb(255, 255, 255);">The next edition of <span style="font-weight: bolder;">Odoo Experience Online</span> is coming soon!
@@ -86,7 +89,7 @@
                 </p>
             </div>
         </div>
-        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
+        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0 bg-dark-blue" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
