@@ -104,6 +104,33 @@
         </div>
 
         <h4 class="border-bottom pb-2">
+            Videos Optimization
+        </h4>
+        <t t-if="!state.titleAttributes.filter(title => !title.decorative and title.title == '').length > 0">
+            <p><i class="fa fa-check text-success me-2"></i>No warning on videos</p>
+        </t>
+        <div class="row">
+            <t t-foreach="state.titleAttributes" t-as="video" t-key="video.id">
+                <div class="col-lg-6 col-sm-12 d-flex mb-3">
+                    <div class="me-3">
+                        <img class="o-img-thumbnail" alt="Preview video" t-att-src="video.thumbnail_url"></img>
+                    </div>
+                    <div role="form" class="flex-grow-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + video.id" t-model="video.decorative" t-on-change="() => videoUpdated(video)"/>
+                            <label t-att-for="'decorative-' + video.id">Mark as decorative
+                                <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The description attribute is used to describe the video which helps screen readers and improves SEO, If you select this option, the video will be hidden from screen readers and not considered for your SEO."/>
+                            </label>
+                        </div>
+                        <div t-if="!video.decorative" class="input-group mt-2">
+                            <input placeholder="Describe the video..." t-model="video.title" type="text" t-att-class="'form-control ' + (video.title.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => videoUpdated(video)"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+
+        <h4 class="border-bottom pb-2">
             Broken Links
         </h4>
         <div class="mt-2" t-if="state.checkingLinks">
