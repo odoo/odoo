@@ -9,7 +9,7 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
     @classmethod
-    def pay_pos_order(self, pos_order):
+    def pay_pos_order(self, pos_order, with_error=False):
         context_make_payment = {
             'active_ids': pos_order.ids,
             'active_id': pos_order.id,
@@ -19,7 +19,8 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         })
         with patch(
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
+            return_value=None if with_error else self.mock_response_post_invoice_success,
+            side_effect=self.mock_request_error if with_error else None,
         ):
             pos_make_payment.with_context(context_make_payment).check()
 
@@ -103,3 +104,24 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         self.pay_pos_order(pos_refund)
         self.assertTrue(pos_refund.account_move)
         self.assertFalse(pos_refund.l10n_es_tbai_state)
+
+    def test_tbai_pos_order_with_failed_chain_head(self):
+        self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id}
+            ],
+        })
+        self.pay_pos_order(order, with_error=True)
+        self.assertNotEqual(order.l10n_es_tbai_state, 'sent')
+
+        order2, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id}
+            ],
+        })
+        self.pay_pos_order(order2)
+
+        # the second order should retry the unposted chain head
+        self.assertEqual(order.l10n_es_tbai_state, 'sent')
+        self.assertEqual(order2.l10n_es_tbai_state, 'sent')
