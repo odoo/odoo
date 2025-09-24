@@ -1,11 +1,11 @@
 import base64
 
 from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.x509 import ObjectIdentifier
 from cryptography.x509.oid import NameOID
-from cryptography.hazmat.primitives import hashes, serialization
 
-from odoo import api, models, service
+from odoo import api, models, release
 
 CERT_TEMPLATE_NAME = {
     'prod': b'\x0c\x12ZATCA-Code-Signing',
@@ -33,7 +33,6 @@ class CertificateCertificate(models.Model):
 
         company_id = journal.company_id
         parent_company_id = journal.company_id.parent_id
-        version_info = service.common.exp_version()
         builder = x509.CertificateSigningRequestBuilder()
         subject_names = (
             # Country Name
@@ -62,7 +61,7 @@ class CertificateCertificate(models.Model):
                 # EGS Serial Number. Manufacturer or Solution Provider Name, Model or Version and Serial Number.
                 # To be written in the following format: "1-... |2-... |3-..."
                 x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
-                    version_info['server_serie'], journal.id)),
+                    release.major_version, journal.id)),
                 # Organisation Identifier (UID)
                 x509.NameAttribute(NameOID.USER_ID, company_id.vat),
                 # Invoice Type. 4-digit numerical input using 0 & 1
