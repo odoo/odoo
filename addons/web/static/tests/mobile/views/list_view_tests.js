@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, patchWithCleanup, triggerEvents } from "@web/../tests/helpers/utils";
 import { getMenuItemTexts, toggleActionMenu } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
 let serverData;
 let fixture;
@@ -31,9 +31,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             },
         };
 
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => fn() || true,
-            clearTimeout: () => {},
+        patchWithCleanup(ListRenderer, {
+            LONG_TOUCH_THRESHOLD: 0,
         });
     });
 
