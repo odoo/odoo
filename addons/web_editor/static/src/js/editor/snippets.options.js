@@ -4527,8 +4527,9 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
                 return;
             }
 
-            // Call widget option methods and update $target
-            await this._select(previewMode, widget);
+            // Invoke widget option methods to update $target, handling any silent errors
+            // (e.g., when changing theme color and saving before the update is applied).
+            await this._select(previewMode, widget).catch(() => {});
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
