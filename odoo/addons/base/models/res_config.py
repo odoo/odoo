@@ -135,7 +135,16 @@ class ResConfigSettings(models.TransientModel):
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
             ``execute``` will save its value in an ir.config.parameter (global setting for the
-            database).
+            database). Its default value will be used as the initial value when the config parameter
+            record doesn't exist. If the field also has 'use_default_if_falsy', its default value
+            will also be used when read when the config parameter has a falsy value.
+
+            The field declaration should be consistent with its config parameter's use case.
+            ``fields.Char(config_parameter='config_key', default='default')``
+            ``env['ir.config_parameter'].get_str('config_key', 'default')``
+
+            ``fields.Char(config_parameter='config_key', use_default_if_falsy=True, default='default')``
+            ``env['ir.config_parameter'].get_str('config_key') or 'default'``
 
         *   For the other fields, the method ``execute`` invokes `set_values`.
             Override it to implement the effect of those fields.
@@ -150,7 +159,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _valid_field_parameter(self, field, name):
         return (
-            name in ('default_model', 'config_parameter')
+            name in ('default_model', 'config_parameter', 'use_default_if_falsy')
             or field.type in ('boolean', 'selection') and name in ('group', 'implied_group')
             or super()._valid_field_parameter(field, name)
         )
@@ -280,7 +289,8 @@ class ResConfigSettings(models.TransientModel):
                     value = IrConfigParameter.get_bool(icp, field.default(self) if field.default else False)
                 case _:
                     raise ValueError(f"Invalid field type: {field.type}")
-            res[name] = value
+            if value or not getattr(field, 'use_default_if_falsy', False):
+                res[name] = value
 
         res.update(self.get_values())
 

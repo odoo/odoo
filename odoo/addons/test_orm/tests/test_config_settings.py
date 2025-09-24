@@ -19,6 +19,7 @@ class TestConfigSettings(TransactionCase):
         IrConfigParameter = self.env['ir.config_parameter']
         field = ResConfigSettings._fields[field_name]
         config_parameter = field.config_parameter
+        use_default_if_falsy = getattr(field, 'use_default_if_falsy', False)
 
         res_config_write_value, res_config_get_value = res_config_setting_values
 
@@ -39,7 +40,10 @@ class TestConfigSettings(TransactionCase):
 
         # ir.config_parameter: get_param
         def get_param(default):
-            return IrConfigParameter.get_param(config_parameter, default)
+            if use_default_if_falsy:
+                return IrConfigParameter.get_param(config_parameter) or default
+            else:
+                return IrConfigParameter.get_param(config_parameter, default)
 
         for get_param_default, get_param_value in get_param_values:
             if get_param_value is False:
@@ -61,7 +65,10 @@ class TestConfigSettings(TransactionCase):
 
         # ir.config_parameter: get_str/get_int/get_float/get_bool
         def get_type(default):
-            return get_type_(config_parameter, default)
+            if use_default_if_falsy:
+                return get_type_(config_parameter) or default
+            else:
+                return get_type_(config_parameter, default)
 
         for get_type_default, get_type_value in get_values:
             if get_type_value is False:
@@ -266,3 +273,20 @@ class TestConfigSettings(TransactionCase):
         ]
         for res_config_setting_values, get_param_values, get_values in test_values:
             self._test_field('test_datetime_field', res_config_setting_values, get_param_values, get_values)
+
+    def test_use_default_if_falsy_char_field_default(self):
+        field = self.env['res.config.settings']._fields['test_char_field']
+        self.addCleanup(setattr, field, 'default', field.default)
+        field.default = lambda x: 'default'
+        self.addCleanup(delattr, field, 'use_default_if_falsy')
+        field.use_default_if_falsy = True
+
+        # [(res_config_write_value, res_config_get_value), [(get_param_default, get_param_value), ...], [(get_type_default, get_type_value), ...]]
+        test_values = [
+            ([DEFAULT_SETTING, 'default'], [('default', 'default')], [('default', 'default')]),
+            (['', 'default'], [('default', 'default')], [('default', 'default')]),
+            ([False, 'default'], [('default', 'default')], [('default', 'default')]),
+            (['value', 'value'], [('default', 'value')], [('default', 'value')]),
+        ]
+        for res_config_setting_values, get_param_values, get_values in test_values:
+            self._test_field('test_char_field', res_config_setting_values, get_param_values, get_values)
