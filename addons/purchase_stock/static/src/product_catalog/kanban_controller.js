@@ -1,5 +1,5 @@
 import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_controller";
-import { onWillStart, useState, useSubEnv, useEffect } from "@odoo/owl";
+import { onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -25,6 +25,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         onWillStart(async () => {
             this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
+            if (this.state.suggestToggle.isOn) {
+                this._debouncedKanbanRecompute();
+            }
         });
 
         /* Pass context to backend and reload front-end with computed values
@@ -48,18 +51,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             }
         }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
 
-        useEffect(
-            () => {
-                this._debouncedKanbanRecompute();
-            },
-            () => [
-                this.state.basedOn,
-                this.state.numberOfDays,
-                this.state.percentFactor,
-                this.state.suggestToggle.isOn,
-            ]
-        );
-
         /* Recompute Kanban on filter changes (incl. sidebar category filters)
          * The "update" triggers a refresh, which can happen before debounce on slow
          * internet --> pass suggest context to searchModel in case it refreshes first */
@@ -82,6 +73,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         useSubEnv({
             suggest: this.state,
             addAllProducts: onAddAll,
+            debouncedKanbanRecompute: this._debouncedKanbanRecompute,
         });
     }
 
