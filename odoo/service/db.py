@@ -497,12 +497,6 @@ def exp_list_countries():
         list_countries.append([code, name])
     return sorted(list_countries, key=lambda c: c[1])
 
-def exp_server_version():
-    """ Return the version of the server
-        Used by the client to verify the compatibility with its own version
-    """
-    return odoo.release.version
-
 #----------------------------------------------------------
 # db service dispatch
 #----------------------------------------------------------
@@ -510,7 +504,7 @@ def exp_server_version():
 def dispatch(method, params):
     g = globals()
     exp_method_name = 'exp_' + method
-    if method in ['db_exist', 'list', 'list_lang', 'server_version']:
+    if method in ['db_exist', 'list', 'list_lang']:
         return g[exp_method_name](*params)
     elif exp_method_name in g:
         passwd = params[0]

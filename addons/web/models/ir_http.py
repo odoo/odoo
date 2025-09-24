@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
-from odoo import api, models, fields
-from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
+from odoo import api, fields, models, release
+from odoo.http import DEFAULT_MAX_CONTENT_LENGTH, request
 from odoo.tools import config
 from odoo.tools.misc import hmac, str2bool
-
 
 """
 Debug mode is stored in session and should always be a string.
@@ -79,7 +77,6 @@ class IrHttp(models.AbstractModel):
     def session_info(self):
         user = self.env.user
         session_uid = request.session.uid
-        version_info = odoo.service.common.exp_version()
 
         if session_uid:
             user_context = dict(self.env['res.users'].context_get())
@@ -104,8 +101,8 @@ class IrHttp(models.AbstractModel):
             "db": self.env.cr.dbname,
             "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
             "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
-            "server_version": version_info.get('server_version'),
-            "server_version_info": version_info.get('server_version_info'),
+            "server_version": release.version,
+            "server_version_info": release.version_info,
             "support_url": "https://www.odoo.com/buy",
             "name": user.name,
             "username": user.login,
@@ -193,10 +190,9 @@ class IrHttp(models.AbstractModel):
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
         if session_uid:
-            version_info = odoo.service.common.exp_version()
             session_info.update({
-                'server_version': version_info.get('server_version'),
-                'server_version_info': version_info.get('server_version_info')
+                'server_version': release.version,
+                'server_version_info': release.version_info,
             })
         return session_info
 

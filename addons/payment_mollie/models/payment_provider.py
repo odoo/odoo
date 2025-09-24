@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models, service
+from odoo import fields, models, release
 from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mollie import const
-
 
 _logger = get_payment_logger(__name__)
 
@@ -58,14 +57,13 @@ class PaymentProvider(models.Model):
         if self.code != 'mollie':
             return super()._build_request_headers(*args, **kwargs)
 
-        odoo_version = service.common.exp_version()['server_version']
         module_version = self.env.ref('base.module_payment_mollie').installed_version
         return {
             'Accept': 'application/json',
             'Authorization': f'Bearer {self.mollie_api_key}',
             'Content-Type': 'application/json',
             # See https://docs.mollie.com/integration-partners/user-agent-strings
-            'User-Agent': f'Odoo/{odoo_version} MollieNativeOdoo/{module_version}',
+            'User-Agent': f'Odoo/{release.version} MollieNativeOdoo/{module_version}',
         }
 
     def _parse_response_error(self, response):
