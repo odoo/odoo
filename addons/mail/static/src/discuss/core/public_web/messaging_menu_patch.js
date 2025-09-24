@@ -10,4 +10,19 @@ patch(MessagingMenu.prototype, {
             thread.markAsRead();
         }
     },
+    canUnpinItem(thread) {
+        return thread.canUnpin && thread.self_member_id?.message_unread_counter === 0;
+    },
+    onSwipeLeftThreadNotification(thread) {
+        const res = super.onSwipeLeftThreadNotification(...arguments);
+        if (this.hasTouch() && this.canUnpinItem(thread)) {
+            return {
+                ...res,
+                action: () => thread.unpin(),
+                icon: "fa-times-circle",
+                bgColor: "bg-danger",
+            };
+        }
+        return res;
+    },
 });
