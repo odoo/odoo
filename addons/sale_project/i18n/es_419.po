@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-23 15:03+0000\n"
+"PO-Revision-Date: 2025-09-24 22:27+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sale_project/es_419/>\n"
@@ -146,6 +146,10 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"Define un proyecto en la cotización o en el formulario de los productos al "
+"crear la tarea de la orden.\n"
+"Los siguientes productos necesitan un proyecto para asignarle la tarea : "
+"%(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -746,7 +750,7 @@ msgstr "Análisis de las tareas"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "El artículo de la orden de venta debe contener un producto de servicio."
 
 #. module: sale_project
 #. odoo-python
@@ -784,12 +788,16 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"Este proyecto no se pudo crear porque no se pudo confirmar la orden de "
+"venta, ya está vinculado a un proyecto o no involucra ningún servicio."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
+"Esta orden de ventas debe contener al menos un producto del tipo \"Servicio\""
+"."
 
 #. module: sale_project
 #. odoo-python
@@ -850,4 +858,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "Podrás crear una factura y recolectar el pago."
