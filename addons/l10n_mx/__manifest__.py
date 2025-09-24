@@ -44,6 +44,14 @@ With this module you will have:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_mx/static/src/helpers/*.js',
+        ],
+        'web.assets_frontend': [
+            'l10n_mx/static/src/helpers/*.js',
+        ],
+    },
     'license': 'LGPL-3',
     'post_init_hook': '_enable_group_uom_post_init',
 }

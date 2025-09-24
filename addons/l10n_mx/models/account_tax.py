@@ -32,3 +32,19 @@ class AccountTax(models.Model):
     def _compute_l10n_mx_tax_type(self):
         for tax in self:
             tax.l10n_mx_tax_type = 'iva' if tax.country_id.code == 'MX' else False
+
+    @api.model
+    def _round_tax_details_tax_amounts(self, base_lines, company, mode='mixed'):
+        # EXTENDS 'account'
+        country_code = company.account_fiscal_country_id.code
+        if country_code == 'MX':
+            mode = 'excluded'
+        super()._round_tax_details_tax_amounts(base_lines, company, mode=mode)
+
+    @api.model
+    def _round_tax_details_base_lines(self, base_lines, company, mode='mixed'):
+        # EXTENDS 'account'
+        country_code = company.account_fiscal_country_id.code
+        if country_code == 'MX':
+            mode = 'excluded'
+        super()._round_tax_details_base_lines(base_lines, company, mode=mode)
