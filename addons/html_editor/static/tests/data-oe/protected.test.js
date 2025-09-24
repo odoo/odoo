@@ -261,7 +261,7 @@ test("should protect disconnected nodes", async () => {
     expect(lastStep.mutations[0].type).toBe("remove");
     expect(
         plugins.get("history").unserializeNode(lastStep.mutations[0].serializedNode).outerHTML
-    ).toBe(`<div contenteditable="false" data-oe-protected="true"></div>`);
+    ).toBe(`<div data-oe-protected="true" contenteditable="false"></div>`);
 });
 
 test("should not crash when changing attributes and removing a protecting anchor", async () => {
@@ -279,7 +279,7 @@ test("should not crash when changing attributes and removing a protecting anchor
     expect(
         plugins.get("history").unserializeNode(lastStep.mutations[1].serializedNode).outerHTML
     ).toBe(
-        `<div contenteditable="false" data-attr="other" data-oe-protected="true"><p>a</p></div>`
+        `<div data-oe-protected="true" data-attr="other" contenteditable="false"><p>a</p></div>`
     );
 });
 
