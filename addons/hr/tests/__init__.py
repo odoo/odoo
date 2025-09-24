@@ -18,3 +18,4 @@ from . import test_hr_version
 from . import test_hr_contract_versions
 from . import test_flexible_resource_calendar
 from . import test_multiple_bank_accounts
+from . import test_hr_org_chart

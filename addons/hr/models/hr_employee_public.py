@@ -60,6 +60,11 @@ class HrEmployeePublic(models.Model):
     employee_id = fields.Many2one('hr.employee', 'Employee', readonly=True)
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
+    child_count = fields.Integer(compute='_compute_child_count')
+    subordinate_ids = fields.One2many(related='employee_id.subordinate_ids', compute_sudo=True)
+    is_subordinate = fields.Boolean(related='employee_id.is_subordinate')
+    child_all_count = fields.Integer(compute='_compute_child_all_count')
+    department_color = fields.Integer(compute='_compute_department_color')
     image_1920 = fields.Image("Image", related='employee_id.image_1920', compute_sudo=True)
     image_1024 = fields.Image("Image 1024", related='employee_id.image_1024', compute_sudo=True)
     image_512 = fields.Image("Image 512", related='employee_id.image_512', compute_sudo=True)
@@ -108,6 +113,15 @@ class HrEmployeePublic(models.Model):
 
     def _compute_country_code(self):
         self._compute_from_employee('country_code')
+
+    def _compute_child_all_count(self):
+        self._compute_from_employee('child_all_count')
+
+    def _compute_department_color(self):
+        self._compute_from_employee('department_color')
+
+    def _compute_child_count(self):
+        self._compute_from_employee('child_count')
 
     @api.depends_context('uid')
     @api.depends('parent_id')
