@@ -4,11 +4,12 @@ from collections import defaultdict
 from datetime import datetime
 from uuid import uuid4
 
-from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
+import odoo.release
+from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
-from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import SQL, convert
-from odoo.service.common import exp_version
+
 from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
@@ -275,7 +276,11 @@ class PosConfig(models.Model):
             return read_records
 
         record = read_records[0]
-        record['_server_version'] = exp_version()
+        record['_server_version'] = {
+            'server_version': odoo.release.version,
+            'server_version_info': odoo.release.version_info,
+            'server_serie': odoo.release.serie,
+        }
         record['_base_url'] = self.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
         record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
