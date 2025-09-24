@@ -93,7 +93,7 @@ export class CalendarArchParser {
                                 context: fieldInfo.context || "{}",
                                 fieldName,
                                 filterFieldName: null,
-                                label: field.string,
+                                label: null,
                                 resModel: field.relation,
                                 writeFieldName: null,
                                 writeResModel: null,
@@ -103,6 +103,7 @@ export class CalendarArchParser {
                             filterInfo.colorFieldName =
                                 (node.hasAttribute("filters") && node.getAttribute("color")) ||
                                 null;
+                            filterInfo.label = node.getAttribute("string") || field.string;
                             filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
                             filterInfo.writeFieldName = node.getAttribute("write_field") || null;
                             filterInfo.writeResModel = node.getAttribute("write_model") || null;
