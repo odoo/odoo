@@ -22,6 +22,7 @@ class TestHrAttendance(TransactionCase):
             'name': "François Russie",
             'user_id': cls.user.id,
             'pin': '1234',
+            'ruleset_id': False,
         })
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
