@@ -52,7 +52,7 @@ class DiscussChannel(models.Model):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread", "bus.listener.mixin"]
+    _inherit = ["mail.thread", "bus.listener.mixin", "mail.versioning.mixin"]
 
     MAX_BOUNCE_LIMIT = 10
 

@@ -59,6 +59,8 @@ export class RecordInternal {
     fieldsComputeProxy2 = new Map();
     uses = new RecordUses();
     updatingAttrs = new Map();
+    versionByField = new Map();
+    overrideByField = new Map();
     proxyUsed = new Map();
     /** @type {string} */
     localId;
