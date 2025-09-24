@@ -110,8 +110,8 @@ export class NewContentSystrayItem extends Component {
 
     get newPageAttrs() {
         return {
-            'aria-label': _t("New Page"),
-            'style': 'width: 300px',
+            "aria-label": _t("New Page"),
+            style: "width: 300px",
         };
     }
 
@@ -120,7 +120,10 @@ export class NewContentSystrayItem extends Component {
             return;
         }
         if (!element.description2) {
-            element.description2 = sprintf(_t('Install "%s"'), this.modulesInfo[element.moduleName].name);
+            element.description2 = sprintf(
+                _t('Install "%s"'),
+                this.modulesInfo[element.moduleName].name
+            );
         }
         const tmp = element.description;
         element.description = element.description2;
@@ -136,39 +139,49 @@ export class NewContentSystrayItem extends Component {
 
         const proms = [];
 
-        proms.push((async () => {
-            this.canInstall = user.isAdmin;
-            if (this.canInstall) {
-                const moduleNames = this.state.newContentElements
-                    .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
-                    .map(({ moduleName }) => moduleName);
-                this.modulesInfo = {};
-                for (const record of await this.orm.cache().searchRead(
-                    "ir.module.module",
-                    [["name", "in", moduleNames]],
-                    ["id", "name", "shortdesc"]
-                )) {
-                    this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
+        proms.push(
+            (async () => {
+                this.canInstall = user.isAdmin;
+                if (this.canInstall) {
+                    const moduleNames = this.state.newContentElements
+                        .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
+                        .map(({ moduleName }) => moduleName);
+                    this.modulesInfo = {};
+                    for (const record of await this.orm
+                        .cache()
+                        .searchRead(
+                            "ir.module.module",
+                            [["name", "in", moduleNames]],
+                            ["id", "name", "shortdesc"]
+                        )) {
+                        this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
+                    }
                 }
-            }
-        })());
+            })()
+        );
 
-        proms.push((async () => {
-            const modelsToCheck = [];
-            const elementsToUpdate = {};
-            for (const element of this.state.newContentElements) {
-                if (element.model) {
-                    modelsToCheck.push(element.model);
-                    elementsToUpdate[element.model] = element;
+        proms.push(
+            (async () => {
+                const modelsToCheck = [];
+                const elementsToUpdate = {};
+                for (const element of this.state.newContentElements) {
+                    if (element.model) {
+                        modelsToCheck.push(element.model);
+                        elementsToUpdate[element.model] = element;
+                    }
                 }
-            }
-            const accesses = await rpc("/website/check_new_content_access_rights", {
-                models: modelsToCheck,
-            }, { cache: true });
-            for (const [model, access] of Object.entries(accesses)) {
-                elementsToUpdate[model].isDisplayed = access;
-            }
-        })());
+                const accesses = await rpc(
+                    "/website/check_new_content_access_rights",
+                    {
+                        models: modelsToCheck,
+                    },
+                    { cache: true }
+                );
+                for (const [model, access] of Object.entries(accesses)) {
+                    elementsToUpdate[model].isDisplayed = access;
+                }
+            })()
+        );
 
         await Promise.all(proms);
         this.dropdown.open();
@@ -176,7 +189,7 @@ export class NewContentSystrayItem extends Component {
         // Preload the new page templates so they are ready as soon as possible
         rpc(
             "/website/get_new_page_templates",
-            { context: { 'website_id': this.website.currentWebsiteId } },
+            { context: { website_id: this.website.currentWebsiteId } },
             { cache: true, silent: true }
         );
     }
@@ -189,7 +202,7 @@ export class NewContentSystrayItem extends Component {
                     ({ status }) => status === MODULE_STATUS.NOT_INSTALLED
                 )
             )
-            .filter(el => ('isDisplayed' in el ? el.isDisplayed : user.isSystem));
+            .filter((el) => ("isDisplayed" in el ? el.isDisplayed : user.isSystem));
     }
 
     async installModule(id, redirectUrl) {

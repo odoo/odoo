@@ -60,7 +60,11 @@ export function changeBackground(snippet, position = "bottom") {
     return [
         {
             trigger: `.o_customize_tab button[data-action-id="replaceBgImage"]`,
-            content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
+            content: markup(
+                _t(
+                    "<b>Customize</b> any block through this menu. Try to change the background image of this block."
+                )
+            ),
             tooltipPosition: position,
             run: "click",
         },
@@ -70,7 +74,11 @@ export function changeBackground(snippet, position = "bottom") {
 export function changeBackgroundColor(position = "bottom") {
     return {
         trigger: ".o_customize_tab .o_we_color_preview",
-        content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background color of this block.")),
+        content: markup(
+            _t(
+                "<b>Customize</b> any block through this menu. Try to change the background color of this block."
+            )
+        ),
         tooltipPosition: position,
         run: "click",
     };
@@ -80,11 +88,10 @@ export function changeBackgroundColor(position = "bottom") {
 // to avoid duplication
 export function selectColorPalette(position = "left") {
     return {
-        trigger:
-            ".o_customize_tab .o_we_color_preview",
+        trigger: ".o_customize_tab .o_we_color_preview",
         content: markup(_t(`<b>Select</b> a Color Palette.`)),
         tooltipPosition: position,
-        run: 'click',
+        run: "click",
     };
 }
 
@@ -104,7 +111,9 @@ export function changeImage(snippet, position = "bottom") {
         },
         {
             trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
-            content: markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
+            content: markup(
+                _t("<b>Double click on an image</b> to change it with one of your choice.")
+            ),
             tooltipPosition: position,
             run: "dblclick",
         },
@@ -116,12 +125,22 @@ export function changeImage(snippet, position = "bottom") {
     By default, prevents the step from being active if a palette is opened.
     Set allowPalette to true to select options within a palette.
 */
-export function changeOption(blockName, actionId = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
-    const noPalette = allowPalette ? "" : !document.querySelector(".o_popover .o_font_color_selector") && ".o_customize_tab";
+export function changeOption(
+    blockName,
+    actionId = "",
+    optionTooltipLabel = "",
+    position = "bottom",
+    allowPalette = false
+) {
+    const noPalette = allowPalette
+        ? ""
+        : !document.querySelector(".o_popover .o_font_color_selector") && ".o_customize_tab";
     const option_block = `${noPalette} [data-container-title='${blockName}']`;
     return {
         trigger: `${option_block} ${actionId}, ${option_block} [data-action-id="${actionId}"]`,
-        content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
+        content: markup(
+            _t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)
+        ),
         tooltipPosition: position,
         run: "click",
     };
@@ -167,14 +186,23 @@ export function changeOptionInPopover(blockName, optionName, elementName, search
     return steps;
 }
 
-export function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
-    const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
+export function selectNested(
+    trigger,
+    optionName,
+    altTrigger = null,
+    optionTooltipLabel = "",
+    position = "top",
+    allowPalette = false
+) {
+    const noPalette = allowPalette
+        ? ""
+        : ".o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))";
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger + (altTrigger ? `, ${option_block} ${altTrigger}` : ""),
         content: markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
         tooltipPosition: position,
-        run: 'click',
+        run: "click",
     };
 }
 
@@ -228,7 +256,7 @@ export function clickOnElement(elementName, selector) {
     return {
         content: `Clicking on the ${elementName}`,
         trigger: selector,
-        run: 'click'
+        run: "click",
     };
 }
 
@@ -238,15 +266,18 @@ export function clickOnElement(elementName, selector) {
  * @param {string} position Where the purple arrow will show up
  */
 export function clickOnEditAndWaitEditMode(position = "bottom") {
-    return [{
-        content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: "body .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
-        tooltipPosition: position,
-        run: "click",
-    }, {
-        content: "Check that we are in edit mode",
-        trigger: ".o_builder_sidebar_open",
-    }];
+    return [
+        {
+            content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
+            trigger: "body .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
+            tooltipPosition: position,
+            run: "click",
+        },
+        {
+            content: "Check that we are in edit mode",
+            trigger: ".o_builder_sidebar_open",
+        },
+    ];
 }
 
 /**
@@ -256,20 +287,24 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
  * @param {string} position Where the purple arrow will show up
  */
 export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
-    return [{
-        content: markup(_t("<b>Click Edit</b> dropdown")),
-        trigger: "body .o_menu_systray button:contains('Edit')",
-        tooltipPosition: position,
-        run: "click",
-    }, {
-        content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: ".o_edit_website_dropdown_item",
-        tooltipPosition: position,
-        run: "click",
-    }, {
-        content: "Check that we are in edit mode",
-        trigger: ".o_builder_sidebar_open",
-    }];
+    return [
+        {
+            content: markup(_t("<b>Click Edit</b> dropdown")),
+            trigger: "body .o_menu_systray button:contains('Edit')",
+            tooltipPosition: position,
+            run: "click",
+        },
+        {
+            content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
+            trigger: ".o_edit_website_dropdown_item",
+            tooltipPosition: position,
+            run: "click",
+        },
+        {
+            content: "Check that we are in edit mode",
+            trigger: ".o_builder_sidebar_open",
+        },
+    ];
 }
 
 /**
@@ -303,8 +338,10 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
             noPrepend: true,
         },
         {
-            trigger: withContains ? "button[data-action=save]:enabled:contains(save)" : "button[data-action=save]:enabled",
-        content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
+            trigger: withContains
+                ? "button[data-action=save]:enabled:contains(save)"
+                : "button[data-action=save]:enabled",
+            content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
             tooltipPosition: position,
             run: "click",
             timeout,
@@ -331,7 +368,7 @@ export function clickOnText(snippet, element, position = "bottom") {
         },
         {
             trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
-        content: markup(_t("<b>Click on a text</b> to start editing it.")),
+            content: markup(_t("<b>Click on a text</b> to start editing it.")),
             tooltipPosition: position,
             run: "click",
         },
@@ -348,30 +385,38 @@ export function clickOnText(snippet, element, position = "bottom") {
  */
 export function insertSnippet(snippet, { position = "bottom", ignoreLoading = false } = {}) {
     const blockEl = snippet.groupName || snippet.name;
-    const insertSnippetSteps = [{
-        trigger: ".o_builder_sidebar_open",
-        noPrepend: true,
-    }];
-    const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
-    if (snippet.groupName) {
-        insertSnippetSteps.push({
-            content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
-            trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail_area`,
-            tooltipPosition: position,
-            run: "click",
-        },
+    const insertSnippetSteps = [
         {
-            content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
-            // FIXME `:not(.d-none)` should obviously not be needed but it seems
-            // currently needed when using a tour in user/interactive mode.
-            trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+            trigger: ".o_builder_sidebar_open",
             noPrepend: true,
-            tooltipPosition: "top",
-            run: "click",
-        });
+        },
+    ];
+    const snippetIDSelector = snippet.id
+        ? `[data-snippet-id="${snippet.id}"]`
+        : `[data-snippet-id^="${snippet.customID}_"]`;
+    if (snippet.groupName) {
+        insertSnippetSteps.push(
+            {
+                content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
+                trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail_area`,
+                tooltipPosition: position,
+                run: "click",
+            },
+            {
+                content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
+                // FIXME `:not(.d-none)` should obviously not be needed but it seems
+                // currently needed when using a tour in user/interactive mode.
+                trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+                noPrepend: true,
+                tooltipPosition: "top",
+                run: "click",
+            }
+        );
     } else {
         insertSnippetSteps.push({
-            content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
+            content: markup(
+                _t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)
+            ),
             trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail`,
             tooltipPosition: position,
             run: "drag_and_drop :iframe #wrapwrap > footer",
@@ -424,15 +469,15 @@ export function selectHeader(position = "bottom") {
 }
 
 export function selectSnippetColumn(snippet, index = 0, position = "bottom") {
-     return {
+    return {
         trigger: `:iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: markup(_t("<b>Click</b> on this column to access its options.")),
-         tooltipPosition: position,
+        tooltipPosition: position,
         run: "click",
-     };
+    };
 }
 
-export function prepend_trigger(steps, prepend_text='') {
+export function prepend_trigger(steps, prepend_text = "") {
     for (const step of steps) {
         if (!step.noPrepend && prepend_text) {
             step.trigger = prepend_text + step.trigger;
@@ -447,24 +492,28 @@ export function getClientActionUrl(path, edition) {
         url += `?path=${encodeURIComponent(path)}`;
     }
     if (edition) {
-        url += `${path ? '&' : '?'}enable_editor=1`;
+        url += `${path ? "&" : "?"}enable_editor=1`;
     }
     return url;
 }
 
 export function clickOnExtraMenuItem(stepOptions, backend = false) {
-    return Object.assign({
-        content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? ":iframe" : ""} .top_menu`,
-        async run(actions) {
-            // Note: the button might not exist (it only appear if there is many menu items)
-            const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
-            // Don't click on the extra menu button if it's already visible.
-            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
-                await actions.click(extraMenuButton);
-            }
+    return Object.assign(
+        {
+            content: "Click on the extra menu dropdown toggle if it is there",
+            trigger: `${backend ? ":iframe" : ""} .top_menu`,
+            async run(actions) {
+                // Note: the button might not exist (it only appear if there is
+                // many menu items).
+                const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
+                // Don't click on the extra menu button if it's already visible.
+                if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                    await actions.click(extraMenuButton);
+                }
+            },
         },
-    }, stepOptions);
+        stepOptions
+    );
 }
 
 /**
@@ -532,7 +581,7 @@ export function registerBackendAndFrontendTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    if (window.location.pathname === '/odoo') {
+    if (window.location.pathname === "/odoo") {
         return registerWebsitePreviewTour(name, options, () => {
             const newSteps = [];
             for (const step of steps()) {
@@ -546,9 +595,7 @@ export function registerBackendAndFrontendTour(name, options, steps) {
 
     return registry.category("web_tour.tours").add(name, {
         url: options.url,
-        steps: () => {
-            return steps();
-        },
+        steps: () => steps(),
     });
 }
 
@@ -560,39 +607,42 @@ export function registerBackendAndFrontendTour(name, options, steps) {
  * @returns {Array} - The steps required to perform the website switch.
  */
 export function switchWebsite(websiteId, websiteName) {
-    return [{
-        content: `Click on the website switch to switch to website '${websiteName}'`,
-        trigger: '.o_website_switcher_container button',
-        run: "click",
-    },
-    {
-        trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
-    },
-    {
-        content: `Switch to website '${websiteName}'`,
-        trigger: `.o-dropdown--menu .dropdown-item[data-website-id="${websiteId}"]:contains("${websiteName}")`,
-        run: "click",
-    }, {
-        content: "Wait for the iframe to be loaded",
-        // The page reload generates assets for the new website, it may take
-        // some time
-        timeout: 20000,
-        trigger: `:iframe html[data-website-id="${websiteId}"]`,
-    }];
+    return [
+        {
+            content: `Click on the website switch to switch to website '${websiteName}'`,
+            trigger: ".o_website_switcher_container button",
+            run: "click",
+        },
+        {
+            trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
+        },
+        {
+            content: `Switch to website '${websiteName}'`,
+            trigger: `.o-dropdown--menu .dropdown-item[data-website-id="${websiteId}"]:contains("${websiteName}")`,
+            run: "click",
+        },
+        {
+            content: "Wait for the iframe to be loaded",
+            // The page reload generates assets for the new website, it may take
+            // some time
+            timeout: 20000,
+            trigger: `:iframe html[data-website-id="${websiteId}"]`,
+        },
+    ];
 }
 
 /**
-* Switches to a different website by clicking on the website switcher.
-* This function can only be used during test tours as it requires
-* specific cookies to properly function.
-*
-* @param {string} websiteName - The name of the website to switch to.
-* @returns {Array} - The steps required to perform the website switch.
-*/
+ * Switches to a different website by clicking on the website switcher.
+ * This function can only be used during test tours as it requires
+ * specific cookies to properly function.
+ *
+ * @param {string} websiteName - The name of the website to switch to.
+ * @returns {Array} - The steps required to perform the website switch.
+ */
 export function testSwitchWebsite(websiteName) {
-   const websiteIdMapping = JSON.parse(cookie.get('websiteIdMapping') || '{}');
-   const websiteId = websiteIdMapping[websiteName];
-   return switchWebsite(websiteId, websiteName)
+    const websiteIdMapping = JSON.parse(cookie.get("websiteIdMapping") || "{}");
+    const websiteId = websiteIdMapping[websiteName];
+    return switchWebsite(websiteId, websiteName);
 }
 
 /**

@@ -5,7 +5,7 @@ export class CookiesWarning extends Interaction {
     static selector = ".o_no_optional_cookie";
     dynamicSelectors = {
         ...this.dynamicSelectors,
-        _iframe: () => this.keptIframeEl ??= this.el.previousElementSibling,
+        _iframe: () => (this.keptIframeEl ??= this.el.previousElementSibling),
     };
     dynamicContent = {
         _root: { "t-on-click": () => this.services.website_cookies.bus.trigger("cookiesBar.show") },
@@ -25,6 +25,4 @@ export class CookiesWarning extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.cookies_warning", CookiesWarning);
+registry.category("public.interactions").add("website.cookies_warning", CookiesWarning);

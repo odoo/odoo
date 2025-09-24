@@ -17,12 +17,12 @@ export const SUB_SNIPPET_TEMPLATES = {
 };
 
 const DROP_IN_ONLY_SNIPPETS = {
-    "s_button": ".btn",
-    "s_video": ".media_iframe_video",
+    s_button: ".btn",
+    s_video: ".media_iframe_video",
 };
 
 // Extract the snippets names from the URL parameters.
-let snippetsNames = (new URL(document.location.href)).searchParams.get("snippets_names") || "";
+let snippetsNames = new URL(document.location.href).searchParams.get("snippets_names") || "";
 // When this test is loaded in the backend, the search params aren't as easy to
 // read as before. Little trickery to make this test run.
 const searchParams = new URLSearchParams(window.location.search).get("path");
@@ -42,7 +42,11 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                 name: snippet.split(":")[0],
                 group: snippet.split(":")[1],
             };
-            const isModal = ["s_popup", "s_newsletter_subscribe_popup", "s_newsletter_benefits_popup"].includes(snippet.name);
+            const isModal = [
+                "s_popup",
+                "s_newsletter_subscribe_popup",
+                "s_newsletter_benefits_popup",
+            ].includes(snippet.name);
             const isDropInOnlySnippet = Object.keys(DROP_IN_ONLY_SNIPPETS).includes(snippet.name);
             const snippetKey = SUB_SNIPPET_TEMPLATES[snippet.name] || snippet.name;
 
@@ -55,7 +59,9 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
 
             const snippetSteps = [
                 {
-                    content: `Drop ${snippet.group || snippet.name} ${snippet.group ? "group" : "snippet"} [${n}/${snippetsNames.length}]`,
+                    content: `Drop ${snippet.group || snippet.name} ${
+                        snippet.group ? "group" : "snippet"
+                    } [${n}/${snippetsNames.length}]`,
                     trigger: draggableElSelector,
                     run: "drag_and_drop :iframe #wrapwrap .oe_drop_zone",
                 },
@@ -65,7 +71,9 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                 },
                 {
                     content: `Click on ${snippet.name} snippet`,
-                    trigger: `:iframe #wrapwrap [data-snippet="${snippetKey}"]${isModal ? " .modal.show" : ""}`,
+                    trigger: `:iframe #wrapwrap [data-snippet="${snippetKey}"]${
+                        isModal ? " .modal.show" : ""
+                    }`,
                     run: "click",
                 },
                 {
@@ -95,19 +103,26 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                     run: "click",
                 });
             } else if (isModal) {
-                snippetSteps.splice(5, 2, {
-                    content: `Make sure ${snippet.name} is shown`,
-                    trigger: ":iframe body.modal-open",
-                }, {
-                    content: `Hide the ${snippet.name} popup`,
-                    trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
-                    run: "click",
-                });
+                snippetSteps.splice(
+                    5,
+                    2,
+                    {
+                        content: `Make sure ${snippet.name} is shown`,
+                        trigger: ":iframe body.modal-open",
+                    },
+                    {
+                        content: `Hide the ${snippet.name} popup`,
+                        trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
+                        run: "click",
+                    }
+                );
             } else if (isDropInOnlySnippet) {
                 // The 'drop in only' snippets have their 'data-snippet' attribute
                 // removed once they are dropped, so we need to use a different
                 // selector.
-                snippetSteps[2].trigger = `:iframe #wrapwrap ${DROP_IN_ONLY_SNIPPETS[snippet.name]}`;
+                snippetSteps[2].trigger = `:iframe #wrapwrap ${
+                    DROP_IN_ONLY_SNIPPETS[snippet.name]
+                }`;
             }
             steps = steps.concat(snippetSteps);
         }
@@ -125,7 +140,9 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                     // receive no steps. The test would then not test anything anymore
                     // without us noticing it.
                     if (steps.length < 500) {
-                        console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
+                        console.error(
+                            `This test is not behaving as it should, got only ${steps.length} steps.`
+                        );
                     }
                 },
             },
@@ -149,9 +166,11 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
             ...clickOnSnippet({ id: "o_header_standard", name: "Header" }),
             ...changeOptionInPopover("Header", "Header Position", "Hidden"),
             goBackToBlocks(),
-        ].concat(steps).map((step) => {
-            delete step.noPrepend;
-            return step;
-        });
+        ]
+            .concat(steps)
+            .map((step) => {
+                delete step.noPrepend;
+                return step;
+            });
     },
 });

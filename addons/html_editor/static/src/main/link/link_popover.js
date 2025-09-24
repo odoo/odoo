@@ -146,10 +146,12 @@ export class LinkPopover extends Component {
                 },
                 noopener: {
                     label: "noopener",
-                    description: _t("Prevents the new page from accessing the original window (security)"),
+                    description: _t(
+                        "Prevents the new page from accessing the original window (security)"
+                    ),
                     isChecked: currentRelValues.includes("noopener"),
                 },
-            }
+            },
         });
 
         const getTargetedElements = () => [this.props.linkElement];
@@ -291,7 +293,7 @@ export class LinkPopover extends Component {
             this.customStyles,
             this.state.linkTarget,
             this.state.attachmentId,
-            relValue,
+            relValue
         );
     }
     applyDeducedUrl() {

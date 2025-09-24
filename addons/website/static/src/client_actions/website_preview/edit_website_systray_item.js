@@ -25,11 +25,7 @@ export class EditWebsiteSystrayItem extends Component {
         this.notification = useService("notification");
         this.websiteContext = useState(this.websiteService.context);
         // TODO: website service should share a reactive
-        useBus(
-            websiteSystrayRegistry,
-            "CONTENT-UPDATED",
-            () => this.checkPendingTranslations()
-        );
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => this.checkPendingTranslations());
         this.isEnteringTranslateMode = false;
     }
 

@@ -33,5 +33,6 @@ export class AnnouncementScrollOptionPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins")
+registry
+    .category("website-plugins")
     .add(AnnouncementScrollOptionPlugin.id, AnnouncementScrollOptionPlugin);

@@ -1,8 +1,8 @@
-import {PageDependencies} from '@website/components/dialog/page_properties';
-import {standardFieldProps} from '@web/views/fields/standard_field_props';
+import { PageDependencies } from "@website/components/dialog/page_properties";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
-import {registry} from '@web/core/registry';
-import { _t } from '@web/core/l10n/translation';
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 import { Component, useEffect, useRef } from "@odoo/owl";
 
 /**
@@ -39,7 +39,7 @@ class PageUrlField extends UrlField {
                     };
                 }
             },
-            () => [this.inputRef.el],
+            () => [this.inputRef.el]
         );
     }
 
@@ -78,11 +78,12 @@ export class ImageRadioField extends Component {
         const selection = this.props.record.fields[this.props.name].selection;
         // Check if value / label exists for each selection item and add the
         // corresponding image from field options.
-        this.values = selection.filter(item => {
-            return item[0] || item[1];
-        }).map((value, index) => {
-            return [...value, this.props.images && this.props.images[index] || ''];
-        });
+        this.values = selection
+            .filter((item) => item[0] || item[1])
+            .map((value, index) => [
+                ...value,
+                (this.props.images && this.props.images[index]) || "",
+            ]);
     }
 
     /**
@@ -100,10 +101,10 @@ export const imageRadioField = {
             label: _t("Images"),
             name: "images",
             type: "string",
-            help: _t("Use an array to list the images to use in the radio selection.")
-        }
+            help: _t("Use an array to list the images to use in the radio selection."),
+        },
     ],
-    supportedTypes: ['selection'],
+    supportedTypes: ["selection"],
     extractProps: ({ options }) => ({
         images: options.images,
     }),
