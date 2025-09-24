@@ -436,6 +436,12 @@ class StockWarehouseOrderpoint(models.Model):
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
+        param_env = self.env['ir.config_parameter'].sudo()
+        global_visibility_days = action['context'].get('global_visibility_days', int(self.get_visibility_days()))
+        last_used_horizon_days = int(param_env.get_param("stock.last_horizon_days", self.get_visibility_days()))
+        if last_used_horizon_days != global_visibility_days:
+            orderpoints._compute_qty_to_order_computed()
+            param_env.set_param("stock.last_horizon_days", global_visibility_days)
         to_refill = defaultdict(float)
         all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self._get_orderpoint_locations()
