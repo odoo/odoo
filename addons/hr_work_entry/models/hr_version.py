@@ -554,7 +554,8 @@ class HrVersion(models.Model):
                 version = self.env['hr.version'].browse(vals['version_id'])
                 calendar = version.resource_calendar_id
                 employee = version.employee_id
-                vals['date'] = date_start.date()
+                tz = _get_tz(vals['version_id'])
+                vals['date'] = date_start.astimezone(tz).date()
                 vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
             vals.pop('date_start', False)
             vals.pop('date_stop', False)
