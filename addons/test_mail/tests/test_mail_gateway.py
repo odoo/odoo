@@ -286,6 +286,26 @@ class TestMailgateway(MailGatewayCommon):
             set(message.attachment_ids.mapped('name')),
             set(['rosaçée.gif', 'verte!µ.gif', 'orangée.gif']))
 
+    def test_message_parse_attachment_inline_signature_img(self):
+        self.format_and_process(test_mail_data.MAIL_MULTIPART_IMAGE_WITH_SIGNATURE, self.email_from, f'groups@{self.alias_domain}')
+        attachments = self.env['ir.attachment'].with_context(hide_quote_attachments=True).search([
+            ('name', 'ilike', 'embedded-attachment-'),
+            ('quote_attachment', 'in', [True, False]),
+        ], order='name ASC')
+
+        self.assertFalse(attachments[0].quote_attachment,
+            "embedded-attachment-1-bodyAndSignature is present in the body, it should not be marked as quoted")
+        self.assertFalse(attachments[1].quote_attachment,
+            "embedded-attachment-2-attached was separately attached, it should not be marked as quoted")
+        self.assertTrue(attachments[2].quote_attachment,
+            "embedded-attachment-3-signature is only present in the signaure, it should be marked as quoted")
+
+        attachments_blind_search = self.env['ir.attachment'].with_context(hide_quote_attachments=True).search([
+            ('name', 'ilike', 'embedded-attachment-'),
+        ])
+        self.assertEqual(len(attachments), 3)
+        self.assertEqual(len(attachments_blind_search), 2, 'A blind search shouldn\'t return the quote attachment')
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_followers(self):
         """ Incoming email: recognized author not archived and not odoobot:

@@ -56,7 +56,7 @@ test("simple chatter on a record", async () => {
             [
                 "mail.thread",
                 {
-                    access_params: {},
+                    access_params: { context: { hide_quote_attachments: true } },
                     request_list: [
                         "activities",
                         "attachments",
@@ -73,7 +73,7 @@ test("simple chatter on a record", async () => {
         {
             ignoreOrder: true,
             stepsAfter: [
-                `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
+                `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","context":{"hide_quote_attachments":true},"fetch_params":{"limit":30}}`,
             ],
         }
     );

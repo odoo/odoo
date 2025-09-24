@@ -353,6 +353,7 @@ export class Store extends BaseStore {
     _fetchStoreDataRpc(fetchParams) {
         const context = {
             ...user.context,
+            hide_quote_attachments: true,
             allowed_company_ids: user.allowedCompanies.map((c) => c.id),
         };
         return rpc(

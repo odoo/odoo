@@ -133,7 +133,11 @@ test("Only necessary requests are made when creating a new chat", async () => {
                     },
                     thread_id: threadId,
                     thread_model: "discuss.channel",
-                    context: { ...userContext(), temporary_id: 0.8200000000000001 },
+                    context: {
+                        ...userContext(),
+                        hide_quote_attachments: true,
+                        temporary_id: 0.8200000000000001,
+                    },
                 })}`,
             ],
         }

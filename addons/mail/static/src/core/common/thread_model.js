@@ -381,7 +381,11 @@ export class Thread extends Record {
     }
 
     get rpcParams() {
-        return {};
+        return {
+            context: {
+                hide_quote_attachments: true,
+            },
+        };
     }
 
     async checkReadAccess() {
