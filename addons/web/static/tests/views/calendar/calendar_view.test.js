@@ -2144,15 +2144,15 @@ test(`set filter with many2many field on desktop`, async () => {
     });
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -2176,15 +2176,15 @@ test(`set filter with many2many field on mobile`, async () => {
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     await contains(`.o_filter`).click();
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -2206,15 +2206,15 @@ test(`set filter with one2many field on desktop`, async () => {
     });
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -2238,15 +2238,15 @@ test(`set filter with one2many field on mobile`, async () => {
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     await contains(`.o_filter`).click();
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test(`open form view`, async () => {
