@@ -64,23 +64,31 @@ class IrModuleModule(models.Model):
         was_installed = len(self) == 1 and self.state in ('installed', 'to upgrade', 'to remove')
         res = super().write(vals)
         is_installed = len(self) == 1 and self.state == 'installed'
-        if (
-            not was_installed and is_installed
-            and not self.env.company.chart_template
-            and self.account_templates
-            and (guessed := next((
-                tname
-                for tname, tvals in self.account_templates.items()
-                if (self.env.company.country_id.id and tvals['country_id'] == self.env.company.country_id.id)
-                or tname == 'generic_coa'
-            ), None))
-        ):
-            def try_loading(env):
-                env['account.chart.template'].try_loading(
-                    guessed,
-                    env.company,
-                )
-            self.env.registry._auto_install_template = try_loading
+        if not was_installed and is_installed:
+            if self.name != 'account':
+                for demo in [False, True] if self.demo else [False]:
+                    for company in self.env['res.company'].search([('chart_template', '!=', False)]):
+                        ChartTemplate = self.env['account.chart.template'].with_company(company)
+                        module_template_data = ChartTemplate._get_chart_template_data(company.chart_template, demo, self.name)
+                        module_template_data.pop('template_data', None)
+                        ChartTemplate._pre_reload_data(company, {}, module_template_data, force_update=True)
+                        ChartTemplate._load_data(module_template_data)
+            if (
+                not self.env.company.chart_template
+                and self.account_templates
+                and (guessed := next((
+                    tname
+                    for tname, tvals in self.account_templates.items()
+                    if (self.env.company.country_id.id and tvals['country_id'] == self.env.company.country_id.id)
+                    or tname == 'generic_coa'
+                ), None))
+            ):
+                def try_loading(env):
+                    env['account.chart.template'].try_loading(
+                        guessed,
+                        env.company,
+                    )
+                self.env.registry._auto_install_template = try_loading
         return res
 
     def _load_module_terms(self, modules, langs, overwrite=False):
