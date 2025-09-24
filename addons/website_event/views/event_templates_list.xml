@@ -219,18 +219,24 @@
                     <t t-out="online_event_text"/>
                 </t>
                 <t t-elif="current_country" t-out="current_country.name"/>
-                <t t-else="">All countries</t>
+                <t t-else="">All Countries</t>
             </button>
             <div class="dropdown-menu">
+                <a t-att-href="keep_event_url(country='all')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == 'all' and 'active'}" title="All Countries">
+                    All Countries
+                    <span t-out="sum(country['country_id_count'] for country in countries)" class="badge pagination ms-3 text-bg-primary"/>
+                </a>
+                <t t-set="online_count" t-value="sum(country['country_id_count'] for country in countries if not country['country_id'])"/>
                 <t t-foreach="countries" t-as="country">
                     <t t-if="country['country_id']">
                         <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
                         <a t-att-href="keep_event_url(country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" t-att-title="country['country_id'][1]">
                             <t t-out="country['country_id'][1]"/>
-                            <span t-out="country['country_id_count']" t-attf-class="badge pagination ms-3 text-bg-primary"/>
+                            <span t-if="include_online_events" t-out="country['country_id_count'] + online_count" t-attf-class="badge pagination ms-3 text-bg-primary"/>
+                            <span t-else="" t-out="country['country_id_count']" t-attf-class="badge pagination ms-3 text-bg-primary"/>
                         </a>
                     </t>
-                    <t t-else="">
+                    <t t-elif="not include_online_events">
                         <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
                         <a t-att-href="keep_event_url(country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" title="Online Events">
                             <span>Online Events</span>
@@ -284,6 +290,8 @@
         </div>
     </xpath>
 </template>
+
+<template id="event_location_include_online" active="True"/>
 
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">

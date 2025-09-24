@@ -589,11 +589,16 @@ class EventEvent(models.Model):
                 domain.append([('tag_ids', 'in', tags.ids)])
 
         no_country_domain = domain.copy()
+        include_online_events = (
+            website.is_view_active('website_event.event_location') and
+            website.is_view_active('website_event.event_location_include_online')
+        )
+
         if country:
             if country == 'online':
                 domain.append([("country_id", "=", False)])
             elif country != 'all':
-                domain.append([("country_id", "=", int(country))])
+                domain.append([("country_id", "in", [int(country), False] if include_online_events else [int(country)])])
 
         no_date_domain = domain.copy()
         dates = self._search_build_dates()

@@ -70,7 +70,6 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('date', 'scheduled')
         searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
-        searches.setdefault('country', 'all')
         # The previous name of the 'scheduled' filter is 'upcoming' and may still be present in URL's saved by users.
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
@@ -91,6 +90,40 @@ class WebsiteEventController(http.Controller):
         events = event_details.get('results', Event)
         events = events[(page - 1) * step:page * step]
 
+        default_country = None
+        event_location = website.is_view_active('website_event.event_location')
+        include_online_events = (
+            event_location and website.is_view_active('website_event.event_location_include_online')
+        )
+        if event_location:
+            country = request.env["res.country"]
+            if not request.env.user._is_public() and request.env.user.country_id:
+                country = request.env.user.country_id
+            elif (visitor := request.env['website.visitor']._get_visitor_from_request()) and visitor.country_id:
+                country = visitor.country_id
+            elif request.geoip.country_code:
+                country = request.env['res.country'].search([('code', '=', request.geoip.country_code)])
+
+            default_country = 'all'
+            if country:
+                domain = [("country_id", "in", [country.id, False] if include_online_events else [country.id])]
+                if Event.search_count(domain, limit=1):
+                    default_country = str(country.id)
+
+        if not searches.get('country'):
+            if default_country and default_country != 'all':
+                return request.redirect_query(
+                    '/events',
+                    dict(
+                        request.httprequest.args.to_dict(),
+                        country=default_country,
+                    ),
+                )
+            searches['country'] = 'all'
+        # when disabling event_location, reload the page accordingly
+        elif searches.get('country') != 'all' and not event_location:
+            return request.redirect('/event')
+
         # count by domains without self search
         domain_search = Domain('name', 'ilike', fuzzy_search_term or searches['search']) if searches['search'] else Domain.TRUE
 
@@ -104,10 +137,7 @@ class WebsiteEventController(http.Controller):
         country_groups = Event._read_group(
             no_country_domain & domain_search,
             ["country_id"], ["__count"], order="country_id")
-        countries = [{
-            'country_id_count': sum(count for __, count in country_groups),
-            'country_id': (0, _("All Countries")),
-        }]
+        countries = []
         for g_country, count in country_groups:
             countries.append({
                 'country_id_count': count,
@@ -155,6 +185,7 @@ class WebsiteEventController(http.Controller):
                 ('is_published', '=', True), '|', ('website_id', '=', website.id), ('website_id', '=', False)
             ]),
             'countries': countries,
+            'include_online_events': include_online_events,
             'pager': pager,
             'searches': searches,
             'search_tags': search_tags,
