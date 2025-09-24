@@ -10,6 +10,7 @@ class CrmTeam(models.Model):
     _description = "Sales Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     def _get_default_color(self):
         return random.randint(1, 11)
