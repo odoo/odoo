@@ -176,7 +176,7 @@ function makeUserAgent(platform) {
  */
 function throwNotImplemented(fnName) {
     return function notImplemented() {
-        throw new HootError(`Unmocked navigator method: ${fnName}`);
+        throw new HootError(`unmocked navigator method: ${fnName}`);
     };
 }
 
