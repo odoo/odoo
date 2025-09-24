@@ -145,10 +145,12 @@ class WebsiteLinks extends Interaction {
         } else {
             // Link generated, clean the form and show the link
             const link = result[0];
-
             this.el.querySelector("#generated_tracked_link").classList.remove("d-none");
             this.el.querySelector("#btn_shorten_url").classList.add("d-none");
             this.el.querySelector(".copy-to-clipboard").dataset.clipboardText = link.short_url;
+            this.el.querySelector(".download-qr-code").href = `/report/barcode/QR/${encodeURIComponent(
+                link.short_url
+            )}?width=500&height=500&download=1`;
             this.el.querySelector("#short-url-host").textContent = link.short_url_host;
             this.el.querySelector("#o_website_links_code").textContent = link.code;
 

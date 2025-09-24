@@ -38,6 +38,9 @@
                                     </span>
                                     <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code o_translate_inline" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
                                     <a class="copy-to-clipboard btn btn-sm btn-primary o_translate_inline" t-att-data-clipboard-text="short_url"><i class="fa fa-copy me-2"/>Copy</a>
+                                    <a class="download-qr-code btn btn-sm btn-primary o_translate_inline" t-attf-href="/report/barcode/QR/#{quote_plus(short_url)}?width=500&amp;height=500&amp;download=1">
+                                        <i class="fa fa-qrcode align-middle me-2"/>Download QR Code
+                                    </a>
                                 </p>
                                 <p class='o_website_links_code_error' style='color:red;font-weight:bold'></p>
                             </div>

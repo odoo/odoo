@@ -260,6 +260,16 @@ class LinkTracker(models.Model):
     def _convert_links_text(self, body, vals, blacklist=None):
         raise NotImplementedError('Moved on mail.render.mixin')
 
+    def action_download_qrcode(self):
+        self.ensure_one()
+        url = urls.url_quote_plus(self.short_url)
+
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/report/barcode/QR/{url}?width=500&height=500&download=1",
+            "target": "self",
+        }
+
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window']._for_xml_id('link_tracker.link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
