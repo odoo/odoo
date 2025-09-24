@@ -2543,6 +2543,10 @@ class IrModelData(models.Model):
         # of records being cascade-deleted or tables being dropped just above
         for data in self.browse(undeletable_ids).exists():
             record = self.env[data.model].browse(data.res_id)
+            table_name = record._table
+            if not tools.table_exists(self._cr, table_name):
+                _logger.debug("Skipping record %s because table %s does not exist", data, table_name)
+                continue
             try:
                 with self.env.cr.savepoint():
                     if record.exists():
