@@ -13,7 +13,7 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
-import { groupBy } from "@web/core/utils/arrays";
+import { groupBy, intersection } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
@@ -436,28 +436,27 @@ export class CalendarModel extends Model {
         Object.assign(data.filterSections, dynamicSections);
 
         // Remove records that don't match dynamic filters
-        for (const [recordId, record] of Object.entries(data.records)) {
-            for (const [fieldName, filterInfo] of Object.entries(dynamicSections)) {
-                const field = this.meta.fields[fieldName];
-                if (!field) {
-                    continue;
+        for (const [fieldName, filterInfo] of Object.entries(dynamicSections)) {
+            const field = this.meta.fields[fieldName];
+            if (!field) {
+                continue;
+            }
+            const inactiveFilters = filterInfo.filters.filter((f) => !f.active);
+            if (!inactiveFilters.length) {
+                continue;
+            }
+            for (const [recordId, record] of Object.entries(data.records)) {
+                const rawValue = record.rawRecord[fieldName];
+                let remove = false;
+                if (["many2many", "one2many"].includes(field.type)) {
+                    const inactiveFilterVals = inactiveFilters.map((filter) => filter.value);
+                    remove = intersection(rawValue, inactiveFilterVals).length === rawValue.length;
+                } else {
+                    const recordValue = Array.isArray(rawValue) ? rawValue[0] : rawValue;
+                    remove = inactiveFilters.some((filter) => filter.value === recordValue);
                 }
-                const isX2Many = ["many2many", "one2many"].includes(field.type);
-                for (const filter of filterInfo.filters) {
-                    if (filter.active) {
-                        continue;
-                    }
-                    const rawValue = record.rawRecord[fieldName];
-                    let match = false;
-                    if (isX2Many) {
-                        match = Array.isArray(rawValue) && rawValue.includes(filter.value);
-                    } else {
-                        const recordValue = Array.isArray(rawValue) ? rawValue[0] : rawValue;
-                        match = filter.value === recordValue;
-                    }
-                    if (match) {
-                        delete data.records[recordId];
-                    }
+                if (remove) {
+                    delete data.records[recordId];
                 }
             }
         }
