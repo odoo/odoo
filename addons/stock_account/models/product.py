@@ -299,7 +299,12 @@ class ProductProduct(models.Model):
                 avco_value = avco_total_value / quantity if quantity else 0
             if move.is_out or move.is_dropship:
                 out_qty = move._get_valued_qty()
-                avco_total_value -= out_qty * avco_value
+                out_value = out_qty * avco_value
+                if lot:
+                    lot_qty = move._get_valued_qty(lot)
+                    out_value = out_value * lot_qty / out_qty
+                    out_qty = lot_qty
+                avco_total_value -= out_value
                 quantity -= out_qty
 
         return avco_value, avco_total_value
