@@ -2147,6 +2147,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_default_pricelist_when_creating_partner', login="pos_user")
 
+    def test_edit_product_ref_not_in_name(self):
+        self.env['product.product'].create({
+            'name': 'Test Product Ref',
+            'default_code': 'TESTPRODREF',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_edit_product_ref_not_in_name', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

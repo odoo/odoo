@@ -722,3 +722,16 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_edit_product_ref_not_in_name", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickInfoProduct("Test Product Ref"),
+            Dialog.confirm("Edit", ".btn-secondary"),
+            Dialog.confirm(),
+            ProductScreen.productIsDisplayed("[TESTPRODREF] Test Product Ref").map(negateStep),
+        ].flat(),
+});

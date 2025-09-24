@@ -1887,7 +1887,9 @@ export class PosStore extends Reactive {
                 props: {
                     resId: product?.id,
                     onSave: (record) => {
-                        this.data.read("product.product", [record.evalContext.id]);
+                        this.data.read("product.product", [record.evalContext.id], [], {
+                            context: { display_default_code: false },
+                        });
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
