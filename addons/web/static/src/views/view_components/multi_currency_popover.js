@@ -1,5 +1,6 @@
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { getCurrency, getCurrencyRates } from "@web/core/currency";
+import { toLocaleDateString } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { formatMonetary } from "../fields/formatters";
@@ -33,8 +34,9 @@ export class MultiCurrencyPopover extends Component {
                 currencies.push({
                     ...getCurrency(currencyId),
                     id: currencyId,
-                    rate: this.state.rates[currencyId],
-                    value: this.props.value / this.state.rates[currencyId],
+                    rate: this.state.rates[currencyId].rate,
+                    date: toLocaleDateString(this.state.rates[currencyId].date),
+                    value: this.props.value / this.state.rates[currencyId].rate,
                 });
             }
             return currencies;

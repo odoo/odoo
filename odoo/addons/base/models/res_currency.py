@@ -33,6 +33,7 @@ class ResCurrency(models.Model):
     inverse_rate = fields.Float(compute='_compute_current_rate', digits=0, readonly=True,
                                 help='The currency of rate 1 to the rate of the currency.')
     rate_string = fields.Char(compute='_compute_current_rate')
+    rate_date = fields.Date("Last Rate Update", compute='_compute_current_rate')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01,
         help='Amounts in this currency are rounded off to the nearest multiple of the rounding factor.')
@@ -41,7 +42,6 @@ class ResCurrency(models.Model):
     active = fields.Boolean(default=True)
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
-    date = fields.Date(compute='_compute_date')
     currency_unit_label = fields.Char(string="Currency Unit", translate=True)
     currency_subunit_label = fields.Char(string="Currency Subunit", translate=True)
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
@@ -117,7 +117,7 @@ class ResCurrency(models.Model):
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
-    def _get_rates(self, company, date):
+    def _get_rates(self, company, date) -> dict[int, tuple[float, int]]:
         if not self.ids:
             return {}
         currency_query = self._as_query(ordered=False)
@@ -154,6 +154,7 @@ class ResCurrency(models.Model):
         for currency in self:
             currency.rate = (currency_rates.get(currency.id) or 1.0) / currency_rates.get(to_currency.id)
             currency.inverse_rate = 1 / currency.rate
+            currency.rate_date = date  # TODO
             if currency != company.currency_id:
                 currency.rate_string = '1 %s = %.6f %s' % (to_currency.name, currency.rate, currency.name)
             else:
@@ -166,11 +167,6 @@ class ResCurrency(models.Model):
                 currency.decimal_places = int(math.ceil(math.log10(1/currency.rounding)))
             else:
                 currency.decimal_places = 0
-
-    @api.depends('rate_ids.name')
-    def _compute_date(self):
-        for currency in self:
-            currency.date = currency.rate_ids[:1].name
 
     def amount_to_text(self, amount):
         self.ensure_one()
