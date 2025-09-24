@@ -183,10 +183,25 @@ class Currency extends models.Model {
         ],
     });
     inverse_rate = fields.Float();
+    rate_date = fields.Date();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
-        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
+        {
+            id: 1,
+            name: "USD",
+            symbol: "$",
+            position: "before",
+            inverse_rate: 1,
+            rate_date: "2017-01-08",
+        },
+        {
+            id: 2,
+            name: "EUR",
+            symbol: "€",
+            position: "after",
+            inverse_rate: 0.5,
+            rate_date: "2019-06-13",
+        },
     ];
 }
 
@@ -3984,7 +3999,7 @@ test("pivot view with monetary with multiple currencies", async () => {
     // multi currencies popover
     await toggleMultiCurrencyPopover(".o_pivot table tbody tr:first .o_value sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50 on Jun 13");
 
     // test sorting
     await contains("th.o_pivot_measure_row").click();

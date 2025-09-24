@@ -3,6 +3,7 @@
 import logging
 import math
 from collections.abc import Iterable
+from datetime import date
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -33,6 +34,7 @@ class ResCurrency(models.Model):
     inverse_rate = fields.Float(compute='_compute_current_rate', digits=0, readonly=True,
                                 help='The currency of rate 1 to the rate of the currency.')
     rate_string = fields.Char(compute='_compute_current_rate')
+    rate_date = fields.Date("Last Rate Update", compute='_compute_current_rate')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01,
         help='Amounts in this currency are rounded off to the nearest multiple of the rounding factor.')
@@ -41,7 +43,6 @@ class ResCurrency(models.Model):
     active = fields.Boolean(default=True)
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
-    date = fields.Date(compute='_compute_date')
     currency_unit_label = fields.Char(string="Currency Unit", translate=True)
     currency_subunit_label = fields.Char(string="Currency Subunit", translate=True)
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
@@ -117,26 +118,56 @@ class ResCurrency(models.Model):
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
-    def _get_rates(self, company, date):
+    def _get_rates_query(self, company, date, currency_ids=None):
+        """ Get the query to fetch all current rate/date by currency for a specific company/date. """
+
+        # _unique_name_per_day and _reversed_unique_name_per_day ensure that this query is optimal.
+        Currency = self.env['res.currency'].sudo()
+        Rate = self.env['res.currency.rate'].sudo()
+
+        currency_query = Currency._search(
+            [] if currency_ids is None else [('id', 'in', currency_ids)],
+            active_test=False,
+        )
+        currency_id_field = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
+
+        rate_query = Rate._search(
+            [('name', '<=', date), ('company_id', 'in', (False, company.root_id.id))],
+            order='company_id.id, name DESC', limit=1)
+        rate_query.add_where(
+            SQL("%s = %s", Rate._field_to_sql(rate_query.table, 'currency_id'), currency_id_field))
+        rate_query = rate_query.subselect(
+            Rate._field_to_sql(Rate._table, 'rate', rate_query),
+            Rate._field_to_sql(Rate._table, 'name', rate_query),
+        )
+        currency_query.add_join('LEFT JOIN LATERAL', 'before_rate', rate_query, SQL('TRUE'))
+
+        rate_query_fallback = Rate._search(
+            [('company_id', 'in', (False, company.root_id.id))],
+            order='company_id.id, name ASC', limit=1)
+        rate_query_fallback.add_where(
+            SQL("%s = %s", Rate._field_to_sql(rate_query_fallback.table, 'currency_id'), currency_id_field))
+        rate_query_fallback = rate_query_fallback.subselect(
+            Rate._field_to_sql(Rate._table, 'rate', rate_query_fallback),
+            Rate._field_to_sql(Rate._table, 'name', rate_query_fallback),
+        )
+        currency_query.add_join('LEFT JOIN LATERAL', 'after_rate', rate_query_fallback, SQL('TRUE'))
+
+        return currency_query.select(
+            SQL.identifier('res_currency', 'id'),
+            SQL('COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate"'),
+            SQL('COALESCE("before_rate"."name", "after_rate"."name") AS "name"'),
+        )
+
+    def _get_rates(self, company, date) -> dict[int, tuple[float, (date | None)]]:
+        """ Return a mapping between currency_id and their rate with the date of this rate."""
         if not self.ids:
             return {}
-        currency_query = self._as_query(ordered=False)
-        currency_id = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
-        Rate = self.env['res.currency.rate']
-        rate_query = Rate._search([
-            ('name', '<=', date),
-            ('company_id', 'in', (False, company.root_id.id)),
-        ], order='company_id.id, name DESC', limit=1)
-        rate_query.add_where(SQL("%s = %s", Rate._field_to_sql(rate_query.table, 'currency_id'), currency_id))
-        rate_fallback = Rate._search([
-            ('company_id', 'in', (False, company.root_id.id)),
-        ], order='company_id.id, name ASC', limit=1)
-        rate_fallback.add_where(SQL("%s = %s", Rate._field_to_sql(rate_fallback.table, 'currency_id'), currency_id))
-        rate = Rate._field_to_sql(rate_query.table, 'rate')
-        return dict(self.env.execute_query(currency_query.select(
-            currency_id,
-            SQL("COALESCE((%s), (%s), 1.0)", rate_query.select(rate), rate_fallback.select(rate))
-        )))
+        query = self._get_rates_query(company, date, currency_ids=self.ids)
+        return {
+            currency_id: (rate, rate_date)
+            for currency_id, rate, rate_date in self.env.execute_query(query)
+        }
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
@@ -150,10 +181,13 @@ class ResCurrency(models.Model):
         company = self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company
         to_currency = self.browse(self.env.context.get('to_currency')) or company.currency_id
         # the subquery selects the last rate before 'date' for the given currency/company
-        currency_rates = (self + to_currency)._get_rates(self.env.company, date)
+        currency_rates = (self | to_currency)._get_rates(self.env.company, date)
+        to_currency_rate, __ = currency_rates[to_currency.id]
         for currency in self:
-            currency.rate = (currency_rates.get(currency.id) or 1.0) / currency_rates.get(to_currency.id)
+            currency_rate, rate_date = currency_rates[currency.id]
+            currency.rate = currency_rate / to_currency_rate
             currency.inverse_rate = 1 / currency.rate
+            currency.rate_date = rate_date
             if currency != company.currency_id:
                 currency.rate_string = '1 %s = %.6f %s' % (to_currency.name, currency.rate, currency.name)
             else:
@@ -166,11 +200,6 @@ class ResCurrency(models.Model):
                 currency.decimal_places = int(math.ceil(math.log10(1/currency.rounding)))
             else:
                 currency.decimal_places = 0
-
-    @api.depends('rate_ids.name')
-    def _compute_date(self):
-        for currency in self:
-            currency.date = currency.rate_ids[:1].name
 
     def amount_to_text(self, amount):
         self.ensure_one()
@@ -350,8 +379,12 @@ class ResCurrencyRate(models.Model):
                                  default=lambda self: self.env.company.root_id)
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute="_compute_company_currency_id")
 
-    _unique_name_per_day = models.Constraint(
-        'unique (name,currency_id,company_id)',
+    _unique_name_per_day = models.UniqueIndex(
+        '(currency_id, company_id, name) NULLS NOT DISTINCT',
+        "Only one currency rate per day allowed!",
+    )
+    _reversed_unique_name_per_day = models.UniqueIndex(
+        '(currency_id, company_id, name DESC) NULLS NOT DISTINCT',
         "Only one currency rate per day allowed!",
     )
     _currency_rate_check = models.Constraint(

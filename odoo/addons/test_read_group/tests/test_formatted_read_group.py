@@ -2143,18 +2143,33 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
-                    SELECT DISTINCT ON ("res_currency_rate"."currency_id")
-                        "res_currency_rate"."currency_id",
-                        "res_currency_rate"."rate"
-                    FROM "res_currency_rate"
-                    WHERE "res_currency_rate"."company_id" IS NULL OR "res_currency_rate"."company_id" = %s
-                    ORDER BY
-                        "res_currency_rate"."currency_id",
-                        "res_currency_rate"."company_id",
-                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
-                        CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
+                    SELECT
+                        "res_currency"."id",
+                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
+                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
+                    FROM
+                        "res_currency"
+                        LEFT JOIN LATERAL (
+                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
+                            FROM "res_currency_rate"
+                            WHERE (
+                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                                AND "res_currency_rate"."name" <= %s
+                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
+                            LIMIT %s
+                        ) AS "before_rate" ON (TRUE)
+                        LEFT JOIN LATERAL (
+                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
+                            FROM "res_currency_rate"
+                            WHERE (
+                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
+                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
+                            LIMIT %s
+                        ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
                 )
         """]):
             self.assertEqual(
@@ -2237,18 +2252,33 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
-                    SELECT DISTINCT ON ("res_currency_rate"."currency_id")
-                        "res_currency_rate"."currency_id",
-                        "res_currency_rate"."rate"
-                    FROM "res_currency_rate"
-                    WHERE "res_currency_rate"."company_id" IS NULL OR "res_currency_rate"."company_id" = %s
-                    ORDER BY
-                        "res_currency_rate"."currency_id",
-                        "res_currency_rate"."company_id",
-                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
-                        CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
+                    SELECT
+                        "res_currency"."id",
+                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
+                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
+                    FROM
+                        "res_currency"
+                        LEFT JOIN LATERAL (
+                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
+                            FROM "res_currency_rate"
+                            WHERE (
+                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                                AND "res_currency_rate"."name" <= %s
+                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
+                            LIMIT %s
+                        ) AS "before_rate" ON (TRUE)
+                        LEFT JOIN LATERAL (
+                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
+                            FROM "res_currency_rate"
+                            WHERE (
+                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
+                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
+                            LIMIT %s
+                        ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
                 )
         """]):
             self.assertEqual(

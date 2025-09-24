@@ -1967,28 +1967,14 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'monetary':
                 raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
 
-            CurrencyRate = self.env['res.currency.rate']
             rate_subquery_table = SQL(
-                """(SELECT DISTINCT ON (%(currency_field_sql)s) %(currency_field_sql)s, %(rate_field_sql)s
-                    FROM "res_currency_rate"
-                    WHERE %(company_field_sql)s IS NULL OR %(company_field_sql)s = %(company_id)s
-                    ORDER BY
-                        %(currency_field_sql)s,
-                        %(company_field_sql)s,
-                        CASE WHEN %(name_field_sql)s <= %(today)s THEN %(name_field_sql)s END DESC,
-                        CASE WHEN %(name_field_sql)s > %(today)s THEN %(name_field_sql)s END ASC)
-                """,
-                currency_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'currency_id'),
-                rate_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'rate'),
-                company_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'company_id'),
-                company_id=self.env.company.root_id.id,
-                name_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'name'),
-                today=Date.context_today(self),
+                "(%s)",
+                self.env['res.currency']._get_rates_query(self.env.company, Date.context_today(self)),
             )
             currency_field_name = field.get_currency_field(self)
             alias_rate = query.make_alias(self._table, f'{currency_field_name}__rates')
             currency_field_sql = self._field_to_sql(self._table, currency_field_name, query)
-            condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "currency_id"))
+            condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "id"))
             query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
 
             return SQL(

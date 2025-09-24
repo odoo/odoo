@@ -87,7 +87,7 @@
                     <field name="name"/>
                     <field name="symbol"/>
                     <field name="full_name" string="Name" optional="show"/>
-                    <field name="date" string="Last Update"/>
+                    <field name="rate_date"/>
                     <field name="rate" digits="[12,6]"/>
                     <field name="inverse_rate" digits="[12,6]" optional="hide"/>
                     <field name="active" widget="boolean_toggle"/>
@@ -117,7 +117,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div><field name="rate_string"/></div>
-                                        <t t-if="record.date.raw_value"><div>Last update: <field name="date"/></div></t>
+                                        <t t-if="record.rate_date.raw_value"><div>Last update: <field name="rate_date"/></div></t>
                                     </div>
                                 </div>
                         </t>

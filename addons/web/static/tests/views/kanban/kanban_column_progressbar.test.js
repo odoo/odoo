@@ -173,10 +173,25 @@ class Currency extends models.Model {
         ],
     });
     inverse_rate = fields.Float();
+    rate_date = fields.Date();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
-        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
+        {
+            id: 1,
+            name: "USD",
+            symbol: "$",
+            position: "before",
+            inverse_rate: 1,
+            rate_date: "2017-01-08",
+        },
+        {
+            id: 2,
+            name: "EUR",
+            symbol: "€",
+            position: "after",
+            inverse_rate: 0.5,
+            rate_date: "2019-06-13",
+        },
     ];
 }
 
@@ -1151,7 +1166,14 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
 });
 
 test("progress bar with monetary aggregate and multi currencies", async () => {
-    const aed = { id: 3, name: "AED", symbol: "AED", position: "after", inverse_rate: 0.25 };
+    const aed = {
+        id: 3,
+        name: "AED",
+        symbol: "AED",
+        position: "after",
+        inverse_rate: 0.25,
+        rate_date: "2017-03-17",
+    };
     serverState.currencies = serverState.currencies.concat([aed]);
     Currency._records.push(aed);
     Partner._records.push({ id: 99, foo: "bar", salary: 300, currency_id: 3, product_id: 3 });
@@ -1178,7 +1200,9 @@ test("progress bar with monetary aggregate and multi currencies", async () => {
 
     await toggleMultiCurrencyPopover(".o_kanban_counter:first .o_animated_number sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("8,100.00 € at $ 0.50\n16,200.00 AED at $ 0.25");
+    expect(".o_multi_currency_popover").toHaveText(
+        "8,100.00 € at $ 0.50 on Jun 13\n16,200.00 AED at $ 0.25 on Mar 17, 2017"
+    );
 });
 
 test("progress bar with monetary aggregate and multi currencies: quick create record", async () => {
