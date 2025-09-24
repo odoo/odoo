@@ -8,6 +8,7 @@ import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
+import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
 import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
 
@@ -36,8 +37,16 @@ export class BlockTab extends Component {
         this.popover = useService("popover");
         this.snippetModel = useSnippets(this.props.snippetsName);
         this.blockTabRef = useRef("block-tab");
+        this.groupSnippetsContainer = useRef("group-snippets-container");
+        this.innerSnippetsContainer = useRef("inner-snippets-container");
         // Needed to avoid race condition in tours.
         this.state = useState({ ongoingInsertion: false });
+
+        this.onSnippetKeydown = useMatrixKeyNavigation(
+            () => [this.groupSnippetsContainer.el, this.innerSnippetsContainer.el],
+            ".o_snippet",
+            ".o_snippet_thumbnail_area, .o_install_btn"
+        );
 
         onMounted(() => {
             this.makeSnippetDraggable();
@@ -443,7 +452,7 @@ export class BlockTab extends Component {
      * Opens the corresponding snippet group dialog after the installation of a
      * newly installed snippet module.
      *
-     * @param {string} newInstalledModule - The JSON object containing title of 
+     * @param {string} newInstalledModule - The JSON object containing title of
      * the snippet group to open.
      */
     async handlePostModuleInstall(newInstalledModule) {

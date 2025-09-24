@@ -11,7 +11,7 @@
          t-on-mouseover="this.onInstallableHover"
          t-on-mouseout="this.onInstallableHover">
         <div class="o_snippet_thumbnail" t-att-data-snippet="this.snippet.name">
-            <button t-if="!this.snippet.isInstallable and !this.snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="this.props.onClickHandler" title="Insert snippet"/>
+            <button t-if="!this.snippet.isInstallable and !this.snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="this.props.onClickHandler" t-on-keydown="this.props.onSnippetKeydown" t-attf-aria-label="Insert {{this.snippet.title}} block"/>
             <Image t-if="this.snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{this.snippet.thumbnailSrc}});"/>
             <span class="o_snippet_thumbnail_title" t-out="this.snippet.title"/>
@@ -19,6 +19,7 @@
                 t-if="this.snippet.isInstallable"
                 class="o_install_btn btn btn-success btn-lg position-absolute start-50 bottom-50 translate-middle-x visually-hidden-focusable z-1"
                 t-on-click="this.onClickInstall"
+                t-on-keydown="this.props.onSnippetKeydown"
                 >
                 Install
             </button>

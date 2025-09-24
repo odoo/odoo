@@ -8,6 +8,7 @@ export class Snippet extends Component {
         snippetModel: { type: Object },
         snippet: { type: Object },
         onClickHandler: { type: Function },
+        onSnippetKeydown: { type: Function },
         disabledTooltip: { type: String },
     };
 

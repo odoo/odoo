@@ -10,11 +10,12 @@
          role="tabpanel"
          aria-labelledby="blocks-tab">
         <div t-if="this.snippetModel.snippetGroups.length" class="o_snippets_container" id="snippet_groups">
-            <div class="o_snippets_container_body o_snippets_container_body_row_cols_2">
+            <div t-custom-ref="group-snippets-container" class="o_snippets_container_body o_snippets_container_body_row_cols_2">
                 <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"
                              onClickHandler="() => this.onSnippetGroupClick(snippet)"
+                             onSnippetKeydown="this.onSnippetKeydown"
                              disabledTooltip="disabledGroupTooltip"/>
                 </t>
             </div>
@@ -37,11 +38,12 @@
         <div t-if="this.snippetModel.snippetInnerContents.length"
             class="o_snippets_container" id="snippet_content">
             <div class="o_snippets_container_header"><span>Inner Content</span></div>
-            <div class="o_snippets_container_body">
+            <div t-custom-ref="inner-snippets-container" class="o_snippets_container_body">
                 <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"
                              onClickHandler.bind="this.showSnippetTooltip"
+                             onSnippetKeydown="this.onSnippetKeydown"
                              disabledTooltip="disabledBlockTooltip"/>
                 </t>
             </div>

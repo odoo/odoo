@@ -3,10 +3,16 @@
 
 
 <t t-name="html_builder.SnippetViewer">
+    <div id="o_snippet_viewer_description" class="visually-hidden">
+        Navigate around the blocks with <kbd>Tab</kbd> or the arrow keys. Select with <kbd>Enter</kbd> or <kbd>Space</kbd>.
+    </div>
     <div t-custom-ref="content"
          class="row g-0 o_snippets_preview_row"
          t-att-class="{ 'flex-row-reverse': this.props.frontendDirection !== this.backendDirection }"
-         t-att-dir="this.props.frontendDirection">
+         t-att-dir="this.props.frontendDirection"
+         role="application"
+         aria-roledescription="Block Viewer"
+         aria-describedby="o_snippet_viewer_description">
         <div class="col-lg-6" t-foreach="this.getSnippetColumns()" t-as="snippetsColumn" t-key="snippetsColumn_index">
             <t t-foreach="snippetsColumn" t-as="snippet" t-key="snippet.id">
                 <div t-on-click="() => this.onClick(snippet)"
@@ -15,6 +21,7 @@
                      t-att-data-label="snippet.label ? snippet.label : ''"
                      t-attf-class="o_snippet_preview_wrap position-relative #{ snippet.isCustom ? 'mb-0' : '' } #{snippet.moduleId ? 'o_snippet_preview_install' : '' }"
                      t-att-tabindex="snippet.moduleId ? '-1' : '0'"
+                     t-att-role="snippet.moduleId ? undefined : 'button'"
                      t-att-aria-label="snippet.label || snippet.title">
                     <div inert="inert">
                         <div t-if="snippet.imagePreviewSrc" class="s_dialog_preview s_dialog_preview_image">

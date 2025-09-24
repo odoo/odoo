@@ -6,6 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
+import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
 import { Switch } from "@html_editor/components/switch/switch";
 import {
     applyTextHighlight,
@@ -59,6 +60,7 @@ class AddPageTemplateBlank extends Component {
             type: Boolean,
             optional: true,
         },
+        onPageKeydown: { type: Function },
     };
 
     setup() {
@@ -88,6 +90,7 @@ class AddPageTemplatePreview extends Component {
             type: Boolean,
             optional: true,
         },
+        onPageKeydown: { type: Function },
     };
 
     setup() {
@@ -95,6 +98,7 @@ class AddPageTemplatePreview extends Component {
         this.iframeRef = useRef("iframe");
         this.previewRef = useRef("preview");
         this.holderRef = useRef("holder");
+
         this.resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const targetEl = entry.target.querySelector(".o_text_highlight") || entry.target;
@@ -307,6 +311,13 @@ class AddPageTemplatePreviews extends Component {
 
     setup() {
         super.setup();
+        this.container = useRef("previews-container");
+
+        this.onPageKeydown = useMatrixKeyNavigation(
+            () => [this.container.el],
+            ".o_page_template",
+            ".o_button_area"
+        );
     }
 
     get columns() {

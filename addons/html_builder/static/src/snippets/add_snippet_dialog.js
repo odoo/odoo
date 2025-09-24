@@ -187,6 +187,9 @@ export class AddSnippetDialog extends Component {
      */
     onIframeDocumentKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape") {
+            this.env.dialogData.close({ dismiss: true });
+        }
         if (!["tab", "shift+tab"].includes(hotkey)) {
             return;
         }
