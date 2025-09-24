@@ -133,7 +133,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         // Should go back to displaying suggested qtys
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
         ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
-
         ...productCatalog.goBackToOrder(),
         {
             content: "Go back to the dashboard",

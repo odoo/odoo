@@ -143,6 +143,12 @@ export const productCatalog = {
         return [{ trigger }];
     },
 
+    selectSearchPanelCategory(categoryName) {
+        const content = `Select the category ${categoryName}`;
+        const trigger = `.o_search_panel_label_title:contains("${categoryName}")`;
+        return [{ content, trigger, run: "click" }];
+    },
+
     /**
      * Clicks on the "Back to Order" button from the Catalog view
      */

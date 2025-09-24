@@ -68,15 +68,21 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         this.env.searchModel.searchPanelInfo.shouldReload = false;
     }
 
-    /** Method to add all suggestions to purchase order */
+    /** Add all suggested products to the purchase order */
     async onAddAll() {
-        await this.model.orm.call(
+        const { searchModel } = this.env;
+        const { sectionId } = searchModel.selectedSection;
+        const lineCountChange = await this.model.orm.call(
             "purchase.order",
             "action_purchase_order_suggest",
-            [this._baseContext["order_id"]],
+            [this._baseContext["product_catalog_order_id"]],
             { context: this._editSuggestContext() }
         );
         this._toggleSuggestFilters(true);
+        searchModel.trigger("section-line-count-change", {
+            sectionId,
+            lineCountChange,
+        });
     }
 
     toggleSuggest() {
@@ -125,6 +131,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             suggest_days: this.state.numberOfDays,
             suggest_percent: this.state.percentFactor,
             warehouse_id: this.state.warehouse_id,
+            sectionId: this.env.searchModel.selectedSection.sectionId ?? false,
         };
         return editSuggestContext(this._baseContext, this.state.suggestToggle.isOn, suggestCtx);
     }
