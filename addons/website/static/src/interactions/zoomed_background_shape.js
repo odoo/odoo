@@ -30,8 +30,8 @@ export class ZoomedBackgroundShape extends Interaction {
         },
         _root: {
             "t-att-style": () => ({
-                "left": this.offset,
-                "right": this.offset,
+                left: this.offset,
+                right: this.offset,
             }),
         },
     };

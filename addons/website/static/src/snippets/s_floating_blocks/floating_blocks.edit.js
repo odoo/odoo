@@ -10,7 +10,10 @@ const FloatingBlocksEdit = (I) =>
             },
         };
         isImpactedBy(el) {
-            return this.el.contains(el) && el.matches(".s_floating_blocks_block, .s_floating_blocks_wrapper");
+            return (
+                this.el.contains(el) &&
+                el.matches(".s_floating_blocks_block, .s_floating_blocks_wrapper")
+            );
         }
         shouldStop() {
             // The interaction is restarted every time that the content of

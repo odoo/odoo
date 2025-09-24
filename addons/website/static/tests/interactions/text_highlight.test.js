@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAll, queryFirst } from "@odoo/hoot-dom";

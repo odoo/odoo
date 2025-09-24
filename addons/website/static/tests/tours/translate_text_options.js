@@ -57,7 +57,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         // Select the highlighted text content and check highlight options were displayed.
-        selectFullText("snippet highlighted text content", "#wrap .s_text_block p:last .o_text_highlight"),
+        selectFullText(
+            "snippet highlighted text content",
+            "#wrap .s_text_block p:last .o_text_highlight"
+        ),
         {
             content: "Expand the toolbar for more buttons",
             trigger: ".o-we-toolbar button[name='expand_toolbar']",
@@ -98,7 +101,8 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that all text options are removed",
-            trigger: ".o-we-toolbar button[title='Apply highlight']:not(:has(.active)), .o-we-toolbar button[title='Animate Text']:not(:has(.active))",
+            trigger:
+                ".o-we-toolbar button[title='Apply highlight']:not(:has(.active)), .o-we-toolbar button[title='Animate Text']:not(:has(.active))",
         },
         selectFullText(
             "highlighted text content again",
@@ -111,7 +115,8 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that only the highlight options are displayed",
-            trigger: ".o-we-toolbar button[title='Apply highlight'].active, .o-we-toolbar button[title='Animate Text']:not(.active)",
+            trigger:
+                ".o-we-toolbar button[title='Apply highlight'].active, .o-we-toolbar button[title='Animate Text']:not(.active)",
         },
         ...clickOnSave(),
         {

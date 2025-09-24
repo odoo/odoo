@@ -1,5 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { animationFrame, press, queryFirst } from "@odoo/hoot-dom";
 
@@ -70,7 +73,9 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
-        await contains(".options-container table [data-action-id=updateDatasetLabel]:last input").click();
+        await contains(
+            ".options-container table [data-action-id=updateDatasetLabel]:last input"
+        ).click();
         await animationFrame();
         expect(
             ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
@@ -91,7 +96,9 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
-        await contains(".options-container table [data-action-id=updateDatasetLabel]:first input").click();
+        await contains(
+            ".options-container table [data-action-id=updateDatasetLabel]:first input"
+        ).click();
         await animationFrame();
         expect(
             ".options-container [data-label='Dataset Color'] button.o_we_color_preview"
@@ -117,7 +124,9 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
-        await contains(".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input").click();
+        await contains(
+            ".options-container table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+        ).click();
         await animationFrame();
         expect(
             ".options-container [data-label='Data Color'] button.o_we_color_preview"
@@ -138,7 +147,9 @@ describe("Differences between pie & non-pie charts", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await animationFrame();
-        await contains(".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input").click();
+        await contains(
+            ".options-container table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+        ).click();
         await animationFrame();
         expect(
             ".options-container [data-label='Data Color'] button.o_we_color_preview"

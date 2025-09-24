@@ -24,7 +24,7 @@ export class CookiesBar extends Popup {
         },
         "#cookies-consent-essential, #cookies-consent-all": { "t-on-click": this.onAcceptClick },
         // Override to avoid side effects on hide.
-        ".js_close_popup": { "t-on-click": () => { } },
+        ".js_close_popup": { "t-on-click": () => {} },
     };
 
     setup() {
@@ -94,7 +94,7 @@ export class CookiesBar extends Popup {
      */
     onShowCookiesBar() {
         const currCookie = cookie.get(this.el.id);
-        if (currCookie && JSON.parse(currCookie).optional || !this.popupAlreadyShown) {
+        if ((currCookie && JSON.parse(currCookie).optional) || !this.popupAlreadyShown) {
             return;
         }
         this.bsModal.show();
@@ -110,6 +110,4 @@ export class CookiesBar extends Popup {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.cookies_bar", CookiesBar);
+registry.category("public.interactions").add("website.cookies_bar", CookiesBar);

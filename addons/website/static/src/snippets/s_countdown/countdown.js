@@ -19,7 +19,7 @@ export class Countdown extends Interaction {
 
     setup() {
         // Remove SVG previews (used to simulated canvas)
-        this.el.querySelectorAll("svg").forEach(el => el.parentNode.remove());
+        this.el.querySelectorAll("svg").forEach((el) => el.parentNode.remove());
 
         this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
         this.hereBeforeTimerEnds = false;
@@ -88,25 +88,31 @@ export class Countdown extends Interaction {
         if (this.endAction === "redirect") {
             const redirectUrl = verifyHttpsUrl(this.el.dataset.redirectUrl) || "/";
             if (this.hereBeforeTimerEnds) {
-                this.waitForTimeout(() => window.location = redirectUrl, 500);
+                this.waitForTimeout(() => (window.location = redirectUrl), 500);
             } else {
                 if (!this.el.querySelector(".s_countdown_end_redirect_message")) {
                     const container = this.el.querySelector(
                         ":scope > .container, :scope > .container-fluid, :scope > .o_container_small"
                     );
-                    this.renderAt("website.s_countdown.end_redirect_message", {
-                        redirectUrl: redirectUrl,
-                    }, container);
+                    this.renderAt(
+                        "website.s_countdown.end_redirect_message",
+                        {
+                            redirectUrl: redirectUrl,
+                        },
+                        container
+                    );
                 }
             }
         } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
             this.el.querySelector(".s_countdown_end_message")?.classList.remove("d-none");
         }
-        this.registerCleanup(() => this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none"));
+        this.registerCleanup(() =>
+            this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none")
+        );
     }
 
     getDelta() {
-        return this.endTime - (Date.now() / 1000);
+        return this.endTime - Date.now() / 1000;
     }
 
     createCanvasWrapper() {
@@ -223,7 +229,7 @@ export class Countdown extends Interaction {
             }
             this.textWrapperEl.classList.toggle("d-none", this.shouldHideCountdown);
 
-            const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
+            const countdownText = this.timeDiff.map((e) => e.nb + " " + e.label).join(", ");
             this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
         } else {
             for (const val of this.timeDiff) {
@@ -285,7 +291,11 @@ export class Countdown extends Interaction {
         ctx.font = `${unitSize}px Arial`;
         ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
 
-        if (this.layout === "boxes" && this.layoutBackground !== "none" && this.progressBarStyle === "none") {
+        if (
+            this.layout === "boxes" &&
+            this.layoutBackground !== "none" &&
+            this.progressBarStyle === "none"
+        ) {
             let barWidth = this.size / (this.progressBarWeight === "thin" ? 31 : 10);
             if (full) {
                 barWidth = 0;
@@ -344,22 +354,50 @@ export class Countdown extends Interaction {
         ctx.lineWidth = useThinLine ? this.size / 35 : this.size / 10;
         if (this.layout === "circle") {
             ctx.beginPath();
-            ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, Math.PI / -2, (Math.PI * 2) * (nbUnit / totalUnit) + (Math.PI / -2));
+            ctx.arc(
+                this.size / 2,
+                this.size / 2,
+                this.size / 2 - this.size / 20,
+                Math.PI / -2,
+                Math.PI * 2 * (nbUnit / totalUnit) + Math.PI / -2
+            );
             ctx.stroke();
         } else if (this.layout === "boxes") {
             ctx.lineWidth *= 2;
-            let pc = nbUnit / totalUnit * 100;
+            let pc = (nbUnit / totalUnit) * 100;
 
             // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
             const linesCoordFuncs = [
-                (linePc) => [0 + ctx.lineWidth / 2, 0, (this.width - ctx.lineWidth / 2) * linePc / 25 + ctx.lineWidth / 2, 0],
-                (linePc) => [this.width, 0 + ctx.lineWidth / 2, this.width, (this.size - ctx.lineWidth / 2) * linePc / 25 + ctx.lineWidth / 2],
-                (linePc) => [this.width - ((this.width - ctx.lineWidth / 2) * linePc / 25) - ctx.lineWidth / 2, this.size, this.width - ctx.lineWidth / 2, this.size],
-                (linePc) => [0, this.size - ((this.size - ctx.lineWidth / 2) * linePc / 25) - ctx.lineWidth / 2, 0, this.size - ctx.lineWidth / 2],
+                (linePc) => [
+                    0 + ctx.lineWidth / 2,
+                    0,
+                    ((this.width - ctx.lineWidth / 2) * linePc) / 25 + ctx.lineWidth / 2,
+                    0,
+                ],
+                (linePc) => [
+                    this.width,
+                    0 + ctx.lineWidth / 2,
+                    this.width,
+                    ((this.size - ctx.lineWidth / 2) * linePc) / 25 + ctx.lineWidth / 2,
+                ],
+                (linePc) => [
+                    this.width -
+                        ((this.width - ctx.lineWidth / 2) * linePc) / 25 -
+                        ctx.lineWidth / 2,
+                    this.size,
+                    this.width - ctx.lineWidth / 2,
+                    this.size,
+                ],
+                (linePc) => [
+                    0,
+                    this.size - ((this.size - ctx.lineWidth / 2) * linePc) / 25 - ctx.lineWidth / 2,
+                    0,
+                    this.size - ctx.lineWidth / 2,
+                ],
             ];
             while (pc > 0 && linesCoordFuncs.length) {
                 const linePc = Math.min(pc, 25);
-                const lineCoord = (linesCoordFuncs.shift())(linePc);
+                const lineCoord = linesCoordFuncs.shift()(linePc);
                 ctx.beginPath();
                 ctx.moveTo(lineCoord[0], lineCoord[1]);
                 ctx.lineTo(lineCoord[2], lineCoord[3]);
@@ -403,6 +441,4 @@ export class Countdown extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.countdown", Countdown);
+registry.category("public.interactions").add("website.countdown", Countdown);
