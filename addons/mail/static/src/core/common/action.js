@@ -25,6 +25,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {(action: Action) => Component<Props, Env>} [componentProps]
  * @property {boolean|(action: Action) => boolean} [disabledCondition]
  * @property {boolean} [dropdown]
+ * @property {string} [extraDropdown]
  * @property {string|(action: Action) => string} [dropdownMenuClass]
  * @property {string|(action: Action) => string} [dropdownPosition]
  * @property {DropdownState|(action: Action) => DropdownState} [dropdownState]
@@ -150,6 +151,13 @@ export class Action {
     /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
     get dropdown() {
         return this._dropdown(this.params) ?? this.definition.dropdown;
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _extraDropdown(action) {}
+    /** Determines whether this action has an extra dropdown. Value is a template string. */
+    get extraDropdown() {
+        return this._extraDropdown(this.params) ?? this.definition.extraDropdown;
     }
 
     /** @param {Action} action @returns {string|undefined} */

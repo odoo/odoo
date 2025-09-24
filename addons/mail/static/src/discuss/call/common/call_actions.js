@@ -35,6 +35,8 @@ registerCallAction("mute", {
     icon: ({ action }) => (action.isActive ? "fa fa-microphone-slash" : "fa fa-microphone"),
     hotkey: "shift+m",
     onSelected: ({ store }) => store.rtc.toggleMicrophone(),
+    dropdownPosition: "top-end",
+    extraDropdown: "discuss.CallActionList.microphoneSettings",
     sequence: 10,
     sequenceGroup: 100,
     tags: ({ action, store }) => {
@@ -56,8 +58,10 @@ registerCallAction("deafen", {
     icon: ({ action }) => (action.isActive ? "fa fa-deaf" : "fa fa-headphones"),
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
+    dropdownPosition: "top-end",
+    extraDropdown: "discuss.CallActionList.SoundSettings",
     sequence: 20,
-    sequenceGroup: 100,
+    sequenceGroup: 110,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 registerCallAction("camera-on", {
@@ -73,8 +77,10 @@ registerCallAction("camera-on", {
     isTracked: true,
     icon: "fa fa-video-camera",
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
+    dropdownPosition: "top-end",
+    extraDropdown: "discuss.CallActionList.cameraSettings",
     sequence: 30,
-    sequenceGroup: 100,
+    sequenceGroup: 120,
     tags: ({ action, store }) => {
         const tags = [];
         if (action.isActive) {
