@@ -170,9 +170,18 @@ export class BomOverviewLine extends Component {
     }
 
     get statusBackgroundClass() {
-        if(this.data.index == "0") {
-            return "text-bg-info";
+        if(this.data.availability_state == "available" || !this.data.level && this.data.availability_state == "estimated" && this.data.producible_qty && this.data.components_available) {
+            return "text-bg-success";
         }
-        return "text-bg-danger";
+        if(this.data.availability_state == "estimated" && !this.data.missing_qty) {
+            return "text-bg-dark";
+        }
+        if(this.data.availability_state == "unavailable" || this.data.stock_avail_state =="unavailable" || this.data.missing_qty) {
+            return "text-bg-danger";
+        }
+        if(this.data.availability_state == "expected") {
+            return "text-bg-warning";
+        }
+        return "";
     }
 }
