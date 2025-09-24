@@ -175,12 +175,13 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         /*
          * -------------------  PART 4 : KANBAN FILTERS ---------------------
          * Checks suggest and searchModel (filters) interactions
-         * (Add / Remove with filters), TODO category filters
+         * (Add / Remove with filters), category filters
          * ------------------------------------------------------------------
          */
         // ---- Check toggling suggest OFF with filters manually removed still works
         ...catalogSuggestion.removeSuggestFilter(),
         ...catalogSuggestion.toggleSuggest(false),
+        { trigger: `.o_kanban_record:contains("Courage") button:has(.fa-plus,.fa-shopping-cart)` },
         ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0), // == suggest is off
 
         // ---- Check Adding non suggested product works with suggest
@@ -191,9 +192,20 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         ...catalogSuggestion.toggleSuggest(true),
         { trigger: '.o_facet_value:contains("Suggested")' }, // Should turn on filter Suggested or in the order
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
         ...catalogSuggestion.checkKanbanRecordPosition("Courage", 1), // Courage still shown because in order
         ...productCatalog.removeProduct("Courage"),
-        ...catalogSuggestion.removeSuggestFilter(),
+
+        // ---- Check Search Panel categories work with suggest
+        ...productCatalog.selectSearchPanelCategory("Goods"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Should recompute estimated price
+        ...productCatalog.selectSearchPanelCategory("Expenses"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+        ...catalogSuggestion.removeSuggestFilter(), // Shouldn't impact categories
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+
+        // ---- Finally done :)
+        ...productCatalog.goBackToOrder(),
         {
             content: "Go back to the dashboard",
             trigger: ".o_menu_brand",
