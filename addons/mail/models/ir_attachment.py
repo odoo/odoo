@@ -18,6 +18,8 @@ class IrAttachment(models.Model):
 
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+    quote_attachment = fields.Boolean('"Quoted" attachments sent as image email signatures or in replied-to emails \
+        are not listed in chatter attachment lists')
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
