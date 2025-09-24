@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
+import { isEmptyTextNode, isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
@@ -241,6 +241,23 @@ export function cleanTextNode(node, char, cursors) {
             cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
         }
     });
+}
+
+/**
+ * Remove all empty text nodes within the given root element
+ * and update cursors for later selection restore.
+ *
+ * This prevents the editor from keeping unnecessary empty text
+ * nodes that may create extra nodes during split operations.
+ *
+ * @param {HTMLElement} root
+ * @param {Cursors} [cursors]
+ */
+export function removeEmptyTextNodes(root, cursors) {
+    for (const node of childNodes(root).filter((n) => isEmptyTextNode(n))) {
+        cursors?.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    }
 }
 
 /**
