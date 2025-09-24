@@ -180,17 +180,24 @@ class PurchaseOrder(models.Model):
                 self.partner_id,
                 self
             )
-            existing_po_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
-            if existing_po_lines:
+            existing_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
+            if section_id := ctx.get("section_id"):
+                existing_lines = existing_lines.filtered(lambda pol: pol.get_parent_section_line().id == section_id)
+                suggest_line["sequence"] = self._get_new_line_sequence("order_line", section_id)
+            else:
+                existing_lines = existing_lines.filtered(lambda pol: not pol.parent_id)  # lines with no sections
+            if existing_lines:
                 # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
-                to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
+                to_unlink = existing_lines if product.suggested_qty == 0 else existing_lines[:-1]
                 po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
                 if product.suggested_qty > 0:
-                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+                    po_lines_commands.append(Command.update(existing_lines[-1].id, suggest_line))
             elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
         self.order_line = po_lines_commands
+        # Return the change in number of po_lines for the given section
+        return sum({"CREATE": 1, "UNLINK": -1}.get(line[0].name, 0) for line in po_lines_commands)
 
     def button_approve(self, force=False):
         self.order_line._set_date_promised()
