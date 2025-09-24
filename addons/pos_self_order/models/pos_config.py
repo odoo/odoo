@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import uuid
 import base64
+import uuid
 import zipfile
+from io import BytesIO
+from urllib.parse import unquote
+
 import qrcode
 import qrcode.image.svg
-from io import BytesIO
-from typing import Optional, List, Dict
-from urllib.parse import unquote
-from odoo.exceptions import UserError, ValidationError, AccessError
 
-from odoo import api, fields, models, _, service
-from odoo.tools import file_open, split_every
+from odoo import _, api, fields, models, release
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class PosConfig(models.Model):
@@ -24,6 +23,7 @@ class PosConfig(models.Model):
         for user in users:
             if user.sudo().has_group("point_of_sale.group_pos_manager"):
                 return user
+        return False
 
     status = fields.Selection(
         [("inactive", "Inactive"), ("active", "Active")],
@@ -180,8 +180,7 @@ class PosConfig(models.Model):
 
     def _compute_selection_pay_after(self):
         selection_each_label = _("Each Order")
-        version_info = service.common.exp_version()['server_version_info']
-        if version_info[-1] == '':
+        if not release.version_info[-1]:
             selection_each_label = f"{selection_each_label} {_('(require Odoo Enterprise)')}"
         return [("meal", _("Meal")), ("each", selection_each_label)]
 
@@ -236,7 +235,7 @@ class PosConfig(models.Model):
 
         return table_qr_code
 
-    def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
+    def _get_self_order_route(self, table_id: int | None = None) -> str:
         self.ensure_one()
         base_route = f"/pos-self/{self.id}"
         table_route = ""
@@ -254,7 +253,7 @@ class PosConfig(models.Model):
 
         return f"{base_route}?access_token={self.access_token}{table_route}"
 
-    def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
+    def _get_self_order_url(self, table_id: int | None = None) -> str:
         self.ensure_one()
         long_url = self.get_base_url() + self._get_self_order_route(table_id)
         return self.env['link.tracker'].search_or_create([{
@@ -377,7 +376,7 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_kiosk_scenario(self):
         if not bool(self.env.company.chart_template):
-            return False
+            return
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
         restaurant_categories = self.get_record_by_ref([

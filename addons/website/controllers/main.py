@@ -1,40 +1,41 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
-import os
 import logging
+import os
 import re
+import zipfile
+from hashlib import md5, sha256
+from io import BytesIO
+from itertools import islice
+from textwrap import shorten
+from xml.etree import ElementTree as ET
+
 import requests
 import urllib.parse
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
-import zipfile
-
-from hashlib import md5, sha256
-from io import BytesIO
-from itertools import islice
 from lxml import etree, html
 from markupsafe import escape as markup_escape
-from textwrap import shorten
 from werkzeug.exceptions import NotFound
-from xml.etree import ElementTree as ET
 
 import odoo
-
-from odoo import http, models, fields, tools, _
+from odoo import _, fields, http, models, release, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
-from odoo.http import request, SessionExpiredException
-from odoo.tools import OrderedSet, escape_psql, html_escape as escape, py_to_js_locale
+from odoo.http import SessionExpiredException, request
+from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
+from odoo.tools import html_escape as escape
+from odoo.tools.json import scriptsafe as json
 from odoo.tools.translate import LazyTranslate
+
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
-from odoo.tools.json import scriptsafe as json
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -331,7 +332,11 @@ class Website(Home):
         values = {
             'apps': apps,
             'l10n': l10n,
-            'version': odoo.service.common.exp_version()
+            'version': {
+                'server_version': release.version,
+                'server_version_info': release.version_info,
+                'server_serie': release.serie,
+            }
         }
         return request.render('website.website_info', values)
 

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.service.common import exp_version
+import odoo.release
 from odoo import http, _
 from odoo.http import content_disposition, request
 from odoo.fields import Domain
@@ -188,7 +188,6 @@ class HrAttendance(http.Controller):
                 kiosk_mode = "settings"
             else:
                 kiosk_mode = company.attendance_kiosk_mode
-            version_info = exp_version()
             return request.render(
                 'hr_attendance.public_kiosk_mode',
                 {
@@ -202,7 +201,7 @@ class HrAttendance(http.Controller):
                         'barcode_source': company.attendance_barcode_source,
                         'device_tracking_enabled': company.attendance_device_tracking,
                         'lang': py_to_js_locale(company.partner_id.lang or company.env.lang),
-                        'server_version_info': version_info.get('server_version_info'),
+                        'server_version_info': odoo.release.version_info,
                     },
                 }
             )
