@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import logging
 
 import odoo.release
-import odoo.tools
 from odoo.exceptions import AccessDenied
 from odoo.modules.registry import Registry
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -34,24 +30,6 @@ def exp_authenticate(db, login, password, user_agent_env):
 
 def exp_version():
     return RPC_VERSION_1
-
-def exp_about(extended=False):
-    """Return information about the OpenERP Server.
-
-    @param extended: if True then return version info
-    @return string if extended is False else tuple
-    """
-
-    info = _('See http://openerp.com')
-
-    if extended:
-        return info, odoo.release.version
-    return info
-
-def exp_set_loglevel(loglevel, logger=None):
-    # TODO Previously, the level was set on the now deprecated
-    # `odoo.netsvc.Logger` class.
-    return True
 
 def dispatch(method, params):
     g = globals()
