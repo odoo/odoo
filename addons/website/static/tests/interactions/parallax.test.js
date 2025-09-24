@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne, queryRect, scroll } from "@odoo/hoot-dom";
@@ -22,7 +19,7 @@ const getTemplate = function (options = {}) {
         </section>
         <section style="height: ${height}px; background-color: #FFCCCC;"></section>
     `;
-}
+};
 
 const simulateScrolls = async function (fixture) {
     fixture.style.overflow = "scroll";
@@ -36,7 +33,7 @@ const simulateScrolls = async function (fixture) {
         spacings.push(spacing);
     }
     return spacings;
-}
+};
 
 test("parallax is started when there is an element .parallax", async () => {
     const { core } = await startInteractions(getTemplate());

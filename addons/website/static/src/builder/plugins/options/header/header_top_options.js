@@ -5,5 +5,4 @@ export class HeaderTopOptions extends Component {
     static props = {
         openEditMenu: Function,
     };
-
 }

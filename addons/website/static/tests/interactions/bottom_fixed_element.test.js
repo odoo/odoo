@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne, queryRect, scroll } from "@odoo/hoot-dom";
@@ -19,17 +16,17 @@ const scrollTo = async function (el, scrollTarget, bottomFixedElement) {
     bottomFixedElement.style.left = `calc(50% - ${queryRect(bottomFixedElement).width / 2}px)`;
     // Dispatch the scroll event
     await manuallyDispatchProgrammaticEvent(document, "scroll");
-}
+};
 
 const scrollToMiddle = async function (el, bottomFixedElement) {
     // 2550 = headerHeight + mainHeight + footerHeight
-    await scrollTo(el, 2550 / 2 - queryRect(bottomFixedElement).height, bottomFixedElement)
-}
+    await scrollTo(el, 2550 / 2 - queryRect(bottomFixedElement).height, bottomFixedElement);
+};
 
 const scrollToBottom = async function (el, bottomFixedElement) {
     // 2550 = headerHeight + mainHeight + footerHeight
-    await scrollTo(el, 2550 - queryRect(bottomFixedElement).height, bottomFixedElement)
-}
+    await scrollTo(el, 2550 - queryRect(bottomFixedElement).height, bottomFixedElement);
+};
 
 const getTemplate = function (options = {}) {
     const withButtonLeft = options.withButtonLeft || false;
@@ -49,7 +46,7 @@ const getTemplate = function (options = {}) {
             ${emptyDiv}
         </footer>
     `;
-}
+};
 
 test("bottom_fixed_element is started when there is an element #wrapwrap", async () => {
     const { core } = await startInteractions(getTemplate());

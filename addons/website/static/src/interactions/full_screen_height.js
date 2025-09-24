@@ -14,7 +14,9 @@ export class FullScreenHeight extends Interaction {
         },
         _root: {
             "t-att-style": () => ({
-                "min-height": this.isActive ? `${this.computeIdealHeight()}px !important` : undefined,
+                "min-height": this.isActive
+                    ? `${this.computeIdealHeight()}px !important`
+                    : undefined,
             }),
         },
     };
@@ -26,7 +28,7 @@ export class FullScreenHeight extends Interaction {
         // Only initialize if taller than the ideal height as some extra css
         // rules may alter the full-screen-height class behavior in some
         // cases (blog...).
-        this.isActive = !isVisible(this.el) || (currentHeight > idealHeight + 1);
+        this.isActive = !isVisible(this.el) || currentHeight > idealHeight + 1;
     }
 
     computeIdealHeight() {
@@ -38,21 +40,23 @@ export class FullScreenHeight extends Interaction {
         // can't because of Arc browser).
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-        if (!this.smallestViewportHeight
-                // Update svh definition only if the viewport resize seems to
-                // not be to a mobile browser UI change (e.g. Arc browser
-                // mistakenly changes svh while its UI changes at the moment).
-                || Math.abs(viewportWidth - this.previousViewportWidth) > 15
-                || Math.abs(viewportHeight - this.previousViewportHeight) > 150) {
+        if (
+            !this.smallestViewportHeight ||
+            // Update svh definition only if the viewport resize seems to
+            // not be to a mobile browser UI change (e.g. Arc browser
+            // mistakenly changes svh while its UI changes at the moment).
+            Math.abs(viewportWidth - this.previousViewportWidth) > 15 ||
+            Math.abs(viewportHeight - this.previousViewportHeight) > 150
+        ) {
             this.previousViewportWidth = viewportWidth;
             this.previousViewportHeight = viewportHeight;
-            const el = document.createElement('div');
-            el.classList.add('vh-100');
-            el.style.position = 'fixed';
-            el.style.top = '0';
-            el.style.pointerEvents = 'none';
-            el.style.visibility = 'hidden';
-            el.style.setProperty('height', '100svh', 'important');
+            const el = document.createElement("div");
+            el.classList.add("vh-100");
+            el.style.position = "fixed";
+            el.style.top = "0";
+            el.style.pointerEvents = "none";
+            el.style.visibility = "hidden";
+            el.style.setProperty("height", "100svh", "important");
             document.body.appendChild(el);
             this.smallestViewportHeight = parseFloat(el.getBoundingClientRect().height);
             document.body.removeChild(el);
@@ -64,12 +68,14 @@ export class FullScreenHeight extends Interaction {
 
         // Doing it that way allows to consider fixed headers, hidden headers,
         // connected users, ...
-        const firstContentEl = this.el.ownerDocument.querySelector("#wrapwrap > main > :first-child"); // first child to consider the padding-top of main
-        const mainTopPos = firstContentEl.getBoundingClientRect().top + this.el.ownerDocument.documentElement.scrollTop;
-        return (this.smallestViewportHeight - mainTopPos);
+        const firstContentEl = this.el.ownerDocument.querySelector(
+            "#wrapwrap > main > :first-child"
+        ); // first child to consider the padding-top of main
+        const mainTopPos =
+            firstContentEl.getBoundingClientRect().top +
+            this.el.ownerDocument.documentElement.scrollTop;
+        return this.smallestViewportHeight - mainTopPos;
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.full_screen_height", FullScreenHeight);
+registry.category("public.interactions").add("website.full_screen_height", FullScreenHeight);

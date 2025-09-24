@@ -386,7 +386,9 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
-    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("info@yourcompany.example.com");
+    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue(
+        "info@yourcompany.example.com"
+    );
 });
 
 test("Last list entry cannot be removed", async () => {

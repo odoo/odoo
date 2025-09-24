@@ -13,43 +13,56 @@ import {
 
 const carouselInnerSelector = ":iframe .carousel-inner";
 
-registerWebsitePreviewTour("carousel_content_removal", {
-    url: '/',
-    edition: true,
-}, () => [
-    ...insertSnippet({
-        id: 's_carousel',
-        name: 'Carousel',
-        groupName: "Intro",
-}), {
-    trigger: ":iframe .carousel .carousel-item.active .carousel-content",
-    content: "Select the active carousel item.",
-    run: "click",
-}, {
-    trigger: ".overlay .oe_snippet_remove",
-    content: "Remove the active carousel item.",
-    run: "click",
-}, {
-    trigger: ":iframe .carousel .carousel-item.active .container:not(:has(*)):not(:visible)",
-    content: "Check for a carousel slide with an empty container tag",
-},
-    goBackToBlocks(),
-    ...insertSnippet({
-        id: "s_quotes_carousel",
-        name: "Blockquote",
-        groupName: "People",
-}), {
-    trigger: ":iframe .s_quotes_carousel_wrapper .carousel-item.active .s_blockquote",
-    content: "Select the blockquote.",
-    run: "click",
-}, {
-    trigger: ".overlay .oe_snippet_remove",
-    content: "Remove the blockquote from the carousel item.",
-    run: "click",
-}, {
-    trigger: ":iframe .s_quotes_carousel_wrapper .carousel-item.active:not(:has(.s_blockquote))",
-    content: "Check that the blockquote has been removed and the carousel item is empty.",
-}]);
+registerWebsitePreviewTour(
+    "carousel_content_removal",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_carousel",
+            name: "Carousel",
+            groupName: "Intro",
+        }),
+        {
+            trigger: ":iframe .carousel .carousel-item.active .carousel-content",
+            content: "Select the active carousel item.",
+            run: "click",
+        },
+        {
+            trigger: ".overlay .oe_snippet_remove",
+            content: "Remove the active carousel item.",
+            run: "click",
+        },
+        {
+            trigger:
+                ":iframe .carousel .carousel-item.active .container:not(:has(*)):not(:visible)",
+            content: "Check for a carousel slide with an empty container tag",
+        },
+        goBackToBlocks(),
+        ...insertSnippet({
+            id: "s_quotes_carousel",
+            name: "Blockquote",
+            groupName: "People",
+        }),
+        {
+            trigger: ":iframe .s_quotes_carousel_wrapper .carousel-item.active .s_blockquote",
+            content: "Select the blockquote.",
+            run: "click",
+        },
+        {
+            trigger: ".overlay .oe_snippet_remove",
+            content: "Remove the blockquote from the carousel item.",
+            run: "click",
+        },
+        {
+            trigger:
+                ":iframe .s_quotes_carousel_wrapper .carousel-item.active:not(:has(.s_blockquote))",
+            content: "Check that the blockquote has been removed and the carousel item is empty.",
+        },
+    ]
+);
 
 const checkSlides = (number, position) => {
     const nSlide = (n) => `div.carousel-item:eq(${n})`;
@@ -113,7 +126,7 @@ registerWebsitePreviewTour(
             content: "Add a slide",
             trigger: "button.btn.btn-success[aria-label='Add Slide']",
             async run(helpers) {
-                await helpers.click()
+                await helpers.click();
                 await delay(360);
             },
         },

@@ -17,7 +17,9 @@ export class GallerySlider extends Interaction {
 
     setup() {
         this.hideOnClickIndicator = true;
-        this.carouselEl = this.el.classList.contains("carousel") ? this.el : this.el.querySelector(".carousel");
+        this.carouselEl = this.el.classList.contains("carousel")
+            ? this.el
+            : this.el.querySelector(".carousel");
         this.indicatorEl = this.carouselEl?.querySelector(".carousel-indicators");
         if (this.indicatorEl) {
             this.prevEl = this.indicatorEl.querySelector("li.o_indicators_left");
@@ -46,7 +48,13 @@ export class GallerySlider extends Interaction {
                     indicatorParentEl = indicatorParentEl.parentElement;
                 }
             }
-            this.nbPerPage = Math.floor(indicatorWidth / (this.liEls.length > 0 ? this.liEls[0].getBoundingClientRect().width : undefined)) - 3; // - navigator - 1 to leave some space
+            this.nbPerPage =
+                Math.floor(
+                    indicatorWidth /
+                        (this.liEls.length > 0
+                            ? this.liEls[0].getBoundingClientRect().width
+                            : undefined)
+                ) - 3; // - navigator - 1 to leave some space
             this.realNbPerPage = this.nbPerPage || 1;
             this.nbPages = Math.ceil(this.liEls.length / this.realNbPerPage);
         }
@@ -67,7 +75,9 @@ export class GallerySlider extends Interaction {
             return;
         }
         this.waitForTimeout(() => {
-            const itemEl = this.carouselEl.querySelector(".carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next");
+            const itemEl = this.carouselEl.querySelector(
+                ".carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next"
+            );
             if (!itemEl) {
                 return;
             }
@@ -75,7 +85,7 @@ export class GallerySlider extends Interaction {
             for (const liEl of this.liEls) {
                 liEl.classList.remove("active");
             }
-            const selectedLiEl = [...this.liEls].find(el => el.dataset.bsSlideTo === `${index}`);
+            const selectedLiEl = [...this.liEls].find((el) => el.dataset.bsSlideTo === `${index}`);
             selectedLiEl?.classList.add("active");
         }, 0);
     }
@@ -101,7 +111,10 @@ export class GallerySlider extends Interaction {
 
     hide() {
         for (let i = 0; i < this.liEls?.length; i++) {
-            this.liEls[i].classList.toggle("d-none", i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage);
+            this.liEls[i].classList.toggle(
+                "d-none",
+                i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage
+            );
         }
         if (this.prevEl) {
             if (this.page <= 0) {
@@ -116,7 +129,7 @@ export class GallerySlider extends Interaction {
                 this.nextEl.remove();
             } else {
                 this.nextEl.classList.remove("d-none");
-                this.insert(this.nextEl, this.indicatorEl, "beforeend")
+                this.insert(this.nextEl, this.indicatorEl, "beforeend");
             }
         }
     }
@@ -131,6 +144,4 @@ export class GallerySlider extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.gallery_slider", GallerySlider);
+registry.category("public.interactions").add("website.gallery_slider", GallerySlider);

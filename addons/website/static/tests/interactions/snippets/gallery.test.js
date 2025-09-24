@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll } from "@odoo/hoot-dom";
@@ -91,6 +88,7 @@ test("gallery interaction opens lightbox on click, then use mouse", async () => 
     await checkLightbox({
         close: async (lightboxEl) => await click(lightboxEl.querySelector(".btn-close")),
         next: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-next")),
-        previous: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-prev")),
+        previous: async (lightboxEl) =>
+            await click(lightboxEl.querySelector(".carousel-control-prev")),
     });
 });

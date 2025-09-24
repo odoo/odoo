@@ -17,7 +17,10 @@ export class BackgroundImageOption extends BaseOptionComponent {
     toggleBgImageClasses() {
         this.dependencies.history.ignoreDOMMutations(() => {
             const backgroundURL = getBgImageURLFromEl(this.editingElement);
-            this.dependencies.backgroundImageOption.setImageBackground(this.editingElement, backgroundURL);
+            this.dependencies.backgroundImageOption.setImageBackground(
+                this.editingElement,
+                backgroundURL
+            );
         });
     }
     showMainColorPicker() {

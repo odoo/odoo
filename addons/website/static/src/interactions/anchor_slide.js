@@ -64,7 +64,7 @@ export class AnchorSlide extends Interaction {
                 "hidden.bs.offcanvas",
                 () => this.manageScroll(hash, anchorEl, scrollValue),
                 // the listener must be automatically removed when invoked
-                { once: true },
+                { once: true }
             );
         } else {
             ev.preventDefault();
@@ -92,6 +92,4 @@ export class AnchorSlide extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.anchor_slide", AnchorSlide);
+registry.category("public.interactions").add("website.anchor_slide", AnchorSlide);

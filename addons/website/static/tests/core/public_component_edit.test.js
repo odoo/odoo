@@ -12,8 +12,7 @@ test(`owl components are neutered in edit mode`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>hello</div>`;
         static props = ["*"];
-        setup() {
-        }
+        setup() {}
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
 
@@ -35,7 +34,7 @@ test(`owl components are neutered in edit mode`, async () => {
         </owl-component>
     `);
 
-    await switchToEditMode(core)
+    await switchToEditMode(core);
     await animationFrame();
 
     // in edit mode, we have pointer-events: none on owl-component
@@ -46,15 +45,13 @@ test(`owl components are neutered in edit mode`, async () => {
             </owl-root>
         </owl-component>
     `);
-
 });
 
 test(`edit owl components are not neutered in edit mode`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>hello</div>`;
         static props = ["*"];
-        setup() {
-        }
+        setup() {}
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
     publicComponentRegistryEdit.add("my_public_comp", MyPublicComp);
@@ -77,10 +74,10 @@ test(`edit owl components are not neutered in edit mode`, async () => {
         </owl-component>
     `);
 
-    await switchToEditMode(core)
+    await switchToEditMode(core);
     await animationFrame();
 
-    // in edit mode, there should not be a pointer-events: none 
+    // in edit mode, there should not be a pointer-events: none
     expect(`.test`).toHaveInnerHTML(`
         <owl-component name="my_public_comp" >
             <owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">
@@ -88,6 +85,4 @@ test(`edit owl components are not neutered in edit mode`, async () => {
             </owl-root>
         </owl-component>
     `);
-
 });
-

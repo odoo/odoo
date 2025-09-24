@@ -21,6 +21,4 @@ export class Map extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.map", Map);
+registry.category("public.interactions").add("website.map", Map);

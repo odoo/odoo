@@ -28,7 +28,7 @@ const clickOnSaveButtonStep = [
     {
         content: "Wait",
         trigger: "body:not(.modal-open)",
-    }
+    },
 ];
 
 const openCreatePageDialog = [
@@ -79,8 +79,7 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
                       content: `Verify custom templates section is empty`,
                       trigger: `.o_website_page_templates_pane:not(:has(.o_page_template))`,
                   },
-              ]
-        ),
+              ]),
         {
             content: "Exit dialog",
             trigger: ".modal-header .btn-close",
@@ -90,7 +89,7 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
             content: "Exit new content backdrop",
             trigger: "body",
             run: "press escape",
-        }
+        },
     ];
 }
 
@@ -215,12 +214,12 @@ function testWebsitePageProperties() {
         {
             content: "Open redirect type popup",
             trigger: "#redirect_type_0",
-            run: "click"
+            run: "click",
         },
         {
             content: "Set redirect type to temporary",
             trigger: ".o-dropdown-item[data-choice-index='1']",
-            run: "click"
+            run: "click",
         },
         {
             // TODO: this needs to be tested
@@ -253,7 +252,7 @@ function testWebsitePageProperties() {
             content: "Make it a template",
             trigger: "#is_new_page_template_0",
             run: "check",
-        },
+        }
     );
     steps.check.push(
         {
@@ -267,7 +266,7 @@ function testWebsitePageProperties() {
             content: "Verify no index",
             trigger: ':iframe head:hidden meta[name="robots"][content="noindex"]',
         },
-        ...checkIsTemplate(true, "Cool Page"),
+        ...checkIsTemplate(true, "Cool Page")
     );
     steps.teardown.unshift(
         {
@@ -309,7 +308,7 @@ function testWebsitePageProperties() {
             content: "Remove from templates",
             trigger: "#is_new_page_template_0",
             run: "uncheck",
-        },
+        }
     );
     steps.checkTorndown.push(
         {
@@ -323,7 +322,7 @@ function testWebsitePageProperties() {
             content: "Verify is indexed",
             trigger: ':iframe head:hidden:not(:has(meta[name="robots"][content="noindex"]))',
         },
-        ...checkIsTemplate(false),
+        ...checkIsTemplate(false)
     );
     return steps;
 }
@@ -333,7 +332,7 @@ registerWebsitePreviewTour(
     {
         url: "/test_view",
     },
-    () => [...testCommonProperties("/test_view", false).finalize()],
+    () => [...testCommonProperties("/test_view", false).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -341,7 +340,7 @@ registerWebsitePreviewTour(
     {
         url: "/test_website/model_item/1",
     },
-    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
+    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -378,5 +377,5 @@ registerWebsitePreviewTour(
         },
         ...clickOnSave(),
         ...testWebsitePageProperties().finalize(),
-    ],
+    ]
 );

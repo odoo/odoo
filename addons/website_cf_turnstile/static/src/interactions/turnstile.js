@@ -51,8 +51,8 @@ export class TurnStile {
 
         // avoid autosubmit from password manager
         const inputValidation = document.createElement("input");
-        inputValidation.style = 'display: none;';
-        inputValidation.className = 'turnstile_captcha_valid';
+        inputValidation.style = "display: none;";
+        inputValidation.className = "turnstile_captcha_valid";
         inputValidation.required = true;
 
         this.turnstileEl = turnstileContainer;
@@ -68,7 +68,7 @@ export class TurnStile {
      */
     static clean(el) {
         const turnstileEls = el.querySelectorAll(".s_turnstile");
-        turnstileEls.forEach(element => element.remove());
+        turnstileEls.forEach((element) => element.remove());
     }
 
     static disableSubmit(submitButton) {

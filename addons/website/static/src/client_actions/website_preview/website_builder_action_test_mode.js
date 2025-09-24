@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { patch } from "@web/core/utils/patch";
-import { WebsiteBuilderClientAction } from './website_builder_action';
+import { WebsiteBuilderClientAction } from "./website_builder_action";
 
 patch(WebsiteBuilderClientAction.prototype, {
     /**
@@ -8,5 +8,5 @@ patch(WebsiteBuilderClientAction.prototype, {
      */
     get testMode() {
         return true;
-    }
+    },
 });

@@ -23,10 +23,10 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
     ].join(", ");
     dynamicContent = {
         _root: {
-            "t-on-slide.bs.carousel": () => this.sliding = true,
-            "t-on-slid.bs.carousel": () => this.sliding = false,
+            "t-on-slide.bs.carousel": () => (this.sliding = true),
+            "t-on-slid.bs.carousel": () => (this.sliding = false),
             "t-att-class": () => ({
-                "o_carousel_sliding": this.sliding,
+                o_carousel_sliding: this.sliding,
             }),
         },
     };
@@ -41,7 +41,7 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
         if (this.hasInterval || this.el.dataset.bsRide) {
             // Wait for carousel to finish sliding.
             if (this.el.classList.contains("o_carousel_sliding")) {
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     this.addListener(this.el, "slid.bs.carousel", () => resolve(), { once: true });
                 });
             }
