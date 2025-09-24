@@ -24,6 +24,7 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
         super.setup();
         this.suggest = useState(useEnv().suggest);
         this.addAllProducts = useEnv().addAllProducts;
+        this.debouncedKanbanRecompute = useEnv().debouncedKanbanRecompute;
         this.displaySuggest = useEnv().suggest.poState === "draft";
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand, incoming quantities, " +
@@ -37,12 +38,14 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
         this.suggest.numberOfDays = boundedVal;
         ev.target.value = boundedVal;
+        this.debouncedKanbanRecompute();
     }
     onPercentFactorInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
         this.suggest.percentFactor = boundedVal;
         ev.target.value = boundedVal;
+        this.debouncedKanbanRecompute();
     }
     async onSuggestToggle() {
         this.suggest.suggestToggle.isOn = !this.suggest.suggestToggle.isOn;
@@ -50,6 +53,7 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
             "purchase_stock.suggest_toggle_state",
             JSON.stringify({ isOn: this.suggest.suggestToggle.isOn })
         );
+        this.debouncedKanbanRecompute();
     }
     get estimatedSuggestPrice() {
         const { currencyId, digits } = this.suggest;
@@ -65,6 +69,7 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
             },
             onChange: (val) => {
                 this.suggest.basedOn = val;
+                this.debouncedKanbanRecompute();
             },
         };
     }
