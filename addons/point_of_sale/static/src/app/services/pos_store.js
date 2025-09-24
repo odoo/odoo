@@ -5,7 +5,13 @@ import { markRaw, reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
+import {
+    deduceUrl,
+    random5Chars,
+    uuidv4,
+    Counter,
+    orderUsageUTCtoLocalUtil,
+} from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -37,7 +43,7 @@ import { sprintf, unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -2297,13 +2303,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     orderUsageUTCtoLocal(data) {
-        const result = {};
-        for (const [datetime, usage] of Object.entries(data)) {
-            const dt = deserializeDateTime(datetime);
-            const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
-            result[formattedDt] = usage;
-        }
-        return result;
+        return orderUsageUTCtoLocalUtil(data);
     }
     async syncPresetSlotAvaibility(preset) {
         try {

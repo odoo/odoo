@@ -12,7 +12,12 @@ import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
-import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
+import {
+    constructFullProductName,
+    deduceUrl,
+    random5Chars,
+    orderUsageUTCtoLocalUtil,
+} from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
     getTaxesAfterFiscalPosition,
@@ -200,8 +205,8 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 preset_id: this.currentOrder?.preset_id?.id,
             });
-
-            preset.computeAvailabilities(presetAvailabilities);
+            const localUsage = orderUsageUTCtoLocalUtil(presetAvailabilities.usage_utc);
+            preset.computeAvailabilities(localUsage);
         } catch {
             console.info("Offline mode, cannot update the slot avaibility");
         }
