@@ -252,6 +252,8 @@ class Store:
             fields = [Store.Attr(key, value) for key, value in fields.items()]
         if not isinstance(fields, list):
             fields = [fields]
+        if "version" in records._fields and "version" not in fields:
+            fields.append("version")
         if hasattr(records, "_field_store_repr"):
             return [f for field in fields for f in records._field_store_repr(field)]
         return fields

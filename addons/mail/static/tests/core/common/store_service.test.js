@@ -79,3 +79,95 @@ test("store.insert different PY model having same JS model", async () => {
     expect(Boolean(store.Thread.get({ id: 2, model: "discuss.channel" }))).toBe(true);
     expect(Boolean(store.Thread.get({ id: 3, model: "discuss.channel" }))).toBe(true);
 });
+
+test("store.insert uses version for overrides", async () => {
+    await start();
+    const store = getService("mail.store");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 1", version: 1 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 1");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 2", version: 2 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 2");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 1", version: 1 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 2");
+});
+
+test("store.insert uses version for many relations", async () => {
+    await start();
+    const store = getService("mail.store");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 1", version: 1, partner_ids: [1] }],
+        "res.partner": [
+            { id: 1, name: "Partner 1" },
+            { id: 2, name: "Partner 2" },
+            { id: 3, name: "Partner 3" },
+        ],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 1");
+    expect(store["mail.message"].get({ id: 1 })?.partner_ids.map((p) => p.name)).toEqual([
+        "Partner 1",
+    ]);
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 4", version: 4, partner_ids: [["ADD", 2]] }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 4");
+    expect(store["mail.message"].get({ id: 1 })?.partner_ids.map((p) => p.name)).toEqual([
+        "Partner 1",
+        "Partner 2",
+    ]);
+    store.insert({
+        "mail.message": [{ id: 1, version: 2, partner_ids: [3] }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 4");
+    expect(store["mail.message"].get({ id: 1 })?.partner_ids.map((p) => p.name)).toEqual([
+        "Partner 3",
+        "Partner 2",
+    ]);
+    store.insert({
+        "mail.message": [{ id: 1, version: 4, partner_ids: [1, 2, 3] }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 4");
+    expect(store["mail.message"].get({ id: 1 })?.partner_ids.map((p) => p.name)).toEqual([
+        "Partner 1",
+        "Partner 2",
+        "Partner 3",
+    ]);
+    store.insert({
+        "res.partner": [{ id: 2, name: "Partner 2 (updated)", version: 2 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.partner_ids.map((p) => p.name)).toEqual([
+        "Partner 1",
+        "Partner 2 (updated)",
+        "Partner 3",
+    ]);
+});
+
+test("store.insert uses version for one relations", async () => {
+    await start();
+    const store = getService("mail.store");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 1", version: 1, author_id: 1 }],
+        "res.partner": [
+            { id: 1, name: "Partner 1" },
+            { id: 2, name: "Partner 2" },
+            { id: 3, name: "Partner 3" },
+        ],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 1");
+    expect(store["mail.message"].get({ id: 1 })?.author_id.name).toBe("Partner 1");
+    store.insert({
+        "mail.message": [{ id: 1, subject: "version 4", version: 4, author_id: 2 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 4");
+    expect(store["mail.message"].get({ id: 1 })?.author_id.name).toBe("Partner 2");
+    store.insert({
+        "mail.message": [{ id: 1, version: 2, author_id: 3 }],
+    });
+    expect(store["mail.message"].get({ id: 1 })?.subject).toBe("version 4");
+    expect(store["mail.message"].get({ id: 1 })?.author_id.name).toBe("Partner 2");
+});

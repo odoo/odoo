@@ -5,7 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
-    _inherit = "mail.message"
+    _inherit = ["mail.message", "mail.versioning.mixin"]
 
     call_history_ids = fields.One2many("discuss.call.history", "start_call_message_id")
     channel_id = fields.Many2one("discuss.channel", compute="_compute_channel_id")
