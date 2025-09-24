@@ -667,12 +667,20 @@ class MassMailing(models.Model):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
     def action_retry_failed(self):
-        failed_mails = self.env['mail.mail'].sudo().search([
+        """ Remove all failed emails and their traces, and try sending them again."""
+        # Use batching to prevent cache overfill in unlink()
+        batch_size = 1000
+        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search([
             ('mailing_id', 'in', self.ids),
             ('state', '=', 'exception')
-        ])
-        failed_mails.mapped('mailing_trace_ids').unlink()
-        failed_mails.unlink()
+        ], limit=batch_size)
+        while failed_emails:
+            failed_emails.mapped('mailing_trace_ids').unlink()
+            failed_emails.unlink()
+            failed_emails = failed_emails.search([
+                ('mailing_id', 'in', self.ids),
+                ('state', '=', 'exception')
+            ], limit=batch_size)
         self.action_put_in_queue()
 
     def action_view_link_trackers(self):
