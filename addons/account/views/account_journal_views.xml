@@ -153,7 +153,7 @@
                                     <field name="selected_payment_method_codes" invisible="1"/>
                                     <group name="outgoing_payment" />
                             </page>
-                            <page name="advanced_settings" string="Advanced Settings">
+                            <page name="advanced_settings" string="Advanced Settings" invisible="type in ['bank', 'cash']">
                                 <group>
                                     <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
