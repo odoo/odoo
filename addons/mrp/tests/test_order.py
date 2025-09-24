@@ -5239,6 +5239,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_increase_MO_qty_lot_comp(self):
+        """
+        check that when the quantity on the MO is increase, the new components on the sotck move
+        are taken with the correct lot
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.product_2.tracking = 'lot'
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 100, lot_id=lot_1)
+        bom = self.bom_1
+        bom.product_id = self.product_5
+        bom.product_tmpl_id = self.product_5.product_tmpl_id
+        bom.product_qty = 2
+        bom.bom_line_ids[1].unlink()
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 10,
+        })
+        mo.action_confirm()
+        mo.write({'qty_producing': 6})
+        mo.set_qty_producing()
+        mo.write({'qty_producing': 8})
+        mo.set_qty_producing()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'quantity': 8, 'lot_id': lot_1.id},
+        ])
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
