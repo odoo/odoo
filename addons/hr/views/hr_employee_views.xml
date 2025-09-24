@@ -322,12 +322,11 @@
                             <page name="payroll_information" string="Payroll" groups="hr.group_hr_manager">
                                 <field name="currency_id" invisible="1"/>
                                 <group name="payroll_group">
-                                    <group name="contract" groups="hr.group_hr_user" style="padding-top: 20px;">
-                                        <div colspan="2" class="row">
-                                            <span class="col-8 text-uppercase fw-bolder small"> Contract Overview </span>
+                                    <group name="contract" groups="hr.group_hr_user">
+                                        <div colspan="2" class="col-lg-6 w-100 mt-4 mb-3 o_horizontal_separator text-uppercase fw-bolder small d-flex">
+                                            <span>Contract Overview</span>
                                             <button name="%(hr_version_wizard_action)d" type="action" string="Load a Template" 
-                                                class="btn btn-link col-4 p-0 w-max text-end"/>
-                                            <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                                                class="btn btn-link ms-auto text-end lh-1 h-100 p-0"/>
                                         </div>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
