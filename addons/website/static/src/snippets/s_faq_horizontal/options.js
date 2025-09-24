@@ -5,17 +5,16 @@ options.registry.faqHorizontalMultipleItems = options.registry.MultipleItems.ext
         // Find the iframe and its #wrapwrap
         const iframe = document.querySelector('.o_iframe');
         const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-        const wrapwrap = iframeDocument.getElementById('wrapwrap');
+        const documentEl = iframeDocument.documentElement;
 
         const topics = this.$target[0].getElementsByClassName('s_faq_horizontal_entry');
         const newTopic = topics[topics.length - 1];
         const newTopicRect = newTopic.getBoundingClientRect();
-        const wrapwrapRect = wrapwrap.getBoundingClientRect();
 
-        const scrollTop = wrapwrap.scrollTop;
-        const centerY = (newTopicRect.top - wrapwrapRect.top) + scrollTop - (wrapwrap.clientHeight / 2) + (newTopicRect.height / 2);
+        const scrollTop = documentEl.scrollTop;
+        const centerY = newTopicRect.top + scrollTop - (documentEl.clientHeight / 2) + (newTopicRect.height / 2);
 
-        wrapwrap.scrollTo({
+        documentEl.scrollTo({
             top: centerY,
             behavior: 'smooth'
         });
