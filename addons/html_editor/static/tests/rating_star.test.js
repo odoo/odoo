@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, press } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { deleteBackward, insertText } from "./_helpers/user_actions";
+import { deleteBackward, insertText, splitBlock } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -55,6 +55,34 @@ test("select star rating", async () => {
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+    );
+});
+
+test("should insert two empty paragraphs when Enter is pressed twice before the star element", async () => {
+    const { el, editor } = await setupEditor(
+        `<p>\u200B[]<span contenteditable="false" class="o_stars o_three_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B</p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p><br></p><p>[]<span contenteditable="false" class="o_stars o_three_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B</p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p><br></p><p><br></p><p>[]<span contenteditable="false" class="o_stars o_three_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B</p>`
+    );
+});
+
+test("should insert two empty paragraphs when Enter is pressed twice after the star element", async () => {
+    const { el, editor } = await setupEditor(
+        `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    splitBlock(editor);
+    expect(getContent(el)).toBe(
+        `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span></p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
