@@ -7,7 +7,6 @@
                 name="click_and_collect_availability"
                 t-on-click="openLocationSelector"
                 class="cursor-pointer"
-                t-att-class="{'disabled': !this.state.active}"
             >
                 <h6>
                     <i class="fa fa-fw fa-map-marker text-muted"/>
@@ -18,7 +17,7 @@
                     <t t-else="">Click and Collect</t>
                 </h6>
                 <div class="d-flex justify-content-between">
-                    <t t-if="this.state.inStoreStockData.in_stock">
+                    <t t-if="this.state.inStoreStockData?.in_stock">
                         <div
                             t-if="this.state.inStoreStockData.show_quantity &amp;&amp; this.state.selectedLocationData.id"
                             class="text-muted"
