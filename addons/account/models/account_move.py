@@ -2748,6 +2748,7 @@ class AccountMove(models.Model):
         if self.is_purchase_document() and self.partner_id:
             res['search_default_seller_ids'] = self.partner_id.name
 
+        res['product_catalog_move_type'] = self.move_type
         res['product_catalog_currency_id'] = self.currency_id.id
         res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
         res['show_sections'] = bool(self.id)

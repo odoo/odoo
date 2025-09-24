@@ -15,7 +15,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         this.suggestParams = {
             currencyId: this.props.context.product_catalog_currency_id,
             digits: this.props.context.product_catalog_digits,
-            poState: this.props.context.po_state,
+            poState: this.props.context.product_catalog_order_state,
             vendorName: this.props.context.vendor_name,
             warehouse_id: this.props.context.warehouse_id,
         };
@@ -64,7 +64,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             await this.model.orm.call(
                 "purchase.order",
                 "action_purchase_order_suggest",
-                [this._baseContext["order_id"], sm.domain],
+                [this._baseContext["product_catalog_order_id"], sm.domain], // Change
                 { context: this._getSuggestContext() }
             );
             this._toggleSuggestFilters(true);

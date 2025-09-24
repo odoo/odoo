@@ -128,6 +128,7 @@ class ProductCatalogMixin(models.AbstractModel):
         return {
             'display_uom': self.env.user.has_group('uom.group_uom'),
             'product_catalog_order_id': self.id,
+            'product_catalog_order_state': self.state if "state" in self._fields else None,
             'product_catalog_order_model': self._name,
         }
 

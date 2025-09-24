@@ -10,15 +10,14 @@ export class ProductCatalogKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.orderId = this.props.context.order_id;
+        this.orderId = this.props.context.product_catalog_order_id;
         this.orderResModel = this.props.context.product_catalog_order_model;
-        this.backToQuotationDebounced = useDebounced(this.backToQuotation, 500)
+        this.backToQuotationDebounced = useDebounced(this.backToQuotation, 500);
 
         onWillStart(() => this.onWillStart());
     }
 
     async onWillStart() {
-        await this.setOrderStateInfo();
         this._defineButtonContent();
     }
 
@@ -27,20 +26,10 @@ export class ProductCatalogKanbanController extends KanbanController {
         return true;
     }
 
-    get stateFiels() {
-        return ["state"];
-    }
-
-    async setOrderStateInfo() {
-        const orderData = await this.orm.searchRead(
-            this.orderResModel, [["id", "=", this.orderId]], this.stateFiels
-        );
-        this.orderStateInfo = orderData[0] || {};
-    }
-
     _defineButtonContent() {
         // Define the button's label depending of the order's state.
-        const orderIsQuotation = ["draft", "sent"].includes(this.orderStateInfo.state);
+        const order_state = this.props.context.product_catalog_order_state;
+        const orderIsQuotation = ["draft", "sent"].includes(order_state);
         if (orderIsQuotation) {
             this.buttonString = _t("Back to Quotation");
         } else {
