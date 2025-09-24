@@ -131,8 +131,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
         checkKanbanRecordPosition("test_product", 0),
+
         ...toggleSuggest(false),
-        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // 24 for One warehouse, 1 for another warehouse
         { trigger: "div.o_product_catalog_buttons i.fa-shopping-cart:visible" }, // == wait for front end to sync (shopping carts only when not suggested)
         checkKanbanRecordPosition("Courage", 0), // Product with lowest ref number should be first, test product should be first anymore
         ...toggleSuggest(true),
@@ -196,7 +197,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         { trigger: ".fa-trash" }, // Wait till its added
         {
-            content: "Check added qty matches expecations",
+            content: "Check added qty matches expectations",
             trigger: ".o_product_catalog_quantity input",
             run() {
                 assert(parseInt(this.anchor.value), 24); // 12 * 4 * 50%
@@ -228,7 +229,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (Add / Remove with filters), TODO category filters
          * ------------------------------------------------------------------
          */
-        // Remove suggest filter
         {
             content: "Remove the Suggested Or In Order filter",
             trigger: '.o_facet_value:contains("Suggested")',
@@ -248,6 +248,13 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: "div.o_product_catalog_buttons i.fa-shopping-cart",
             run: "click",
         },
+        {
+            content: "Add a delay to make sure its added to PO",
+            trigger: ".fa-trash",
+            async run() {
+                await new Promise((r) => setTimeout(r, 1000));
+            },
+        }, // Wait till its added
         ...toggleSuggest(true),
         { trigger: '.o_facet_value:contains("Suggested")' }, // 12 * 4 * 50%
         {
@@ -277,6 +284,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: ".o_kanban_record",
             run: "click",
         },
+        // TODO non deterministic
         { trigger: ".fa-trash" }, // Wait till its added
         ...goToPOFromCatalog(),
         {

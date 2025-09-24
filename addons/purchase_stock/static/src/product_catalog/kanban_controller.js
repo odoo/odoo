@@ -54,13 +54,18 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         /** Method to add all suggestions to purchase order */
         const onAddAll = async () => {
             const sm = this.env.searchModel;
-            await this.model.orm.call(
+            const section_id = sm.selectedSection.sectionId;
+            const lineCountChange = await this.model.orm.call(
                 "purchase.order",
                 "action_purchase_order_suggest",
-                [this._baseContext["product_catalog_order_id"], sm.domain], // Change
+                [this._baseContext["product_catalog_order_id"], sm.domain, section_id],
                 { context: this._getSuggestContext() }
             );
             this._toggleSuggestFilters(true);
+            this.env.searchModel.trigger("section-line-count-change", {
+                sectionId: section_id,
+                lineCountChange: lineCountChange,
+            });
         };
 
         /** When user toggles suggestion switch, we reload && toggle filters */

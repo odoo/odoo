@@ -58,7 +58,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             "suggest_percent": factor,
             "suggest_days": days,
         }
-        po.with_context(suggest_context).action_purchase_order_suggest([])  # Simplify by passing empty domain
+        po.with_context(suggest_context).action_purchase_order_suggest([], False)  # Simplify by passing empty domain & no setcion
 
     def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False, to_validate=True):
         date = date or datetime.now()
