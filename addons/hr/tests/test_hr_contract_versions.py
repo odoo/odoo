@@ -108,8 +108,8 @@ class TestHrContractVersions(TransactionCase):
         unique_version.contract_date_end = date(2025, 7, 31)
         for date_version in ['2025-01-01', '2025-06-01', '2025-12-31']:
             unique_version.date_version = date_version
-            for date_start in (None, date(2025, 3, 1)):
-                for date_end in (None, date(2025, 6, 15)):
+            for date_start in (None, date(2025, 3, 1), date(2025, 4, 1)):
+                for date_end in (None, date(2025, 4, 1), date(2025, 6, 15), date(2025, 7, 31)):
                     for use_latest_version in (True, False):
                         self.assert_get_contract_versions(
                             date_start,
@@ -347,43 +347,57 @@ class TestHrContractVersions(TransactionCase):
         # no versions, because no contract active in the range, even if versions are in the range
         contract_1_version, contract_2_version = self.setup_2contract_1version_each()
         self.assert_get_contract_versions(
-            date(2025, 5, 15),
-            date(2025, 6, 15),
+            date(2025, 5, 16),
+            date(2025, 6, 14),
             []
         )
         # all versions of each contract
         self.assert_get_contract_versions(
-            date(2025, 5, 14),
-            date(2025, 6, 16),
+            date(2025, 5, 15),
+            date(2025, 6, 15),
             [contract_1_version, contract_2_version]
         )
         # the first version before the end date, of the contract active in the range
         self.assert_get_contracts(
-            date(2025, 4, 15),
-            date(2025, 6, 15),
+            date(2025, 5, 15),
+            date(2025, 6, 14),
             True,
             contract_1_version
         )
         # the first version before the start date, of the contract active in the range
         self.assert_get_contracts(
-            date(2025, 4, 15),
-            date(2025, 6, 15),
+            date(2025, 5, 15),
+            date(2025, 6, 14),
             False,
             contract_1_version
         )
         # the first version before the end date, of the contract active in the range
         self.assert_get_contracts(
+            date(2025, 5, 16),
             date(2025, 6, 15),
-            date(2025, 7, 15),
             True,
             contract_2_version
         )
         # the first version before the start date, of the contract active in the range
         self.assert_get_contracts(
+            date(2025, 5, 16),
             date(2025, 6, 15),
-            date(2025, 7, 15),
             False,
             contract_2_version
+        )
+        # the first version before the end date, of the contract active in the range
+        self.assert_get_contracts(
+            date(2025, 5, 15),
+            date(2025, 6, 15),
+            True,
+            [contract_1_version, contract_2_version]
+        )
+        # the first version before the start date, of the contract active in the range
+        self.assert_get_contracts(
+            date(2025, 5, 15),
+            date(2025, 6, 15),
+            False,
+            [contract_1_version, contract_2_version]
         )
 
     def test_2contract_1version_each_w_date_end(self):
@@ -398,6 +412,12 @@ class TestHrContractVersions(TransactionCase):
         self.assert_get_contract_versions(
             None,
             date(2025, 6, 15),
+            [contract_1_version, contract_2_version]
+        )
+        # all versions of the first contract
+        self.assert_get_contract_versions(
+            None,
+            date(2025, 6, 14),
             [contract_1_version]
         )
         # the first before the end date, of each contract
@@ -503,8 +523,8 @@ class TestHrContractVersions(TransactionCase):
         # all versions of all contracts
         contract_1_version, contract_2_version, _ = self.setup_2contract_3version_each()
         self.assert_get_contract_versions(
-            date(2025, 5, 15),
-            date(2025, 6, 15),
+            date(2025, 5, 16),
+            date(2025, 6, 14),
             []
         )
         # the first before the end date, of the contract active in the range
@@ -512,26 +532,26 @@ class TestHrContractVersions(TransactionCase):
             date(2025, 4, 15),
             date(2025, 6, 15),
             True,
-            contract_1_version[-1]
+            [contract_1_version[-1], contract_2_version[1]]
         )
         # the first before the start date, of the contract active in the range
         self.assert_get_contracts(
             date(2025, 4, 15),
             date(2025, 6, 15),
             False,
-            contract_1_version[1]
+            [contract_1_version[0], contract_2_version[0]]
         )
         # the first before the end date, of the contract active in the range
         self.assert_get_contracts(
             date(2025, 6, 15),
-            date(2025, 7, 15),
+            date(2025, 7, 31),
             True,
-            contract_2_version[1]
+            contract_2_version[-1]
         )
         # the first before the start date, of the contract active in the range
         self.assert_get_contracts(
             date(2025, 6, 15),
-            date(2025, 7, 15),
+            date(2025, 7, 31),
             False,
             contract_2_version[1]
         )
