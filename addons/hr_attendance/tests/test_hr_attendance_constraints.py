@@ -13,7 +13,7 @@ class TestHrAttendance(TransactionCase):
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
         cls.attendance = cls.env['hr.attendance']
-        cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky"})
+        cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky", 'ruleset_id': False})
         # demo data contains set up for cls.test_employee
         cls.open_attendance = cls.attendance.create({
             'employee_id': cls.test_employee.id,
