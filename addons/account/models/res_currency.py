@@ -109,7 +109,7 @@ class ResCurrency(models.Model):
 
         last_date_to = None
         for period_key, date_from, date_to in date_periods:
-            main_company_unit_factor = main_company.currency_id._get_rates(main_company, date_to)[main_company.currency_id.id]
+            main_company_unit_factor, _ = main_company.currency_id._get_rates(main_company, date_to)[main_company.currency_id.id]
 
             if use_cta_rates:
                 table_builders += [

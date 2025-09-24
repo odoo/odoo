@@ -20,6 +20,7 @@ def _sql_from_table(alias: str, table: SQL) -> SQL:
 _SQL_JOINS = {
     "JOIN": SQL("JOIN"),
     "LEFT JOIN": SQL("LEFT JOIN"),
+    "LEFT JOIN LATERAL": SQL("LEFT JOIN LATERAL"),
 }
 
 
