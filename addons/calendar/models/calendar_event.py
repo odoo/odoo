@@ -72,6 +72,7 @@ class CalendarEvent(models.Model):
     _description = "Calendar Event"
     _order = "start desc"
     _inherit = ["mail.thread"]
+    _mail_post_access = 'read'
     _systray_view = 'calendar'
 
     DISCUSS_ROUTE = 'calendar/join_videocall'
