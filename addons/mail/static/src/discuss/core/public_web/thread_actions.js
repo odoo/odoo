@@ -1,3 +1,4 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 import { useChildSubEnv } from "@odoo/owl";
@@ -31,4 +32,15 @@ registerThreadAction("show-threads", {
     sequence: ({ owner }) => (owner.props.chatWindow ? 40 : 5),
     sequenceGroup: 10,
     toggle: true,
+});
+registerThreadAction("leave", {
+    condition: ({ owner, thread }) =>
+        (thread?.canLeave || thread?.canUnpin) && !owner.isDiscussContent,
+    icon: "fa fa-fw fa-sign-out",
+    name: ({ thread }) => (thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation")),
+    open: ({ thread }) => (thread.canLeave ? thread.leaveChannel() : thread.unpin()),
+    partition: ({ owner }) => owner.env.inChatWindow,
+    sequence: 10,
+    sequenceGroup: 40,
+    tags: ACTION_TAGS.DANGER,
 });

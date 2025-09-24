@@ -57,6 +57,8 @@ export class MessagingMenu extends Component {
         }
     }
 
+    onSwipeLeftThreadNotification(thread) {}
+
     navigate(direction) {
         if (this.notificationItems.length === 0) {
             return;
@@ -171,10 +173,6 @@ export class MessagingMenu extends Component {
         if (!["inbox", "starred"].includes(this.store.discuss.activeTab)) {
             this.store.discuss.thread = undefined;
         }
-    }
-
-    canUnpinItem(thread) {
-        return thread.canUnpin && thread.self_member_id?.message_unread_counter === 0;
     }
 }
 
