@@ -1168,6 +1168,7 @@ class MailMessage(models.Model):
         res.many(
             "attachment_ids",
             "_store_attachment_fields",
+            value=lambda m: m.sudo().attachment_ids.filtered(lambda a: not a.quote_attachment),
             sort="id",
             dynamic_fields="_store_attachment_dynamic_fields",
             sudo=True,

@@ -1480,6 +1480,36 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
             )
         self.start_tour("/odoo", "access_inbox_records_tour", login=self.user_employee.login)
 
+    def test_store_hide_quote_attachments(self):
+        [attachment_quote, attachment_noquote] = self.env['ir.attachment'].create([
+            {
+                'name': 'Test Attachment',
+                'raw': b'This is test attachment content',
+                'res_model': self.test_record._name,
+                'res_id': self.test_record.id,
+                'mimetype': 'text/plain',
+                'quote_attachment': booln,
+            } for booln in [True, False]
+        ])
+        self.test_record.message_post(
+            body='Message body',
+            message_type='comment',
+            attachment_ids=(attachment_quote + attachment_noquote).ids,
+        )
+        self.assertEqual(self.test_record.message_ids.attachment_ids, attachment_quote + attachment_noquote,
+            'Sanity check: all attachments are related to the message')
+
+        # Thread attachments
+        thread_attachments = self.test_record._get_mail_thread_data_attachments()
+        self.assertIn(attachment_noquote, thread_attachments)
+        self.assertNotIn(attachment_quote, thread_attachments)
+
+        # Store attachments
+        res = Store().add(self.test_record.message_ids, '_store_message_fields')._build_result()
+        self.assertEqual(res['mail.message'][0]['attachment_ids'], [attachment_noquote.id],
+            'Only unquoted attachments should be listed as message attachments')
+        self.assertEqual([res['ir.attachment'][0]['id']], [attachment_noquote.id],
+            'Only unquoted attachments should be listed as attachments')
 
 @tagged('mail_thread')
 class TestNotification(MailCommon):
