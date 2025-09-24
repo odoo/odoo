@@ -13,10 +13,10 @@
         <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
             <attribute name="t-attf-style" add="color: {{ livechatService.options.title_color }}; --o-mail-livechat-btn-color: {{ livechatService.options.title_color }}; background-color: {{ livechatService.options.header_background_color }} !important;" separator=" "/>
         </xpath>
-        <xpath expr="//*[@t-ref='composerDisabledContainer']" position="inside">
+        <xpath expr="//*[@t-ref='composerHiddenContainer']" position="inside">
             <button t-if="showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.onClickFeedback()">Continue</button>
         </xpath>
-        <xpath expr="//*[@t-ref='composerDisabledContainer']" position="attributes">
+        <xpath expr="//*[@t-ref='composerHiddenContainer']" position="attributes">
             <attribute name="t-attf-class" add="{{ showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
         </xpath>
     </t>

@@ -249,6 +249,14 @@ export class Thread extends Record {
      *  @type {integer|undefined}
      */
     pid;
+    composerDisabled = fields.Attr(false, {
+        compute() {
+            return this.computeComposerDisabled();
+        },
+        onUpdate() {
+            this.composerDisabledonUpdate();
+        },
+    });
 
     get accessRestrictedToGroupText() {
         if (!this.group_public_id?.full_name) {
@@ -363,6 +371,10 @@ export class Thread extends Record {
     }
 
     onPinStateUpdated() {}
+
+    computeComposerDisabled() {}
+
+    composerDisabledonUpdate() {}
 
     get isEmpty() {
         return this.messages.length === 0;

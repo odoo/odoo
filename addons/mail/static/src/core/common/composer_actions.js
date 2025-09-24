@@ -88,6 +88,7 @@ registerComposerAction("send-message", {
     sequenceQuick: 30,
 });
 registerComposerAction("add-emoji", {
+    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     icon: "fa fa-smile-o",
     isPicker: true,
     pickerName: _t("Emoji"),
@@ -111,6 +112,7 @@ registerComposerAction("add-emoji", {
     sequenceQuick: 20,
 });
 registerComposerAction("upload-files", {
+    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     condition: ({ owner }) => owner.allowUpload,
     icon: "fa fa-paperclip",
     name: _t("Attach Files"),

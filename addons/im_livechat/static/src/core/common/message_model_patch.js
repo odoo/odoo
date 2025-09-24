@@ -10,10 +10,10 @@ const messagePatch = {
         this.chatbotStep = fields.One("ChatbotStep", { inverse: "message" });
     },
     canReplyTo(thread) {
-        return (
-            super.canReplyTo(thread) &&
-            (thread?.channel_type !== "livechat" || !thread.composerDisabled)
-        );
+        if (thread?.channel_type === "livechat") {
+            return !thread.composerDisabled && !thread.composerHidden;
+        }
+        return super.canReplyTo(thread);
     },
     isTranslatable(thread) {
         return (

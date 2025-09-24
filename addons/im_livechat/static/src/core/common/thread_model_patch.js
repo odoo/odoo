@@ -1,7 +1,6 @@
 import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
@@ -66,14 +65,8 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" || super.allowDescription;
     },
 
-    get composerDisabled() {
+    get composerHidden() {
         return this.channel_type === "livechat" && this.livechat_end_dt;
-    },
-
-    get composerDisabledText() {
-        return this.channel_type === "livechat" && this.livechat_end_dt
-            ? _t("This livechat conversation has ended")
-            : "";
     },
     /**
      * @override
