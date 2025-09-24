@@ -3,7 +3,10 @@ import { click } from "@odoo/hoot-dom";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 

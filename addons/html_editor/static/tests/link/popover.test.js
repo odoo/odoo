@@ -243,7 +243,7 @@ describe("popover should switch UI depending on editing state", () => {
         await click(".o_advance_option_panel .fa-angle-left");
         await waitFor(".o-we-linkpopover");
         await contains(".o_we_apply_link").click();
-        expect (cleanLinkArtifacts(getContent(el))).toBe(
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/" rel="noopener" target="_blank">li[]nk</a></p>'
         );
     });

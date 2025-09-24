@@ -1,14 +1,14 @@
-import {CheckBox} from '@web/core/checkbox/checkbox';
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
-import {useService, useAutofocus} from "@web/core/utils/hooks";
-import {sprintf} from "@web/core/utils/strings";
-import {WebsiteDialog} from './dialog';
+import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
+import { WebsiteDialog } from "./dialog";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
-import { formView } from '@web/views/form/form_view';
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
 import { Component, onWillDestroy, useEffect, useRef, useState, xml } from "@odoo/owl";
-import { FormController } from '@web/views/form/form_controller';
+import { FormController } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 
 export class PageDependencies extends Component {
@@ -28,9 +28,9 @@ export class PageDependencies extends Component {
 
     setup() {
         super.setup();
-        this.orm = useService('orm');
+        this.orm = useService("orm");
 
-        this.action = useRef('action');
+        this.action = useRef("action");
         this.sprintf = sprintf;
 
         useEffect(
@@ -53,24 +53,22 @@ export class PageDependencies extends Component {
     }
 
     async fetchDependencies() {
-        this.state.dependencies = await this.orm.call(
-            'website',
-            'search_url_dependencies',
-            [this.props.resModel, await this.getResIds()],
-        );
+        this.state.dependencies = await this.orm.call("website", "search_url_dependencies", [
+            this.props.resModel,
+            await this.getResIds(),
+        ]);
     }
 
     showDependencies() {
         const popover = window.Popover.getOrCreateInstance(this.action.el, {
             title: _t("Dependencies"),
-            boundary: 'viewport',
-            placement: 'right',
-            trigger: 'focus',
-            content: () => {
-                return renderToFragment("website.PageDependencies.Tooltip", {
+            boundary: "viewport",
+            placement: "right",
+            trigger: "focus",
+            content: () =>
+                renderToFragment("website.PageDependencies.Tooltip", {
                     dependencies: this.state.dependencies,
-                });
-            },
+                }),
         });
         popover.toggle();
     }
@@ -106,7 +104,7 @@ export class FormPageDependencies extends PageDependencies {
         const records = await this.orm.read(
             this.props.record.resModel,
             [this.props.record.resId],
-            ["target_model_id"],
+            ["target_model_id"]
         );
         return records.map((record) => record.target_model_id[0]);
     }
@@ -142,7 +140,7 @@ export class DeletePageDialog extends Component {
     };
 
     setup() {
-        this.website = useService('website');
+        this.website = useService("website");
 
         this.state = useState({
             confirm: false,
@@ -169,12 +167,12 @@ export class DuplicatePageDialog extends Component {
     };
 
     setup() {
-        this.orm = useService('orm');
-        this.website = useService('website');
+        this.orm = useService("orm");
+        this.website = useService("website");
         useAutofocus();
 
         this.state = useState({
-            name: '',
+            name: "",
         });
     }
 
@@ -183,11 +181,12 @@ export class DuplicatePageDialog extends Component {
         if (this.state.name) {
             for (let count = 0; count < this.props.pageIds.length; count++) {
                 const name = this.state.name + (count ? ` ${count + 1}` : "");
-                duplicates.push(await this.orm.call(
-                    'website.page',
-                    'clone_page',
-                    [this.props.pageIds[count], name]
-                ));
+                duplicates.push(
+                    await this.orm.call("website.page", "clone_page", [
+                        this.props.pageIds[count],
+                        name,
+                    ])
+                );
             }
         }
         this.props.onDuplicate(duplicates);
@@ -223,9 +222,9 @@ export class PagePropertiesDialog extends FormViewDialog {
 
     setup() {
         super.setup();
-        this.dialog = useService('dialog');
-        this.orm = useService('orm');
-        this.website = useService('website');
+        this.dialog = useService("dialog");
+        this.orm = useService("orm");
+        this.website = useService("website");
 
         this.viewProps = {
             ...this.viewProps,
@@ -237,7 +236,7 @@ export class PagePropertiesDialog extends FormViewDialog {
                         ? "website.website_page_properties_view_form"
                         : "website.website_page_properties_base_view_form",
                 },
-                this.viewProps.context,
+                this.viewProps.context
             ),
             ...(this.isPage
                 ? {
@@ -285,13 +284,15 @@ export class PagePropertiesDialog extends FormViewDialog {
 
     async deletePage() {
         const pageIds = [this.targetId];
-        const newPageTemplateFields = await this.orm.read("website.page", pageIds, ["is_new_page_template"]);
+        const newPageTemplateFields = await this.orm.read("website.page", pageIds, [
+            "is_new_page_template",
+        ]);
         this.dialog.add(DeletePageDialog, {
             resIds: pageIds,
-            resModel: 'website.page',
+            resModel: "website.page",
             onDelete: async () => {
                 await this.orm.unlink("website.page", pageIds);
-                this.website.goToWebsite({path: '/'});
+                this.website.goToWebsite({ path: "/" });
                 this.props.close();
                 this.props.onClose();
             },

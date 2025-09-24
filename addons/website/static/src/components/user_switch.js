@@ -9,4 +9,3 @@ patch(UserSwitch.prototype, {
         super.toggleFormDisplay();
     },
 });
-

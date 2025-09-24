@@ -61,7 +61,8 @@ export class MenuDataPlugin extends Plugin {
         }
         this.isEditMenuOpening = true;
         return new Promise((resolve) => {
-            this.services.dialog.add(EditMenuDialog,
+            this.services.dialog.add(
+                EditMenuDialog,
                 {
                     save: async (newPageUrl) => {
                         // Save the page before reloading the editor.
@@ -96,7 +97,7 @@ export class MenuDataPlugin extends Plugin {
         return (
             linkElement &&
             (linkElement.getAttribute("role") === "menuitem" ||
-            linkElement.classList.contains("nav-link")) &&
+                linkElement.classList.contains("nav-link")) &&
             !linkElement.dataset.bsToggle
         );
     }

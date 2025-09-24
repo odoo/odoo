@@ -1,7 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC_BEFORE, END, VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
+import {
+    SNIPPET_SPECIFIC_BEFORE,
+    END,
+    VERTICAL_ALIGNMENT,
+} from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 class EcommCategoriesShowcaseOptionPlugin extends Plugin {
@@ -10,10 +14,17 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     static DEFAULT_BLOCK_COUNT = 3;
     static MIN_BLOCK_COUNT = 2;
     static MAX_BLOCK_COUNT = 4;
-    static GAP_CLASS = 'gap-4';
-    static DEFAULT_ROUNDNESS = 'rounded-2';
-    static NO_ROUNDNESS = 'rounded-0';
-    static ROUNDNESS_CLASSES = ['rounded-0', 'rounded-1', 'rounded-2', 'rounded-3', 'rounded-4', 'rounded-5'];
+    static GAP_CLASS = "gap-4";
+    static DEFAULT_ROUNDNESS = "rounded-2";
+    static NO_ROUNDNESS = "rounded-0";
+    static ROUNDNESS_CLASSES = [
+        "rounded-0",
+        "rounded-1",
+        "rounded-2",
+        "rounded-3",
+        "rounded-4",
+        "rounded-5",
+    ];
 
     resources = {
         builder_options: [
@@ -41,8 +52,8 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     };
 
     static _updateBlocksRoundness(editingElement, roundnessClass) {
-        const blocks = editingElement.querySelectorAll('.s_ecomm_categories_showcase_block');
-        blocks.forEach(block => {
+        const blocks = editingElement.querySelectorAll(".s_ecomm_categories_showcase_block");
+        blocks.forEach((block) => {
             block.classList.remove(...EcommCategoriesShowcaseOptionPlugin.ROUNDNESS_CLASSES);
             block.classList.add(roundnessClass);
         });
@@ -53,47 +64,51 @@ class BlockCountAction extends BuilderAction {
     static id = "blockCount";
 
     getValue({ editingElement }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         if (!wrapper) {
             return EcommCategoriesShowcaseOptionPlugin.DEFAULT_BLOCK_COUNT.toString();
         }
-        return wrapper.querySelectorAll('.s_ecomm_categories_showcase_block').length.toString();
+        return wrapper.querySelectorAll(".s_ecomm_categories_showcase_block").length.toString();
     }
 
     apply({ editingElement, value }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         if (!wrapper) {
             return;
         }
 
         const count = parseInt(value, 10);
-        if (isNaN(count) || count < EcommCategoriesShowcaseOptionPlugin.MIN_BLOCK_COUNT || count > EcommCategoriesShowcaseOptionPlugin.MAX_BLOCK_COUNT) {
+        if (
+            isNaN(count) ||
+            count < EcommCategoriesShowcaseOptionPlugin.MIN_BLOCK_COUNT ||
+            count > EcommCategoriesShowcaseOptionPlugin.MAX_BLOCK_COUNT
+        ) {
             return;
         }
 
-        let blocks = wrapper.querySelectorAll('.s_ecomm_categories_showcase_block');
+        let blocks = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block");
 
         // Remove blocks if needed
         while (blocks.length > count) {
             const blockToRemove = blocks[blocks.length - 1];
             blockToRemove.remove();
-            blocks = wrapper.querySelectorAll('.s_ecomm_categories_showcase_block');
+            blocks = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block");
         }
 
         // Add blocks if needed
         while (blocks.length < count) {
             const newBlock = blocks[0].cloneNode(true);
             wrapper.appendChild(newBlock);
-            blocks = wrapper.querySelectorAll('.s_ecomm_categories_showcase_block');
+            blocks = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block");
         }
     }
 
     isApplied({ editingElement, value }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         if (!wrapper) {
             return false;
         }
-        const currentCount = wrapper.querySelectorAll('.s_ecomm_categories_showcase_block').length;
+        const currentCount = wrapper.querySelectorAll(".s_ecomm_categories_showcase_block").length;
         const targetCount = parseInt(value, 10);
         return !isNaN(targetCount) && currentCount === targetCount;
     }
@@ -103,12 +118,12 @@ class SpacingToggleAction extends BuilderAction {
     static id = "spacingToggle";
 
     isApplied({ editingElement }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         return wrapper && wrapper.classList.contains(EcommCategoriesShowcaseOptionPlugin.GAP_CLASS);
     }
 
     apply({ editingElement }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         if (!wrapper) {
             return;
         }
@@ -117,17 +132,24 @@ class SpacingToggleAction extends BuilderAction {
         wrapper.classList.toggle(EcommCategoriesShowcaseOptionPlugin.GAP_CLASS);
 
         // Set roundness based on new state
-        const newRoundness = hasGap ? EcommCategoriesShowcaseOptionPlugin.NO_ROUNDNESS : EcommCategoriesShowcaseOptionPlugin.DEFAULT_ROUNDNESS;
+        const newRoundness = hasGap
+            ? EcommCategoriesShowcaseOptionPlugin.NO_ROUNDNESS
+            : EcommCategoriesShowcaseOptionPlugin.DEFAULT_ROUNDNESS;
         EcommCategoriesShowcaseOptionPlugin._updateBlocksRoundness(editingElement, newRoundness);
     }
 
     clean({ editingElement }) {
-        const wrapper = editingElement.querySelector('.s_ecomm_categories_showcase_wrapper');
+        const wrapper = editingElement.querySelector(".s_ecomm_categories_showcase_wrapper");
         if (wrapper) {
             wrapper.classList.remove(EcommCategoriesShowcaseOptionPlugin.GAP_CLASS);
-            EcommCategoriesShowcaseOptionPlugin._updateBlocksRoundness(editingElement, EcommCategoriesShowcaseOptionPlugin.NO_ROUNDNESS);
+            EcommCategoriesShowcaseOptionPlugin._updateBlocksRoundness(
+                editingElement,
+                EcommCategoriesShowcaseOptionPlugin.NO_ROUNDNESS
+            );
         }
     }
 }
 
-registry.category("website-plugins").add(EcommCategoriesShowcaseOptionPlugin.id, EcommCategoriesShowcaseOptionPlugin);
+registry
+    .category("website-plugins")
+    .add(EcommCategoriesShowcaseOptionPlugin.id, EcommCategoriesShowcaseOptionPlugin);
