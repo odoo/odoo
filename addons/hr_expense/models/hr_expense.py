@@ -1276,15 +1276,6 @@ class HrExpense(models.Model):
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
 
-    def action_get_attachment_view(self):
-        self.ensure_one()
-        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        res.update({
-            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
-            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
-        })
-        return res
-
     def action_approve_duplicates(self):
         root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         for expense in self.duplicate_expense_ids:

@@ -45,9 +45,6 @@
                     <field name="tax_amount" sum="Total Taxes" readonly="True"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
-                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip"
-                            aria-label="View Attachments" title="View Attachments" class="float-end pe-0"
-                            readonly="True" invisible="nb_attachment == 0"/>
                     <field name="total_amount" sum="Total Amount" widget='monetary'
                            readonly="not is_editable or product_has_cost"
                            options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
