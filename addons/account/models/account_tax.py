@@ -1258,6 +1258,7 @@ class AccountTax(models.Model):
                     'group': batching_results['group_per_tax'].get(tax_data['tax'].id) or self.env['account.tax'],
                     'batch': batching_results['batch_per_tax'][tax_data['tax'].id],
                     'tax_amount': tax_data['tax_amount'],
+                    'price_include': tax_data['price_include'],
                     'base_amount': tax_data['base'],
                     'is_reverse_charge': tax_data.get('is_reverse_charge', False),
                 }
@@ -1332,14 +1333,25 @@ class AccountTax(models.Model):
         results = {}
         if base_line['computation_key']:
             results['computation_key'] = base_line['computation_key']
+
+        store_source_data = False
+        if base_line['manual_total_excluded_currency'] is not None:
+            results['manual_total_excluded_currency'] = base_line['manual_total_excluded_currency']
+            store_source_data = True
+        if base_line['manual_total_excluded'] is not None:
+            results['manual_total_excluded'] = base_line['manual_total_excluded']
+            store_source_data = True
         if base_line['manual_tax_amounts']:
+            results['manual_tax_amounts'] = base_line['manual_tax_amounts']
+            store_source_data = True
+
+        if store_source_data:
             results.update({
                 'currency_id': base_line['currency_id'].id,
                 'price_unit': base_line['price_unit'],
                 'discount': base_line['discount'],
                 'quantity': base_line['quantity'],
                 'rate': base_line['rate'],
-                'manual_tax_amounts': base_line['manual_tax_amounts'],
             })
         return results
 
@@ -1359,27 +1371,37 @@ class AccountTax(models.Model):
         results = {}
         if extra_tax_data and extra_tax_data.get('computation_key'):
             results['computation_key'] = extra_tax_data['computation_key']
+
+        manual_tax_amounts = extra_tax_data.get('manual_tax_amounts') or {} if extra_tax_data else None
         if (
             extra_tax_data
-            and extra_tax_data.get('manual_tax_amounts')
+            and extra_tax_data.get('currency_id')
             and base_line['currency_id'].id == extra_tax_data['currency_id']
             and base_line['currency_id'].compare_amounts(base_line['price_unit'], extra_tax_data['price_unit']) == 0
             and base_line['currency_id'].compare_amounts(base_line['discount'], extra_tax_data['discount']) == 0
             and base_line['currency_id'].compare_amounts(base_line['quantity'], extra_tax_data['quantity']) == 0
-            and all(str(tax.id) in extra_tax_data['manual_tax_amounts'] for tax in base_line['tax_ids'])
+            and all(str(tax.id) in manual_tax_amounts for tax in base_line['tax_ids'])
         ):
             results['price_unit'] = extra_tax_data['price_unit']
-            results['manual_tax_amounts'] = {}
+
             if base_line['rate'] and extra_tax_data.get('rate'):
                 delta_rate = base_line['rate'] / extra_tax_data['rate']
             else:
                 delta_rate = 1.0
-            for tax_id_str, amounts in extra_tax_data['manual_tax_amounts'].items():
-                results['manual_tax_amounts'][tax_id_str] = dict(amounts)
-                if 'tax_amount' in amounts:
-                    results['manual_tax_amounts'][tax_id_str]['tax_amount'] /= delta_rate
-                if 'base_amount' in amounts:
-                    results['manual_tax_amounts'][tax_id_str]['base_amount'] /= delta_rate
+
+            if 'manual_total_excluded_currency' in extra_tax_data:
+                results['manual_total_excluded_currency'] = extra_tax_data['manual_total_excluded_currency']
+            if 'manual_total_excluded' in extra_tax_data:
+                results['manual_total_excluded'] = extra_tax_data['manual_total_excluded'] / delta_rate
+
+            if manual_tax_amounts:
+                results['manual_tax_amounts'] = {}
+                for tax_id_str, amounts in extra_tax_data['manual_tax_amounts'].items():
+                    results['manual_tax_amounts'][tax_id_str] = dict(amounts)
+                    if 'tax_amount' in amounts:
+                        results['manual_tax_amounts'][tax_id_str]['tax_amount'] /= delta_rate
+                    if 'base_amount' in amounts:
+                        results['manual_tax_amounts'][tax_id_str]['base_amount'] /= delta_rate
 
         return results
 
@@ -1396,16 +1418,16 @@ class AccountTax(models.Model):
             return None
 
         new_extra_tax_data = copy.deepcopy(extra_tax_data)
+        for field in ('quantity', 'manual_total_excluded_currency', 'manual_total_excluded'):
+            if new_extra_tax_data.get(field):
+                new_extra_tax_data[field] *= -1
         if new_extra_tax_data.get('manual_tax_amounts'):
-            new_extra_tax_data['quantity'] *= -1
-            for tax_amounts in new_extra_tax_data['manual_tax_amounts'].values():
-                if 'base_amount_currency' in tax_amounts:
-                    tax_amounts['base_amount_currency'] *= -1
-                if 'base_amount' in tax_amounts:
-                    tax_amounts['base_amount'] *= -1
-                tax_amounts['tax_amount_currency'] *= -1
-                if 'tax_amount' in tax_amounts:
-                    tax_amounts['tax_amount'] *= -1
+            for current_manual_tax_amounts in new_extra_tax_data['manual_tax_amounts'].values():
+                for suffix in ('_currency', ''):
+                    for prefix in ('base', 'tax'):
+                        field = f'{prefix}_amount{suffix}'
+                        if current_manual_tax_amounts.get(field):
+                            current_manual_tax_amounts[field] *= -1
         return new_extra_tax_data
 
     def _turn_base_line_is_refund_flag_off(self, base_line):
@@ -1580,6 +1602,16 @@ class AccountTax(models.Model):
 
             # For all computation that are inferring a base amount in order to reach a total you know in advance, you have to force some
             # base/tax amounts for the computation (E.g. down payment, combo products, global discounts etc).
+            'manual_total_excluded_currency': load(
+                field='manual_total_excluded_currency',
+                fallback=extra_tax_data.get('manual_total_excluded_currency'),
+                from_base_line=True,
+            ),
+            'manual_total_excluded': load(
+                field='manual_total_excluded',
+                fallback=extra_tax_data.get('manual_total_excluded'),
+                from_base_line=True,
+            ),
             'manual_tax_amounts': load('manual_tax_amounts', extra_tax_data.get('manual_tax_amounts'), from_base_line=True),
         })
         if 'price_unit' in extra_tax_data:
@@ -1767,6 +1799,287 @@ class AccountTax(models.Model):
         return amounts_to_distribute
 
     @api.model
+    def _round_tax_details_tax_amounts(self, base_lines, company, mode='mixed'):
+        """ Dispatch the delta in term of tax amounts across the tax details when dealing with the 'round_globally' method.
+        Suppose 2 lines:
+        - quantity=12.12, price_unit=12.12, tax=23%
+        - quantity=12.12, price_unit=12.12, tax=23%
+        The tax of each line is computed as round(12.12 * 12.12 * 0.23) = 33.79
+        The expected tax amount of the whole document is round(12.12 * 12.12 * 0.23 * 2) = 67.57
+        The delta in term of tax amount is 67.57 - 33.79 - 33.79 = -0.01
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:             The company owning the base lines.
+        :param mode:                The mode to round taxes:
+            * excluded:                 Round base and tax independently.
+            * included:                 Round base + tax, then subtract the tax and round the base according the remaining amount.
+            * mixed:                    Round 'excluded' or 'included' depending if the tax is price-included or not.
+        """
+        def grouping_function(base_line, tax_data):
+            if not tax_data:
+                return
+            return {
+                'tax': tax_data['tax'],
+                'currency': base_line['currency_id'],
+                'is_refund': base_line['is_refund'],
+                'is_reverse_charge': tax_data['is_reverse_charge'],
+                'price_include': tax_data['price_include'],
+                'computation_key': base_line['computation_key'],
+            }
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            if not grouping_key:
+                continue
+
+            price_include = grouping_key['price_include']
+            currency = grouping_key['currency']
+            for delta_currency_indicator, delta_currency in (
+                ('_currency', currency),
+                ('', company.currency_id),
+            ):
+                # Tax amount.
+                raw_total_tax_amount = values[f'target_tax_amount{delta_currency_indicator}']
+                rounded_raw_total_tax_amount = delta_currency.round(raw_total_tax_amount)
+                total_tax_amount = values[f'tax_amount{delta_currency_indicator}']
+                delta_total_tax_amount = rounded_raw_total_tax_amount - total_tax_amount
+
+                if raw_total_tax_amount:
+                    target_factors = [
+                        {
+                            'factor': tax_data[f'raw_tax_amount{delta_currency_indicator}'],
+                            'tax_data': tax_data,
+                        }
+                        for _base_line, taxes_data in values['base_line_x_taxes_data']
+                        for tax_data in taxes_data
+                    ]
+                    amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                        precision_digits=delta_currency.decimal_places,
+                        delta_amount=delta_total_tax_amount,
+                        target_factors=target_factors,
+                    )
+                    for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                        tax_data = target_factor['tax_data']
+                        tax_data[f'tax_amount{delta_currency_indicator}'] += amount_to_distribute
+
+                # Base amount.
+                raw_total_base_amount = values[f'target_base_amount{delta_currency_indicator}']
+                if (mode == 'mixed' and price_include) or mode == 'included':
+                    raw_total_amount = raw_total_base_amount + raw_total_tax_amount
+                    rounded_raw_total_amount = delta_currency.round(raw_total_amount)
+                    total_amount = values[f'base_amount{delta_currency_indicator}'] + total_tax_amount + delta_total_tax_amount
+                    delta_total_base_amount = rounded_raw_total_amount - total_amount
+                elif (mode == 'mixed' and not price_include) or mode == 'excluded':
+                    rounded_raw_total_base_amount = delta_currency.round(raw_total_base_amount)
+                    total_base_amount = values[f'base_amount{delta_currency_indicator}']
+                    delta_total_base_amount = rounded_raw_total_base_amount - total_base_amount
+
+                if raw_total_base_amount:
+                    target_factors = [
+                        {
+                            'factor': tax_data[f'raw_base_amount{delta_currency_indicator}'],
+                            'tax_data': tax_data,
+                        }
+                        for _base_line, taxes_data in values['base_line_x_taxes_data']
+                        for tax_data in taxes_data
+                    ]
+                    amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                        precision_digits=delta_currency.decimal_places,
+                        delta_amount=delta_total_base_amount,
+                        target_factors=target_factors,
+                    )
+                    for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                        tax_data = target_factor['tax_data']
+                        tax_data[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
+
+    @api.model
+    def _round_tax_details_base_lines(self, base_lines, company, mode='mixed'):
+        """ Additional global rounding depending on if the taxes are included or excluded in price.
+
+        This method does not modify the rounding in `taxes_data`, rather it computes an adjustment
+        for `tax_details['total_excluded{_currency}']` and stores it as `tax_details['delta_total_excluded{_currency}']`.
+
+        Suppose all taxes are price-included.
+        Suppose two price-included taxes of 10%.
+        Suppose a line having price_unit=100.0.
+        The tax amount is computed as 100.0 / 1.2 * 0.1 = 8.333333333
+        The base amount is computed as 100.0 - (2 * 8.333333333) = 83.333333334
+        Without doing anything, we end up with a base of 83.33 and 2 * 8.33 as tax amounts.
+        83.33 + 8.33 + 8.33 = 99.99.
+        However, since all tax are price-included, we expect a base amount of 83.34 to reach the
+        original 100.0.
+
+        Manage price-excluded taxes.
+        Suppose 2 lines, both having quantity=12.12, price_unit=12.12, tax=23%
+        The base amount of each line is computed as round(12.12 * 12.12) = 146.89
+        The expected base amount of the whole document is round(12.12 * 12.12 * 2) = 293.79
+        The delta in term of base amount is 293.79 - 146.89 - 146.89 = 0.01
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:             The company owning the base lines.
+        :param mode:                The mode to round taxes:
+            * excluded:                 Round base and tax independently.
+            * included:                 Round base + tax, then subtract the tax and round the base according the remaining amount.
+            * mixed:                    Round 'excluded' or 'included' depending if the tax is price-included or not.
+        """
+        def grouping_function(base_line, tax_data):
+            return {
+                'currency': base_line['currency_id'],
+                'is_refund': base_line['is_refund'],
+                'computation_key': base_line['computation_key'],
+            }
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            current_mode = mode
+            if mode == 'mixed':
+                current_mode = 'included'
+                for base_line, taxes_data in values['base_line_x_taxes_data']:
+                    if any(not tax_data['price_include'] for tax_data in taxes_data):
+                        current_mode = 'excluded'
+                        break
+
+            currency = grouping_key['currency']
+            for delta_currency_indicator, delta_currency in (
+                ('_currency', currency),
+                ('', company.currency_id),
+            ):
+                if current_mode == 'excluded':
+                    # Price-excluded rounding.
+                    raw_total_excluded = values[f'target_total_excluded{delta_currency_indicator}']
+                    if not raw_total_excluded:
+                        continue
+
+                    rounded_raw_total_excluded = delta_currency.round(raw_total_excluded)
+                    total_excluded = values[f'total_excluded{delta_currency_indicator}']
+                    delta_total_excluded = rounded_raw_total_excluded - total_excluded
+                    target_factors = [
+                        {
+                            'factor': base_line['tax_details'][f'raw_total_excluded{delta_currency_indicator}'],
+                            'base_line': base_line,
+                        }
+                        for base_line, _taxes_data in values['base_line_x_taxes_data']
+                    ]
+                else:
+                    # Price-included rounding.
+                    raw_total_included = (
+                        values[f'target_total_excluded{delta_currency_indicator}']
+                        + values[f'target_tax_amount{delta_currency_indicator}']
+                    )
+                    if not raw_total_included:
+                        continue
+
+                    rounded_raw_total_included = delta_currency.round(raw_total_included)
+                    total_included = (
+                        values[f'total_excluded{delta_currency_indicator}']
+                        + values[f'tax_amount{delta_currency_indicator}']
+                    )
+                    delta_total_excluded = rounded_raw_total_included - total_included
+                    target_factors = [
+                        {
+                            'factor': base_line['tax_details'][f'raw_total_included{delta_currency_indicator}'],
+                            'base_line': base_line,
+                        }
+                        for base_line, _taxes_data in values['base_line_x_taxes_data']
+                    ]
+
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=delta_currency.decimal_places,
+                    delta_amount=delta_total_excluded,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    base_line = target_factor['base_line']
+                    base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
+
+    @api.model
+    def _round_tax_details_tax_amounts_from_tax_lines(self, base_lines, company, tax_lines):
+        """ If tax lines are provided, the totals will be aggregated according them.
+        At this point, everything is rounded and won't change anymore.
+
+        [!] Only added python-side.
+
+        :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:             The company owning the base lines.
+        :param tax_lines:           A optional list of base lines generated using the '_prepare_tax_line_for_taxes_computation'
+                                    method. If specified, the tax amounts will be computed based on those existing tax lines.
+                                    It's used to keep the manual tax amounts set by the user.
+        """
+        if not tax_lines:
+            return
+
+        total_per_tax_line_key = defaultdict(lambda: {
+            'currency': None,
+            'tax_amount_currency': 0.0,
+            'tax_amount': 0.0,
+        })
+        for tax_line in tax_lines:
+            tax_rep = tax_line['tax_repartition_line_id']
+            sign = tax_line['sign']
+            tax = tax_rep.tax_id
+            currency = tax_line['currency_id']
+            tax_line_key = (tax.id, currency.id, tax_rep.document_type == 'refund')
+            total_per_tax_line_key[tax_line_key]['currency'] = currency
+            total_per_tax_line_key[tax_line_key]['tax_amount_currency'] += sign * tax_line['amount_currency']
+            total_per_tax_line_key[tax_line_key]['tax_amount'] += sign * tax_line['balance']
+
+        def grouping_function(base_line, tax_data):
+            if not tax_data:
+                return
+            return {
+                'tax': tax_data['tax'],
+                'currency': base_line['currency_id'],
+                'is_refund': base_line['is_refund'],
+            }
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            if not grouping_key:
+                continue
+
+            currency = grouping_key['currency']
+            tax_line_key = (grouping_key['tax'].id, currency.id, grouping_key['is_refund'])
+            if tax_line_key not in total_per_tax_line_key:
+                continue
+
+            for delta_currency_indicator, delta_currency in (
+                ('_currency', currency),
+                ('', company.currency_id),
+            ):
+                current_total_tax_amount = values[f'tax_amount{delta_currency_indicator}']
+                if not current_total_tax_amount:
+                    continue
+
+                target_total_tax_amount = total_per_tax_line_key[tax_line_key][f'tax_amount{delta_currency_indicator}']
+                delta_total_tax_amount = target_total_tax_amount - current_total_tax_amount
+
+                target_factors = [
+                    {
+                        'factor': tax_data[f'tax_amount{delta_currency_indicator}'],
+                        'tax_data': tax_data,
+                    }
+                    for _base_line, taxes_data in values['base_line_x_taxes_data']
+                    for tax_data in taxes_data
+                ]
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=delta_currency.decimal_places,
+                    delta_amount=delta_total_tax_amount,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    tax_data = target_factor['tax_data']
+                    tax_data[f'tax_amount{delta_currency_indicator}'] += amount_to_distribute
+
+    @api.model
     def _round_base_lines_tax_details(self, base_lines, company, tax_lines=None):
         """ Round the 'tax_details' added to base_lines with the '_add_accounting_data_to_base_line_tax_details'.
         This method performs all the rounding and take care of rounding issues that could appear when using the
@@ -1825,384 +2138,58 @@ class AccountTax(models.Model):
                                     method. If specified, the tax amounts will be computed based on those existing tax lines.
                                     It's used to keep the manual tax amounts set by the user.
         """
-        total_per_tax = defaultdict(lambda: {
-            'base_amount_currency': 0.0,
-            'base_amount': 0.0,
-            'raw_base_amount_currency': 0.0,
-            'raw_base_amount': 0.0,
-            'tax_amount_currency': 0.0,
-            'tax_amount': 0.0,
-            'raw_tax_amount_currency': 0.0,
-            'raw_tax_amount': 0.0,
-            'raw_total_amount_currency': 0.0,
-            'raw_total_amount': 0.0,
-            'base_lines': [],
-        })
-        total_per_base = defaultdict(lambda: {
-            'base_amount_currency': 0.0,
-            'base_amount': 0.0,
-            'raw_base_amount_currency': 0.0,
-            'raw_base_amount': 0.0,
-            'tax_amount_currency': 0.0,
-            'tax_amount': 0.0,
-            'raw_total_amount_currency': 0.0,
-            'raw_total_amount': 0.0,
-            'base_lines': [],
-        })
-        map_total_per_tax_key_x_for_tax_line_key = defaultdict(set)
-        country_code = company.account_fiscal_country_id.code
-
+        # Raw rounding.
         for base_line in base_lines:
-            currency = base_line['currency_id']
-            computation_key = base_line['computation_key']
+            tax_details = base_line['tax_details']
+
+            for suffix, currency in (('_currency', base_line['currency_id']), ('', company.currency_id)):
+                total_excluded_field = f'total_excluded{suffix}'
+                tax_details[total_excluded_field] = currency.round(tax_details[f'raw_{total_excluded_field}'])
+
+                for tax_data in tax_details['taxes_data']:
+                    for prefix in ('base', 'tax'):
+                        field = f'{prefix}_amount{suffix}'
+                        tax_data[field] = currency.round(tax_data[f'raw_{field}'])
+
+        # Apply 'manual_tax_amounts'.
+        for base_line in base_lines:
             manual_tax_amounts = base_line['manual_tax_amounts']
             rate = base_line['rate']
             tax_details = base_line['tax_details']
-            taxes_data = tax_details['taxes_data']
-            tax_details['delta_total_excluded_currency'] = 0.0
-            tax_details['delta_total_excluded'] = 0.0
 
-            # If there are taxes on it, account the amounts from taxes_data.
-            for index, tax_data in enumerate(taxes_data):
-                tax = tax_data['tax']
-                reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
+            for suffix, currency in (('_currency', base_line['currency_id']), ('', company.currency_id)):
+                total_field = f'total_excluded{suffix}'
+                manual_field = f'manual_{total_field}'
+                if base_line[manual_field] is not None:
+                    tax_details[total_field] = base_line[manual_field]
+                    if suffix == '_currency' and rate:
+                        tax_details['total_excluded'] = company.currency_id.round(tax_details[total_field] / rate)
 
-                tax_data['base_amount_currency'] = currency.round(tax_data['raw_base_amount_currency'])
-                tax_data['base_amount'] = company.currency_id.round(tax_data['raw_base_amount'])
-                current_manual_tax_amounts = manual_tax_amounts and manual_tax_amounts.get(str(tax.id)) or {}
-                if 'base_amount_currency' in current_manual_tax_amounts:
-                    raw_base_amount_currency = current_manual_tax_amounts['base_amount_currency']
-                    raw_base_amount = raw_base_amount_currency / rate if rate else 0.0
-                    base_amount_currency = currency.round(raw_base_amount_currency)
-                    base_amount = company.currency_id.round(raw_base_amount)
-                    tax_data['base_amount_currency'] = base_amount_currency
-                    tax_data['base_amount'] = base_amount
-                else:
-                    raw_base_amount_currency = tax_data['raw_base_amount_currency']
-                    raw_base_amount = tax_data['raw_base_amount']
-                if 'base_amount' in current_manual_tax_amounts:
-                    raw_base_amount = current_manual_tax_amounts['base_amount']
-                    base_amount = company.currency_id.round(raw_base_amount)
-                    tax_data['base_amount'] = base_amount
+                for tax_data in tax_details['taxes_data']:
+                    tax = tax_data['tax']
+                    reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
+                    current_manual_tax_amounts = manual_tax_amounts and manual_tax_amounts.get(str(tax.id)) or {}
+                    for prefix, factor in (('base', 1), ('tax', reverse_charge_sign)):
+                        field = f'{prefix}_amount{suffix}'
+                        if field in current_manual_tax_amounts:
+                            tax_data[field] = currency.round(factor * current_manual_tax_amounts[field])
+                            if suffix == '_currency' and rate:
+                                tax_data[f'{prefix}_amount'] = company.currency_id.round(tax_data[field] / rate)
 
-                if index == 0:
-                    tax_details['total_excluded_currency'] = tax_details['total_included_currency'] = tax_data['base_amount_currency']
-                    tax_details['total_excluded'] = tax_details['total_included'] = tax_data['base_amount']
+        # Compute 'total_included' & add 'delta_total_excluded'.
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
 
-                if 'tax_amount_currency' in current_manual_tax_amounts:
-                    raw_tax_amount_currency = currency.round(reverse_charge_sign * current_manual_tax_amounts['tax_amount_currency'])
-                    raw_tax_amount = company.currency_id.round(raw_tax_amount_currency / rate) if rate else 0.0
-                else:
-                    raw_tax_amount_currency = tax_data['raw_tax_amount_currency']
-                    raw_tax_amount = tax_data['raw_tax_amount']
-                if 'tax_amount' in current_manual_tax_amounts:
-                    raw_tax_amount = currency.round(reverse_charge_sign * current_manual_tax_amounts['tax_amount'])
-                tax_data['tax_amount_currency'] = currency.round(raw_tax_amount_currency)
-                tax_data['tax_amount'] = company.currency_id.round(raw_tax_amount)
-                tax_details['total_included_currency'] += tax_data['tax_amount_currency']
-                tax_details['total_included'] += tax_data['tax_amount']
+            for suffix in ('_currency', ''):
+                tax_details[f'delta_total_excluded{suffix}'] = 0.0
+                tax_details[f'total_included{suffix}'] = tax_details[f'total_excluded{suffix}']
 
-                tax_rounding_key = (tax, currency, base_line['is_refund'], tax_data['is_reverse_charge'], computation_key)
-                tax_line_key = (tax, currency, base_line['is_refund'])
-                map_total_per_tax_key_x_for_tax_line_key[tax_line_key].add(tax_rounding_key)
-                tax_amounts = total_per_tax[tax_rounding_key]
-                tax_amounts['tax_amount_currency'] += tax_data['tax_amount_currency']
-                tax_amounts['raw_tax_amount_currency'] += raw_tax_amount_currency
-                tax_amounts['tax_amount'] += tax_data['tax_amount']
-                tax_amounts['raw_tax_amount'] += raw_tax_amount
-                tax_amounts['base_amount_currency'] += tax_data['base_amount_currency']
-                tax_amounts['raw_base_amount_currency'] += raw_base_amount_currency
-                tax_amounts['base_amount'] += tax_data['base_amount']
-                tax_amounts['raw_base_amount'] += raw_base_amount
-                tax_amounts['raw_total_amount_currency'] += raw_base_amount_currency + raw_tax_amount_currency
-                tax_amounts['raw_total_amount'] += raw_base_amount + raw_tax_amount
-                if not base_line['special_type']:
-                    tax_amounts['base_lines'].append(base_line)
+                for tax_data in tax_details['taxes_data']:
+                    tax_details[f'total_included{suffix}'] += tax_data[f'tax_amount{suffix}']
 
-                base_rounding_key = (currency, base_line['is_refund'], computation_key)
-                base_amounts = total_per_base[base_rounding_key]
-                base_amounts['tax_amount_currency'] += tax_data['tax_amount_currency']
-                base_amounts['tax_amount'] += tax_data['tax_amount']
-                base_amounts['raw_total_amount_currency'] += raw_tax_amount_currency
-                base_amounts['raw_total_amount'] += raw_tax_amount
-                if index == 0:
-                    base_amounts['base_amount_currency'] += tax_data['base_amount_currency']
-                    base_amounts['raw_base_amount_currency'] += raw_base_amount_currency
-                    base_amounts['base_amount'] += tax_data['base_amount']
-                    base_amounts['raw_base_amount'] += raw_base_amount
-                    base_amounts['raw_total_amount_currency'] += raw_base_amount_currency
-                    base_amounts['raw_total_amount'] += raw_base_amount
-                    if not base_line['special_type']:
-                        base_amounts['base_lines'].append(base_line)
-
-            # If not, just account the base amounts.
-            if not taxes_data:
-                tax_details['total_excluded_currency'] = tax_details['total_included_currency'] = currency.round(tax_details['raw_total_excluded_currency'])
-                tax_details['total_excluded'] = tax_details['total_included'] = company.currency_id.round(tax_details['raw_total_excluded'])
-
-                tax_rounding_key = (None, currency, base_line['is_refund'], False, computation_key)
-                tax_amounts = total_per_tax[tax_rounding_key]
-                tax_amounts['base_amount_currency'] += tax_details['total_excluded_currency']
-                tax_amounts['raw_base_amount_currency'] += tax_details['raw_total_excluded_currency']
-                tax_amounts['base_amount'] += tax_details['total_excluded']
-                tax_amounts['raw_base_amount'] += tax_details['raw_total_excluded']
-                tax_amounts['raw_total_amount_currency'] += tax_details['raw_total_excluded_currency']
-                tax_amounts['raw_total_amount'] += tax_details['raw_total_excluded']
-                if not base_line['special_type']:
-                    tax_amounts['base_lines'].append(base_line)
-
-                base_rounding_key = (currency, base_line['is_refund'], computation_key)
-                base_amounts = total_per_base[base_rounding_key]
-                base_amounts['base_amount_currency'] += tax_details['total_excluded_currency']
-                base_amounts['raw_base_amount_currency'] += tax_details['raw_total_excluded_currency']
-                base_amounts['base_amount'] += tax_details['total_excluded']
-                base_amounts['raw_base_amount'] += tax_details['raw_total_excluded']
-                base_amounts['raw_total_amount_currency'] += tax_details['raw_total_excluded_currency']
-                base_amounts['raw_total_amount'] += tax_details['raw_total_excluded']
-                if not base_line['special_type']:
-                    base_amounts['base_lines'].append(base_line)
-
-        # Round 'total_per_tax'.
-        for (_tax, currency, _is_refund, _is_reverse_charge, computation_key), tax_amounts in total_per_tax.items():
-            tax_amounts['raw_tax_amount_currency'] = currency.round(tax_amounts['raw_tax_amount_currency'])
-            tax_amounts['raw_tax_amount'] = company.currency_id.round(tax_amounts['raw_tax_amount'])
-            tax_amounts['raw_base_amount_currency'] = currency.round(tax_amounts['raw_base_amount_currency'])
-            tax_amounts['raw_base_amount'] = company.currency_id.round(tax_amounts['raw_base_amount'])
-            tax_amounts['raw_total_amount_currency'] = currency.round(tax_amounts['raw_total_amount_currency'])
-            tax_amounts['raw_total_amount'] = company.currency_id.round(tax_amounts['raw_total_amount'])
-
-        # Round 'total_per_base'.
-        for (currency, _is_refund, _computation_key), base_amounts in total_per_base.items():
-            base_amounts['raw_base_amount_currency'] = currency.round(base_amounts['raw_base_amount_currency'])
-            base_amounts['raw_base_amount'] = company.currency_id.round(base_amounts['raw_base_amount'])
-            base_amounts['raw_total_amount_currency'] = currency.round(base_amounts['raw_total_amount_currency'])
-            base_amounts['raw_total_amount'] = company.currency_id.round(base_amounts['raw_total_amount'])
-
-        # If tax lines are provided, the totals will be aggregated according them.
-        # Note: there is no managment of custom tax lines js-side.
-        if tax_lines:
-            # Aggregate the tax lines all together under the 'tax_line_key'.
-            # Since the 'rounding_key' is not similar as 'tax_line_key' because we are not able to recover all
-            # the key from an accounting tax lines, we have to map both and dispatch somehow the delta in term of
-            # base and tax amounts.
-            total_per_tax_line_key = defaultdict(lambda: {
-                'tax_amount_currency': 0.0,
-                'tax_amount': 0.0,
-            })
-            for tax_line in tax_lines:
-                tax_rep = tax_line['tax_repartition_line_id']
-                sign = tax_line['sign']
-                tax = tax_rep.tax_id
-                currency = tax_line['currency_id']
-                tax_line_key = (tax, currency, tax_rep.document_type == 'refund')
-                total_per_tax_line_key[tax_line_key]['tax_amount_currency'] += sign * tax_line['amount_currency']
-                total_per_tax_line_key[tax_line_key]['tax_amount'] += sign * tax_line['balance']
-
-            # Reflect the difference to 'total_per_tax'.
-            for tax_line_key, tax_line_amounts in total_per_tax_line_key.items():
-                raw_tax_amount_currency = 0.0
-                raw_tax_amount = 0.0
-                rounding_keys = map_total_per_tax_key_x_for_tax_line_key[tax_line_key]
-                if not rounding_keys:
-                    continue
-
-                for tax_rounding_key in rounding_keys:
-                    raw_tax_amount_currency += total_per_tax[tax_rounding_key]['raw_tax_amount_currency']
-                    raw_tax_amount += total_per_tax[tax_rounding_key]['raw_tax_amount']
-                delta_raw_tax_amount_currency = tax_line_amounts['tax_amount_currency'] - raw_tax_amount_currency
-                delta_raw_tax_amount = tax_line_amounts['tax_amount'] - raw_tax_amount
-                biggest_total_per_tax = max(
-                    [
-                        total_per_tax[rounding_key]
-                        for rounding_key in rounding_keys
-                    ],
-                    key=lambda total_per_tax_amounts: total_per_tax_amounts['raw_tax_amount_currency'],
-                )
-                biggest_total_per_tax['raw_tax_amount_currency'] += delta_raw_tax_amount_currency
-                biggest_total_per_tax['raw_tax_amount'] += delta_raw_tax_amount
-
-                # Suppose a vendor bill of 123.0 with 23% tax.
-                # Your total amounts are 123.0 for the base, 28.29 for the tax and a total of 151.29.
-                # If the tax line says a tax amount of 28.30, we want the total to be 151.30.
-                # So we have to increase the total too since the Portugal computation is based on it.
-                if country_code == 'PT' and delta_raw_tax_amount_currency:
-                    total_per_tax[tax_rounding_key]['raw_total_amount_currency'] += delta_raw_tax_amount_currency
-                    total_per_tax[tax_rounding_key]['raw_total_amount'] += delta_raw_tax_amount
-
-                    base_rounding_key = (tax_line_key[1], tax_rep.document_type == 'refund', tax_rounding_key[4])
-                    total_per_base[base_rounding_key]['raw_total_amount_currency'] += delta_raw_tax_amount_currency
-                    total_per_base[base_rounding_key]['raw_total_amount'] += delta_raw_tax_amount
-
-        # Dispatch the delta in term of tax amounts across the tax details when dealing with the 'round_globally' method.
-        # Suppose 2 lines:
-        # - quantity=12.12, price_unit=12.12, tax=23%
-        # - quantity=12.12, price_unit=12.12, tax=23%
-        # The tax of each line is computed as round(12.12 * 12.12 * 0.23) = 33.79
-        # The expected tax amount of the whole document is round(12.12 * 12.12 * 0.23 * 2) = 67.57
-        # The delta in term of tax amount is 67.57 - 33.79 - 33.79 = -0.01
-        for (tax, currency, _is_refund, is_reverse_charge, _computation_key), tax_amounts in total_per_tax.items():
-            if not tax_amounts['base_lines']:
-                continue
-
-            tax_amounts['sorted_base_line_x_tax_data'] = [
-                (
-                    base_line,
-                    next(
-                        (
-                            (index, tax_data)
-                            for index, tax_data in enumerate(base_line['tax_details']['taxes_data'])
-                            if tax_data['tax'] == tax and tax_data['is_reverse_charge'] == is_reverse_charge
-                        ),
-                        None,
-                    )
-                )
-                for base_line in sorted(
-                    tax_amounts['base_lines'],
-                    key=lambda base_line: (bool(base_line['special_type']), -base_line['tax_details']['total_included_currency']),
-                )
-            ]
-            tax_amounts['total_included_currency'] = sum(
-                abs(base_line['tax_details']['total_included_currency'])
-                for base_line in tax_amounts['base_lines']
-            )
-            if not tax or not tax_amounts['total_included_currency']:
-                continue
-
-            for delta_field, delta_currency in (
-                ('tax_amount_currency', currency),
-                ('tax_amount', company.currency_id),
-            ):
-                delta_amount = tax_amounts[f'raw_{delta_field}'] - tax_amounts[delta_field]
-                target_factors = [
-                    {
-                        'factor': base_line['tax_details']['total_included_currency'],
-                        'base_line': base_line,
-                        'index_tax_data': index_tax_data,
-                    }
-                    for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']
-                    if index_tax_data
-                ]
-                amounts_to_distribute = self._distribute_delta_amount_smoothly(
-                    precision_digits=delta_currency.decimal_places,
-                    delta_amount=delta_amount,
-                    target_factors=target_factors,
-                )
-                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                    base_line = target_factor['base_line']
-                    index, tax_data = target_factor['index_tax_data']
-                    tax_data[delta_field] += amount_to_distribute
-                    tax_amounts[delta_field] += amount_to_distribute
-
-                    if index == 0:
-                        base_rounding_key = (currency, base_line['is_refund'], base_line['computation_key'])
-                        base_amounts = total_per_base[base_rounding_key]
-                        base_amounts[delta_field] += amount_to_distribute
-
-        # Dispatch the delta of base amounts across the base lines.
-        # Suppose 2 lines:
-        # - quantity=12.12, price_unit=12.12, tax=23%
-        # - quantity=12.12, price_unit=12.12, tax=23%
-        # The base amount of each line is computed as round(12.12 * 12.12) = 146.89
-        # The expected base amount of the whole document is round(12.12 * 12.12 * 2) = 293.79
-        # The delta in term of base amount is 293.79 - 146.89 - 146.89 = 0.01
-        for (tax, currency, _is_refund, _is_reverse_charge, _computation_key), tax_amounts in total_per_tax.items():
-            if not tax_amounts.get('sorted_base_line_x_tax_data') or not tax_amounts.get('total_included_currency'):
-                continue
-
-            for delta_currency_indicator, delta_currency in (
-                ('_currency', currency),
-                ('', company.currency_id),
-            ):
-                if country_code == 'PT':
-                    delta_amount = (
-                        tax_amounts[f'raw_total_amount{delta_currency_indicator}']
-                        - tax_amounts[f'base_amount{delta_currency_indicator}']
-                        - tax_amounts[f'tax_amount{delta_currency_indicator}']
-                    )
-                else:
-                    delta_amount = tax_amounts[f'raw_base_amount{delta_currency_indicator}'] - tax_amounts[f'base_amount{delta_currency_indicator}']
-
-                target_factors = [
-                    {
-                        'factor': base_line['tax_details']['total_included_currency'],
-                        'base_line': base_line,
-                        'index_tax_data': index_tax_data,
-                    }
-                    for base_line, index_tax_data in tax_amounts['sorted_base_line_x_tax_data']
-                ]
-                amounts_to_distribute = self._distribute_delta_amount_smoothly(
-                    precision_digits=delta_currency.decimal_places,
-                    delta_amount=delta_amount,
-                    target_factors=target_factors,
-                )
-                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                    base_line = target_factor['base_line']
-                    tax_details = base_line['tax_details']
-                    index_tax_data = target_factor['index_tax_data']
-                    if index_tax_data:
-                        _index, tax_data = index_tax_data
-                        tax_data[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
-                    else:
-                        tax_details[f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
-
-                        base_rounding_key = (currency, base_line['is_refund'], base_line['computation_key'])
-                        base_amounts = total_per_base[base_rounding_key]
-                        base_amounts[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
-
-        # Dispatch the delta of base amounts accross the base lines.
-        # Suppose 2 lines:
-        # - quantity=12.12, price_unit=12.12, tax=23%
-        # - quantity=12.12, price_unit=12.12, tax=13%
-        # The base amount of each line is computed as round(12.12 * 12.12) = 146.89
-        # The expected base amount of the whole document is round(12.12 * 12.12 * 2) = 293.79
-        # Currently, the base amount has already been rounded per tax. So the tax details for the whole document is currently:
-        # 23%: base = 146.89, tax = 33.79
-        # 13%: base = 146.89, tax = 19.1
-        # However, for the whole document, there is a delta in term of base amount: 293.79 - 146.89 - 146.89 = 0.01
-        # This delta won't be there in any base but still has to be accounted.
-        for (currency, _is_refund, _computation_key), base_amounts in total_per_base.items():
-            if not base_amounts['base_lines']:
-                continue
-
-            if country_code == 'PT':
-                delta_base_amount_currency = (
-                    base_amounts['raw_total_amount_currency']
-                    - base_amounts['base_amount_currency']
-                    - base_amounts['tax_amount_currency']
-                )
-                delta_base_amount = (
-                    base_amounts['raw_total_amount']
-                    - base_amounts['base_amount']
-                    - base_amounts['tax_amount']
-                )
-            else:
-                delta_base_amount_currency = base_amounts['raw_base_amount_currency'] - base_amounts['base_amount_currency']
-                delta_base_amount = base_amounts['raw_base_amount'] - base_amounts['base_amount']
-
-            if currency.is_zero(delta_base_amount_currency) and company.currency_id.is_zero(delta_base_amount):
-                continue
-
-            # Dispatch the base delta evenly on the base lines, starting from the biggest line.
-            factors = [{'factor': 1.0}] * len(base_amounts['base_lines'])
-            base_lines_sorted = sorted(
-                base_amounts['base_lines'],
-                key=lambda base_line: base_line['tax_details']['total_included_currency'],
-                reverse=True,
-            )
-            for delta_currency_indicator, currency, delta_amount in (
-                ('_currency', currency, delta_base_amount_currency),
-                ('', company.currency_id, delta_base_amount),
-            ):
-                amounts_to_distribute = self._distribute_delta_amount_smoothly(
-                    currency.decimal_places,
-                    delta_amount,
-                    factors,
-                )
-                for base_line, amount_to_distribute in zip(
-                    base_lines_sorted,
-                    amounts_to_distribute,
-                ):
-                    base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
+        self._round_tax_details_tax_amounts(base_lines, company)
+        self._round_tax_details_base_lines(base_lines, company)
+        self._round_tax_details_tax_amounts_from_tax_lines(base_lines, company, tax_lines)
 
     @api.model
     def _prepare_base_line_grouping_key(self, base_line):
@@ -2450,66 +2437,107 @@ class AccountTax(models.Model):
         :return: A mapping <grouping_key, amounts> where:
             grouping_key                is the grouping_key returned by the 'grouping_function' or 'None'.
             amounts                     is a dictionary containing:
-                base_amount_currency:       The base amount of this grouping key expressed in foreign currency.
-                base_amount:                The base amount of this grouping key expressed in local currency.
-                raw_base_amount_currency:   The base amount of this grouping key expressed in foreign currency before any rounding.
-                raw_base_amount:            The base amount of this grouping key expressed in local currency before any rounding.
-                tax_amount_currency:        The tax amount of this grouping key expressed in foreign currency.
-                tax_amount:                 The tax amount of this grouping key expressed in local currency.
-                raw_tax_amount_currency:    The tax amount of this grouping key expressed in foreign currency before any rounding.
-                raw_tax_amount:             The tax amount of this grouping key expressed in local currency before any rounding.
-                total_excluded_currency:    The delta base amount for the base line involved in this grouping key expressed
-                                            in foreign currency.
-                total_excluded:             The delta base amount for the base line involved in this grouping key expressed
-                                            in local currency.
-                taxes_data:                 The subset of base_line['tax_details']['taxes_data'] aggregated under this grouping_key.
+                base_amount_currency:           The base amount of this grouping key expressed in foreign currency.
+                base_amount:                    The base amount of this grouping key expressed in local currency.
+                raw_base_amount_currency:       The base amount of this grouping key expressed in foreign currency before any rounding.
+                raw_base_amount:                The base amount of this grouping key expressed in local currency before any rounding.
+                target_base_amount_currency:    The same as 'raw_base_amount_currency' but considering the manual amounts.
+                target_base_amount:             The same as 'raw_base_amount' but considering the manual amounts.
+                tax_amount_currency:            The tax amount of this grouping key expressed in foreign currency.
+                tax_amount:                     The tax amount of this grouping key expressed in local currency.
+                raw_tax_amount_currency:        The tax amount of this grouping key expressed in foreign currency before any rounding.
+                raw_tax_amount:                 The tax amount of this grouping key expressed in local currency before any rounding.
+                target_tax_amount_currency:     The same as 'raw_tax_amount_currency' but considering the manual amounts.
+                target_tax_amount:              The same as 'raw_tax_amount' but considering the manual amounts.
+                total_excluded_currency:        The delta base amount for the base line involved in this grouping key expressed
+                                                in foreign currency.
+                total_excluded:                 The delta base amount for the base line involved in this grouping key expressed
+                                                in local currency.
+                raw_total_excluded_currency:    The delta base amount for the base line involved in this grouping key expressed
+                                                in foreign currency before any rounding.
+                raw_total_excluded:             The delta base amount for the base line involved in this grouping key expressed
+                                                in local currency before any rounding.
+                target_total_excluded_currency: The same as 'raw_total_excluded_currency' but considering the manual amounts.
+                target_total_excluded:          The same as 'raw_total_excluded' but considering the manual amounts.
+                taxes_data:                     The subset of base_line['tax_details']['taxes_data'] aggregated under this grouping_key.
         """
-        values_per_grouping_key = defaultdict(lambda: {
-            'base_amount_currency': 0.0,
-            'base_amount': 0.0,
-            'raw_base_amount_currency': 0.0,
-            'raw_base_amount': 0.0,
-            'tax_amount_currency': 0.0,
-            'tax_amount': 0.0,
-            'raw_tax_amount_currency': 0.0,
-            'raw_tax_amount': 0.0,
-            'total_excluded_currency': 0.0,
-            'total_excluded': 0.0,
-            'taxes_data': [],
-        })
-
+        values_per_grouping_key = {}
         tax_details = base_line['tax_details']
         taxes_data = tax_details['taxes_data']
+        manual_tax_amounts = base_line['manual_tax_amounts']
+
         # If there are no taxes, we pass None to the grouping function.
         for tax_data in (taxes_data or [None]):
+            current_manual_tax_amounts = manual_tax_amounts and tax_data and manual_tax_amounts.get(str(tax_data['tax'].id)) or {}
+
             grouping_key = grouping_function(base_line, tax_data)
             if isinstance(grouping_key, dict):
                 grouping_key = frozendict(grouping_key)
-            already_accounted = grouping_key in values_per_grouping_key
-            values = values_per_grouping_key[grouping_key]
-            values['grouping_key'] = grouping_key
 
             # Base amount.
-            if not already_accounted:
-                values['total_excluded_currency'] += tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
-                values['total_excluded'] += tax_details['total_excluded'] + tax_details['delta_total_excluded']
-                if tax_data:
-                    values['base_amount_currency'] += tax_data['base_amount_currency']
-                    values['base_amount'] += tax_data['base_amount']
-                    values['raw_base_amount_currency'] += tax_data['raw_base_amount_currency']
-                    values['raw_base_amount'] += tax_data['raw_base_amount']
-                else:
-                    values['base_amount_currency'] += tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
-                    values['base_amount'] += tax_details['total_excluded'] + tax_details['delta_total_excluded']
-                    values['raw_base_amount_currency'] += tax_details['raw_total_excluded_currency']
-                    values['raw_base_amount'] += tax_details['raw_total_excluded']
+            if grouping_key not in values_per_grouping_key:
+                values = values_per_grouping_key[grouping_key] = {
+                    'grouping_key': grouping_key,
+                    'taxes_data': [],
+                }
+                for suffix in ('_currency', ''):
+                    excluded_rounded_field = f'total_excluded{suffix}'
+                    excluded_delta_field = f'delta_{excluded_rounded_field}'
+                    excluded_raw_field = f'raw_{excluded_rounded_field}'
+                    excluded_target_field = f'target_{excluded_rounded_field}'
+                    excluded_manual_field = f'manual_{excluded_rounded_field}'
+                    excluded_rounded_amount = tax_details[excluded_rounded_field] + tax_details[excluded_delta_field]
+                    excluded_raw_amount = tax_details[excluded_raw_field]
+                    values[excluded_rounded_field] = excluded_rounded_amount
+                    values[excluded_raw_field] = excluded_raw_amount
+                    if base_line[excluded_manual_field] is not None:
+                        excluded_target_amount = base_line[excluded_manual_field]
+                    elif not suffix and base_line['manual_total_excluded_currency'] is not None:
+                        excluded_target_amount = excluded_rounded_amount
+                    else:
+                        excluded_target_amount = excluded_raw_amount
+                    values[excluded_target_field] = excluded_target_amount
+
+                    tax_base_rounded_field = f'base_amount{suffix}'
+                    tax_base_raw_field = f'raw_{tax_base_rounded_field}'
+                    tax_base_target_field = f'target_{tax_base_rounded_field}'
+                    if tax_data:
+                        values[tax_base_rounded_field] = tax_data[tax_base_rounded_field]
+                        values[tax_base_raw_field] = tax_data[tax_base_raw_field]
+                        if tax_base_rounded_field in current_manual_tax_amounts:
+                            values[tax_base_target_field] = current_manual_tax_amounts[tax_base_rounded_field]
+                        elif not suffix and 'base_amount_currency' in current_manual_tax_amounts:
+                            values[tax_base_target_field] = tax_data[tax_base_rounded_field]
+                        else:
+                            values[tax_base_target_field] = tax_data[tax_base_raw_field]
+                    else:
+                        values[tax_base_rounded_field] = excluded_rounded_amount
+                        values[tax_base_raw_field] = excluded_raw_amount
+                        values[tax_base_target_field] = excluded_target_amount
+
+                    tax_rounded_field = f'tax_amount{suffix}'
+                    tax_raw_field = f'raw_{tax_rounded_field}'
+                    tax_target_field = f'target_{tax_rounded_field}'
+                    values[tax_rounded_field] = 0.0
+                    values[tax_raw_field] = 0.0
+                    values[tax_target_field] = 0.0
 
             # Tax amount.
             if tax_data:
-                values['tax_amount_currency'] += tax_data['tax_amount_currency']
-                values['tax_amount'] += tax_data['tax_amount']
-                values['raw_tax_amount_currency'] += tax_data['raw_tax_amount_currency']
-                values['raw_tax_amount'] += tax_data['raw_tax_amount']
+                reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
+                values = values_per_grouping_key[grouping_key]
+                for suffix in ('_currency', ''):
+                    tax_rounded_field = f'tax_amount{suffix}'
+                    tax_raw_field = f'raw_{tax_rounded_field}'
+                    tax_target_field = f'target_{tax_rounded_field}'
+                    values[tax_rounded_field] += tax_data[tax_rounded_field]
+                    values[tax_raw_field] += tax_data[tax_raw_field]
+                    if tax_rounded_field in current_manual_tax_amounts:
+                        values[tax_target_field] += reverse_charge_sign * current_manual_tax_amounts[tax_rounded_field]
+                    elif not suffix and 'tax_amount_currency' in current_manual_tax_amounts:
+                        values[tax_target_field] = tax_data[tax_rounded_field]
+                    else:
+                        values[tax_target_field] += tax_data[tax_raw_field]
                 values['taxes_data'].append(tax_data)
 
         return values_per_grouping_key
@@ -2559,23 +2587,16 @@ class AccountTax(models.Model):
                 base_line_x_taxes_data:     A list of tuple <base_line, taxes_data> that associates for each base_line the
                                             subset of base_line['tax_details']['taxes_data'] aggregated under this grouping_key.
         """
-        default_float_fields = {
-            'base_amount_currency',
-            'base_amount',
-            'raw_base_amount_currency',
-            'raw_base_amount',
-            'tax_amount_currency',
-            'tax_amount',
-            'raw_tax_amount_currency',
-            'raw_tax_amount',
-            'total_excluded_currency',
-            'total_excluded',
-        }
+        default_float_fields = set()
+        for prefix in ('', 'raw_', 'target_'):
+            for suffix in ('_currency', ''):
+                for field in ('base_amount', 'tax_amount', 'total_excluded'):
+                    default_float_fields.add(f'{prefix}{field}{suffix}')
+
         values_per_grouping_key = defaultdict(lambda: {
             **dict.fromkeys(default_float_fields, 0.0),
             'base_line_x_taxes_data': [],
         })
-
         for base_line, aggregated_values in base_lines_aggregated_values:
             for grouping_key, values in aggregated_values.items():
                 agg_values = values_per_grouping_key[grouping_key]
@@ -2583,7 +2604,6 @@ class AccountTax(models.Model):
                     agg_values[field] += values[field]
                 agg_values['grouping_key'] = grouping_key
                 agg_values['base_line_x_taxes_data'].append((base_line, values['taxes_data']))
-
         return values_per_grouping_key
 
     # -------------------------------------------------------------------------
@@ -2709,17 +2729,29 @@ class AccountTax(models.Model):
                     involved_taxes |= tax_data['tax']
 
             # Compute the display base amounts.
-            display_base_amount = values['base_amount']
-            display_base_amount_currency = values['base_amount_currency']
             if set(involved_taxes.mapped('amount_type')) == {'fixed'}:
                 display_base_amount = None
                 display_base_amount_currency = None
             elif set(involved_taxes.mapped('amount_type')) == {'division'} and all(involved_taxes.mapped('price_include')):
+                display_base_amount = 0.0
+                display_base_amount_currency = 0.0
                 for base_line, _taxes_data in values['base_line_x_taxes_data']:
-                    for tax_data in base_line['tax_details']['taxes_data']:
+                    tax_details = base_line['tax_details']
+                    display_base_amount += (
+                        tax_details['total_excluded']
+                        + tax_details['delta_total_excluded']
+                    )
+                    display_base_amount_currency += (
+                        tax_details['total_excluded_currency']
+                        + tax_details['delta_total_excluded_currency']
+                    )
+                    for tax_data in tax_details['taxes_data']:
                         if tax_data['tax'].amount_type == 'division':
                             display_base_amount_currency += tax_data['tax_amount_currency']
                             display_base_amount += tax_data['tax_amount']
+            else:
+                display_base_amount = values['base_amount']
+                display_base_amount_currency = values['base_amount_currency']
 
             if display_base_amount_currency is not None:
                 encountered_base_amounts.add(float_repr(display_base_amount_currency, currency.decimal_places))
@@ -3079,10 +3111,19 @@ class AccountTax(models.Model):
         :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will be considered.
         """
         for base_line in base_lines:
-            taxes_data = base_line['tax_details']['taxes_data']
+            tax_details = base_line['tax_details']
+            taxes_data = tax_details['taxes_data']
             if not taxes_data:
                 continue
 
+            base_line['manual_total_excluded_currency'] = (
+                tax_details['total_excluded_currency']
+                + tax_details['delta_total_excluded_currency']
+            )
+            base_line['manual_total_excluded'] = (
+                tax_details['total_excluded']
+                + tax_details['delta_total_excluded']
+            )
             base_line['manual_tax_amounts'] = {}
             for tax_data in taxes_data:
                 if filter_function and not filter_function(base_line, tax_data):
@@ -3311,6 +3352,8 @@ class AccountTax(models.Model):
                 price_unit=base_line['quantity'] * price_unit_after_discount,
                 quantity=1.0,
                 discount=0.0,
+                manual_total_excluded_currency=None,
+                manual_total_excluded=None,
                 manual_tax_amounts=None,
             )
             grouping_key = {'tax_ids': new_base_line['tax_ids']}
@@ -3510,11 +3553,11 @@ class AccountTax(models.Model):
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function_total)
         values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         total_amount_currency = sum(
-            values['base_amount_currency'] + values['tax_amount_currency']
+            values['total_excluded_currency'] + values['tax_amount_currency']
             for _grouping_key, values in values_per_grouping_key.items()
         )
         total_amount = sum(
-            values['base_amount'] + values['tax_amount']
+            values['total_excluded'] + values['tax_amount']
             for _grouping_key, values in values_per_grouping_key.items()
         )
 
@@ -3528,6 +3571,8 @@ class AccountTax(models.Model):
             grouping_key: {
                 'tax_amount_currency': values['tax_amount_currency'],
                 'tax_amount': values['tax_amount'],
+                'base_amount_currency': values['base_amount_currency'],
+                'base_amount': values['base_amount'],
             }
             for grouping_key, values in values_per_grouping_key.items()
             if grouping_key
@@ -3551,6 +3596,8 @@ class AccountTax(models.Model):
             grouping_key: {
                 'tax_amount_currency': currency.round(values['tax_amount_currency'] * sign * percentage),
                 'tax_amount': company.currency_id.round(values['tax_amount'] * sign * percentage),
+                'base_amount_currency': currency.round(values['base_amount_currency'] * sign * percentage),
+                'base_amount': company.currency_id.round(values['base_amount'] * sign * percentage),
             }
             for grouping_key, values in tax_amounts_per_tax.items()
         }
@@ -3592,46 +3639,79 @@ class AccountTax(models.Model):
             grouping_key: {
                 'tax_amount_currency': values['tax_amount_currency'],
                 'tax_amount': values['tax_amount'],
+                'base_amount_currency': values['base_amount_currency'],
+                'base_amount': values['base_amount'],
             }
             for grouping_key, values in values_per_grouping_key.items()
             if grouping_key
         }
         for tax_id_str, tax_amounts in current_tax_amounts_per_tax.items():
-            tax_amount_currency = tax_amounts['tax_amount_currency']
-            if not tax_amount_currency:
-                continue
-
-            for delta_suffix, delta_tax_amount, delta_currency in (
-                ('_currency', expected_tax_amounts[tax_id_str]['tax_amount_currency'] - tax_amounts['tax_amount_currency'], currency),
-                ('', expected_tax_amounts[tax_id_str]['tax_amount'] - tax_amounts['tax_amount'], company.currency_id),
+            for delta_suffix, delta_tax_amount, delta_base_amount, delta_currency in (
+                (
+                    '_currency',
+                    expected_tax_amounts[tax_id_str]['tax_amount_currency'] - tax_amounts['tax_amount_currency'],
+                    expected_tax_amounts[tax_id_str]['base_amount_currency'] - tax_amounts['base_amount_currency'],
+                    currency,
+                ),
+                (
+                    '',
+                    expected_tax_amounts[tax_id_str]['tax_amount'] - tax_amounts['tax_amount'],
+                    expected_tax_amounts[tax_id_str]['base_amount'] - tax_amounts['base_amount'],
+                    company.currency_id,
+                ),
             ):
-                target_factors = [
-                    {
-                        'factor': abs(tax_data['tax_amount_currency'] / tax_amount_currency),
-                        'base_line': base_line,
-                        'tax_data': tax_data,
-                    }
-                    for base_line in sorted_base_lines
-                    for tax_data in base_line['tax_details']['taxes_data']
-                    if str(tax_data['tax'].id) == tax_id_str
-                ]
-                amounts_to_distribute = self._distribute_delta_amount_smoothly(
-                    precision_digits=delta_currency.decimal_places,
-                    delta_amount=delta_tax_amount,
-                    target_factors=target_factors,
-                )
-                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                    tax_data = target_factor['tax_data']
-                    tax_data[f'tax_amount{delta_suffix}'] += amount_to_distribute
+                # Tax amount.
+                tax_amount_currency = tax_amounts['tax_amount_currency']
+                if tax_amount_currency:
+                    target_factors = [
+                        {
+                            'factor': abs(tax_data['tax_amount_currency'] / tax_amount_currency),
+                            'base_line': base_line,
+                            'tax_data': tax_data,
+                        }
+                        for base_line in sorted_base_lines
+                        for tax_data in base_line['tax_details']['taxes_data']
+                        if str(tax_data['tax'].id) == tax_id_str
+                    ]
+                    amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                        precision_digits=delta_currency.decimal_places,
+                        delta_amount=delta_tax_amount,
+                        target_factors=target_factors,
+                    )
+                    for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                        tax_data = target_factor['tax_data']
+                        tax_data[f'tax_amount{delta_suffix}'] += amount_to_distribute
+
+                # Base amount.
+                base_amount_currency = tax_amounts['base_amount_currency']
+                if base_amount_currency:
+                    target_factors = [
+                        {
+                            'factor': abs(tax_data['base_amount_currency'] / base_amount_currency),
+                            'base_line': base_line,
+                            'tax_data': tax_data,
+                        }
+                        for base_line in sorted_base_lines
+                        for tax_data in base_line['tax_details']['taxes_data']
+                        if str(tax_data['tax'].id) == tax_id_str
+                    ]
+                    amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                        precision_digits=delta_currency.decimal_places,
+                        delta_amount=delta_base_amount,
+                        target_factors=target_factors,
+                    )
+                    for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                        tax_data = target_factor['tax_data']
+                        tax_data[f'base_amount{delta_suffix}'] += amount_to_distribute
 
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(new_base_lines, grouping_function_total)
         values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         current_base_amount_currency = sum(
-            values['base_amount_currency']
+            values['total_excluded_currency']
             for _grouping_key, values in values_per_grouping_key.items()
         )
         current_base_amount = sum(
-            values['base_amount']
+            values['total_excluded']
             for _grouping_key, values in values_per_grouping_key.items()
         )
         for delta_suffix, delta_base_amount, delta_currency in (
@@ -3656,19 +3736,9 @@ class AccountTax(models.Model):
             for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                 base_line = target_factor['base_line']
                 tax_details = base_line['tax_details']
-                taxes_data = tax_details['taxes_data']
+                tax_details[f'delta_total_excluded{delta_suffix}'] += amount_to_distribute
                 if delta_suffix == '_currency':
                     base_line['price_unit'] += amount_to_distribute
-                if not taxes_data:
-                    continue
-
-                first_batch = taxes_data[0]['batch']
-                for tax_data in taxes_data:
-                    tax = tax_data['tax']
-                    if tax in first_batch:
-                        tax_data[f'base_amount{delta_suffix}'] += amount_to_distribute
-                    else:
-                        break
 
         return new_base_lines
 
