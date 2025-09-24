@@ -63,6 +63,9 @@ class SaleOrderLine(models.Model):
             or self.reward_id.reward_type == 'product'
         )
 
+    def _is_discount_line(self):
+        return super()._is_discount_line() or self.reward_id.reward_type == 'discount'
+
     def _reset_loyalty(self, complete=False):
         """
         Reset the line(s) to a state which does not impact reward computation.
