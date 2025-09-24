@@ -98,6 +98,7 @@ export class Composer extends Component {
         "type?",
         "showFullComposer?",
         "allowUpload?",
+        "disabled?",
     ];
     static template = "mail.Composer";
 
@@ -260,7 +261,7 @@ export class Composer extends Component {
     }
 
     get areAllActionsDisabled() {
-        return false;
+        return this.props.disabled;
     }
 
     get isMultiUpload() {

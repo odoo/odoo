@@ -44,8 +44,7 @@ declare module "models" {
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
     }
     export interface Thread {
-        composerDisabled: Readonly<boolean>;
-        composerDisabledText: Readonly<string>;
+        composerHidden: Readonly<boolean>;
         livechat_conversation_tag_ids: LivechatConversationTag[];
         livechat_end_dt: luxon.DateTime;
         livechat_operator_id: ResPartner;

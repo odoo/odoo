@@ -8,9 +8,9 @@
             </t>
         </xpath>
         <xpath expr="//Composer" position="replace">
-            <div t-if="thread?.composerDisabled" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerDisabledContainer">
+            <div t-if="thread?.composerHidden" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
                 <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
-                <span t-esc="thread.composerDisabledText"/>
+                <span>This livechat conversation has ended</span>
                 <span class="flex-grow-1"/>
             </div>
             <t t-else="">$0</t>

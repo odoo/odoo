@@ -3,7 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -81,6 +80,7 @@ patch(Thread.prototype, {
             },
         });
         this.requested_by_operator = false;
+        this._prevComposerDisabled = false;
     },
     /** @returns {boolean} */
     get isLastMessageFromCustomer() {
@@ -148,13 +148,20 @@ patch(Thread.prototype, {
         return message;
     },
 
-    get composerDisabled() {
+    get composerHidden() {
+        return (
+            super.composerHidden ||
+            this.livechat_end_dt ||
+            (this.chatbot?.completed && !this.chatbot?.forwarded)
+        );
+    },
+
+    computeComposerDisabled() {
         const step = this.chatbot?.currentStep;
         if (this.chatbot?.forwarded && !this.livechat_end_dt) {
             return false;
         }
         return (
-            super.composerDisabled ||
             this.chatbot?.isProcessingAnswer ||
             (step &&
                 !step.operatorFound &&
@@ -162,20 +169,10 @@ patch(Thread.prototype, {
         );
     },
 
-    get composerDisabledText() {
-        const text = super.composerDisabledText;
-        if (text || !this.chatbot) {
-            return text;
+    composerDisabledonUpdate() {
+        if (!this.composerDisabled && this._prevComposerDisabled) {
+            this.composer.autofocus++;
         }
-        if (this.chatbot.completed) {
-            return _t("This livechat conversation has ended");
-        }
-        if (
-            this.chatbot.currentStep?.step_type === "question_selection" &&
-            !this.chatbot.currentStep.selectedAnswer
-        ) {
-            return _t("Select an option above");
-        }
-        return _t("Say something");
+        this._prevComposerDisabled = this.composerDisabled;
     },
 });
