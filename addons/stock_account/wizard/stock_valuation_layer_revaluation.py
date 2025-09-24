@@ -156,8 +156,8 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         revaluation_svl_vals = []
 
-        previous_cost = product_id.standard_price
-        product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / product_id.quantity_svl
+        previous_cost = product_id.avg_cost or product_id.standard_price
+        product_id.with_context(disable_auto_svl=True).standard_price = previous_cost + (self.added_value / product_id.quantity_svl)
         new_cost = product_id.standard_price
 
         description_base = _("Manual Stock Valuation: %s.", self.reason or _("No Reason Given"))
