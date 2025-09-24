@@ -25,7 +25,7 @@ class PosOrder(models.Model):
 
     @api.depends('pricelist_id.currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
-        @lru_cache
+        @lru_cache()
         def get_rate(from_currency, to_currency, company, date):
             return self.env['res.currency']._get_conversion_rate(
                 from_currency=from_currency,
