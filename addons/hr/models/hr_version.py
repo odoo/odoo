@@ -39,16 +39,16 @@ class HrVersion(models.Model):
         )
 
     company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
-                                 store=True, default=lambda self: self.env.company)
+                                 store=True, default=lambda self: self.env.company, tracking=True)
     employee_id = fields.Many2one(
         'hr.employee',
         string='Employee',
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         index=True)
-    name = fields.Char()
+    name = fields.Char(tracking=True)
     display_name = fields.Char(compute='_compute_display_name')
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=True)
 
     date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
@@ -81,7 +81,7 @@ class HrVersion(models.Model):
 
     distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
-                                  compute="_compute_km_home_work", inverse="_inverse_km_home_work", store=True)
+                                  compute="_compute_km_home_work", inverse="_inverse_km_home_work", store=True, tracking=True)
     distance_home_work_unit = fields.Selection([
         ('kilometers', 'km'),
         ('miles', 'mi'),
@@ -113,7 +113,7 @@ class HrVersion(models.Model):
     job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
-    is_custom_job_title = fields.Boolean(default=False, groups="hr.group_hr_user")
+    is_custom_job_title = fields.Boolean(default=False, groups="hr.group_hr_user", tracking=True)
     address_id = fields.Many2one(
         'res.partner',
         string='Work Address',
@@ -127,7 +127,7 @@ class HrVersion(models.Model):
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
 
     resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=True)
@@ -141,7 +141,7 @@ class HrVersion(models.Model):
         'Contract End Date', tracking=True, help="End date of the contract (if it's a fixed-term contract).",
         groups="hr.group_hr_manager")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
-                                 groups="hr.group_hr_manager")
+                                 groups="hr.group_hr_manager", tracking=True)
     date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_start_date")
     date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_end_date")
     is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_manager")
