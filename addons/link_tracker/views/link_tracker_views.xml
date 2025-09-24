@@ -26,6 +26,10 @@
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
                 <form string="Website Link" duplicate="0">
+                    <header>
+                        <button name="action_download_qrcode" type="object" string="Download QR Code" class="btn-secondary"
+                            invisible="not id"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" icon="fa-sign-out" name="action_visit_page"
@@ -41,10 +45,11 @@
                         </div>
                         <div class="oe_title mw-100">
                             <label for="code" string="Link Tracker"/>
-                            <h2 class="d-flex flex-wrap fw-normal">
+                            <h2 invisible="not id" class="d-flex flex-wrap fw-normal">
                                 <field name="short_url_host" nolabel="1" readonly="1" class="text-break w-auto me-1"/>
-                                <field name="code" nolabel="1" readonly="not code" invisible="not code" class="o_input w-100 w-sm-50 w-lg-25"/>
+                                <field name="code" nolabel="1" readonly="not id" required="id" class="o_input w-100 w-sm-50 w-lg-25"/>
                             </h2>
+                            <h2 invisible="id" class="fw-normal">New Link Tracker</h2>
                         </div>
                         <group>
                             <group name="link" string="Link">

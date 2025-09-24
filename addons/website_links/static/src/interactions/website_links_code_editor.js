@@ -12,6 +12,9 @@ class WebsiteLinksCodeEditor extends Interaction {
             "t-on-click.prevent": this.onCopyToClipboardClick,
             "t-att-class": () => ({ "d-none": this.editing }),
         },
+        ".download-qr-code": {
+            "t-att-class": () => ({ "d-none": this.editing }),
+        },
         ".o_website_links_edit_code": {
             "t-on-click": this.onEditCodeClick,
             "t-att-class": () => ({ "d-none": this.editing }),
@@ -73,6 +76,14 @@ class WebsiteLinksCodeEditor extends Interaction {
         this.codeEl.replaceChildren(newCode);
         const host = this.el.querySelector("#short-url-host").textContent;
         this.copyButtonEl.dataset.clipboardText = `${host}${newCode}`;
+
+        const downloadQRButton = this.el.querySelector(".download-qr-code");
+        if (downloadQRButton) {
+            downloadQRButton.href = `/report/barcode/QR/${encodeURIComponent(
+                `${host}${newCode}`
+            )}?width=500&height=500&download=1`;
+        }
+
         this.editing = false;
         this.error = false;
     }
