@@ -66,17 +66,20 @@ export class CompanySelector {
     }
 
     _selectCompany(companyId, unshift = false) {
-        if (!this.selectedCompaniesIds.includes(companyId)) {
-            if (unshift) {
+        if (!(companyId in this.companyService.disallowedAncestorCompanies)) {
+            if (!this.selectedCompaniesIds.includes(companyId)) {
+                if (unshift) {
+                    this.selectedCompaniesIds.unshift(companyId);
+                } else {
+                    this.selectedCompaniesIds.push(companyId);
+                }
+            } else if (unshift) {
+                const index = this.selectedCompaniesIds.findIndex((c) => c === companyId);
+                this.selectedCompaniesIds.splice(index, 1);
                 this.selectedCompaniesIds.unshift(companyId);
-            } else {
-                this.selectedCompaniesIds.push(companyId);
             }
-        } else if (unshift) {
-            const index = this.selectedCompaniesIds.findIndex((c) => c === companyId);
-            this.selectedCompaniesIds.splice(index, 1);
-            this.selectedCompaniesIds.unshift(companyId);
         }
+
         this._getBranches(companyId).forEach((companyId) => this._selectCompany(companyId));
     }
 

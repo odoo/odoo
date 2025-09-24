@@ -290,3 +290,47 @@ class TestPacking(TestPackingCommon):
         company_a_user.groups_id = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
         res = delivery_company_a.with_user(company_a_user).read()
         self.assertTrue(res)
+
+    def test_put_in_pack_applies_only_to_selected_move_line(self):
+        """Ensure that the 'Put in Pack' action applies only to the selected
+        stock move line, without affecting other move lines in the same picking.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 5.0)
+        self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 5.0)
+
+        picking_ship = self.env['stock.picking'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': self.test_carrier.id
+        })
+        move_line_1 = self.env['stock.move.line'].create({
+            'product_id': self.product_aw.id,
+            'product_uom_id': self.uom_kg.id,
+            'picking_id': picking_ship.id,
+            'quantity': 5,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
+        })
+        move_line_2 = self.env['stock.move.line'].create({
+            'product_id': self.product_bw.id,
+            'product_uom_id': self.uom_kg.id,
+            'picking_id': picking_ship.id,
+            'quantity': 5,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
+        })
+        pack_action = move_line_1.action_put_in_pack()
+        pack_action_ctx = pack_action['context']
+        pack_action_model = pack_action['res_model']
+
+        # Ensure the correct wizard action is returned
+        self.assertEqual(pack_action_model, 'choose.delivery.package')
+
+        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+        pack_wiz.action_put_in_pack()
+        self.assertTrue(move_line_1.result_package_id, 'A package should have been created for the selected move line')
+        self.assertFalse(move_line_2.result_package_id, 'The other move line should not be packed')
