@@ -120,15 +120,15 @@ class StockValuationLayerRevaluation(models.TransientModel):
         # Update the stardard price in case of AVCO/FIFO
         cost_method = product_id.categ_id.property_cost_method
         if cost_method in ['average', 'fifo']:
-            previous_cost = lot_id.standard_price if lot_id else product_id.standard_price
+            previous_cost = product_id.avg_cost or product_id.standard_price
             total_product_qty = sum(layers_with_qty.mapped('remaining_qty'))
+            product_id.with_context(disable_auto_svl=True).standard_price = previous_cost + (self.added_value / product_id.quantity_svl)
             if lot_id:
+                previous_cost_lot = lot_id.standard_price
                 lot_id.with_context(disable_auto_svl=True).standard_price += self.added_value / total_product_qty
-            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / product_id.quantity_svl
-            if self.lot_id:
                 description += _(
                     " lot/serial number cost updated from %(previous)s to %(new_cost)s.",
-                    previous=previous_cost,
+                    previous=previous_cost_lot,
                     new_cost=lot_id.standard_price
                 )
             else:
