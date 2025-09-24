@@ -74,7 +74,7 @@ test("supports arbitrary number of text and number inputs on entries", async () 
     );
 });
 
-test("delete an item", async () => {
+test("delete an item except the last one", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
@@ -87,12 +87,21 @@ test("delete an item", async () => {
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
-        JSON.stringify(defaultValueWithIds([0]))
+        JSON.stringify(defaultValueWithIds([0, 1]))
     );
     await contains(".we-bg-options-container .builder_list_remove_item").click();
-    expect(":iframe .test-options-target").toHaveAttribute("data-list", JSON.stringify([]));
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify(defaultValueWithIds([1]))
+    );
+    await contains(".we-bg-options-container .builder_list_remove_item").click();
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify(defaultValueWithIds([1]))
+    );
 });
 
 test("reorder items", async () => {
