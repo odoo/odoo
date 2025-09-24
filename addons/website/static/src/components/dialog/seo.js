@@ -4,25 +4,34 @@ import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 import { escapeRegExp } from "@web/core/utils/strings";
-import { useService, useAutofocus } from '@web/core/utils/hooks';
+import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
-import { CheckBox } from '@web/core/checkbox/checkbox';
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
-import { WebsiteDialog } from './dialog';
-import { Component, onMounted, onWillStart, reactive, useEffect, useState, useRef } from "@odoo/owl";
+import { WebsiteDialog } from "./dialog";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    reactive,
+    useEffect,
+    useState,
+    useRef,
+} from "@odoo/owl";
 import wUtils from "@website/js/utils";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
-const WORD_SEPARATORS_REGEX = '([\\u2000-\\u206F\\u2E00-\\u2E7F\'!"#\\$%&\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?¿¡@\\[\\]\\^_`\\{\\|\\}~\\s]+|^|$)';
+const WORD_SEPARATORS_REGEX =
+    "([\\u2000-\\u206F\\u2E00-\\u2E7F'!\"#\\$%&\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?¿¡@\\[\\]\\^_`\\{\\|\\}~\\s]+|^|$)";
 
 const seoContext = reactive({
-    description: '',
+    description: "",
     keywords: [],
-    title: '',
-    seoName: '',
-    metaImage: '',
-    defaultTitle: '',
+    title: "",
+    seoName: "",
+    metaImage: "",
+    defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
 });
@@ -194,13 +203,15 @@ class ImageSelector extends Component {
     };
 
     setup() {
-        this.website = useService('website');
-        this.dialogs = useService('dialog');
+        this.website = useService("website");
+        this.dialogs = useService("dialog");
 
         this.seoContext = useState(seoContext);
 
-        const firstImageId = this.props.hasSocialDefaultImage ? 'social_default_image' : 'logo';
-        const firstImageSrc = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/${firstImageId}`;
+        const firstImageId = this.props.hasSocialDefaultImage ? "social_default_image" : "logo";
+        const firstImageSrc = `/web/image/website/${encodeURIComponent(
+            this.website.currentWebsite.id
+        )}/${firstImageId}`;
         const firstImage = {
             src: firstImageSrc,
             active: this.areSameImages(firstImageSrc, this.seoContext.metaImage),
@@ -210,17 +221,20 @@ class ImageSelector extends Component {
         this.state = useState({
             images: [
                 firstImage,
-                ...this.props.pageImages.map((src) => {
-                    return {
-                        src,
-                        active: this.areSameImages(src, this.seoContext.metaImage),
-                        custom: false,
-                    };
-                }),
+                ...this.props.pageImages.map((src) => ({
+                    src,
+                    active: this.areSameImages(src, this.seoContext.metaImage),
+                    custom: false,
+                })),
             ],
         });
 
-        if (this.seoContext.metaImage && !this.state.images.map(({src}) => this.getImagePathname(src)).includes(this.getImagePathname(this.seoContext.metaImage))) {
+        if (
+            this.seoContext.metaImage &&
+            !this.state.images
+                .map(({ src }) => this.getImagePathname(src))
+                .includes(this.getImagePathname(this.seoContext.metaImage))
+        ) {
             this.state.images.push({
                 src: this.seoContext.metaImage,
                 active: true,
@@ -234,7 +248,7 @@ class ImageSelector extends Component {
     }
 
     get activeMetaImage() {
-        const activeImage = this.state.images.find(({active}) => active);
+        const activeImage = this.state.images.find(({ active }) => active);
         return activeImage && activeImage.src;
     }
 
@@ -247,7 +261,7 @@ class ImageSelector extends Component {
     }
 
     selectImage(src) {
-        this.state.images = this.state.images.map(img => {
+        this.state.images = this.state.images.map((img) => {
             img.active = img.src === src;
             return img;
         });
@@ -257,12 +271,12 @@ class ImageSelector extends Component {
     openMediaDialog() {
         this.dialogs.add(MediaDialog, {
             onlyImages: true,
-            resModel: 'ir.ui.view',
+            resModel: "ir.ui.view",
             useMediaLibrary: true,
-            save: image => {
+            save: (image) => {
                 let existingImage;
-                const src = image.getAttribute('src');
-                this.state.images = this.state.images.map(img => {
+                const src = image.getAttribute("src");
+                this.state.images = this.state.images.map((img) => {
                     img.active = false;
                     if (img.src === src) {
                         existingImage = img;
@@ -293,7 +307,7 @@ class Keyword extends Component {
     };
 
     setup() {
-        this.website = useService('website');
+        this.website = useService("website");
 
         this.seoContext = useState(seoContext);
 
@@ -325,7 +339,7 @@ class Keyword extends Component {
         };
 
         onMounted(async () => {
-            const suggestions = await rpc('/website/seo_suggest', {
+            const suggestions = await rpc("/website/seo_suggest", {
                 lang: jsToPyLocale(this.props.language),
                 keywords: this.props.keyword,
             });
@@ -334,7 +348,11 @@ class Keyword extends Component {
                 "gi"
             );
             this.state.suggestions = [
-                ...new Set(JSON.parse(suggestions).map((word) => word.replace(regex, "").trim()).filter(Boolean)),
+                ...new Set(
+                    JSON.parse(suggestions)
+                        .map((word) => word.replace(regex, "").trim())
+                        .filter(Boolean)
+                ),
             ];
         });
     }
@@ -347,11 +365,15 @@ class Keyword extends Component {
     }
 
     getGoogleTrendsURL() {
-        return `https://trends.google.com/trends/explore?q=${encodeURIComponent(this.props.keyword)}`;
+        return `https://trends.google.com/trends/explore?q=${encodeURIComponent(
+            this.props.keyword
+        )}`;
     }
 
     getHeaders(tag) {
-        return Array.from(this.website.pageDocument.documentElement.querySelectorAll(`#wrap ${tag}`)).map(header => header.textContent);
+        return Array.from(
+            this.website.pageDocument.documentElement.querySelectorAll(`#wrap ${tag}`)
+        ).map((header) => header.textContent);
     }
 
     getBodyText() {
@@ -359,11 +381,11 @@ class Keyword extends Component {
     }
 
     get usedInH1() {
-        return this.isKeywordIn(this.getHeaders('h1'));
+        return this.isKeywordIn(this.getHeaders("h1"));
     }
 
     get usedInH2() {
-        return this.isKeywordIn(this.getHeaders('h2'));
+        return this.isKeywordIn(this.getHeaders("h2"));
     }
 
     get usedInTitle() {
@@ -387,19 +409,19 @@ class MetaKeywords extends Component {
     static props = {};
 
     setup() {
-        this.website = useService('website');
+        this.website = useService("website");
 
         this.seoContext = useState(seoContext);
 
         this.state = useState({
-            language: '',
-            keyword: '',
+            language: "",
+            keyword: "",
         });
 
         this.maxKeywords = 10;
 
         onWillStart(async () => {
-            this.languages = await rpc('/website/get_languages');
+            this.languages = await rpc("/website/get_languages");
             this.state.language = this.getLanguage();
         });
     }
@@ -429,12 +451,12 @@ class MetaKeywords extends Component {
         keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
         if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
-            this.state.keyword = '';
+            this.state.keyword = "";
         }
     }
 
     removeKeyword(keyword) {
-        this.seoContext.keywords = this.seoContext.keywords.filter(kw => kw !== keyword);
+        this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
     }
 }
 
@@ -510,9 +532,11 @@ class SEOPreview extends Component {
 
     get description() {
         if (this.props.description?.length > 160) {
-            return this.props.description.substring(0, 159) + '…';
+            return this.props.description.substring(0, 159) + "…";
         } else if (!this.props.description?.length) {
-            return _t("If you don't write one, the description will be generated by the search engines based on the content of your page.");
+            return _t(
+                "If you don't write one, the description will be generated by the search engines based on the content of your page."
+            );
         }
         return this.props.description || "";
     }
@@ -554,15 +578,21 @@ class TitleDescription extends Component {
         );
 
         // Update the title when its input value changes
-        useEffect(() => {
-            document.title = this.title;
-        }, () => [this.seoContext.title]);
+        useEffect(
+            () => {
+                document.title = this.title;
+            },
+            () => [this.seoContext.title]
+        );
 
         // Restore the original title when unmounting the component
-        useEffect(() => {
-            const initialTitle = document.title;
-            return () => document.title = initialTitle;
-        }, () => []);
+        useEffect(
+            () => {
+                const initialTitle = document.title;
+                return () => (document.title = initialTitle);
+            },
+            () => []
+        );
     }
 
     //--------------------------------------------------------------------------
@@ -647,29 +677,35 @@ export class BrokenLink extends Component {
     };
 
     setup() {
-        this.website = useService('website');
-        this.urlInputRef = useRef('url-input');
+        this.website = useService("website");
+        this.urlInputRef = useRef("url-input");
         this.link = this.props.link;
 
         this.state = useState({
             checkingLink: false,
         });
 
-        useEffect((input) => {
-            if (!input) {
-                return;
-            }
-            const options = {
-                body: this.website.pageDocument.body,
-                position: "bottom-fit",
-                urlChosen: () => {
-                    this.link.newLink = input.value;
-                },
-            };
-            const unmountAutocompleteWithPages =
-                wUtils.autocompleteWithPages(input, options, this.env);
-            return () => unmountAutocompleteWithPages();
-        }, () => [this.urlInputRef.el]);
+        useEffect(
+            (input) => {
+                if (!input) {
+                    return;
+                }
+                const options = {
+                    body: this.website.pageDocument.body,
+                    position: "bottom-fit",
+                    urlChosen: () => {
+                        this.link.newLink = input.value;
+                    },
+                };
+                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                    input,
+                    options,
+                    this.env
+                );
+                return () => unmountAutocompleteWithPages();
+            },
+            () => [this.urlInputRef.el]
+        );
     }
 
     async modifyLink(link) {
@@ -704,10 +740,12 @@ export class BrokenLink extends Component {
     }
 
     checkButtonDisabled(link) {
-        return this.state.checkingLink
-                || !link.newLink.trim().length
-                || (link.newLink.trim() == link.oldLink)
-                || (link.validLink == link.newLink.trim());
+        return (
+            this.state.checkingLink ||
+            !link.newLink.trim().length ||
+            link.newLink.trim() == link.oldLink ||
+            link.validLink == link.newLink.trim()
+        );
     }
 }
 
@@ -745,7 +783,7 @@ export class SeoChecks extends Component {
 
     imgUpdated(img) {
         img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter(img => img.updated);
+        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
@@ -789,8 +827,9 @@ export class SeoChecks extends Component {
     async getBrokenLinks() {
         this.state.checkingLinks = true;
         this.state.counterLinks = 1;
-        const hrefEls =
-            this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap a[href]:not(.oe_unremovable)");
+        const hrefEls = this.website.pageDocument.documentElement.querySelectorAll(
+            "#wrapwrap a[href]:not(.oe_unremovable)"
+        );
         let links = Array.from(hrefEls)
             .filter((a) => {
                 const href = a.href;
@@ -826,10 +865,11 @@ export class SeoChecks extends Component {
                 } else {
                     const imgLinkEl = el.querySelector("img");
                     if (imgLinkEl?.src) {
-                        label = imgLinkEl.src.split('/').pop();
+                        label = imgLinkEl.src.split("/").pop();
                         isImageLink = true;
                     } else if (el.querySelector(".fa")) {
-                        label = el.ariaLabel || el.title || el.href.split('/').filter(Boolean).pop();
+                        label =
+                            el.ariaLabel || el.title || el.href.split("/").filter(Boolean).pop();
                         isImageLink = true;
                     }
                 }
@@ -846,7 +886,9 @@ export class SeoChecks extends Component {
             .filter(Boolean);
         const seen = new Set();
         links = links.filter((item) => {
-            const key = `${item.link}::${item.res_model || ""}::${item.res_id || ""}::${item.field || ""}`;
+            const key = `${item.link}::${item.res_model || ""}::${item.res_id || ""}::${
+                item.field || ""
+            }`;
             if (seen.has(key)) {
                 return false;
             }
@@ -869,23 +911,19 @@ export class SeoChecks extends Component {
         this.state.checkingLinks = false;
         this.state.checkedLinks = true;
         // Keep links order in the DOM.
-        brokenLinks.sort((a, b) => {
-            return a.position - b.position;
-        });
-        this.seoContext.brokenLinks = brokenLinks.map((link) => {
-            return {
-                oldLink: link.link,
-                newLink: link.link,
-                broken: true,
-                remove: false,
-                res_model: link.res_model,
-                res_id: link.res_id,
-                field: link.field,
-                label: link.label,
-                isImageLink: link.isImageLink,
-                validLink: null,
-            };
-        });
+        brokenLinks.sort((a, b) => a.position - b.position);
+        this.seoContext.brokenLinks = brokenLinks.map((link) => ({
+            oldLink: link.link,
+            newLink: link.link,
+            broken: true,
+            remove: false,
+            res_model: link.res_model,
+            res_id: link.res_id,
+            field: link.field,
+            label: link.label,
+            isImageLink: link.isImageLink,
+            validLink: null,
+        }));
     }
 }
 
@@ -904,13 +942,13 @@ export class OptimizeSEODialog extends Component {
     };
 
     setup() {
-        this.website = useService('website');
-        this.dialogs = useService('dialog');
-        this.orm = useService('orm');
+        this.website = useService("website");
+        this.dialogs = useService("dialog");
+        this.orm = useService("orm");
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
-        this.size = 'lg';
+        this.size = "lg";
         this.contentClass = "oe_seo_configuration";
 
         onWillStart(async () => {
@@ -918,38 +956,45 @@ export class OptimizeSEODialog extends Component {
                 metadata: { mainObject, seoObject, path },
             } = this.website.currentWebsite;
             this.object = seoObject || mainObject;
-            this.data = await rpc('/website/get_seo_data', {
-                'res_id': this.object.id,
-                'res_model': this.object.model,
+            this.data = await rpc("/website/get_seo_data", {
+                res_id: this.object.id,
+                res_model: this.object.model,
             });
 
             this.canEditSeo = this.data.can_edit_seo;
-            this.canEditDescription = this.canEditSeo && 'website_meta_description' in this.data;
-            this.canEditTitle = this.canEditSeo && 'website_meta_title' in this.data;
-            this.canEditUrl = this.canEditSeo && 'seo_name' in this.data;
+            this.canEditDescription = this.canEditSeo && "website_meta_description" in this.data;
+            this.canEditTitle = this.canEditSeo && "website_meta_title" in this.data;
+            this.canEditUrl = this.canEditSeo && "seo_name" in this.data;
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
-            this.isIndexed = 'website_indexed' in this.data ? this.data.website_indexed : true;
-            this.seoNameHelp = _t("This value will be escaped to be compliant with all major browsers and used in url. Keep it empty to use the default name of the record.");
+            this.isIndexed = "website_indexed" in this.data ? this.data.website_indexed : true;
+            this.seoNameHelp = _t(
+                "This value will be escaped to be compliant with all major browsers and used in url. Keep it empty to use the default name of the record."
+            );
             this.previousSeoName = this.canEditUrl && this.data.seo_name;
             seoContext.seoName = this.previousSeoName;
             this.seoNameDefault = this.canEditUrl && this.data.seo_name_default;
 
-            seoContext.description = this.getMeta({ name: 'description' });
-            this.previewDescription = _t("Your page description should be between 50 and 160 characters long.");
+            seoContext.description = this.getMeta({ name: "description" });
+            this.previewDescription = _t(
+                "Your page description should be between 50 and 160 characters long."
+            );
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
             this.url = path;
 
-            seoContext.metaImage = this.data.website_meta_og_img || this.getMeta({ property: 'og:image' });
+            seoContext.metaImage =
+                this.data.website_meta_og_img || this.getMeta({ property: "og:image" });
 
             this.pageImages = this.getImages();
-            this.socialPreviewDescription = _t("The description will be generated by social media based on page content unless you specify one.");
+            this.socialPreviewDescription = _t(
+                "The description will be generated by social media based on page content unless you specify one."
+            );
             this.hasSocialDefaultImage = this.data.has_social_default_image;
 
-            this.canEditKeywords = 'website_meta_keywords' in this.data;
-            seoContext.keywords = this.getMeta({ name: 'keywords' });
+            this.canEditKeywords = "website_meta_keywords" in this.data;
+            seoContext.keywords = this.getMeta({ name: "keywords" });
         });
     }
 
@@ -958,15 +1003,18 @@ export class OptimizeSEODialog extends Component {
     }
 
     getImages() {
-        const imageEls = this.pageDocumentElement.querySelectorAll('#wrap img');
-        return [...new Set(Array.from(imageEls)
-            .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200)
-            .map(img => img.getAttribute("src"))
-        )];
+        const imageEls = this.pageDocumentElement.querySelectorAll("#wrap img");
+        return [
+            ...new Set(
+                Array.from(imageEls)
+                    .filter((img) => img.naturalHeight > 200 && img.naturalWidth > 200)
+                    .map((img) => img.getAttribute("src"))
+            ),
+        ];
     }
 
     getMeta({ name, property }) {
-        let query = '';
+        let query = "";
         if (name) {
             query = `meta[name="${name}"]`;
         }
@@ -974,10 +1022,10 @@ export class OptimizeSEODialog extends Component {
             query = `meta[property="${property}"]`;
         }
         const el = this.pageDocumentElement.querySelector(query);
-        if (name === 'keywords') {
+        if (name === "keywords") {
             // Keywords might contain spaces which makes them fail the content
             // check. Trim the strings to prevent this from happening.
-            const parsed = el && el.content.split(',').map(kw => kw.trim());
+            const parsed = el && el.content.split(",").map((kw) => kw.trim());
             return parsed && parsed[0] ? [...new Set(parsed)] : [];
         }
         return el && el.content;
@@ -992,7 +1040,7 @@ export class OptimizeSEODialog extends Component {
             data.website_meta_description = seoContext.description;
         }
         if (this.canEditKeywords) {
-            data.website_meta_keywords = seoContext.keywords.join(',');
+            data.website_meta_keywords = seoContext.keywords.join(",");
         }
         if (this.canEditUrl) {
             if (seoContext.seoName !== this.previousSeoName) {
@@ -1003,7 +1051,7 @@ export class OptimizeSEODialog extends Component {
         await this.orm.write(this.object.model, [this.object.id], data, {
             context: {
                 lang: this.website.currentWebsite.metadata.lang,
-                'website_id': this.website.currentWebsite.id,
+                website_id: this.website.currentWebsite.id,
             },
         });
 

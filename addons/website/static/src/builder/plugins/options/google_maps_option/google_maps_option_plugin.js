@@ -67,12 +67,10 @@ export class GoogleMapsOptionPlugin extends Plugin {
     // TODO: Remove this method when data-vxml is reintroduced.
     upgradeSnippets() {
         // This is for pages which already existed before the plugin was created.
-        this.document
-            .querySelectorAll(".s_google_map")
-            .forEach((mapSnippetEl) => {
-                mapSnippetEl.classList.add("o_not_editable");
-                mapSnippetEl.dataset.vxml = "001";
-            });
+        this.document.querySelectorAll(".s_google_map").forEach((mapSnippetEl) => {
+            mapSnippetEl.classList.add("o_not_editable");
+            mapSnippetEl.dataset.vxml = "001";
+        });
     }
 
     async onSnippetDropped({ snippetEl }) {

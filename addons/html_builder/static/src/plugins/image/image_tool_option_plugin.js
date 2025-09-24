@@ -20,7 +20,8 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 export class ImageAndFaOption extends BaseOptionComponent {
     static template = "html_builder.ImageAndFaOption";
     static selector = "span.fa, i.fa, img";
-    static exclude = "[data-oe-type='image'] > img, [data-oe-xpath], .s_social_media i.fa, .s_share i.fa";
+    static exclude =
+        "[data-oe-type='image'] > img, [data-oe-xpath], .s_social_media i.fa, .s_share i.fa";
     static name = "imageAndFaOption";
 }
 class ImageToolOptionPlugin extends Plugin {

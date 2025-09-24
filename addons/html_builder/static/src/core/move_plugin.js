@@ -120,7 +120,11 @@ export class MovePlugin extends Plugin {
                 const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
-                    title: isVertical ? _t("Move up") : this.isEditableRTL ? _t("Move right") : _t("Move left"),
+                    title: isVertical
+                        ? _t("Move up")
+                        : this.isEditableRTL
+                        ? _t("Move right")
+                        : _t("Move left"),
                     handler: this.onMoveClick.bind(this, "prev"),
                 };
                 buttons.push(button);
@@ -130,7 +134,11 @@ export class MovePlugin extends Plugin {
                 const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
-                    title: isVertical ? _t("Move down") : this.isEditableRTL ? _t("Move left") : _t("Move right"),
+                    title: isVertical
+                        ? _t("Move down")
+                        : this.isEditableRTL
+                        ? _t("Move left")
+                        : _t("Move right"),
                     handler: this.onMoveClick.bind(this, "next"),
                 };
                 buttons.push(button);

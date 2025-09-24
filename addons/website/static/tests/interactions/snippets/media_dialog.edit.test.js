@@ -16,10 +16,7 @@ const videoTemplate = `
 `;
 
 test("media video: iframe not replaced in edition if present", async () => {
-    const { core } = await startInteractions(
-        videoTemplate,
-        { editMode: true },
-    );
+    const { core } = await startInteractions(videoTemplate, { editMode: true });
     expect("iframe[original='true']").toHaveCount(1);
     expect("iframe").toHaveCount(1);
     await switchToEditMode(core);
@@ -28,10 +25,9 @@ test("media video: iframe not replaced in edition if present", async () => {
 });
 
 test("media video: iframe replaced in edition if not present", async () => {
-    const { core } = await startInteractions(
-        videoTemplate.replace(/<iframe.*<\/iframe>/, ''),
-        { editMode: true },
-    );
+    const { core } = await startInteractions(videoTemplate.replace(/<iframe.*<\/iframe>/, ""), {
+        editMode: true,
+    });
     expect("iframe").toHaveCount(0);
     await switchToEditMode(core);
     expect("iframe").toHaveCount(1);

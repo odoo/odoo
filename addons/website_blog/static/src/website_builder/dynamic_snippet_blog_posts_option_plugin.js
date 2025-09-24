@@ -10,7 +10,7 @@ import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_opti
 class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     static id = "dynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetOption"];
-    static shared = ["fetchBlogs","getModelNameFilter"];
+    static shared = ["fetchBlogs", "getModelNameFilter"];
     modelNameFilter = "blog.post";
     resources = {
         builder_options: withSequence(DYNAMIC_SNIPPET, DynamicSnippetBlogPostsOption),

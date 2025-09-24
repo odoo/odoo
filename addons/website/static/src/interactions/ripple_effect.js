@@ -7,7 +7,7 @@ export class RippleEffect extends Interaction {
         _root: {
             "t-on-click": this.onClick,
             "t-att-class": () => ({
-                "o_js_ripple_effect": this.isActive,
+                o_js_ripple_effect: this.isActive,
             }),
         },
     };
@@ -57,6 +57,4 @@ export class RippleEffect extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.ripple_effect", RippleEffect);
+registry.category("public.interactions").add("website.ripple_effect", RippleEffect);

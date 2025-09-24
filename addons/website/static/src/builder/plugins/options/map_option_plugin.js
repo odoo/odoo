@@ -75,13 +75,13 @@ export class MapDescriptionAction extends BuilderAction {
 class MapDescriptionTextAction extends BuilderAction {
     static id = "mapDescriptionTextValue";
     getValue({ editingElement }) {
-        return editingElement
-            .querySelector(".description")
-            ?.textContent.trim()
-            .replace(/\s+/g, " ") || "";
+        return (
+            editingElement.querySelector(".description")?.textContent.trim().replace(/\s+/g, " ") ||
+            ""
+        );
     }
     apply({ editingElement, value }) {
-        return editingElement.querySelector(".description").textContent = value;
+        return (editingElement.querySelector(".description").textContent = value);
     }
 }
 

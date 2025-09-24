@@ -1,9 +1,12 @@
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour("website_media_iframe_video", {
+registerWebsitePreviewTour(
+    "website_media_iframe_video",
+    {
         url: "/",
         edition: true,
-    }, () => [
+    },
+    () => [
         ...insertSnippet({
             id: "s_text_image",
             name: "Text - Image",

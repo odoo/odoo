@@ -6,7 +6,10 @@ export class Parallax extends Interaction {
     dynamicSelectors = Object.assign(this.dynamicSelectors, {
         _modal: () => this.el.closest(".modal"),
         // ":scope > .s_parallax_bg" is kept for compatibility
-        _bg: () => this.el.querySelector(":scope > .s_parallax_bg_wrap > .s_parallax_bg, :scope > .s_parallax_bg"),
+        _bg: () =>
+            this.el.querySelector(
+                ":scope > .s_parallax_bg_wrap > .s_parallax_bg, :scope > .s_parallax_bg"
+            ),
     });
     dynamicContent = {
         _document: { "t-on-scroll": this.onScroll },
@@ -14,9 +17,9 @@ export class Parallax extends Interaction {
         _modal: { "t-on-shown.bs.modal": this.updateBackgroundHeight },
         _bg: {
             "t-att-style": () => ({
-                "top": this.styleTop,
-                "bottom": this.styleBottom,
-                "transform": this.styleTransform,
+                top: this.styleTop,
+                bottom: this.styleBottom,
+                transform: this.styleTransform,
             }),
         },
     };
@@ -106,12 +109,8 @@ export class Parallax extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.parallax", Parallax);
+registry.category("public.interactions").add("website.parallax", Parallax);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.parallax", {
-        Interaction: Parallax,
-    });
+registry.category("public.interactions.edit").add("website.parallax", {
+    Interaction: Parallax,
+});

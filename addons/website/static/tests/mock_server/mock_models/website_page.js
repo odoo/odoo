@@ -6,4 +6,3 @@ export class WebsitePage extends models.Model {
 
     name = fields.Char();
 }
-

@@ -43,20 +43,30 @@ test("vertical toggle of video options", async () => {
     await dblclick(":iframe iframe");
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_video_dialog_form").toHaveCount(1);
-    expect(".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size").toHaveCount(1);
+    expect(
+        ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size"
+    ).toHaveCount(1);
     // Wait for options to be rendered before interaction
-    await waitFor(".modal-content:contains(Select a media) .o_video_dialog_form .o_video_dialog_options");
+    await waitFor(
+        ".modal-content:contains(Select a media) .o_video_dialog_form .o_video_dialog_options"
+    );
     // Toggle the “Vertical” option
-    const verticalToggle = queryOne('.modal-content:contains("Select a media") .o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input');
+    const verticalToggle = queryOne(
+        '.modal-content:contains("Select a media") .o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input'
+    );
     verticalToggle.click();
 
     // Confirm vertical class is applied in the preview area
-    await waitFor(".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical");
-    queryOne('.modal-content:contains(Select a media) footer button:contains(Add)').click();
+    await waitFor(
+        ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
+    );
+    queryOne(".modal-content:contains(Select a media) footer button:contains(Add)").click();
     await animationFrame();
     // Verify the vertical class persists in the website preview
     expect(":iframe .media_iframe_video .media_iframe_video_size_for_vertical").toHaveCount(1);
     // Reopen configurator and ensure the vertical setting is still active
     await dblclick(":iframe iframe");
-    await waitFor(".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical");
+    await waitFor(
+        ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
+    );
 });

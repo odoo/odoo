@@ -7,24 +7,24 @@ export class AnnouncementScroll extends Interaction {
     dynamicContent = {
         _root: {
             "t-att-class": () => ({
-                "s_announcement_scroll_ready": this.announcementScrollReady,
-                "s_announcement_scroll_page_scrolling": this.announcementScrollPageScrolling,
+                s_announcement_scroll_ready: this.announcementScrollReady,
+                s_announcement_scroll_page_scrolling: this.announcementScrollPageScrolling,
             }),
         },
         _window: {
-            "t-on-resize": this.debounced(this.onResize, 100, {leading: true, trailing: true}),
+            "t-on-resize": this.debounced(this.onResize, 100, { leading: true, trailing: true }),
             "t-on-scroll": this.throttled(this.onScroll),
         },
         ".s_announcement_scroll_marquee_container": {
             "t-att-style": () => ({
-                "transform": `translateX(${this.parallaxPosition}%)`,
+                transform: `translateX(${this.parallaxPosition}%)`,
             }),
         },
     };
 
     setup() {
-        this.marqueeContainerEl = this.el.querySelector('.s_announcement_scroll_marquee_container');
-        this.marqueeItemEl = this.el.querySelector('.s_announcement_scroll_marquee_item');
+        this.marqueeContainerEl = this.el.querySelector(".s_announcement_scroll_marquee_container");
+        this.marqueeItemEl = this.el.querySelector(".s_announcement_scroll_marquee_item");
         this.setParallaxPosition();
     }
 
@@ -88,9 +88,12 @@ export class AnnouncementScroll extends Interaction {
         const rect = this.el.getBoundingClientRect();
         const startScroll = window.scrollY + rect.top - window.innerHeight;
         const endScroll = window.scrollY + rect.bottom;
-        const progress = Math.min(Math.max((window.scrollY - startScroll) / (endScroll - startScroll), 0), 1);
-        if (this.el.classList.contains('s_announcement_scroll_direction_right')) {
-            this.parallaxPosition = (-MIN_LEFT_SHIFT - PARALLAX_AMOUNT) + progress * PARALLAX_AMOUNT;
+        const progress = Math.min(
+            Math.max((window.scrollY - startScroll) / (endScroll - startScroll), 0),
+            1
+        );
+        if (this.el.classList.contains("s_announcement_scroll_direction_right")) {
+            this.parallaxPosition = -MIN_LEFT_SHIFT - PARALLAX_AMOUNT + progress * PARALLAX_AMOUNT;
         } else {
             this.parallaxPosition = -MIN_LEFT_SHIFT - progress * PARALLAX_AMOUNT;
         }
@@ -103,7 +106,7 @@ export class AnnouncementScroll extends Interaction {
         while (this.marqueeContainerEl.children.length > 1) {
             this.marqueeContainerEl.lastChild.remove();
         }
-        this.marqueeContainerEl.style.removeProperty('--marquee-item-size');
+        this.marqueeContainerEl.style.removeProperty("--marquee-item-size");
     }
 
     /**
@@ -112,7 +115,9 @@ export class AnnouncementScroll extends Interaction {
      */
     updateMarqueeLayout() {
         const marqueeItemElWidth = this.marqueeItemEl.offsetWidth;
-        const itemsPerContainer = Math.ceil(this.marqueeContainerEl.offsetWidth / marqueeItemElWidth);
+        const itemsPerContainer = Math.ceil(
+            this.marqueeContainerEl.offsetWidth / marqueeItemElWidth
+        );
         if (itemsPerContainer > 100) {
             return;
         }
@@ -126,13 +131,11 @@ export class AnnouncementScroll extends Interaction {
         const cloneCount = itemsPerContainer * 2 + 1;
         for (let i = 0; i < cloneCount; i++) {
             const cloneEl = this.marqueeItemEl.cloneNode(true);
-            cloneEl.classList.add('s_announcement_scroll_marquee_item_clone');
-            cloneEl.prepend(document.createTextNode('\u00A0')); // NBSP
+            cloneEl.classList.add("s_announcement_scroll_marquee_item_clone");
+            cloneEl.prepend(document.createTextNode("\u00A0")); // NBSP
             this.marqueeContainerEl.appendChild(cloneEl);
         }
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.announcement_scroll", AnnouncementScroll);
+registry.category("public.interactions").add("website.announcement_scroll", AnnouncementScroll);

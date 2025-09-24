@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryOne, tick } from "@odoo/hoot-dom";
@@ -14,7 +11,9 @@ describe.current.tags("interaction_dev");
 const getTemplate = function (options = { endAction: "nothing", endTime: "98765432100" }) {
     return `
         <div style="background-color: white;">
-            <section class="s_countdown pt48 pb48 ${options.endAction === "message_no_countdown" ? "hide-countdown" : ""}"
+            <section class="s_countdown pt48 pb48 ${
+                options.endAction === "message_no_countdown" ? "hide-countdown" : ""
+            }"
             data-display="dhms"
             data-end-action="${options.endAction}"
             data-size="175"
@@ -38,7 +37,7 @@ const getTemplate = function (options = { endAction: "nothing", endTime: "987654
                 ${["message", "message_no_countdown"].includes(options.endAction) ? endMessage : ""}
             </section>
         </div>
-    `
+    `;
 };
 
 const endMessage = `
@@ -68,7 +67,7 @@ const wasDataChanged = function (data1, data2, l) {
         }
     }
     return false;
-}
+};
 
 test("countdown is started when there is an element .s_countdown", async () => {
     const { core } = await startInteractions(getTemplate());
@@ -84,30 +83,60 @@ test("countdown is started when there is an element .s_countdown", async () => {
 test("[time] countdown display is updated correctly when time pass", async () => {
     await startInteractions(getTemplate());
 
-    const canvasEls = queryAll('canvas');
+    const canvasEls = queryAll("canvas");
     const canvasHours = canvasEls[1];
     const canvasSeconds = canvasEls[3];
-    const canvasHoursCtx = canvasHours.getContext('2d');
-    const canvasSecondsCtx = canvasSeconds.getContext('2d');
+    const canvasHoursCtx = canvasHours.getContext("2d");
+    const canvasSecondsCtx = canvasSeconds.getContext("2d");
 
     // time T
-    const data1Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
-    const data1Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
+    const data1Hours = canvasHoursCtx.getImageData(
+        0,
+        0,
+        canvasHours.width,
+        canvasHours.height
+    ).data;
+    const data1Seconds = canvasSecondsCtx.getImageData(
+        0,
+        0,
+        canvasSeconds.width,
+        canvasSeconds.height
+    ).data;
 
     // time T + 1s
     await advanceTime(1000);
-    const data2Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
-    const data2Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
+    const data2Hours = canvasHoursCtx.getImageData(
+        0,
+        0,
+        canvasHours.width,
+        canvasHours.height
+    ).data;
+    const data2Seconds = canvasSecondsCtx.getImageData(
+        0,
+        0,
+        canvasSeconds.width,
+        canvasSeconds.height
+    ).data;
 
     // time T + 2s
     await advanceTime(1000);
-    const data3Hours = canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
-    const data3Seconds = canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
+    const data3Hours = canvasHoursCtx.getImageData(
+        0,
+        0,
+        canvasHours.width,
+        canvasHours.height
+    ).data;
+    const data3Seconds = canvasSecondsCtx.getImageData(
+        0,
+        0,
+        canvasSeconds.width,
+        canvasSeconds.height
+    ).data;
 
     // Check that the data are not empty & the same size
 
     const dataHoursLength = data1Hours.length;
-    const dataSecondsLength = data1Seconds.length
+    const dataSecondsLength = data1Seconds.length;
     expect(dataSecondsLength).toBe(dataHoursLength);
     expect(dataSecondsLength).not.toBe(0);
 

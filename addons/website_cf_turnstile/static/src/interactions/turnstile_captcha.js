@@ -13,10 +13,7 @@ export class TurnstileCaptcha extends Interaction {
     }
 
     start() {
-        if (
-            !this.el.querySelector(".s_turnstile")
-            && session.turnstile_site_key
-        ) {
+        if (!this.el.querySelector(".s_turnstile") && session.turnstile_site_key) {
             this.uniq = uniqueId("turnstile_");
             const action = this.el.dataset.captcha || "generic";
             const turnstile = new TurnStile(action);

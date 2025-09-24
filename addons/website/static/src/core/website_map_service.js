@@ -15,23 +15,23 @@ registry.category("services").add("website_map", {
         const promiseKeys = {};
         const promiseKeysResolves = {};
         let lastKey;
-        window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
+        window.odoo_gmap_api_post_load = async function odoo_gmap_api_post_load() {
             for (const el of document.querySelectorAll("section.s_google_map")) {
                 publicInteractions.stopInteractions(el);
                 publicInteractions.startInteractions(el);
             }
             promiseKeysResolves[lastKey]?.();
-        }).bind(this);
+        }.bind(this);
         return {
             /**
              * @param {boolean} [refetch=false]
              */
             async getGMapAPIKey(refetch) {
                 if (refetch || !gmapAPIKeyProm) {
-                    gmapAPIKeyProm = new Promise(async resolve => {
-                        const data = await rpc('/website/google_maps_api_key');
-                        resolve(JSON.parse(data).google_maps_api_key || '');
-                    });
+                    gmapAPIKeyProm = (async () => {
+                        const data = await rpc("/website/google_maps_api_key");
+                        return JSON.parse(data).google_maps_api_key || "";
+                    })();
                 }
                 return gmapAPIKeyProm;
             },
@@ -44,8 +44,8 @@ registry.category("services").add("website_map", {
                 // library. If the library was loaded with a correct key and that the
                 // key changes meanwhile... it will not work but we can agree the user
                 // can bother to reload the page at that moment.
-                if (refetch || !gmapAPILoading) {
-                    gmapAPILoading = new Promise(async resolve => {
+                if (refetch || !(await gmapAPILoading)) {
+                    gmapAPILoading = (async () => {
                         const key = await this.getGMapAPIKey(refetch);
                         lastKey = key;
 
@@ -61,7 +61,7 @@ registry.category("services").add("website_map", {
                                 );
                             }
                             await promiseKeys[key];
-                            resolve(key);
+                            return key;
                         } else {
                             if (!editableMode && user.isAdmin) {
                                 const message = _t("Cannot load google map.");
@@ -71,13 +71,12 @@ registry.category("services").add("website_map", {
                                         <span>${message}</span><br/>
                                         <a href="/odoo/action-website.action_website_configuration">${urlTitle}</a>
                                     </div>`,
-                                    { type: 'warning', sticky: true }
+                                    { type: "warning", sticky: true }
                                 );
                             }
-                            resolve(false);
-                            gmapAPILoading = false;
+                            return false;
                         }
-                    });
+                    })();
                 }
                 return gmapAPILoading;
             },
@@ -136,6 +135,6 @@ registry.category("services").add("website_map", {
                     )}`
                 );
             },
-        }
-    }
+        };
+    },
 });

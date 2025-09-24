@@ -58,6 +58,6 @@ class HeaderOptionPlugin extends Plugin {
             withSequence(HEADER_ICON_BACKGROUND, HeaderIconBackgroundOption),
         ],
     };
-};
+}
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);

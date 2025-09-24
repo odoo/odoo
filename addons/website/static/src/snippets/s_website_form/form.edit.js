@@ -2,10 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { Form } from "./form";
 import { patch } from "@web/core/utils/patch";
-import {
-    formatDate,
-    formatDateTime,
-} from "@web/core/l10n/dates";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -31,16 +28,17 @@ export class FormEdit extends Interaction {
             return [];
         }
         return Object.keys(this.dataForValues)
-            .map(name => this.el.querySelector(`[name="${CSS.escape(name)}"]`))
-            .filter(dataForValuesFieldEl => dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to");
+            .map((name) => this.el.querySelector(`[name="${CSS.escape(name)}"]`))
+            .filter(
+                (dataForValuesFieldEl) =>
+                    dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to"
+            );
     }
 }
 
-registry
-    .category("public.interactions.edit")
-    .add("website.form", {
-        Interaction: FormEdit,
-    });
+registry.category("public.interactions.edit").add("website.form", {
+    Interaction: FormEdit,
+});
 
 // Translation mode.
 patch(Form.prototype, {

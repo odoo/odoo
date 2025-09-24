@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { SearchModel } from '@web/search/search_model';
+import { SearchModel } from "@web/search/search_model";
 
 export class PageSearchModel extends SearchModel {
     /**
@@ -7,7 +7,7 @@ export class PageSearchModel extends SearchModel {
      */
     setup() {
         super.setup(...arguments);
-        this.website = useService('website');
+        this.website = useService("website");
     }
 
     /**
@@ -91,9 +91,9 @@ export class PageSearchModel extends SearchModel {
      * @returns {Object} The current website.
      */
     async getCurrentWebsite() {
-        const currentWebsite = await this.orm.call('website', 'get_current_website');
+        const currentWebsite = await this.orm.call("website", "get_current_website");
         if (currentWebsite) {
-            return this.website.websites.find(w => w.id === currentWebsite[0]);
+            return this.website.websites.find((w) => w.id === currentWebsite[0]);
         }
         return this.website.websites[0];
     }

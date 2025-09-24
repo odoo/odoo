@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: "click next",
             trigger: "button.o_configurator_show",
             run: "click",
-            timeout: 20000,  /* previous step create a new website, this could take a long time */
+            timeout: 20000 /* previous step create a new website, this could take a long time */,
         },
         // Description screen
         {
@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             trigger: '.card.card_installed:contains("eLearning")',
         },
         {
-            content:"News (Blog) should be selected (module already installed)",
+            content: "News (Blog) should be selected (module already installed)",
             trigger: '.card.card_installed:contains("News")',
         },
         {
@@ -109,12 +109,10 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: `Check footer menu ${menu} is there`,
             trigger: `:iframe footer a:contains(${menu})`,
         })),
-        ...["Home", "Events", "Courses", "Pricing Plan", "News"].map(
-            (menu) => ({
-                content: `Check menu ${menu} is there`,
-                trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
-            })
-        ),
+        ...["Home", "Events", "Courses", "Pricing Plan", "News"].map((menu) => ({
+            content: `Check menu ${menu} is there`,
+            trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
+        })),
         ...["/", "/event", "/slides", "/pricing", "/blog/"].map((url) => ({
             content: `Check url ${url} is there`,
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
