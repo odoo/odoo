@@ -305,9 +305,7 @@ export class ClosePosPopup extends Component {
             },
             cancel: async () => {
                 if (!response.redirect) {
-                    const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
-                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
-                    this.closeSession();
+                    await this.cancelOrders(response);
                 }
             },
             dismiss: async () => {},
@@ -316,6 +314,11 @@ export class ClosePosPopup extends Component {
         if (response.redirect) {
             this.pos.router.close();
         }
+    }
+    async cancelOrders(response) {
+        const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
+        await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
+        this.closeSession();
     }
     getMovesTotalAmount() {
         const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
