@@ -132,7 +132,7 @@ def checkout(branch, remote=None):
     _logger.warning("Checking out %s/%s", remote, branch)
     git('remote', 'set-branches', remote, branch)
     git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
-    git('reset', f'{remote}/{branch}', '--hard')
+    git('reset', 'FETCH_HEAD', '--hard')
 
     _logger.info("Cleaning the working directory")
     git('clean', '-dfx')
