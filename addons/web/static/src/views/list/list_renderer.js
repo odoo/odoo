@@ -2218,7 +2218,6 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.previous]
      */
     async sortDrop(dataRowId, dataGroupId, { element, previous }) {
-        await this.props.list.leaveEditMode();
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
         try {
@@ -2237,6 +2236,7 @@ export class ListRenderer extends Component {
             await this.resequencePromise;
         } finally {
             element.classList.add("o_row_draggable");
+            await this.props.list.leaveEditMode();
         }
     }
 
