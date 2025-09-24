@@ -34,9 +34,9 @@ class DiscussChannel(models.Model):
                     Store.One("country_id", ["code"]),
                     "display_name",
                     Store.One("lang_id", ["name"]),
-                    "page_visit_history",
                     Store.One("partner_id", [Store.One("country_id", ["code"])]),
                     Store.One("website_id", ["name"]),
+                    *self.livechat_visitor_id._get_store_visitor_history_fields(),
                 ],
                 predicate=lambda channel: channel.channel_type == "livechat"
                 and self.livechat_visitor_id.has_access("read"),
