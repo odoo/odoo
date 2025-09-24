@@ -1,5 +1,5 @@
 import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_controller";
-import { onWillStart, useState, useSubEnv, onRendered } from "@odoo/owl";
+import { onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { loadSuggestToggleState, editSuggestContext, toggleFilters } from "./utils";
 import { useBus } from "@web/core/utils/hooks";
@@ -31,13 +31,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         onWillStart(async () => {
             this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
             this._kanbanReload();
-        });
-
-        // On every UI change reorder grid if it is not ordered
-        onRendered(async () => {
-            if (this.state.suggestToggle.isOn) {
-                await this._reorderKanbanGrid();
-            }
         });
 
         // Reload using a 300ms delay to avoid rendering entire kanban on each digit change
@@ -110,47 +103,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             (sum, p) => sum + Number(p.suggest_estimated_price || 0),
             0
         );
-    }
-
-    /**
-     * Moves records with suggested_qty > 0 to the front, keeping original order.
-     * Works with normal and group filters but not accross pagination (eg if 41st
-     * record has suggested qty > 0 it won't show).
-     * @returns {null} Forces a refresh (only if changed order) by not sorting in place.
-     */
-    async _reorderKanbanGrid() {
-        const sortBySuggested = (list) => {
-            const suggestProducts = list.filter((record) => record.data.suggested_qty > 0);
-            const notSuggestedProducts = list.filter((record) => record.data.suggested_qty == 0);
-            return [...suggestProducts, ...notSuggestedProducts];
-        };
-
-        const isGroupFilterOff = this.model.config.groupBy.length === 0;
-        if (isGroupFilterOff) {
-            if (!this._isKanbanOrdered(this.model.root.records)) {
-                this.model.root.records = sortBySuggested(this.model.root.records);
-            }
-        } else {
-            for (const group of this.model.root.groups || []) {
-                if (!this._isKanbanOrdered(group.list.records)) {
-                    group.list.records = sortBySuggested(group.list.records);
-                }
-            }
-        }
-    }
-
-    /** Returns true if all suggested products are before not suggested */
-    _isKanbanOrdered(records) {
-        let lastSuggested = false;
-        for (const record of records) {
-            const isProductSuggested = (record.data.suggested_qty || 0) > 0;
-            if (!isProductSuggested) {
-                lastSuggested = true;
-            } else if (lastSuggested) {
-                return false; // If we see again suggested after 1st non suggested
-            }
-        }
-        return true;
     }
 
     /**
