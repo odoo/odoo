@@ -16,6 +16,7 @@
                         <option t-att-value="slot[0]" t-esc="formatDate(slot[0])" disabled="1" />
                         <option t-foreach="Object.values(slot[1])"
                             t-as="s" t-key="s_index"
+                            t-if="!s.isFull"
                             t-att-value="s.datetime.toFormat('yyyy-MM-dd HH:mm:ss')"
                             t-esc="s.datetime.toFormat('HH:mm')" />
                     </t>
