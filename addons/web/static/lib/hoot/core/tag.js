@@ -98,7 +98,8 @@ export function applyTags(job, tags) {
             throw new HootError(
                 `cannot apply tag ${stringify(tag.name)} on test/suite ${stringify(
                     job.name
-                )} as it explicitly excludes tags ${excluded.map(stringify).join(" & ")}`
+                )} as it explicitly excludes tags ${excluded.map(stringify).join(" & ")}`,
+                { level: "global" }
             );
         }
         job.tags.push(tag);
@@ -123,7 +124,9 @@ export function defineTags(...definitions) {
     return definitions.map((def) => {
         const tagKey = def.key || normalize(def.name.toLowerCase());
         if (existingTags[tagKey]) {
-            throw new HootError(`duplicate definition for tag "${def.name}"`);
+            throw new HootError(`duplicate definition for tag "${def.name}"`, {
+                level: "global",
+            });
         }
         checkTagSimilarity(tagKey, def.name);
 
