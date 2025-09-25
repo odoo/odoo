@@ -1,5 +1,4 @@
 import { reactive } from "@odoo/owl";
-import { serializeDate } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { formatFloat, humanNumber } from "@web/core/utils/numbers";
@@ -27,7 +26,6 @@ export async function getCurrencyRates() {
     const context = {
         ...user.context,
         to_currency: user.activeCompany.currency_id,
-        date: serializeDate(luxon.DateTime.now()),
     };
     const params = {
         model,
