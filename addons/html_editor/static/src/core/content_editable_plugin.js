@@ -1,5 +1,5 @@
-import { isArtificialVoidElement } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -40,10 +40,7 @@ export class ContentEditablePlugin extends Plugin {
             ...extraContentEditableEls,
         ]) {
             if (!contentEditableEl.isContentEditable) {
-                if (
-                    isArtificialVoidElement(contentEditableEl) ||
-                    contentEditableEl.nodeName === "IMG"
-                ) {
+                if (isMediaElement(contentEditableEl)) {
                     contentEditableEl.classList.add("o_editable_media");
                     continue;
                 }

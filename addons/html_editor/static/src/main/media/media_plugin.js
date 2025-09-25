@@ -110,10 +110,7 @@ export class MediaPlugin extends Plugin {
     }
 
     isEditableMediaElement(node) {
-        return (
-            (isMediaElement(node) || node.nodeName === "IMG") &&
-            node.classList.contains(EDITABLE_MEDIA_CLASS)
-        );
+        return isMediaElement(node) && node.classList.contains(EDITABLE_MEDIA_CLASS);
     }
 
     replaceImage() {
