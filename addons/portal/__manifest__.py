@@ -42,6 +42,7 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/xml/**/*',
             'portal/static/src/signature_form/**/*',
             'portal/static/src/chatter/boot/boot_service.js',
+            'web/static/src/views/fields/file_handler.*',
         ],
         'web.assets_unit_tests_setup': [
             'portal/static/src/interactions/**/*',
