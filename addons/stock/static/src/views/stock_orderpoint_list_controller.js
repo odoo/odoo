@@ -15,11 +15,10 @@ export class StockOrderpointListController extends ListController {
         return this.model.root.selection.length;
     }
 
-    async onClickOrder(force_to_max) {
+    async onClickOrder() {
         const resIds = await this.model.root.getResIds(true);
         const action = await this.model.orm.call(this.props.resModel, 'action_replenish', [resIds], {
             context: this.props.context,
-            force_to_max: force_to_max,
         });
         if (action) {
             await this.actionService.doAction(action);

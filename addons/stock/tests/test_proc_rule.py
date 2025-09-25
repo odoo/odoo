@@ -344,7 +344,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
     def test_reordering_rule_3(self):
-        """Test how replenishment_uom_id affects qty_to_order"""
+        """Test how replenishment_uom_id affects qty_to_order and qty_to_order_to_max"""
         stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
@@ -355,37 +355,52 @@ class TestProcRule(TransactionCase):
             'relative_factor': 10.0,
             'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
         })
+        single_unit = self.env['uom.uom'].create({
+            'name': 'Test UoM',
+            'relative_factor': 1,
+            'rounding': 1.0
+        })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.productA.id,
             'location_id': stock_location.id,
             'inventory_quantity': 14.5,
         }).action_apply_inventory()
 
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.env['res.users'].browse(2)).create({
             'name': 'ProductA RR',
             'product_id': self.productA.id,
             'product_min_qty': 15.0,
             'product_max_qty': 30.0,
             'replenishment_uom_id': pack_of_10.id,
+            'trigger': 'manual'
         })
         self.assertEqual(orderpoint.qty_to_order, 20.0)  # 15.0 < 14.5 + 10 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order_to_max, 20.0)
         # Test search on computed field
         rr = self.env['stock.warehouse.orderpoint'].search([
             ('qty_to_order', '>', 0),
             ('product_id', '=', self.productA.id),
         ])
         self.assertTrue(rr)
-        orderpoint.write({
-            'replenishment_uom_id': self.env['uom.uom'].create({
-                'name': 'Test UoM',
-                'relative_factor': 1,
-            })
-        })
+
+        orderpoint.replenishment_uom_id = single_unit
         self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
-        orderpoint.write({
-            'replenishment_uom_id': False,
-        })
+        self.assertEqual(orderpoint.qty_to_order_to_max, 16.0)
+        orderpoint.replenishment_uom_id = False
         self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order_to_max, 15.5)
+
+        orderpoint.qty_to_order = 10.0
+        self.assertEqual(orderpoint.qty_to_order_manual, 10.0)
+        orderpoint.action_replenish()
+        self.assertEqual(orderpoint.qty_to_order, 0)
+        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
+        self.assertEqual(orderpoint.qty_to_order_to_max, 5.5)
+
+        orderpoint.replenishment_uom_id = pack_of_10
+        self.assertEqual(orderpoint.qty_to_order_to_max, 10.0)
+        orderpoint.replenishment_uom_id = single_unit
+        self.assertEqual(orderpoint.qty_to_order_to_max, 6.0)
 
     def test_orderpoint_replenishment_view_1(self):
         """ Create two warehouses + two moves
@@ -600,11 +615,11 @@ class TestProcRule(TransactionCase):
             'product_max_qty': 200,
         })
         self.assertEqual(orderpoint.qty_forecast, 10.0)
-        # above minimum qty => nothing to order
+        self.assertEqual(orderpoint.qty_to_order_to_max, 190)
         orderpoint.action_replenish()
-        self.assertEqual(orderpoint.qty_forecast, 10.0)
-        orderpoint.action_replenish(force_to_max=True)
+        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
         self.assertEqual(orderpoint.qty_forecast, 200.0)
+        self.assertEqual(orderpoint.qty_to_order_to_max, 0)
 
     def test_orderpoint_location_archive(self):
         warehouse = self.env['stock.warehouse'].create({

@@ -519,10 +519,11 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_A.lot_stock_id), 1)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_B.lot_stock_id), 0)
 
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_stock_manager).create({
             'location_id': warehouse_B.lot_stock_id.id,
             'product_id': self.product_3.id,
             'qty_to_order': 1.0,
+            'trigger': 'manual',
         })
         orderpoint.action_replenish()
         # Check that the orderpoint generated the source move from the furthest location.
