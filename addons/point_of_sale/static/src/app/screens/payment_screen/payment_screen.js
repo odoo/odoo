@@ -568,12 +568,10 @@ export class PaymentScreen extends Component {
         // the current order is fully paid and due is zero.
         this.pos.paymentTerminalInProgress = false;
         const config = this.pos.config;
-        const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
         if (
             isPaymentSuccessful &&
             currentOrder.is_paid() &&
-            floatIsZero(currentOrder.get_due(), currency.decimal_places) &&
             config.auto_validate_terminal_payment
         ) {
             this.validateOrder(false);
@@ -609,13 +607,8 @@ export class PaymentScreen extends Component {
     async sendForceDone(line) {
         line.set_payment_status("done");
         const config = this.pos.config;
-        const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
-        if (
-            currentOrder.is_paid() &&
-            floatIsZero(currentOrder.get_due(), currency.decimal_places) &&
-            config.auto_validate_terminal_payment
-        ) {
+        if (currentOrder.is_paid() && config.auto_validate_terminal_payment) {
             this.validateOrder(true);
         }
     }
