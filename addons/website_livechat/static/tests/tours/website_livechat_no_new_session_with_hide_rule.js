@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 
 const sendFirstMessageSteps = [
     {
@@ -52,15 +51,8 @@ registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_r
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow p:contains('Did we correctly answer your question?')",
-            async run() {
-                await contains("button", { target: this.anchor.getRootNode(), text: "Close" });
-                await contains("button", {
-                    target: this.anchor.getRootNode(),
-                    text: "New Session",
-                    count: 0,
-                });
-            },
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatWindow:has(p:contains('Did we correctly answer your question?')):has(button:contains('Close')):not(:has(button:contains('New Session')))",
         },
     ],
 });

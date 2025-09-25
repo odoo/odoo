@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("star_message_tour", {
     steps: () => [
@@ -17,13 +16,7 @@ registry.category("web_tour.tours").add("star_message_tour", {
 registry.category("web_tour.tours").add("message_actions_tour", {
     steps: () => [
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message",
-            run: async function () {
-                await contains(".o-mail-Thread .o-mail-Message", {
-                    count: 1,
-                    target: document.querySelector("#chatterRoot").shadowRoot,
-                });
-            },
+            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message:count(1)",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Composer-input",
@@ -34,13 +27,7 @@ registry.category("web_tour.tours").add("message_actions_tour", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message",
-            run: async function () {
-                await contains(".o-mail-Thread .o-mail-Message", {
-                    count: 2,
-                    target: document.querySelector("#chatterRoot").shadowRoot,
-                });
-            },
+            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message:count(2)",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message[data-persistent]:contains(New message)",
@@ -79,13 +66,7 @@ registry.category("web_tour.tours").add("message_actions_tour", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message",
-            run: async function () {
-                await contains(".o-mail-Thread .o-mail-Message", {
-                    count: 1,
-                    target: document.querySelector("#chatterRoot").shadowRoot,
-                });
-            },
+            trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message:count(1)",
         },
     ],
 });
