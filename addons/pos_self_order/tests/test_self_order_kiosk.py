@@ -277,3 +277,48 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.assertEqual(len(self.pos_config.self_ordering_image_home_ids), 3)
         # Background images can be fully cleared
         self.assertEqual(len(self.pos_config.self_ordering_image_background_ids), 0)
+
+    def test_self_order_parent_category(self):
+        # Create a parent POS category and two child POS categories
+        test_parent_category = self.env['pos.category'].create({
+            'name': "Test Parent Category",
+        })
+        test_child_category1 = self.env['pos.category'].create({
+            'name': "Test Child Category 1",
+            'parent_id': test_parent_category.id
+        })
+        test_child_category2 = self.env['pos.category'].create({
+            'name': "Test Child Category 2",
+            'parent_id': test_parent_category.id
+        })
+
+        # Create sample products for testing for child categories
+        self.env['product.product'].create({
+            'name': "Coca-Cola",
+            'list_price': 2.53,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.link(test_child_category1.id)],
+        })
+        self.env['product.product'].create({
+            'name': "Pepsi",
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.link(test_child_category2.id)],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'iface_available_categ_ids': [Command.set([test_parent_category.id, test_child_category1.id, test_child_category2.id])],
+            'limit_categories': True,
+            'use_presets': False,
+            'default_preset_id': False,
+            'available_preset_ids': [Command.clear()],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_parent_category")
