@@ -31,6 +31,7 @@ export function initMockRpc() {
     onRpc("/pos-self-order/process-order/kiosk", mockProcssOrder);
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
     onRpc("/pos-self-order/get-slots/", () => ({ usage_utc: {} }));
+    onRpc("/pos-self-order/remove-order", () => ({}));
 }
 
 export const setupPoSEnvForSelfOrder = async () => {
