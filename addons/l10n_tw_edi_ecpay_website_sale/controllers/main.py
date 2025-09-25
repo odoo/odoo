@@ -207,7 +207,6 @@ class WebsiteSaleL10nTW(WebsiteSale):
                     company_contact = request.env['res.partner'].sudo().create({
                         'name': address_values.get('parent_name'),
                         'vat': address_values.get('vat'),
-                        'company_type': 'company',
                         'l10n_tw_edi_require_paper_format': l10n_tw_edi_is_print,
                     })
                     order_sudo.partner_id.parent_id = company_contact
