@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_sale
-# 
+# * event_sale
+#
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+#
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2025-09-25 14:00+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
+"event_sale/da/>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
@@ -32,7 +35,8 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
-msgstr "<i class=\"fa fa-arrow-right\"/> Konfigurér arrangementer &amp; billetter"
+msgstr ""
+"<i class=\"fa fa-arrow-right\"/> Konfigurér arrangementer &amp; billetter"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -134,6 +138,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Vælg en tidsblok til et arrangement, så oprettes tilmeldingen automatisk for "
+"denne blok."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -348,13 +354,14 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Udyldig tidsblok \"%(slot_name)s\" for arrangement \"%(event_name)s\"."
 
 #. module: event_sale
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
-msgstr "Ugyldigt billetvalg \"%(ticket_name)s\" for arrangement \"%(event_name)s\"."
+msgstr ""
+"Ugyldigt billetvalg \"%(ticket_name)s\" for arrangement \"%(event_name)s\"."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -389,7 +396,7 @@ msgstr "Sidst opdateret den"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Medium"
+msgstr "Middel"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -543,7 +550,7 @@ msgstr "Salg"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Salg (inkl. moms)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -602,6 +609,9 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Salgsordrelinjer med produktet %(product_name)s skal være tilknyttet et "
+"arrangement, en billet og en tidsblok i det tilfælde, hvor et arrangement "
+"har flere tidsblokke."
 
 #. module: event_sale
 #. odoo-python
@@ -639,7 +649,8 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
-"Ikke bekræftet: Tilmeldinger, der afventer handling (typisk i forbindelse med salgsstatus).\n"
+"Ikke bekræftet: Tilmeldinger, der afventer handling (typisk i forbindelse "
+"med salgsstatus).\n"
 "Tilmeldt: Tilmeldinger, der anses som bekræftede af kunden.\n"
 "Deltaget: Tilmeldinger, hvor deltageren har deltaget i arrangementet.\n"
 "Annulleret: Tilmeldinger, der er blevet annulleret manuelt."
@@ -667,7 +678,7 @@ msgstr "Vi kunne ikke finde en billet, der passer til dette produkt. <br/>"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "ændret fra"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
