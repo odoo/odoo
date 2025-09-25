@@ -18,6 +18,14 @@ export class ProductProduct extends Base {
         );
     }
 
+    get searchString() {
+        const fields = ["display_name", "barcode", "default_code"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
+
     getApplicablePricelistRules(pricelist) {
         const tmpl = this.product_tmpl_id;
         const tmplRules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || [])
