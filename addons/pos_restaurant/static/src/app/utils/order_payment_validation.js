@@ -40,6 +40,7 @@ patch(OrderPaymentValidation.prototype, {
             });
             if (confirmed) {
                 try {
+                    await this.pos.ensureGuestCustomerCount(this.order);
                     this.pos.env.services.ui.block();
                     await this.pos.sendOrderInPreparationUpdateLastChange(this.order);
                 } finally {
