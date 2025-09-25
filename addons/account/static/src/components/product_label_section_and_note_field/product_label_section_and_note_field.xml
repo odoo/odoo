@@ -40,16 +40,21 @@
                         />
                     </t>
                 </div>
+                <div
+                    t-if="props.readonly"
+                    class="o_input d-print-none border-0 fst-italic"
+                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and label) }"
+                    t-out="label"
+                />
                 <textarea
+                    t-else=""
                     class="o_input d-print-none border-0 fst-italic"
                     placeholder="Enter a description"
                     rows="1"
                     type="text"
-                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or !props.readonly and labelVisibility.value)) }"
-                    t-att-readonly="props.readonly and isProductClickable ? '1' : ''"
+                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
                     t-att-value="label"
                     t-ref="labelNodeRef"
-                    t-key="props.readonly"
                 />
             </t>
             <t t-if="isPrintMode.value">
