@@ -1681,11 +1681,14 @@ export const accountTaxHelpers = {
                 tax_details.total_excluded + tax_details.delta_total_excluded;
             base_line.manual_tax_amounts = {};
             for (const tax_data of taxes_data) {
+                const tax = tax_data.tax;
+                const tax_id_str = tax.id.toString();
+                base_line.manual_tax_amounts[tax_id_str] = {};
                 if (filter_function && !filter_function(base_line, tax_data)) {
                     continue;
                 }
-                const tax = tax_data.tax;
-                base_line.manual_tax_amounts[tax.id.toString()] = {
+
+                base_line.manual_tax_amounts[tax_id_str] = {
                     tax_amount_currency: tax_data.tax_amount_currency,
                     tax_amount: tax_data.tax_amount,
                     base_amount_currency: tax_data.base_amount_currency,
