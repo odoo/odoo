@@ -182,7 +182,8 @@ test("BadgeSelectionField widget in list with the color_field option", async () 
         `,
     });
 
-
+    // Ensure that the first partner has no tag displayed (20 is the default color).
+    expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_20`).toHaveCount(0);
     // Ensure that the correct o_badge_color is used.
     expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_6`).toHaveCount(1);
     expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_7`).toHaveCount(0);

@@ -13,7 +13,8 @@ export class ListBadgeSelectionField extends BadgeSelectionField {
         if (this.props.readonly) {
             if (
                 this.props.colorField &&
-                Number.isInteger(this.props.record.data[this.props.colorField])
+                Number.isInteger(this.props.record.data[this.props.colorField]) &&
+                this.props.record.data[this.props.name]
             ) {
                 return `o_badge_color_${this.props.record.data[this.props.colorField]}`;
             }
