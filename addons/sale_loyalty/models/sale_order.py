@@ -150,7 +150,6 @@ class SaleOrder(models.Model):
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
-            # Give points on order confirmation
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
@@ -213,7 +212,6 @@ class SaleOrder(models.Model):
             coupon = next(iter(claimable_rewards))
             rewards = claimable_rewards[coupon]
             if len(rewards) == 1 and not rewards.multi_product:
-                # GDPF this call discount points.
                 self._apply_program_reward(claimable_rewards[coupon], coupon)
                 return True
         elif not claimable_rewards:
@@ -1036,8 +1034,7 @@ class SaleOrder(models.Model):
         all_programs_status = {p: {'error': 'error'} for p in all_programs_to_check - domain_matching_programs}
         # Compute applicability and points given for all programs that passed the domain check
         # Note that points are computed with reward lines present
-        programs_result = self._program_check_compute_points(domain_matching_programs)
-        all_programs_status.update(programs_result)
+        all_programs_status.update(self._program_check_compute_points(domain_matching_programs))
         # Delay any unlink to the end of the function since they cause a full cache invalidation
         lines_to_unlink = self.env['sale.order.line']
         coupons_to_unlink = self.env['loyalty.card']
@@ -1091,7 +1088,6 @@ class SaleOrder(models.Model):
                     all_point_changes = [0]
                 for pe, points in zip(program_point_entries.sudo(), all_point_changes):
                     pe.points = points
-                # GDPF tried force entering this condition, no success.
                 if len(program_point_entries) < len(all_point_changes):
                     new_coupon_points = all_point_changes[len(program_point_entries):]
                     # next_order_coupons should be linked to the order's partner
@@ -1128,7 +1124,6 @@ class SaleOrder(models.Model):
         # +==========================================+
 
         # We will reuse these lines as much as possible, this resets the order in a reward-less state
-        # GDPF Here the points are faked reseted...
         reward_line_pool = self.order_line.filtered(lambda l: l.reward_id and l.coupon_id)._reset_loyalty()
         seen_rewards = set()
         line_rewards = []
@@ -1196,7 +1191,6 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        # GDPF This function is the problem that points are not being granted for new manually created invoices (not cron).
         # Prepare quantities
         order_lines = self._get_not_rewarded_order_lines().filtered(
             lambda line: not line.combo_item_id
