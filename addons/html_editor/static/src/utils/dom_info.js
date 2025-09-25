@@ -342,6 +342,7 @@ export function isIconElement(node) {
 // @todo @phoenix: move the specific part in a proper plugin.
 export function isMediaElement(node) {
     return (
+        node.nodeName === "IMG" ||
         isIconElement(node) ||
         (node.classList &&
             (node.classList.contains("o_image") ||
