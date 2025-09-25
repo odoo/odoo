@@ -120,22 +120,17 @@ patch(PosStore.prototype, {
         }
         return result;
     },
-
-    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
+    async ensureGuestCustomerCount(order) {
         const currentPreset = order.preset_id;
-        if (
-            this.config.use_presets &&
-            currentPreset?.use_guest &&
-            !order.uiState.guestSetted &&
-            !opts.cancelled
-        ) {
-            const response = await this.setCustomerCount(order);
-            if (!response) {
-                return;
+        if (this.config.use_presets && currentPreset?.use_guest && !order.uiState.guestSetted) {
+            await this.setCustomerCount(order);
+            if (order.getCustomerCount() === 0 && order.table_id) {
+                order.setCustomerCount(order.table_id.seats);
             }
             order.uiState.guestSetted = true;
         }
-
+    },
+    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
         if (!opts.cancelled) {
             order.cleanCourses();
             const firstCourse = order.getFirstCourse();
@@ -533,6 +528,7 @@ patch(PosStore.prototype, {
     },
     async submitOrder() {
         const order = this.getOrder();
+        await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
         this.showDefault();
@@ -552,6 +548,7 @@ patch(PosStore.prototype, {
                 return;
             }
             try {
+                await this.ensureGuestCustomerCount(order);
                 this.env.services.ui.block();
                 await this.sendOrderInPreparationUpdateLastChange(order);
             } finally {
