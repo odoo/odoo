@@ -871,7 +871,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 'name': 'translation',
                 'country_id': None,
                 'country_code': None,
-                'modules': ['account'],
+                'module': 'account',
                 'parent': None,
             }}
 

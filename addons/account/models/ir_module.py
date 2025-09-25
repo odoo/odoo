@@ -5,20 +5,20 @@ from odoo import api, models, fields
 from odoo.tools.misc import get_flag
 
 
-def templ(env, code, name=None, country='', **kwargs):
-    country_code = country or code.split('_')[0] if country is not None else None
-    country = country_code and env.ref(f"base.{country_code}", raise_if_not_found=False)
+def templ(env, code2country, name=None, country_code='', **kwargs):
+    country = country_code and code2country.get(country_code.upper())
     country_name = f"{get_flag(country.code)} {country.name}" if country else ''
     return {
         'name': country_name and (f"{country_name} - {name}" if name else country_name) or name,
         'country_id': country and country.id,
-        'country_code': country and country.code,
         **kwargs,
     }
 
 template_module = lambda m: ismodule(m) and m.__name__.split('.')[-1].startswith('template_')
 template_class = isclass
 template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and f._l10n_template[1] == 'template_data'
+
+TEMPLATE_REGISTER = {}
 
 
 class IrModuleModule(models.Model):
@@ -28,36 +28,41 @@ class IrModuleModule(models.Model):
 
     @api.depends('state')
     def _compute_account_templates(self):
-        chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
-        ChartTemplate = self.env['account.chart.template']
+        code2country = self.env['res.country'].search([]).grouped('code')
         for module in self:
-            templates = {}
-            if module.category_id == chart_category or module.name == 'account':
-                try:
-                    python_module = import_module(f"odoo.addons.{module.name}.models")
-                except ModuleNotFoundError:
-                    templates = {}
-                else:
-                    templates = {
-                        fct._l10n_template[0]: {
-                            'name': template_values.get('name'),
-                            'parent': template_values.get('parent'),
-                            'sequence': template_values.get('sequence', 1),
-                            'country': template_values.get('country', ''),
-                            'visible': template_values.get('visible', True),
-                            'installed': module.state == "installed",
-                            'module': module.name,
-                        }
-                        for _name, mdl in getmembers(python_module, template_module)
-                        for _name, cls in getmembers(mdl, template_class)
-                        for _name, fct in getmembers(cls, template_function)
-                        if (template_values := fct(ChartTemplate))
-                    }
-
             module.account_templates = {
-                code: templ(self.env, code, **vals)
-                for code, vals in sorted(templates.items(), key=lambda kv: kv[1]['sequence'])
+                code: templ(self.env, code2country, **vals)
+                for code, vals in module._get_module_template().items()
             }
+
+    def _get_module_template(self):
+        if self.name not in TEMPLATE_REGISTER:
+            chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
+            templates = {}
+            if self.category_id == chart_category or self.name == 'account':
+                try:
+                    python_module = import_module(f"odoo.addons.{self.name}.models")
+                except ModuleNotFoundError:
+                    pass
+                else:
+                    for _name, mdl in getmembers(python_module, template_module):
+                        for _name, cls in getmembers(mdl, template_class):
+                            for _name, fct in getmembers(cls, template_function):
+                                if (template_values := fct(self.env['account.chart.template'])):
+                                    code = fct._l10n_template[0]
+                                    country = template_values.get('country', '')
+                                    country_code = country or code.split('_')[0] if country is not None else None
+                                    templates[code] = {
+                                        'name': template_values.get('name'),
+                                        'parent': template_values.get('parent'),
+                                        'sequence': template_values.get('sequence', 1),
+                                        'country': country,
+                                        'country_code': country_code,
+                                        'visible': template_values.get('visible', True),
+                                        'module': self.name,
+                                    }
+            TEMPLATE_REGISTER[self.name] = dict(sorted(templates.items(), key=lambda kv: kv[1]['sequence']))
+        return TEMPLATE_REGISTER[self.name]
 
     def write(self, vals):
         # Instanciate the first template of the module on the current company upon installing the module
@@ -71,8 +76,9 @@ class IrModuleModule(models.Model):
                         ChartTemplate = self.env['account.chart.template'].with_company(company)
                         module_template_data = ChartTemplate._get_chart_template_data(company.chart_template, demo, self.name)
                         module_template_data.pop('template_data', None)
-                        ChartTemplate._pre_reload_data(company, {}, module_template_data, force_update=True)
-                        ChartTemplate._load_data(module_template_data)
+                        if module_template_data:
+                            ChartTemplate._pre_reload_data(company, {}, module_template_data, force_update=True)
+                            ChartTemplate._load_data(module_template_data)
             if (
                 not self.env.company.chart_template
                 and self.account_templates

@@ -229,7 +229,8 @@ class ResCompany(models.Model):
 
         # If that l10n module isn't installed, it means the company doesn't use any tax report for that country
         # and thus hasn't nor need those tax report tag
-        is_coa_module_installed = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['installed']
+        coa_module_name = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['module']
+        is_coa_module_installed = coa_module_name in self.env['ir.module.module']._installed()
         if not is_coa_module_installed:
             chart_template = None
 
@@ -265,7 +266,8 @@ class ResCompany(models.Model):
     def _get_country_specific_account_tax_fields(self):
         country = self._get_country_from_vat()
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
-        is_coa_module_installed = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['installed']
+        coa_module_name = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['module']
+        is_coa_module_installed = coa_module_name in self.env['ir.module.module']._installed()
 
         if is_coa_module_installed:
             return EU_FIELD_MAP.get(chart_template, {})

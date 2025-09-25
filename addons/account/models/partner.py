@@ -93,7 +93,7 @@ class AccountFiscalPosition(models.Model):
                 template_code = self.env['account.chart.template']._guess_chart_template(fiscal_position.country_id)
                 template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
                 # 'no_template' kept for compatibility in stable. To remove in master
-                fiscal_position.foreign_vat_header_mode = 'templates_found' if template['installed'] else 'no_template'
+                fiscal_position.foreign_vat_header_mode = 'templates_found' if template['module'] in self.env['ir.module.module']._installed() else 'no_template'
 
     @api.depends('tax_ids')
     def _compute_tax_map(self):
@@ -285,7 +285,7 @@ class AccountFiscalPosition(models.Model):
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
         template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
-        if not template['installed']:
+        if template['module'] not in self.env['ir.module.module']._installed():
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
         created_records = self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)

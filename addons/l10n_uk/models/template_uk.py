@@ -12,6 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': '110000',
             'property_account_payable_id': '210000',
             'code_digits': '6',
+            'country': 'gb',
         }
 
     @template('uk', 'res.company')

@@ -850,6 +850,8 @@ class AccountChartTemplate(models.AbstractModel):
                                 template_data[model][xmlid].update(record)
         if 'account.move' in template_data:
             template_data['account.move'] = template_data.pop('account.move')
+        if not template_data['res.company']:
+            del template_data['res.company']
         return template_data
 
     def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
