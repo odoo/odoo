@@ -198,6 +198,32 @@ def check_companies_domain_parent_of(self, companies):
     ])]
 
 
+def get_public_method(model: BaseModel, name: str) -> callable:
+    """ Get the public unbound method from a model.
+
+    When the method does not exist or is inaccessible, raise appropriate errors.
+    Accessible methods are public (in sense that python defined it:
+    not prefixed with "_") and are not decorated with `@api.private`.
+    """
+    assert isinstance(model, BaseModel)
+    e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
+    if name.startswith('_'):
+        raise AccessError(e)
+
+    cls = type(model)
+    method = getattr(cls, name, None)
+    if not callable(method):
+        raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+
+    for mro_cls in cls.mro():
+        if not (cla_method := getattr(mro_cls, name, None)):
+            continue
+        if getattr(cla_method, '_api_private', False):
+            raise AccessError(e)
+
+    return method
+
+
 class MetaModel(type):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
