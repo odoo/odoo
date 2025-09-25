@@ -566,9 +566,9 @@ class L10nInEwaybill(models.Model):
         round_value = self.env['account.move']._l10n_in_round_value
         tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get('tax_details', {}))
         line_details = {
-            'productName': line.product_id.name,
+            'productName': line.product_id.name[:100] if line.product_id else "",
             'hsnCode': extract_digits(line.l10n_in_hsn_code),
-            'productDesc': line.name,
+            'productDesc': line.name[:100] if line.name else "",
             'quantity': line.quantity,
             'qtyUnit': line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split('-')[0] or 'OTH',
             'taxableAmount': round_value(line.balance * sign),
