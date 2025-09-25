@@ -19,10 +19,11 @@ export class DashboardDateFilter extends Component {
     static props = {
         value: { type: Object, optional: true },
         update: Function,
+        model: Object,
     };
 
     get inputValue() {
-        return dateFilterValueToString(this.props.value);
+        return dateFilterValueToString(this.props.value, this.props.model.getters);
     }
 
     selectPrevious() {

@@ -216,15 +216,10 @@ export class DashboardLoader {
             const result = await this.env.services.http.get(
                 `/spreadsheet/dashboard/data/${dashboardId}`
             );
-            const { snapshot, revisions, default_currency, is_sample, translation_namespace } =
-                result;
+            const { snapshot, revisions, is_sample, translation_namespace } = result;
             dashboard.translationNamespace = translation_namespace;
-            dashboard.model = this._createSpreadsheetModel(
-                snapshot,
-                revisions,
-                default_currency,
-                translation_namespace
-            );
+            const config = this.getModelConfig(result);
+            dashboard.model = this._createSpreadsheetModel(snapshot, revisions, config);
             dashboard.status = Status.Loaded;
             dashboard.isSample = is_sample;
         } catch (error) {
@@ -257,23 +252,28 @@ export class DashboardLoader {
      * @param {object} [defaultCurrency]
      * @returns {Model}
      */
-    _createSpreadsheetModel(snapshot, revisions = [], currency, translationNamespace) {
-        const odooDataProvider = new OdooDataProvider(this.env);
-        const model = new Model(
-            snapshot,
-            {
-                custom: { env: this.env, orm: this.orm, odooDataProvider, translationNamespace },
-                mode: "dashboard",
-                defaultCurrency: createDefaultCurrency(currency),
-                external: { geoJsonService: this.geoJsonService },
-            },
-            revisions
-        );
+    _createSpreadsheetModel(snapshot, revisions = [], config) {
+        const model = new Model(snapshot, config, revisions);
         this._activateFirstSheet(model);
-        odooDataProvider.addEventListener("data-source-updated", () =>
+        config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
             model.dispatch("EVALUATE_CELLS")
         );
         return model;
+    }
+
+    getModelConfig(serverResult) {
+        const odooDataProvider = new OdooDataProvider(this.env);
+        return {
+            custom: {
+                env: this.env,
+                orm: this.orm,
+                odooDataProvider,
+                translationNamespace: serverResult.translation_namespace,
+            },
+            mode: "dashboard",
+            defaultCurrency: createDefaultCurrency(serverResult.default_currency),
+            external: { geoJsonService: this.geoJsonService },
+        };
     }
 }
 
