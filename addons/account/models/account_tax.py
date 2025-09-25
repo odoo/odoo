@@ -3786,15 +3786,22 @@ class AccountTax(models.Model):
             tax = tax_data['tax']
             return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
 
-        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
-        if not has_taxes_to_exclude:
-            return base_lines
-
         # Exclude non-discountable taxes.
+        base_lines_partition_taxes, _has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
         discountable_base_lines = []
         for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
+
+            if not taxes_to_exclude:
+                discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=base_line['price_unit'] * base_line['quantity'] * (1 - (base_line['discount'] / 100.0)),
+                    quantity=1.0,
+                    discount=0.0,
+                    manual_tax_amounts=base_line['manual_tax_amounts'],
+                ))
+                continue
 
             if any(
                 tax_data['tax'] in taxes_to_exclude
@@ -3905,14 +3912,21 @@ class AccountTax(models.Model):
             tax = tax_data['tax']
             return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
 
-        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
-        if not has_taxes_to_exclude:
-            return base_lines
-
+        base_lines_partition_taxes, _has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
         base_lines_for_dp = []
         for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
+
+            if not taxes_to_exclude:
+                base_lines_for_dp.append(self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=base_line['price_unit'] * base_line['quantity'] * (1 - (base_line['discount'] / 100.0)),
+                    quantity=1.0,
+                    discount=0.0,
+                    manual_tax_amounts=base_line['manual_tax_amounts'],
+                ))
+                continue
 
             # Split the taxes in multiple batch of taxes, one per sub base line.
             new_taxes = self.env['account.tax']
