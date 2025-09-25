@@ -722,3 +722,24 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_partner_name_editable", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCreateCustomerButton(),
+            ProductScreen.clickPartnerTab("Sales"),
+            {
+                content: "Add a name to the new customer",
+                trigger: 'div[name="name"] input[type="text"][id^="name_"]',
+                run: function (trigger) {
+                    const input = document.querySelector(
+                        'div[name="name"] input[type="text"][id^="name_"]'
+                    );
+                    input.value = "Test Partner Name";
+                },
+            },
+        ].flat(),
+});
