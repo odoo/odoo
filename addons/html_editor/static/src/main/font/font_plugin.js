@@ -2,7 +2,11 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isRedundantElement, isVisibleTextNode } from "@html_editor/utils/dom_info";
+import {
+    isPhrasingContent,
+    isRedundantElement,
+    isVisibleTextNode,
+} from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
@@ -542,7 +546,7 @@ export class FontPlugin extends Plugin {
                 linebreak = this.document.createTextNode("\n");
                 node.append(linebreak);
             }
-            if (node.nodeType === Node.ELEMENT_NODE) {
+            if (!isPhrasingContent(node)) {
                 unwrapContents(node);
             }
             for (const child of children) {

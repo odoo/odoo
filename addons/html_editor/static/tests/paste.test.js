@@ -2599,7 +2599,7 @@ describe("pasting within pre", () => {
             contentAfter: "<pre>xabc\ndef\nghi[]y</pre>",
         });
     });
-    test("should paste as plain text within pre", async () => {
+    test("should paste only phrasing content within pre", async () => {
         await testEditor({
             contentBefore: "<pre>[]<br></pre>",
             stepFunction: async (editor) => {
@@ -2608,7 +2608,7 @@ describe("pasting within pre", () => {
                     '<div class="o-paragraph">a<strong>bcd</strong><font style="color: rgb(255, 0, 0);">efg</font><font style="background-color: rgba(255, 156, 0, 0.6);">hij</font><span class="display-3-fs">klm</span>no</div>'
                 );
             },
-            contentAfter: "<pre>abcdefghijklmno[]</pre>",
+            contentAfter: "<pre>a<strong>bcd</strong>efghijklmno[]</pre>",
         });
     });
     test("should paste lists within pre as plain text and keep the list style and indentation", async () => {
