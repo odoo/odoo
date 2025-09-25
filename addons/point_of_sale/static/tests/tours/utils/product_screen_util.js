@@ -229,32 +229,6 @@ export function inputCustomerSearchbar(value) {
         },
     ];
 }
-export function clickCreateCustomerButton() {
-    const steps = [
-        {
-            isActive: ["desktop"],
-            content: "click Create button to add a customer",
-            trigger: 'button.btn.btn-primary.btn-lg:contains("Create")',
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "click Create button to add a customer",
-            trigger: 'button.btn.btn-primary.btn-lg:contains("New")',
-            run: "click",
-        },
-    ];
-    return steps;
-}
-export function clickPartnerTab(name) {
-    return [
-        {
-            content: `click '${name}' tab`,
-            trigger: `.nav-tabs .nav-link:contains("${name}")`,
-            run: "click",
-        },
-    ];
-}
 export function clickRefund() {
     return [clickReview(), ...clickControlButton("Refund")];
 }
