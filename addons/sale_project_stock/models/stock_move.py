@@ -40,8 +40,9 @@ class StockMove(models.Model):
         """ Generate the sale.line creation value from the current stock move """
         self.ensure_one()
 
+        order = order.sudo()
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
-        product_taxes = self.product_id.taxes_id._filter_taxes_by_company(order.company_id)
+        product_taxes = self.product_id.sudo().taxes_id._filter_taxes_by_company(order.company_id)
         taxes = fpos.map_tax(product_taxes)
 
         return {
