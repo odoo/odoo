@@ -148,7 +148,7 @@ class ir_cron(models.Model):
                         continue
                     _logger.debug("job %s acquired", job_id)
                     # take into account overridings of _process_job() on that database
-                    registry = Registry(db_name)
+                    registry = Registry(db_name).check_signaling()
                     registry[cls._name]._process_job(db, cron_cr, job)
                     _logger.debug("job %s updated and released", job_id)
 
