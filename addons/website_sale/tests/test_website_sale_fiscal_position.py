@@ -23,20 +23,18 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
         cls.env['account.tax'].search([('company_id', '=', cls.env.company.id)]).action_archive()
 
         # Create a fiscal position with a mapping of taxes
-        cls.tax_15_excl = cls.env['account.tax'].create({
-            'name': "15% excl",
+        base_tax_vals = {
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 15,
             'price_include': False,
             'include_base_amount': False,
-        })
-        cls.tax_0 = cls.env['account.tax'].create({
-            'name': "0%",
-            'type_tax_use': 'sale',
-            'amount_type': 'percent',
-            'amount': 0,
-        })
+        }
+        cls.tax_15_excl, cls.tax_15_incl, cls.tax_0 = cls.env['account.tax'].create([
+            dict(base_tax_vals, name="15% excl"),
+            dict(base_tax_vals, name="15% incl", price_include=True),
+            dict(base_tax_vals, name="0%", amount=0),
+        ])
         belgium = cls.env.ref('base.be')
         cls.fpos_be = cls.env['account.fiscal.position'].create({
             'name': "Fiscal Position BE",
@@ -106,8 +104,7 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
         self.start_tour("/shop", 'website_sale_fiscal_position_public_tour', login="")
 
     def test_recompute_taxes_on_address_change(self):
-        tax_15_incl = self.tax_15_excl.copy({'name': "15% incl", 'price_include': True})
-        self.fpos_be.tax_ids.tax_src_id = self.product.taxes_id = tax_15_incl
+        self.fpos_be.tax_ids.tax_src_id = self.product.taxes_id = self.tax_15_incl
         self.product.website_published = True
         cart = self.env['sale.order'].create({
             'partner_id': self.partner_portal.id,
@@ -120,13 +117,37 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
 
         self.partner_portal.country_id = self.env.ref('base.us')
         self.assertNotEqual(cart.fiscal_position_id, self.fpos_be)
-        self.assertEqual(cart.order_line.tax_id, tax_15_incl)
+        self.assertEqual(cart.order_line.tax_id, self.tax_15_incl)
         self.assertEqual(cart.amount_untaxed, amount_untaxed, "Untaxed amount should not change")
 
         cart.action_confirm()
         self.partner_portal.country_id = self.env.ref('base.be')
         self.assertEqual(
             cart.order_line.tax_id,
-            tax_15_incl,
+            self.tax_15_incl,
             "Tax should no longer change after order confirmation",
+        )
+
+    def test_fiscal_position_price_rounding(self):
+        """Ensure that the correct list price gets displayed when using a fiscal position."""
+        self.fpos_be.tax_ids.update({
+            'tax_src_id': self.tax_15_incl.id,
+            'tax_dest_id': self.tax_15_excl.id,
+        })
+        self.website.update({
+
+            'show_line_subtotals_tax_selection': 'tax_included',
+            'fiscal_position_id': self.fpos_be.id,
+        })
+        product_tmpl = self.product.product_tmpl_id
+        product_tmpl.update({
+            'list_price': 10.0,
+            'taxes_id': [Command.set(self.tax_15_incl.ids)],
+            'website_published': True,
+        })
+        combination_info = product_tmpl._get_combination_info()
+        self.assertEqual(combination_info['taxes'], self.tax_15_excl)
+        self.assertEqual(
+            combination_info['list_price'], 10.0,
+            "List price should be correctly rounded after fiscal position is applied",
         )

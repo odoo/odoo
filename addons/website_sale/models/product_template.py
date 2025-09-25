@@ -568,9 +568,10 @@ class ProductTemplate(models.Model):
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
 
         # The list_price is always the price of one.
-        return taxes.compute_all(
+        list_price = taxes.with_context(round=False, round_base=False).compute_all(
             price, currency, 1, product_or_template, self.env.user.partner_id
         )[tax_display]
+        return currency.round(list_price)
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """ Create if necessary and possible and return the id of the product
