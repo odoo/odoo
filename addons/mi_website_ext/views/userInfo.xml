@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="layout_add_user_session_info" inherit_id="website.layout">
+        <xpath expr="//head/script[last()]" position="after">
+            <script type="text/javascript">
+                window.odoo_user_id = <t t-esc="request.session.uid or 'false'"/>;
+            </script>
+        </xpath>
+    </template>
+</odoo>

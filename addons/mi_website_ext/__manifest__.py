@@ -21,6 +21,7 @@
         ],
         "web.assets_frontend": [
             "mi_website_ext/static/src/js/notify_button_handler.js",
+            'mi_website_ext/static/src/js/auto_logout.js',
             'mi_website_ext/static/src/js/manual_viewer.js',
             'mi_website_ext/static/src/js/back_button_refresh.js',
             "mi_website_ext/static/src/js/startup_popups.js",
@@ -87,7 +88,8 @@
         "data/ir_cron.xml",
         'views/manual_viewer_modal.xml',
         'views/mandatory_policies_modal.xml',
-        'views/hr_leave_views.xml'
+        'views/hr_leave_views.xml',
+        'views/userInfo.xml'
     ],
     "installable": True,
     "application": True,
