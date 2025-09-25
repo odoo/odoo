@@ -113,3 +113,16 @@ registry.category("web_tour.tours").add("test_integration_dynamic_always_never_v
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_image_variants_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Image Product"),
+            ProductConfiguratorPopup.checkImageVariantVisible(),
+            ProductConfiguratorPopup.checkImageVariantTextVisible("First Image"),
+            ProductConfiguratorPopup.checkImageVariantTextVisible("Second Image"),
+            ProductConfiguratorPopup.checkImagePriceExtraVisible("$ 20"),
+        ].flat(),
+});
