@@ -248,4 +248,20 @@ describe("self_order_service", () => {
             expect(models["pos.order.line"].length).toBe(2);
         });
     });
+
+    test("cancelBackendOrder", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+
+        const syncOrder = await store.sendDraftOrderToServer();
+        expect(order.id).toBeOfType("number");
+        expect(order.lines[0].id).toBeOfType("number");
+        expect(order.lines[1].id).toBeOfType("number");
+        expect(syncOrder.id).toBe(order.id);
+
+        await store.cancelBackendOrder();
+
+        expect(order.state).toBe("cancel");
+        expect(store.router.activeSlot).toBe("default");
+    });
 });

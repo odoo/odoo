@@ -32,6 +32,11 @@ export class PaymentPage extends Component {
         return this.selfOrder.paymentError || this.state.selection;
     }
 
+    back() {
+        this.selfOrder.currentOrder.uiState.lineChanges = {};
+        this.router.back();
+    }
+
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;

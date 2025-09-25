@@ -88,3 +88,38 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
 
         # Check self-order in pos-terminal order button remains enabled
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_online_payment_pos_self_order_preparation_changes', login='pos_user')
+
+    def test_kiosk_cart_restore_and_cancel(self):
+        """
+        Verify that the cart restores correctly after back navigation from payment
+        and that order cancellation works as expected.
+        """
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'payment_method_ids': [Command.set(self.online_payment_method.ids)],
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_kiosk_cart_restore_and_cancel")
+
+        kiosk_order = self.env['pos.order'].search(
+            [('config_id', '=', self.pos_config.id), ('state', '=', 'cancel')],
+            order="id desc", limit=1
+        )
+
+        # Collect order lines in a dict by product name
+        order_lines = {line.product_id.name: line for line in kiosk_order.lines}
+        self.assertEqual(len(order_lines), 2, "There should be exactly 2 order lines")
+
+        coca_line = order_lines.get("Coca-Cola")
+        self.assertIsNotNone(coca_line, "Expected order line not found")
+        self.assertEqual(coca_line.qty, 1, "Order line quantity mismatch")
+
+        fanta_line = order_lines.get("Fanta")
+        self.assertIsNotNone(fanta_line, "Expected order line not found")
+        self.assertEqual(fanta_line.qty, 1, "Order line quantity mismatch")
