@@ -11,7 +11,6 @@ from odoo.tools.translate import html_translate
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -764,8 +763,12 @@ class ProductTemplate(models.Model):
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
-            tags = list(map(int, tags)) # Convert list of strings to list of integers
-            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
+            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            domains.append([
+                '|',
+                ('product_tag_ids', 'in', tags),
+                ('product_variant_ids.additional_product_tag_ids', 'in', tags),
+            ])
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
