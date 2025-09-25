@@ -5,6 +5,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { dispatchClean } from "../_helpers/dispatch";
+import { execCommand } from "../_helpers/userCommands";
 
 function span(text) {
     const span = document.createElement("span");
@@ -106,6 +107,17 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfter: "<pre>abcdef[]<br>ghi</pre>",
+        });
+    });
+
+    test("should be able to insert phrasing content inside pre", async () => {
+        await testEditor({
+            contentBefore: "<pre>abc[]</pre>",
+            stepFunction: async (editor) => {
+                execCommand(editor, "toggleLinkTools");
+                editor.shared.history.addStep();
+            },
+            contentAfterEdit: `<pre>abc\ufeff<a class="o_link_in_selection">\ufeff[]</a>\ufeff</pre>`,
         });
     });
 
