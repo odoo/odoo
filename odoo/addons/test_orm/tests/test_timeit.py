@@ -3,6 +3,8 @@ import time
 import timeit
 from typing import Literal
 
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.models import BaseModel
 from odoo.tests.common import tagged, TransactionCase
@@ -216,3 +218,61 @@ class TestPerformanceTimeit(TransactionCase):
         ctx = {'dom': large_domain_uniq}
         self.launch_perf_set("records._search(dom(records))",
             ctx=ctx, number=3)
+
+    def test_prefetch_loop(self):
+        records = self.Model.create([{
+                'name': f'record {i}',
+                'child_ids': [
+                    Command.create({'name': f'child {i} {j}', 'active': True})
+                    for j in range(10)
+                ],
+            } for i in range(100)
+        ])
+
+        # mock data fetch to avoid variance due to database communication
+        all_records = records | records.child_ids
+        data = {
+            'name': {record.id: record.name for record in all_records},
+            'child_ids': {record.id: record.child_ids._ids for record in all_records},
+        }
+
+        def fetch(self, field_names):
+            [field_name] = field_names
+            field = self._fields[field_name]
+            field_data = data[field_name]
+            field._insert_cache(self, [field_data[id_] for id_ in self._ids])
+
+        with patch.object(self.Model.__class__, 'fetch', fetch):
+            records = records.with_context(prefetch_fields=False)
+            self.launch_perf("records.env.invalidate_all(); records.simple_loop()", records)
+            self.launch_perf("records.env.invalidate_all(); records.nested_loop()", records)
+
+    def test_prefetch_union(self):
+        # 990 children forces the prefetching to iterate across all prefetch ids
+        records = self.Model.create([{
+                'name': f'record {i}',
+                'child_ids': [
+                    Command.create({'name': f'child {i} {j}', 'active': True})
+                    for j in range(10)
+                ],
+            } for i in range(99)
+        ])
+        # test making a union all at once or in a loop
+        self.launch_perf("records.union_once()", records)
+        self.launch_perf("records.union_loop()", records)
+
+        # test making a union, then iterate over it and prefetch a field
+
+        # mock data fetch to avoid variance due to database communication
+        def fetch(self, field_names):
+            [field_name] = field_names
+            field = self._fields[field_name]
+            field._insert_cache(self, [field_data[id_] for id_ in self._ids])
+
+        field_data = {record.id: record.name for record in records.child_ids}
+
+        with patch.object(self.Model.__class__, 'fetch', fetch):
+            # don't invalidate child_ids, as it impacts prefetching of children
+            records = records.with_context(prefetch_fields=False)
+            self.launch_perf("records.invalidate_model(['name']); records.union_once().simple_loop()", records)
+            self.launch_perf("records.invalidate_model(['name']); records.union_loop().simple_loop()", records)
