@@ -1856,9 +1856,7 @@ export class PosStore extends Reactive {
         });
     }
     editPartnerContext(partner) {
-        return {
-            pos_config_id: this.config.id,
-        };
+        return {};
     }
     /**
      * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner
