@@ -142,6 +142,22 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: remove this and replace the selector in the
+        // "gallery_image" option XML template.
+        // Consider other media types and not only images in the "Image Gallery"
+        // and "Images Wall" snippets.
+        const galleryImageOption = $html.find('[data-js="gallery_img"]')[0];
+        galleryImageOption.dataset.selector = [
+            ".s_image_gallery img", // Normal images
+            ".s_image_gallery .media_iframe_video", // Videos
+        ].join(", ");
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
