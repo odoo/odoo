@@ -624,10 +624,10 @@ export const accountTaxHelpers = {
             discount: load("discount", 0.0),
             currency_id: currency,
             sign: load("sign", 1.0),
-            special_mode: load("special_mode", null),
-            special_type: load("special_type", null),
+            special_mode: kwargs.special_mode || null,
+            special_type: kwargs.special_type || null,
             rate: load("rate", 1.0),
-            filter_tax_function: load("filter_tax_function", null),
+            filter_tax_function: kwargs.filter_tax_function || null,
         };
 
         const extra_tax_data = this.import_base_line_extra_tax_data(
@@ -635,19 +635,15 @@ export const accountTaxHelpers = {
             load("extra_tax_data", {}) || {}
         );
         Object.assign(base_line, {
-            computation_key: load("computation_key", extra_tax_data.computation_key || null),
-            manual_total_excluded_currency: load(
-                "manual_total_excluded_currency",
-                extra_tax_data.manual_total_excluded_currency || null
-            ),
-            manual_total_excluded: load(
-                "manual_total_excluded",
-                extra_tax_data.manual_total_excluded || null
-            ),
-            manual_tax_amounts: load(
-                "manual_tax_amounts",
-                extra_tax_data.manual_tax_amounts || null
-            ),
+            manual_total_excluded_currency:
+                kwargs.manual_total_excluded_currency ||
+                extra_tax_data.manual_total_excluded_currency ||
+                null,
+            manual_total_excluded:
+                kwargs.manual_total_excluded || extra_tax_data.manual_total_excluded || null,
+            computation_key: kwargs.computation_key || extra_tax_data.computation_key || null,
+            manual_tax_amounts:
+                kwargs.manual_tax_amounts || extra_tax_data.manual_tax_amounts || null,
         });
         if ("price_unit" in extra_tax_data) {
             base_line.price_unit = extra_tax_data.price_unit;
@@ -1771,9 +1767,6 @@ export const accountTaxHelpers = {
                 price_unit: base_line.quantity * price_unit_after_discount,
                 quantity: 1.0,
                 discount: 0.0,
-                manual_total_excluded_currency: null,
-                manual_total_excluded: null,
-                manual_tax_amounts: null,
             });
             const raw_grouping_key = {
                 tax_ids: new_base_line.tax_ids.map((tax) => tax.id),
