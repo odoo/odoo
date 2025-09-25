@@ -58,7 +58,7 @@ class AccountMove(models.Model):
             and (customization_id := file_data['xml_tree'].findtext('{*}CustomizationID'))
             and 'TR1.2' in customization_id
         ):
-            return 'account_edi.xml.ubl.tr'
+            return 'account.edi.xml.ubl.tr'
 
         return super()._get_import_file_type(file_data)
 
