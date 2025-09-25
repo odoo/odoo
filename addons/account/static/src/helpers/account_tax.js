@@ -2277,19 +2277,30 @@ export const accountTaxHelpers = {
             );
         }
 
-        const [base_lines_partition_taxes, has_taxes_to_exclude] = this.partition_base_lines_taxes(
+        // Exclude non-discountable taxes.
+        const base_lines_partition_taxes = this.partition_base_lines_taxes(
             base_lines,
             partition_function.bind(this)
-        );
-        if (!has_taxes_to_exclude) {
-            return base_lines;
-        }
-
-        // Exclude non-discountable taxes.
+        )[0];
         const discountable_base_lines = [];
         for (const [base_line, taxes_to_keep, taxes_to_exclude] of base_lines_partition_taxes) {
             const tax_details = base_line.tax_details;
             const taxes_data = tax_details.taxes_data;
+
+            if (!taxes_to_exclude.length) {
+                discountable_base_lines.push(
+                    this.prepare_base_line_for_taxes_computation(base_line, {
+                        price_unit:
+                            base_line.price_unit *
+                            base_line.quantity *
+                            (1 - base_line.discount / 100.0),
+                        quantity: 1.0,
+                        discount: 0.0,
+                        manual_tax_amounts: base_line.manual_tax_amounts,
+                    })
+                );
+                continue;
+            }
 
             let taxes_data_for_price_unit;
             if (
@@ -2386,18 +2397,29 @@ export const accountTaxHelpers = {
             );
         }
 
-        const [base_lines_partition_taxes, has_taxes_to_exclude] = this.partition_base_lines_taxes(
+        const base_lines_partition_taxes = this.partition_base_lines_taxes(
             base_lines,
             partition_function.bind(this)
-        );
-        if (!has_taxes_to_exclude) {
-            return base_lines;
-        }
-
+        )[0];
         const base_lines_for_dp = [];
-        for (const [base_line, taxes_to_keep] of base_lines_partition_taxes) {
+        for (const [base_line, taxes_to_keep, taxes_to_exclude] of base_lines_partition_taxes) {
             const tax_details = base_line.tax_details;
             const taxes_data = tax_details.taxes_data;
+
+            if (!taxes_to_exclude.length) {
+                base_lines_for_dp.push(
+                    this.prepare_base_line_for_taxes_computation(base_line, {
+                        price_unit:
+                            base_line.price_unit *
+                            base_line.quantity *
+                            (1 - base_line.discount / 100.0),
+                        quantity: 1.0,
+                        discount: 0.0,
+                        manual_tax_amounts: base_line.manual_tax_amounts,
+                    })
+                );
+                continue;
+            }
 
             // Split the taxes in multiple batch of taxes, one per sub base line.
             const new_taxes = [];
