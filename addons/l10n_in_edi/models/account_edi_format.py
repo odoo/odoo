@@ -361,9 +361,9 @@ class AccountEdiFormat(models.Model):
             # government does not accept negative in qty or unit price
             unit_price_in_inr = unit_price_in_inr * -1
             quantity = quantity * -1
-        return {
+
+        line_details = {
             "SlNo": str(index),
-            "PrdDesc": line.name.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
             "HsnCd": self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code),
             "Qty": self._l10n_in_round_value(quantity or 0.0, 3),
@@ -390,6 +390,10 @@ class AccountEdiFormat(models.Model):
             "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
             "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
         }
+        if line.name:
+            line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
+
+        return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, invoice, json_payload):
         """Set negative lines against positive lines as discount with same HSN code and tax rate
