@@ -15,6 +15,7 @@ export class DateFilterValue extends Component {
     static props = {
         value: { type: Object, optional: true },
         update: Function,
+        model: Object,
     };
 
     setup() {
@@ -26,6 +27,6 @@ export class DateFilterValue extends Component {
     }
 
     get inputValue() {
-        return dateFilterValueToString(this.props.value);
+        return dateFilterValueToString(this.props.value, this.props.model.getters);
     }
 }

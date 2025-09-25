@@ -23,6 +23,7 @@ export class DateFilterDropdown extends Component {
     static props = {
         value: { type: Object, optional: true },
         update: Function,
+        model: Object,
     };
 
     setup() {
@@ -63,8 +64,8 @@ export class DateFilterDropdown extends Component {
     }
 
     _setRangeToCurrentValue(value) {
-        const { from, to } = getDateRange(value);
         const now = DateTime.local();
+        const { from, to } = getDateRange(value, 0, now, this.props.model.getters);
         this.selectedValues.range = {
             type: "range",
             from: from ? from.toISODate() : now.startOf("month").toISODate(),
@@ -152,7 +153,7 @@ export class DateFilterDropdown extends Component {
     }
 
     getDescription(type) {
-        return dateFilterValueToString(this.selectedValues[type]);
+        return dateFilterValueToString(this.selectedValues[type], this.props.model.getters);
     }
 
     selectPrevious(type) {

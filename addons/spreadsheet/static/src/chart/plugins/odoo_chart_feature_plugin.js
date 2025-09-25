@@ -21,8 +21,12 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
                         const { fieldName, granularity } =
                             this.getters.getChartGranularity(chartId);
                         const fieldMatching = this.getters.getChartFieldMatch(chartId)[filterId];
-                        const bestGranularity = getBestGranularity(cmd.value, fieldMatching);
-                        const validGranularities = getValidGranularities(cmd.value);
+                        const bestGranularity = getBestGranularity(
+                            cmd.value,
+                            fieldMatching,
+                            this.getters
+                        );
+                        const validGranularities = getValidGranularities(cmd.value, this.getters);
                         if (
                             fieldMatching?.chain === fieldName &&
                             !validGranularities.includes(this.overwrittenGranularities[chartId]) &&
@@ -70,7 +74,7 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
         if (matching?.type === "datetime") {
             all.unshift({ value: "hour", label: _t("Hours") });
         }
-        const validGranularities = getValidGranularities(currentFilterValue);
+        const validGranularities = getValidGranularities(currentFilterValue, this.getters);
         return all.filter(
             ({ value }) => validGranularities.includes(value) || value === granularity
         );

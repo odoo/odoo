@@ -216,15 +216,9 @@ export class DashboardLoader {
             const result = await this.env.services.http.get(
                 `/spreadsheet/dashboard/data/${dashboardId}`
             );
-            const { snapshot, revisions, default_currency, is_sample, translation_namespace } =
-                result;
+            const { snapshot, revisions, is_sample, translation_namespace } = result;
             dashboard.translationNamespace = translation_namespace;
-            dashboard.model = this._createSpreadsheetModel(
-                snapshot,
-                revisions,
-                default_currency,
-                translation_namespace
-            );
+            dashboard.model = this._createSpreadsheetModel(snapshot, revisions, result);
             dashboard.status = Status.Loaded;
             dashboard.isSample = is_sample;
         } catch (error) {
@@ -257,23 +251,29 @@ export class DashboardLoader {
      * @param {object} [defaultCurrency]
      * @returns {Model}
      */
-    _createSpreadsheetModel(snapshot, revisions = [], currency, translationNamespace) {
-        const odooDataProvider = new OdooDataProvider(this.env);
-        const model = new Model(
-            snapshot,
-            {
-                custom: { env: this.env, orm: this.orm, odooDataProvider, translationNamespace },
-                mode: "dashboard",
-                defaultCurrency: createDefaultCurrency(currency),
-                external: { geoJsonService: this.geoJsonService },
-            },
-            revisions
-        );
+    _createSpreadsheetModel(snapshot, revisions = [], data) {
+        const config = this.getModelConfig(data);
+        const model = new Model(snapshot, config, revisions);
         this._activateFirstSheet(model);
-        odooDataProvider.addEventListener("data-source-updated", () =>
+        config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
             model.dispatch("EVALUATE_CELLS")
         );
         return model;
+    }
+
+    getModelConfig(data) {
+        const odooDataProvider = new OdooDataProvider(this.env);
+        return {
+            custom: {
+                env: this.env,
+                orm: this.orm,
+                odooDataProvider,
+                translationNamespace: data.translation_namespace,
+            },
+            mode: "dashboard",
+            defaultCurrency: createDefaultCurrency(data.default_currency),
+            external: { geoJsonService: this.geoJsonService },
+        };
     }
 }
 

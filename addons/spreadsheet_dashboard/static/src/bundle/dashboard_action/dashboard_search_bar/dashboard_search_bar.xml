@@ -60,7 +60,8 @@
             </Dropdown>
             <div class="o_sp_date_filter_button ms-2 d-flex" t-if="firstDateFilter">
                 <DashboardDateFilter value="firstDateFilterValue"
-                                update.bind="updateFirstDateFilter" />
+                                update.bind="updateFirstDateFilter"
+                                model="this.props.model"/>
             </div>
         </div>
     </t>

@@ -26,6 +26,7 @@ import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
+const { DateTime } = luxon;
 
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
 const uuidGenerator = new UuidGenerator();
@@ -297,7 +298,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     _getDateFilterDisplayValue(filter) {
-        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id));
+        const value = this.getGlobalFilterValue(filter.id);
+        const { from, to } = getDateRange(value, 0, DateTime.local(), this.getters);
         const locale = this.getters.getLocale();
         const _from = {
             value: from ? toNumber(serializeDate(from), locale) : "",
@@ -339,7 +341,12 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
         const offset = fieldMatching.offset || 0;
-        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id), offset);
+        const { from, to } = getDateRange(
+            this.getGlobalFilterValue(filter.id),
+            offset,
+            DateTime.local(),
+            this.getters
+        );
         return getDateDomain(from, to, field, type);
     }
 
