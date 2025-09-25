@@ -101,3 +101,23 @@ class Test_PerformanceSimpleMinded(models.Model):
     parent_id = fields.Many2one('test_performance.simple.minded')
 
     child_ids = fields.One2many('test_performance.simple.minded', 'parent_id')
+
+    def simple_loop(self):
+        for record in self:
+            record.name
+
+    def nested_loop(self):
+        for record in self:
+            for child in record.child_ids:
+                child.name
+
+    def union_once(self):
+        """ Union all first children at once. """
+        return self.browse().union(*[record.child_ids[:1] for record in self])
+
+    def union_loop(self):
+        """ Union all first children in a loop. """
+        result = self.browse()
+        for record in self:
+            result |= record.child_ids[:1]
+        return result
