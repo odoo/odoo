@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/checkout route -->
+    <template id="website_sale.checkout">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Shop - Checkout</t>
+            <t t-set="redirect" t-valuef="/shop/checkout"/>
+            <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
+            <div id="shop_checkout">
+                <t t-if="order._has_deliverable_products()">
+                    <div class="mb-4">
+                        <t t-call="website_sale.delivery_form">
+                            <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                        </t>
+                    </div>
+                    <div class="mb-4">
+                        <t t-call="website_sale.delivery_address_list">
+                            <t t-set="addresses" t-value="delivery_addresses"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-call="website_sale.billing_address_list">
+                    <t t-set="addresses" t-value="billing_addresses"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_sale.delivery_form">
+        <!-- Parameters description:
+            - delivery_methods: The delivery methods to display, as a `delivery.carrier` recordset.
+            - selected_dm_id: The selected delivery method id.
+        -->
+        <form id="o_delivery_form" class="o_delivery_form">
+            <h4 class="mb-3">Delivery method</h4>
+            <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
+                <t t-foreach="delivery_methods" t-as="dm">
+                    <li name="o_delivery_method" class="list-group-item">
+                        <t t-call="website_sale.delivery_method">
+                            <t t-set="is_selected" t-value="dm.id == selected_dm_id"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+            <div t-else="" class="alert alert-warning">
+                <strong>No suitable delivery method could be found.</strong>
+            </div>
+        </form>
+    </template>
+
+    <template id="website_sale.delivery_method">
+        <!-- Parameters description:
+            - dm: The delivery method to display, as a `delivery.carrier` recordset.
+            - is_selected: Whether the radio button of the delivery method should be checked.
+        -->
+        <t t-set="delivery_type" t-value="dm.delivery_type + '_use_locations'"/>
+        <t
+            t-set="is_pickup_needed"
+            t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
+        />
+        <div class="d-flex justify-content-between gap-3">
+            <div class="form-check flex-grow-1 cursor-pointer">
+                <!-- === Radio button === -->
+                <input
+                    t-attf-id="o_delivery_{{dm.id}}"
+                    name="o_delivery_radio"
+                    type="radio"
+                    t-att-checked="is_selected"
+                    disabled="true"
+                    class="form-check-input position-absolute"
+                    t-att-data-dm-id="dm.id"
+                    t-att-data-delivery-type="dm.delivery_type"
+                    t-att-data-is-pickup-location-required="is_pickup_needed"
+                />
+                <!-- === Delivery method label === -->
+                <label
+                    name="o_delivery_method_label"
+                    class="form-check-label w-100"
+                    t-attf-for="o_delivery_{{dm.id}}"
+                >
+                    <span name="o_delivery_method_name" t-field="dm.name"/>
+                </label>
+            </div>
+            <!-- === Delivery price badge === -->
+            <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
+                <small class="fw-normal">Select to compute delivery rate</small>
+            </span>
+        </div>
+        <!-- === Pick up location === -->
+        <div
+            t-if="is_pickup_needed"
+            name="o_pickup_location"
+            t-attf-class="position-relative d-flex gap-2 mt-3 mb-2 {{'' if is_selected else 'd-none'}}"
+        >
+            <t
+                t-set="pickup_location_data"
+                t-value="(is_selected and order.pickup_location_data) or {}"
+            />
+            <div
+                name="o_pickup_location_details"
+                t-attf-class="d-flex justify-items-between align-items-center gap-3 w-100 border p-3 rounded {{'' if pickup_location_data else 'd-none'}}"
+            >
+                <span>
+                    <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
+                    <br/>
+                    <span
+                        name="o_pickup_location_address"
+                        class="text-muted"
+                        t-out="(pickup_location_data.get('street', ) or '')
+                               + ' '
+                               + (pickup_location_data.get('zip_code') or '')
+                               + ' '
+                               + (pickup_location_data.get('city') or '')"
+                    />
+                </span>
+                <span
+                    name="o_pickup_location_selector"
+                    class="btn btn-light fa fa-pencil ms-auto p-3"
+                    title="Change location"
+                    aria-label="Change location"
+                    t-att-data-location-id="pickup_location_data.get('id')"
+                    t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                    t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
+                />
+            </div>
+            <button
+                t-if="not pickup_location_data"
+                name="o_pickup_location_selector"
+                type="button"
+                class="btn btn-primary ms-4"
+                t-att-data-zip-code="order.partner_shipping_id.zip"
+            >
+                Select a location
+            </button>
+        </div>
+        <div
+            t-if="dm.website_description"
+            t-field="dm.website_description"
+            class="text-muted mt-1"
+        />
+    </template>
+
+    <template id="website_sale.delivery_address_list">
+        <t t-set="address_type" t-value="'delivery'"/>
+        <t
+            t-set="new_address_url"
+            t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+        />
+        <div id="delivery_address_list">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <h5 name="delivery_address_title" class="mb-0">Delivery address</h5>
+                <!-- We don't allow public users to have multiple delivery addresses. -->
+                <a
+                    t-if="not order.website_id.is_public_user()"
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    class="o_address_card_add_new btn btn-outline-primary btn-sm"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
+            <t t-call="website_sale.address_list">
+                <t t-set="addresses" t-value="delivery_addresses"/>
+                <t t-set="selected_address" t-value="order.partner_shipping_id"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="website_sale.billing_address_list">
+        <t t-set="address_type" t-value="'billing'"/>
+        <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
+        <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+        <div id="billing_address_list" class="mb-3 pt-2">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <p t-attf-class="mb-0 {{only_services and 'h4' or 'h5'}}">
+                    Billing address
+                </p>
+                <a
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    t-attf-class="o_address_card_add_new o_add_billing_address_btn btn btn-outline-primary btn-sm {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
+            <div t-if="has_delivery" class="form-check form-switch mt-2">
+                <label id="use_delivery_as_billing_label">
+                    <input
+                        type="checkbox"
+                        id="use_delivery_as_billing"
+                        class="form-check-input"
+                        t-att-checked="use_delivery_as_billing"
+                    />
+                    <span name="use_delivery_as_billing_text">
+                        Same as delivery address
+                    </span>
+                </label>
+            </div>
+            <div
+                id="billing_container"
+                t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+            >
+                <t t-call="website_sale.address_list">
+                    <t t-set="addresses" t-value="billing_addresses"/>
+                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sale.address_list" inherit_id="portal.address_list" primary="True">
+        <t t-call="portal.address_card" position="replace">
+            <t t-call="website_sale.address_card">
+                <!-- Drop show_removal and address_update_url which were in the base call to portal.address_card -->
+                <t t-set="is_user_address" t-value="address == request.env.user.partner_id"/>
+                <t t-set="contact" t-value="address"/>
+                <t
+                    t-set="can_be_edited"
+                    t-value="contact._can_be_edited_by_current_customer(order_sudo=order)"
+                />
+                <t t-set="selected" t-value="address == selected_address"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- To ensure modification dones in the checkout are not applied on the portal -->
+    <template id="website_sale.address_card" inherit_id="portal.address_card" primary="True"/>
+
+    <!-- /shop/address route -->
+    <template id="website_sale.address_form_fields" inherit_id="portal.address_form_fields" primary="True">
+        <t name="b2b_fields" position="attributes">
+            <attribute name="t-if">display_b2b_fields</attribute>
+        </t>
+    </template>
+
+    <!-- /shop/address route -->
+    <template id="website_sale.address" name="Address Management">
+        <t t-call="website_sale.checkout_layout">
+            <div class="o_customer_address_fill">
+                <div>
+                    <t t-if="not is_anonymous_cart">
+                        <h4 class="mb-3">
+                            <t t-if="partner_sudo">Edit address</t>
+                            <t t-else="">New address</t>
+                        </h4>
+                    </t>
+                    <div
+                        t-if="use_delivery_as_billing and not only_services and partner_sudo"
+                        class="alert alert-warning"
+                        role="alert"
+                    >
+                        <p class="mb-0">
+                            You are editing your <b>delivery and billing</b> addresses
+                            at the same time!<br/>
+                            If you want to modify your billing address, create a
+                            <a class="o_translate_inline" href="/shop/address?address_type=billing">new address</a>.
+                        </p>
+                    </div>
+                    <div id="errors"/> <!-- for js -->
+                    <form
+                        action="/shop/address/submit"
+                        method="post"
+                        name="address_form"
+                        class="address_autoformat"
+                        t-att-data-company-country-code="res_company.country_id.code"
+                        t-att-data-submit-url="'/shop/address/submit'"
+                    >
+                        <t t-if="is_anonymous_cart">
+                            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">
+                                <h4 class="w-100 w-md-auto">Details</h4>
+                                <div
+                                    t-if="website.account_on_checkout != 'disabled'"
+                                    class="o_address_signin d-flex d-md-block justify-content-between align-items-center p-3 p-md-0 w-100 text-md-end"
+                                >
+                                    <span class="align-middle">Already have an account?</span>
+                                    <a
+                                        role="button"
+                                        href='/web/login?redirect=/shop/checkout'
+                                        class="btn btn-primary ms-2"
+                                    >
+                                        Sign in
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <t t-call="website_sale.address_form_fields"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Deactivatable through the website editor. -->
+    <template id="website_sale.address_b2b" inherit_id="website_sale.address" name="Show b2b fields" />
+
+    <template id="website_sale.address_edit_button" name="Address edit button">
+        <t t-if="xmlid != 'website_sale.confirmation'">
+            <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration" href="/shop/checkout">
+                <i class="fa fa-pencil me-1"/>Edit
+            </a>
+            <a
+                t-else=""
+                class="float-end no-decoration"
+                t-attf-href="/shop/address?partner_id={{order.partner_invoice_id.id}}&amp;address_type=billing"
+            >
+                <i class="fa fa-pencil me-1"/>Want an invoice?
+            </a>
+        </t>
+    </template>
+
+</odoo>

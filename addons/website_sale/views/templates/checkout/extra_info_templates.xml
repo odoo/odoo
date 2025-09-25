@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/extra_info route -->
+    <template id="extra_info" name="Checkout Extra Info" active="False">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="redirect" t-valuef="/shop/extra_info"/>
+            <t t-set="oe_structure">
+                <!-- This is the drag-and-drop area for website building blocs at the end of each
+                     checkout page. This is append at the of the page in `checkout_layout`. The
+                     templates created in the database to store blocs are hooked using XPath on the
+                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                     t-att-id) and each template needs to define a div element. -->
+                <div class="oe_structure" id="oe_structure_website_sale_extra_info_1"/>
+            </t>
+
+            <h4 class="mb-3">Extra info</h4>
+            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                <div class="container">
+                    <form
+                        action="/website/form/"
+                        method="post"
+                        enctype="multipart/form-data"
+                        class="o_mark_required s_website_form_no_recaptcha"
+                        data-mark="*"
+                        data-force_action="shop.sale.order"
+                        data-model_name="sale.order"
+                        data-success-mode="redirect"
+                        data-success-page="/shop/payment"
+                        hide-change-model="true"
+                    >
+                        <div class="s_website_form_rows s_col_no_bgcolor row">
+                            <span id="s_website_form_result"/>
+                            <div class="s_website_form_field col-12 pb-2 mb-0" data-type="char" data-name="Field">
+                                <div class="s_col_no_resize s_col_no_bgcolor">
+                                    <label class="s_website_form_label col-form-label col-sm-auto" style="width: 200px" for="sale1">
+                                        <span class="s_website_form_label_content">Your Reference</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input id="sale1" type="text" class="s_website_form_input form-control" name="client_order_ref"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="s_website_form_field s_website_form_custom col-12 pb-2 mb-0" data-type="text" data-name="Field">
+                                <div class="s_col_no_resize s_col_no_bgcolor">
+                                    <label class="s_website_form_label col-form-label col-sm-auto" style="width: 200px" for="sale2">
+                                        <span class="s_website_form_label_content">Give us your feedback</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <textarea id="sale2" class="s_website_form_input form-control" name="Give us your feedback" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="s_website_form_field s_website_form_custom col-12 pb-2 mb-0" data-type="binary" data-name="Field">
+                                <div class="s_col_no_resize s_col_no_bgcolor">
+                                    <label class="s_website_form_label col-form-label col-sm-auto" style="width: 200px" for="sale3">
+                                        <span class="s_website_form_label_content">Upload a document</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input id="sale3" type="file" class="s_website_form_input form-control" name="a_document" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

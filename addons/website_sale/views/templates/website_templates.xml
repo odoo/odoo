@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="header_cart_link" name="Header Cart Link">
+        <t t-set="website_sale_cart_quantity" t-value="request.session.get('website_sale_cart_quantity', request.cart.cart_quantity) or 0"/>
+        <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+            <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
+            </a>
+        </li>
+    </template>
+
+    <template id="header_hide_empty_cart_link" inherit_id="website_sale.header_cart_link" name="Header Hide Empty Cart link" active="False">
+        <xpath expr="//t[@t-set='show_cart']" position="after">
+            <t t-set="show_cart" t-value="website_sale_cart_quantity" />
+        </xpath>
+    </template>
+
+        <!-- Insert JSON-LD markup data for SEO. -->
+    <template id="website_sale_layout" inherit_id="website.layout" priority="1">
+        <body position="before">
+            <t
+                t-if="website._get_product_image_ratio() != '1_1'"
+                t-set="body_classname"
+                t-value="'o_wsale_products_opt_thumb_' + website._get_product_image_ratio() + (' ' + body_classname if body_classname else '')"
+            />
+        </body>
+        <head position="inside">
+            <!-- Company markup data, in all pages. -->
+            <t t-set="base_url" t-value="website.get_base_url()"/>
+            <script t-if="res_company and website" type="application/ld+json" >
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "<t t-out="res_company.name"/>",
+    "logo": "<t t-out="'%s/logo.png?company=%s' % (base_url, res_company.id)"/>",
+    "url": "<t t-out="base_url"/>"
+}
+            </script>
+
+             <!-- Product markup data, on product pages. -->
+            <script
+                t-if="product_markup_data" type="application/ld+json" t-out="product_markup_data"
+            />
+        </head>
+    </template>
+
+    <template
+        id="template_footer_website_sale"
+        name="eCommerce Footer"
+        inherit_id="website.layout"
+        active="False"
+    >
+        <div id="footer" position="replace">
+            <div
+                t-if="not no_footer"
+                id="footer"
+                class="oe_structure oe_structure_solo"
+                t-ignore="true"
+            >
+                <section class="s_text_block pt48" data-snippet="s_text_block" data-name="Container">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <!-- Column 1: Products -->
+                            <div class="col-lg-3 pb32">
+                                <h5>Products</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <t t-set="ecommerce_categories" t-value="[]"/>
+                                    <li t-foreach="ecommerce_categories" t-as="category">
+                                        <a
+                                            t-att-href="'/shop/category/' + str(category['id'])"
+                                            t-out="category['name']"
+                                        />
+                                    </li>
+                                    <t t-if="not ecommerce_categories">
+                                        <li><a href="#">Accessories</a></li>
+                                        <li><a href="#">Apparel</a></li>
+                                        <li><a href="#">Beauty</a></li>
+                                        <li><a href="#">Essentials</a></li>
+                                        <li><a href="#">Fitness</a></li>
+                                        <li><a href="#">Gadgets</a></li>
+                                    </t>
+                                </ul>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <a href="/shop"><i class="fa fa-long-arrow-right"/> All Products</a>
+                                <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Customer Care -->
+                            <div class="col-lg-3 pb32">
+                                <h5>Customer Care</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="/contactus">Contact us</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 3: Badges, Social, Payments -->
+                            <div class="col-lg-5 offset-lg-1 pb48">
+                                <!-- Payment Icons -->
+                                <h5>Our payment methods</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <div
+                                    class="s_supported_payment_methods o_not_editable"
+                                    data-snippet="s_supported_payment_methods"
+                                    data-name="Supported Payment Methods"
+                                    data-limit="8"
+                                    data-height="32px"
+                                    data-oe-protected="true"
+                                />
+                                <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <!-- Service Badges -->
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-dollar fa-fw o_not-animable"/> Low Prices
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-shopping-basket fa-fw o_not-animable"/>
+                                    Easy Returns
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-truck fa-fw o_not-animable"/> Fast Shipping
+                                </span>
+                                <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto" style="border-top-color: rgba(255, 255, 255, 0);"/>
+                                </div>
+                                <!-- Social Media -->
+                                <div
+                                    class="s_social_media text-start o_not_editable"
+                                    data-snippet="s_social_media"
+                                    data-name="Social Media"
+                                    contenteditable="false"
+                                >
+                                    <h5 class="s_social_media_title d-none">
+                                        Follow us
+                                    </h5>
+                                    <a
+                                        href="/website/social/instagram"
+                                        class="s_social_media_instagram"
+                                        target="_blank"
+                                        aria-label="Instagram"
+                                    >
+                                        <i class="fa fa-instagram o_editable_media rounded shadow-sm"/>
+                                    </a>
+                                    <a
+                                        href="/website/social/youtube"
+                                        class="s_social_media_youtube"
+                                        target="_blank"
+                                        aria-label="YouTube"
+                                    >
+                                        <i class="fa fa-youtube-play o_editable_media rounded shadow-sm"/>
+                                    </a>
+                                    <a
+                                        href="/website/social/tiktok"
+                                        class="s_social_media_tiktok"
+                                        target="_blank"
+                                        aria-label="TikTok"
+                                    >
+                                        <i class="fa fa-tiktok o_editable_media rounded shadow-sm"/>
+                                    </a>
+                                    <a
+                                        href="/website/social/twitter"
+                                        class="s_social_media_twitter"
+                                        aria-label="Twitter"
+                                    >
+                                        <i class="fa fa-twitter o_editable_media rounded shadow-sm"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="small">
+                &amp;copy;
+                <span class="o_footer_copyright_name align-baseline">Company name</span>
+                 - <a href="#">Terms &amp; Conditions</a>
+                 - <a href="#">Privacy Policy</a>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="template_header_mobile" inherit_id="website.template_header_mobile">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_default" inherit_id="website.template_header_default">
+        <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-pill p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_stretch" inherit_id="website.template_header_stretch">
+        <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset'"/>
+                <t t-set="_badge_class" t-value="'rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website.template_header_vertical">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_search" inherit_id="website.template_header_search">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset'"/>
+                <t t-set="_badge_class" t-value="'rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_one" inherit_id="website.template_header_sales_one">
+        <xpath expr="//t[@t-call='portal.user_dropdown']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'btn position-relative rounded-circle p-1 text-reset o_navlink_background'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_two" inherit_id="website.template_header_sales_two">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_icon_wrap_class" t-value="'o_navlink_background position-relative me-2 rounded-circle p-2 transition-base'"/>
+                <t t-set="_link_class" t-value="'o_navlink_trigger_hover btn d-flex align-items-center fw-bold text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+                <t t-set="_text_class" t-value="'small'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_three" inherit_id="website.template_header_sales_three">
+        <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'position-relative'"/>
+                <t t-set="_link_class" t-value="'nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold'"/>
+                <t t-set="_icon_wrap_class" t-value="'d-contains'"/>
+                <t t-set="_badge_class" t-value="'top-0 d-block ms-2'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_four" inherit_id="website.template_header_sales_four">
+        <xpath expr="//t[@t-call='website.placeholder_header_call_to_action']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-pill p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
+        <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="after">
+            <ul class="list-unstyled d-flex gap-1 ms-auto mb-0">
+                <t t-call="website_sale.header_cart_link">
+                    <t t-set="_icon" t-value="True"/>
+                    <t t-set="_link_class" t-value="'o_navlink_background btn position-relative p-1 rounded-circle text-reset'"/>
+                    <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 rounded-pill mt-n1 me-n1'"/>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="template_header_boxed" inherit_id="website.template_header_boxed">
+        <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message">
+                    The #1 <a target="_blank" href="http://www.odoo.com/app/ecommerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>
+                </t>
+                <t t-set="_utm_medium" t-valuef="website"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -31,12 +31,20 @@
 
         # QWeb templates
         'views/templates/product_tile_templates.xml',
-        'views/templates/delivery_form_templates.xml',
         'views/templates/gmc_templates.xml',
+        'views/templates/product_page_templates.xml',
         'views/templates/sale_portal_templates.xml',
-        'views/templates/templates.xml',
-        'views/templates/templates_svg.xml',
-        'views/templates/variant_templates.xml',
+        'views/templates/shop_page_templates.xml',
+        'views/templates/svg_templates.xml',
+        'views/templates/website_templates.xml',
+
+        # Qweb templates -> checkout
+        'views/templates/checkout/checkout_templates.xml',  # Shared templates first
+        'views/templates/checkout/address_templates.xml',
+        'views/templates/checkout/cart_templates.xml',
+        'views/templates/checkout/confirmation_templates.xml',
+        'views/templates/checkout/extra_info_templates.xml',
+        'views/templates/checkout/payment_templates.xml',
 
         # Model views.
         'views/account_move_views.xml',

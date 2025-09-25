@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.attribute.list.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+               <field name="category_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.form.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="website_sale.product_attribute_view_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <group name="ecommerce_main_fields" position="inside">
+                <field name="category_id"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

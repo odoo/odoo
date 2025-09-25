@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/product page -->
+    <template id="base_unit_price" name="Product Base unit price">
+        <span
+            class="o_base_unit_price"
+            t-out="base_unit_price"
+            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+        />
+         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
+    </template>
+
+    <template id="website_sale.product" name="Product" track="1">
+        <!-- Qweb variable defining the class suffix for navbar items.
+             Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
+        <t t-set="navClass" t-valuef="light"/>
+
+        <t
+            t-set="is_fullwidth_content"
+            t-value="website.product_page_image_width in ['none', '100_pc']"
+        />
+        <t t-set="is_50_pc" t-value="website.product_page_image_width == '50_pc'"/>
+
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="product.name" />
+            <div id="wrap" class="js_sale o_wsale_product_page">
+                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
+                <section id="product_detail"
+                         t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
+                            if combination_info['has_discounted_price'] else ''}
+                            {{website._get_product_page_container() == 'regular' and 'o_wsale_container_lg container-lg' or (website._get_product_page_container() == 'fluid' and 'o_wsale_container_fluid container-fluid' or false)}}
+                            o_wsale_product_page_opt_image_width_{{website.product_page_image_width}}
+                            o_wsale_product_page_opt_image_ratio_{{website.product_page_image_ratio}}
+                            o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
+                            o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
+                         "
+                         t-att-data-view-track="view_track and '1' or '0'"
+                >
+                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
+                                <li class="breadcrumb-item d-none d-lg-inline-block">
+                                    <a t-att-href="keep(shop_path)">
+                                        <t t-call="website_sale.all_products_link_name"/>
+                                    </a>
+                                </li>
+                                <t t-foreach="category.parents_and_self" t-as="cat">
+                                    <li
+                                        class="breadcrumb-item d-none d-lg-inline-block"
+                                    >
+                                        <a
+                                            class="py-2 py-lg-0"
+                                            t-att-href="keep('%s/category/%s' % (shop_path, slug(cat)))"
+                                        >
+                                            <i
+                                                class="oi oi-chevron-left d-lg-none me-1"
+                                                role="img"
+                                            />
+                                            <t t-out="cat.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                                <li class="breadcrumb-item d-none d-lg-inline-block active">
+                                    <span t-field="product.name" />
+                                </li>
+                                <li class="breadcrumb-item d-lg-none">
+                                    <a t-att-href="category and keep('%s/category/%s' % (shop_path, slug(cat))) or keep(shop_path)">
+                                        <i class="oi oi-chevron-left me-2" role="img"/>
+                                        <t t-if="category.name" t-out="category.name"/>
+                                        <t t-else="" t-call="website_sale.all_products_link_name"/>
+                                    </a>
+                                </li>
+                            </ol>
+                            <div class="d-flex d-md-none gap-2 ms-auto">
+                                <t t-call="website_sale.pricelist_list"/>
+                                <a
+                                    t-attf-class="o_wsale_product_search_mobile_btn o_not_editable btn btn-{{navClass}} d-none"
+                                    data-bs-target="#o_wsale_product_search_modal"
+                                    data-bs-toggle="modal"
+                                    role="button"
+                                    title="Search Products"
+                                    href="#"
+                                >
+                                    <i class="oi oi-search" role="presentation"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div
+                            class="o_wsale_product_top_bar_desktop d-none d-md-inline-flex flex-wrap gap-2 w-auto mb-lg-auto"
+                        >
+                            <t t-call="website_sale.pricelist_list"/>
+                        </div>
+                    </div>
+                    <div
+                        t-attf-class="row align-items-lg-start {{website.product_page_cols_order == 'inverse' and 'flex-lg-row-reverse' or ''}}"
+                        id="product_detail_main"
+                        data-name="Product Page"
+                        t-att-data-image_layout="website.product_page_image_layout"
+                    >
+                        <div
+                            t-attf-class="o_wsale_product_images col o_wsale_sticky_object"
+                            t-att-data-image-amount="len(product_variant._get_images() if product_variant else product._get_images())"
+                        >
+                            <t t-call="website_sale.shop_product_images"/>
+                        </div>
+                        <div
+                            id="product_details"
+                            t-attf-class="position-relative position-lg-sticky o_wsale_sticky_object col"
+                        >
+                            <div id="o_wsale_product_details_content" t-attf-class="js_product js_main_product o_wsale_content_contained container">
+
+                                <!-- Product title (purchase not available)-->
+                                <t t-set="is_add_to_cart_possible" t-value="product._is_add_to_cart_possible()"/>
+                                <t
+                                    t-if="not is_add_to_cart_possible"
+                                    t-call="website_sale.product_title"
+                                />
+
+                                <form t-if="is_add_to_cart_possible">
+                                    <!-- Product title (purchase available)-->
+                                    <t t-call="website_sale.product_title"/>
+
+                                    <div
+                                        t-if="not is_view_active('website_sale.cta_wrapper_boxed')"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_price mb-4"
+                                    >
+                                        <t t-call="website_sale.product_price"/>
+                                        <small t-if="combination_info.get('base_unit_price')"
+                                            class="ms-1 text-muted o_base_unit_price_wrapper d-none">
+                                            <t t-call="website_sale.base_unit_price">
+                                                <t
+                                                    t-set="base_unit_price"
+                                                    t-value="combination_info['base_unit_price']"
+                                                />
+                                            </t>
+                                        </small>
+                                    </div>
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        t-att-value="request.csrf_token()"
+                                    />
+
+                                    <t name="variant_info">
+                                        <input
+                                            type="hidden"
+                                            class="o_not_editable product_id"
+                                            name="product_id"
+                                            t-att-value="product_variant.id"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            class="o_not_editable product_template_id"
+                                            name="product_template_id"
+                                            t-att-value="product.id"
+                                        />
+                                        <input
+                                            t-if="product.public_categ_ids.ids"
+                                            type="hidden"
+                                            class="product_category_id"
+                                            name="product_category_id"
+                                            t-att-value="product.public_categ_ids.ids[0]"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="product_type"
+                                            t-att-value="product.type"
+                                        />
+                                        <div
+                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product._has_multiple_uoms()) and 'd-none' or ''}}"
+                                        >
+                                            <t t-call="website_sale.variants">
+                                                <t t-set="ul_class" t-valuef="flex-column" />
+                                                <t t-set="parent_combination" t-value="None" />
+                                                <t
+                                                    t-set="combination"
+                                                    t-value="combination_info['combination']"
+                                                />
+                                            </t>
+                                        </div>
+                                    </t>
+                                    <div
+                                        id="o_wsale_product_cta_section"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4"
+                                    >
+                                        <t t-call="website_sale.cta_wrapper"/>
+                                    </div>
+
+                                    <div
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_accordion mb-4"
+                                        t-if="is_view_active('website_sale_comparison.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
+                                    >
+                                        <t t-call="website_sale.product_accordion"/>
+                                    </div>
+
+                                    <div
+                                        t-if="combination_info['prevent_zero_price_sale']"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
+                                    >
+                                        <div
+                                            id="contact_us_wrapper"
+                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
+                                        >
+                                            <section
+                                                class="s_text_block"
+                                                data-snippet="s_text_block"
+                                                data-name="Text">
+                                                <div class="container">
+                                                    <a
+                                                        t-att-href="website.contact_us_button_url"
+                                                        t-att-data-url="website.contact_us_button_url"
+                                                        class="btn btn-primary btn_cta"
+                                                    >
+                                                        Contact Us
+                                                    </a>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <t
+                                        t-set="single_value_attributes"
+                                        t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"
+                                    />
+                                    <div
+                                        id="product_attributes_simple"
+                                        t-if="single_value_attributes"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_specs mb-4"
+                                    >
+                                        <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
+                                            <t t-foreach="single_value_attributes" t-as="attribute">
+                                                <tr>
+                                                    <td>
+                                                        <span t-field="attribute.name"/>:
+                                                        <t
+                                                            t-foreach="single_value_attributes[attribute]"
+                                                            t-as="ptal"
+                                                        >
+                                                            <span t-field="ptal.product_template_value_ids._only_active().name"/>
+                                                            <t t-if="not ptal_last">, </t>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </div>
+                                    <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
+                                    <div
+                                        id="product_documents"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_documents mb-4"
+                                        t-if="product_documents"
+                                    >
+                                        <strong>Documents</strong>
+                                        <div class="list-group">
+                                            <t t-foreach="product_documents" t-as="document_sudo">
+                                                <t
+                                                    t-set="attachment_sudo"
+                                                    t-value="document_sudo.ir_attachment_id"
+                                                />
+                                                <t
+                                                    t-set="target"
+                                                    t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"
+                                                />
+                                                <t
+                                                    t-set="icon"
+                                                    t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"
+                                                />
+                                                <a
+                                                    class="list-group-item list-group-item-action"
+                                                    t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)"
+                                                    t-att-target="target">
+                                                    <i t-att-class="'fa ' + icon + ' me-2'"/>
+                                                    <t t-out="attachment_sudo.name"/>
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div
+                    id="product_full_description"
+                    t-field="product.website_description"
+                    class="oe_structure oe_empty mt16"
+                />
+                <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
+            </div>
+            <div
+                id="o_wsale_product_search_modal"
+                class="modal fade css_editable_mode_hidden"
+                aria-hidden="true"
+                tabindex="-1"
+            >
+                <div class="modal-dialog modal-lg pt-5">
+                    <div class="modal-content mt-5 bg-transparent border-0">
+                        <div class="o_container_small">
+                            <t t-call="website.website_search_box_input">
+                                <t t-set="default_style" t-valuef="true"/>
+                                <t t-set="search_type" t-valuef="products"/>
+                                <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
+                                <t t-set="_input_classes" t-valuef="border-0 p-3"/>
+                                <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_sale.variants">
+        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
+        <ul
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
+            t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
+        >
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                <t t-set="attribute" t-value="ptal.attribute_id"/>
+                <t t-set="ptavs" t-value="ptal.product_template_value_ids._only_active()"/>
+                <t t-set="single" t-value="len(ptavs) == 1"/>
+
+                <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
+                <li name="variant_attribute"
+                    t-att-data-attribute-id="attribute.id"
+                    t-att-data-attribute-name="attribute.name"
+                    t-att-data-attribute-display-type="attribute.display_type"
+                    t-attf-class="variant_attribute #{
+                        'd-none' if single
+                        and not ptavs[0].is_custom
+                        and not attribute.display_type == 'multi' else ''
+                    }">
+
+                    <!-- Used to customize layout if the only available attribute value is custom -->
+                    <t t-set="single_and_custom" t-value="single and ptavs[0].is_custom"/>
+                    <h6 class="attribute_name mb-2">
+                        <span t-field="ptal.attribute_id.name"/>
+                        <span t-if="attribute.display_type in ['color', 'image']" class="text-muted">
+                            -
+                            <t
+                                t-set="active_ptavs"
+                                t-value="[ptav for ptav in ptavs if ptav in combination]"
+                            />
+                            <t t-foreach="active_ptavs" t-as="ptav">
+                                <span class="attribute_value" name="attribute_value" t-field="ptav.name"/>
+                            </t>
+                        </span>
+                    </h6>
+
+                    <t t-if="attribute.display_type == 'select'">
+                        <select
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="form-select css_attribute_select o_wsale_product_attribute js_variant_change #{attribute.create_variant} #{'d-none' if single_and_custom else ''}"
+                            t-att-name="'ptal-%s' % ptal.id">
+                            <t t-foreach="ptavs" t-as="ptav">
+                                <option t-att-value="ptav.id"
+                                    t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                    t-att-data-value-id="ptav.id"
+                                    t-att-data-value-name="ptav.name"
+                                    t-att-data-attribute-name="attribute.name"
+                                    t-att-data-is-custom="ptav.is_custom"
+                                    t-att-selected="ptav in combination">
+                                    <span t-field="ptav.name"/>
+                                    <t t-call="website_sale.badge_extra_price"/>
+                                </option>
+                            </t>
+                        </select>
+                    </t>
+
+                    <t t-elif="attribute.display_type in ('radio', 'multi')">
+                        <ul
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-3 list-unstyled #{'d-none' if single_and_custom else ''}"
+                        >
+                            <t t-foreach="ptavs" t-as="ptav">
+                                <li class="js_attribute_value">
+                                    <label class="col-form-label p-0">
+                                        <div class="form-check cursor-pointer">
+                                            <input t-att-type="'radio' if attribute.display_type == 'radio' else 'checkbox'"
+                                                t-attf-class="form-check-input js_variant_change #{attribute.create_variant}"
+                                                t-att-checked="ptav in combination"
+                                                t-att-title="ptav.name"
+                                                t-att-name="'ptal-%s' % ptal.id"
+                                                t-att-value="ptav.id"
+                                                t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                                t-att-data-value-id="ptav.id"
+                                                t-att-data-value-name="ptav.name"
+                                                t-att-data-attribute-name="attribute.name"
+                                                t-att-data-is-custom="ptav.is_custom"/>
+                                            <div class="radio_input_value form-check-label">
+                                                <span t-field="ptav.name"/>
+                                                <t t-call="website_sale.badge_extra_price"/>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+
+                    <t t-elif="attribute.display_type == 'pills'">
+                        <ul
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="o_wsale_product_attribute d-flex flex-wrap list-unstyled gap-2 #{'d-none' if single_and_custom else ''}"
+                            data-bs-toggle="buttons"
+                        >
+                            <t t-foreach="ptavs" t-as="ptav">
+                                <li t-attf-class="o_variant_pills js_attribute_value border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if ptav in combination else ''}">
+                                    <input type="radio"
+                                        t-attf-class="js_variant_change position-absolute #{attribute.create_variant} opacity-0 cursor-pointer"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-id="ptav.id"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"
+                                        t-att-autocomplete="off"/>
+                                    <label class="radio_input_value o_variant_pills_input_value cursor-pointer"
+                                           t-att-for="ptav.id">
+                                        <span t-field="ptav.name"/>
+                                        <t t-call="website_sale.badge_extra_price"/>
+                                    </label>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+
+                    <t t-elif="attribute.display_type == 'color'">
+                        <ul
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-2 list-unstyled #{'d-none' if single_and_custom else ''}"
+                        >
+                            <li t-foreach="ptavs" t-as="ptav">
+                                <t t-set="img_style"
+                                   t-value="'background: url(/web/image/product.template.attribute.value/%s/image); background-size: cover; ' % ptav.id if ptav.image else ''"
+                                />
+                                <t t-set="color_style"
+                                   t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
+                                />
+                                <label t-attf-style="#{img_style or color_style}"
+                                       t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                >
+                                      <input type="radio"
+                                        t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"/>
+                                </label>
+                            </li>
+                        </ul>
+                    </t>
+
+                    <t t-elif="attribute.display_type == 'image'">
+                        <ul
+                            t-att-data-attribute-id="attribute.id"
+                            t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
+                        >
+                            <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
+                                <label
+                                    name="o_wsale_attribute_image_selector"
+                                    t-attf-style="#{'background-image: url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''}"
+                                    t-attf-class="css_attribute_image oe_img_bg o_bg_img_center position-relative d-inline-block rounded-3 bg-body text-center cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                >
+                                    <input
+                                        type="radio"
+                                        t-attf-class="js_variant_change w-100 h-100 opacity-0 cursor-pointer #{attribute.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"
+                                    />
+                                </label>
+                            </li>
+                        </ul>
+                    </t>
+                </li>
+            </t>
+        </ul>
+        <ul
+            t-if="product._has_multiple_uoms()"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
+            t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
+        >
+            <!-- NOTE: the t-att-data-attribute-exclusions is only there to match existing events selectors -->
+            <li>
+                <!-- Separate template to reduce views duplication -->
+                <t t-call="website_sale.packaging_title"/>
+                <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
+                    <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
+                    <t t-foreach="product_uoms" t-as="uom">
+                        <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
+                        <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
+                            <input
+                                class="position-absolute opacity-0 cursor-pointer"
+                                type="radio"
+                                t-att-checked="is_main_uom"
+                                name="uom_id"
+                                t-att-value="uom.id"
+                                t-attf-id="uom-{{uom.id}}"
+                                t-att-autocomplete="off"/>
+                            <label class="radio_input_value cursor-pointer" t-attf-for="uom-{{uom.id}}">
+                                <span t-field="uom.name"/>
+                            </label>
+                        </li>
+                    </t>
+                </ul>
+            </li>
+        </ul>
+    </template>
+
+    <template id="website_sale.badge_extra_price" name="Badge Extra Price">
+        <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
+        <span t-if="price_extra" t-attf-class="{{'badge text-bg-primary' if attribute.display_type != 'pills' else 'small text-muted'}}">
+            <!--
+                price_extra is displayed as catalog price instead of
+                price after pricelist because it is impossible to
+                compute. Indeed, the pricelist rule might depend on the
+                selected variant, so the price_extra will be different
+                depending on the selected combination. The price of an
+                attribute is therefore variable and it's not very
+                accurate to display it.
+            -->
+        <t t-if="attribute.display_type in ['pills', 'select']">(</t><span class="sign_badge_price_extra"><t t-out="price_extra > 0 and '+' or '-'"/></span>
+        <span
+            t-out="abs(price_extra)"
+            class="variant_price_extra"
+            style="white-space: nowrap;"
+            t-options='{
+                "widget": "monetary",
+                "display_currency": website.currency_id
+            }'/><t t-if="attribute.display_type in ['pills', 'select']">)</t>
+        </span>
+    </template>
+
+    <template id="website_sale.packaging_title" name="Packaging title">
+        <h6 class="attribute_name mb-2">Packaging</h6>
+    </template>
+
+    <template id="website_sale.product_title">
+        <div
+            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
+        >
+            <!-- FIXME VCR variable seems unused -->
+            <t t-set="base_url" t-value="website.get_base_url()"/>
+            <h1
+                t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
+                t-field="product.name"
+            >
+                Product Name
+            </h1>
+            <t t-if="is_view_active('website_sale.product_comment')">
+                <a
+                    href="#o_product_page_reviews"
+                    class="o_product_page_reviews_link d-block mb-2 text-decoration-none"
+                >
+                    <t t-call="portal_rating.rating_widget_stars_static">
+                        <!-- sudo: product.product - visitor can access product average rating -->
+                        <t t-set="rating_avg" t-value="product.sudo().rating_avg"/>
+                        <t t-set="trans_text_plural">%s reviews</t>
+                        <t t-set="trans_text_singular">%s review</t>
+                        <t
+                            t-set="rating_count"
+                            t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"
+                        />
+                    </t>
+                </a>
+            </t>
+            <div
+                t-field="product.description_ecommerce"
+                t-attf-class="oe_structure mb-3 text-muted"
+                placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
+            />
+            <t
+                t-if="is_view_active('website_sale.product_tags')"
+                t-call="website_sale.product_tags"
+            >
+                <t
+                    t-set="all_product_tags"
+                    t-value="product_variant.all_product_tag_ids"
+                />
+            </t>
+            <p t-if="(not is_add_to_cart_possible) and (not product.active)" class="alert alert-warning">
+                This product is no longer available.
+            </p>
+            <p t-elif="not is_add_to_cart_possible" class="alert alert-warning">
+                This product has no valid combination.
+            </p>
+        </div>
+    </template>
+
+    <template id="website_sale.cta_wrapper" name="CTA Wrapper">
+        <div
+            id="o_wsale_cta_wrapper"
+            t-att-class="'d-flex flex-wrap align-items-center gap-2 mb-4' +
+                (' w-100 w-lg-auto' if is_50_pc else ' w-100') +
+                (' ' if not is_fullwidth_content and not is_view_active('website_sale.cta_wrapper_boxed') else ' ')"
+        >
+            <div
+                id="add_to_cart_wrap"
+                t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
+            >
+                <a
+                    id="add_to_cart"
+                    role="button"
+                    href="#"
+                    t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1"
+                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                    data-animation-selector=".o_wsale_product_images"
+                >
+                    <i class="fa fa-shopping-cart me-2"/>
+                    Add to cart
+                </a>
+            </div>
+            <div
+                id="product_option_block"
+                t-attf-class="d-flex d-empty-none flex-wrap gap-2 w-100 {{'w-sm-auto' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ''}}"
+            />
+        </div>
+    </template>
+
+    <template
+        id="website_sale.cta_wrapper_boxed"
+        inherit_id="website_sale.cta_wrapper"
+        active="False"
+        name="Bordered CTA Wrapper"
+    >
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
+            <attribute
+                name="t-att-class"
+                remove="pt-3"
+                add="' o_wsale_cta_wrapper_boxed border rounded p-3'"
+                separator=" + "
+            />
+        </xpath>
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='product_option_block']" position="attributes">
+            <attribute name="t-att-class" remove="flex-lg-grow-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
+            <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
+                <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
+                <t t-call="website_sale.product_price"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.cta_wrapper_large"
+        inherit_id="website_sale.cta_wrapper"
+        active="False"
+        name="Large CTA Wrapper">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
+            <attribute name="t-att-class" add="' o_wsale_cta_wrapper_large'" separator=" + "/>
+        </xpath>
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='product_option_block']" position="attributes">
+            <attribute name="t-att-class" remove="flex-lg-grow-0" separator=" "/>
+        </xpath>
+        <xpath expr="//a[@id='add_to_cart']" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="btn-lg {{('' if is_50_pc else ' px-xl-0')}}"
+                separator=" "
+            />
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.cta_separator"
+        inherit_id="website_sale.product"
+        name="Product Info - Dividers">
+        <xpath expr="//section[@id='product_detail']" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="o_wsale_product_page_opt_separators"
+                separator=" "
+            />
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_search"
+        inherit_id="website_sale.product"
+        active="False"
+        name="Searchbar On Product Page"
+    >
+        <xpath expr="//div[hasclass('o_wsale_product_top_bar_desktop')]" position="inside">
+            <t t-call="website_sale.search">
+                <t t-set="search" t-value="False"/>
+                <t t-set="_classes" t-value="'me-sm-2'"/>
+            </t>
+        </xpath>
+        <xpath expr="//a[contains(@t-attf-class, 'o_wsale_product_search_mobile_btn')]" position="attributes">
+            <attribute name="t-attf-class" add="d-md-none" remove="d-none" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="all_products_link_name" name="All Products name">
+        <span placeholder="All products">All products</span>
+    </template>
+
+    <template id="product_accordion" name="Accordion On Product Page">
+        <div
+            t-if="is_view_active('website_sale_comparison.accordion_specs_item')
+                  or is_view_active('website_sale.accordion_more_information')"
+            id="product_accordion"
+            class="o_accordion_not_initialized accordion accordion-flush my-4"
+        >
+            <div
+                t-if="is_view_active('website_sale.accordion_more_information')"
+                id="more_information_accordion_item"
+                class="accordion-item"
+            />
+        </div>
+    </template>
+
+    <template
+        id="accordion_more_information"
+        name="More Information Accordion Item"
+        inherit_id="website_sale.product_accordion"
+        active="False"
+    >
+        <xpath expr="//div[@id='more_information_accordion_item']" position="inside">
+            <div class="accordion-header my-0 h6">
+                <button
+                    class="accordion-button collapsed fw-medium"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#customizable_item"
+                    aria-expanded="false"
+                    aria-controls="customizable_item"
+                >
+                    More Information
+                </button>
+            </div>
+            <div
+                id="customizable_item"
+                class="accordion-collapse collapse"
+                data-bs-parent="#product_accordion"
+            >
+                <div class="accordion-body py-0">
+                    <p>This content will be shared across all product pages.</p>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_sale.product_tags" name="Product Tags" active="True">
+        <t t-set="visible_tags" t-value="all_product_tags.filtered('visible_to_customers')"/>
+        <div
+            t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
+        >
+            <t t-foreach="visible_tags" t-as="tag">
+                <span t-if="tag.image"
+                      class="order-0"
+                      t-field="tag.image"
+                      t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
+                />
+                <span t-else="" class="position-relative order-1 py-1 px-2">
+                    <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                          t-attf-style="background-color: #{tag.color}; opacity: .2;"
+                    />
+                    <span class="text-nowrap small"
+                          t-attf-style="color: #{tag.color}"
+                          t-field="tag.name"
+                    />
+                </span>
+            </t>
+        </div>
+    </template>
+
+    <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
+        <div t-field="product.website_description" position="after">
+            <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
+                <section data-snippet="s_dynamic_snippet_products"
+                    class="oe_unmovable oe_unremovable s_dynamic_snippet_products o_wsale_alternative_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
+                    data-name="Alternative Products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
+                    data-template-key="website_sale.dynamic_filter_template_product_product_products_item" data-product-category-id="all" data-number-of-elements="4"
+                    data-number-of-elements-small-devices="1" data-number-of-records="16" data-carousel-interval="5000" data-bs-original-title="" title="">
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
+                                <div>
+                                    <h4>Alternative Products</h4>
+                                    <p class="lead">These other products might interest you</p>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="o_not_editable">
+                            <div class="dynamic_snippet_template"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </template>
+
+    <template
+        name="Terms and Conditions"
+        id="website_sale.product_terms_and_conditions"
+        inherit_id="website_sale.product"
+        active="True"
+        priority="21"
+    >
+        <div id="o_wsale_product_cta_section" position="inside">
+            <small class="text-muted mb-0">
+                <a href="/terms" class="o_translate_inline text-muted">
+                    <u>Terms and Conditions</u>
+                </a><br/>
+                30-day money-back guarantee<br/>
+                Shipping: 2-3 Business Days
+            </small>
+        </div>
+    </template>
+
+    <!-- Product options: Zoom -->
+    <template inherit_id='website_sale.product' id="product_picture_magnify_click" name="Image Zoom On Click">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-click">1</attribute>
+            <attribute name="class" separator=" " add="ecom-zoomable" />
+        </xpath>
+    </template>
+
+    <!-- Product options: OpenChatter -->
+    <template id="product_comment" inherit_id="website_sale.product" active="False" name="Discussion and Rating" priority="15">
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <div class="o_shop_discussion_rating border-top" data-anchor='true'>
+                <section id="o_product_page_reviews" class="container pt48 pb48" data-anchor='true'>
+                    <a class="o_product_page_reviews_title d-flex justify-content-between text-reset text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
+                        <h2 class="fs-4 mb-0">Customer Reviews</h2>
+                        <i class="oi align-self-center"/>
+                    </a>
+                    <div id="o_product_page_reviews_content" class="collapse mt-3">
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="product"/>
+                            <t t-set="display_rating" t-value="True"/>
+                            <t t-set="message_per_page" t-value="5"/>
+                            <t t-set="two_columns" t-value="true"/>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_quantity"
+        inherit_id="website_sale.cta_wrapper"
+        name="Select Quantity"
+    >
+        <div id="add_to_cart_wrap" position="inside">
+            <div
+                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                contenteditable="false"
+            >
+                <a
+                    t-attf-href="#"
+                    class="css_quantity_minus btn btn-link pe-2 js_add_cart_json border-0"
+                    aria-label="Remove one"
+                    title="Remove one"
+                    name="remove_one"
+                >
+                    <i class="oi oi-minus text-600"/>
+                </a>
+                <input
+                    type="text"
+                    t-attf-class="form-control quantity text-center border-0"
+                    data-min="1"
+                    name="add_qty"
+                    t-att-value="1"
+                />
+                <a
+                    t-attf-href="#"
+                    class="css_quantity_plus btn btn-link ps-2 js_add_cart_json border-0"
+                    aria-label="Add one"
+                    title="Add one"
+                >
+                    <i class="oi oi-plus text-600"/>
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template
+        id="website_sale.product_quantity_large"
+        inherit_id="website_sale.product_quantity"
+        active="False"
+        name="Select Quantity Large"
+    >
+        <xpath expr="//div[contains(@t-attf-class, 'css_quantity')]" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="input-group-lg {{(' css_quantity_50' if is_50_pc else '')}}"
+                separator=" "
+            />
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_buy_now"
+        inherit_id="website_sale.cta_wrapper"
+        active="False"
+        name="Buy Now Button"
+    >
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="inside">
+            <a
+                role="button"
+                t-attf-class="btn btn-outline-primary o_we_buy_now w-100 {{'' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') or not is_50_pc else 'w-sm-auto'}} {{'flex-grow-1' if not is_50_pc else ''}}"
+                href="#"
+            >
+                <i class="fa fa-bolt me-2"/>
+                Buy now
+            </a>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_buy_now_large"
+        inherit_id="website_sale.product_buy_now"
+        active="False"
+        name="Large Buy Now Button"
+    >
+        <xpath expr="//a[contains(@t-attf-class, 'o_we_buy_now')]" position="attributes">
+            <attribute name="t-attf-class" add="btn-lg" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="website_sale.tax_indication" active="False">
+        <span
+            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            class="fs-6 fw-normal text-muted text-nowrap"
+        >
+            (Tax excluded)
+        </span>
+        <span t-else="" class="fs-6 fw-normal text-muted text-nowrap">
+            (Tax included)
+        </span>
+    </template>
+
+    <template id="product_price">
+        <div
+            name="product_price"
+            t-attf-class="product_price {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
+        >
+            <div
+                name="product_price_container"
+                class="css_editable_mode_hidden d-flex align-items-baseline justify-content-end gap-2 flex-wrap h5 mb-0 text-wrap"
+            >
+                <span class="oe_price"
+                      style="white-space: nowrap;"
+                      t-out="combination_info['price']"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span t-attf-class="text-muted oe_default_price mb-0 h6 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                      style="text-decoration: line-through; white-space: nowrap;"
+                      t-out="combination_info['list_price']"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                      name="product_list_price"
+                />
+                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
+                <del
+                    name="product_price_strikethrough"
+                    t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
+                    class="text-muted ms-1 h6 oe_compare_list_price"
+                >
+                    <bdi dir="inherit">
+                    <span t-out="combination_info['compare_list_price']"
+                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    </bdi>
+                </del>
+            </div>
+            <div
+                t-if="editable"
+                name="product_list_price_container"
+                class="css_non_editable_mode_hidden decimal_precision h5"
+                t-att-data-precision="str(website.currency_id.decimal_places)"
+            >
+                <span t-field="product.list_price"
+                      t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
+                <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])">
+                    <bdi dir="inherit">
+                    <span t-field="product.compare_list_price"
+                          t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                    </bdi>
+                </del>
+            </div>
+            <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
+                <t t-out="combination_info['tax_disclaimer']"/>
+            </small>
+        </div>
+        <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
+            <br/>
+        </div>
+    </template>
+
+    <!-- Product page images -->
+    <template id="website_sale.shop_product_images" name="Shop Product Images">
+        <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+        <t
+            t-set="ribbon"
+            t-value="product.sudo()._get_ribbon(price_vals=combination_info, variant=product_variant)"
+        />
+        <t t-set="bg_color" t-value="ribbon.bg_color"/>
+        <t t-set="text_color" t-value="ribbon.text_color"/>
+        <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
+    </template>
+
+    <template id="website_sale.shop_product_image">
+        <span
+            t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()} z-1"
+            t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+            t-att-data-ribbon-id="ribbon.id"
+            t-out="ribbon.name or ''"
+        />
+        <div
+            t-if="product_image._name == 'product.image' and product_image.embed_code"
+            t-att-class="image_classes + ' ratio ratio-16x9'"
+        >
+            <t t-out="product_image.embed_code"/>
+        </div>
+        <div
+            t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
+            class="position-relative d-inline-flex overflow-hidden m-auto h-100 w-100"
+        >
+            <span
+                t-field="product_image.image_1920"
+                name="o_img_with_max_suggested_width"
+                class="o_product_detail_img_wrapper d-flex align-items-start justify-content-center h-100 w-100 oe_unmovable"
+                t-options="{
+                    'widget': 'image',
+                    'preview_image': 'image_1024',
+                    'class': 'oe_unmovable product_detail_img h-100 w-100',
+                    'alt-field': 'name',
+                    'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
+                }"
+            />
+
+        </div>
+        <div
+            t-else=""
+            t-field="product_image.image_1920"
+            t-att-class="image_classes + ' o_product_detail_img_wrapper oe_unmovable'"
+            t-attf-style="{{
+                image_natural_index and ('--o-wsale-grid-product-img-natural-order: ' + str(image_natural_index)) or false
+            }}"
+            t-options="{
+                'widget': 'image',
+                'preview_image': 'image_1024',
+                'class': 'oe_unmovable product_detail_img w-100 h-100',
+                'alt-field': 'name',
+                'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
+            }"
+        />
+    </template>
+
+    <!-- Product page images: Carousel -->
+    <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
+        <t t-set="product_carousel_block_name">Product Carousel</t>
+        <div
+            id="o-carousel-product"
+            t-attf-class="#{len(product_images) > 1 and 'o_carousel_not_single'} carousel slide mb-3 overflow-hidden"
+            t-att-data-name="product_carousel_block_name"
+        >
+            <div
+                class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden"
+            >
+                <span
+                    t-if="len(product_images) > 1"
+                    t-attf-class="o_ribbons #{ribbon._get_css_classes()} z-1"
+                    t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                    t-out="ribbon.name or ''"
+                    t-att-data-ribbon-id="ribbon.id"
+                />
+                <div class="carousel-inner h-100">
+                    <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
+                    <t t-foreach="product_images" t-as="product_image">
+                        <div t-attf-class="carousel-item h-100 w-100 text-center#{' active' if product_image_first else ''}">
+                            <t t-call="website_sale.shop_product_image"/>
+                        </div>
+                    </t>
+                </div>
+                <t t-if="len(product_images) > 1">
+                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
+                        <i
+                            class="oi oi-chevron-left oe_unmovable border bg-white text-900"
+                            role="img"
+                            aria-label="Previous"
+                            title="Previous"
+                        />
+                    </a>
+                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
+                        <i
+                            class="oi oi-chevron-right oe_unmovable border bg-white text-900"
+                            role="img"
+                            aria-label="Next"
+                            title="Next"
+                        />
+                    </a>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="carousel_product_indicators_bottom" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Bottom" active="False">
+        <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="after">
+            <t t-call="website_sale.carousel_product_indicators">
+                <t t-set="indicators_div_class" t-value="'pt-2 overflow-hidden'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="carousel_product_indicators_left" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Left">
+        <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
+            <t t-call="website_sale.carousel_product_indicators">
+                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='o-carousel-product']" position="attributes">
+            <attribute name="t-attf-class" add="o_carousel_product_left_indicators d-flex" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="carousel_product_indicators" name="Carousel Product">
+        <div
+            t-if="len(product_images) > 1"
+            t-ignore="True"
+            t-attf-class="o_carousel_product_indicators {{indicators_div_class}}"
+        >
+            <ol
+                t-attf-class="carousel-indicators position-static pt-2 pt-lg-0 mx-auto my-0 {{indicators_list_class}} {{website.product_page_image_width == '100_pc' and 'justify-content-center'}}"
+            >
+                <li
+                    t-foreach="product_images" t-as="product_image"
+                    t-attf-class="align-top position-relative {{'active' if product_image_first else ''}}"
+                    data-bs-target="#o-carousel-product"
+                    t-att-data-bs-slide-to="str(product_image_index)"
+                >
+                    <div
+                        t-field="product_image.image_128"
+                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'object-fit-cover w-100 h-100', 'alt-field': 'name'}"
+                    />
+                    <i
+                        t-if="product_image._name == 'product.image' and product_image.embed_code"
+                        class="fa fa-2x fa-play-circle o_product_video_thumb bg-black-50 text-center"
+                    />
+                </li>
+            </ol>
+        </div>
+    </template>
+
+    <!-- Product page images: Grid -->
+    <template id="website_sale.shop_product_grid" name="Shop Product Grid">
+        <t t-set="imagesCount" t-value="len(product_images)"/>
+        <div
+            id="o-grid-product"
+            t-attf-class="
+                    o_grid_uses_ratio_{{website.product_page_image_ratio}}
+                    o_grid_uses_ratio_mobile_{{website.product_page_image_ratio_mobile}}
+                {{
+                    imagesCount &gt; 11 and 'o_grid_has_more_than_11' or
+                    imagesCount &gt; 9 and 'o_grid_has_more_than_9' or
+                    imagesCount &gt; 5 and 'o_grid_has_more_than_5' or
+                    imagesCount &gt; 3 and 'o_grid_has_more_than_3' or
+                    imagesCount == 1   and 'o_grid_solo' or ''
+                }}
+            "
+            data-name="Product Grid"
+            t-att-data-image_spacing="website.product_page_image_spacing"
+            t-att-data-image_count="len(product_images)"
+            t-att-data-grid_columns="website.product_page_grid_columns"
+        >
+            <div class="position-relative overflow-hidden">
+                <span
+                    t-attf-class="o_ribbons #{ribbon._get_css_classes()}"
+                    t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                    t-out="ribbon.name or ''"
+                    t-att-data-ribbon-id="ribbon.id"
+                />
+                <!-- One row for every two images -->
+                <t t-set="image_classes" t-value="'w-100'"/>
+                <div
+                    t-attf-class="o_wsale_product_page_grid_row {{website._get_product_page_grid_image_spacing_classes()}}"
+                >
+                    <t t-foreach="website.product_page_grid_columns" t-as="col_idx">
+                        <t t-set="col_feed_counter" t-value="0"/>
+
+                        <div
+                            t-if="col_idx_index &lt; len(product_images)"
+                            t-attf-class="o_wsale_product_page_grid_column flex-column px-0"
+                        >
+                            <t t-foreach="len(product_images)" t-as="image_idx">
+                                <t
+                                    t-set="product_image"
+                                    t-value="image_idx &lt; len(product_images) and product_images[image_idx] or False"
+                                />
+                                <t
+                                    t-if="product_image and col_idx == col_feed_counter"
+                                    t-call="website_sale.shop_product_image"
+                                >
+                                    <t t-set="image_natural_index" t-value="image_idx"/>
+                                    <t
+                                        t-set="image_classes"
+                                        t-value="image_idx_last and 'o_product_detail_img_wrapper_last' or ''"
+                                    />
+                                </t>
+                                <t t-if="col_feed_counter == (website.product_page_grid_columns - 1)">
+                                    <t t-set="col_feed_counter" t-value="0"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="col_feed_counter" t-value="col_feed_counter + 1"/>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <t t-if="any([product.sudo()[field.name] for field in website.shop_extra_field_ids])">
+                <hr/>
+                <p class="text-muted">
+                    <t t-foreach="website.shop_extra_field_ids" t-as="field" t-if="product.sudo()[field.name]">
+                        <b><t t-out="field.label"/>: </b>
+                        <t t-if="field.field_id.ttype != 'binary'">
+                            <span t-out="product.sudo()[field.name]" t-options="{'widget': field.field_id.ttype}"/>
+                        </t>
+                        <t t-else=''>
+                            <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
+                                <i class='fa fa-file'></i>
+                            </a>
+                        </t>
+                        <br/>
+                    </t>
+                </p>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
