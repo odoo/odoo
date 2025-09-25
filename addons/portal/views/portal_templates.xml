@@ -76,8 +76,8 @@
             <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span t-if="not no_text"
                         t-attf-class="#{_txt_class}"
-                        t-esc="active_lang.name.split('/').pop()"/>
-                <span t-elif="codes" class="align-middle" t-esc="active_lang.url_code.split('_').pop(0).upper()"/>
+                        t-out="active_lang.name.split('/').pop()"/>
+                <span t-elif="codes" class="align-middle" t-out="active_lang.url_code.split('_').pop(0).upper()"/>
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                 <t t-foreach="frontend_languages.values()" t-as="lg">
@@ -85,8 +85,8 @@
                     t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
                     t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
                     role="menuitem">
-                        <span t-if="not no_text" t-esc="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
-                        <span t-elif="codes" t-esc="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
+                        <span t-if="not no_text" t-out="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
+                        <span t-elif="codes" t-out="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
                     </a>
                 </t>
             </div>
@@ -104,7 +104,7 @@
                 <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
                     <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
                 </div>
-                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-out="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
             </a>
             <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
                 <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
@@ -311,7 +311,7 @@
             <t t-if="breadcrumbs_searchbar">
                 <t t-call="portal.portal_breadcrumbs"/>
             </t>
-            <span t-else="" class="navbar-brand mb-0 h1 me-auto" t-esc="title or 'No title'"/>
+            <span t-else="" class="navbar-brand mb-0 h1 me-auto" t-out="title or 'No title'"/>
 
             <!--  Collapse button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
@@ -325,13 +325,13 @@
                         <span class="small me-1 navbar-text">Sort By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_sortby" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
-                                <t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                                <t t-out="searchbar_sortings[sortby].get('label', 'Newest')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
                                 <t t-foreach="searchbar_sortings" t-as="option">
                                     <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
                                        t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
-                                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                                        <span t-out="searchbar_sortings[option].get('label')"/>
                                     </a>
                                 </t>
                             </div>
@@ -341,13 +341,13 @@
                         <span class="small me-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_filters" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
-                                <t t-esc="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
+                                <t t-out="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_filters">
                                 <t t-foreach="searchbar_filters" t-as="option">
                                     <a t-att-href="default_url + '?' + keep_query('*', filterby=option)"
                                        t-attf-class="dropdown-item#{filterby == option and ' active' or ''}">
-                                        <span t-esc="searchbar_filters[option].get('label')"/>
+                                        <span t-out="searchbar_filters[option].get('label')"/>
                                     </a>
                                 </t>
                             </div>
@@ -357,13 +357,13 @@
                         <span class="small me-1 navbar-text">Group By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_groupby" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">
-                                <t t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
+                                <t t-out="searchbar_groupby[groupby].get('label', 'None')"/>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_groupby">
                                 <t t-foreach="searchbar_groupby" t-as="option">
                                     <a t-att-href="default_url + '?' + keep_query('*', groupby=option)"
                                        t-attf-class="dropdown-item#{groupby == option and ' active' or ''}">
-                                        <span t-esc="searchbar_groupby[option].get('label')"/>
+                                        <span t-out="searchbar_groupby[option].get('label')"/>
                                     </a>
                                 </t>
                             </div>
@@ -396,18 +396,18 @@
         <div class="o_portal_contact_details mb-5">
             <h5>Your contact</h5>
             <hr class="mt-1"/>
-            <h6 t-esc="sales_user.name"/>
+            <h6 t-out="sales_user.name"/>
             <div t-if="sales_user.email_normalized" class="d-flex align-items-baseline mb-1">
                 <i class="fa fa-envelope fa-fw me-1 text-600"/>
-                <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+                <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-out="sales_user.email"/>
             </div>
             <div t-if="sales_user.phone" class="d-flex flex-nowrap align-items-center mb-1">
                 <i class="fa fa-phone fa-fw me-1 text-600"/>
-                <span t-esc="sales_user.phone"/>
+                <span t-out="sales_user.phone"/>
             </div>
             <div t-if="sales_user.city" class="d-flex flex-nowrap align-items-center mb-1">
                 <i class="fa fa-map-marker fa-fw me-1 text-600"/>
-                <span t-esc="sales_user.city"/>
+                <span t-out="sales_user.city"/>
             </div>
         </div>
     </template>
@@ -430,7 +430,7 @@
             <t t-set="additional_title">Security</t>
             <t t-set="no_breadcrumbs" t-value="1"/>
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
-                <t t-esc="errors"/>
+                <t t-out="errors"/>
             </div>
             <div class="d-flex gap-2 my-3">
                 <a href="/my/" title="Go Back" class="btn btn-light px-2"><i class="oi oi-chevron-left"/></a>
@@ -443,7 +443,7 @@
                     Password Updated!
                 </div>
                 <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
-                    <t t-esc="errors['password']"/>
+                    <t t-out="errors['password']"/>
                 </div>
                 <form action="/my/security" method="post" class="oe_reset_password_form">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -557,7 +557,7 @@
                                 id="portal_deactivate_account_form">
                                 <div>
                                     <div class="alert alert-danger"
-                                        t-esc="get_error(errors, 'deactivate.other')"/>
+                                        t-out="get_error(errors, 'deactivate.other')"/>
                                     <p class="text-muted">
                                         Disable your account, preventing any further login.<br/>
                                         <b>
@@ -576,12 +576,12 @@
                                     <hr/>
                                     <p>
                                         2. Confirm you want to delete your account by
-                                        copying down your login (<t t-esc="env.user.login"/>).
+                                        copying down your login (<t t-out="env.user.login"/>).
                                     </p>
                                     <input name="validation" type="text" required="1"
                                         t-attf-class="form-control #{'is-invalid' if deactivate_error == 'validation' else ''}"/>
                                     <div t-if="deactivate_error == 'validation'" class="invalid-feedback">
-                                        You should enter "<t t-esc="env.user.login"/>" to validate your action.
+                                        You should enter "<t t-out="env.user.login"/>" to validate your action.
                                     </div>
                                     <div class="d-flex flex-row align-items-center">
                                         <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>

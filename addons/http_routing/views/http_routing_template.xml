@@ -4,7 +4,7 @@
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <div class="oe_structure">
-                    <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                    <h1 class="container mt32"><t t-out="status_code"/>: <t t-out="status_message"/></h1>
                 </div>
                 <t t-if="editable or debug">
                     <t t-call="http_routing.http_error_debug"/>
@@ -16,7 +16,7 @@
     <template id="error_message">
         <p t-if="error_message">
             <strong>Error message:</strong>
-            <pre t-esc="error_message"/>
+            <pre t-out="error_message"/>
         </p>
     </template>
 
@@ -39,10 +39,10 @@
                 <div id="error_qweb" class="collapse show">
                     <div class="card-body">
                         <p>
-                            The error occurred while rendering the template <code t-esc="qweb_exception.template"/>
-                            <t t-if="qweb_exception.element">and evaluating the following expression: <code t-esc="qweb_exception.element"/></t>
+                            The error occurred while rendering the template <code t-out="qweb_exception.template"/>
+                            <t t-if="qweb_exception.element">and evaluating the following expression: <code t-out="qweb_exception.element"/></t>
                         </p>
-                        <pre t-esc="str(exception)"/>
+                        <pre t-out="str(exception)"/>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 </h4>
                 <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
                     <div class="card-body">
-                        <pre id="exception_traceback" t-esc="traceback"/>
+                        <pre id="exception_traceback" t-out="traceback"/>
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         <html>
             <head>
-                <title t-esc="status_message">Internal Server Error</title>
+                <title t-out="status_message">Internal Server Error</title>
 
                 <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
                 <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
@@ -232,7 +232,7 @@
                     </header>
                     <main>
                         <div id="error_message" class="oe_structure">
-                            <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
+                            <h2 class="container mt32"><t t-out="status_code"/>: <t t-out="status_message"/></h2>
                         </div>
 
                         <t t-if="editable or debug">

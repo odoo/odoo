@@ -101,7 +101,7 @@ class StockTraceabilityReport(models.TransientModel):
 
     @api.model
     def _quantity_to_str(self, from_uom, to_uom, qty):
-        """ workaround to apply the float rounding logic of t-esc on data prepared server side """
+        """ workaround to apply the float rounding logic of t-out on data prepared server side """
         qty = from_uom._compute_quantity(qty, to_uom, rounding_method='HALF-UP')
         return self.env['ir.qweb.field.float'].value_to_html(qty, {'decimal_precision': 'Product Unit'})
 

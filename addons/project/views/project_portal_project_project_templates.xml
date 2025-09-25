@@ -7,20 +7,20 @@
                 <t t-else="">Projects</t>
             </li>
             <li t-if="page_name in ['project_task', 'project_subtasks', 'project_recurrent_tasks'] and project" class="breadcrumb-item active">
-                <a t-if="project" t-attf-href="/my/projects/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
+                <a t-if="project" t-attf-href="/my/projects/{{ project.id }}?{{ keep_query() }}"><t t-out="project.name"/></a>
             </li>
             <li t-elif="project" t-attf-class="breadcrumb-item #{'active ' if not project else ''} text-truncate col-8 col-lg-10">
-                <t t-esc="project.name"/>
+                <t t-out="project.name"/>
             </li>
             <li t-if="page_name == 'task' or (task and not project)" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
                 <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
                 <t t-else="">Tasks</t>
             </li>
             <li t-if="page_name == 'project_subtasks' and task and project" class="breadcrumb-item active">
-                <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}"><t t-esc="task.name"/></a>
+                <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}"><t t-out="task.name"/></a>
             </li>
             <li t-elif="page_name == 'project_recurrent_tasks' and task and project" class="breadcrumb-item active text-truncate">
-                <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}?{{ keep_query() }}"><t t-esc="task.name"/></a>
+                <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}?{{ keep_query() }}"><t t-out="task.name"/></a>
             </li>
             <li t-elif="task" class="breadcrumb-item active text-break">
                 <span t-field="task.name"/>

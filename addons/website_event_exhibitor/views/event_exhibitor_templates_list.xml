@@ -300,7 +300,7 @@
         <t t-foreach="search_countries" t-as="country">
             <span class="o_search_tag d-flex align-items-baseline ps-2 my-2 me-2 border rounded bg-white">
                 <i class="fa fa-tag me-2 text-muted"/>
-                <t t-esc="country.display_name"/>
+                <t t-out="country.display_name"/>
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (
                     slug(event),
                     keep_query('*', countries=str((search_countries - country).ids)))"
@@ -310,7 +310,7 @@
         <t t-foreach="search_sponsorships" t-as="sponsorship">
             <span class="o_search_tag d-flex align-items-baseline ps-2 my-2 me-2 border rounded bg-white">
                 <i class="fa fa-tag me-2 text-muted"/>
-                <t t-esc="sponsorship.display_name"/>
+                <t t-out="sponsorship.display_name"/>
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (
                     slug(event),
                     keep_query('*', sponsorships=str((search_sponsorships - sponsorship).ids)))"

@@ -206,7 +206,7 @@
                                 style="white-space: nowrap;"
                             >
                                 <small
-                                    t-esc="template_price_vals['base_price']"
+                                    t-out="template_price_vals['base_price']"
                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                 />
                             </del>

@@ -10,7 +10,7 @@
                 <t t-if="multiple_carrier_tracking">
                     <t t-foreach="multiple_carrier_tracking" t-as="line">
                         <a t-att-href="line[1]" target="_blank">
-                            <span t-esc="line[0]"/>
+                            <span t-out="line[0]"/>
                         </a>
                         <span t-if="not line_last"> + </span>
                     </t>

@@ -46,18 +46,18 @@
                             </td>
                             <td class="text-end align-middle">
                                 <span t-if="not is_uom_day" t-field="line.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</span>
-                                <span t-else="" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}">1 day</span>
+                                <span t-else="" t-out="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}">1 day</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-end" colspan="100">
                                 <strong t-if="not is_uom_day">
                                     <span style="margin-right: 15px;">Total (Hours)</span>
-                                    <t t-esc="sum(lines.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</t>
+                                    <t t-out="sum(lines.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}">2 hours</t>
                                 </strong>
                                 <strong t-else="">
                                     <span style="margin-right: 15px;">Total (Days)</span>
-                                    <t t-esc="lines._convert_hours_to_days(sum(lines.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}">1 day</t>
+                                    <t t-out="lines._convert_hours_to_days(sum(lines.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}">1 day</t>
                                 </strong>
                             </td>
                         </tr>

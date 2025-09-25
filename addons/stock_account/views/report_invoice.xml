@@ -15,12 +15,12 @@
                 </thead>
                 <tbody>
                     <tr t-foreach="lot_values" t-as="snln_line">
-                        <td><t t-esc="snln_line['product_name']">Bacon</t></td>
+                        <td><t t-out="snln_line['product_name']">Bacon</t></td>
                         <td class="text-end">
-                            <t t-esc="snln_line['quantity']">6.00</t>
-                            <t t-esc="snln_line['uom_name']" groups="uom.group_uom">units</t>
+                            <t t-out="snln_line['quantity']">6.00</t>
+                            <t t-out="snln_line['uom_name']" groups="uom.group_uom">units</t>
                         </td>
-                        <td><t class="text-end" t-esc="snln_line['lot_name']">BC46282798</t></td>
+                        <td><t class="text-end" t-out="snln_line['lot_name']">BC46282798</t></td>
                     </tr>
                 </tbody>
             </table>

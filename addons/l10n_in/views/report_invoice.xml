@@ -96,30 +96,30 @@
                                 <th class="text-end" t-if="hsn_summary['has_cess']">CESS</th>
                             </thead>
                             <tr t-foreach="hsn_summary['items']" t-as="item">
-                                <td t-esc="item['l10n_in_hsn_code']"/>
+                                <td t-out="item['l10n_in_hsn_code']"/>
                                 <td class="text-end">
-                                    <span t-esc="item['quantity']"/>
-                                    <span t-if="hsn_summary['display_uom']">(<t t-esc="item['uom_name']"/>)</span>
+                                    <span t-out="item['quantity']"/>
+                                    <span t-if="hsn_summary['display_uom']">(<t t-out="item['uom_name']"/>)</span>
                                 </td>
-                                <td class="text-end" t-esc="item['rate']"/>
+                                <td class="text-end" t-out="item['rate']"/>
                                 <td class="text-end">
-                                    <span t-esc="item['amount_untaxed']"
+                                    <span t-out="item['amount_untaxed']"
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                                 <td class="text-end" t-if="hsn_summary['has_gst']">
-                                    <span t-esc="item['tax_amount_sgst']"
+                                    <span t-out="item['tax_amount_sgst']"
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                                 <td class="text-end" t-if="hsn_summary['has_gst']">
-                                    <span t-esc="item['tax_amount_cgst']"
+                                    <span t-out="item['tax_amount_cgst']"
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                                 <td class="text-end" t-if="hsn_summary['has_igst']">
-                                    <span t-esc="item['tax_amount_igst']"
+                                    <span t-out="item['tax_amount_igst']"
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                                 <td class="text-end" t-if="hsn_summary['has_cess']">
-                                    <span t-esc="item['tax_amount_cess']"
+                                    <span t-out="item['tax_amount_cess']"
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                             </tr>

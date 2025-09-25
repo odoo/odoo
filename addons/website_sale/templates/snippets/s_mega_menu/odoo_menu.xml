@@ -20,7 +20,7 @@
                                 <a
                                     t-att-href="'/shop/category/%s' % category.id"
                                     class="nav-link p-0 text-black"
-                                    t-esc="category.name"
+                                    t-out="category.name"
                                 />
                             </h4>
                             <div class="s_hr pt4 pb16">
@@ -34,7 +34,7 @@
                                     <a
                                         t-att-href="'/shop/category/%s' % sub_category.id"
                                         class="nav-link px-0"
-                                        t-esc="sub_category.name"/>
+                                        t-out="sub_category.name"/>
                                 </t>
                             </nav>
                         </div>

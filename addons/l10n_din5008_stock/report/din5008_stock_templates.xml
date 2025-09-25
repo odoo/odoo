@@ -7,17 +7,17 @@
                     <td class="shipping_address">
                         <t t-if="o.picking_type_id.code == 'incoming'">
                             <span class="fw-bold">Vendor Address:</span>
-                            <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                            <address t-out="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                         </t>
                         <t t-if="o.picking_type_id.code == 'internal'">
                             <span class="fw-bold">Warehouse Address:</span>
-                            <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                            <address t-out="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                         </t>
                         <t t-if="o.picking_type_id.code == 'outgoing'">
                             <t t-set="main_address_box" t-value="o.move_ids[0].partner_id if o.should_print_delivery_address() else o.partner_id"/>
                             <t t-if="main_address_box.id != o.partner_id.commercial_partner_id.id">
                                 <span class="fw-bold">Beneficiary:</span>
-                                <address class="mb-0" t-esc="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                <address class="mb-0" t-out="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                 <div t-if="o.partner_id.vat">
                                     <t t-if="o.partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
@@ -25,7 +25,7 @@
                             </t>
                             <t t-if="main_address_box.id != o.partner_id.id">
                                 <span class="fw-bold">Customer Address:</span>
-                                <address t-esc="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                <address t-out="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                             </t>
                         </t>
                     </td>

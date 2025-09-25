@@ -490,8 +490,8 @@ class IrQwebFieldMonetary(models.AbstractModel):
         options.update(
             from_currency=dict(type='model', params='res.currency', string=_('Original currency')),
             display_currency=dict(type='model', params='res.currency', string=_('Display currency'), required="value_to_html"),
-            date=dict(type='date', string=_('Date'), description=_('Date used for the original currency (only used for t-esc). by default use the current date.')),
-            company_id=dict(type='model', params='res.company', string=_('Company'), description=_('Company used for the original currency (only used for t-esc). By default use the user company')),
+            date=dict(type='date', string=_('Date'), description=_('Date used for the original currency (only used for t-out). by default use the current date.')),
+            company_id=dict(type='model', params='res.company', string=_('Company'), description=_('Company used for the original currency (only used for t-out). By default use the user company')),
         )
         return options
 

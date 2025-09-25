@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-md-6 o_mail_footer_description col-12">
                     <p t-if="res_company">
-                        <strong><t t-esc="res_company.partner_id.name"/></strong>
+                        <strong><t t-out="res_company.partner_id.name"/></strong>
                     </p>
                     <div class="o_mail_footer_links">
                         <p class="mb-0">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-md-6 col-12" align="right">
                     <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
-                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                    <p class="o_mail_footer_copy">© <t t-out="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
             </div>
         </div>

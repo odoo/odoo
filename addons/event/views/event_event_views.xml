@@ -235,14 +235,14 @@
                 <templates>
                     <t t-name="card" class="p-0 row">
                         <aside class="col-4 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                            <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="fs-1"/>
+                            <div t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="fs-1"/>
                             <div>
-                                <t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
+                                <t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
                             </div>
-                            <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
+                            <div><t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
                                 <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
                                     <i class="oi oi-arrow-right me-2" title="End date"/>
-                                    <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
+                                    <t t-out="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                 </div>
                         </aside>
                         <main class="col pt-3 pb-2 px-3 justify-content-between">

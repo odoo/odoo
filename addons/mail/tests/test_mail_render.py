@@ -57,7 +57,7 @@ class TestMailRenderCommon(common.MailCommon):
         # some qweb templates, their views and their xml ids
         cls.base_qweb_bits = [
             '<p>Hello</p>',
-            '<p>Hello <t t-esc="object.name"/></p>',
+            '<p>Hello <t t-out="object.name"/></p>',
             """<p>
     <span t-if="object.lang == 'en_US'">English Speaker</span>
     <span t-else="">Other Speaker</span>
@@ -65,7 +65,7 @@ class TestMailRenderCommon(common.MailCommon):
         ]
         cls.base_qweb_bits_fr = [
             '<p>Bonjour</p>',
-            '<p>Bonjour <t t-esc="object.name"/></p>',
+            '<p>Bonjour <t t-out="object.name"/></p>',
             """<p>
     <span t-if="object.lang == 'en_US'">Narrateur Anglais</span>
     <span t-else="">Autre Narrateur</span>

@@ -106,15 +106,15 @@ _</h1>
         template_addresses = self.env['ir.ui.view'].create({
             'type': 'qweb',
             'arch_db': '''<t>
-    <street t-esc="address.get('street')"/>
-    <number t-esc="address.get('number')"/>
-    <city t-esc="address.get('city')"/>
+    <street t-out="address.get('street')"/>
+    <number t-out="address.get('number')"/>
+    <city t-out="address.get('city')"/>
 </t>
 '''})
         template_main = self.env['ir.ui.view'].create({
             'type': 'qweb',
             'arch_db': f'''<data>
-    <item t-foreach="items" t-as="item" t-esc="item"/>
+    <item t-foreach="items" t-as="item" t-out="item"/>
     <addressSender><t t-call='{template_addresses.id}'>
         <t t-set="address" t-value="addressSender"/>
     </t></addressSender>

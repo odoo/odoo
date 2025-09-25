@@ -762,10 +762,10 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 Hi,
 <t t-set="url" t-value="'www.odoo.com'"/>
 <t t-set="httpurl" t-value="'https://www.odoo.eu'"/>
-Website0: <a id="url0" t-attf-href="https://www.odoo.tz/my/{{object.name}}">https://www.odoo.tz/my/<t t-esc="object.name"/></a>
+Website0: <a id="url0" t-attf-href="https://www.odoo.tz/my/{{object.name}}">https://www.odoo.tz/my/<t t-out="object.name"/></a>
 Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</a>
-Website2: <a id="url2" t-attf-href="https://{{url}}">https://<t t-esc="url"/></a>
-Website3: <a id="url3" t-att-href="httpurl"><t t-esc="httpurl"/></a>
+Website2: <a id="url2" t-attf-href="https://{{url}}">https://<t t-out="url"/></a>
+Website3: <a id="url3" t-att-href="httpurl"><t t-out="httpurl"/></a>
 External1: <a id="url4" href="https://www.example.com/foo/bar?baz=qux">Youpie</a>
 Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,

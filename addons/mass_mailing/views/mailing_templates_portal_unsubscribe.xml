@@ -88,8 +88,8 @@
                                     <t t-foreach="lists_optin" t-as="mailing_list">
                                         <li class="list-group-item d-flex align-items-center">
                                             <strong>
-                                                <t t-if="mailing_list.is_public" t-esc="mailing_list.name"/>
-                                                <t t-else="">Mailing List #<t t-esc="mailing_list.id"/></t>
+                                                <t t-if="mailing_list.is_public" t-out="mailing_list.name"/>
+                                                <t t-else="">Mailing List #<t t-out="mailing_list.id"/></t>
                                             </strong>
                                         </li>
                                     </t>

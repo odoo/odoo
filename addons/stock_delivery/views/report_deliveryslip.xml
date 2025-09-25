@@ -41,7 +41,7 @@
     </template>
     <template id="stock_report_delivery_aggregated_move_lines_inherit_delivery" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
         <xpath expr="//td[@name='move_line_aggregated_quantity']" position="after">
-            <td t-if="has_hs_code"><span t-esc="aggregated_lines[line]['hs_code']"/></td>
+            <td t-if="has_hs_code"><span t-out="aggregated_lines[line]['hs_code']"/></td>
         </xpath>
     </template>
 

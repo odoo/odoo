@@ -469,7 +469,7 @@
                                 class="fw-bold"
                             />
                             <t t-if="sale_order._get_prepayment_required_amount() == amount">
-                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                (<b t-out="sale_order.prepayment_percent * 100"/>%),
                             </t>
                         </span>
                         <span id="o_sale_portal_use_amount_total">By paying,</span>

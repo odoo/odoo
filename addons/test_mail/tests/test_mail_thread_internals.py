@@ -1441,7 +1441,7 @@ class TestNoThread(MailCommon, TestRecipients):
         ])
         test_template = self.env['mail.template'].create({
             'auto_delete': True,
-            'body_html': '<p>TemplateBody <t t-esc="object.name"></t></p>',
+            'body_html': '<p>TemplateBody <t t-out="object.name"></t></p>',
             'email_from': '{{ (user.email_formatted) }}',
             'email_to': '',
             'mail_server_id': self.mail_server_domain.id,

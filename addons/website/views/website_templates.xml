@@ -2024,7 +2024,7 @@
                                 <li><a href="#">Services</a></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link">
-                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                    <a t-att-href="link['href']" t-out="link['text']"/>
                                 </li>
                             </ul>
                         </div>
@@ -2133,7 +2133,7 @@
                                             <li><a href="#">Services</a></li>
                                             <t t-set="configurator_footer_links" t-value="[]"/>
                                             <li t-foreach="configurator_footer_links" t-as="link">
-                                                <a t-att-href="link['href']" t-esc="link['text']"/>
+                                                <a t-att-href="link['href']" t-out="link['text']"/>
                                             </li>
                                         </ul>
                                     </div>
@@ -2265,7 +2265,7 @@
                                             <li><a href="#">Services</a></li>
                                             <t t-set="configurator_footer_links" t-value="[]"/>
                                             <li t-foreach="configurator_footer_links" t-as="link">
-                                                <a t-att-href="link['href']" t-esc="link['text']"/>
+                                                <a t-att-href="link['href']" t-out="link['text']"/>
                                             </li>
                                         </ul>
                                     </div>

@@ -218,7 +218,7 @@
                     <t t-set="online_event_text">Online Events</t>
                     <t t-out="online_event_text"/>
                 </t>
-                <t t-elif="current_country" t-esc="current_country.name"/>
+                <t t-elif="current_country" t-out="current_country.name"/>
                 <t t-else="">All countries</t>
             </button>
             <div class="dropdown-menu">

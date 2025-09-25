@@ -87,8 +87,7 @@ in the IrQweb class.
               ┃  ┃    ┗━► t-tag-open      ━━► _compile_directive_open          ◄━━┓  ┃
               ┃  ┃    ┗━► t-tag-close     ━━► _compile_directive_close         ◄━━┫  ┃
               ┃  ┃    ┗━► t-out           ━━► _compile_directive_out             ━┛ ━┫ ◄━━┓
-              ┃  ┃    ┗━► t-field         ━━► _compile_directive_field               ┃   ━┫
-              ┃  ┃    ┗━► t-esc           ━━► _compile_directive_esc                 ┃   ━┛
+              ┃  ┃    ┗━► t-field         ━━► _compile_directive_field               ┃   ━┛
               ┃  ┃    ┗━► t-*             ━━► ...                                    ┃
               ┃  ┃                                                                   ┃
               ┗━━┻━► _compile_static_node                                           ━┛
@@ -157,10 +156,10 @@ defined in ``_directives_eval_order`` method.
 ```
 <t t-set="check" t-value="1"/>
 <section t-if="False">10</section>
-<span t-elif="check == 1" t-foreach="range(3)" t-as="check" t-esc="check"/>
+<span t-elif="check == 1" t-foreach="range(3)" t-as="check" t-out="check"/>
 
 <section t-if="False">10</section>
-<div t-else="" t-if="check == 1" t-foreach="range(3)" t-as="check" t-esc="check"/>
+<div t-else="" t-if="check == 1" t-foreach="range(3)" t-as="check" t-out="check"/>
 
 Result:
 
@@ -299,10 +298,6 @@ Use ``t-out`` compile method but the generated code call ``_get_field``
 instead of ``_get_widget``. It's the ``ir.qweb.field.*`` models that format
 the value. The rendering model is chosen according to the type of field. The
 rendering model can be modified via the ``t-options-widget``.
-
-``t-esc``
-~~~~~~~~~
-Deprecated, please use ``t-out``
 
 ``t-raw``
 ~~~~~~~~~
@@ -1611,7 +1606,7 @@ class IrQweb(models.AbstractModel):
             'options',
             'call',
             'att',
-            'field', 'esc', 'raw', 'out',
+            'field', 'raw', 'out',
             'tag-open',
             'set',
             'inner-content',
@@ -1671,7 +1666,7 @@ class IrQweb(models.AbstractModel):
             if el_tag not in VOID_ELEMENTS:
                 el.set('t-tag-close', el_tag)
 
-        if not ({'t-out', 't-esc', 't-raw', 't-field'} & set(el.attrib)):
+        if not ({'t-out', 't-raw', 't-field'} & set(el.attrib)):
             el.set('t-inner-content', 'True')
 
         return body + self._compile_directives(el, compile_context, level)
@@ -1778,7 +1773,7 @@ class IrQweb(models.AbstractModel):
 
         remaining = set(el.attrib) - SPECIAL_DIRECTIVES
         if remaining:
-            _logger.warning('Unknown directives or unused attributes: %s in %s', remaining, compile_context['template'])
+            _logger.warning('Unknown directives or unused attributes: %s in %s', remaining, compile_context['ref_name'] or compile_context['template'])
 
         return code
 
@@ -2314,11 +2309,8 @@ class IrQweb(models.AbstractModel):
             expr = el.attrib.pop('t-field', None)
             if expr is None:
                 # deprecated use.
-                ttype = 't-esc'
-                expr = el.attrib.pop('t-esc', None)
-                if expr is None:
-                    ttype = 't-raw'
-                    expr = el.attrib.pop('t-raw')
+                ttype = 't-raw'
+                expr = el.attrib.pop('t-raw')
 
         code = self._flush_text(compile_context, level)
 
@@ -2430,16 +2422,6 @@ class IrQweb(models.AbstractModel):
             code.append(indent_code("""else: values.pop('__qweb_attrs__', None)""", level))
 
         return code
-
-    def _compile_directive_esc(self, el, compile_context, level):
-        # deprecated use.
-        if compile_context.get('dev_mode'):
-            _logger.warning(
-                "Found deprecated directive @t-esc=%r in template %r. Replace by @t-out",
-                el.get('t-esc'),
-                compile_context.get('ref', '<unknown>'),
-            )
-        return self._compile_directive_out(el, compile_context, level)
 
     def _compile_directive_raw(self, el, compile_context, level):
         # deprecated use.

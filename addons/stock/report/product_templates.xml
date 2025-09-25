@@ -40,9 +40,9 @@
             </t>
             <t t-if="price_included">
                 <t t-if="show_price_per_unit">
-^FO150,210 ^A0N,25^FH ^FD( <t t-esc="price_per_unit"/> / <t t-esc="reference_unit_name" /> )^FS
+^FO150,210 ^A0N,25^FH ^FD( <t t-out="price_per_unit"/> / <t t-out="reference_unit_name" /> )^FS
                 </t>
-^FO300,200 ^A0N,40^FH ^FD<t t-esc="price"/>^FS
+^FO300,200 ^A0N,40^FH ^FD<t t-out="price"/>^FS
             </t>
         </template>
 
@@ -59,9 +59,9 @@
             </t>
             <t t-if="price_included">
                 <t t-if="show_price_per_unit">
-^FO160,185 ^A0N,18^FH ^FD( <t t-esc="price_per_unit"/> / <t t-esc="reference_unit_name" /> )^FS
+^FO160,185 ^A0N,18^FH ^FD( <t t-out="price_per_unit"/> / <t t-out="reference_unit_name" /> )^FS
                 </t>
-^FO290,165 ^A0N,30^FH ^FD<t t-esc="price"/>^FS
+^FO290,165 ^A0N,30^FH ^FD<t t-out="price"/>^FS
             </t>
         </template>
 
@@ -71,7 +71,7 @@
 ^FO35,50^BY1 ^BCN,80,Y,N,N ^FD<t t-out="barcode"/>^FS
             </t>
             <t t-if="price_included">
-^FO150,165 ^A0N,25^FH ^FD<t t-esc="price"/>^FS
+^FO150,165 ^A0N,25^FH ^FD<t t-out="price"/>^FS
             </t>
         </template>
 
@@ -81,7 +81,7 @@
 ^FO35,5^BY1 ^BCN,80,Y,N,N ^FD<t t-out="barcode"/>^FS
             </t>
             <t t-if="price_included">
-^FO290,50 ^A0N,30^FH ^FD<t t-esc="price"/>^FS
+^FO290,50 ^A0N,30^FH ^FD<t t-out="price"/>^FS
             </t>
         </template>
 

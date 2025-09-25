@@ -213,9 +213,9 @@ class TranslationToolsTestCase(BaseCase):
         terms = []
         # do not slit the long line below, otherwise the result will not match
         source = """<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
-                        <cbc:UBLVersionID t-esc="version_id"/>
+                        <cbc:UBLVersionID t-out="version_id"/>
                         <t t-foreach="[1, 2, 3, 4]" t-as="value">
-                            Oasis <cac:Test t-esc="value"/>
+                            Oasis <cac:Test t-out="value"/>
                         </t>
                     </Invoice>"""
         result = xml_translate(terms.append, source)

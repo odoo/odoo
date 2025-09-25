@@ -41,7 +41,7 @@
             </t>
             <tr t-att-class="'fw-bold o_line_section'">
                 <td colspan="99">
-                    <span t-esc="kit_product.display_name"/>
+                    <span t-out="kit_product.display_name"/>
                 </td>
             </tr>
             <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.bom_line_id.bom_id == bom)"/>

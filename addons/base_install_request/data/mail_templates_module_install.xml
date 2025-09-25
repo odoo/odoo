@@ -8,7 +8,7 @@
                     <li class="mt8 col-lg-6" t-if="app.application">
                         <div>
                             <img width="24px" height="24px" class="img-fluid" t-att-src="app.icon"/>
-                            <t t-esc="app.shortdesc"/>
+                            <t t-out="app.shortdesc"/>
                         </div>
                     </li>
                 </t>

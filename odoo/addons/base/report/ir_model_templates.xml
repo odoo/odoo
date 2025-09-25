@@ -69,7 +69,7 @@
                             <div t-if="field.size"><span>- size = <span t-field="field.size"/></span></div>
                             <div t-if="field.on_delete"><span>- ondelete = <span t-field="field.on_delete"/></span></div>
                             <div t-if="field.domain"><span>- domain = <span t-field="field.domain"/></span></div>
-                            <div t-if="field.groups"><span>- groups = <span t-esc="', '.join(g.name for g in field.groups)"/></span></div>
+                            <div t-if="field.groups"><span>- groups = <span t-out="', '.join(g.name for g in field.groups)"/></span></div>
                         </td>
                         <td><t t-if="field.required">X</t></td>
                         <td><t t-if="field.readonly">X</t></td>

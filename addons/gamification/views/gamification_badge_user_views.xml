@@ -13,7 +13,7 @@
                             <div class="col">
                                 <field class="fw-bold fs-5" type="open" name="badge_name"/>
                                 <div>
-                                    Granted on <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')"/>
+                                    Granted on <t t-out="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')"/>
                                     <div class="d-flex align-items-center">
                                         By
                                         <field class="m-0 mx-1 oe_inline" name="create_uid" options="{'no_open': True}" widget="many2one_avatar_user"/>

@@ -15,20 +15,20 @@
                                     <t t-foreach="locations" t-as="location">
                                         <th class="o_report_stock_rule_location_header">
                                             <div t-att-res-id="location.id" t-att-res-model="location._name" view-type="form">
-                                                <t t-esc="location.display_name"/>
+                                                <t t-out="location.display_name"/>
                                             </div>
                                             <t t-if="header_lines.get(location.id)">
                                                 <t t-foreach="header_lines[location.id]['putaway']" t-as="lines">
                                                     <t t-foreach="lines" t-as="line">
                                                         <div class="o_report_stock_rule_putaway" t-att-res-id="location.id" t-att-res-model="location._name" view-type="form">
-                                                            <p>Putaway: <t t-esc="line.location_out_id.display_name"/></p>
+                                                            <p>Putaway: <t t-out="line.location_out_id.display_name"/></p>
                                                         </div>
                                                     </t>
                                                 </t>
                                                 <t t-foreach="header_lines[location.id]['orderpoint']" t-as="lines">
                                                     <t t-foreach="lines" t-as="line">
                                                         <div class="o_report_stock_rule_putaway" t-att-res-id="line.id" t-att-res-model="line._name" view-type="form">
-                                                            <p>[<t t-esc="line.display_name"/>]<br/>min: <t t-esc="line.product_min_qty"/>, max:<t t-esc="line.product_max_qty"/></p>
+                                                            <p>[<t t-out="line.display_name"/>]<br/>min: <t t-out="line.product_min_qty"/>, max:<t t-out="line.product_max_qty"/></p>
                                                         </div>
                                                     </t>
                                                 </t>
@@ -80,7 +80,7 @@
                                                                     </t>
                                                                 </div>
                                                                 <div class="o_report_stock_rule_rule_name">
-                                                                    <span t-attf-style="color: #{color};"><t t-esc="rule[0].picking_type_id.name"/></span>
+                                                                    <span t-attf-style="color: #{color};"><t t-out="rule[0].picking_type_id.name"/></span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -180,4 +180,3 @@
         </div>
     </template>
 </odoo>
-

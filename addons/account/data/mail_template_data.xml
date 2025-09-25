@@ -257,11 +257,11 @@
         <li>For new invoices, please ensure a PDF or electronic invoice file is attached</li>
         <li>To add information to a previously sent invoice, reply to your "sent" email</li>
     </ul>
-    For any other question, write to <t t-esc="company_email"/>.
+    For any other question, write to <t t-out="company_email"/>.
     <br/>
     --
     <br/>
-    <t t-esc="company_name"/>
+    <t t-out="company_name"/>
 </p>
         </template>
        <record id="mail_template_einvoice_notification" model="mail.template">
