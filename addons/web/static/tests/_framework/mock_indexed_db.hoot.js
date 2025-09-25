@@ -28,6 +28,10 @@ export function mockIndexedDB(_name, { fn }) {
                 return this.mockIndexedDB[table]?.[key];
             }
 
+            async getAllKeys(table) {
+                return Object.keys(this.mockIndexedDB[table] || {});
+            }
+
             async invalidate(tables = null) {
                 if (tables) {
                     tables = typeof tables === "string" ? [tables] : tables;
