@@ -19,11 +19,20 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
         return domain
 
+    def _domain_holiday_status_id(self):
+        domain = [
+            ('company_id', 'in', self.env.companies.ids + [False]),
+            ('requires_allocation', '=', True),
+        ]
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return domain
+        return Domain.AND([domain, [('employee_requests', '=', True)]])
+
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", required=True,
-        domain="[('company_id', 'in', [company_id, False])]")
+        domain=_domain_holiday_status_id)
     request_unit = fields.Selection(related="holiday_status_id.request_unit")
     allocation_mode = fields.Selection([
         ('employee', 'By Employee'),
