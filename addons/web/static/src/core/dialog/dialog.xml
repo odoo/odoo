@@ -15,6 +15,7 @@
                                 <t t-call="web.Dialog.header">
                                     <t t-set="fullscreen" t-value="isFullscreen"/>
                                     <t t-set="onExpand" t-value="props.onExpand"/>
+                                    <t t-set="onMobilesnippet" t-value="props.onMobilesnippet"/>
                                 </t>
                             </t>
                         </header>
@@ -43,6 +44,9 @@
         </h4>
         <t t-if="onExpand">
             <button type="button" class="fa fa-expand btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
+        </t>
+        <t t-if="onMobilesnippet">
+            <button type="button" class="fa fa-mobile btn"  t-on-click="toggleMobilePreview"/>
         </t>
         <t t-if="!fullscreen">
             <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
