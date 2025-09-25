@@ -39,14 +39,18 @@ export class ContentEditablePlugin extends Plugin {
             ...filteredContentEditableEls,
             ...extraContentEditableEls,
         ]) {
-            if (!contentEditableEl.isContentEditable) {
-                if (isMediaElement(contentEditableEl)) {
-                    contentEditableEl.classList.add("o_editable_media");
-                    continue;
-                }
-                if (!contentEditableEl.matches(toDisableSelector)) {
-                    contentEditableEl.setAttribute("contenteditable", true);
-                }
+            if (
+                isMediaElement(contentEditableEl) &&
+                !contentEditableEl.parentNode.isContentEditable
+            ) {
+                contentEditableEl.classList.add("o_editable_media");
+                continue;
+            }
+            if (
+                !contentEditableEl.isContentEditable &&
+                !contentEditableEl.matches(toDisableSelector)
+            ) {
+                contentEditableEl.setAttribute("contenteditable", true);
             }
         }
     }
