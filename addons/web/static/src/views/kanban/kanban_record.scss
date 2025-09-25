@@ -24,7 +24,13 @@
     }
 
     @include media-only(print) {
+        height: auto;
         font-size: 0.8rem;
+        page-break-inside: avoid;
+
+        &:not(.o_kanban_ghost) > * {
+            height: auto;
+        }
     }
 
     &:not(.o_kanban_ghost) {
