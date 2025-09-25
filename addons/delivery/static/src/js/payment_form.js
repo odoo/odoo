@@ -7,7 +7,8 @@ PaymentForm.include({
      * @override
      */
     async start() {
-        this.submitButton = document.querySelector('[adapt-label-for-cod="True"]');
+        this.submitButtons = document.querySelectorAll('[adapt-label-for-cod="True"]');
+        this.submitButton = this.submitButtons[0];
         this.submitButtonDefaultLabel = this.submitButton.textContent;
         await this._super(...arguments);
     },
@@ -21,12 +22,11 @@ PaymentForm.include({
      * @return {void}
      */
      async _expandInlineForm(radio) {
+         let label = this.submitButtonDefaultLabel;
          if (radio.dataset.paymentMethodCode === 'cash_on_delivery') {
-             this.submitButton.textContent = _t("Place order");
+             label = _t("Place order");
          }
-         else {
-             this.submitButton.textContent = this.submitButtonDefaultLabel;
-         }
+         this.submitButtons.forEach((btn) => btn.textContent = label);
          return await this._super(...arguments);
      }
 
