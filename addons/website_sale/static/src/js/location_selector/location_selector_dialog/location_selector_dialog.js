@@ -8,6 +8,9 @@ patch(LocationSelectorDialog, {
     props: {
         ...LocationSelectorDialog.props,
         isFrontend: { type: Boolean, optional: true },
+        countryCode: { type: String, optional: true},
+        carrierId: Number,
+        carrierType: String,
     },
 });
 

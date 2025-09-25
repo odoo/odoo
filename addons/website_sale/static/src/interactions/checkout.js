@@ -150,14 +150,21 @@ export class Checkout extends Interaction {
      * @return {void}
      */
     async selectPickupLocation(ev) {
-        const { zipCode, countryCode, locationId, carrierId } = ev.currentTarget.dataset;
+        const {
+            zipCode,
+            locationId,
+            countryCode,
+            carrierId,
+            carrierType,
+        } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
         this.services.dialog.add(LocationSelectorDialog, {
             zipCode: zipCode,
-            countryCode: countryCode,
             selectedLocationId: locationId,
             isFrontend: true,
+            countryCode: countryCode,
             carrierId: parseInt(carrierId),
+            carrierType: carrierType,
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
@@ -457,20 +464,12 @@ export class Checkout extends Interaction {
                 await this._showPickupLocation(checkedRadio);
             }
         }
+        // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
         await Promise.all(this.dmRadios.filter(radio => !radio.checked).map(async radio => {
-            await this._updateDeliveryRate(radio)
-        }));
-    }
-
-    /**
-     * Asynchronously fetch delivery rates to mitigate delays from third-party APIs
-     *
-     * @param {Element} radio
-     */
-    async _updateDeliveryRate(radio){
-        this._showLoadingBadge((radio));
+            this._showLoadingBadge((radio));
             const rateData = await this.waitFor(this._getDeliveryRate(radio));
             this._updateAmountBadge(radio, rateData);
+        }));
     }
 
     /**
@@ -549,13 +548,7 @@ export class Checkout extends Interaction {
             '/website_sale/set_pickup_location',
             { pickup_location_data: pickupLocationData }
         );
-        // Delivery rates are calculated based on location's country, so it needs to be recalculated
-        // in case rates are different for another country.
-        await Promise.all(this.dmRadios.filter(radio => radio.checked).map(async radio => {
-            await this._updateDeliveryRate(radio)
-        }));
-
-        this._updateCartSummary(result);
+        this._updateCartSummaries(result);
     }
 
     // #=== GETTERS & SETTERS ===#

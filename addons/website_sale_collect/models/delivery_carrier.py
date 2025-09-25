@@ -60,7 +60,7 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _get_carrier_countries(self):
+    def _get_available_countries(self):
         """ Override
         Get the formatted countries of the delivery carrier based on available warehouses
 
@@ -69,11 +69,20 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if self.delivery_type == 'in_store' and self.warehouse_ids:
             countries = self.warehouse_ids.partner_id.country_id
-            return self.format_countries_selector(countries)
+            return [
+                {
+                    'value': {
+                        'name': c.name,
+                        'code': c.code,
+                        'image_url': c.image_url,
+                        'fields': c.get_address_fields(),
+                    },
+                    'label': c.name,
+                } for c in countries
+            ]
+        return []
 
-        return super()._get_carrier_countries()
-
-    def _in_store_get_close_locations(self, partner_address, product_id=None, country_code=None):
+    def _in_store_get_close_locations(self, partner_address, product_id=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.

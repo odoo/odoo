@@ -127,35 +127,8 @@
 
     <t t-name="delivery.locationSelector.searchbar">
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
-            <!-- Country selector -->
-            <SelectMenu
-                choices="this.state.countries"
-                searchable="this.state.countries.length > 10"
-                required="true"
-                onSelect.bind="this.setSelectedCountry"
-                class="'rounded-end-0 border-0'"
-                togglerClass="'rounded-end-0 pe-0'"
-                menuClass="'o_location_selector_country_selector'"
-            >
-                <img
-                    t-att-src="state.selectedCountry.image_url"
-                    class="pe-2"
-                    style="height: auto; width: 30px;"
-                    t-att-alt="state.selectedCountry.name"
-                />
-                <t t-set-slot="choice" t-slot-scope="choice">
-                    <span class="text-truncate">
-                        <img
-                            t-att-src="choice.data.value.image_url"
-                            class="pe-2"
-                            style="height: auto; width: 30px;"
-                            t-att-alt="choice.data.label"
-                        />
-                        <t t-out="choice.data.label"/>
-                    </span>
-                </t>
-            </SelectMenu>
             <input
+                id="o_location_selector_search"
                 class="search-query form-control oe_search_box border-0 px-2 text-bg-light"
                 t-model.lazy="this.state.zipCode"
                 t-att-placeholder="postalCodePlaceholder"

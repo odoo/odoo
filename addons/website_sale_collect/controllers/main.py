@@ -39,7 +39,7 @@ class WebsiteSaleCollect(WebsiteSale):
                     or request.geoip.country_code
                     or ''
                 ),
-                'carrier_id': in_store_dm_sudo.id,
+                'carrier': in_store_dm_sudo,
             })
         return res
 

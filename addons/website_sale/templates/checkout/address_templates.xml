@@ -122,6 +122,9 @@
                     t-att-data-location-id="pickup_location_data.get('id')"
                     t-att-data-zip-code="pickup_location_data.get('zip_code')"
                     t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
+                    t-att-data-country-code="order.partner_shipping_id.country_code"
+                    t-att-data-carrier-id="dm.id"
+                    t-att-data-carrier-type="dm.delivery_type"
                 />
             </div>
             <button
@@ -130,6 +133,9 @@
                 type="button"
                 class="btn btn-primary ms-4"
                 t-att-data-zip-code="order.partner_shipping_id.zip"
+                t-att-data-country-code="order.partner_shipping_id.country_code"
+                t-att-data-carrier-id="dm.id"
+                t-att-data-carrier-type="dm.delivery_type"
             >
                 Select a location
             </button>

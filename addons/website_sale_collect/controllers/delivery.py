@@ -8,14 +8,20 @@ from odoo.addons.website_sale.controllers.delivery import Delivery
 class InStoreDelivery(Delivery):
 
     @route()
-    def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):
-        """ Override of `website_sale` to set the pickup in store delivery method on the order in
-        order to retrieve pickup locations when called from the product page. If there is no order
-        create a temporary one to display pickup locations.
+    def website_sale_get_pickup_locations(self, zip_code=None, country_code=None, **kwargs):
+        """ Override of `website_sale` to:
+        1. get the pickup locations depending on the country selector
+        2. set the pickup in store delivery method on the order in order to retrieve pickup
+        locations when called from the product page. If there is no order create a temporary one to
+        display pickup locations.
         """
+        in_store_dm = request.website.sudo().in_store_dm_id
+        if in_store_dm.delivery_type == 'in_store':
+            kwargs['country'] = request.env['res.country'].search(
+                [('code', '=', country_code)], limit=1,
+            )
         if kwargs.get('product_id'):  # Called from the product page.
             order_sudo = request.cart
-            in_store_dm = request.website.sudo().in_store_dm_id
             if not order_sudo:  # Pickup location requested without a cart creation.
                 # Create a temporary order to fetch pickup locations.
                 temp_order = request.env['sale.order'].new({'carrier_id': in_store_dm.id})
@@ -59,3 +65,13 @@ class InStoreDelivery(Delivery):
             if dm.delivery_type == 'in_store':
                 del dm_rate_mapping[dm]
         return dm_rate_mapping
+
+    @route('/shop/get_click_and_collect_countries', type='jsonrpc', auth='public', website=True)
+    def get_click_and_collect_countries(self, carrier_id):
+        """ Fetch the countries associated with a delivery carrier.
+
+        :return: The available countries to select from.
+        :rtype: dict
+        """
+        carrier_sudo = request.env['delivery.carrier'].sudo().browse(carrier_id)
+        return carrier_sudo._get_available_countries()
