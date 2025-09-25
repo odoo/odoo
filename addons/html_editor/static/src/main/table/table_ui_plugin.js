@@ -156,8 +156,6 @@ export class TableUIPlugin extends Plugin {
             moveRow: withAddStep(this.dependencies.table.moveRow),
             addRow: withAddStep(this.dependencies.table.addRow),
             removeRow: withAddStep(this.dependencies.table.removeRow),
-            turnIntoHeader: withAddStep(this.dependencies.table.turnIntoHeader),
-            turnIntoRow: withAddStep(this.dependencies.table.turnIntoRow),
             resetRowHeight: withAddStep(this.dependencies.table.resetRowHeight),
             resetColumnWidth: withAddStep(this.dependencies.table.resetColumnWidth),
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
@@ -170,8 +168,14 @@ export class TableUIPlugin extends Plugin {
                 props: {
                     type: "row",
                     overlay: this.rowMenu,
+                    createOverlay: (Component, props = {}, options) =>
+                        this.dependencies.overlay.createOverlay(Component, props, options),
                     target: td,
                     dropdownState: this.createDropdownState(this.colMenu),
+                    addStep: this.dependencies.history.addStep,
+                    document: this.document,
+                    turnIntoHeader: this.dependencies.table.turnIntoHeader,
+                    turnIntoRow: this.dependencies.table.turnIntoRow,
                     ...tableMethods,
                 },
             });
@@ -183,8 +187,14 @@ export class TableUIPlugin extends Plugin {
                     type: "column",
                     overlay: this.colMenu,
                     target: td,
+                    createOverlay: (Component, props = {}, options) =>
+                        this.dependencies.overlay.createOverlay(Component, props, options),
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
+                    addStep: this.dependencies.history.addStep,
+                    document: this.document,
+                    turnIntoHeader: this.dependencies.table.turnIntoHeader,
+                    turnIntoRow: this.dependencies.table.turnIntoRow,
                     ...tableMethods,
                 },
             });

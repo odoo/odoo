@@ -1,8 +1,9 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { TableDragDrop } from "./table_drag_drop";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
@@ -16,14 +17,17 @@ export class TableMenu extends Component {
         removeRow: Function,
         turnIntoHeader: Function,
         turnIntoRow: Function,
+        addStep: Function,
         resetRowHeight: Function,
         resetColumnWidth: Function,
         resetTableSize: Function,
         clearColumnContent: Function,
         clearRowContent: Function,
         overlay: Object,
+        createOverlay: { type: Function, optional: true },
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         direction: { type: String, optional: true },
     };
     static defaultProps = { direction: "ltr" };
@@ -40,6 +44,19 @@ export class TableMenu extends Component {
             this.isTableHeader = [...tr.children][0].nodeName === "TH";
         }
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+        this.menuRef = useRef("menuRef");
+        const onPointerDown = (ev) => this.onPointerDown(ev);
+        onMounted(() => {
+            this.menuRef?.el.addEventListener("pointerdown", onPointerDown);
+        });
+        onWillUnmount(() => {
+            this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
+        });
+        useExternalListener(this.props.document, "pointerup", this.onPointerUp);
+        if (this.props.document !== document) {
+            // Listen outside the iframe.
+            useExternalListener(document, "pointerup", this.onPointerUp);
+        }
     }
 
     get hasCustomTableSize() {
@@ -68,6 +85,47 @@ export class TableMenu extends Component {
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();
+    }
+
+    onPointerDown(ev) {
+        this.longPressTimer = setTimeout(() => {
+            this.props.overlay.close();
+            const table = closestElement(this.props.target, "table");
+            const rect =
+                this.props.type === "row"
+                    ? this.props.target.parentElement.getBoundingClientRect()
+                    : this.props.target.getBoundingClientRect();
+            // Create and open the TableDragDrop overlay.
+            this.tableDragDropOverlay = this.props.createOverlay(TableDragDrop);
+            this.tableDragDropOverlay.open({
+                target: this.props.target,
+                props: {
+                    overlayRect: {
+                        top: rect.top,
+                        left: rect.left,
+                        width: rect.width,
+                        height:
+                            this.props.type === "row"
+                                ? rect.height
+                                : table.getBoundingClientRect().height,
+                    },
+                    pointerPos: { x: ev.clientX, y: ev.clientY },
+                    type: this.props.type,
+                    close: () => this.tableDragDropOverlay.close(),
+                    turnIntoRow: this.props.turnIntoRow,
+                    turnIntoHeader: this.props.turnIntoHeader,
+                    addStep: this.props.addStep,
+                    target: this.props.target,
+                    document: this.props.document,
+                },
+            });
+        }, 100); // long press threshold
+    }
+
+    onPointerUp() {
+        // Cancel long-press to prevent overlay
+        clearTimeout(this.longPressTimer);
+        delete this.longPressTimer;
     }
 
     colItems() {
@@ -131,14 +189,20 @@ export class TableMenu extends Component {
                     name: "make_header",
                     icon: "fa-th-large",
                     text: _t("Turn into header"),
-                    action: (target) => this.props.turnIntoHeader(target.parentElement),
+                    action: (target) => {
+                        this.props.turnIntoHeader(target.parentElement);
+                        this.props.addStep();
+                    },
                 },
             this.isFirst &&
                 this.isTableHeader && {
                     name: "remove_header",
                     icon: "fa-table",
                     text: _t("Turn into row"),
-                    action: (target) => this.props.turnIntoRow(target.parentElement),
+                    action: (target) => {
+                        this.props.turnIntoRow(target.parentElement);
+                        this.props.addStep();
+                    },
                 },
             !this.isFirst && {
                 name: "move_up",
