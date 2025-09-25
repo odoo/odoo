@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { TableDragDrop } from "./table_drag_drop";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -66,6 +67,8 @@ export class TableUIPlugin extends Plugin {
                 position: "left-fit",
             },
         });
+        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
+        this.tableDragDropOverlay = this.dependencies.overlay.createOverlay(TableDragDrop);
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
         const closeMenus = () => {
             if (this.isMenuOpened) {
@@ -172,8 +175,11 @@ export class TableUIPlugin extends Plugin {
                 props: {
                     type: "row",
                     overlay: this.rowMenu,
+                    tableDragDropOverlay: this.tableDragDropOverlay,
                     target: td,
                     dropdownState: this.createDropdownState(this.colMenu),
+                    document: this.document,
+                    editable: this.editable,
                     ...tableMethods,
                 },
             });
@@ -185,8 +191,11 @@ export class TableUIPlugin extends Plugin {
                     type: "column",
                     overlay: this.colMenu,
                     target: td,
+                    tableDragDropOverlay: this.tableDragDropOverlay,
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
+                    document: this.document,
+                    editable: this.editable,
                     ...tableMethods,
                 },
             });

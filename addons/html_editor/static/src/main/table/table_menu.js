@@ -1,6 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { Component, onMounted, onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
-import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -24,8 +24,11 @@ export class TableMenu extends Component {
         clearRowContent: Function,
         toggleAlternatingRows: Function,
         overlay: Object,
+        tableDragDropOverlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
+        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         direction: { type: String, optional: true },
     };
     static defaultProps = { direction: "ltr" };
@@ -42,6 +45,19 @@ export class TableMenu extends Component {
             this.isTableHeader = [...tr.children][0].nodeName === "TH";
         }
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+        this.menuRef = useRef("menuRef");
+        const onPointerDown = (ev) => this.onPointerDown(ev);
+        onMounted(() => {
+            this.menuRef?.el.addEventListener("pointerdown", onPointerDown);
+        });
+        onWillUnmount(() => {
+            this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
+        });
+        useExternalListener(this.props.document, "pointerup", this.onPointerUp);
+        if (this.props.document !== document) {
+            // Listen outside the iframe.
+            useExternalListener(document, "pointerup", this.onPointerUp);
+        }
     }
 
     get hasCustomTableSize() {
@@ -70,6 +86,32 @@ export class TableMenu extends Component {
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();
+    }
+
+    onPointerDown(ev) {
+        this.longPressTimer = setTimeout(() => {
+            this.props.overlay.close();
+            // Open the TableDragDrop overlay.
+            this.props.tableDragDropOverlay.open({
+                target: this.props.target,
+                props: {
+                    type: this.props.type,
+                    pointerPos: { x: ev.clientX, y: ev.clientY },
+                    target: this.props.target,
+                    document: this.props.document,
+                    editable: this.props.editable,
+                    close: () => this.props.tableDragDropOverlay.close(),
+                    moveRow: this.props.moveRow,
+                    moveColumn: this.props.moveColumn,
+                },
+            });
+        }, 200); // long press threshold
+    }
+
+    onPointerUp() {
+        // Cancel long-press to prevent tableDragDropOverlay.
+        clearTimeout(this.longPressTimer);
+        delete this.longPressTimer;
     }
 
     colItems() {

@@ -1179,6 +1179,57 @@ test("move header row below operation", async () => {
     );
 });
 
+test("should revert a converted header row back to normal after undo", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td><td>2</td></tr>
+                <tr><td>3</td><td>4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on th to show row ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='make_header']");
+
+    // convert row into header
+    await click("div[name='make_header']");
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table>
+                <tbody>
+                    <tr><th class="o_table_header">1[]</th><th class="o_table_header">2</th></tr>
+                    <tr><td>3</td><td>4</td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>
+        `)
+    );
+
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table>
+                <tbody>
+                    <tr><td class="a">1[]</td><td>2</td></tr>
+                    <tr><td>3</td><td>4</td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>
+        `)
+    );
+});
+
 test("preserve table rows width on move row below operation", async () => {
     const { el } = await setupEditor(
         unformat(`
