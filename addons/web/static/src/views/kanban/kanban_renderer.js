@@ -68,7 +68,6 @@ export class KanbanRenderer extends Component {
 
     static defaultProps = {
         scrollTop: () => {},
-        quickCreateState: { groupId: false },
         tooltipInfo: {},
     };
 
@@ -342,7 +341,7 @@ export class KanbanRenderer extends Component {
             return true;
         }
         if (isGrouped) {
-            if (this.props.quickCreateState.groupId) {
+            if (this.props.quickCreateState.isOpen) {
                 return false;
             }
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
@@ -465,11 +464,6 @@ export class KanbanRenderer extends Component {
         } else {
             this.props.progressBarState?.updateCounts(group);
         }
-        this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
-    }
-
-    cancelQuickCreate() {
-        this.props.quickCreateState.groupId = false;
     }
 
     async deleteGroup(group) {

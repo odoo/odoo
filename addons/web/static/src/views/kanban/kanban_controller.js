@@ -26,12 +26,13 @@ import {
     Component,
     onMounted,
     onWillStart,
-    reactive,
     useEffect,
     useRef,
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { QuickCreateState } from "./kanban_record_quick_create";
+import { effect } from "@web/core/utils/reactive";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -141,20 +142,16 @@ export class KanbanController extends Component {
         }
         this.headerButtons = archInfo.headerButtons;
 
-        const self = this;
-        this.quickCreateState = reactive({
-            get groupId() {
-                return this._groupId || false;
-            },
-            set groupId(groupId) {
-                if (self.model.useSampleModel) {
-                    self.model.removeSampleDataInGroups();
-                    self.model.useSampleModel = false;
+        this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
+        effect(
+            ({ isOpen }) => {
+                if (isOpen && this.model.useSampleModel) {
+                    this.model.removeSampleDataInGroups();
+                    this.model.useSampleModel = false;
                 }
-                this._groupId = groupId;
             },
-            view: archInfo.quickCreateView,
-        });
+            [this.quickCreateState]
+        );
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
@@ -425,7 +422,7 @@ export class KanbanController extends Component {
             if (firstGroup.isFolded) {
                 await firstGroup.toggle();
             }
-            this.quickCreateState.groupId = firstGroup.id;
+            await this.quickCreateState.openQuickCreate(firstGroup.id);
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
                 additionalContext: root.context,
