@@ -1827,6 +1827,40 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_search(self):
         """Verify that the product search works correctly"""
+        product_with_variant = self.env['product.template'].create({
+            'name': 'Product with Variant',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '1234567',
+        })
+
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color always',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {
+                'name': 'Red',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'Blue',
+                'sequence': 2,
+            })],
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_with_variant.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })
+        product_with_variant.product_variant_ids[0].write({
+            "barcode": "variant_barcode_1",
+            "default_code": "VARIANT_1"
+        })
+        product_with_variant.product_variant_ids[1].write({
+            "barcode": "variant_barcode_2",
+            "default_code": "VARIANT_2"
+        })
+
         self.env['product.product'].create([
             {
                 'name': 'Test Product 1',
@@ -1852,6 +1886,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             },
             {
                 'name': 'galaxy',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+            {
+                'name': '1234567890123',
                 'list_price': 100,
                 'taxes_id': False,
                 'available_in_pos': True,

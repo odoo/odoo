@@ -2693,23 +2693,13 @@ export class PosStore extends WithLazyGetterTrap {
 
     getProductsBySearchWord(searchWord, products) {
         const words = unaccent(searchWord.toLowerCase(), false);
-        const exactMatches = products.filter((product) => product.exactMatch(words));
-
-        if (exactMatches.length > 0 && words.length > 2) {
-            return this.sortByWordIndex(exactMatches, words);
-        }
-
-        const matches = products.filter(
-            (p) =>
-                unaccent(p.searchString, false).toLowerCase().includes(words) ||
-                p.product_variant_ids.some((variant) =>
-                    variant.product_template_variant_value_ids.some((vv) =>
-                        unaccent(vv.name, false).toLowerCase().includes(words)
-                    )
-                )
+        const matches = products.filter((p) =>
+            p.product_variant_ids.some((variant) =>
+                unaccent(variant.searchString, false).toLowerCase().includes(words)
+            )
         );
 
-        return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);
+        return this.sortByWordIndex(matches, words);
     }
 
     getPaymentMethodDisplayText(pm, order) {
