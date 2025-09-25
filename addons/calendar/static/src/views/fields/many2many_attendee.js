@@ -5,6 +5,7 @@ import {
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { AttendeeTagsList } from "@calendar/views/fields/attendee_tags_list";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const ICON_BY_STATUS = {
     accepted: "fa-check",
@@ -21,14 +22,21 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
         super.setup();
         this.specialData = useSpecialData((orm, props) => {
             const { context, name, record } = props;
-            return orm.call(
-                "res.partner",
-                "get_attendee_detail",
-                [record.data[name].records.map((rec) => rec.resId), [record.resId || false]],
-                {
-                    context,
-                }
-            );
+            return orm
+                .call(
+                    "res.partner",
+                    "get_attendee_detail",
+                    [record.data[name].records.map((rec) => rec.resId), [record.resId || false]],
+                    {
+                        context,
+                    }
+                )
+                .catch((error) => {
+                    if (error instanceof ConnectionLostError) {
+                        return [];
+                    }
+                    throw error;
+                });
         });
     }
 

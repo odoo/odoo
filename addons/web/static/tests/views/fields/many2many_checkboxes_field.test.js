@@ -75,6 +75,34 @@ test("Many2ManyCheckBoxesField", async () => {
     expect.verifySteps(["web_save", "web_save"]);
 });
 
+test("[Offline] Many2ManyCheckBoxesField", async () => {
+    onRpc(
+        "/web/dataset/call_kw/partner.type/name_search",
+        () => new Response("", { status: 502 }),
+        {
+            pure: true,
+        }
+    );
+    Partner._records[0].timmy = [12];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="timmy" widget="many2many_checkboxes" />
+                </group>
+            </form>`,
+    });
+
+    expect("div.o_field_widget div.form-check").toHaveCount(1);
+    expect(queryAllTexts("div.o_field_widget div.form-check")).toEqual(["gold"]);
+
+    expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
+
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+});
 test("Many2ManyCheckBoxesField (readonly)", async () => {
     Partner._records[0].timmy = [12];
     await mountView({

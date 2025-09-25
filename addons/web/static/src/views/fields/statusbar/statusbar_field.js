@@ -11,6 +11,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("../standard_field_props").StandardFieldProps & {
@@ -106,7 +107,15 @@ export class StatusBarField extends Component {
                         record.evalContext
                     );
                 }
-                return orm.searchRead(relation, domain, fieldNames);
+                return orm.searchRead(relation, domain, fieldNames).catch((error) => {
+                    if (error instanceof ConnectionLostError) {
+                        if (this.props.record.data[this.props.name]) {
+                            return [this.props.record.data[this.props.name]];
+                        }
+                        return [];
+                    }
+                    throw error;
+                });
             });
         }
 

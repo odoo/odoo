@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 export class BadgeSelectionField extends Component {
     static template = "web.BadgeSelectionField";
@@ -24,7 +25,14 @@ export class BadgeSelectionField extends Component {
             this.specialData = useSpecialData((orm, props) => {
                 const domain = getFieldDomain(props.record, props.name, props.domain);
                 const { relation } = props.record.fields[props.name];
-                return orm.call(relation, "name_search", ["", domain]);
+                return orm.call(relation, "name_search", ["", domain]).catch((error) => {
+                    if (error instanceof ConnectionLostError) {
+                        return this.props.record.data[this.props.name]
+                            ? [Object.values(this.props.record.data[this.props.name])]
+                            : [];
+                    }
+                    throw error;
+                });
             });
         }
     }

@@ -55,6 +55,39 @@ test("Many2ManyAttendee: basic rendering", async () => {
     expect.verifySteps(["get_attendee_detail"]);
 });
 
+test("[Offline] Many2ManyAttendee: basic rendering", async () => {
+    onRpc(
+        "/web/dataset/call_kw/res.partner/get_attendee_detail",
+        () => new Response("", { status: 502 }),
+        { pure: true }
+    );
+    await mountView({
+        type: "form",
+        resModel: "calendar.event",
+        resId: serverData.eventId,
+        arch: /*xml*/ `
+            <form>
+                <field name="partner_ids" widget="many2manyattendee"/>
+            </form>
+        `,
+    });
+    expect(".o_field_widget[name='partner_ids'] div.o_field_tags").toHaveCount(1);
+    expect(".o_field_widget[name='partner_ids'] .o_tag").toHaveCount(2);
+    expect(".o_field_widget[name='partner_ids'] .o_tag:eq(0)").toHaveText("Zeus");
+    expect(
+        ".o_field_widget[name='partner_ids'] .o_tag:eq(0) .attendee_tag_status.o_attendee_status_accepted"
+    ).toHaveCount(0);
+    expect(".o_field_widget[name='partner_ids'] .o_tag:eq(1)").toHaveText("Azdaha");
+    expect(
+        ".o_field_widget[name='partner_ids'] .o_tag:eq(1) .attendee_tag_status.o_attendee_status_tentative"
+    ).toHaveCount(0);
+    expect(".o_field_widget[name='partner_ids'] .o_tag:eq(0) img").toHaveCount(1);
+    expect(".o_field_widget[name='partner_ids'] .o_tag:eq(0) img").toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/res.partner/${serverData.partnerIds[0]}/avatar_128`
+    );
+});
+
 test("Many2ManyAttendee: remove own attendee", async () => {
     onRpc("get_attendee_detail", () => [
         { id: serverData.partnerIds[0], name: "Zeus", status: "accepted", color: 0 },
