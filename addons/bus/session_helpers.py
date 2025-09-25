@@ -3,6 +3,7 @@ import hmac
 import time
 
 from odoo.api import Environment
+from odoo.http import SessionExpiredException
 from odoo.modules.registry import Registry
 from odoo.sql_db import SQL
 from odoo.tools.lru import LRU
@@ -35,7 +36,8 @@ def _get_session_token_query_params(cr, session):
 def check_session(cr, session):
     session._delete_old_sessions()
     if 'deletion_time' in session and session['deletion_time'] <= time.time():
-        return False
+        e = "session is too old"
+        raise SessionExpiredException(e)
     query_params = _get_session_token_query_params(cr, session)
     cr.execute(
         SQL(
@@ -44,14 +46,17 @@ def check_session(cr, session):
         ),
     )
     if cr.rowcount != 1:
-        return False
+        e = "user not found"
+        raise SessionExpiredException(e)
     row = cr.fetchone()
     key_tuple = tuple(
         (col.name, row[i]) for i, col in enumerate(cr.description) if row[i] is not None
     )
     key = str(key_tuple).encode()
     token = hmac.new(key, session.sid.encode(), hashlib.sha256).hexdigest()
-    return consteq(token, session.session_token)
+    if not consteq(token, session.session_token):
+        e = "session token mismatch; likely because the user credentials changed"
+        raise SessionExpiredException(e)
 
 
 def new_env(cr, session, *, set_lang=False):

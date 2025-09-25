@@ -24,7 +24,6 @@ from markupsafe import Markup
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
 from odoo.fields import Domain
-from odoo.service import security
 from odoo.http import request, root
 from odoo.tools import config, is_html_empty, parse_version, split_every
 from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
@@ -557,7 +556,7 @@ class IrActionsReport(models.Model):
                     '_trace_disable': True,
                 })
                 if temp_session.uid:
-                    temp_session.session_token = security.compute_session_token(temp_session, self.env)
+                    temp_session._update_session_token(self.env)
                 root.session_store.save(temp_session)
                 stack.callback(root.session_store.delete, temp_session)
 
