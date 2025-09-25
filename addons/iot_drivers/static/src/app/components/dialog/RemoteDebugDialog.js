@@ -105,7 +105,7 @@ export class RemoteDebugDialog extends Component {
                     Your IoT Box is currently accessible from the internet. 
                     The owner of the ngrok authtoken can access both the IoT Box and your local network.
                 </div>
-                <div t-if="!store.base.server_status" class="d-flex flex-row gap-2 mb-4">
+                <div class="d-flex flex-row gap-2 mb-4">
                     <input placeholder="Password" t-att-value="this.state.password" class="form-control" readonly="readonly" />
                     <button class="btn btn-primary btn-sm" t-on-click="generatePassword">
                         <div t-if="this.state.loading" class="spinner-border spinner-border-sm" role="status">
