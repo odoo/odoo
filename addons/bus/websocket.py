@@ -32,7 +32,6 @@ from odoo.http import root, Request, Response, SessionExpiredException, get_defa
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
-from odoo.service.security import check_session
 from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
@@ -742,8 +741,8 @@ class Websocket:
         self._waiting_for_dispatch = False
         with acquire_cursor(session.db) as cr:
             env = self.new_env(cr, session)
-            if session.uid is not None and not check_session(session, env):
-                raise SessionExpiredException()
+            if session['uid'] is not None:
+                session._check(env)
             notifications = env["bus.bus"]._poll(
                 self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
             )
