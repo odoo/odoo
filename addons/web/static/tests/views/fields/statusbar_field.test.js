@@ -127,6 +127,35 @@ test("static statusbar widget on many2one field", async () => {
     expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
 });
 
+test.tags("desktop");
+test("[Offline] static statusbar widget on many2one field", async () => {
+    Partner._fields.trululu = fields.Many2one({
+        relation: "partner",
+        domain: "[('bar', '=', True)]",
+    });
+    Partner._records[1].bar = false;
+    onRpc("/web/dataset/call_kw/partner/search_read", () => new Response("", { status: 502 }), {
+        pure: true,
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" />
+                </header>
+            </form>
+        `,
+    });
+    expect(queryAllTexts(".o_form_statusbar")).toEqual(["aaa"]);
+    expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(1);
+    expect(".o_statusbar_status button:disabled:not(.d-none)").toHaveCount(1);
+    expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
+});
+
 test("folded statusbar widget on selection field has selected value in the toggler", async () => {
     mockService("ui", (env) => {
         Object.defineProperty(env, "isSmall", {

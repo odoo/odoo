@@ -6,6 +6,7 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { standardFieldProps } from "../standard_field_props";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 export class SelectionField extends Component {
     static components = {
@@ -29,7 +30,15 @@ export class SelectionField extends Component {
             this.specialData = useSpecialData((orm, props) => {
                 const { relation } = props.record.fields[props.name];
                 const domain = getFieldDomain(props.record, props.name, props.domain);
-                return orm.call(relation, "name_search", ["", domain]);
+                return orm.call(relation, "name_search", ["", domain]).catch((error) => {
+                    if (error instanceof ConnectionLostError) {
+                        if (this.props.record.data[this.props.name]) {
+                            return [Object.values(this.props.record.data[this.props.name])];
+                        }
+                        return [];
+                    }
+                    throw error;
+                });
             });
         }
     }

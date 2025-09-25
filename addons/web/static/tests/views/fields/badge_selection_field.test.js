@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -71,6 +72,25 @@ test("BadgeSelectionField widget on a many2one in a new record", async () => {
 
     await clickSave();
     expect.verifySteps(["saved product_id: 37"]);
+});
+
+test("[Offline] BadgeSelectionField widget on a many2one", async () => {
+    onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
+        pure: true,
+    });
+    await mountView({
+        resModel: "res.partner",
+        resId: 2,
+        type: "form",
+        arch: `<form><field name="product_id" widget="selection_badge"/></form>`,
+    });
+
+    expect(`div.o_field_selection_badge`).toHaveCount(1, {
+        message: "should have rendered outer div",
+    });
+    expect(`span.o_selection_badge`).toHaveCount(1);
+    expect(queryAllTexts(`span.o_selection_badge`)).toEqual(["xphone"]);
+    expect(`span.active`).toHaveCount(1);
 });
 
 test("BadgeSelectionField widget on a selection in a new record", async () => {
@@ -181,7 +201,6 @@ test("BadgeSelectionField widget in list with the color_field option", async () 
             </list>
         `,
     });
-
 
     // Ensure that the correct o_badge_color is used.
     expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_6`).toHaveCount(1);

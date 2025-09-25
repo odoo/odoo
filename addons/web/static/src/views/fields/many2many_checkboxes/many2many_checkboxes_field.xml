@@ -8,7 +8,7 @@
                     <CheckBox
                         value="isSelected(item)"
                         disabled="props.readonly"
-                        onChange="(ev) => this.onChange(item[0], ev)"
+                        onChange="(ev) => this.onChange(item[0], item[1], ev)"
                     >
                         <t t-esc="item[1]" />
                     </CheckBox>
