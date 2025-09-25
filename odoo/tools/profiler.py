@@ -244,7 +244,7 @@ class PeriodicCollector(_BasePeriodicCollector):
                 # the call itself does not appear in any of those frames: the duration of the call
                 # is incorrectly attributed to the last frame.
                 self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
-            self.last_frame = None  # skip duplicate detection for the next frame.
+                self.last_frame = None  # skip duplicate detection for the next frame.
         self._last_time = real_time()
 
         frame = frame or get_current_frame(self.profiler.init_thread)
