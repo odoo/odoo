@@ -35,7 +35,7 @@
                         <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }"
                         class="dropdown-item d-flex justify-content-between">
                             <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
-                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
+                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="grade['grade_id_count']"/>
                         </a>
                     </t>
                 </div>
@@ -51,7 +51,7 @@
                         <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
                         <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
                             <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
-                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
+                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="country['country_id_count']"/>
                         </a>
                     </t>
                 </div>

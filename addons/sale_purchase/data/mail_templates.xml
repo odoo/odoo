@@ -6,7 +6,7 @@
         <p>
             Exception(s) occurred on the sale order(s):
             <t t-foreach="sale_orders" t-as="sale_order">
-                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
+                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-out="sale_order.name"/></a>.
             </t>
             Manual actions may be needed.
         </p>
@@ -17,8 +17,8 @@
                     <t t-set="new_qty" t-value="sale_line.product_uom_qty"/>
                     <t t-set="old_qty" t-value="origin_values.get(sale_line.id, 0.0)"/>
 
-                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-esc="sale_line.order_id.name"/></a>:
-                    <t t-esc="new_qty"/> <t t-esc="sale_line.product_uom_id.name"/> of <t t-esc="sale_line.product_id.name"/> ordered instead of <t t-esc="old_qty"/> <t t-esc="sale_line.product_uom_id.name"/>
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-out="sale_line.order_id.name"/></a>:
+                    <t t-out="new_qty"/> <t t-out="sale_line.product_uom_id.name"/> of <t t-out="sale_line.product_id.name"/> ordered instead of <t t-out="old_qty"/> <t t-out="sale_line.product_uom_id.name"/>
                   </li>
             </ul>
         </div>
@@ -30,7 +30,7 @@
         <p>
             Exception(s) occurred on the sale order(s):
             <t t-foreach="sale_orders" t-as="sale_order">
-                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>
+                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-out="sale_order.name"/></a>
             </t>.
             Manual actions may be needed.
         </p>
@@ -38,7 +38,7 @@
             <p>Exception(s):</p>
             <ul t-foreach="sale_order_lines" t-as="sale_line">
                 <li>
-                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-esc="sale_line.order_id.name"/></a>: <t t-esc="sale_line.product_uom_qty"/> <t t-esc="sale_line.product_uom_id.name"/> of <t t-esc="sale_line.product_id.name"/> cancelled
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-out="sale_line.order_id.name"/></a>: <t t-out="sale_line.product_uom_qty"/> <t t-out="sale_line.product_uom_id.name"/> of <t t-out="sale_line.product_id.name"/> cancelled
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@
         <p>
             Exception(s) occurred on the purchase order(s):
             <t t-foreach="purchase_orders" t-as="purchase_order">
-                <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-esc="purchase_order.name"/></a>
+                <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-out="purchase_order.name"/></a>
             </t>.
             Manual actions may be needed.
         </p>
@@ -58,7 +58,7 @@
             <p>Exception(s):</p>
             <ul t-foreach="purchase_order_lines" t-as="purchase_line">
                 <li>
-                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-esc="purchase_line.order_id.name"/></a>: <t t-esc="purchase_line.product_qty"/> <t t-esc="purchase_line.product_uom_id.name"/> of <t t-esc="purchase_line.product_id.name"/> cancelled
+                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-out="purchase_line.order_id.name"/></a>: <t t-out="purchase_line.product_qty"/> <t t-out="purchase_line.product_uom_id.name"/> of <t t-out="purchase_line.product_id.name"/> cancelled
                 </li>
             </ul>
         </div>

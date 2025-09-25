@@ -21,7 +21,7 @@
                 </script>
                 <t t-call-assets="point_of_sale.customer_display_assets" />
                 <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="point_of_sale.customer_display_assets_test" />
-                <title><t t-esc="debug" /></title>
+                <title><t t-out="debug" /></title>
             </head>
             <body></body>
         </html>

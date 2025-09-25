@@ -323,7 +323,7 @@
                     </div>
                     <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
                         <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
-                        <div>You received the badge <span class="fw-bold" t-esc="survey.certification_badge_id.name"/>!</div>
+                        <div>You received the badge <span class="fw-bold" t-out="survey.certification_badge_id.name"/>!</div>
                     </div>
                 </div>
             </div>
@@ -386,7 +386,7 @@
         <div class="o_survey_comment_container h-auto p-0">
             <textarea class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0" rows="3"
                       t-att-name="question.id" t-att-placeholder="question.question_placeholder"
-                      t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
+                      t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-out="answer_lines[0].value_text_box or None"/></textarea>
         </div>
     </template>
 
@@ -556,13 +556,13 @@
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 h-auto #{'d-none' if not comment_line else ''}">
                     <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
-                        t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                        t-att-disabled="None if comment_line else 'disabled'"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </t>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer'
                 class="mb-2 o_survey_comment_container mt-3">
                 <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent rounded-0 p-0"
-                    t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                    t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -621,12 +621,12 @@
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 h-auto px-1 #{'d-none' if not comment_line else ''}">
                     <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
-                        t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                        t-att-disabled="None if comment_line else 'disabled'"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </t>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="mb-2 o_survey_comment_container mt-3">
                 <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent rounded-0 p-0"
-                    t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                    t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -677,14 +677,14 @@
         <div t-if='question.comments_allowed'>
             <textarea type="text" class="form-control o_survey_question_text_box o_survey_comment bg-transparent rounded-0 p-0 mt-3"
                       t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"
-                      t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                      t-att-name="'%s_%s' % (question.id, 'comment')"><t t-out="comment_line.value_char_box if comment_line else ''"/></textarea>
         </div>
     </template>
 
     <template id="survey_selection_key">
         <div t-if="useKeySelection" t-att-class="'o_survey_choice_key bg-white rounded %s' % selection_key_class">
              <span class="o_survey_key text-center position-absolute bg-white rounded-start py-0 ps-2"><span class="text-primary text-center text-center w-100 position-relative">Key</span></span>
-             <span class="text-primary text-center w-100 position-relative" t-esc="letters[item_idx]"/>
+             <span class="text-primary text-center w-100 position-relative" t-out="letters[item_idx]"/>
         </div>
     </template>
 
@@ -692,10 +692,10 @@
         <t t-if="len(page_ids) > 1 and not survey.has_conditional_questions">
             <t t-set="percentage" t-value="round(100*(page_number/len(page_ids)))"/>
             <span t-if="survey.progression_mode == 'percent'">
-                <t t-esc="percentage"/>% completed
+                <t t-out="percentage"/>% completed
             </span>
             <span t-else="">
-                <t t-esc="page_number"/> of <t t-esc="len(page_ids)"/>
+                <t t-out="page_number"/> of <t t-out="len(page_ids)"/>
                 <t t-if="survey.questions_layout == 'page_per_question'">answered</t>
                 <t t-else="">pages</t>
             </span>

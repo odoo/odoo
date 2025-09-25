@@ -88,7 +88,7 @@ class TestMailComposer(MailCommon, TestRecipients):
             'auto_delete': True,
             'name': 'TestTemplate',
             'subject': 'TemplateSubject {{ object.name }}',
-            'body_html': '<p>TemplateBody <t t-esc="object.name"></t></p>',
+            'body_html': '<p>TemplateBody <t t-out="object.name"></t></p>',
             'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
             'email_to': '{{ (object.email_from if not object.customer_id else "") }}',
             'email_from': '{{ (object.user_id.email_formatted or user.email_formatted) }}',
@@ -2703,7 +2703,7 @@ class TestComposerResultsMass(TestMailComposer):
             'subject': 'Common Subject',
         }
         same_attachments = {'attachment_ids': template_attachment.ids}
-        diff_body = {'body_html': '<p><t t-esc="object.name"></t></p>'}
+        diff_body = {'body_html': '<p><t t-out="object.name"></t></p>'}
         # regardless of whether they have different bodies or not, they are considered duplicates
         diff_attachment_same_content = {'report_template_ids': [self.test_report_2.id]}
         diff_attachment_diff_content = {'report_template_ids': [self.test_report_3.id]}

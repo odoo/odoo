@@ -80,7 +80,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     # def test_05_reset_specific_view_controller_broken_request(self):
     #     total_views = self.View.search_count([('type', '=', 'qweb')])
     #     # Trigger COW then break the QWEB XML on it
-    #     break_view(self.test_view.with_context(website_id=1), to='<t t-esc="request.env[\'website\'].browse(\'a\').name" />')
+    #     break_view(self.test_view.with_context(website_id=1), to='<t t-out="request.env[\'website\'].browse(\'a\').name" />')
     #     self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (1)")
     #     self.fix_it('/test_view')
 

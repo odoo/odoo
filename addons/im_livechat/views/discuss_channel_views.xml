@@ -95,7 +95,7 @@
                                         <span class="fw-normal">
                                             <t t-if="record.livechat_is_escalated.raw_value">Escalated</t>
                                             <t t-elif="record.livechat_failure.raw_value === 'no_failure'">Success</t>
-                                            <t t-else="" t-esc="record.livechat_failure.value"/>
+                                            <t t-else="" t-out="record.livechat_failure.value"/>
                                         </span>
                                     </span>
                                 </div>

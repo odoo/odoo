@@ -122,25 +122,25 @@
                                         <div class="col-5">
                                             <span>Date</span>
                                         </div>
-                                        <span t-esc="statistics.date.start_date" class="col-7"/>
+                                        <span t-out="statistics.date.start_date" class="col-7"/>
                                     </div>
                                     <div class="row">
                                         <div class="col-5">
                                             <span>Opening</span>
                                         </div>
-                                        <span name="opening_cash" t-esc="statistics.cash.opening_cash" class="col-7"/>
+                                        <span name="opening_cash" t-out="statistics.cash.opening_cash" class="col-7"/>
                                     </div>
                                     <div t-if="statistics.orders.paid.display" class="row">
                                         <div class="col-5">
                                             <span>Sold</span>
                                         </div>
-                                        <span name="paid_orders" t-esc="statistics.orders.paid.display" class="col-7"/>
+                                        <span name="paid_orders" t-out="statistics.orders.paid.display" class="col-7"/>
                                     </div>
                                     <div t-if="statistics.orders.draft.display" class="row">
                                         <div class="col-5">
                                             <span>Ongoing</span>
                                         </div>
-                                        <span name="draft_orders" t-esc="statistics.orders.draft.display" class="col-7"/>
+                                        <span name="draft_orders" t-out="statistics.orders.draft.display" class="col-7"/>
                                     </div>
                                 </t>
 

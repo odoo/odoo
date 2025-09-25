@@ -3,10 +3,10 @@
 <template id="contact_name">
     <div t-if="'name' in fields">
         <t t-if="object.name">
-            <span itemprop="name" t-esc="name"/>
+            <span itemprop="name" t-out="name"/>
         </t>
         <t t-if="not object.name and object.parent_name">
-            <span itemprop="name" t-esc="object.parent_name"/>
+            <span itemprop="name" t-out="object.parent_name"/>
         </t>
         <t t-if="options.get('country_image') and 'country_id' in fields and object.country_id and object.country_id.image_url">
             <span t-field="object.country_id.image_url" t-options='{"widget": "image_url", "class": "country_flag"}'/>
@@ -17,7 +17,7 @@
 <template id="contact">
     <address t-ignore="true" class="o_portal_address mb-0">
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
-            --<span class="text-muted" t-esc="name"/>--
+            --<span class="text-muted" t-out="name"/>--
         </div>
         <t t-if="object.country_id.name_position != 'after'">
             <t t-call="base.contact_name"/>
@@ -26,7 +26,7 @@
 
             <div t-if="address and 'address' in fields" t-attf-class="d-flex align-items-baseline gap-1">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
-                <span class="w-100 lh-sm text-break d-block" itemprop="streetAddress" t-esc="address"/>
+                <span class="w-100 lh-sm text-break d-block" itemprop="streetAddress" t-out="address"/>
             </div>
             <t t-set="has_city" t-value="city and 'city' in fields"/>
             <t t-set="has_state" t-value="object.state_id and object.country_id.state_required"/>
@@ -45,20 +45,20 @@
                 </span>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="phone and 'phone' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-esc="phone"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-out="phone"/>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="mobile and 'mobile' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-out="mobile"/>
             </div>
             <!-- Prevent issue with iOS Safari parsing of schema data without telephone itemprops -->
             <div t-if="not (phone and 'phone' in fields) and not (mobile and 'mobile' in fields)" itemprop="telephone"/>
             <div class="d-flex align-items-baseline gap-1" t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe fa-fw' role="img" aria-label="Website" title="Website"/>
-                <a class="text-break w-100" t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
+                <a class="text-break w-100" t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-out="website"/></a>
             </div>
-            <div class="d-flex align-items-baseline gap-1" t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span class="text-break w-100" itemprop="email" t-esc="email"/></div>
+            <div class="d-flex align-items-baseline gap-1" t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span class="text-break w-100" itemprop="email" t-out="email"/></div>
         </div>
-        <div t-if="vat and 'vat' in fields"><span t-esc="vat_label"/>: <span itemprop="vatID" t-esc="vat"/></div>
+        <div t-if="vat and 'vat' in fields"><span t-out="vat_label"/>: <span itemprop="vatID" t-out="vat"/></div>
         <t t-if="object.country_id and object.country_id.name_position == 'after'">
             <t t-call="base.contact_name"/>
         </t>

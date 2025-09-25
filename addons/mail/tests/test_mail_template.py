@@ -204,19 +204,19 @@ class TestMailTemplate(MailCommon):
                 employee_template.body_html = '<p t-out="%s"></p>' % expression
 
             with self.assertRaises(AccessError):
-                employee_template.body_html = '<p t-esc="%s"></p>' % expression
+                employee_template.body_html = '<p t-out="%s"></p>' % expression
 
             # try to cheat with the context
             with self.assertRaises(AccessError):
                 employee_template.with_context(raise_on_forbidden_code=False).email_to = '{{ %s }}' % expression
             with self.assertRaises(AccessError):
-                employee_template.with_context(raise_on_forbidden_code=False).body_html = '<p t-esc="%s"></p>' % expression
+                employee_template.with_context(raise_on_forbidden_code=False).body_html = '<p t-out="%s"></p>' % expression
 
             # check that an admin can use the expression
             mail_template.with_user(self.user_admin).email_to = '{{ %s }}' % expression
             mail_template.with_user(self.user_admin).email_to = '{{ %s ||| Bob }}' % expression
             mail_template.with_user(self.user_admin).body_html = '<p t-out="%s">Default</p>' % expression
-            mail_template.with_user(self.user_admin).body_html = '<p t-esc="%s">Default</p>' % expression
+            mail_template.with_user(self.user_admin).body_html = '<p t-out="%s">Default</p>' % expression
 
         # hide qweb code in t-inner-content
         code = '''<t t-inner-content="<p t-out='1+11'>Test</p>"></t>'''
@@ -228,7 +228,7 @@ class TestMailTemplate(MailCommon):
 
         forbidden_qweb_expressions = (
             '<p t-out="partner_id.name"></p>',
-            '<p t-esc="partner_id.name"></p>',
+            '<p t-out="partner_id.name"></p>',
             '<p t-debug=""></p>',
             '<p t-set="x" t-value="object.name"></p>',
             '<p t-set="x" t-value="object.name"></p>',
@@ -338,9 +338,9 @@ class TestMailTemplate(MailCommon):
 
         # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
         with self.assertRaises(AccessError):
-            employee_template.with_context(lang='fr_FR').body_html = '<t t-esc="foo"/>'
+            employee_template.with_context(lang='fr_FR').body_html = '<t t-out="foo"/>'
 
-        employee_template.with_context(lang='fr_FR').sudo().body_html = '<t t-esc="foo"/>'
+        employee_template.with_context(lang='fr_FR').sudo().body_html = '<t t-out="foo"/>'
 
         # reset the body_html to static
         employee_template.body_html = False

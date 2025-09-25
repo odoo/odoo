@@ -21,7 +21,7 @@
             <t t-if="title">
                 <li t-if="page_name == 'production' or picking" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
                     <a t-if="breadcrumbs_url" t-attf-href="/my/productions{{ keep_query() }}">Productions</a>
-                    <t t-else="" t-esc="title"></t>
+                    <t t-else="" t-out="title"></t>
                 </li>
                 <li t-if="picking" class="breadcrumb-item active">
                     <t t-out="picking.name"/>

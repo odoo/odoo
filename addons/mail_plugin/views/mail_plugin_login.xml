@@ -10,7 +10,7 @@
                 <input type="hidden" name="state" t-att-value="state"/>
                 <input type="hidden" name="friendlyname" t-att-value="friendlyname"/>
                 <p class="text-center">
-                    Let <t t-esc="friendlyname" /> access your Odoo database?
+                    Let <t t-out="friendlyname" /> access your Odoo database?
                 </p>
                 <p class="text-center">
                     <button type="submit" name="do" value="1" class="btn btn-link btn-sm">Allow</button>

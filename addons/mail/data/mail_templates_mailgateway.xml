@@ -4,7 +4,7 @@
         <template id="message_notification_limit_email">
             <p>Dear Sender,</p>
             <p>
-                The message below could not be accepted by the address <t t-esc="email"/> because you have
+                The message below could not be accepted by the address <t t-out="email"/> because you have
                 contacted it too many times in the last few minutes.
                 <br/>
                 Please try again later.
@@ -24,14 +24,14 @@
 
         <template id="mail_bounce_catchall">
 <div>
-    <p>Hello <t t-esc="message['email_from']"/>,</p>
-    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
-    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
-    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Hello <t t-out="message['email_from']"/>,</p>
+    <p>The email sent to <t t-out="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-out="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-out="res_company.email"/></a></p>
     <p>Regards,</p>
-    <p>The <t t-esc="res_company.name"/> team.</p>
+    <p>The <t t-out="res_company.name"/> team.</p>
 </div>
-<blockquote><t t-esc="message['body']"/></blockquote>
+<blockquote><t t-out="message['body']"/></blockquote>
         </template>
 
         <!-- Mail bounce alias mail template -->

@@ -1941,27 +1941,27 @@ class MailCommon(MailCase):
         email_notification_allow_header and has_button_access)"/>
     <t t-set="show_footer" t-value="email_notification_force_footer or (
         email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
-    <p>English Layout for <t t-esc="model_description"/></p>
+    <p>English Layout for <t t-out="model_description"/></p>
     <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" t-att-alt="'%s' % company.name"/>
     <div t-if="show_header">HEADER
         <a t-if="has_button_access" t-att-href="button_access['url']">
-            <t t-esc="button_access['title']"/>
+            <t t-out="button_access['title']"/>
         </a>
         <t t-if="actions" t-foreach="actions" t-as="action">
             <a t-att-href="action['url']">
-                <t t-esc="action['title']"/>
+                <t t-out="action['title']"/>
             </a>
         </t>
     </div>
     <t t-out="message.body"/>
     <ul t-if="tracking_values">
         <li t-foreach="tracking_values" t-as="tracking">
-            <t t-esc="tracking[0]"/>: <t t-esc="tracking[1]"/> -&gt; <t t-esc="tracking[2]"/>
+            <t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/>
         </li>
     </ul>
     <div t-if="signature" t-out="signature"/>
     <div t-if="show_footer">
-        <p>Sent by <t t-esc="company.name"/></p>
+        <p>Sent by <t t-out="company.name"/></p>
         <span t-if="show_unfollow" id="mail_unfollow">
             | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
         </span>

@@ -93,7 +93,7 @@
                                                     <span t-field="move_operation.display_name">Product Name</span>
                                                 </td>
                                                 <td>
-                                                    <span t-esc="sum(move_operation.mapped('quantity'))">Quantity Done</span>
+                                                    <span t-out="sum(move_operation.mapped('quantity'))">Quantity Done</span>
                                                     <span t-field="move_operation.product_uom_id" groups="uom.group_uom"/>
                                                 </td>
                                                 <td>

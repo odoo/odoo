@@ -53,7 +53,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 
         # activate translations
         cls._activate_multi_lang(
-            layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',
+            layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-out="model_description"/></body>',
             test_record=cls.test_record, test_template=cls.test_template
         )
 

@@ -21,7 +21,7 @@
                     integrity="sha256-CvDqAOMjq0Sv/D59O5JSbzzXoClZ3rptt6ts8D/6CWw="
                 ></script>
                 <script>
-                const b64 = '<t t-esc="speedscope_base64"/>';
+                const b64 = '<t t-out="speedscope_base64"/>';
                 document.addEventListener("DOMContentLoaded", () => {
                     speedscope.loadFileFromBase64('Profile', b64);
                 });

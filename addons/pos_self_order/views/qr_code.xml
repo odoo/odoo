@@ -25,7 +25,7 @@
         <t t-set="qr_code_size" t-value="190"/>
         <t t-call="web.basic_layout">
             <div class="w-100" style="text-align: right">
-                <span class="fs-4">Point of sale: <t t-esc="pos_name" /></span><span class="fs-4" style="margin-left:20px">Self Order: <t t-if="self_order">Yes</t><t t-else="">No</t></span>
+                <span class="fs-4">Point of sale: <t t-out="pos_name" /></span><span class="fs-4" style="margin-left:20px">Self Order: <t t-if="self_order">Yes</t><t t-else="">No</t></span>
             </div>
             <div class="mb-5" style="border-bottom: 1px solid black;">
                 <h2 t-if="table_mode">Make it easy for your customers to explore your menu
@@ -39,12 +39,12 @@
                 <t t-if="table_mode">
                     <p>Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,
                     both the point of sale and table names are encrypted in the generated URL, as shown in the example below:.</p>
-                    <p class="mt-2">Table: <span t-if="table_example" t-esc="table_example['name']" /><br/>
-                    URL: <span t-if="table_example" t-esc="table_example['decoded_url']" /></p>
+                    <p class="mt-2">Table: <span t-if="table_example" t-out="table_example['name']" /><br/>
+                    URL: <span t-if="table_example" t-out="table_example['decoded_url']" /></p>
                 </t>
                 <t t-else="">
                     <p>Feel free to use and print this QR code as many times as needed according to your requirements.</p>
-                    <p>URL: <span t-if="table_example" t-esc="table_example['decoded_url']" /></p>
+                    <p>URL: <span t-if="table_example" t-out="table_example['decoded_url']" /></p>
                 </t>
             </div>
 
@@ -58,7 +58,7 @@
                                 <td t-foreach="row" t-as="table" style="width: 33%; text-align:center; border: none;">
                                     <div class="mb-3" style="page-break-inside: avoid">
                                         <h4 class="fw-bold text-center" t-if="table.get('table_number')">
-                                            <t t-esc="table['table_number']"/>
+                                            <t t-out="table['table_number']"/>
                                         </h4>
                                         <div class="mt-1 mb-1 position-relative top-0 start-0">
                                             <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" class="position-relative top-0 start-0" />

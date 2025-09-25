@@ -36,7 +36,7 @@
 
         <xpath expr="//div[@id='total']" position="after">
             <div t-if="o.currency_id.id != o.company_id.currency_id.id" class="ms-1">
-                <strong>Exchange Rate</strong>: 1 <span t-esc="o.company_id.currency_id.name"/> = <span t-esc="round(o.invoice_currency_rate, 8)"/> <span t-esc="o.currency_id.name"/>
+                <strong>Exchange Rate</strong>: 1 <span t-out="o.company_id.currency_id.name"/> = <span t-out="round(o.invoice_currency_rate, 8)"/> <span t-out="o.currency_id.name"/>
             </div>
         </xpath>
     </template>

@@ -657,7 +657,7 @@
                     <div t-if="slide_promoted.tag_ids" class="mt-2 pt-1">
                         <t t-foreach="slide_promoted.tag_ids" t-as="tag">
                             <h4 t-if="invite_preview" class="badge text-bg-info" t-out="tag.name"/>
-                            <a t-else="" t-attf-href="/slides/#{slug(slide_promoted.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-esc="tag.name"/>
+                            <a t-else="" t-attf-href="/slides/#{slug(slide_promoted.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-out="tag.name"/>
                         </t>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
         <div>
           Exception(s) occurred on the purchase order(s):
           <t t-foreach="purchase_order_ids" t-as="purchase_order">
-              <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-esc="purchase_order.name"/></a>.
+              <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-out="purchase_order.name"/></a>.
           </t>
           Manual actions may be needed.
           <div class="mt16">
@@ -14,15 +14,15 @@
                       <t t-set="order_line" t-value="exception[0]"/>
                       <t t-set="new_qty" t-value="exception[1][0]"/>
                       <t t-set="old_qty" t-value="exception[1][1]"/>
-                      <t t-esc="new_qty"/> <t t-esc="order_line.product_uom_id.name"/> of <t t-esc="order_line.product_id.name"/>
-                      ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_uom_id.name"/>
+                      <t t-out="new_qty"/> <t t-out="order_line.product_uom_id.name"/> of <t t-out="order_line.product_id.name"/>
+                      ordered instead of <t t-out="old_qty"/> <t t-out="order_line.product_uom_id.name"/>
                   </li>
               </ul>
           </div>
           <div class="mt16" t-if="impacted_pickings">
               <p>Next transfer(s) impacted:</p>
               <ul t-foreach="impacted_pickings" t-as="picking">
-                  <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+                  <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-out="picking.name"/></a></li>
               </ul>
           </div>
         </div>

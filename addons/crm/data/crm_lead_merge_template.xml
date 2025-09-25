@@ -67,7 +67,7 @@
                 <div t-if="lead.tag_ids" name="tag_ids" class="d-flex flex-row">
                     Tags:
                     <div class="ms-2 d-flex flex-row">
-                        <div t-foreach="lead.tag_ids" t-as="tag" t-esc="tag.name"
+                        <div t-foreach="lead.tag_ids" t-as="tag" t-out="tag.name"
                             t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.color} d-inline-block"/>
                     </div>
                 </div>
@@ -142,13 +142,13 @@
                     <div>
                         The contacts below have been added as followers of this lead
                         because they have been contacted less than 30 days ago on
-                        <span class="fw-bold" t-esc="lead.name"/>.
+                        <span class="fw-bold" t-out="lead.name"/>.
                     </div>
                     <ul>
                       <li t-foreach="lead_followers" t-as="follower">
-                        <t t-esc="follower.partner_id.name"/>
+                        <t t-out="follower.partner_id.name"/>
                         <t t-if="follower.partner_id.email">
-                            (<t t-esc="follower.partner_id.email"/>)
+                            (<t t-out="follower.partner_id.email"/>)
                         </t>
                       </li>
                     </ul>
@@ -161,13 +161,13 @@
                     <ul class="p-0">
                         <li t-foreach="properties" t-as="property"
                             class="d-flex flex-row align-items-center">
-                            <t t-esc="property['label']"/>:
+                            <t t-out="property['label']"/>:
                             <div t-if="'values' in property"
                                 class="ms-2 d-flex flex-row"> <!-- Tags -->
-                                <div t-foreach="property['values']" t-as="tag" t-esc="tag['name']"
+                                <div t-foreach="property['values']" t-as="tag" t-out="tag['name']"
                                     t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.get('color', 0)} d-inline-block me-2"/>
                             </div>
-                            <div t-else="" class="ms-2" t-esc="property['value']"/>
+                            <div t-else="" class="ms-2" t-out="property['value']"/>
                         </li>
                     </ul>
                 </div>

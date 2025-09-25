@@ -19,7 +19,7 @@
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title">Payment</t>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -80,7 +80,7 @@
         <div class="row mr16">
             <div class="alert alert-warning col-lg-12 ms-3 me-3" role="alert">
                 <p>
-                    Please switch to company <t t-esc="expected_company.name"/> to make this
+                    Please switch to company <t t-out="expected_company.name"/> to make this
                     payment.
                 </p>
             </div>
@@ -91,7 +91,7 @@
     <template id="payment.payment_methods" name="Payment Methods">
         <t t-call="portal.frontend_layout">
             <t t-set="page_title">Payment Methods</t>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -111,7 +111,7 @@
     <template id="payment.payment_status" name="Payment Status">
         <t t-call="portal.frontend_layout">
             <t t-set="page_title">Payment Status</t>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -167,7 +167,7 @@
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title">Payment Confirmation</t>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
                 <div class="container">
@@ -244,7 +244,7 @@
                                aria-label="Home"/>
                         </a>
                     </li>
-                    <li class="breadcrumb-item"><t t-esc="page_title"/></li>
+                    <li class="breadcrumb-item"><t t-out="page_title"/></li>
                 </ol>
             </div>
         </div>

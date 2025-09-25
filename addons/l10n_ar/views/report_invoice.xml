@@ -286,7 +286,7 @@
                     </th>
                     <t t-foreach="l10n_ar_custom_tax_summary" t-as="detail">
                         <tr>
-                            <td class="text-end"><strong t-esc="detail['name']"/></td>
+                            <td class="text-end"><strong t-out="detail['name']"/></td>
                             <td class="text-end">
                                 <span
                                     class="oe_subtotal_footer_separator"

@@ -22,7 +22,7 @@
                                         <a
                                             t-att-href="'/shop/category/%s' % category.id"
                                             class="col-lg-4 nav-link text-black p-0"
-                                            t-esc="category.name"
+                                            t-out="category.name"
                                         />
                                     </h4>
                                     <nav class="nav flex-column">
@@ -31,7 +31,7 @@
                                             <a
                                                 t-att-href="'/shop/category/%s' % sub_category.id"
                                                 class="nav-link px-0"
-                                                t-esc="sub_category.name"
+                                                t-out="sub_category.name"
                                             />
                                         </t>
                                     </nav>

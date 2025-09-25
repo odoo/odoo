@@ -40,7 +40,7 @@
 
                         <div class="alert alert-success text-center" role="status">
                             <t t-if="lists_optout">
-                                <p><strong t-esc="sms_number"/> has been successfully removed from</p>
+                                <p><strong t-out="sms_number"/> has been successfully removed from</p>
                                 <t t-foreach="lists_optout" t-as="list_id">
                                     <t t-if="list_id.is_public">
                                         <strong t-out="list_id.name"/><br />
@@ -49,7 +49,7 @@
                                 </t>
                             </t>
                             <p t-else="">
-                                <strong t-esc="sms_number"/> has been successfully blacklisted
+                                <strong t-out="sms_number"/> has been successfully blacklisted
                             </p>
                         </div>
                     </div>

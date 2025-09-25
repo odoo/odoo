@@ -44,7 +44,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         cls.user_employee.group_ids += cls.env.ref('mail.group_mail_template_editor')
 
         cls._activate_multi_lang(
-            layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',
+            layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-out="model_description"/></body>',
             lang_code='es_ES',
             test_record=cls.test_record,
             test_template=cls.mail_template,
@@ -110,7 +110,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         editor rights. """
         source = self.test_record.with_env(self.env)
         composer = self.env['mail.test.composer.mixin'].create({
-            'description': '<p>Description for <t t-esc="object.name"/></p>',
+            'description': '<p>Description for <t t-out="object.name"/></p>',
             'name': 'Invite',
             'template_id': self.mail_template.id,
             'source_ids': [(4, source.id)],
@@ -140,7 +140,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         """ Test rendering with custom strings (not coming from template) """
         source = self.test_record.with_env(self.env)
         composer = self.env['mail.test.composer.mixin'].create({
-            'description': '<p>Description for <t t-esc="object.name"/></p>',
+            'description': '<p>Description for <t t-out="object.name"/></p>',
             'body': '<p>SpecificBody from <t t-out="user.name"/></p>',
             'name': 'Invite',
             'subject': 'SpecificSubject for {{ object.name }}',
@@ -163,7 +163,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         customer.lang = 'es_ES'
         source = self.test_record.with_env(self.env)
         composer = self.env['mail.test.composer.mixin'].create({
-            'description': '<p>Description for <t t-esc="object.name"/></p>',
+            'description': '<p>Description for <t t-out="object.name"/></p>',
             'name': 'Invite',
             'template_id': self.mail_template.id,
             'source_ids': [(4, source.id)],

@@ -90,9 +90,9 @@
                                                         <t t-set="correct_answer" t-value="question['answer_%s' % question.question_type ]"/>
                                                         <div class="col-12 text-success mt-1">
                                                             The correct answer was:
-                                                            <strong t-esc="correct_answer" t-if="question.question_type == 'numerical_box'"/>
-                                                            <strong t-esc="format_date(correct_answer)" t-if="question.question_type == 'date'"/>
-                                                            <strong t-esc="format_datetime(correct_answer)" t-if="question.question_type == 'datetime'"/>
+                                                            <strong t-out="correct_answer" t-if="question.question_type == 'numerical_box'"/>
+                                                            <strong t-out="format_date(correct_answer)" t-if="question.question_type == 'date'"/>
+                                                            <strong t-out="format_datetime(correct_answer)" t-if="question.question_type == 'datetime'"/>
                                                         </div>
                                                     </div>
                                                 </t>
@@ -137,7 +137,7 @@
     <template id="certification_preview">
         <html>
             <head>
-                <title t-esc="'%s Preview' % page_title"/>
+                <title t-out="'%s Preview' % page_title"/>
                 <link rel="shortcut icon" href="/web/static/img/favicon.ico" type="image/x-icon"/>
             </head>
             <body style="margin:0;">

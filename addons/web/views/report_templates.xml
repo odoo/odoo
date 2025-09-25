@@ -13,7 +13,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-out="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-autoprefix="true"/>
                 <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
                 <!-- Should be removed once the reports are fully converted. -->
@@ -47,7 +47,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-out="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <style>
                     <t t-out="preview_css"/>
@@ -291,7 +291,7 @@
             </t>
 
             <div name="address" t-att-class="not custom_layout_address and colclass or information_block and colclass">
-                <t t-esc="address or None">
+                <t t-out="address or None">
                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                         <strong>Address block</strong>
                         <div>Usually contains the address of the document's recipient.</div>
@@ -329,8 +329,8 @@
                         </li>
                         <li t-if="not forced_vat"/>
                         <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-out="forced_vat">US12345671</span>
                         </li>
                     </ul>
                 </div>
@@ -384,8 +384,8 @@
                             </li>
                             <li t-if="not forced_vat"/>
                             <li t-else="">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                                <span t-esc="forced_vat">US12345671</span>
+                                <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-out="forced_vat">US12345671</span>
                             </li>
                         </ul>
                     </div>
@@ -443,8 +443,8 @@
                         </li>
                         <li t-if="not forced_vat"/>
                         <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-out="forced_vat">US12345671</span>
                         </li>
                     </ul>
                 </div>
@@ -503,8 +503,8 @@
                         </li>
                         <li t-if="not forced_vat"/>
                         <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-out="forced_vat">US12345671</span>
                         </li>
                     </ul>
                 </div>
@@ -577,8 +577,8 @@
                         </li>
                         <li t-if="not forced_vat"/>
                         <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-out="forced_vat">US12345671</span>
                         </li>
                     </ul>
                 </div>
@@ -646,8 +646,8 @@
                         </li>
                         <li t-if="not forced_vat"/>
                         <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-out="forced_vat">US12345671</span>
                         </li>
                     </ul>
                 </div>
@@ -719,8 +719,8 @@
                                     </li>
                                     <li t-if="not forced_vat"/>
                                     <li t-else="">
-                                        <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                                        <span t-esc="forced_vat">US12345671</span>
+                                        <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                        <span t-out="forced_vat">US12345671</span>
                                     </li>
                                 </ul>
                             </div>
@@ -814,10 +814,10 @@
         <div class="header">
             <div class="row">
                 <div class="col-3">
-                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                    <span t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
                 </div>
                 <div class="col-2 offset-2 text-center">
-                    <span t-esc="company.name"/>
+                    <span t-out="company.name"/>
                 </div>
                 <div class="col-2 offset-3 text-end">
                     <ul class="list-inline">
@@ -891,31 +891,31 @@
                     }
                 }
 
-                .o_company_<t t-esc='company.id'/>_layout {
-                    font-family: <t t-esc="font" />;
+                .o_company_<t t-out='company.id'/>_layout {
+                    font-family: <t t-out="font" />;
 
                     h2 {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
 
                     #informations strong {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
 
                     .o_total strong {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
 
                     .o_company_tagline {
-                        color: <t t-esc='primary'/>
+                        color: <t t-out='primary'/>
                     }
             <t t-if="layout == 'web.external_layout_boxed'">
                 &amp;.o_report_layout_boxed {
                     #total .o_total td {
-                        background-color: <t t-esc='primary'/>;
+                        background-color: <t t-out='primary'/>;
 
                         strong {
-                            color: preview-color-contrast(<t t-esc='primary'/>);
+                            color: preview-color-contrast(<t t-out='primary'/>);
                         }
                     }
                 }
@@ -924,11 +924,11 @@
                 &amp;.o_report_layout_bold {
                     .o_main_table {
                         thead th {
-                            border-top: 3px solid <t t-esc='secondary'/>;
+                            border-top: 3px solid <t t-out='secondary'/>;
                         }
 
                         tbody tr:last-child td {
-                            border-bottom: 3px solid <t t-esc='secondary'/>;
+                            border-bottom: 3px solid <t t-out='secondary'/>;
                         }
                     }
                 }
@@ -936,35 +936,35 @@
             <t t-elif="layout == 'web.external_layout_folder'">
                 &amp; .o_folder_header_container {
                     rect, path {
-                        fill: mix(white, <t t-esc='primary'/>, 92%);
+                        fill: mix(white, <t t-out='primary'/>, 92%);
                     }
                 }
 
                 &amp;.o_report_layout_folder_footer {
-                    border-top: 1px solid <t t-esc='secondary'/>;
+                    border-top: 1px solid <t t-out='secondary'/>;
                 }
             </t>
             <t t-elif="layout == 'web.external_layout_wave'">
                 &amp;.o_report_layout_wave {
                     #informations {
-                        border-color: <t t-esc='secondary'/>;
-                        background-color: mix(white, <t t-esc='secondary'/>, 92%);
+                        border-color: <t t-out='secondary'/>;
+                        background-color: mix(white, <t t-out='secondary'/>, 92%);
                     }
                 }
             </t>
             <t t-elif="layout == 'web.external_layout_bubble'">
                 &amp;.o_report_layout_bubble {
                     #informations {
-                        border-color: <t t-esc='secondary'/>;
-                        background-color: mix(white, <t t-esc='secondary'/>, 92%);
+                        border-color: <t t-out='secondary'/>;
+                        background-color: mix(white, <t t-out='secondary'/>, 92%);
                     }
 
                     thead th, #total .o_total td {
-                        background-color: <t t-esc='primary'/>;
-                        color: preview-color-contrast(<t t-esc='primary'/>);
+                        background-color: <t t-out='primary'/>;
+                        color: preview-color-contrast(<t t-out='primary'/>);
 
                         strong {
-                            color: preview-color-contrast(<t t-esc='primary'/>);
+                            color: preview-color-contrast(<t t-out='primary'/>);
                         }
                     }
                 }

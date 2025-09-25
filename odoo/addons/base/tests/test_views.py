@@ -1166,7 +1166,7 @@ class TestTemplating(ViewCase):
             'type': 'qweb',
             'arch': """<hello>
                 <world></world>
-                <world><t t-esc="hello"/></world>
+                <world><t t-out="hello"/></world>
                 <world></world>
             </hello>
             """
@@ -1205,7 +1205,7 @@ class TestTemplating(ViewCase):
         [initial] = arch.xpath('/hello[1]/world[3]')
         self.assertFalse(
             initial.get('data-oe-xpath'),
-            'node containing t-esc is not branded')
+            'node containing t-out is not branded')
 
         # The most important assert
         # Fourth world - should have a correct oe-xpath, which is 3rd in main view
@@ -1221,7 +1221,7 @@ class TestTemplating(ViewCase):
             'type': 'qweb',
             'arch': """<hello>
                 <world></world>
-                <world><t t-esc="hello"/></world>
+                <world><t t-out="hello"/></world>
                 <world></world>
             </hello>
             """
@@ -1259,7 +1259,7 @@ class TestTemplating(ViewCase):
         [initial] = arch.xpath('/hello[1]/world[2]')
         self.assertFalse(
             initial.get('data-oe-xpath'),
-            'node containing t-esc is not branded')
+            'node containing t-out is not branded')
 
         # The most important assert
         # Third world - should have a correct oe-xpath, which is 3rd in main view
@@ -1273,14 +1273,14 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
-            # The t-esc node is to ensure branding is distributed to both
+            # The t-out node is to ensure branding is distributed to both
             # <world/> elements from the start
             'arch': """
                 <hello>
                     <world></world>
                     <world></world>
 
-                    <t t-esc="foo"/>
+                    <t t-out="foo"/>
                 </hello>
             """
         })
@@ -1801,7 +1801,7 @@ class TestTemplating(ViewCase):
             'name': "Base View",
             'type': 'qweb',
             'arch': """<root>
-                <item><span t-esc="foo"/></item>
+                <item><span t-out="foo"/></item>
             </root>""",
         })
 
@@ -1809,7 +1809,7 @@ class TestTemplating(ViewCase):
         arch = etree.fromstring(arch_string)
         self.View.distribute_branding(arch)
 
-        self.assertEqual(arch, E.root(E.item(E.span({'t-esc': "foo"}))))
+        self.assertEqual(arch, E.root(E.item(E.span({'t-out': "foo"}))))
 
     def test_ignore_unbrand(self):
         view1 = self.View.create({
@@ -1817,7 +1817,7 @@ class TestTemplating(ViewCase):
             'type': 'qweb',
             'arch': """<root>
                 <item order="1" t-ignore="true">
-                    <t t-esc="foo"/>
+                    <t t-out="foo"/>
                 </item>
             </root>"""
         })
@@ -1842,7 +1842,7 @@ class TestTemplating(ViewCase):
             E.root(
                 E.item(
                     {'t-ignore': 'true', 'order': '1'},
-                    E.t({'t-esc': 'foo'}),
+                    E.t({'t-out': 'foo'}),
                     E.item(
                         {'order': '2'},
                         E.content(
@@ -3579,11 +3579,11 @@ class TestViews(ViewCase):
         arch = "<form>%s</form>"
 
         self.assertInvalid(
-            arch % ('<span t-esc="x"/>'),
+            arch % ('<span t-out="x"/>'),
             """Error while validating view near:
 
-<form __validate__="1"><span t-esc="x"/></form>
-Forbidden owl directive used in arch (t-esc).""",
+<form __validate__="1"><span t-out="x"/></form>
+Forbidden owl directive used in arch (t-out).""",
         )
 
         self.assertInvalid(
@@ -3597,7 +3597,7 @@ Forbidden owl directive used in arch (t-on-click).""",
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_forbidden_owl_directives_in_kanban(self):
         arch = "<kanban><templates><t t-name='card'>%s</t></templates></kanban>"
-        self.assertValid(arch % ('<span t-esc="record.resId"/>'))
+        self.assertValid(arch % ('<span t-out="record.resId"/>'))
         self.assertValid(arch % ('<t t-debug=""/>'))
 
         self.assertInvalid(
@@ -3668,10 +3668,10 @@ Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
     def test_forbidden_use_of___comp___in_kanban(self):
         arch = "<kanban><templates><t t-name='card'>%s</t></templates></kanban>"
         self.assertInvalid(
-            arch % '<t t-esc="__comp__.props.resId"/>',
+            arch % '<t t-out="__comp__.props.resId"/>',
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="card"><t t-esc="__comp__.props.resId"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="card"><t t-out="__comp__.props.resId"/></t></templates></kanban>
 Forbidden use of `__comp__` in arch."""
         )
 

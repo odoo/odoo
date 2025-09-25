@@ -13,14 +13,14 @@
                             <t t-foreach="sale_order.order_line" t-as="sale_order_line">
                                 <t t-if="sale_order_line.product_id != down_payment_product and sale_order_line.tax_ids == line.tax_ids">
                                     <div>
-                                        <span style="margin-right: 5px;"><t t-esc="int(sale_order_line.product_uom_qty)"/>x</span>
-                                        <span t-esc="sale_order_line.name" />
+                                        <span style="margin-right: 5px;"><t t-out="int(sale_order_line.product_uom_qty)"/>x</span>
+                                        <span t-out="sale_order_line.name" />
                                         <span style="margin: 0px 5px;">:</span>
-                                        <t t-esc="sale_order_line.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        <t t-out="sale_order_line.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                     </div>
                                 </t>
                             </t>
-                            <div style="font-weight: bold">From <t t-esc="sale_order.name"/> </div>
+                            <div style="font-weight: bold">From <t t-out="sale_order.name"/> </div>
                         </t>
                     </t>
                 </div>

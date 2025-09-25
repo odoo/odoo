@@ -98,7 +98,7 @@
                                     <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <t t-if="move.packaging_uom_id != move.product_uom" groups="uom.group_uom">
                                         <br/>
-                                        <span class="text-muted" t-esc="move.product_uom._compute_quantity(move.quantity, move.packaging_uom_id)">1.00</span>
+                                        <span class="text-muted" t-out="move.product_uom._compute_quantity(move.quantity, move.packaging_uom_id)">1.00</span>
                                         <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
                                     </t>
                                 </td>
@@ -263,7 +263,7 @@
             <td>
                 <span t-out="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
+                    <span t-out="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td t-if="has_multi_level_packages">

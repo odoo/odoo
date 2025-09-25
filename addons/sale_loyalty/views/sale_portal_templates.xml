@@ -6,13 +6,13 @@
             t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
             <span>
                 Code:
-                <t t-esc="line.coupon_id.code[-4:].rjust(14, '&#8902;')"/>
+                <t t-out="line.coupon_id.code[-4:].rjust(14, '&#8902;')"/>
             </span>
             <t t-if="line.coupon_id.expiration_date">
                 <br/>
                 <span>
                     Expired Date:
-                    <t t-esc="line.coupon_id.expiration_date"/>
+                    <t t-out="line.coupon_id.expiration_date"/>
                 </span>
             </t>
         </div>
@@ -33,9 +33,9 @@
                         <t t-foreach="range(len(gift_cards))" t-as="gift_card_idx">
                             <t t-set="gift_card" t-value="gift_cards[gift_card_idx]"/>
                             <td class="o_purchased_gift_card">
-                                Gift #<t t-esc="gift_card_idx + 1"/>
-                                (<span t-esc="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
-                                <strong t-esc="gift_card.code"/>
+                                Gift #<t t-out="gift_card_idx + 1"/>
+                                (<span t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
+                                <strong t-out="gift_card.code"/>
                                 <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
                                     <span class="fa fa-clipboard"/> Copy
                                 </button>

@@ -2277,7 +2277,7 @@ actual arch.
         valid_aria_attrs = {
             *att_names('title'), *att_names('aria-label'), *att_names('aria-labelledby'),
         }
-        valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc', 't-out'}
+        valid_t_attrs = {'t-value', 't-raw', 't-field', 't-out'}
 
         ## Following or preceding text
         if (node.tail or '').strip() or (node.getparent().text or '').strip():
@@ -2292,9 +2292,7 @@ actual arch.
                 return True
             if elem.tag in ['field', 'label'] and elem.get('string'):
                 return True
-            if elem.tag == 't' and (elem.get('t-esc') or elem.get('t-raw')):
-                return True
-            return False
+            return elem.tag == 't' and (elem.get('t-out') or elem.get('t-raw'))
 
         if has_text(node.getnext()) or has_text(node.getprevious()):
             return
@@ -2339,7 +2337,6 @@ actual arch.
         if self._is_qweb_based_view(view_type):
             allowed_directives.extend([
                 "t-name",
-                "t-esc",
                 "t-out",
                 "t-set",
                 "t-value",
@@ -2473,7 +2470,7 @@ actual arch.
         if not e.get('data-oe-model'):
             return
 
-        if {'t-esc', 't-raw', 't-out'}.intersection(e.attrib):
+        if {'t-raw', 't-out'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)

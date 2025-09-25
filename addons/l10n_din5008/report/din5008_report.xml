@@ -238,13 +238,13 @@
                             <t t-if="delivery_partner and delivery_partner != commercial_partner">
                                 <td class="shipping_address">
                                     <span class="fw-bold">Shipping Address:</span>
-                                    <address t-esc="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <address t-out="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                 </td>
                             </t>
                             <t t-if="invoice_partner and invoice_partner != commercial_partner">
                                 <td class="shipping_address">
                                     <span class="fw-bold">Beneficiary:</span>
-                                    <address class="mb-0" t-esc="o.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <address class="mb-0" t-out="o.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                     <div t-if="o.commercial_partner_id.vat">
                                         <t t-if="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                                         <t t-else="">Tax ID</t>: <span t-field="o.commercial_partner_id.vat"/>
@@ -282,7 +282,7 @@
             </xpath>
             <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="before">
                 <t t-if="o.company_id.has_position_column">
-                    <td class="text-start" t-esc="line_number"/>
+                    <td class="text-start" t-out="line_number"/>
                     <t t-set="line_number" t-value="line_number+1"/>
                  </t>
             </xpath>

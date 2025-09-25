@@ -120,7 +120,7 @@
 
             <script>
                 // Get data from Odoo template
-                const rawData = JSON.parse(atob('<t t-esc="memory_graph"/>'));
+                const rawData = JSON.parse(atob('<t t-out="memory_graph"/>'));
 
                 // --- UTILITY FUNCTIONS ---
                 function formatBytes(bytes) {

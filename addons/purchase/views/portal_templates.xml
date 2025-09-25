@@ -12,7 +12,7 @@
         <t t-else="">Purchase Orders</t>
       </li>
       <li t-if="order" class="breadcrumb-item active">
-        <t t-esc="order.name"/>
+        <t t-out="order.name"/>
       </li>
     </xpath>
   </template>
@@ -61,7 +61,7 @@
               </thead>
               <t t-foreach="rfqs" t-as="rfq">
                   <tr>
-                      <td><a t-att-href="rfq.get_portal_url()"><t t-esc="rfq.name"/></a></td>
+                      <td><a t-att-href="rfq.get_portal_url()"><t t-out="rfq.name"/></a></td>
                       <td class="text-end">
                           <span t-field="rfq.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="rfq.date_order" t-options="{'time_only': True}"/>
@@ -99,7 +99,7 @@
               </thead>
               <t t-foreach="orders" t-as="order">
                   <tr>
-                      <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
+                      <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-out="order.name"/></a></td>
                       <td id="order_confirmation" class="text-end">
                           <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
@@ -220,7 +220,7 @@
           <t t-else="1">
             Purchase Order
           </t>
-          <em t-esc="order.name"/>
+          <em t-out="order.name"/>
         </h2>
       </div>
 
@@ -261,7 +261,7 @@
                               <div class="d-flex flex-wrap align-items-center justify-content-between">
                                   <div>
                                       <a t-att-href="report_url">
-                                          <span t-esc="i.name"/>
+                                          <span t-out="i.name"/>
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
@@ -366,7 +366,7 @@
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
                                         <span
-                                            t-esc="current_subtotal"
+                                            t-out="current_subtotal"
                                             t-options='{"widget": "monetary", "display_currency": order.currency_id}'
                                         />
                                     </td>

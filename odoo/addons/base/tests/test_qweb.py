@@ -71,7 +71,7 @@ class TestQWebTField(TransactionCase):
             'name': "dummy",
             'type': 'qweb',
             'arch': """
-                <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
+                <t t-name="base.dummy"><root><span t-out="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
             """
         })
         text = etree.fromstring(self.env['ir.qweb']._render(view1.id)).find('span').text
@@ -84,7 +84,7 @@ class TestQWebTField(TransactionCase):
                 <t t-name="base.dummy">
                     <root>
                         <script type="application/javascript">
-                            var s = <t t-esc="json.dumps({'key': malicious})"/>;
+                            var s = <t t-out="json.dumps({'key': malicious})"/>;
                         </script>
                     </root>
                 </t>
@@ -356,15 +356,15 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result % values))
 
     def test_render_dynamic_xml_with_namespace_t_esc(self):
-        """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
-        handles the t-esc attribute and keep the ns declaration.
+        """ Test that rendering a template containing a node having both an ns declaration and a t-out attribute correctly
+        handles the t-out attribute and keep the ns declaration.
         """
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
             'arch': """
                 <t t-name="base.dummy">
-                    <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" t-esc="'test'"/>
+                    <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" t-out="'test'"/>
                 </t>
             """
         })
@@ -374,8 +374,8 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_esc_with_useless_distributed_namespace(self):
-        """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
-        handles the t-esc attribute and keep the ns declaration, and distribute correctly the ns declaration to its children.
+        """ Test that rendering a template containing a node having both an ns declaration and a t-out attribute correctly
+        handles the t-out attribute and keep the ns declaration, and distribute correctly the ns declaration to its children.
         """
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
@@ -486,9 +486,9 @@ class TestQWebNS(TransactionCase):
             'arch': """
                 <t t-name="base.dummy">
                     <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
-                        <cbc:UBLVersionID t-esc="version_id"/>
+                        <cbc:UBLVersionID t-out="version_id"/>
                         <t t-foreach="[1, 2, 3, 4]" t-as="value">
-                            Oasis <cac:Test t-esc="value"/>
+                            Oasis <cac:Test t-out="value"/>
                         </t>
                     </Invoice>
                 </t>
@@ -533,7 +533,7 @@ class TestQWebNS(TransactionCase):
             'type': 'qweb',
             'arch': """
                 <t t-name="base.dummy">
-                    <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" t-esc="'abc'"/>
+                    <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" t-out="'abc'"/>
                 </t>
             """
         })
@@ -757,7 +757,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]">
-                    [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+                    [<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
             </t>'''
         })
 
@@ -776,7 +776,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="">
-                    [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+                    [<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
             </t>'''
         })
 
@@ -796,7 +796,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="b-2">
-                    [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+                    [<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
             </t>'''
         })
 
@@ -831,7 +831,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="item">
-                    [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+                    [<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
             </t>'''
         })
         result = """
@@ -849,7 +849,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="iter-dict">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
-                    [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+                    [<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
             </t>'''
         })
         result = """
@@ -967,10 +967,10 @@ class TestQWebBasic(TransactionCase):
             'arch_db': '''<t t-name="bibi">
                 <section>
                     <div t-foreach="[1, 2]" t-as="v">
-                        <span t-att-test="v" t-esc="v_index"/>
+                        <span t-att-test="v" t-out="v_index"/>
                     </div>
                     <div t-foreach="[1, 2]" t-as="v" class="o">
-                        <span t-att-test="v" t-esc="v_index"/>
+                        <span t-att-test="v" t-out="v_index"/>
                     </div>
                 </section>
             </t>'''
@@ -1375,13 +1375,13 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(str(rendered.strip()), result.strip())
 
     def test_esc_markup(self):
-        # t-esc is equal to t-out
+        # t-out is equal to t-out
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
             'arch_db': '''<t t-name="esc-markup">
                 <t t-set="content"><span>toto</span></t>
-                <div t-esc="content"/>
+                <div t-out="content"/>
             </t>'''
         })
         ref = self.env['ir.ui.view'].create({
@@ -1504,7 +1504,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="test">
                 <section>
-                    <div t-esc="abc + def">
+                    <div t-out="abc + def">
                         <span>content</span>
                     </div>
                 </section>
@@ -1517,7 +1517,7 @@ class TestQWebBasic(TransactionCase):
             self.env['ir.qweb']._render(t.id)
         except QWebError as e:
             error = str(e)
-            self.assertIn('<div t-esc="abc + def"/>', error)
+            self.assertIn('<div t-out="abc + def"/>', error)
 
     def test_error_message_2(self):
         t = self.env['ir.ui.view'].create({
@@ -1525,7 +1525,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="test">
                 <section>
-                    <div t-esc="abc + def + (">
+                    <div t-out="abc + def + (">
                         <span>content</span>
                     </div>
                 </section>
@@ -1539,12 +1539,12 @@ class TestQWebBasic(TransactionCase):
         except QWebError as e:
             error = str(e)
             self.assertIn('Can not compile expression', error)
-            self.assertIn('<div t-esc="abc + def + ("/>', error)
+            self.assertIn('<div t-out="abc + def + ("/>', error)
 
     def test_error_message_3(self):
         # The format error tells the developer what to do.
         template = '''<section>
-                    <div t-esc="1+2">
+                    <div t-out="1+2">
                         <span>content</span>
                     </div>
                 </section>'''
@@ -1555,7 +1555,7 @@ class TestQWebBasic(TransactionCase):
         except QWebError as e:
             self.assertIn('Inline templates must be passed as `etree` documents', str(e))
 
-        template = '''toto <t t-esc="content"/>'''
+        template = '''toto <t t-out="content"/>'''
         with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(template)
         try:
@@ -2015,7 +2015,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch': """
                 <t t-name="base.callee">
-                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                    <t t-out="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
                 </t>
             """
         })
@@ -2137,7 +2137,7 @@ class TestQWebBasic(TransactionCase):
             'name': "dummy",
             'type': 'qweb',
             'arch': """
-                <t t-name="base.dummy"><root><span t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}' /></root></t>
+                <t t-name="base.dummy"><root><span t-out="user" t-options='{"widget": "contact", "fields": ["name"]}' /></root></t>
             """
         })
         self.env['ir.qweb']._render(view1.id, {'user': u})  # should not crash
@@ -2148,7 +2148,7 @@ class TestQWebBasic(TransactionCase):
             'name': "dummy",
             'type': 'qweb',
             'arch': """
-                <t t-name="base.dummy"><root><span t-esc="3600" t-options='{"widget": "duration", "format": "short"}' /></root></t>
+                <t t-name="base.dummy"><root><span t-out="3600" t-options='{"widget": "duration", "format": "short"}' /></root></t>
             """
         })
         self.env['ir.qweb'].with_context(lang='pt_BR')._render(view1.id, {})  # should not crash
@@ -2218,9 +2218,9 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name='master'>
                     <section>
-                        <article t-foreach="[0, 1, 2]" t-as="value" t-esc="value"/>
+                        <article t-foreach="[0, 1, 2]" t-as="value" t-out="value"/>
                         <t t-foreach="[0, 1, 2]" t-as="value">
-                            <article t-esc="value"/>
+                            <article t-out="value"/>
                         </t>
                     </section>
                 </t>'''})

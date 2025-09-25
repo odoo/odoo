@@ -11,7 +11,7 @@
             </t>
             <th t-if="display_sol">Sales Order Item</th>
         </th>
-        <xpath expr="//tr/td[t[@t-esc='timesheet.name']]" position="after">
+        <xpath expr="//tr/td[t[@t-out='timesheet.name']]" position="after">
             <td  t-if="display_sol">
 	        <t t-if="timesheet.so_line.order_id.access_url and so_accessible"><a t-att-href="'%s' % timesheet.so_line.order_id.access_url"><t t-out="timesheet.so_line.display_name"/></a></t>
 		    <t t-elif="timesheet.so_line.display_name" t-out="timesheet.so_line.display_name"></t>
@@ -22,8 +22,8 @@
             <tr t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger'}}">
                 <td><strong>Time Remaining on SO: </strong></td>
                 <td class="text-end">
-                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
-                    <span t-else="" t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
+                    <span t-if="is_uom_day" t-out="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
+                    <span t-else="" t-out="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
                 </td>
             </tr>
         </xpath>

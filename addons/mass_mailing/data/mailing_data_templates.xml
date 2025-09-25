@@ -86,7 +86,7 @@
                         <tr>
                             <td align="left">
                                 <span style="color:#282f33; font-size: 15px; font-weight: bold; line-height: 30px">
-                                    <t t-esc="'Click Rate Report on %i %s Sent' % (object.expected, mailing_type)"/>
+                                    <t t-out="'Click Rate Report on %i %s Sent' % (object.expected, mailing_type)"/>
                                 </span>
                             </td>
                         </tr>
@@ -102,10 +102,10 @@
                         </tr>
                         <tr t-foreach="link_trackers" t-as="link_tracker" style="color: #888888; font-size: 15px; font-weight: 300;">
                             <td style="width: 70%;padding: 10px 0; border: 1px solid #e7e7e7;">
-                                <a t-att-href="link_tracker.absolute_url" target="_blank" style="color: #56b3b5; text-decoration: none;" t-esc="link_tracker.label or link_tracker.url"/>
+                                <a t-att-href="link_tracker.absolute_url" target="_blank" style="color: #56b3b5; text-decoration: none;" t-out="link_tracker.label or link_tracker.url"/>
                             </td>
                             <td style="width: 30%;padding: 10px 0; text-align: center;  border: 1px solid #e7e7e7;">
-                                <t t-esc="int(link_tracker.count * 100 / object.sent) if object.sent else 0"/>% (<t t-esc="link_tracker.count"/>)
+                                <t t-out="int(link_tracker.count * 100 / object.sent) if object.sent else 0"/>% (<t t-out="link_tracker.count"/>)
                             </td>
                         </tr>
                     </table>
