@@ -700,7 +700,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'qty_to_order': 1.0,
-            'location_id': stock_location.id
+            'location_id': stock_location.id,
+            'trigger': 'manual',
         })
         orderpoint.action_replenish()
         po = self.env['purchase.order'].search([("product_id", "=", product.id)], limit=1)

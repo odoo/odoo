@@ -87,6 +87,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit')
     qty_to_order_computed = fields.Float('To Order Computed', store=True, compute='_compute_qty_to_order_computed', digits='Product Unit')
     qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit')
+    qty_to_order_to_max = fields.Float('To Order to Reach Max', compute='_compute_qty_to_order_to_max', digits='Product Unit')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
 
@@ -339,11 +340,10 @@ class StockWarehouseOrderpoint(models.Model):
         action['res_id'] = res.id
         return action
 
-    def action_replenish(self, force_to_max=False):
+    def action_replenish(self):
         now = self.env.cr.now()
-        if force_to_max:
-            for orderpoint in self:
-                orderpoint.qty_to_order = orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast)
+        for orderpoint in self:
+            orderpoint.qty_to_order = orderpoint.qty_to_order_manual or orderpoint.qty_to_order_to_max
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
@@ -429,6 +429,11 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in orderpoints:
             orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=qty_in_progress_by_orderpoint)
         (self - orderpoints).qty_to_order_computed = False
+
+    @api.depends('replenishment_uom_id', 'product_max_qty')
+    def _compute_qty_to_order_to_max(self):
+        for orderpoint in self:
+            orderpoint.qty_to_order_to_max = max(0, orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast))
 
     def _get_default_rule(self):
         self.ensure_one()
