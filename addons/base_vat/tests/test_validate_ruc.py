@@ -148,6 +148,16 @@ class TestStructure(TransactionCase):
         with self.assertRaisesRegex(ValidationError, msg):
             test_partner.write({'vat': '0123457890-11134'})
 
+    def test_vat_tw(self):
+        test_partner = self.env["res.partner"].create({"name": "TW Company", "country_id": self.env.ref("base.tw").id})
+
+        for ubn in ['88117254', '12345601', '90183275']:
+            test_partner.vat = ubn
+
+        for ubn in ['88117250', '12345600', '90183272']:
+            with self.assertRaises(ValidationError):
+                test_partner.vat = ubn
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):

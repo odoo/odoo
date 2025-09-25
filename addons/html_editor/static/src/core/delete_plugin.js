@@ -268,6 +268,22 @@ export class DeletePlugin extends Plugin {
 
     getRangeForDelete(node, offset, direction, granularity) {
         let destContainer, destOffset;
+        if (granularity === "word") {
+            // In some browsers such as Firefox or Safari, if the cursor
+            // is at the start of a block (when direction is "backward") or
+            // at the end of a block (when direction is "forward"),
+            // Selection.modify("extend", direction, "word") ends up
+            // selecting the previous or next adjacent text node, respectively.
+            // To handle such cases, the granularity should be "character".
+            const blockEl = closestBlock(node);
+            if (
+                (direction === "backward" &&
+                    this.isCursorAtStartOfElement(blockEl, node, offset)) ||
+                (direction === "forward" && this.isCursorAtEndOfElement(blockEl, node, offset))
+            ) {
+                granularity = "character";
+            }
+        }
         switch (granularity) {
             case "character":
                 [destContainer, destOffset] = this.findAdjacentPosition(node, offset, direction);

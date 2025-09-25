@@ -7,14 +7,24 @@ patch(SelfOrder.prototype, {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
         this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
+            // Ignore updates for orders from other devices
+            let order = this.models["pos.order"].find((o) => o.uuid === data["pos.order"][0].uuid);
+            if (!order) {
+                return;
+            }
             this.models.loadData(data, [], false);
             this.onlinePaymentStatus = status;
             this.paymentError = status === "fail";
 
-            const order = this.models["pos.order"].find(
+            order = this.models["pos.order"].find(
                 (o) => o.access_token === data["pos.order"][0].access_token
             );
-            if (status === "success" && !this.currentOrder.access_token && order) {
+            if (
+                status === "success" &&
+                !this.currentOrder.access_token &&
+                order &&
+                order.uuid === this.currentOrder.uuid
+            ) {
                 this.confirmationPage("order", this.config.self_ordering_mode, order.access_token);
             }
         });

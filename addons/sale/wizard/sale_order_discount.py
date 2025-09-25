@@ -62,6 +62,7 @@ class SaleOrderDiscount(models.TransientModel):
             'product_id': product.id,
             'sequence': 999,
             'price_unit': -amount,
+            'technical_price_unit': 0,
             'tax_id': [Command.set(taxes.ids)],
         }
         if description:

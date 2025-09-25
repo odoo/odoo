@@ -106,7 +106,9 @@ class StockPicking(models.Model):
                 if len(move_line_ids.carrier_id) > 1 or any(not ml.carrier_id for ml in move_line_ids):
                     # avoid (duplicate) costs for products
                     raise UserError(_("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
-                return self._set_delivery_package_type(batch_pack=len(move_line_ids.picking_id) > 1)
+                return self.with_context(
+                    default_move_line_ids=move_line_ids.ids
+                )._set_delivery_package_type(batch_pack=len(move_line_ids.picking_id) > 1)
         else:
             return res
 
