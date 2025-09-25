@@ -105,7 +105,11 @@ export class KanbanQuickCreateController extends Component {
             mode: "edit",
             context: this.props.context,
         };
-        this.model = useState(new this.props.Model(this.env, { config }, modelServices));
+        const modelParams = {
+            config,
+            useSendBeaconToSaveUrgently: true,
+        };
+        this.model = useState(new this.props.Model(this.env, modelParams, modelServices));
 
         onWillStart(async () => {
             await this.model.load();
@@ -156,11 +160,31 @@ export class KanbanQuickCreateController extends Component {
         // Validate when leaving the view
         useSetupAction({
             beforeLeave: () => this.validate("close"),
+            beforeUnload: (ev) => this.beforeUnload(ev),
         });
 
         // Key Navigation
         useHotkey("enter", () => this.validate("add"), { bypassEditableProtection: true });
         useHotkey("escape", () => this.cancel(true));
+    }
+
+    get useNameCreate() {
+        const fieldNames = Object.keys(this.model.root.activeFields);
+        return fieldNames.length === 1 && fieldNames[0] === "display_name";
+    }
+
+    async beforeUnload(ev) {
+        if (this.useNameCreate) {
+            const name = this.model.root.data.display_name;
+            if (name) {
+                return this.nameCreate(name);
+            }
+        }
+        const succeeded = await this.model.root.urgentSave();
+        if (!succeeded) {
+            ev.preventDefault();
+            ev.returnValue = "Unsaved changes";
+        }
     }
 
     validate(mode) {
@@ -199,19 +223,11 @@ export class KanbanQuickCreateController extends Component {
 
     async save() {
         let resId = this.model.root.resId;
-        const keys = Object.keys(this.model.root.activeFields);
-        if (keys.length === 1 && keys[0] === "display_name") {
+        if (this.useNameCreate) {
             const isValid = await this.model.root.checkValidity(); // needed to put the class o_field_invalid in the field
             if (isValid) {
                 try {
-                    [resId] = await this.model.orm.call(
-                        this.props.resModel,
-                        "name_create",
-                        [this.model.root.data.display_name],
-                        {
-                            context: this.props.context,
-                        }
-                    );
+                    [resId] = await this.nameCreate(this.model.root.data.display_name);
                 } catch (e) {
                     this.showFormDialogInError(e);
                 }
@@ -227,6 +243,11 @@ export class KanbanQuickCreateController extends Component {
             resId = this.model.root.resId;
         }
         return resId;
+    }
+
+    nameCreate(name) {
+        const { resModel, context } = this.props;
+        return this.model.orm.call(resModel, "name_create", [name], { context });
     }
 
     async cancel(force) {

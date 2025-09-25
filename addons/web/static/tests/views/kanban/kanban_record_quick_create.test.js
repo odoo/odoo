@@ -8,8 +8,9 @@ import {
     queryAllTexts,
     queryFirst,
     resize,
+    unload,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickModalButton,
     contains,
@@ -3715,4 +3716,112 @@ test("click on '+' while quick create is open (not dirty)", async () => {
     expect(".o_kanban_record").toHaveCount(4);
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_group:eq(2) .o_kanban_quick_create").toHaveCount(1);
+});
+
+test("Auto save on closing tab/browser (no quick create view)", async () => {
+    onRpc("partner", "name_create", ({ args }) => {
+        expect.step("name_create"); // should be called
+        expect(args[0]).toEqual("test");
+    });
+
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+
+    const [event] = await unload();
+    expect(event.defaultPrevented).toBe(false);
+    expect.verifySteps(["name_create"]);
+});
+
+test("Auto save on closing tab/browser (quick create view)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+        </form>`;
+
+    const sendBeaconDeferred = new Deferred();
+    mockSendBeacon((_, blob) => {
+        expect.step("sendBeacon");
+        blob.text().then((r) => {
+            const { params } = JSON.parse(r);
+            if (params.method === "web_save" && params.model === "partner") {
+                expect(params.args[1]).toEqual({ foo: "test" });
+            }
+            sendBeaconDeferred.resolve();
+        });
+        return true;
+    });
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+
+    const [event] = await unload();
+    await animationFrame();
+    expect(event.defaultPrevented).toBe(false);
+    expect.verifySteps(["sendBeacon"]);
+});
+
+test("Auto save on closing tab/browser (invalid)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+
+    mockSendBeacon(() => expect.step("sendBeacon"));
+
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+
+    const [event] = await unload();
+    await animationFrame();
+    expect(event.defaultPrevented).toBe(true);
+    expect(".o_kanban_quick_create [name=date]").toHaveClass("o_field_invalid");
+    expect.verifySteps([]);
 });
