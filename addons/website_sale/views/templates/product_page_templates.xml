@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- /shop/product page -->
-    <template id="base_unit_price" name="Product Base unit price">
+    <template id="website_sale.base_unit_price" name="Product Base unit price">
         <span
             class="o_base_unit_price"
             t-out="base_unit_price"
@@ -716,11 +716,11 @@
         </xpath>
     </template>
 
-    <template id="all_products_link_name" name="All Products name">
+    <template id="website_sale.all_products_link_name" name="All Products name">
         <span placeholder="All products">All products</span>
     </template>
 
-    <template id="product_accordion" name="Accordion On Product Page">
+    <template id="website_sale.product_accordion" name="Accordion On Product Page">
         <div
             t-if="is_view_active('website_sale_comparison.accordion_specs_item')
                   or is_view_active('website_sale.accordion_more_information')"
@@ -736,7 +736,7 @@
     </template>
 
     <template
-        id="accordion_more_information"
+        id="website_sale.accordion_more_information"
         name="More Information Accordion Item"
         inherit_id="website_sale.product_accordion"
         active="False"
@@ -790,7 +790,12 @@
         </div>
     </template>
 
-    <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
+    <template
+        id="website_sale.alternative_products"
+        inherit_id="website_sale.product"
+        name="Alternative Products"
+        active="True"
+    >
         <div t-field="product.website_description" position="after">
             <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
                 <section data-snippet="s_dynamic_snippet_products"
@@ -817,8 +822,8 @@
     </template>
 
     <template
-        name="Terms and Conditions"
         id="website_sale.product_terms_and_conditions"
+        name="Terms and Conditions"
         inherit_id="website_sale.product"
         active="True"
         priority="21"
@@ -835,7 +840,11 @@
     </template>
 
     <!-- Product options: Zoom -->
-    <template inherit_id='website_sale.product' id="product_picture_magnify_click" name="Image Zoom On Click">
+    <template
+        id="website_sale.product_picture_magnify_click"
+        inherit_id="website_sale.product"
+        name="Image Zoom On Click"
+    >
         <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
             <attribute name="data-ecom-zoom-click">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable" />
@@ -843,7 +852,13 @@
     </template>
 
     <!-- Product options: OpenChatter -->
-    <template id="product_comment" inherit_id="website_sale.product" active="False" name="Discussion and Rating" priority="15">
+    <template
+        id="website_sale.product_comment"
+        inherit_id="website_sale.product"
+        name="Discussion and Rating"
+        active="False"
+        priority="15"
+    >
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating border-top" data-anchor='true'>
                 <section id="o_product_page_reviews" class="container pt48 pb48" data-anchor='true'>
@@ -958,7 +973,7 @@
         </span>
     </template>
 
-    <template id="product_price">
+    <template id="website_sale.product_price">
         <div
             name="product_price"
             t-attf-class="product_price {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
@@ -1122,7 +1137,12 @@
         </div>
     </template>
 
-    <template id="carousel_product_indicators_bottom" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Bottom" active="False">
+    <template
+        id="website_sale.carousel_product_indicators_bottom"
+        inherit_id="website_sale.shop_product_carousel"
+        name="Carousel Product Indicators Bottom"
+        active="False"
+    >
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="after">
             <t t-call="website_sale.carousel_product_indicators">
                 <t t-set="indicators_div_class" t-value="'pt-2 overflow-hidden'"/>
@@ -1130,7 +1150,11 @@
         </xpath>
     </template>
 
-    <template id="carousel_product_indicators_left" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Left">
+    <template
+        id="website_sale.carousel_product_indicators_left"
+        inherit_id="website_sale.shop_product_carousel"
+        name="Carousel Product Indicators Left"
+    >
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
             <t t-call="website_sale.carousel_product_indicators">
                 <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
@@ -1141,7 +1165,7 @@
         </xpath>
     </template>
 
-    <template id="carousel_product_indicators" name="Carousel Product">
+    <template id="website_sale.carousel_product_indicators" name="Carousel Product">
         <div
             t-if="len(product_images) > 1"
             t-ignore="True"
@@ -1238,7 +1262,12 @@
         </div>
     </template>
 
-    <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
+    <template
+        id="website_sale.ecom_show_extra_fields"
+        inherit_id="website_sale.product"
+        name="Show Extra Fields"
+        active="True"
+    >
         <xpath expr="//div[@id='product_details']" position="inside">
             <t t-if="any([product.sudo()[field.name] for field in website.shop_extra_field_ids])">
                 <hr/>

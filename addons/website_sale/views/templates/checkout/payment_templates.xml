@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- /shop/payment route -->
-    <template id="payment" name="Payment">
+    <template id="website_sale.payment" name="Payment">
         <t t-call="website_sale.checkout_layout">
             <t t-set="additional_title">Shop - Select Payment Method</t>
             <t t-set='redirect' t-valuef="/shop/payment"/>

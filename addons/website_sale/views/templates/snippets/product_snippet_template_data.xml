@@ -4,7 +4,7 @@
         <!-- Template for Dynamic Snippet -->
 
         <template
-            id="dynamic_filter_template_product_product_products_item"
+            id="website_sale.dynamic_filter_template_product_product_products_item"
             name="Generic Product Template (customizable)"
         >
             <t
@@ -122,7 +122,7 @@
             </t>
         </template>
 
-        <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
+        <template id="website_sale.price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
             <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
                 <span t-out="data['price']"
                       class="mb-0 fw-bold"

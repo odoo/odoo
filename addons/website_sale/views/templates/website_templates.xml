@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="header_cart_link" name="Header Cart Link">
+    <template id="website_sale.header_cart_link" name="Header Cart Link">
         <t t-set="website_sale_cart_quantity" t-value="request.session.get('website_sale_cart_quantity', request.cart.cart_quantity) or 0"/>
         <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
         <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
@@ -16,14 +16,19 @@
         </li>
     </template>
 
-    <template id="header_hide_empty_cart_link" inherit_id="website_sale.header_cart_link" name="Header Hide Empty Cart link" active="False">
+    <template
+        id="website_sale.header_hide_empty_cart_link"
+        inherit_id="website_sale.header_cart_link"
+        name="Header Hide Empty Cart link"
+        active="False"
+    >
         <xpath expr="//t[@t-set='show_cart']" position="after">
             <t t-set="show_cart" t-value="website_sale_cart_quantity" />
         </xpath>
     </template>
 
         <!-- Insert JSON-LD markup data for SEO. -->
-    <template id="website_sale_layout" inherit_id="website.layout" priority="1">
+    <template id="website_sale.website_sale_layout" inherit_id="website.layout" priority="1">
         <body position="before">
             <t
                 t-if="website._get_product_image_ratio() != '1_1'"
@@ -52,7 +57,7 @@
     </template>
 
     <template
-        id="template_footer_website_sale"
+        id="website_sale.template_footer_website_sale"
         name="eCommerce Footer"
         inherit_id="website.layout"
         active="False"
@@ -214,7 +219,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_mobile" inherit_id="website.template_header_mobile">
+    <template id="website_sale.template_header_mobile" inherit_id="website.template_header_mobile">
         <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -224,7 +229,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_default" inherit_id="website.template_header_default">
+    <template id="website_sale.template_header_default" inherit_id="website.template_header_default">
         <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -234,7 +239,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
+    <template id="website_sale.template_header_hamburger" inherit_id="website.template_header_hamburger">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -244,7 +249,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_stretch" inherit_id="website.template_header_stretch">
+    <template id="website_sale.template_header_stretch" inherit_id="website.template_header_stretch">
         <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -255,7 +260,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_vertical" inherit_id="website.template_header_vertical">
+    <template id="website_sale.template_header_vertical" inherit_id="website.template_header_vertical">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -265,7 +270,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_search" inherit_id="website.template_header_search">
+    <template id="website_sale.template_header_search" inherit_id="website.template_header_search">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
@@ -276,7 +281,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_one" inherit_id="website.template_header_sales_one">
+    <template id="website_sale.template_header_sales_one" inherit_id="website.template_header_sales_one">
         <xpath expr="//t[@t-call='portal.user_dropdown']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -286,7 +291,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_two" inherit_id="website.template_header_sales_two">
+    <template id="website_sale.template_header_sales_two" inherit_id="website.template_header_sales_two">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -299,7 +304,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_three" inherit_id="website.template_header_sales_three">
+    <template id="website_sale.template_header_sales_three" inherit_id="website.template_header_sales_three">
         <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
@@ -311,7 +316,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_four" inherit_id="website.template_header_sales_four">
+    <template id="website_sale.template_header_sales_four" inherit_id="website.template_header_sales_four">
         <xpath expr="//t[@t-call='website.placeholder_header_call_to_action']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
@@ -321,7 +326,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
+    <template id="website_sale.template_header_sidebar" inherit_id="website.template_header_sidebar">
         <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="after">
             <ul class="list-unstyled d-flex gap-1 ms-auto mb-0">
                 <t t-call="website_sale.header_cart_link">
@@ -333,7 +338,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_boxed" inherit_id="website.template_header_boxed">
+    <template id="website_sale.template_header_boxed" inherit_id="website.template_header_boxed">
         <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>

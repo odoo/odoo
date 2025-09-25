@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+    <template
+        id="website_sale.sale_order_portal_content_inherit_website_sale"
+        inherit_id="sale.sale_order_portal_content"
+        name="Orders Followup Products Links"
+    >
         <div name="sol_table" position="attributes">
             <attribute name="class" remove="table-responsive" separator=" "/>
         </div>
@@ -15,7 +19,11 @@
         </span>
     </template>
 
-    <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
+    <template
+        id="website_sale.sale_order_re_order_btn"
+        inherit_id="sale.sale_order_portal_template"
+        name="Sale Order Order Again"
+    >
         <div id="print_invoice_sidebar_button" position="after">
             <t t-if="sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
                 <button

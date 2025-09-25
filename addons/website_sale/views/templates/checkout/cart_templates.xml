@@ -3,7 +3,7 @@
 
     <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
          template to change or remove the product link. Called in `website_sale.cart_lines`. -->
-    <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
+    <template id="website_sale.cart_line_product_link" name="Shopping Cart Line Product Link">
         <a
             t-if="line._is_sellable()"
             class="text-reset"
@@ -18,7 +18,7 @@
     <!-- This template displays all the lines following the first one on the description of the sale
          order line, with a muted style. For typical products this content will be the product
          description_sale. Called in `website_sale.cart_lines`. -->
-    <template id="cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
+    <template id="website_sale.cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
@@ -32,7 +32,7 @@
     </template>
 
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
-    <template id="cart_lines" name="Shopping Cart Lines">
+    <template id="website_sale.cart_lines" name="Shopping Cart Lines">
         <div
             t-if="not website_sale_order or not website_sale_order.website_order_line"
             class="js_cart_lines w-100"
@@ -169,7 +169,7 @@
         </div>
     </template>
 
-    <template id="cart_lines_quantity" name="Shopping Cart Line quantity">
+    <template id="website_sale.cart_lines_quantity" name="Shopping Cart Line quantity">
         <t
             t-set="should_show_quantity_selector"
             t-value="is_view_active('website_sale.product_quantity')"
@@ -227,7 +227,7 @@
         </div>
     </template>
 
-    <template id="cart_lines_price" name="Shopping Cart Line Price">
+    <template id="website_sale.cart_lines_price" name="Shopping Cart Line Price">
         <h6
             class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1"
             name="website_sale_cart_line_price"
@@ -256,7 +256,7 @@
         </small>
     </template>
 
-    <template id="cart_combo_item_line">
+    <template id="website_sale.cart_combo_item_line">
         <a
             t-att-href="combo_item_line.product_id.website_url if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else '#'"
             t-attf-class="list-group-item #{'list-group-item-action' if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else 'cursor-default text-decoration-none'}"
@@ -282,7 +282,7 @@
         </a>
     </template>
 
-    <template id="cart_product_price">
+    <template id="website_sale.cart_product_price">
         <span
             t-out="product_price"
             style="white-space: nowrap;"
@@ -291,7 +291,7 @@
     </template>
 
     <!-- /shop/cart route -->
-    <template id="cart" name="Shopping Cart">
+    <template id="website_sale.cart" name="Shopping Cart">
         <t t-call="website_sale.checkout_layout">
             <t t-set="show_shorter_cart_summary" t-value="True"/>
             <t t-set="show_footer" t-value="True"/>
@@ -334,7 +334,7 @@
         </t>
     </template>
 
-    <template id="quick_reorder_button">
+    <template id="website_sale.quick_reorder_button">
         <t t-set="quick_reorder_button_title">
             <t t-if="request.website.is_public_user()">Login to reorder</t>
             <t t-elif="not order_history">No previous products available for reorder.</t>
@@ -355,7 +355,7 @@
         <t t-call="website_sale.quick_reorder_sidebar"/>
     </template>
 
-    <template id="quick_reorder_sidebar">
+    <template id="website_sale.quick_reorder_sidebar">
         <div
             id="quick_reorder_sidebar"
             class="offcanvas offcanvas-end"
@@ -377,7 +377,7 @@
         </div>
     </template>
 
-    <template id="quick_reorder_history">
+    <template id="website_sale.quick_reorder_history">
         <div
             class="o_wsale_quick_reorder_line_group ps-sm-3"
             t-foreach="order_history"
@@ -477,7 +477,11 @@
     </template>
 
     <!-- Deactivatable through the website editor. -->
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
+    <template
+        id="website_sale.suggested_products_list"
+        inherit_id="website_sale.cart_lines"
+        name="Accessory Products in my cart"
+    >
         <xpath expr="//div[@id='cart_products']" position="inside">
             <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
             <div t-if="suggested_products"
