@@ -46,7 +46,8 @@ export class AnchorSlide extends Interaction {
         hash = "#" + CSS.escape(hash.substring(1));
         const anchorEl = this.el.ownerDocument.querySelector(hash);
         const scrollValue = anchorEl?.dataset.anchor;
-        if (!anchorEl || !scrollValue) {
+        // No need to scroll when target is _blank as it should open in new tab
+        if (!anchorEl || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
