@@ -16,6 +16,14 @@ export function clickCategory(categoryName) {
     };
 }
 
+export function clickChildCategory(childCategoryName) {
+    return {
+        content: `Click on child category '${childCategoryName}'`,
+        trigger: `.child_category_btn:contains('${childCategoryName}')`,
+        run: "click",
+    };
+}
+
 export function waitProduct(productName) {
     return {
         content: `Wait for product '${productName}'`,
