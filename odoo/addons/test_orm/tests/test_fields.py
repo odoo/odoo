@@ -3259,7 +3259,7 @@ class TestX2many(TransactionExpressionCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',

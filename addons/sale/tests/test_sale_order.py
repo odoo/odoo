@@ -182,7 +182,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_invoicing_terms(self):
         # Enable invoicing terms
-        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env['ir.config_parameter'].sudo().set_bool('account.use_invoice_terms', True)
 
         # Plain invoice terms
         self.env.company.terms_type = 'plain'

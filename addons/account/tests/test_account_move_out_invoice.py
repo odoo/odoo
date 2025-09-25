@@ -4713,7 +4713,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_narration_preserved_when_use_invoice_terms_disabled(self):
         """ Ensure narration is preserved when partner changes and invoice terms are disabled. """
-        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', False)
+        self.env['ir.config_parameter'].sudo().set_bool('account.use_invoice_terms', False)
         invoice = self.invoice.copy({
             'narration': 'Manually written terms by user',
         })

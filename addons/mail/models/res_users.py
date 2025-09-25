@@ -6,7 +6,7 @@ import contextlib
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import email_normalize, str2bool
+from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -316,7 +316,7 @@ class ResUsers(models.Model):
 
     def _notify_security_setting_update_prepare_values(self, content, **kwargs):
         """"Prepare rendering values for the 'mail.account_security_alert' qweb template."""
-        reset_password_enabled = str2bool(self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True))
+        reset_password_enabled = self.env['ir.config_parameter'].sudo().get_bool("auth_signup.reset_password")
 
         values = {
             'browser': False,

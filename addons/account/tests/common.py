@@ -1066,13 +1066,13 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         if not self.js_tests:
             return
 
-        self.env['ir.config_parameter'].set_param(
+        self.env['ir.config_parameter'].set_str(
             'account.tests_shared_js_python',
             json.dumps([test for test, _expected_values, _assert_function in self.js_tests]),
         )
 
         self.start_tour('/account/init_tests_shared_js_python', 'tests_shared_js_python', login=self.env.user.login)
-        results = json.loads(self.env['ir.config_parameter'].get_param('account.tests_shared_js_python', '[]'))
+        results = json.loads(self.env['ir.config_parameter'].get_str('account.tests_shared_js_python') or '[]')
 
         self.assertEqual(len(results), len(self.js_tests))
         for index, (js_test, expected_values, assert_function), r in zip(count(1), self.js_tests, results):

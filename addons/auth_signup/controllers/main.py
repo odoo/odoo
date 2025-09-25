@@ -126,11 +126,10 @@ class AuthSignupHome(Home):
     def get_auth_signup_config(self):
         """retrieve the module config (which features are enabled) for the login page"""
 
-        get_param = request.env['ir.config_parameter'].sudo().get_param
         return {
             'disable_database_manager': not tools.config['list_db'],
             'signup_enabled': request.env['res.users']._get_signup_invitation_scope() == 'b2c',
-            'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
+            'reset_password_enabled': request.env['ir.config_parameter'].sudo().get_bool('auth_signup.reset_password'),
         }
 
     def get_auth_signup_qcontext(self):

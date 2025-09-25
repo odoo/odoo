@@ -18,7 +18,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()
         # by default signup not allowed
-        self.env["ir.config_parameter"].set_param('auth_signup.invitation_scope', 'b2b')
+        self.env["ir.config_parameter"].set_str('auth_signup.invitation_scope', 'b2b')
         view = self.env.ref('survey.survey_invite_view_form').sudo()
         tree = etree.fromstring(view.arch)
         # Remove the invisible on `emails` to be able to test the onchange `_onchange_emails`
@@ -171,7 +171,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
 
     @users('survey_manager')
     def test_survey_invite_authentication_signup(self):
-        self.env["ir.config_parameter"].sudo().set_param('auth_signup.invitation_scope', 'b2c')
+        self.env["ir.config_parameter"].sudo().set_str('auth_signup.invitation_scope', 'b2c')
         self.env.invalidate_all()
         Answer = self.env['survey.user_input']
 

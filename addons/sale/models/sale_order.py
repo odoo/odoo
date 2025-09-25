@@ -377,7 +377,7 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
         if not use_invoice_terms:
             return
         for order in self:

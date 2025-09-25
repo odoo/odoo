@@ -87,7 +87,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_signup_invitation_scope(self):
-        return self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b')
+        return self.env['ir.config_parameter'].sudo().get_str('auth_signup.invitation_scope') or 'b2b'
 
     @api.model
     def _signup_create_user(self, values):
