@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Search render results display -->
-    <template id="product_category_extra_link" name="Product Category Extra Link">
+    <template id="website_sale.product_category_extra_link" name="Product Category Extra Link">
         <button class="btn btn-link btn-sm pe-0" disabled="disabled">
             <t t-if="len(categories) == 1">Category:</t>
             <t t-else="">Categories:</t>
@@ -17,7 +17,7 @@
     </template>
 
     <!-- Search Bar input-group template -->
-    <template id="search" name="Search Box" active="True">
+    <template id="website_sale.search" name="Search Box" active="True">
         <t t-call="website.website_search_box_input">
             <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form me-auto flex-grow-1 {{_form_classes}}"/>
             <t t-set="_submit_classes" t-valuef="btn btn-{{navClass}}"/>
@@ -31,7 +31,7 @@
         </t>
     </template>
 
-    <template id="product_variant_preview">
+    <template id="website_sale.product_variant_preview">
         <div
             t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap overflow-hidden {{
                 'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
@@ -104,7 +104,7 @@
         </div>
     </template>
 
-    <template id="pricelist_list" name="Pricelists Dropdown">
+    <template id="website_sale.pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)" />
         <t t-set="hasPricelistDropdown" t-value="hasPricelistDropdown or (website_sale_pricelists and len(website_sale_pricelists)&gt;1)"/>
         <t t-set="pricelist" t-value="request.pricelist"/>
@@ -140,7 +140,7 @@
         </div>
     </template>
 
-    <template id="products_breadcrumb" name="Products Breadcrumb">
+    <template id="website_sale.products_breadcrumb" name="Products Breadcrumb">
         <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
             <li class="breadcrumb-item">
                 <a
@@ -169,7 +169,7 @@
     </template>
 
     <!-- /shop product listing -->
-    <template id="products" name="Products">
+    <template id="website_sale.products" name="Products">
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="category.name"/>
             <t t-set="grid_block_name">Grid</t>
@@ -1317,7 +1317,7 @@
     </template>
 
     <!-- Add to cart button-->
-    <template id="categories_recursive" name="Category list">
+    <template id="website_sale.categories_recursive" name="Category list">
         <li class="nav-item mb-1" t-att-data-publish="c.has_published_products and 'on' or 'off'">
             <t t-call="website_sale.categorie_link"/>
             <!-- Dynamic category display based on search -->
@@ -1335,7 +1335,7 @@
         </li>
     </template>
 
-    <template id="categorie_link" name="Category Link">
+    <template id="website_sale.categorie_link" name="Category Link">
         <a
             t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
             t-attf-class="{{c.id == category.id and 'text-decoration-underline'}} p-0"
@@ -1411,7 +1411,7 @@
         </xpath>
     </template>
 
-    <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
+    <template id="website_sale.option_collapse_categories_recursive" name="Collapse Category Recursive">
         <!-- Dynamic category display based on search -->
         <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
         <!-- Only show categories with published products to portal users preventing from access errors  -->
@@ -1453,13 +1453,23 @@
         </li>
     </template>
 
-    <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories_list" active="False">
+    <template
+        id="website_sale.option_collapse_products_categories"
+        inherit_id="website_sale.products_categories_list"
+        name="Collapsible Category List"
+        active="False"
+    >
         <xpath expr="//t[@t-call='website_sale.categories_recursive']" position="attributes">
             <attribute name="t-call">website_sale.option_collapse_categories_recursive</attribute>
         </xpath>
     </template>
 
-    <template id="products_attributes" inherit_id="website_sale.products" active="True" name="Attributes &amp; Variants filters">
+    <template
+        id="website_sale.products_attributes"
+        inherit_id="website_sale.products"
+        name="Attributes &amp; Variants filters"
+        active="True"
+    >
         <xpath expr="//div[contains(@t-attf-class, 'products_attributes_filters')]" position="inside">
             <div t-if="attributes or all_tags" id="wsale_products_attributes_collapse"
                  class=" position-relative">
@@ -1471,7 +1481,7 @@
     </template>
 
     <template
-        id="products_attributes_collapsible"
+        id="website_sale.products_attributes_collapsible"
         name="Collapsed Attributes &amp; Variants filters"
         inherit_id="website_sale.product_attribute_filters_form"
     >
@@ -1509,7 +1519,7 @@
         </xpath>
     </template>
 
-    <template id="filter_products_price" name="Filter by Prices">
+    <template id="website_sale.filter_products_price" name="Filter by Prices">
         <t t-set="is_disabled" t-value="available_min_price == available_max_price"/>
         <div
             id="o_wsale_price_range_option"
@@ -1568,7 +1578,7 @@
         </div>
     </template>
 
-    <template id="filter_products_tags" name="Filter by Tags" active="True">
+    <template id="website_sale.filter_products_tags" name="Filter by Tags" active="True">
         <div t-if="all_tags" class="accordion-item">
             <div class="accordion-header h6 mb-0">
                 <button class="accordion-button px-0 bg-transparent shadow-none"
@@ -1590,7 +1600,7 @@
         </div>
     </template>
 
-    <template id="filter_products_tags_list">
+    <template id="website_sale.filter_products_tags_list">
         <t t-foreach="all_tags" t-as="tag" class="list-group-item border-0 ps-0 pb-0">
             <div class="form-check mb-1">
                 <input type="checkbox"
@@ -1605,7 +1615,12 @@
         </t>
     </template>
 
-    <template id="products_list_view" inherit_id="website_sale.products" active="False" name="List View (by default)">
+    <template
+        id="website_sale.products_list_view"
+        inherit_id="website_sale.products"
+        name="List View (by default)"
+        active="False"
+    >
         <xpath expr="//div[@id='products_grid']" position="after">
             <!-- Nothing to do, this view is only meant to allow the server -->
             <!-- to know if the list view layout should be used -->
@@ -1614,7 +1629,11 @@
 
     <!-- Enable HTML previews in edition mode. The template is active by default, but can be
          manually disabled for advanced debug if necessary -->
-    <template id="website_sale.editor_previews" name="Enable edit previews" inherit_id="website_sale.products">
+    <template
+        id="website_sale.editor_previews"
+        inherit_id="website_sale.products"
+        name="Enable edit previews"
+    >
         <xpath expr="//div[@id='wrap']" position="before">
             <t t-set="editionPreviews" t-value="true"  groups="website.group_website_designer"/>
         </xpath>

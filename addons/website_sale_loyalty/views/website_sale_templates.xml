@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
+    <template id="website_sale_loyalty.sale_coupon_result" inherit_id="website_sale.coupon_form">
         <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
             <attribute name="placeholder">Gift card or discount code...</attribute>
         </xpath>
         <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
 
-    <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
+    <template
+        id="website_sale_loyalty.modify_code_form"
+        inherit_id="website_sale.total"
+        name="Loyalty, coupon, gift card"
+    >
         <xpath expr="//div[contains(@t-attf-class, 'o_cart_total')]//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
                 <td colspan="3" class="text-center text-xl-end border-0 p-0">
@@ -152,7 +156,7 @@
         </xpath>
     </template>
 
-    <template id="layout" inherit_id="website.layout">
+    <template id="website_sale_loyalty.layout" inherit_id="website.layout">
         <xpath expr="//*[@id='wrapwrap']" position="inside">
             <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
             <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
@@ -169,7 +173,12 @@
         </xpath>
     </template>
 
-    <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
+    <template
+        id="website_sale_loyalty.cart_discount"
+        inherit_id="website_sale.total"
+        name="Show Discount in Subtotal"
+        active="False"
+    >
         <xpath expr="//tr[@name='o_order_total_untaxed']" position="before">
             <tr t-if="website_sale_order and website_sale_order.reward_amount">
             <td class="text-end border-0 text-muted" title="Discounted amount">Discount:</td>
@@ -185,13 +194,17 @@
         </xpath>
     </template>
 
-    <template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
+    <template id="website_sale_loyalty.reduction_coupon_code" inherit_id="website_sale.reduction_code">
         <xpath expr="//t[@t-set='force_coupon']" position="after">
             <t t-set="_placeholder">Discount code or gift card</t>
         </xpath>
     </template>
 
-    <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_product_price">
+    <template
+        id="website_sale_loyalty.cart_summary"
+        inherit_id="website_sale.cart_product_price"
+        name="Payment"
+    >
         <xpath expr="//span" position="attributes">
             <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
@@ -211,20 +224,25 @@
         </xpath>
     </template>
 
-
-    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_lines">
+    <template id="website_sale_loyalty.cart_line_product_no_link" inherit_id="website_sale.cart_lines">
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="before">
             <t t-if="line.is_reward_line" t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
 
-    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary_content">
+    <template
+        id="website_sale_loyalty.cart_summary_inherit_website_gift_card_sale"
+        inherit_id="website_sale.cart_summary_content"
+    >
         <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
             <t t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
 
-    <template id="website_sale_purchased_gift_card" inherit_id="website_sale.confirmation" >
+    <template
+        id="website_sale_loyalty.website_sale_purchased_gift_card"
+        inherit_id="website_sale.confirmation"
+    >
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card"/>
         </xpath>

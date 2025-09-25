@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- /shop/confirmation route -->
-    <template id="confirmation">
+    <template id="website_sale.confirmation">
         <t t-call="website_sale.checkout_layout">
             <t t-set="show_wizard_checkout" t-value="False"/>
             <t t-set="show_mobile_cart_summary" t-value="False"/>
@@ -68,7 +68,7 @@
     </template>
 
     <!-- Called in `website_sale.confirmation`. -->
-    <template id="payment_confirmation_status">
+    <template id="website_sale.payment_confirmation_status">
         <div
             name="order_confirmation"
             class="mt-3"

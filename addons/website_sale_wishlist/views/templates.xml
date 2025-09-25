@@ -43,7 +43,11 @@
         </t>
     </template>
 
-    <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
+    <template
+        id="website_sale_wishlist.product_cart_lines"
+        inherit_id="website_sale.cart_lines"
+        active="True"
+    >
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']/a" position="after">
             <t t-if="line._is_sellable()">
                 <span class="text-300">|</span>
@@ -126,7 +130,7 @@
         </xpath>
     </template>
 
-    <template id="header_wishlist_link" name="Header Wishlist Link">
+    <template id="website_sale_wishlist.header_wishlist_link" name="Header Wishlist Link">
         <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
         <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
         <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
@@ -143,7 +147,7 @@
         </li>
     </template>
 
-    <template id="header_hide_empty_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
+    <template id="website_sale_wishlist.header_hide_empty_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
         <xpath expr="//t[@t-set='show_wishes']" position="after">
             <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
         </xpath>
@@ -152,7 +156,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_mobile" inherit_id="website_sale.template_header_mobile">
+    <template id="website_sale_wishlist.template_header_mobile" inherit_id="website_sale.template_header_mobile">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -162,7 +166,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_default" inherit_id="website_sale.template_header_default">
+    <template id="website_sale_wishlist.template_header_default" inherit_id="website_sale.template_header_default">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -172,7 +176,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_hamburger" inherit_id="website_sale.template_header_hamburger">
+    <template id="website_sale_wishlist.template_header_hamburger" inherit_id="website_sale.template_header_hamburger">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -182,7 +186,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_stretch" inherit_id="website_sale.template_header_stretch">
+    <template id="website_sale_wishlist.template_header_stretch" inherit_id="website_sale.template_header_stretch">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -193,7 +197,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_vertical" inherit_id="website_sale.template_header_vertical">
+    <template id="website_sale_wishlist.template_header_vertical" inherit_id="website_sale.template_header_vertical">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -203,7 +207,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_search" inherit_id="website_sale.template_header_search">
+    <template id="website_sale_wishlist.template_header_search" inherit_id="website_sale.template_header_search">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_text" t-value="True"/>
@@ -214,7 +218,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_one" inherit_id="website_sale.template_header_sales_one">
+    <template id="website_sale_wishlist.template_header_sales_one" inherit_id="website_sale.template_header_sales_one">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -224,7 +228,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_two" inherit_id="website_sale.template_header_sales_two">
+    <template id="website_sale_wishlist.template_header_sales_two" inherit_id="website_sale.template_header_sales_two">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -237,7 +241,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_three" inherit_id="website_sale.template_header_sales_three">
+    <template id="website_sale_wishlist.template_header_sales_three" inherit_id="website_sale.template_header_sales_three">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_text" t-value="True"/>
@@ -249,7 +253,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sales_four" inherit_id="website_sale.template_header_sales_four">
+    <template id="website_sale_wishlist.template_header_sales_four" inherit_id="website_sale.template_header_sales_four">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -259,7 +263,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_sidebar" inherit_id="website_sale.template_header_sidebar">
+    <template id="website_sale_wishlist.template_header_sidebar" inherit_id="website_sale.template_header_sidebar">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -269,7 +273,7 @@
         </xpath>
     </template>
 
-    <template id="template_header_boxed" inherit_id="website_sale.template_header_boxed">
+    <template id="website_sale_wishlist.template_header_boxed" inherit_id="website_sale.template_header_boxed">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
@@ -279,7 +283,7 @@
         </xpath>
     </template>
 
-    <template id="product_wishlist" name="Wishlist Page">
+    <template id="website_sale_wishlist.product_wishlist" name="Wishlist Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>
             <div id="wrap" class="js_sale">

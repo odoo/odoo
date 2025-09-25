@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="wizard_checkout" name="Wizard Checkout">
+    <template id="website_sale.wizard_checkout" name="Wizard Checkout">
         <t t-call="website.step_wizard">
             <t t-set="wizard_step" t-value="website._get_checkout_steps()"/>
         </t>
     </template>
 
     <!-- Called in `website_sale.reduction_code`. -->
-    <template id='coupon_form' name='Coupon form'>
+    <template id="website_sale.coupon_form" name="Coupon form">
         <!-- Checkout context:
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.

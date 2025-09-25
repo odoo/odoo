@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="dynamic_filter_template_product_public_category_default">
+    <template id="website_sale.dynamic_filter_template_product_public_category_default">
         <t t-foreach="records" t-as="category">
             <t t-set="is_parent" t-value="category['id'] == parentCategoryId"/>
             <div
@@ -40,7 +40,7 @@
     </template>
 
     <template
-        id="dynamic_filter_template_product_public_category_clickable_items"
+        id="website_sale.dynamic_filter_template_product_public_category_clickable_items"
         inherit_id="website_sale.dynamic_filter_template_product_public_category_default"
         primary="True"
     >
