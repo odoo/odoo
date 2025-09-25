@@ -728,7 +728,7 @@ export class Rtc extends Record {
                 }
                 for (const [id, info] of Object.entries(payload)) {
                     const session = await this.store.RtcSession.getWhenReady(Number(id));
-                    if (!session || !this.state.channel) {
+                    if (!this.state.channel || session?.eq(this.selfSession)) {
                         return;
                     }
                     // `isRaisingHand` is turned into the Date `raisingHand`
