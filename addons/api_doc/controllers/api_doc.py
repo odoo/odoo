@@ -18,8 +18,8 @@ import odoo
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.models import get_public_method
 from odoo.modules.module_graph import ModuleGraph
-from odoo.service.model import get_public_method
 from odoo.tools import hmac, json_default, lazy_classproperty, py_to_js_locale
 
 logger = logging.getLogger(__name__)
