@@ -537,6 +537,7 @@ export const accountTaxHelpers = {
 
         const manual_tax_amounts = extra_tax_data ? extra_tax_data.manual_tax_amounts || {} : null;
         const extra_tax_data_tax_ids = new Set(Object.keys(manual_tax_amounts || {}));
+        const { sorted_taxes } = this.flatten_taxes_and_sort_them(base_line.tax_ids);
         if (
             extra_tax_data &&
             extra_tax_data.currency_id &&
@@ -544,8 +545,8 @@ export const accountTaxHelpers = {
             are_amounts_equal(base_line.price_unit, extra_tax_data.price_unit) &&
             are_amounts_equal(base_line.discount, extra_tax_data.discount) &&
             are_amounts_equal(base_line.quantity, extra_tax_data.quantity) &&
-            base_line.tax_ids.length === extra_tax_data_tax_ids.size &&
-            base_line.tax_ids
+            sorted_taxes.length === extra_tax_data_tax_ids.size &&
+            sorted_taxes
                 .map((tax) => tax.id.toString())
                 .every((tax_id_str) => extra_tax_data_tax_ids.has(tax_id_str))
         ) {
