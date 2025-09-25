@@ -339,8 +339,10 @@ class IrModuleModule(models.Model):
         return [('state', '=', 'installed')]
 
     def check_external_dependencies(self, module_name, newstate='to install'):
+        manifest = modules.Manifest.for_addon(module_name)
+        if not manifest:
+            return  # unavailable module, there is no point in checking dependencies
         try:
-            manifest = modules.Manifest.for_addon(module_name)
             manifest.check_manifest_dependencies()
         except MissingDependency as e:
             if newstate == 'to install':
