@@ -1,28 +1,12 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { expect, test } from "@odoo/hoot";
-import { observe, queryFirst, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
+import { queryFirst, queryOne, scroll, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
-
-async function waitForReposition(target) {
-    await Promise.race([
-        new Promise((resolve) => {
-            const disconnect = observe(target, (mutations) => {
-                for (const mutation of mutations) {
-                    if (mutation.type === "attributes" && mutation.attributeName === "style") {
-                        disconnect();
-                        resolve();
-                    }
-                }
-            });
-        }),
-        new Promise((_, reject) => setTimeout(() => reject("Timeout waiting for reposition"), 300)),
-    ]);
-}
 
 test("Popovers scroll with iframe", async () => {
     // Top margin to have room to scroll while keeping the popovers visible
@@ -42,9 +26,10 @@ test("Popovers scroll with iframe", async () => {
 
     const expectScroll = async (popoverSelector) => {
         const popover = await waitFor(popoverSelector);
-        const previousTop = parseFloat(getComputedStyle(popover).top);
-        // Wait for the initial positioning
-        await waitForReposition(popover);
+        const previousTop = parseFloat(popover.style.top);
+        popover.style.top = "0px";
+        // Wait for the initial call of `reposition`
+        await waitUntil(() => popover.style.top !== "0px", { timeout: 500 });
 
         const delta = 100;
         await scroll(body, { y: delta }, { scrollable: false, force: true });
