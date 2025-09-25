@@ -93,6 +93,22 @@ class L10nInEwaybill(models.Model):
             return self.picking_id.picking_type_id.code == 'incoming'
         return super()._is_incoming()
 
+    def _log_product_info_warning(self):
+        if self.picking_id:
+            if any(
+                len(l.product_id.name) > 100
+                or len(l.description_picking) > 100
+                for l in self.move_ids
+            ):
+                self.message_post(
+                    body=self.env._(
+                        "Some product name(s)/description(s) exceeded the 100-character limit "
+                        "required for the e-waybill and were automatically trimmed."
+                    )
+                )
+            return
+        super()._log_product_info_warning()
+
     @api.depends('partner_bill_from_id', 'partner_bill_to_id')
     def _compute_fiscal_position(self):
         for ewaybill in self:
@@ -220,9 +236,9 @@ class L10nInEwaybill(models.Model):
             AccountMove = self.env['account.move']
             product = line.product_id
             line_details = {
-                'productName': product.name,
+                'productName': product.name[:100],
                 'hsnCode': AccountMove._l10n_in_extract_digits(product.l10n_in_hsn_code),
-                'productDesc': product.name,
+                'productDesc': line.description_picking[:100],
                 'quantity': line.quantity,
                 'qtyUnit': (
                     line.product_uom.l10n_in_code

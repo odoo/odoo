@@ -303,6 +303,17 @@ class AccountMove(models.Model):
             'company_id': self.company_id.id,
         })
         self.l10n_in_edi_status = 'sent'
+        if any(
+            l.name and len(l.name.replace("\n", "")) > 300
+            for l in self.invoice_line_ids
+            if l.display_type == 'product' and not l._l10n_in_is_global_discount()
+        ):
+            self.message_post(
+                body=self.env._(
+                    "Some invoice line descriptions exceeded the 300-character "
+                    "limit required for e-invoicing and were automatically trimmed."
+                )
+            )
         message = []
         for partner in partners:
             if partner_validation := self._l10n_in_edi_optional_field_validation(partner):
@@ -505,7 +516,7 @@ class AccountMove(models.Model):
             'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
         if line.name:
-            line_details['PrdDesc'] = line.name.replace("\n", "")
+            line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
         return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, json_payload):
