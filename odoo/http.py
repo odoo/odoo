@@ -146,6 +146,7 @@ import re
 import threading
 import time
 import traceback
+import typing
 import warnings
 import weakref
 from abc import ABC, abstractmethod
@@ -201,7 +202,7 @@ import odoo.addons
 from .exceptions import UserError, AccessError, AccessDenied
 from .modules import module as module_manager
 from .modules.registry import Registry
-from .service import security, model as service_model
+from .service import model as service_model
 from .service.server import thread_local
 from .tools import (config, consteq, file_path, get_lang, json_default,
                     parse_version, profiler, unique, exception_to_unicode)
@@ -1011,7 +1012,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             self.delete(session)
             session.sid = self.generate_key()
         if session.uid and env:
-            session.session_token = security.compute_session_token(session, env)
+            session._update_session_token(env)
         session.should_rotate = False
         session['create_time'] = time.time()
         self.save(session)
@@ -1305,6 +1306,76 @@ class Session(collections.abc.MutableMapping):
 
     def _delete_old_sessions(self):
         root.session_store.delete_old_sessions(self)
+
+    def _update_session_token(self, env: odoo.api.Environment | None = None):
+        """
+        Compute the session token of the current user (determined using
+        ``session['uid']``) and save it in the session.
+
+        :param env: An environment to access ``res.users``. It uses the
+            environment attached to the current request by default.
+        """
+        if env is None:
+            env = request.env
+        user = env['res.users'].browse(self['uid'])
+        self['session_token'] = user._compute_session_token(self.sid)
+
+    def _check(
+        self,
+        request: 'Request | None' = None,
+        env: odoo.api.Environment | typing.Literal[False] | None = None,
+    ):
+        """
+        Verify that the session is not expired, and that the token saved
+        in the session matches the session token computed for the user.
+
+        The session token changes when some sensitive informations about
+        the user changed: active, login, password, ...
+
+        On success, it logs the request in the ``res.device.log`` and
+        returns.
+
+        On failure, it logs the session out (but keep the database) and
+        raises a :class:`SessionExpiredException` with an appropriate
+        message. See also :meth:`logout`.
+
+        :param request: optional, the request used to log the device. It
+            uses the current request (if any) by default. Set this
+            parameter to another falsy value than ``None`` to skip
+            device logging.
+        :param env: required, an environment to access ``res.users``. It
+            uses the environment attached to ``request`` (if set or
+            found) by default.
+        :raises SessionExpiredException: when the session is expired.
+        """
+        if request is None and env is None:
+            request = _request_stack.top
+        if env is None and request:
+            env = request.env
+        self._delete_old_sessions()
+        # Make sure we don't use a deleted session that can be saved again
+        if self.get('deletion_time', float('+inf')) <= time.time():
+            self.logout(keep_db=True)
+            e = "session is too old"
+            raise SessionExpiredException(e)
+        user = env['res.users'].browse(self['uid'])
+        expected = user._compute_session_token(self.sid)
+        if expected:
+            if consteq(expected, self['session_token']):
+                if request:
+                    env['res.device.log']._update_device(request)
+                return
+            # If the session token is not valid, we check if the legacy
+            # version works and convert the session token to the new one
+            legacy_expected = user._legacy_session_token_hash_compute(self.sid)
+            if legacy_expected and consteq(legacy_expected, self['session_token']):
+                self['session_token'] = expected
+                if request:
+                    env['res.device.log']._update_device(request)
+                return
+        self.logout(keep_db=True)
+        e = "session token mismatch; likely because the user credentials changed"
+        raise SessionExpiredException(e)
 
 
 # =========================================================
