@@ -1330,6 +1330,7 @@ export class StoreMany extends StoreRelation {
             })
         );
         this.mode = mode;
+        this.sort = sort;
     }
     _copy_with_records(target, record) {
         const res = super._copy_with_records(target, record);
