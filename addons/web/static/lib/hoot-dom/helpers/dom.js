@@ -135,6 +135,14 @@ const {
  */
 function applyFilters(filters, nodes) {
     for (const filter of filters) {
+        if (filter.isCollectionFilter) { 
+            const resultCollection = filter(nodes);
+            nodes = resultCollection;
+            if (nodes.length === 0) {
+                break;
+            }
+            continue;
+        }
         const filteredGroupNodes = [];
         for (let i = 0; i < nodes.length; i++) {
             const result = matchFilter(filter, nodes, i);
@@ -1105,7 +1113,17 @@ customPseudoClasses
     .set("shadow", () => getNodeShadowRoot)
     .set("value", makePatternBasedPseudoClass("value", getNodeValue))
     .set("viewPort", () => isNodeInViewPort)
-    .set("visible", () => isNodeVisible);
+    .set("visible", () => isNodeVisible)
+    .set("count", (expectedCount) => {
+        const countFilter = function checkCountAndReturnCollection(nodes) {
+            if (nodes.length === $parseInt(expectedCount)) {
+                return nodes;
+            }
+            return [];
+        };
+        countFilter.isCollectionFilter = true;
+        return countFilter;
+    });
 
 const rCustomPseudoClass = compilePseudoClassRegex();
 
