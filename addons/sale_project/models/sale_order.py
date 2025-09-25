@@ -127,7 +127,7 @@ class SaleOrder(models.Model):
             if not is_project_manager:
                 projects = projects._filtered_access('read')
             order.project_ids = projects
-            order.project_count = len(projects)
+            order.project_count = len(projects.filtered('active'))
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
@@ -202,7 +202,7 @@ class SaleOrder(models.Model):
         default_sale_line = next((
             sol for sol in sorted_line if sol.product_id.type == 'service'
         ), self.env['sale.order.line'])
-        project_ids = self.with_context(active_test=False).project_ids
+        project_ids = self.project_ids
         partner = self.partner_shipping_id or self.partner_id
         if len(project_ids) == 1:
             action = self.env['ir.actions.actions'].with_context(
@@ -223,7 +223,6 @@ class SaleOrder(models.Model):
                 '|',
                 ('sale_order_id', '=', self.id),
                 ('id', 'in', project_ids.ids),
-                ('active', 'in', [True, False]),
             ]
             action['context'] = {
                 **self.env.context,
