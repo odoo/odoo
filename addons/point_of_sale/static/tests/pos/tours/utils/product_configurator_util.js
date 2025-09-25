@@ -84,3 +84,30 @@ export function isAddEnabled() {
         },
     ];
 }
+
+export function checkImageVariantVisible() {
+    return [
+        {
+            content: `Check that the image is displayed`,
+            trigger: `.configurator_color.rounded-3`,
+        },
+    ];
+}
+
+export function checkImageVariantTextVisible(variantName) {
+    return [
+        {
+            content: `Check that the variant is visible`,
+            trigger: `.text-center.mt-2.small span:contains("${variantName}")`,
+        },
+    ];
+}
+
+export function checkImagePriceExtraVisible(price) {
+    return [
+        {
+            content: `Check that the extra price is displayed`,
+            trigger: `.price_extra.px-2.py-1.rounded-pill.text-bg-info:contains("${price}")`,
+        },
+    ];
+}

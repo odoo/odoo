@@ -42,6 +42,10 @@ export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
 }
 
+export class ImageProductAttribute extends BaseProductAttribute {
+    static template = "point_of_sale.ImageProductAttribute";
+}
+
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
 
@@ -70,6 +74,7 @@ export class ProductConfiguratorPopup extends Component {
         PillsProductAttribute,
         SelectProductAttribute,
         ColorProductAttribute,
+        ImageProductAttribute,
         MultiProductAttribute,
         Dialog,
     };
