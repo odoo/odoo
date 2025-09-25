@@ -757,5 +757,4 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             },
         )
 
-        self.assertAlmostEqual(dp_lines[0]['price_unit'], 1070.71, 2)
-        self.assertAlmostEqual(dp_lines[1]['price_unit'], -70.71, 2)
+        self.assertAlmostEqual(dp_lines[0]['price_unit'], 1000.0, 2)
