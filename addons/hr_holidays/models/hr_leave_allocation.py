@@ -7,8 +7,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.date_intervals import HOURS_PER_DAY
+from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
 
@@ -29,9 +29,13 @@ class HrLeaveAllocation(models.Model):
         return self.env['hr.leave.type'].search(domain, limit=1)
 
     def _domain_holiday_status_id(self):
+        domain = [
+            ('company_id', 'in', self.env.companies.ids + [False]),
+            ('requires_allocation', '=', True),
+        ]
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            return [('requires_allocation', '=', True)]
-        return [('employee_requests', '=', True)]
+            return domain
+        return expression.AND([domain, [('employee_requests', '=', True)]])
 
     def _domain_employee_id(self):
         domain = [('company_id', 'in', self.env.companies.ids)]
