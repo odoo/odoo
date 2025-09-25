@@ -178,7 +178,9 @@ export const tourService = {
             tour.steps.forEach((step) => validateStep(step));
 
             if (tourConfig.mode === "auto") {
-                await loadBundle("web_tour.automatic", { css: false });
+                if (!odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_automatic")) {
+                    await loadBundle("web_tour.automatic", { css: false });
+                }
                 const { TourAutomatic } = odoo.loader.modules.get(
                     "@web_tour/js/tour_automatic/tour_automatic"
                 );
