@@ -1,12 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
 import {
     Component,
+    EventBus,
     onMounted,
     onWillStart,
+    reactive,
     useExternalListener,
     useRef,
     useState,
@@ -14,6 +16,7 @@ import {
 } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { useSetupAction } from "@web/search/action_hook";
 import { formView } from "../form/form_view";
 import { getDefaultConfig } from "../view";
 import { FormViewDialog } from "../view_dialogs/form_view_dialog";
@@ -29,20 +32,47 @@ const DEFAULT_QUICK_CREATE_FIELDS = {
     display_name: { string: "Display name", type: "char" },
 };
 
-const ACTION_SELECTORS = [
-    ".o_kanban_quick_add",
-    ".o_kanban_load_more button",
-    ".o-kanban-button-new",
-];
+export class QuickCreateState {
+    constructor(view) {
+        this.view = view;
+        this.isOpen = false;
+        this.id = null;
+        this.bus = new EventBus();
+        return reactive(this);
+    }
+
+    async openQuickCreate(id) {
+        // constraint: only one quick create open at a time, so notify that we will open
+        // such that if there's one quick create already open, it can close itself first
+        const canProceed = await this._willOpenQuickCreate(id);
+        if (!canProceed) {
+            return false;
+        }
+        this.isOpen = true;
+        this.id = id;
+        return true;
+    }
+    async closeQuickCreate() {
+        this.isOpen = false;
+        this.id = null;
+    }
+
+    async _willOpenQuickCreate(id) {
+        const proms = [];
+        this.bus.trigger("WILL-OPEN-QUICK-CREATE", { id, proms });
+        const res = await Promise.all(proms);
+        return !res.includes(false);
+    }
+}
 
 export class KanbanQuickCreateController extends Component {
     static props = {
         Model: Function,
         Renderer: Function,
         Compiler: Function,
+        quickCreateState: QuickCreateState,
         resModel: String,
         onValidate: Function,
-        onCancel: Function,
         fields: { type: Object },
         context: { type: Object },
         archInfo: { type: Object },
@@ -94,45 +124,81 @@ export class KanbanQuickCreateController extends Component {
         useExternalListener(
             window,
             "click",
-            (/** @type {MouseEvent} */ ev) => {
+            async (/** @type {MouseEvent} */ ev) => {
                 if (this.uiActiveElement !== this.uiService.activeElement) {
                     // this component isn't in the current active element -> do nothing
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                // accounts for clicking on datetime picker and legacy autocomplete
-                const gotClickedInside =
-                    target.closest(".o_datetime_picker") ||
-                    target.closest(".ui-autocomplete") ||
-                    this.rootRef.el.contains(target);
-                if (!gotClickedInside) {
-                    let force = false;
-                    for (const selector of ACTION_SELECTORS) {
-                        const closestEl = target.closest(selector);
-                        if (closestEl) {
-                            force = true;
-                            break;
+                if (!this.rootRef.el.contains(target)) {
+                    const isSameOverlay =
+                        this.rootRef.el.closest(".o-overlay-item") ===
+                        target.closest(".o-overlay-item");
+                    if (isSameOverlay) {
+                        if (!target.closest(".o_kanban_quick_add,.o-kanban-button-new")) {
+                            await this.validate("close");
                         }
                     }
-                    this.cancel(force);
                 }
                 this.mousedownTarget = null;
             },
             { capture: true }
         );
 
+        this._validateProm = null;
+
+        // Validate when requested by the state
+        useBus(this.props.quickCreateState.bus, "WILL-OPEN-QUICK-CREATE", (ev) => {
+            const mode = ev.detail.id === this.props.quickCreateState.id ? "add" : "close";
+            ev.detail.proms.push(this.validate(mode));
+        });
+
+        // Validate when leaving the view
+        useSetupAction({
+            beforeLeave: () => this.validate("close"),
+        });
+
         // Key Navigation
         useHotkey("enter", () => this.validate("add"), { bypassEditableProtection: true });
         useHotkey("escape", () => this.cancel(true));
     }
 
-    async validate(mode) {
-        let resId = undefined;
-        if (this.state.disabled) {
-            return;
+    validate(mode) {
+        if (!this._validateProm) {
+            this._validateProm = this._validate(mode);
+            this._validateProm.then(() => (this._validateProm = null));
+        }
+        return this._validateProm;
+    }
+
+    /**
+     * @param {"add"|"edit"|"close"} mode
+     * @returns boolean
+     */
+    async _validate(mode) {
+        if (mode === "close" && !(await this.model.root.isDirty())) {
+            this.props.quickCreateState.closeQuickCreate();
+            return true;
         }
         this.state.disabled = true;
+        const resId = await this.save();
+        if (resId) {
+            this.props.onValidate(resId, mode);
+            if (mode === "add") {
+                await this.model.load({ resId: false });
+            } else {
+                this.props.quickCreateState.closeQuickCreate();
+            }
+            this.state.disabled = false;
+            return true;
+        } else {
+            this.state.disabled = false;
+            return false;
+        }
+    }
 
+    async save() {
+        let resId = this.model.root.resId;
         const keys = Object.keys(this.model.root.activeFields);
         if (keys.length === 1 && keys[0] === "display_name") {
             const isValid = await this.model.root.checkValidity(); // needed to put the class o_field_invalid in the field
@@ -149,10 +215,9 @@ export class KanbanQuickCreateController extends Component {
                 } catch (e) {
                     this.showFormDialogInError(e);
                 }
+                await this.model.root.discard();
             } else {
-                this.model.notification.add(_t("Invalid Display Name"), {
-                    type: "danger",
-                });
+                this.model.notification.add(_t("Invalid Display Name"), { type: "danger" });
             }
         } else {
             await this.model.root.save({
@@ -161,16 +226,7 @@ export class KanbanQuickCreateController extends Component {
             });
             resId = this.model.root.resId;
         }
-
-        if (resId) {
-            this.props.onValidate(resId, mode);
-            if (mode === "add") {
-                await this.model.load({ resId: false });
-                this.state.disabled = false;
-            }
-        } else {
-            this.state.disabled = false;
-        }
+        return resId;
     }
 
     async cancel(force) {
@@ -178,7 +234,7 @@ export class KanbanQuickCreateController extends Component {
             return;
         }
         if (force || !(await this.model.root.isDirty())) {
-            this.props.onCancel();
+            this.props.quickCreateState.closeQuickCreate();
         }
     }
 
@@ -211,10 +267,10 @@ export class KanbanRecordQuickCreate extends Component {
     static components = { KanbanQuickCreateController };
     static template = "web.KanbanRecordQuickCreate";
     static props = {
-        quickCreateView: { type: [String, { value: null }], optional: 1 },
+        quickCreateState: QuickCreateState,
         onValidate: Function,
-        onCancel: Function,
-        group: Object,
+        resModel: String,
+        context: Object,
     };
 
     setup() {
@@ -237,10 +293,10 @@ export class KanbanRecordQuickCreate extends Component {
         let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
         let quickCreateRelatedModels = {};
 
-        if (props.quickCreateView) {
+        if (props.quickCreateState.view) {
             const { fields, relatedModels, views } = await this.viewService.loadViews({
-                context: { ...props.context, form_view_ref: props.quickCreateView },
-                resModel: props.group.resModel,
+                context: { ...props.context, form_view_ref: props.quickCreateState.view },
+                resModel: props.resModel,
                 views: [[false, "form"]],
             });
             quickCreateFields = { fields: fields };
@@ -249,23 +305,23 @@ export class KanbanRecordQuickCreate extends Component {
         }
         const models = {
             ...quickCreateRelatedModels,
-            [props.group.resModel]: quickCreateFields,
+            [props.resModel]: quickCreateFields,
         };
         const archInfo = new formView.ArchParser().parse(
             parseXML(quickCreateForm.arch),
             models,
-            props.group.resModel
+            props.resModel
         );
         this.quickCreateProps = {
             Model: formView.Model,
             Renderer: formView.Renderer,
             Compiler: formView.Compiler,
-            resModel: props.group.resModel,
+            resModel: props.resModel,
             onValidate: props.onValidate,
-            onCancel: props.onCancel,
             fields: quickCreateFields.fields,
-            context: props.group.context,
+            context: props.context,
             archInfo,
+            quickCreateState: props.quickCreateState,
         };
     }
 }

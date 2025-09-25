@@ -1179,8 +1179,9 @@ test("quick create record: cancel and validate without using the buttons", async
 
     // click to add and element and click outside, should cancel the quick creation
     await quickCreateKanbanRecord();
-    await contains(".o_kanban_group:first-child .o_kanban_record:last-of-type").click();
+    await contains(".o_control_panel").click();
     expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
     // click to input and drag the mouse outside, should not cancel the quick creation
     await quickCreateKanbanRecord();
@@ -1191,23 +1192,27 @@ test("quick create record: cancel and validate without using the buttons", async
     expect(".o_kanban_quick_create").toHaveCount(1, {
         message: "the quick create should not have been destroyed after clicking outside",
     });
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
-    // click to really add an element
-    await quickCreateKanbanRecord();
+    // edit and confirm by pressing ENTER
     await editKanbanRecordQuickCreateInput("foo", "new partner");
-
-    // clicking outside should no longer destroy the quick create as it is dirty
-    await contains(".o_kanban_group:first-child .o_kanban_record:last-of-type").click();
-    expect(".o_kanban_quick_create").toHaveCount(1, {
-        message: "the quick create should not have been destroyed",
-    });
-
-    // confirm by pressing ENTER
     await press("Enter");
     await animationFrame();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
     expect(getKanbanRecordTexts(0)).toEqual(["new partner", "blip"]);
+    expect(".o_kanban_quick_create").toHaveCount(1, {
+        message: "the quick create should not have been reopened",
+    });
+
+    // clicking outside should no longer destroy the quick create as it is dirty, but save it
+    await editKanbanRecordQuickCreateInput("foo", "new partner 2");
+    await contains(".o_control_panel").click();
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(6);
+    expect(getKanbanRecordTexts(0)).toEqual(["new partner 2", "new partner", "blip"]);
+    expect(".o_kanban_quick_create").toHaveCount(0, {
+        message: "the quick create should now be closed",
+    });
 });
 
 test("quick create record: validate with ENTER", async () => {
@@ -1758,19 +1763,11 @@ test("quick create record: cancel when dirty", async () => {
 
     await editKanbanRecordQuickCreateInput("display_name", "some value");
 
-    // click outside: should not remove the quick create
+    // click outside: should create the record
     await contains(".o_kanban_group:first-child .o_kanban_record").click();
-
-    expect(".o_kanban_quick_create").toHaveCount(1, {
-        message: "the quick create should not have been destroyed",
-    });
-
-    // press ESC: should remove the quick create
-    await press("Escape");
-    await animationFrame();
-
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_quick_create").toHaveCount(0, {
-        message: "quick create widget should have been removed",
+        message: "the quick create should not have been destroyed",
     });
 
     // click to reopen quick create and edit it
@@ -1788,9 +1785,7 @@ test("quick create record: cancel when dirty", async () => {
     expect(".o_kanban_quick_create").toHaveCount(0, {
         message: "the quick create should be destroyed when the user discard quick creation",
     });
-    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
-        message: "first column should still contain one record",
-    });
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 });
 
 test("quick create record and edit in grouped mode", async () => {
@@ -3077,9 +3072,6 @@ test("quick create record and click outside (no dirty input)", async () => {
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
-        createRecord: () => {
-            expect.step("create record");
-        },
     });
 
     expect(".o_kanban_quick_create").toHaveCount(0);
@@ -3111,13 +3103,6 @@ test("quick create record and click outside (no dirty input)", async () => {
 
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_group:nth-child(1) .o_kanban_quick_create").toHaveCount(1);
-
-    expect.verifySteps([]);
-
-    await createKanbanRecord();
-
-    expect.verifySteps(["create record"]);
-    expect(".o_kanban_quick_create").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -3134,11 +3119,9 @@ test("quick create record and click outside (with dirty input)", async () => {
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
-        createRecord: () => {
-            expect.step("create record");
-        },
     });
 
+    expect(".o_kanban_record").toHaveCount(3);
     expect(".o_kanban_quick_create").toHaveCount(0);
 
     await quickCreateKanbanRecord();
@@ -3152,9 +3135,8 @@ test("quick create record and click outside (with dirty input)", async () => {
 
     await contains(".o_control_panel").click();
 
-    expect(".o_kanban_quick_create").toHaveCount(1);
-    expect(".o_kanban_group:nth-child(1) .o_kanban_quick_create").toHaveCount(1);
-    expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("ABC");
+    expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_record").toHaveCount(4);
 
     await quickCreateKanbanRecord(1);
 
@@ -3162,28 +3144,23 @@ test("quick create record and click outside (with dirty input)", async () => {
     expect(".o_kanban_group:nth-child(2) .o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("");
 
-    await editKanbanRecordQuickCreateInput("display_name", "ABC");
+    await editKanbanRecordQuickCreateInput("display_name", "DEF");
 
-    expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("ABC");
+    expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("DEF");
 
     await contains(".o_kanban_load_more button").click();
 
     expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_record").toHaveCount(6); // 4 + 1 created record + 1 "load more" record
 
     await quickCreateKanbanRecord();
 
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_group:nth-child(1) .o_kanban_quick_create").toHaveCount(1);
 
-    await editKanbanRecordQuickCreateInput("display_name", "ABC");
+    await editKanbanRecordQuickCreateInput("display_name", "GHI");
 
-    expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("ABC");
-    expect.verifySteps([]);
-
-    await createKanbanRecord();
-
-    expect.verifySteps(["create record"]);
-    expect(".o_kanban_quick_create").toHaveCount(0);
+    expect(".o_kanban_quick_create [name=display_name] input").toHaveValue("GHI");
 });
 
 test("quick create record and click on 'Load more'", async () => {
@@ -3328,4 +3305,414 @@ test("grouped kanban with quick_create attrs set to false", async () => {
 
     expect(".o_kanban_quick_create").toHaveCount(0);
     expect.verifySteps(["create record"]);
+});
+
+test("quick create record and leave before validating (no quick create view)", async () => {
+    Partner._views.list = `<list><field name="foo"/></list>`;
+    Partner._views.kanban = `
+        <kanban>
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+
+    onRpc("name_create", ({ args }) => {
+        expect.step("name_create");
+        expect(args[0]).toBe("test");
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    await quickCreateKanbanRecord(0);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    expect.verifySteps([]);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    });
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect.verifySteps(["name_create"]);
+});
+
+test("quick create record and leave before validating (with quick create view)", async () => {
+    Partner._views["form,quick_create_ref"] = `<form><field name="foo"/></form>`;
+    Partner._views.list = `<list><field name="foo"/></list>`;
+    Partner._views.kanban = `
+        <kanban quick_create_view="quick_create_ref">
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual({ foo: "test" });
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(0);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    expect.verifySteps([]);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    });
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect.verifySteps(["web_save"]);
+});
+
+test("quick create record and leave before validating (not dirty)", async () => {
+    Partner._views["form,quick_create_ref"] = `<form><field name="foo"/></form>`;
+    Partner._views.list = `<list><field name="foo"/></list>`;
+    Partner._views.kanban = `
+        <kanban quick_create_view="quick_create_ref">
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(0);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    });
+    expect(".o_list_view").toHaveCount(1); // kanban has been left
+    expect(".o_data_row").toHaveCount(4); // no record created
+});
+
+test("quick create record and leave before validating (dirty and invalid)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+    Partner._views.list = `<list><field name="foo"/></list>`;
+    Partner._views.kanban = `
+        <kanban quick_create_view="quick_create_ref">
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(0);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    expect.verifySteps([]);
+
+    getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(0);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create [name=date]").toHaveClass("o_field_invalid");
+});
+
+test("click on New while quick create is open (in first column)", async () => {
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await createKanbanRecord();
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    await createKanbanRecord();
+    expect(".o_kanban_record").toHaveCount(5);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create input").toHaveValue("");
+});
+
+test("click on New while quick create is open (first column, quick create view)", async () => {
+    Partner._views["form,form_view_ref"] = `<form><field name="foo"/></form>`;
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="form_view_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await createKanbanRecord();
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await createKanbanRecord();
+    expect(".o_kanban_record").toHaveCount(5);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create input").toHaveValue("");
+});
+
+test("click on New while quick create is open (not in first column)", async () => {
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    await createKanbanRecord();
+    expect(".o_kanban_record").toHaveCount(5);
+    expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create input").toHaveValue("");
+});
+
+test("click on New while quick create is open (invalid)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await createKanbanRecord();
+    expect(".o_kanban_record").toHaveCount(4);
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create [name=foo] input").toHaveValue("test");
+    expect(".o_kanban_quick_create [name=date]").toHaveClass("o_field_invalid");
+});
+
+test("click on '+' while quick create is open (in same column)", async () => {
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_record").toHaveCount(5);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create input").toHaveValue("");
+});
+
+test("click on '+' while quick create is open (in another column)", async () => {
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    await quickCreateKanbanRecord(2);
+    expect(".o_kanban_record").toHaveCount(5);
+    expect(".o_kanban_group:eq(2) .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create input").toHaveValue("");
+});
+
+test("click on '+' while quick create is open (invalid)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await quickCreateKanbanRecord(2);
+    expect(".o_kanban_record").toHaveCount(4);
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create [name=foo] input").toHaveValue("test");
+    expect(".o_kanban_quick_create [name=date]").toHaveClass("o_field_invalid");
+});
+
+test("click on '+' while quick create is open (not dirty)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(4);
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await quickCreateKanbanRecord(2);
+    expect(".o_kanban_record").toHaveCount(4);
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_group:eq(2) .o_kanban_quick_create").toHaveCount(1);
 });

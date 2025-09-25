@@ -29,12 +29,12 @@
                             progressBarState="props.progressBarState"
                         />
                         <t t-if="!group.isFolded">
-                            <t t-if="group.id === props.quickCreateState.groupId">
+                            <t t-if="group.id === props.quickCreateState.id">
                                 <KanbanRecordQuickCreate
-                                    group="group"
-                                    onCancel="force => this.cancelQuickCreate(force)"
+                                    quickCreateState="props.quickCreateState"
                                     onValidate="(record, mode) => this.validateQuickCreate(record, mode, group)"
-                                    quickCreateView="props.quickCreateState.view"
+                                    resModel="group.resModel"
+                                    context="group.context"
                                 />
                             </t>
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
