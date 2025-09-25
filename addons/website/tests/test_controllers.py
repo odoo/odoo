@@ -8,6 +8,7 @@ from unittest.mock import patch, Mock
 from odoo import tests
 from odoo.tools.misc import mute_logger, submap
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tests.tagged('post_install', '-at_install')
@@ -193,3 +194,36 @@ class TestControllers(tests.HttpCase):
         res = self.url_open('/website/action/my_test_action')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
+    def test_07_get_alt_images(self):
+        test_view = self.env["ir.ui.view"].create({
+            "name": "Image Template Test View",
+            "type": "qweb",
+            "arch_db": """
+                <template>
+                    <div>
+                        <img t-att-src="dynamic_source1" />
+                        <img t-att-src="dynamic_source2" alt="Dynamic img" />
+                        <img t-attf-src="/path/{{variable}}" />
+                        <img src="/static/image1.jpg" alt="Static 1" />
+                        <img src="/static/image2.jpg" alt="Static 2" role="presentation" />
+                        <img src="/static/image3.png" />
+                        <img src="/static/image4.png" role="presentation" />
+                    </div>
+                </template>
+            """,
+        })
+        models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
+
+        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+            result = Website().get_alt_images(models)
+            parsed_result = json.loads(result)
+
+            expected_srcs = ["/static/image1.jpg", "/static/image3.png", "/static/image4.png"]
+            actual_srcs = [img["src"] for img in parsed_result]
+
+            self.assertEqual(
+                expected_srcs,
+                actual_srcs,
+                "XPath should filter out dynamic images, include only static",
+            )
