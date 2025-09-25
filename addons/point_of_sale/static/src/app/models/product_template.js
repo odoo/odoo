@@ -254,21 +254,6 @@ export class ProductTemplate extends Base {
         );
     }
 
-    get searchString() {
-        const fields = ["display_name", "default_code"];
-        return fields
-            .map((field) => this[field] || "")
-            .filter(Boolean)
-            .join(" ");
-    }
-
-    exactMatch(searchWord) {
-        const variantMatch = this.product_variant_ids.some(
-            (variant) => variant.barcode && variant.barcode.toLowerCase() == searchWord
-        );
-        return variantMatch || (this.barcode && this.barcode.toLowerCase() === searchWord);
-    }
-
     _isArchivedCombination(attributeValueIds) {
         if (!this._archived_combinations) {
             return false;
