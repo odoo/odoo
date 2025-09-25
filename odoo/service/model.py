@@ -7,10 +7,9 @@ from functools import partial
 from odoo import api, http
 from odoo.exceptions import (
     AccessDenied,
-    AccessError,
     UserError,
 )
-from odoo.models import BaseModel
+from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.server import thread_local
 from odoo.tools import lazy
@@ -28,32 +27,6 @@ class Params:
         params = [repr(arg) for arg in self.args]
         params.extend(f"{key}={value!r}" for key, value in sorted(self.kwargs.items()))
         return ', '.join(params)
-
-
-def get_public_method(model: BaseModel, name: str):
-    """ Get the public unbound method from a model.
-
-    When the method does not exist or is inaccessible, raise appropriate errors.
-    Accessible methods are public (in sense that python defined it:
-    not prefixed with "_") and are not decorated with `@api.private`.
-    """
-    assert isinstance(model, BaseModel)
-    e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
-    if name.startswith('_'):
-        raise AccessError(e)
-
-    cls = type(model)
-    method = getattr(cls, name, None)
-    if not callable(method):
-        raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
-
-    for mro_cls in cls.mro():
-        if not (cla_method := getattr(mro_cls, name, None)):
-            continue
-        if getattr(cla_method, '_api_private', False):
-            raise AccessError(e)
-
-    return method
 
 
 def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
