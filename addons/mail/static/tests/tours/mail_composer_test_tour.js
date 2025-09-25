@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { contains, dragenterFiles, dropFiles, inputFiles } from "@web/../tests/utils";
+import { dragenterFiles, dropFiles, inputFiles } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -11,10 +11,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
     steps: () => [
         {
             content: "Wait for the chatter to be fully loaded",
-            trigger: ".o-mail-Chatter",
-            async run() {
-                await contains(".o-mail-Message", { count: 1 });
-            },
+            trigger: ".o-mail-Chatter .o-mail-Message:count(1)",
         },
         {
             content: "Click on Send Message",

@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
     steps: () => [
@@ -31,13 +30,8 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             run: "fill @",
         },
         {
-            trigger: ".o-mail-DiscussCommand",
-            async run() {
-                await contains(".fa-hashtag", {
-                    parent: [".o-mail-DiscussCommand", { text: "Test channel" }],
-                });
-                await contains(".fa-user", { count: 0 });
-            },
+            trigger:
+                ".o-mail-DiscussCommand:not(:has(.fa-user)):has(.fa-hashtag):contains(/^Test channel$/)",
         },
     ],
 });
