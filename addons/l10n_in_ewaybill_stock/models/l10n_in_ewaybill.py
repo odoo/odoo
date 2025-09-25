@@ -460,6 +460,17 @@ class Ewaybill(models.Model):
         }
         self._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
         self._write_successfully_response(response_values)
+        if any(
+            len(l.product_id.name) > 100
+            or len(l.description_picking) > 100
+            for l in self.move_ids
+        ):
+            self.message_post(
+                body=_(
+                    "Some product name(s)/description(s) exceeded the 100-character limit "
+                    "required for the e-waybill and were automatically trimmed."
+                )
+            )
         self._cr.commit()
 
     @api.model
@@ -525,9 +536,9 @@ class Ewaybill(models.Model):
         AccountEDI = self.env['account.edi.format']
         product = line.product_id
         line_details = {
-            "productName": product.name,
+            "productName": product.name[:100],
             "hsnCode": AccountEDI._l10n_in_edi_extract_digits(product.l10n_in_hsn_code),
-            "productDesc": product.name,
+            "productDesc": line.description_picking[:100],
             "quantity": line.quantity,
             "qtyUnit": line.product_uom.l10n_in_code and line.product_uom.l10n_in_code.split("-")[
                 0] or "OTH",
