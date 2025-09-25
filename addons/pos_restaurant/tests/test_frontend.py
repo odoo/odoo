@@ -611,6 +611,10 @@ class TestFrontend(TestFrontendCommon):
             'resource_calendar_id': resource_calendar
         })
         self.start_pos_tour('test_preset_timing_restaurant')
+        self.preset_eat_in.write({
+            'use_guest': True,
+        })
+        self.start_pos_tour('test_guest_count_bank_payment')
 
     def test_combo_preparation_receipt_layout(self):
         setup_product_combo_items(self)
