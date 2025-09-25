@@ -18,9 +18,8 @@ from odoo.exceptions import (
 )
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
+from odoo.server import thread_local
 from odoo.tools import lazy
-
-from .server import thread_local
 
 _logger = logging.getLogger(__name__)
 
