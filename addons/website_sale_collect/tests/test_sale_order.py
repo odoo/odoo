@@ -119,6 +119,37 @@ class TestSaleOrder(ClickAndCollectCommon):
         insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
         self.assertEqual(insufficient_stock_data[cart.order_line], 10)
 
+    def test_insufficient_stock_with_mixed_uom_order_lines(self):
+        """Test that the insufficient stock is correctly computed when the order lines
+        use different UoMs."""
+        pack_of_6_id = self.ref('uom.product_uom_pack_6')
+        # 1 pack of 6 + 5 units = 11 units in the cart
+        cart = self._create_in_store_delivery_order(
+            order_line=[
+                Command.create(
+                    {
+                        'product_id': self.storable_product.id,
+                        'product_uom_qty': 1.0,
+                        'product_uom_id': pack_of_6_id,
+                    }
+                ),
+                Command.create(
+                    {
+                        'product_id': self.storable_product.id,
+                        'product_uom_qty': 5.0,
+                        'product_uom_id': self.storable_product.uom_id.id,
+                    }
+                ),
+            ]
+        )
+        # 10 units available, 11 requested, so 1 unit short
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        ol_unit = cart.order_line.filtered(
+            lambda l: l.product_uom_id == self.storable_product.uom_id
+        )
+        # only 4 units are available for the second order line instead of 5
+        self.assertEqual(insufficient_stock_data[ol_unit], 4)
+
     def test_out_of_stock_product_is_unavailable(self):
         cart = self._create_in_store_delivery_order(
             order_line=[
