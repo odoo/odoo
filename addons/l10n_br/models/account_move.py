@@ -22,3 +22,10 @@ class AccountMove(models.Model):
             where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
             param["l10n_latam_document_type_id"] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
+
+    def _get_name_invoice_report(self):
+        # EXTENDS account
+        self.ensure_one()
+        if self.country_code == 'BR':
+            return 'l10n_br.report_invoice_document'
+        return super()._get_name_invoice_report()
