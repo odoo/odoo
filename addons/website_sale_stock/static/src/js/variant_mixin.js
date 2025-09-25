@@ -22,7 +22,7 @@ import { markup } from "@odoo/owl";
  * @param {$.Element} $parent
  * @param {Array} combination
  */
-VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+VariantMixin._onChangeCombinationStock = async function (ev, $parent, combination) {
     let product_id = 0;
     // needed for list view of variants
     if ($parent.find('input.product_id:checked').length) {
@@ -45,7 +45,8 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     ctaWrapper.classList.remove('out_of_stock');
 
     if (combination.is_storable && !combination.allow_out_of_stock_order) {
-        combination.free_qty -= parseInt(combination.cart_qty);
+        const unavailableQty = await VariantMixin._getUnavailableQty(combination);
+        combination.free_qty -= unavailableQty;
         $addQtyInput.data('max', combination.free_qty || 1);
         if (combination.free_qty < 0) {
             combination.free_qty = 0;
@@ -91,6 +92,10 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         'website_sale_stock.product_availability',
         combination
     ));
+};
+
+VariantMixin._getUnavailableQty = async function (combination) {
+    return parseInt(combination.cart_qty);
 };
 
 export default VariantMixin;
