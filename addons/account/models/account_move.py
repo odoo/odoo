@@ -991,7 +991,7 @@ class AccountMove(models.Model):
 
             invoice.payment_state = new_pmt_state
 
-    @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
+    @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due', 'invoice_line_ids')
     def _compute_needed_terms(self):
         for invoice in self:
             is_draft = invoice.id != invoice._origin.id
