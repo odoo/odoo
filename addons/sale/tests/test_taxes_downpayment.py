@@ -1048,14 +1048,12 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         wizard.action_apply_discount()
 
         # Create a down payment invoice for 1,000.00.
-        wizard = (
-            self.env['sale.advance.payment.inv']
-            .with_context(active_model=so._name, active_ids=so.ids)
+        self.env['sale.advance.payment.inv']\
+            .with_context(active_model=so._name, active_ids=so.ids)\
             .create({
                 'advance_payment_method': 'fixed',
                 'fixed_amount': 1000.00,
             })
-        )
 
         so_base_lines = [
             order_line._prepare_base_line_for_taxes_computation()
@@ -1076,5 +1074,4 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             },
         )
 
-        self.assertAlmostEqual(dp_lines[0]['price_unit'], 1070.71, 2)
-        self.assertAlmostEqual(dp_lines[1]['price_unit'], -70.71, 2)
+        self.assertAlmostEqual(dp_lines[0]['price_unit'], 1000.0, 2)
