@@ -59,7 +59,7 @@ class ResetGoogleAccount(models.TransientModel):
 
         # Write the next sync update attribute on the existing events.
         if self.delete_policy not in ('delete_odoo', 'delete_both'):
-            events.write(next_sync_update)
+            events.with_context(skip_event_permission=True).write(next_sync_update)
 
         self.user_id.res_users_settings_id._set_google_auth_tokens(False, False, 0)
         self.user_id.write({
