@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
@@ -12,6 +14,7 @@ class WebsiteVisitor(models.Model):
 
     livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
     livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")
+    page_visit_history = fields.Json(compute="_compute_page_visit_history")
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
@@ -32,6 +35,38 @@ class WebsiteVisitor(models.Model):
         visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
         for visitor in self:
             visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
+
+    @api.depends("last_connection_datetime")
+    def _compute_page_visit_history(self):
+        if not self:
+            return
+        query = """
+                    SELECT visitor_id, page_name, visit_datetime
+                      FROM (
+                          SELECT website_track.visitor_id,
+                                 ir_ui_view.name as page_name,
+                                 website_track.visit_datetime,
+                                 ROW_NUMBER() OVER(
+                                    PARTITION BY website_track.visitor_id ORDER BY website_track.visit_datetime DESC
+                                 ) as row_number
+                            FROM website_track
+                            JOIN website_page ON website_page.id = website_track.page_id
+                            JOIN ir_ui_view ON ir_ui_view.id = website_page.view_id
+                           WHERE website_track.visitor_id IN %s
+                             AND website_track.page_id IS NOT NULL
+                      ) as ranked_visits
+                     WHERE row_number <= 3
+                  ORDER BY visitor_id, visit_datetime ASC
+                """
+        self.env.cr.execute(query, (tuple(self.ids),))
+        results = self.env.cr.dictfetchall()
+        history_map = defaultdict(list)
+        for res in results:
+            history_map[res["visitor_id"]].append(
+                (res["page_name"], fields.Datetime.to_string(res["visit_datetime"]))
+            )
+        for visitor in self:
+            visitor.page_visit_history = history_map.get(visitor.id, [])
 
     @api.depends('discuss_channel_ids')
     def _compute_session_count(self):
@@ -116,21 +151,3 @@ class WebsiteVisitor(models.Model):
                 guest_livechats.livechat_visitor_id = visitor_sudo.id
                 guest_livechats.country_id = visitor_sudo.country_id
         return visitor_id, upsert
-
-    def _field_store_repr(self, field_name):
-        if field_name == "page_visit_history":
-            # sudo: website.track - reading the history of accessible visitor is acceptable
-            return [
-                Store.Attr("page_visit_history", lambda visitor: visitor.sudo()._get_visitor_history()),
-            ]
-        return [field_name]
-
-    def _get_visitor_history(self):
-        self.ensure_one()
-        recent_history = self.env["website.track"].search(
-            [("page_id", "!=", False), ("visitor_id", "=", self.id)], limit=3
-        )
-        return [
-            (visit.page_id.name, fields.Datetime.to_string(visit.visit_datetime))
-            for visit in reversed(recent_history)
-        ]
