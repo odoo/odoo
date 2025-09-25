@@ -3102,7 +3102,8 @@ class AccountTax(models.Model):
 
         :param base_lines:      A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
         :param company:         The company owning the base lines.
-        :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will be considered.
+        :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will have
+                                its amounts stored.
         """
         for base_line in base_lines:
             tax_details = base_line['tax_details']
@@ -3120,10 +3121,13 @@ class AccountTax(models.Model):
             )
             base_line['manual_tax_amounts'] = {}
             for tax_data in taxes_data:
+                tax = tax_data['tax']
+                tax_id_str = str(tax.id)
+                base_line['manual_tax_amounts'][tax_id_str] = {}
                 if filter_function and not filter_function(base_line, tax_data):
                     continue
-                tax = tax_data['tax']
-                base_line['manual_tax_amounts'][str(tax.id)] = {
+
+                base_line['manual_tax_amounts'][tax_id_str] = {
                     'tax_amount_currency': tax_data['tax_amount_currency'],
                     'tax_amount': tax_data['tax_amount'],
                     'base_amount_currency': tax_data['base_amount_currency'],
