@@ -30,11 +30,11 @@ const { DateTime, Interval } = luxon;
  * @param {{ chain: string, type: string }} [fieldMatching]
  * @returns {string}
  */
-export function getBestGranularity(dateFilterValue, fieldMatching) {
+export function getBestGranularity(dateFilterValue, fieldMatching, getters) {
     if (!dateFilterValue) {
         return "year";
     }
-    const { from, to } = getDateRange(dateFilterValue);
+    const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return fieldMatching?.type === "datetime" ? "hour" : "day";
@@ -51,11 +51,11 @@ export function getBestGranularity(dateFilterValue, fieldMatching) {
  * @param {DateValue} dateFilterValue
  * @returns {string[]}
  */
-export function getValidGranularities(dateFilterValue) {
+export function getValidGranularities(dateFilterValue, getters) {
     if (!dateFilterValue) {
         return ["week", "month", "quarter", "year"];
     }
-    const { from, to } = getDateRange(dateFilterValue);
+    const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return ["hour", "day"];
@@ -98,11 +98,11 @@ export function getDateGlobalFilterTypes() {
 /**
  * Compute the display name of a date filter value.
  */
-export function dateFilterValueToString(value) {
+export function dateFilterValueToString(value, getters) {
     if (!value || !value.type) {
         return _t("All time");
     }
-    return getDateGlobalFilterRegistryItem(value).getValueString(value);
+    return getDateGlobalFilterRegistryItem(value).getValueString(value, getters);
 }
 
 /**
@@ -621,11 +621,11 @@ globalFilterDateRegistry
  *
  * @returns {{ from?: DateTime, to?: DateTime }}
  */
-export function getDateRange(value, offset = 0, now = DateTime.local()) {
+export function getDateRange(value, offset = 0, now = DateTime.local(), getters) {
     if (!value) {
         return {};
     }
-    return getDateGlobalFilterRegistryItem(value).getDateRange(now, value, offset);
+    return getDateGlobalFilterRegistryItem(value).getDateRange(now, value, offset, getters);
 }
 
 function getFixedPeriodFromTo(now, offset, value) {
@@ -1034,7 +1034,7 @@ export function getFilterCellValue(getters, filter, filterValue) {
     );
 }
 
-export async function getFacetInfo(env, filter, filterValue) {
+export async function getFacetInfo(env, filter, filterValue, getters) {
     let values;
     const separator = _t("or");
     switch (filter.type) {
@@ -1042,7 +1042,7 @@ export async function getFacetInfo(env, filter, filterValue) {
             if (!filterValue) {
                 throw new Error("Should be defined at this point");
             }
-            values = [dateFilterValueToString(filterValue)];
+            values = [dateFilterValueToString(filterValue, getters)];
             break;
         }
         default: {

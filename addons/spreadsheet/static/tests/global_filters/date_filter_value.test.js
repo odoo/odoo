@@ -3,6 +3,7 @@ import { mockDate } from "@odoo/hoot-mock";
 import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { DateFilterValue } from "@spreadsheet/global_filters/components/date_filter_value/date_filter_value";
+import { Model } from "@odoo/o-spreadsheet";
 
 describe.current.tags("desktop");
 defineSpreadsheetModels();
@@ -18,7 +19,7 @@ beforeEach(() => {
  * @param {{ model: Model, filter: object}} props
  */
 async function mountDateFilterValue(env, props) {
-    await mountWithCleanup(DateFilterValue, { props, env });
+    await mountWithCleanup(DateFilterValue, { props: { model: new Model(), ...props }, env });
 }
 
 test("basic date filter value", async function () {
