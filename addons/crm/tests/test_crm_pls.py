@@ -94,8 +94,8 @@ class TestConfig(CrmPlsCommon):
         pls_fields_str = ','.join(frequency_fields.mapped('field_id.name'))
         pls_start_date_str = "2021-01-01"
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
-        IrConfigSudo.set_param("crm.pls_start_date", pls_start_date_str)
-        IrConfigSudo.set_param("crm.pls_fields", pls_fields_str)
+        IrConfigSudo.set_str("crm.pls_start_date", pls_start_date_str)
+        IrConfigSudo.set_str("crm.pls_fields", pls_fields_str)
 
         date_to_update = "2021-02-02"
         fields_to_remove = frequency_fields.filtered(lambda f: f.field_id.name in ['source_id', 'lang_id'])
@@ -115,8 +115,8 @@ class TestConfig(CrmPlsCommon):
         pls_update_wizard0.action_update_crm_lead_probabilities()
 
         # Config params should have been updated
-        self.assertEqual(IrConfigSudo.get_param("crm.pls_start_date"), date_to_update, 'Correct date is updated in config')
-        self.assertEqual(IrConfigSudo.get_param("crm.pls_fields"), fields_after_updation_str, 'Correct fields are updated in config')
+        self.assertEqual(IrConfigSudo.get_str("crm.pls_start_date"), date_to_update, 'Correct date is updated in config')
+        self.assertEqual(IrConfigSudo.get_str("crm.pls_fields"), fields_after_updation_str, 'Correct fields are updated in config')
 
     def test_settings_pls_start_date(self):
         """ Test various use cases of 'crm.pls_start_date' """
@@ -129,7 +129,7 @@ class TestConfig(CrmPlsCommon):
             ("One does not simply walk into system parameters to corrupt them", str_date_8_days_ago),
         ]:
             with self.subTest(value=value):
-                self.env['ir.config_parameter'].sudo().set_param('crm.pls_start_date', value)
+                self.env['ir.config_parameter'].sudo().set_str('crm.pls_start_date', value)
                 res_config_new = self.env['res.config.settings'].new()
                 self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date), expected)
 
@@ -202,8 +202,8 @@ class TestCrmPls(CrmPlsCommon):
         leads[-4::].team_id = team_ids[2]
 
         # Set the PLS config
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id,tag_ids")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_start_date", "2000-01-01")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id,tag_ids")
 
         # set leads as won and lost
         # for Team 1
@@ -502,7 +502,7 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
 
         # remove all pls fields
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", False)
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_fields", None)
         Lead._cron_update_automated_probabilities()
         self.env.invalidate_all()
 
@@ -510,7 +510,7 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 50.0, 2), 0)
 
         # check if the probabilities are the same with the old param
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
         Lead._cron_update_automated_probabilities()
         self.env.invalidate_all()
 
@@ -548,9 +548,9 @@ class TestCrmPls(CrmPlsCommon):
         leads.tag_ids = self.env['crm.tag'].create({'name': 'lead scoring edge case'})
 
         # Set the PLS config
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_start_date", "2000-01-01")
         # tag_ids can be used in versions newer than v14
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_fields", "country_id")
 
         # set leads as won and lost
         leads[1].action_set_lost()
@@ -598,7 +598,7 @@ class TestCrmPls(CrmPlsCommon):
             values, in order of importance, of TOP 3 and LOW 3 criterions in PLS computation.
             See Table in docstring below for more details and a practical situation."""
         Lead = self.env['crm.lead']
-        self.env['ir.config_parameter'].sudo().set_param(
+        self.env['ir.config_parameter'].sudo().set_str(
             "crm.pls_fields",
             "country_id,state_id,email_state,phone_state,source_id"
         )
@@ -653,7 +653,7 @@ class TestCrmPls(CrmPlsCommon):
         # Assert scores for phone/email_state are excluded if absurd,
         # e.g. in top 3 when incorrect / not set or in low 3 if correct
         # Stage does not change and always has a score of 0.645
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "email_state,phone_state")
+        self.env['ir.config_parameter'].sudo().set_str("crm.pls_fields", "email_state,phone_state")
 
         leads[5].phone_state = False
         leads[5].email_state = 'incorrect'

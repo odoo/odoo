@@ -12,7 +12,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
     def setUp(self):
         super(TestLinkTracker, self).setUp()
         self._web_base_url = 'https://test.odoo.com'
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', self._web_base_url)
 
     def test_absolute_url(self):
         """
@@ -197,7 +197,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         (link_1 | link_2).write({'medium_id': False})
 
     def test_no_external_tracking(self):
-        self.env['ir.config_parameter'].set_param('link_tracker.no_external_tracking', '1')
+        self.env['ir.config_parameter'].set_bool('link_tracker.no_external_tracking', True)
 
         campaign = self.env['utm.campaign'].create({'name': 'campaign'})
         source = self.env['utm.source'].create({'name': 'source'})
@@ -244,7 +244,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         )
 
         # Deactivate the system parameter
-        self.env['ir.config_parameter'].set_param('link_tracker.no_external_tracking', False)
+        self.env['ir.config_parameter'].set_bool('link_tracker.no_external_tracking', False)
 
         # URL to an external website -> UTM parameters should be added since
         # the system  parameter "link_tracker.no_external_tracking" is disabled

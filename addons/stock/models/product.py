@@ -1291,8 +1291,8 @@ class UomUom(models.Model):
         """
         procurement_uom = self
         computed_qty = qty
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        if get_param('stock.propagate_uom') != '1':
+        get_bool = self.env['ir.config_parameter'].sudo().get_bool
+        if not get_bool('stock.propagate_uom'):
             computed_qty = self._compute_quantity(qty, quant_uom, rounding_method='HALF-UP')
             procurement_uom = quant_uom
         else:

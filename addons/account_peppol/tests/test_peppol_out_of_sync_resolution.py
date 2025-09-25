@@ -12,7 +12,7 @@ class TestTokenSyncResolution(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+        cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
         cls.env.company.write({'peppol_eas': '0208', 'peppol_endpoint': '0239843188'})
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(

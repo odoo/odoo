@@ -185,7 +185,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
             return
 
         # force_send limit should apply to the total nb of attendees, not per alarm
-        force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
+        force_send_limit = self.env['ir.config_parameter'].sudo().get_int('mail.mail_force_send_limit', 100)
 
         event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
         events = self.env['calendar.event'].browse(event_ids)

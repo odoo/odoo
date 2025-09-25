@@ -33,7 +33,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
             self.count += 1
             return DEFAULT
 
-        self.env['ir.config_parameter'].set_param('sms.session.batch.size', '3')
+        self.env['ir.config_parameter'].set_int('sms.session.batch.size', 3)
         with patch.object(SmsModel, '_send', autospec=True, side_effect=_send) as _send_mock:
             self.env['sms.sms'].browse(self.sms_all.ids).send()
 

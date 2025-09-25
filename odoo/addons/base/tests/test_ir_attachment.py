@@ -48,7 +48,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
 
     def test_01_store_in_db(self):
         # force storing in database
-        self.env['ir.config_parameter'].set_param('ir_attachment.location', 'db')
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
 
         # 'ir_attachment.location' is undefined test database storage
         a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1})
@@ -154,24 +154,24 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertApproximately(attach.datas, 12.06)  # default resize + default compression
 
         # resize + default quality (80)
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '1024x768')
         attach.datas = img_encoded
         self.assertApproximately(attach.datas, 3.71)
 
         # resize + quality 50
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 50)
         attach.datas = img_encoded
         self.assertApproximately(attach.datas, 3.57)
 
         # no resize + no quality implicit
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '0')
         attach.datas = img_encoded
         self.assertApproximately(attach.datas, fullsize)
 
         # Check that we only compress quality when we resize. We avoid to compress again during a new write.
         # no resize + quality -> should have no effect
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '10000x10000')
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '10000x10000')
+        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 50)
         attach.datas = img_encoded
         self.assertApproximately(attach.datas, fullsize)
 
@@ -193,27 +193,27 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertApproximately(attach.raw, 12.06)  # default resize + default compression
 
         # resize + default quality (80)
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '1024x768')
         attach.raw = img_bin
         self.assertApproximately(attach.raw, 3.71)
 
         # resize + no quality
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '0')
+        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 0)
         attach.raw = img_bin
         self.assertApproximately(attach.raw, 4.09)
 
         # resize + quality 50
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 50)
         attach.raw = img_bin
         self.assertApproximately(attach.raw, 3.57)
 
         # no resize + no quality implicit
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '0')
         attach.raw = img_bin
         self.assertApproximately(attach.raw, fullsize)
 
         # no resize of gif
-        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0x0')
+        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '0x0')
         gif_bin = b'GIF89a\x01\x00\x01\x00\x00\xff\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x00;'
         attach.raw = gif_bin
         self.assertEqual(attach.raw, gif_bin)

@@ -16,7 +16,7 @@ class TestMailTemplate(MailCommon):
     def setUpClass(cls):
         super(TestMailTemplate, cls).setUpClass()
         # Enable the Jinja rendering restriction
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
         cls.test_partner = cls.env['res.partner'].create({
             'email': 'test.rendering@test.example.com',
@@ -494,10 +494,10 @@ class TestTemplateConfigRestrictEditor(MailCommon):
         self.assertIn(group, self.user_employee.all_group_ids)
         self.assertNotIn(group, self.user_employee.group_ids)
 
-        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
 
-        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', False)
         self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))
 
 

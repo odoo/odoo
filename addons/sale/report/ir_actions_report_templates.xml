@@ -343,7 +343,7 @@
                 </p>
             </div>
             <div class="oe_structure"/>
-            <t t-set="base_address" t-value="doc.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+            <t t-set="base_address" t-value="doc.env['ir.config_parameter'].sudo().get_str('web.base.url')"/>
             <t t-set="portal_url" t-value="base_address + '/my/orders/' + str(doc.id) + '#portal_connect_software_modal_btn'"/>
             <div t-if="any(u._is_portal() for u in doc.partner_id.user_ids) and doc._get_edi_builders()" class="text-center">
                 <a t-att-href="portal_url">Connect your software</a> with <t t-out="doc.company_id.name"/> to create quotes automatically.

@@ -347,11 +347,12 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
     @mute_logger('odoo.http')
     def test01_session_nan(self):
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 'adminCantSetupThisValueLikeANormalPerson')
+        # hack: logically equivalent to icp.value = 'adminCantSetupThisValueLikeANormalPerson'
+        self.env['ir.config_parameter'].set_str('sessions.max_inactivity_seconds', 'adminCantSetupThisValueLikeANormalPerson')
 
-        with self.assertLogs('odoo.http', level='WARNING') as logs:
+        with self.assertLogs('odoo.addons.base.models.ir_config_parameter', level='WARNING') as logs:
             self.assertEqual(odoo.http.get_session_max_inactivity(self.env), SESSION_LIFETIME)
-            self.assertEqual(logs.output[0], "WARNING:odoo.http:Invalid value for 'sessions.max_inactivity_seconds', using default value.")
+            self.assertEqual(logs.output[0], "WARNING:odoo.addons.base.models.ir_config_parameter:ir.config_parameter with key sessions.max_inactivity_seconds has invalid value 'adminCantSetupThisValueLikeANormalPerson' for type int")
 
     @mute_logger('odoo.http')
     def test02_session_lifetime_1week(self):
@@ -372,7 +373,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
     @mute_logger('odoo.http')
     def test03_session_lifetime_1min(self):
         # changing the lifetime to 1 minute
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 60)
+        self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', 60)
         with freeze_time() as freeze:
             session = self.authenticate(None, None)
 
@@ -389,7 +390,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
     @mute_logger('odoo.http')
     def test04_session_lifetime_nodb(self):
         # in case of requesting session in a no db scenario
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
+        self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
         with freeze_time() as freeze:
             self.authenticate(None, None)
             res = TestHttpBase.nodb_url_open(self, '/')

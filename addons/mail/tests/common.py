@@ -148,7 +148,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.alias_bounce = 'bounce.test'
         cls.default_from = 'notifications.test'
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].set_str('mail.default.from_filter', cls.default_from_filter)
 
         # ensure global alias domain for tests: to ease tests, search or create
         # the default test domains
@@ -1812,7 +1812,7 @@ class MailCommon(MailCase):
         cls._init_mail_servers()
 
         # by default avoid rendering restriction complexity
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', False)
 
         # test standard employee
         cls.user_employee = mail_new_test_user(

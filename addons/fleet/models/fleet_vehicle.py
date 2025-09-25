@@ -296,7 +296,7 @@ class FleetVehicle(models.Model):
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
         params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        delay_alert_contract = params.get_int('hr_fleet.delay_alert_contract', 30)
         current_date = fields.Date.context_today(self)
         data = self.env['fleet.vehicle.log.contract']._read_group(
             domain=[('expiration_date', '!=', False), ('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
@@ -335,7 +335,7 @@ class FleetVehicle(models.Model):
         if operator != 'in':
             return NotImplemented
         params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        delay_alert_contract = params.get_int('hr_fleet.delay_alert_contract', 30)
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))

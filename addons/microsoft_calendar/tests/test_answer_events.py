@@ -162,7 +162,7 @@ class TestAnswerEvents(TestCommon):
     @users('admin')
     def test_sync_data_with_stopped_sync(self):
         self.authenticate(self.env.user.login, self.env.user.login)
-        self.env['ir.config_parameter'].sudo().set_param(
+        self.env['ir.config_parameter'].sudo().set_str(
             'microsoft_calendar_client_id',
             'test_microsoft_calendar_client_id'
         )

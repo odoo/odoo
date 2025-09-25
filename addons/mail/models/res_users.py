@@ -6,7 +6,7 @@ import contextlib
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import email_normalize, str2bool
+from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -64,7 +64,7 @@ class ResUsers(models.Model):
     has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server')
 
     def _compute_has_external_mail_server(self):
-        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_param(
+        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_str(
             'base_setup.default_external_email_server')
 
     _notification_type = models.Constraint(
@@ -316,7 +316,7 @@ class ResUsers(models.Model):
 
     def _notify_security_setting_update_prepare_values(self, content, **kwargs):
         """"Prepare rendering values for the 'mail.account_security_alert' qweb template."""
-        reset_password_enabled = str2bool(self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True))
+        reset_password_enabled = self.env['ir.config_parameter'].sudo().get_bool("auth_signup.reset_password")
 
         values = {
             'browser': False,
@@ -455,7 +455,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_activity_groups(self):
-        search_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.systray.limit', 1000))
+        search_limit = self.env['ir.config_parameter'].sudo().get_int('mail.activity.systray.limit') or 1000
         activities = self.env["mail.activity"].search(
             [("user_id", "=", self.env.uid)],
             order='id desc', limit=search_limit,

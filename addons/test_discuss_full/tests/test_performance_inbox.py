@@ -20,7 +20,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #   - insert res_device_log
         #   - _xmlid_lookup (_get_public_users)
         #   - fetch website (_get_cached_values)
-        #   - get_param ir_config_parameter (_pre_dispatch website_sale)
+        #   - _get ir_config_parameter (_pre_dispatch website_sale)
         #   4 _message_fetch:
         #       2 _search_needaction:
         #           - fetch res_users (current user)
@@ -63,7 +63,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - read group rating_rating (_compute_rating_stats for slide.channel)
         #       - read group rating_rating (_rating_get_stats_per_record for product.template)
         #       - read group rating_rating (_compute_rating_stats for product.template)
-        #   - get_param ir_config_parameter (_save_session)
+        #   - _get ir_config_parameter (_save_session)
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )

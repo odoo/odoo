@@ -400,8 +400,8 @@ class CrmTeam(models.Model):
 
         """
 
-        BUNDLE_HOURS_DELAY = float(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
-        BUNDLE_COMMIT_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
+        BUNDLE_HOURS_DELAY = self.env['ir.config_parameter'].sudo().get_float('crm.assignment.delay')
+        BUNDLE_COMMIT_SIZE = self.env['ir.config_parameter'].sudo().get_int('crm.assignment.commit.bundle') or 100
         auto_commit = not modules.module.current_test
 
         # leads
@@ -579,7 +579,7 @@ class CrmTeam(models.Model):
         """
         auto_commit = not modules.module.current_test
         result_data = {}
-        commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
+        commit_bundle_size = self.env['ir.config_parameter'].sudo().get_int('crm.assignment.commit.bundle') or 100
         teams_with_members = self.filtered(lambda team: team.crm_team_member_ids)
         quota_per_member = {member: member._get_assignment_quota(force_quota=force_quota) for member in self.crm_team_member_ids}
         counter = 0

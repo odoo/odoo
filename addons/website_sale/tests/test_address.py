@@ -412,7 +412,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 )
 
     def test_09_shop_update_address(self):
-        self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+        self.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
         user = self.env['res.users'].create({
             'name': 'test',
             'login': 'test',

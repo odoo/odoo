@@ -104,7 +104,7 @@ class AccountAnalyticPlan(models.Model):
 
     @ormcache()
     def __get_all_plans(self):
-        project_plan = self.browse(int(self.env['ir.config_parameter'].sudo().get_param('analytic.project_plan', 0)))
+        project_plan = self.browse(self.env['ir.config_parameter'].sudo().get_int('analytic.project_plan'))
         if not project_plan:
             raise UserError(_("A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"))
         other_plans = self.sudo().search([('parent_id', '=', False)]) - project_plan

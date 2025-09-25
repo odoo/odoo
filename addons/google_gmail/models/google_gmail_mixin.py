@@ -38,8 +38,8 @@ class GoogleGmailMixin(models.AbstractModel):
 
     def _compute_gmail_uri(self):
         Config = self.env['ir.config_parameter'].sudo()
-        google_gmail_client_id = Config.get_param('google_gmail_client_id')
-        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        google_gmail_client_id = Config.get_str('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_str('google_gmail_client_secret')
         is_configured = google_gmail_client_id and google_gmail_client_secret
         base_url = self.get_base_url()
 
@@ -80,16 +80,14 @@ class GoogleGmailMixin(models.AbstractModel):
             raise UserError(_('Please enter a valid email address.'))
 
         Config = self.env['ir.config_parameter'].sudo()
-        google_gmail_client_id = Config.get_param('google_gmail_client_id')
-        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        google_gmail_client_id = Config.get_str('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_str('google_gmail_client_secret')
         is_configured = google_gmail_client_id and google_gmail_client_secret
 
         if not is_configured:  # use IAP (see '/google_gmail/iap_confirm')
-            gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
-                'mail.server.gmail.iap.endpoint',
-                self._DEFAULT_GMAIL_IAP_ENDPOINT,
-            )
-            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+            gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
+                'mail.server.gmail.iap.endpoint') or self._DEFAULT_GMAIL_IAP_ENDPOINT
+            db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
             callback_params = url_encode({
@@ -151,8 +149,8 @@ class GoogleGmailMixin(models.AbstractModel):
         """
         Config = self.env['ir.config_parameter'].sudo()
 
-        google_gmail_client_id = Config.get_param('google_gmail_client_id')
-        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        google_gmail_client_id = Config.get_str('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_str('google_gmail_client_secret')
         if not google_gmail_client_id or not google_gmail_client_secret:
             return self._fetch_gmail_access_token_iap(refresh_token)
 
@@ -171,8 +169,8 @@ class GoogleGmailMixin(models.AbstractModel):
         :param values: Additional parameters that will be given to the GMail endpoint
         """
         Config = self.env['ir.config_parameter'].sudo()
-        google_gmail_client_id = Config.get_param('google_gmail_client_id')
-        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        google_gmail_client_id = Config.get_str('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_str('google_gmail_client_secret')
         base_url = self.get_base_url()
         redirect_uri = url_join(base_url, '/google_gmail/confirm')
 
@@ -202,11 +200,9 @@ class GoogleGmailMixin(models.AbstractModel):
         :return:
             access_token, access_token_expiration
         """
-        gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
-            'mail.server.gmail.iap.endpoint',
-            self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT,
-        )
-        db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
+            'mail.server.gmail.iap.endpoint') or self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT
+        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
         response = requests.get(
             url_join(gmail_iap_endpoint, '/api/mail_oauth/1/gmail_access_token'),

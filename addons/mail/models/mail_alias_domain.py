@@ -206,8 +206,8 @@ class MailAliasDomain(models.Model):
         all_domains = self.search([])
         aliases = all_domains.mapped('bounce_email') + all_domains.mapped('catchall_email') + all_domains.mapped('default_from_email')
 
-        catchall_domains_allowed = list(filter(None, (self.env["ir.config_parameter"].sudo().get_param(
-            "mail.catchall.domain.allowed") or '').split(',')))
+        catchall_domains_allowed = list(filter(None, (self.env["ir.config_parameter"].sudo().get_str(
+            "mail.catchall.domain.allowed")).split(',')))
         if catchall_domains_allowed:
             catchall_domains_allowed += all_domains.mapped('name')
             email_localparts_tocheck = [
@@ -241,18 +241,15 @@ class MailAliasDomain(models.Model):
         module only and 'mail' is installed afterwards: configuration should
         not be lost (odoo.sh use case). """
         Icp = self.env['ir.config_parameter'].sudo()
-        alias_domain = Icp.get_param('mail.catchall.domain')
+        alias_domain = Icp.get_str('mail.catchall.domain')
         if alias_domain:
             existing = self.search([('name', '=', alias_domain)])
             if existing:
                 return existing
-            bounce_alias = Icp.get_param('mail.bounce.alias')
-            catchall_alias = Icp.get_param('mail.catchall.alias')
-            default_from = Icp.get_param('mail.default.from')
             return self.create({
-                'bounce_alias': bounce_alias or 'bounce',
-                'catchall_alias': catchall_alias or 'catchall',
-                'default_from': default_from or 'notifications',
+                'bounce_alias': Icp.get_str('mail.bounce.alias') or 'bounce',
+                'catchall_alias': Icp.get_str('mail.catchall.alias') or 'catchall',
+                'default_from': Icp.get_str('mail.default.from') or 'notifications',
                 'name': alias_domain,
             })
         return self.browse()

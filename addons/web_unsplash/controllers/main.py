@@ -20,7 +20,7 @@ class Web_Unsplash(http.Controller):
 
     def _get_access_key(self):
         """ Use this method to get the key, needed for internal reason """
-        return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
+        return request.env['ir.config_parameter'].sudo().get_str('unsplash.access_key')
 
     def _notify_download(self, url):
         ''' Notifies Unsplash from an image download. (API requirement)
@@ -143,12 +143,12 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/get_app_id", type='jsonrpc', auth="public")
     def get_unsplash_app_id(self, **post):
-        return request.env['ir.config_parameter'].sudo().get_param('unsplash.app_id')
+        return request.env['ir.config_parameter'].sudo().get_str('unsplash.app_id')
 
     @http.route("/web_unsplash/save_unsplash", type='jsonrpc', auth="user")
     def save_unsplash(self, **post):
         if request.env.user._can_manage_unsplash_settings():
-            request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
-            request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
+            request.env['ir.config_parameter'].sudo().set_str('unsplash.app_id', post.get('appId'))
+            request.env['ir.config_parameter'].sudo().set_str('unsplash.access_key', post.get('key'))
             return True
         raise werkzeug.exceptions.NotFound()

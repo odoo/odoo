@@ -28,9 +28,9 @@ class TestCloudStorageGoogleCommon(TransactionCase):
 '''
         self.bucket_name = 'bucket_name'
         ICP = self.env['ir.config_parameter']
-        ICP.set_param('cloud_storage_provider', 'google')
-        ICP.set_param('cloud_storage_google_bucket_name', self.bucket_name)
-        ICP.set_param('cloud_storage_google_account_info', self.DUMMY_GOOGLE_ACCOUNT_INFO)
+        ICP.set_str('cloud_storage_provider', 'google')
+        ICP.set_str('cloud_storage_google_bucket_name', self.bucket_name)
+        ICP.set_str('cloud_storage_google_account_info', self.DUMMY_GOOGLE_ACCOUNT_INFO)
 
 
 class TestCloudStorageGoogle(TestCloudStorageGoogleCommon):
@@ -62,6 +62,6 @@ class TestCloudStorageGoogle(TestCloudStorageGoogleCommon):
         uninstall_hook(self.env)
         # make sure all sensitive data are removed
         ICP = self.env['ir.config_parameter']
-        self.assertFalse(ICP.get_param('cloud_storage_provider'))
-        self.assertFalse(ICP.get_param('cloud_storage_google_bucket_name'))
-        self.assertFalse(ICP.get_param('cloud_storage_google_account_info'))
+        self.assertFalse(ICP.get_str('cloud_storage_provider'))
+        self.assertFalse(ICP.get_str('cloud_storage_google_bucket_name'))
+        self.assertFalse(ICP.get_str('cloud_storage_google_account_info'))

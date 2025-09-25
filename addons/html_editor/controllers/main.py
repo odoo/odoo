@@ -492,11 +492,11 @@ class HTML_Editor(http.Controller):
         """
         attachments = []
         ICP = request.env['ir.config_parameter'].sudo()
-        library_endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        library_endpoint = ICP.get_str('html_editor.media_library_endpoint') or DEFAULT_LIBRARY_ENDPOINT
 
         media_ids = ','.join(media.keys())
         params = {
-            'dbuuid': ICP.get_param('database.uuid'),
+            'dbuuid': ICP.get_str('database.uuid'),
             'media_ids': media_ids,
         }
         response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
@@ -621,8 +621,8 @@ class HTML_Editor(http.Controller):
     def generate_text(self, prompt, conversation_history):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
-            olg_api_endpoint = IrConfigParameter.get_param('html_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
-            database_id = IrConfigParameter.get_param('database.uuid')
+            olg_api_endpoint = IrConfigParameter.get_str('html_editor.olg_api_endpoint') or DEFAULT_OLG_ENDPOINT
+            database_id = IrConfigParameter.get_str('database.uuid')
             response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
                 'prompt': prompt,
                 'conversation_history': conversation_history or [],
@@ -726,8 +726,8 @@ class HTML_Editor(http.Controller):
     @http.route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
-        endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
-        params['dbuuid'] = ICP.get_param('database.uuid')
+        endpoint = ICP.get_str('html_editor.media_library_endpoint') or DEFAULT_LIBRARY_ENDPOINT
+        params['dbuuid'] = ICP.get_str('database.uuid')
         response = requests.post('%s/media-library/1/search' % endpoint, data=params, timeout=5)
         if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
             return response.json()

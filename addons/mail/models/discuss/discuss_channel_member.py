@@ -442,10 +442,10 @@ class DiscussChannelMember(models.Model):
         sfu_server_url = discuss.get_sfu_url(self.env)
         if not sfu_server_url:
             return
-        sfu_local_key = self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
+        sfu_local_key = self.env["ir.config_parameter"].sudo().get_str("mail.sfu_local_key")
         if not sfu_local_key:
             sfu_local_key = str(uuid.uuid4())
-            self.env["ir.config_parameter"].sudo().set_param("mail.sfu_local_key", sfu_local_key)
+            self.env["ir.config_parameter"].sudo().set_str("mail.sfu_local_key", sfu_local_key)
         json_web_token = jwt.sign(
             {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": sfu_local_key},
             key=discuss.get_sfu_key(self.env),
@@ -477,7 +477,7 @@ class DiscussChannelMember(models.Model):
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
-            key = self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
+            key = self.env["ir.config_parameter"].sudo().get_str("mail.sfu_local_key")
         claims = {
             "session_id": rtc_session.id,
             "ice_servers": ice_servers,

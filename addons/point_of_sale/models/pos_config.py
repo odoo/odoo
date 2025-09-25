@@ -225,7 +225,7 @@ class PosConfig(models.Model):
         help="This ID needs to be set in the printer's configuration to secure server printing.",
         readonly=True,
         store=False,
-        default=lambda self: self.env['ir.config_parameter'].sudo().get_param('database.uuid', "")[:30].strip(),  # 30 is the max size in printer settings
+        default=lambda self: self.env['ir.config_parameter'].sudo().get_str('database.uuid')[:30].strip(),  # 30 is the max size in printer settings
     )
     epson_server_pending_receipt_ids = fields.One2many(
         'pos.printer.pending.receipt',
@@ -911,18 +911,10 @@ class PosConfig(models.Model):
         }).id
 
     def get_limited_product_count(self):
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', DEFAULT_LIMIT_LOAD_PRODUCT)
-        try:
-            return int(config_param)
-        except (TypeError, ValueError, OverflowError):
-            return DEFAULT_LIMIT_LOAD_PRODUCT
+        return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_product_count') or DEFAULT_LIMIT_LOAD_PRODUCT
 
     def _get_limited_partner_count(self):
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', DEFAULT_LIMIT_LOAD_PARTNER)
-        try:
-            return int(config_param)
-        except (TypeError, ValueError, OverflowError):
-            return DEFAULT_LIMIT_LOAD_PARTNER
+        return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_customer_count') or DEFAULT_LIMIT_LOAD_PARTNER
 
     def get_limited_partners_loading(self, offset=0):
         return self.env.execute_query(SQL("""
@@ -1260,11 +1252,11 @@ class PosConfig(models.Model):
     @api.model
     def _set_default_pos_load_limit(self):
         param_model = self.env["ir.config_parameter"]
-        if not param_model.get_param("point_of_sale.limited_product_count"):
-            param_model.set_param("point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT)
+        if not param_model.get_int("point_of_sale.limited_product_count"):
+            param_model.set_int("point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT)
 
-        if not param_model.get_param("point_of_sale.limited_customer_count"):
-            param_model.set_param("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
+        if not param_model.get_int("point_of_sale.limited_customer_count"):
+            param_model.set_int("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
 
     def _is_quantities_set(self):
         return self.use_closing_entry_by_product

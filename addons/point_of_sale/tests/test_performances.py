@@ -35,7 +35,7 @@ class TestPosPerformance(TestPointOfSaleHttpCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.cli.populate', 'odoo.tools.populate', 'odoo.tests.common', 'werkzeug')
     def test_pos_session_open_product_performance(self):
-        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 20000)
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 20000)
         if not self.__populate_model('product.template', 20000):
             _logger.warning("The product.template model must contain at least one record before it can be populated.")
             return

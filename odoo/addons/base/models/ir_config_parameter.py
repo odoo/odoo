@@ -60,7 +60,7 @@ class IrConfig_Parameter(models.Model):
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
             if force or not params:
-                params.set_param(key, func())
+                params.set_str(key, str(func()))  # use set_str as a hack for all types
 
     @api.model
     def set_bool(self, key: str, value):
