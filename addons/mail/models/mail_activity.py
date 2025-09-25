@@ -842,7 +842,7 @@ class MailActivity(models.Model):
         - If the config_parameter is set to a negative number, it's an invalid value, we skip the gc routine
         - If the config_parameter is set to a positive number, we delete only overdue activities which deadline is older than X years
         """
-        year_threshold = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.gc.delete_overdue_years', 0))
+        year_threshold = self.env['ir.config_parameter'].sudo().get_int('mail.activity.gc.delete_overdue_years')
         if year_threshold == 0:
             _logger.warning("The ir.config_parameter 'mail.activity.gc.delete_overdue_years' is missing or set to 0. Skipping gc routine.")
             return

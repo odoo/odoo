@@ -446,12 +446,7 @@ def get_session_max_inactivity(env):
         return SESSION_LIFETIME
 
     ICP = env['ir.config_parameter'].sudo()
-
-    try:
-        return int(ICP.get_param('sessions.max_inactivity_seconds', SESSION_LIFETIME))
-    except ValueError:
-        _logger.warning("Invalid value for 'sessions.max_inactivity_seconds', using default value.")
-        return SESSION_LIFETIME
+    return ICP.get_int('sessions.max_inactivity_seconds') or SESSION_LIFETIME
 
 
 def is_cors_preflight(request, endpoint):
@@ -1964,7 +1959,7 @@ class Request:
         :returns: ASCII token string
         :rtype: str
         """
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
         if not secret:
             raise ValueError("CSRF protection requires a configured database secret")
 
@@ -1986,7 +1981,7 @@ class Request:
         if not csrf:
             return False
 
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
         if not secret:
             raise ValueError("CSRF protection requires a configured database secret")
 

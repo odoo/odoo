@@ -434,7 +434,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
-        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        self.env['ir.config_parameter'].sudo().set_bool('stock.propagate_uom', True)
         so1.write({
             'order_line': [
                 Command.update(product_line.id, {'product_uom_qty': 3}),

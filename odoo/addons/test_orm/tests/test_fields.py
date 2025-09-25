@@ -603,7 +603,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
-        self.env['ir.config_parameter'].set_param('test_orm.full_name', 'name1,name2')
+        self.env['ir.config_parameter'].set_str('test_orm.full_name', 'name1,name2')
 
         # this must re-evaluate the field's dependencies
         self.env.flush_all()
@@ -3259,7 +3259,7 @@ class TestX2many(TransactionExpressionCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',

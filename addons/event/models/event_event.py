@@ -206,7 +206,7 @@ class EventEvent(models.Model):
         string='Specific Questions', domain=[('once_per_order', '=', False)])
 
     def _compute_use_barcode(self):
-        use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
+        use_barcode = self.env['ir.config_parameter'].sudo().get_bool('event.use_event_barcode')
         for record in self:
             record.use_barcode = use_barcode
 

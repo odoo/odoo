@@ -699,12 +699,12 @@ class TestHrEmployeeWebJson(HttpCase):
     def setUp(self):
         super().setUp()
         # JSON route needs to be enabled for the tests
-        self.env['ir.config_parameter'].sudo().set_param('web.json.enabled', True)
+        self.env['ir.config_parameter'].sudo().set_bool('web.json.enabled', True)
 
     def test_webjson_employees(self):
         # Check that json employees can be accessed
         url = "/json/1/employees"
-        self.env['ir.config_parameter'].set_param('web.json.enabled', True)
+        self.env['ir.config_parameter'].set_bool('web.json.enabled', True)
         self.authenticate('admin', 'admin')
         CSRF_USER_HEADERS = {
             "Sec-Fetch-Dest": "document",

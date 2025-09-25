@@ -215,7 +215,7 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
-        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        self.env['ir.config_parameter'].sudo().set_bool('stock.propagate_uom', True)
         with po_form.order_line.edit(0) as po_line:
             po_line.product_qty = 3
         po_form.save()
@@ -452,7 +452,7 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(move1.product_qty, 12.0)
 
         # force the propagation of the uom, buy 2.6 dozen, the move 2 should have 2 dozen
-        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        self.env['ir.config_parameter'].sudo().set_bool('stock.propagate_uom', True)
         po.order_line.product_qty = 2.6
         move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 2)

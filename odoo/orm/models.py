@@ -3332,7 +3332,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if len(self) > 1:
             raise ValueError("Expected singleton or no record: %s" % self)
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return self.env['ir.config_parameter'].sudo().get_str('web.base.url')
 
     def _check_company_domain(self, companies) -> Domain:
         """Domain to be used for company consistency between records regarding this model.

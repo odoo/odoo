@@ -28,7 +28,7 @@ class TestMassMailingServer(TestMassMailCommon):
             'name': 'Server 2',
             'smtp_host': 'archive-test2.smtp.local',
         }])
-        self.env['ir.config_parameter'].set_param('mass_mailing.mail_server_id', servers[0].id)
+        self.env['ir.config_parameter'].set_int('mass_mailing.mail_server_id', servers[0].id)
         mailing = self.env['mailing.mailing'].create({
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
@@ -42,7 +42,7 @@ class TestMassMailingServer(TestMassMailCommon):
         with self.assertRaises(UserError, msg='Servers still used as default and for 2 mailings'):
             servers.action_archive()
         self.assertTrue(all(server.active for server in servers), 'All servers must be active')
-        self.env['ir.config_parameter'].set_param('mass_mailing.mail_server_id', False)
+        self.env['ir.config_parameter'].set_int('mass_mailing.mail_server_id', False)
         with self.assertRaises(UserError, msg='Servers still used for 2 mailings'):
             servers.action_archive()
         self.assertTrue(all(server.active for server in servers), 'All servers must be active')
@@ -58,7 +58,7 @@ class TestMassMailingServer(TestMassMailCommon):
         self.assertFalse(mailing.copy().mail_server_id,
                          'The clone of a mailing with an archived server gets the default one (none here)')
         servers[1].action_unarchive()
-        self.env['ir.config_parameter'].set_param('mass_mailing.mail_server_id', servers[1].id)
+        self.env['ir.config_parameter'].set_int('mass_mailing.mail_server_id', servers[1].id)
         mailing_clone = mailing.copy()
         self.assertEqual(mailing_clone.mail_server_id.id, servers[1].id,
                          'The clone of a mailing with an archived server gets the default one')
@@ -66,7 +66,7 @@ class TestMassMailingServer(TestMassMailCommon):
         with self.assertRaises(UserError, msg='Servers still used as default'):
             servers.action_archive()
         self.assertTrue(servers[1].active)
-        self.env['ir.config_parameter'].set_param('mass_mailing.mail_server_id', False)
+        self.env['ir.config_parameter'].set_int('mass_mailing.mail_server_id', False)
         servers.action_archive()  # Servers no more used -> no error
         self.assertFalse(servers.filtered('active'), 'All servers must be archived')
 

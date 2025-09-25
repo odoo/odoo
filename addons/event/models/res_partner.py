@@ -62,8 +62,8 @@ class ResPartner(models.Model):
 
     def _google_map_signed_img(self, zoom=13, width=298, height=298):
         """Create a signed static image URL for the location of this partner."""
-        GOOGLE_MAPS_STATIC_API_KEY = self.env['ir.config_parameter'].sudo().get_param('google_maps.signed_static_api_key')
-        GOOGLE_MAPS_STATIC_API_SECRET = self.env['ir.config_parameter'].sudo().get_param('google_maps.signed_static_api_secret')
+        GOOGLE_MAPS_STATIC_API_KEY = self.env['ir.config_parameter'].sudo().get_str('google_maps.signed_static_api_key')
+        GOOGLE_MAPS_STATIC_API_SECRET = self.env['ir.config_parameter'].sudo().get_str('google_maps.signed_static_api_secret')
         if not GOOGLE_MAPS_STATIC_API_KEY or not GOOGLE_MAPS_STATIC_API_SECRET:
             return None
         # generate signature as per https://developers.google.com/maps/documentation/maps-static/digital-signature#server-side-signing

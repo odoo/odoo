@@ -60,7 +60,7 @@ class TestStockValuation(TransactionCase):
         where product_uom is different from purchase uom
         """
         self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 3
-        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', False)
+        self.env['ir.config_parameter'].sudo().set_bool('stock.propagate_uom', False)
 
         # Create and set a new weight unit.
         kgm = self.env.ref('uom.product_uom_kgm')

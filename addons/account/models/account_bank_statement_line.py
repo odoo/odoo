@@ -5,7 +5,6 @@ from odoo.fields import Command, Domain
 from xmlrpc.client import MAXINT
 
 from odoo.tools import SQL
-from odoo.tools.misc import str2bool
 
 
 class AccountBankStatementLine(models.Model):
@@ -487,9 +486,7 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account and not str2bool(
-                self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
-        ):
+        if not bank_account and not self.env['ir.config_parameter'].sudo().get_bool("account.skip_create_bank_account_on_reconcile"):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,

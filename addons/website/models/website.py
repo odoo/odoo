@@ -479,7 +479,7 @@ class Website(models.Model):
     def _api_rpc(self, route, params, endpoint_param_name, default_endpoint, **kwargs):
         params['version'] = release.version
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        api_endpoint = IrConfigParameter.get_param(endpoint_param_name, default_endpoint)
+        api_endpoint = IrConfigParameter.get_str(endpoint_param_name) or default_endpoint
         return iap_tools.iap_jsonrpc(api_endpoint + route, params=params, **kwargs)
 
     def _website_api_rpc(self, route, params):
@@ -907,7 +907,7 @@ class Website(models.Model):
         translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
         if translated_ratio > 0.8:
             try:
-                database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+                database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
                 response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
                     'placeholders': list(generated_content.keys()),
                     'lang': website.default_lang_id.name,
@@ -1247,16 +1247,12 @@ class Website(models.Model):
         return page_temp
 
     def _get_plausible_script_url(self):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'website.plausible_script',
-            'https://plausible.io/js/plausible.js'
-        )
+        return self.env['ir.config_parameter'].sudo().get_str(
+            'website.plausible_script') or 'https://plausible.io/js/plausible.js'
 
     def _get_plausible_server(self):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'website.plausible_server',
-            'https://plausible.io'
-        )
+        return self.env['ir.config_parameter'].sudo().get_str(
+            'website.plausible_server') or 'https://plausible.io'
 
     def _get_plausible_share_url(self):
         embed_url = f'/share/{self.plausible_site}?auth={self.plausible_shared_key}&embed=true&theme=system'

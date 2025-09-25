@@ -183,9 +183,9 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not expiration:
             if self.signup_type == 'reset':
-                expiration = int(self.env['ir.config_parameter'].get_param("auth_signup.reset_password.validity.hours", 4))
+                expiration = self.env['ir.config_parameter'].get_int("auth_signup.reset_password.validity.hours") or 4
             else:
-                expiration = int(self.env['ir.config_parameter'].get_param("auth_signup.signup.validity.hours", 144))
+                expiration = self.env['ir.config_parameter'].get_int("auth_signup.signup.validity.hours") or 144
         plist = [self.id, self.user_ids.ids, self._get_login_date(), self.signup_type]
         payload = tools.hash_sign(self.sudo().env, 'signup', plist, expiration_hours=expiration)
         return payload

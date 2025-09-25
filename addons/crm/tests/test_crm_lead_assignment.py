@@ -34,8 +34,8 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         with mute_logger('odoo.models.unlink'):
             cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
         cls.bundle_size = 50
-        cls.env['ir.config_parameter'].set_param('crm.assignment.commit.bundle', '%s' % cls.bundle_size)
-        cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
+        cls.env['ir.config_parameter'].set_int('crm.assignment.commit.bundle', '%s' % cls.bundle_size)
+        cls.env['ir.config_parameter'].set_float('crm.assignment.delay', 0)
 
     def assertInitialData(self):
         self.assertEqual(self.sales_team_1.assignment_max, 75)

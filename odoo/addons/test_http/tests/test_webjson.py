@@ -41,8 +41,8 @@ class TestHttpWebJson_1(TestHttpBase):
     def setUpClass(cls):
         super().setUpClass()
 
-        # enable explicitely and make sure demo has permissions
-        cls.env['ir.config_parameter'].set_param('web.json.enabled', True)
+        # enable explicitly and make sure demo has permissions
+        cls.env['ir.config_parameter'].set_bool('web.json.enabled', True)
         cls.user_demo.write({
             'group_ids': [Command.link(cls.env.ref('base.group_allow_export').id)],
         })

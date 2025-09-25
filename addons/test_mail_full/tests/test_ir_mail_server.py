@@ -14,7 +14,7 @@ class TestIrMailServerPersonal(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('mail.disable_personal_mail_servers', False)
+        cls.env['ir.config_parameter'].sudo().set_bool('mail.disable_personal_mail_servers', False)
         cls.user_admin.email = 'admin@test.lan'
         cls.user_employee.email = 'employee@test.lan'
         cls.user_employee.group_ids += cls.env.ref('mass_mailing.group_mass_mailing_user')

@@ -2065,7 +2065,7 @@ class CrmLead(models.Model):
     def _is_rule_based_assignment_activated(self):
         """ Returns whether a rule-based assignment method is activated (cron-enabled or manually-ran).
         """
-        return self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False)
+        return self.env['ir.config_parameter'].sudo().get_bool('crm.lead.auto.assignment')
 
     # ------------------------------------------------------------
     # MAILING
@@ -2633,7 +2633,7 @@ class CrmLead(models.Model):
             as we directly use this string in the sql queries.
             To avoid sql injections when using this config param,
             we ensure the date string can be effectively a date."""
-        str_date = self.env['ir.config_parameter'].sudo().get_param('crm.pls_start_date')
+        str_date = self.env['ir.config_parameter'].sudo().get_str('crm.pls_start_date')
         if not fields.Date.to_date(str_date):
             return False
         return str_date
@@ -2643,7 +2643,7 @@ class CrmLead(models.Model):
             we the fields from the formated string stored into the Char config field.
             To avoid sql injections when using that list, we return only the fields
             that are defined on the model. """
-        pls_fields_config = self.env['ir.config_parameter'].sudo().get_param('crm.pls_fields')
+        pls_fields_config = self.env['ir.config_parameter'].sudo().get_str('crm.pls_fields')
         pls_fields = pls_fields_config.split(',') if pls_fields_config else []
         pls_safe_fields = [field for field in pls_fields if field in self._fields.keys()]
         return pls_safe_fields

@@ -141,7 +141,7 @@
             <strong>Payment Terms: </strong>
             <span t-field="o.payment_term_id" class="mt-4"></span>
 
-            <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+            <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_str('web.base.url')"/>
             <t t-set="portal_url" t-value="base_address + '/my/purchase/' + str(o.id) + '#portal_connect_software_modal'"/>
             <div t-if="any(u._is_portal() for u in o.partner_id.user_ids) and o._get_edi_builders()" class="text-center">
                 <a t-att-href="portal_url">Connect your software</a> with <t t-out="o.company_id.name"/> to create quotes automatically.

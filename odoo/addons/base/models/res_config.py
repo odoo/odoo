@@ -554,7 +554,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_open_template_user(self):
         action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
-        template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
+        template_user_id = self.env['ir.config_parameter'].sudo().get_int('base.template_portal_user_id')
         template_user = self.env['res.users'].browse(template_user_id)
         if not template_user.exists():
             raise UserError(_('Invalid template user. It seems it has been deleted.'))

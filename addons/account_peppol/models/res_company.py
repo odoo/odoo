@@ -395,7 +395,7 @@ class ResCompany(models.Model):
 
     def _get_peppol_edi_mode(self, temporary_eas=False):
         self.ensure_one()
-        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        config_param = self.env['ir.config_parameter'].sudo().get_str('account_peppol.edi.mode')
         # by design, we can only have zero or one proxy user per company with type Peppol
         peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
         demo_if_demo_identifier = 'demo' if (temporary_eas or self.peppol_eas) == 'odemo' else False

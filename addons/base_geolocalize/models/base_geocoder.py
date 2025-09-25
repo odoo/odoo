@@ -27,7 +27,7 @@ class BaseGeocoder(models.AbstractModel):
 
     @api.model
     def _get_provider(self):
-        prov_id = self.env['ir.config_parameter'].sudo().get_param('base_geolocalize.geo_provider')
+        prov_id = self.env['ir.config_parameter'].sudo().get_int('base_geolocalize.geo_provider')
         if prov_id:
             provider = self.env['base.geo_provider'].browse(int(prov_id))
         if not prov_id or not provider.exists():
@@ -138,7 +138,7 @@ class BaseGeocoder(models.AbstractModel):
         """ Use google maps API. It won't work without a valid API key.
         :return: (latitude, longitude) or None if not found
         """
-        apikey = self.env['ir.config_parameter'].sudo().get_param('base_geolocalize.google_map_api_key')
+        apikey = self.env['ir.config_parameter'].sudo().get_str('base_geolocalize.google_map_api_key')
         if not apikey:
             raise UserError(_(
                 "API key for GeoCoding (Places) required.\n"

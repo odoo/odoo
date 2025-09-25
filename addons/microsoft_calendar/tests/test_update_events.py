@@ -1431,7 +1431,7 @@ class TestUpdateEvents(TestCommon):
         """
         # Set sync lower bound days range (with 'lower_bound_range' = 7 days).
         # Set event end time in two weeks past the current day for simulating an old event.
-        self.env['ir.config_parameter'].sudo().set_param('microsoft_calendar.sync.lower_bound_range', 7)
+        self.env['ir.config_parameter'].sudo().set_int('microsoft_calendar.sync.lower_bound_range', 7)
         self.simple_event.write({
             'start': datetime.now() - timedelta(days=14),
             'stop': datetime.now() - timedelta(days=14) + timedelta(hours=2),

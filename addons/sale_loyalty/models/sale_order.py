@@ -683,7 +683,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return (
             self.company_id.partner_id.tz
-            or self.env['ir.config_parameter'].sudo().get_param('loyalty.timezone', 'UTC')
+            or self.env['ir.config_parameter'].sudo().get_str('loyalty.timezone')
+            or 'UTC'
         )
 
     def _get_confirmed_tx_create_date(self):
@@ -1503,7 +1504,7 @@ class SaleOrder(models.Model):
         super()._validate_order()
         if self.amount_total or not self.reward_amount:
             return
-        auto_invoice = self.env['ir.config_parameter'].get_param('sale.automatic_invoice')
+        auto_invoice = self.env['ir.config_parameter'].get_bool('sale.automatic_invoice')
         if str2bool(auto_invoice):
             # create an invoice for order with zero total amount and automatic invoice enabled
             self._force_lines_to_invoice_policy_order()

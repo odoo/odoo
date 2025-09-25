@@ -19,3 +19,9 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='base_geolocalize.google_map_api_key',
         help="Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
     )
+
+    def set_values(self):
+        super().set_values()
+        if not self.geoloc_provider_id:
+            # change setting ir_config_parameter.value from '0' to False to display default value next time
+            self.env['ir.config_parameter'].sudo().set_int('base_geolocalize.geo_provider', None)

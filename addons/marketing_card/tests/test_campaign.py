@@ -114,7 +114,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
     def test_campaign_send_mailing_with_duplicates(self):
         # set a low batch size to make sure mailing "seen list" does not affect card mailings
         # as it is based on traces existing with some email -> traces created in batches with mail.mail
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 5)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 5)
 
         campaign = self.campaign.with_user(self.env.user)
         self.env.user.sudo().group_ids += self.env.ref('mass_mailing.group_mass_mailing_user')

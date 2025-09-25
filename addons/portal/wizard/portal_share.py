@@ -96,7 +96,7 @@ class PortalShare(models.TransientModel):
             self = self.with_context(lang=saved_lang)
 
     def action_send_mail(self):
-        signup_enabled = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope') == 'b2c'
+        signup_enabled = self.env['ir.config_parameter'].sudo().get_str('auth_signup.invitation_scope') or 'b2c' == 'b2c'
 
         if getattr(self.resource_ref, 'access_token', False) or not signup_enabled:
             partner_ids = self.partner_ids

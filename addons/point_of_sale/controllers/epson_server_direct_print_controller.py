@@ -118,7 +118,7 @@ class ServerDirectPrintController(http.Controller):
         :return: A response to be sent back to the Epson printer.
         """
         # Ensure the request format validity / refuse unauthorized requests
-        db_uuid = request.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        db_uuid = request.env['ir.config_parameter'].sudo().get_str('database.uuid')
         if not db_uuid or db_uuid[:30].strip() != ID:  # 30 is the max size in printer settings
             _logger.warning("Invalid ID in request data %s %s. Ignoring the request", ConnectionType, ID)
             return self._respond_to_printer_request()

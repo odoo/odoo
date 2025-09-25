@@ -142,8 +142,8 @@ class ResCompany(models.Model):
 
     def _get_nemhandel_edi_mode(self):
         self.ensure_one()
-        config_param = self.env['ir.config_parameter'].sudo().get_param('l10n_dk.edi.mode')
-        return self.sudo().nemhandel_edi_user.edi_mode or config_param or 'prod'
+        config_param = self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode') or 'prod'
+        return self.sudo().nemhandel_edi_user.edi_mode or config_param
 
     def _get_nemhandel_webhook_endpoint(self):
         self.ensure_one()

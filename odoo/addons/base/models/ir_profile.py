@@ -155,7 +155,7 @@ class IrProfile(models.Model):
         If the profiling is enabled, return until when it is enabled.
         Otherwise return ``None``.
         """
-        limit = self.env['ir.config_parameter'].sudo().get_param('base.profiling_enabled_until', '')
+        limit = self.env['ir.config_parameter'].sudo().get_str('base.profiling_enabled_until')
         return limit if str(fields.Datetime.now()) < limit else None
 
     @api.model
@@ -234,5 +234,5 @@ class BaseEnableProfilingWizard(models.TransientModel):
             record.expiration = fields.Datetime.now() + relativedelta(**{unit: int(quantity)})
 
     def submit(self):
-        self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', self.expiration)
+        self.env['ir.config_parameter'].set_str('base.profiling_enabled_until', self.expiration)
         return False

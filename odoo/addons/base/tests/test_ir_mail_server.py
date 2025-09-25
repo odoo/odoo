@@ -53,7 +53,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', False)
+        cls.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', None)
         cls._init_mail_servers()
 
     def test_assert_base_values(self):
@@ -418,7 +418,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                     )
 
         # for from_filter in ICP, overwrite the one from odoo-bin
-        self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', 'icp.example.com')
+        self.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', 'icp.example.com')
 
         # Use an email in the domain of the config parameter "mail.default.from_filter"
         with self.mock_smtplib_connection():
@@ -441,7 +441,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         """
         IrMailServer = self.env['ir.mail_server']
         # should be ignored by the mail server
-        self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', 'fake.com')
+        self.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', 'fake.com')
 
         server_other = IrMailServer.create([{
             'name': 'Server No From Filter',

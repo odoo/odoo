@@ -77,7 +77,7 @@ class SmsSms(models.Model):
     def _get_send_batch_size(self):
         companies = self._get_sms_company()
         if companies and any(company.sms_provider == 'twilio' for company in companies):
-            return int(self.env['ir.config_parameter'].sudo().get_param('sms_twilio.session.batch.size', 10))
+            return self.env['ir.config_parameter'].sudo().get_int('sms_twilio.session.batch.size') or 10
         return super()._get_send_batch_size()
 
     def _handle_call_result_hook(self, results):

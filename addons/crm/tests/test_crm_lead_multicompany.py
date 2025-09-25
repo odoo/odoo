@@ -304,7 +304,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
     def test_gateway_incompatible_company_error_on_incoming_email(self):
         # set automatic assignment to Manual to circumvent automatic lead assignment,
         # so as to reproduce the conditions in which the original bug appeared
-        self.env['ir.config_parameter'].set_param('crm.lead.auto.assignment', True)
+        self.env['ir.config_parameter'].set_bool('crm.lead.auto.assignment', True)
         self.assertTrue(self.sales_team_1.alias_name)
         self.assertFalse(self.sales_team_1.company_id)
         customer_company = self.env['res.partner'].create({

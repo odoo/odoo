@@ -176,5 +176,5 @@ FROM (SELECT
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
-        report_period = self.env['ir.config_parameter'].sudo().get_param('stock.report_stock_quantity_period', default='3')
-        self.env.cr.execute(query, {'report_period': int(report_period)})
+        report_period = self.env['ir.config_parameter'].sudo().get_int('stock.report_stock_quantity_period') or 3
+        self.env.cr.execute(query, {'report_period': report_period})

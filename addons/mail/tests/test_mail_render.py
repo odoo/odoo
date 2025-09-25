@@ -140,7 +140,7 @@ class TestMailRenderCommon(common.MailCommon):
         })
 
         # Enable group-based template management
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
 
         # User without the group "mail.group_mail_template_editor"
         cls.user_rendering_restricted = common.mail_new_test_user(

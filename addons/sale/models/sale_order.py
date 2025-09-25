@@ -12,7 +12,6 @@ from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools import SQL, OrderedSet, float_is_zero, format_amount, is_html_empty
 from odoo.tools.mail import html_keep_url
-from odoo.tools.misc import str2bool
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -377,7 +376,7 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
         if not use_invoice_terms:
             return
         for order in self:
@@ -1114,11 +1113,10 @@ class SaleOrder(models.Model):
         :return: `mail.template` record or None if default template wasn't found
         """
         self.ensure_one()
-        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
+        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_int(
             'sale.default_confirmation_template'
         )
-        default_confirmation_template = default_confirmation_template_id \
-            and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
+        default_confirmation_template = self.env['mail.template'].browse(default_confirmation_template_id).exists()
         if default_confirmation_template:
             return default_confirmation_template
         else:
@@ -1246,7 +1244,7 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+        async_send = self.env['ir.config_parameter'].sudo().get_bool('sale.async_emails')
         cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
         cron_enabled = cron and cron.sudo().active
         if async_send and cron_enabled and allow_deferred_sending:

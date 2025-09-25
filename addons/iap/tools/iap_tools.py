@@ -87,7 +87,7 @@ def mail_prepare_for_domain_search(email, min_email_length=0):
 
 
 def iap_get_endpoint(env):
-    url = env['ir.config_parameter'].sudo().get_param('iap.endpoint', DEFAULT_ENDPOINT)
+    url = env['ir.config_parameter'].sudo().get_str('iap.endpoint') or DEFAULT_ENDPOINT
     return url
 
 

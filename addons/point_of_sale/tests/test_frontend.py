@@ -1306,7 +1306,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
 
     def test_limited_product_pricelist_loading(self):
-        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 1)
 
         limited_category = self.env['pos.category'].create({
             'name': 'Limited Category',
@@ -1729,7 +1729,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'rounding_method': rounding_method.id,
         })
 
-        self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
+        self.env['ir.config_parameter'].sudo().set_int('barcode.max_time_between_keys_in_ms', 1)
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 

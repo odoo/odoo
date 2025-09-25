@@ -863,7 +863,7 @@ class CustomerPortal(Controller):
     def security(self, **post):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
-        values['allow_api_keys'] = bool(request.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'))
+        values['allow_api_keys'] = request.env['ir.config_parameter'].sudo().get_bool('portal.allow_api_keys')
         values['open_deactivate_modal'] = False
 
         if request.httprequest.method == 'POST':

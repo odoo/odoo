@@ -952,7 +952,7 @@ class TestOrmComputeDynamicDepends(models.Model):
 
     def _get_full_name_fields(self):
         # the fields to use are stored in a config parameter
-        depends = self.env['ir.config_parameter'].get_param('test_orm.full_name', '')
+        depends = self.env['ir.config_parameter'].get_str('test_orm.full_name')
         return depends.split(',') if depends else []
 
     @api.depends(lambda self: self._get_full_name_fields())
