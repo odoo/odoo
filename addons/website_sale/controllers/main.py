@@ -408,8 +408,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTag = request.env['product.tag']
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search_fetch(Domain.AND([
-                Domain('product_ids.is_published', '=', True),
                 Domain('visible_to_customers', '=', True),
+                Domain.OR([
+                    Domain('product_template_ids.is_published', '=', True),
+                    Domain('product_ids.is_published', '=', True),
+                ]),
                 website_domain,
             ]))
         else:
