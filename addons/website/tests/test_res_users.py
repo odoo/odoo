@@ -1,15 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.exceptions import ValidationError
-from odoo.service.model import retrying
-from odoo.tests.common import tagged, TransactionCase, new_test_user
-from odoo.tools import mute_logger
-
 from unittest import TestCase
 
 import psycopg2
+
+from odoo import Command
+from odoo.exceptions import ValidationError
+from odoo.http import retrying
+from odoo.tests.common import TransactionCase, new_test_user, tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

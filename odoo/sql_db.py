@@ -21,6 +21,8 @@ from datetime import datetime, timedelta
 from inspect import currentframe
 
 import psycopg2
+import psycopg2.errorcodes
+import psycopg2.errors
 import psycopg2.extensions
 import psycopg2.extras
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
@@ -32,12 +34,13 @@ import odoo
 
 from . import tools
 from .release import MIN_PG_VERSION
-from .tools import config, SQL
+from .tools import SQL, config
 from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
+
     from odoo.orm.environments import Transaction
 
     T = typing.TypeVar('T')
@@ -63,6 +66,12 @@ _logger_conn = _logger.getChild("connection")
 
 re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
+
+PG_CONCURRENCY_EXCEPTIONS_TO_RETRY = (
+    psycopg2.errors.LockNotAvailable,
+    psycopg2.errors.SerializationFailure,
+    psycopg2.errors.DeadlockDetected,
+)
 
 
 def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into'], str] | tuple[typing.Literal['other'], None]:
