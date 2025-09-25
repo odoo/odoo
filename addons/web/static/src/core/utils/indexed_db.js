@@ -31,7 +31,7 @@ export class IndexedDB {
      *
      * @param {string} table
      * @param {string} key
-     * @returns Promise
+     * @returns {Promise<any>}
      */
     async read(table, key) {
         this._tables.add(table);
@@ -43,12 +43,27 @@ export class IndexedDB {
     }
 
     /**
+     * Reads all keys from a given table.
+     *
+     * @param {string} table
+     * @returns {Promise<string>}
+     */
+    async getAllKeys(table) {
+        this._tables.add(table);
+        return this.execute((db) => {
+            if (db) {
+                return this._getAllKeys(db, table);
+            }
+        });
+    }
+
+    /**
      * Write data into the given table
      *
      * @param {string} table
      * @param {string} key
      * @param  {any} value
-     * @returns Promise
+     * @returns {Promise}
      */
     async write(table, key, value) {
         this._tables.add(table);
@@ -63,7 +78,7 @@ export class IndexedDB {
      * Invalidates a table, or the whole database.
      *
      * @param {string|Array} [table=null] if not given, the whole database is invalidated
-     * @returns Promise
+     * @returns {Promise}
      */
     async invalidate(tables = null) {
         return this.execute((db) => {
@@ -76,7 +91,7 @@ export class IndexedDB {
     /**
      * Delete the whole database
      *
-     * @returns Promise
+     * @returns {Promise}
      */
     async deleteDatabase() {
         return this.mutex.exec(() => this._deleteDatabase(() => {}));
@@ -86,7 +101,7 @@ export class IndexedDB {
      * open the database and execute the callback with the db as parameter.
      *
      * @params {Function} callback
-     * @returns Promise
+     * @returns {Promise<any>}
      */
     async execute(callback) {
         return this.mutex.exec(() => this._execute(callback));
@@ -233,6 +248,16 @@ export class IndexedDB {
             const transaction = db.transaction(table, "readonly");
             const objectStore = transaction.objectStore(table);
             const r = objectStore.get(key);
+            r.onsuccess = () => resolve(r.result);
+            transaction.onerror = () => reject(transaction.error);
+        });
+    }
+
+    async _getAllKeys(db, table) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(table, "readonly");
+            const objectStore = transaction.objectStore(table);
+            const r = objectStore.getAllKeys();
             r.onsuccess = () => resolve(r.result);
             transaction.onerror = () => reject(transaction.error);
         });

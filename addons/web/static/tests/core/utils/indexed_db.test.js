@@ -137,6 +137,28 @@ test("one cache, invalidate all tables", async () => {
     await ensureDbIsAbsent();
 });
 
+test("one table, call getAllKeys", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // empty table
+    expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
+
+    // populate and call getAllKeys
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    expect(await indexedDB.getAllKeys("mytable")).toEqual(["test", "test2"]);
+
+    // invalidate table and call getAllKeys
+    await indexedDB.invalidate("mytable");
+    expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
 test("invalidate all tables, empty cache", async () => {
     onError(() => deleteCacheDB());
     await ensureDbIsAbsent();
