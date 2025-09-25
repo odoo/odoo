@@ -13,7 +13,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
-from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
+from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
@@ -408,8 +408,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTag = request.env['product.tag']
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search_fetch(Domain.AND([
-                Domain('product_ids.is_published', '=', True),
                 Domain('visible_to_customers', '=', True),
+                Domain.OR([
+                    Domain('product_template_ids.is_published', '=', True),
+                    Domain('product_ids.is_published', '=', True),
+                ]),
                 website_domain,
             ]))
         else:
