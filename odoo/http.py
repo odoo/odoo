@@ -36,11 +36,11 @@ Here be dragons:
             Request._serve_db
                 env['ir.http']._match
                 if not match:
-                    model.retrying(Request._serve_ir_http_fallback)
+                    retrying(Request._serve_ir_http_fallback)
                         env['ir.http']._serve_fallback
                         env['ir.http']._post_dispatch
                 else:
-                    model.retrying(Request._serve_ir_http)
+                    retrying(Request._serve_ir_http)
                         env['ir.http']._authenticate
                         env['ir.http']._pre_dispatch
                         Dispatcher.pre_dispatch
@@ -79,7 +79,7 @@ Request._serve_db
   the same read-only cursor; ``_serve_ir_http`` is called reusing the
   same (but reset) read-only cursor, or a new read/write one.
 
-service.model.retrying
+retrying
   Manage the cursor, the environment and exceptions that occured while
   executing the underlying function. They recover from various
   exceptions such as serialization errors and writes in read-only
@@ -127,7 +127,7 @@ endpoint
   The @route(...) decorated controller method.
 """
 
-import odoo.init  # import first for core setup
+import odoo.init  # import first for core setup  # noqa: I001
 
 import base64
 import collections.abc
@@ -142,13 +142,13 @@ import json
 import logging
 import mimetypes
 import os
+import random
 import re
 import secrets
-import threading
 import tempfile
+import threading
 import time
 import traceback
-import typing
 import warnings
 import weakref
 from abc import ABC, abstractmethod
@@ -164,8 +164,8 @@ import babel.core
 
 try:
     import geoip2.database
-    import geoip2.models
     import geoip2.errors
+    import geoip2.models
 except ImportError:
     geoip2 = None
 
@@ -175,19 +175,24 @@ except ImportError:
     maxminddb = None
 
 import psycopg2
+import psycopg2.errorcodes
+import psycopg2.errors
 import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.local
 import werkzeug.routing
 import werkzeug.security
 import werkzeug.wrappers
-import werkzeug.wsgi
-from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (
-    default_exceptions as werkzeug_default_exceptions,
-    HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
-    InternalServerError
+    HTTPException,
+    InternalServerError,
+    NotFound,
+    UnprocessableEntity,
+    UnsupportedMediaType,
 )
+from werkzeug.exceptions import default_exceptions as werkzeug_default_exceptions
+from werkzeug.urls import URL, url_encode, url_parse, url_quote
+
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
     ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
@@ -199,19 +204,33 @@ try:
 except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
-import odoo.addons
-from .exceptions import UserError, AccessError, AccessDenied
+from .exceptions import (
+    AccessDenied,
+    AccessError,
+    ConcurrencyError,
+    UserError,
+    ValidationError,
+)
 from .modules import module as module_manager
 from .modules.registry import Registry
-from .service import model as service_model
 from .service.server import thread_local
-from .tools import (config, consteq, file_path, get_lang, json_default,
-                    parse_version, profiler, unique, exception_to_unicode)
+from .sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
+from .tools import (
+    config,
+    consteq,
+    exception_to_unicode,
+    file_path,
+    get_lang,
+    json_default,
+    parse_version,
+    profiler,
+    real_time,
+    unique,
+)
+from .tools._vendor.useragents import UserAgent
 from .tools.facade import Proxy, ProxyAttr, ProxyFunc
 from .tools.func import filter_kwargs
-from .tools.misc import submap, real_time
-from .tools._vendor.useragents import UserAgent
-
+from .tools.misc import submap
 
 _logger = logging.getLogger(__name__)
 
@@ -232,6 +251,7 @@ CSRF_TOKEN_SALT = 60 * 60 * 24 * 365
 # The default lang to use when the browser doesn't specify it
 DEFAULT_LANG = 'en_US'
 
+
 # The dictionary to initialise a new session with.
 def get_default_session():
     return {
@@ -243,8 +263,8 @@ def get_default_session():
         'uid': None,
         'session_token': None,
         '_trace': [],
-        'create_time': time.time(),
     }
+
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
 
@@ -254,6 +274,9 @@ DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
 if geoip2:
     GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
     GEOIP_EMPTY_CITY = geoip2.models.City({})
+
+# How many times retrying() is allowed to retry
+MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 MISSING_CSRF_WARNING = """\
 No CSRF validation token provided for path %r
@@ -360,7 +383,7 @@ def content_disposition(filename, disposition_type='attachment'):
         raise ValueError(e)
     return "{}; filename*=UTF-8''{}".format(
         disposition_type,
-        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
+        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%')  # RFC6266
     )
 
 
@@ -454,6 +477,98 @@ def get_session_max_inactivity(env):
 
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
+
+
+def retrying(func, env):
+    """
+    Call ``func``in a loop until the SQL transaction commits with no
+    serialisation error. It rollbacks the transaction in between calls.
+
+    A serialisation error occurs when two independent transactions
+    attempt to commit incompatible changes such as writing different
+    values on a same record. The first transaction to commit works, the
+    second is canceled with a :class:`psycopg2.errors.SerializationFailure`.
+
+    This function intercepts those serialization errors, rollbacks the
+    transaction, reset things that might have been modified, waits a
+    random bit, and then calls the function again.
+
+    It calls the function up to ``MAX_TRIES_ON_CONCURRENCY_FAILURE`` (5)
+    times. The time it waits between calls is random with an exponential
+    backoff: ``random.uniform(0.0, 2 ** i)`` where ``i`` is the n° of
+    the current attempt and starts at 1.
+
+    :param callable func: The function to call, you can pass arguments
+        using :func:`functools.partial`.
+    :param odoo.api.Environment env: The environment where the registry
+        and the cursor are taken.
+    """
+    try:
+        for tryno in range(1, MAX_TRIES_ON_CONCURRENCY_FAILURE + 1):
+            tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
+            try:
+                result = func()
+                if not env.cr._closed:
+                    env.cr.flush()  # submit the changes to the database
+                break
+            except (
+                psycopg2.IntegrityError,
+                psycopg2.OperationalError,
+                ConcurrencyError,
+            ) as exc:
+                if env.cr._closed:
+                    raise
+                env.cr.rollback()
+                env.transaction.reset()
+                env.registry.reset_changes()
+                if request:
+                    request.session = request._get_session_and_dbname()[0]
+                    # Rewind files in case of failure
+                    for filename, file in request.httprequest.files.items():
+                        if hasattr(file, "seekable") and file.seekable():
+                            file.seek(0)
+                        else:
+                            e = ("Cannot retry request on input file "
+                                f"{filename!r} after serialization failure")
+                            raise RuntimeError(e) from exc
+                if isinstance(exc, psycopg2.IntegrityError):
+                    model = env['base']
+                    for rclass in env.registry.values():
+                        if exc.diag.table_name == rclass._table:
+                            model = env[rclass._name]
+                            break
+                    message = env._(
+                        "The operation cannot be completed: %s",
+                        model._sql_error_to_message(exc))
+                    raise ValidationError(message) from exc
+
+                if isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
+                    error = psycopg2.errorcodes.lookup(exc.pgcode)
+                elif isinstance(exc, ConcurrencyError):
+                    error = repr(exc)
+                else:
+                    raise
+                if not tryleft:
+                    _logger.info("%s, maximum number of tries reached!", error)
+                    raise
+
+                wait_time = random.uniform(0.0, 2 ** tryno)
+                _logger.info("%s, %s tries left, try again in %.04f sec...",
+                    error, tryleft, wait_time)
+                time.sleep(wait_time)
+        else:
+            # handled in the "if not tryleft" case
+            raise RuntimeError("unreachable")  # noqa: EM101, TRY301
+
+    except Exception:
+        env.transaction.reset()
+        env.registry.reset_changes()
+        raise
+
+    if not env.cr.closed:
+        env.cr.commit()  # effectively commits and execute post-commits
+    env.registry.signal_changes()
+    return result
 
 
 def serialize_exception(exception, *, message=None, arguments=None):
@@ -2356,7 +2471,7 @@ class Request:
             if readonly and cr.readonly:
                 threading.current_thread().cursor_mode = 'ro'
                 try:
-                    return service_model.retrying(serve_func, env=self.env)
+                    return retrying(serve_func, env=self.env)
                 except psycopg2.errors.ReadOnlySqlTransaction as exc:
                     # although the controller is marked read-only, it
                     # attempted a write operation, try again using a
@@ -2382,7 +2497,7 @@ class Request:
             assert not cr.readonly
             self.env = self.env(cr=cr)
             try:
-                return service_model.retrying(serve_func, env=self.env)
+                return retrying(serve_func, env=self.env)
             except Exception as exc:  # noqa: BLE001
                 raise self._update_served_exception(exc)
         except HTTPException as exc:

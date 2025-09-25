@@ -1,20 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import random
 import threading
-import time
 from collections.abc import Mapping, Sequence
 from functools import partial
-
-from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 from odoo import api, http
 from odoo.exceptions import (
     AccessDenied,
     AccessError,
-    ConcurrencyError,
     UserError,
-    ValidationError,
 )
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
@@ -23,10 +17,6 @@ from odoo.tools import lazy
 from .server import thread_local
 
 _logger = logging.getLogger(__name__)
-
-PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
-PG_CONCURRENCY_EXCEPTIONS_TO_RETRY = (errors.LockNotAvailable, errors.SerializationFailure, errors.DeadlockDetected)
-MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 
 class Params:
@@ -142,97 +132,13 @@ def execute_cr(cr, uid, obj, method, args, kw):
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
     thread_local.rpc_model_method = f'{obj}.{method}'
-    result = retrying(partial(call_kw, recs, method, args, kw), env)
+    result = http.retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
     for l in _traverse_containers(result, lazy):
         _0 = l._value
     if result is None:
         _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
-    return result
-
-
-def retrying(func, env):
-    """
-    Call ``func``in a loop until the SQL transaction commits with no
-    serialisation error. It rollbacks the transaction in between calls.
-
-    A serialisation error occurs when two independent transactions
-    attempt to commit incompatible changes such as writing different
-    values on a same record. The first transaction to commit works, the
-    second is canceled with a :class:`psycopg2.errors.SerializationFailure`.
-
-    This function intercepts those serialization errors, rollbacks the
-    transaction, reset things that might have been modified, waits a
-    random bit, and then calls the function again.
-
-    It calls the function up to ``MAX_TRIES_ON_CONCURRENCY_FAILURE`` (5)
-    times. The time it waits between calls is random with an exponential
-    backoff: ``random.uniform(0.0, 2 ** i)`` where ``i`` is the n° of
-    the current attempt and starts at 1.
-
-    :param callable func: The function to call, you can pass arguments
-        using :func:`functools.partial`.
-    :param odoo.api.Environment env: The environment where the registry
-        and the cursor are taken.
-    """
-    try:
-        for tryno in range(1, MAX_TRIES_ON_CONCURRENCY_FAILURE + 1):
-            tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
-            try:
-                result = func()
-                if not env.cr._closed:
-                    env.cr.flush()  # submit the changes to the database
-                break
-            except (IntegrityError, OperationalError, ConcurrencyError) as exc:
-                if env.cr._closed:
-                    raise
-                env.cr.rollback()
-                env.transaction.reset()
-                env.registry.reset_changes()
-                request = http.request
-                if request:
-                    request.session = request._get_session_and_dbname()[0]
-                    # Rewind files in case of failure
-                    for filename, file in request.httprequest.files.items():
-                        if hasattr(file, "seekable") and file.seekable():
-                            file.seek(0)
-                        else:
-                            raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
-                if isinstance(exc, IntegrityError):
-                    model = env['base']
-                    for rclass in env.registry.values():
-                        if exc.diag.table_name == rclass._table:
-                            model = env[rclass._name]
-                            break
-                    message = env._("The operation cannot be completed: %s", model._sql_error_to_message(exc))
-                    raise ValidationError(message) from exc
-
-                if isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
-                    error = errorcodes.lookup(exc.pgcode)
-                elif isinstance(exc, ConcurrencyError):
-                    error = repr(exc)
-                else:
-                    raise
-                if not tryleft:
-                    _logger.info("%s, maximum number of tries reached!", error)
-                    raise
-
-                wait_time = random.uniform(0.0, 2 ** tryno)
-                _logger.info("%s, %s tries left, try again in %.04f sec...", error, tryleft, wait_time)
-                time.sleep(wait_time)
-        else:
-            # handled in the "if not tryleft" case
-            raise RuntimeError("unreachable")
-
-    except Exception:
-        env.transaction.reset()
-        env.registry.reset_changes()
-        raise
-
-    if not env.cr.closed:
-        env.cr.commit()  # effectively commits and execute post-commits
-    env.registry.signal_changes()
     return result
 
 
