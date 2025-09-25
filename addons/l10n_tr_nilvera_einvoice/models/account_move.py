@@ -217,9 +217,15 @@ class AccountMove(models.Model):
                 elif not move.ref and (nilvera_reference := document_uuids_references.get(document_uuid)):
                     move.ref = nilvera_reference
                     self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
+<<<<<<< 1c52e2e9e8e00a19e2db00bf70d658496f9a0f29
                 moves |= move
                 self.env.cr.commit()
             journal._notify_einvoices_received(moves)
+||||||| 73af26879b353cc17b2bed6ae5f0823a67f668ab
+            self._cr.commit()
+=======
+                self._cr.commit()
+>>>>>>> 1cd6a1fe9ebe195c490b3fa3c0c212887b5b019f
 
     def _l10n_tr_get_nilvera_invoice_journal(self, journal_type):
         journal = self._l10n_tr_get_document_category_default_journal(journal_type)
