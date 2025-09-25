@@ -34,7 +34,6 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
 from odoo.http import ROUTING_KEYS, SAFE_HTTP_METHODS, Response, request
 from odoo.modules.registry import Registry
-from odoo.service import security
 from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.translate import code_translations
@@ -256,7 +255,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _auth_method_user(cls):
         if request.env.uid in [None] + cls._get_public_users():
-            raise http.SessionExpiredException("Session expired")
+            raise http.SessionExpiredException("user is not connected")
 
     @classmethod
     def _auth_method_none(cls):
@@ -276,13 +275,20 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _authenticate_explicit(cls, auth):
+        session_expired_exc = None
         try:
             if request.session.uid is not None:
-                if not security.check_session(request.session, request.env, request):
-                    request.session.logout(keep_db=True)
+                try:
+                    request.session._check(request)
+                except http.SessionExpiredException as exc:
+                    session_expired_exc = exc  # save the traceback
                     request.env = api.Environment(request.env.cr, None, request.session.context)
             getattr(cls, f'_auth_method_{auth}')()
-        except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
+        except http.SessionExpiredException as exc:
+            if session_expired_exc:
+                raise exc from session_expired_exc
+            raise
+        except (AccessDenied, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)

@@ -63,7 +63,6 @@ from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
-from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
@@ -2366,10 +2365,12 @@ class HttpCase(TransactionCase):
                 auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
-            session.uid = uid
-            session.login = user
-            session.session_token = uid and security.compute_session_token(session, env)
-            session.context = dict(env['res.users'].context_get())
+            session['uid'] = uid
+            session['login'] = user
+            session['session_token'] = None
+            if uid:
+                session._update_session_token(env)
+            session['context'] = dict(env['res.users'].context_get())
 
         odoo.http.root.session_store.save(session)
         # Reset the opener: turns out when we set cookies['foo'] we're really
