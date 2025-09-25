@@ -149,7 +149,7 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc8_concurrency_error(self):
         with (
-            self.assertLogs('odoo.service.model') as log_catcher,
+            self.assertLogs('odoo.http') as log_catcher,
             patch.object(test_http.controllers, 'should_fail', True),
         ):
             self.url_open('/test_http/concurrency_error').raise_for_status()
