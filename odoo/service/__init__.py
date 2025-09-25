@@ -3,7 +3,6 @@
 from . import common
 from . import db
 from . import model
-from . import server
 
 #.apidoc title: RPC Services
 

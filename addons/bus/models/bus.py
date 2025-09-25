@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import contextlib
 import datetime
 import json
@@ -8,13 +7,13 @@ import os
 import selectors
 import threading
 import time
+
 from psycopg2 import InterfaceError
 
 import odoo
 from odoo import api, fields, models
-from odoo.service.server import CommonServer
-from odoo.tools import json_default, SQL
-from odoo.tools.constants import GC_UNLINK_LIMIT
+from odoo.server import CommonServer
+from odoo.tools import SQL, json_default
 from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)

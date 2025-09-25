@@ -127,7 +127,7 @@ endpoint
   The @route(...) decorated controller method.
 """
 
-import odoo.init  # import first for core setup
+import odoo.init  # import first for core setup  # noqa: I001
 
 import base64
 import collections.abc
@@ -164,8 +164,8 @@ import babel.core
 
 try:
     import geoip2.database
-    import geoip2.models
     import geoip2.errors
+    import geoip2.models
 except ImportError:
     geoip2 = None
 
@@ -182,12 +182,16 @@ import werkzeug.routing
 import werkzeug.security
 import werkzeug.wrappers
 import werkzeug.wsgi
-from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (
-    default_exceptions as werkzeug_default_exceptions,
-    HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
-    InternalServerError
+    HTTPException,
+    InternalServerError,
+    NotFound,
+    UnprocessableEntity,
+    UnsupportedMediaType,
 )
+from werkzeug.exceptions import default_exceptions as werkzeug_default_exceptions
+from werkzeug.urls import URL, url_encode, url_parse, url_quote
+
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
     ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
@@ -200,18 +204,27 @@ except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
 import odoo.addons
-from .exceptions import UserError, AccessError, AccessDenied
+from .exceptions import AccessDenied, AccessError, UserError
 from .modules import module as module_manager
 from .modules.registry import Registry
+from .server import thread_local
 from .service import model as service_model
-from .service.server import thread_local
-from .tools import (config, consteq, file_path, get_lang, json_default,
-                    parse_version, profiler, unique, exception_to_unicode)
+from .tools import (
+    config,
+    consteq,
+    exception_to_unicode,
+    file_path,
+    get_lang,
+    json_default,
+    parse_version,
+    profiler,
+    real_time,
+    unique,
+)
+from .tools._vendor.useragents import UserAgent
 from .tools.facade import Proxy, ProxyAttr, ProxyFunc
 from .tools.func import filter_kwargs
-from .tools.misc import submap, real_time
-from .tools._vendor.useragents import UserAgent
-
+from .tools.misc import submap
 
 _logger = logging.getLogger(__name__)
 
@@ -2768,7 +2781,7 @@ class Application:
         initializing the configuration values.
         """
         module_manager.initialize_sys_path()
-        from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
+        from odoo.server import load_server_wide_modules  # noqa: PLC0415
         load_server_wide_modules()
 
     def static_path(self, module_name: str) -> str | None:

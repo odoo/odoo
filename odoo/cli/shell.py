@@ -7,11 +7,12 @@ import sys
 import threading
 
 import odoo  # to expose in the shell
-from odoo import api
+from odoo import api, server
 from odoo.modules.registry import Registry
-from odoo.service import server
 from odoo.tools import config
-from . import Command, server as cli_server
+
+from . import Command
+from . import server as cli_server
 
 _logger = logging.getLogger(__name__)
 

@@ -27,7 +27,7 @@ def run_tests(env, test_tags, modules=None, reload_tests=False):
         _logger.error('run_tests should be used only in threaded mode')
         return
 
-    from odoo.service.server import server  # noqa: PLC0415
+    from odoo.server import server  # noqa: PLC0415
     if not server.httpd:
         # some tests need the http daemon to be available...
         server.http_spawn()

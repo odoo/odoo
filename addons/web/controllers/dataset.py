@@ -4,8 +4,8 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.server import thread_local
 from odoo.service.model import call_kw
-from odoo.service.server import thread_local
 
 from .utils import clean_action
 

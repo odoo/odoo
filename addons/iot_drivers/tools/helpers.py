@@ -1,29 +1,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from enum import Enum
-from functools import cache, wraps
-from ipaddress import ip_address
 import inspect
 import io
 import logging
-from pathlib import Path
-import requests
 import socket
-from urllib.parse import parse_qs
-import urllib3.util
-from threading import Thread
 import time
 import zipfile
+from enum import Enum
+from functools import cache, wraps
+from ipaddress import ip_address
+from pathlib import Path
+from threading import Thread
+from urllib.parse import parse_qs
+
+import requests
+import urllib3.util
 from werkzeug.exceptions import Locked
 
-from odoo import service
+from odoo import server
+
 from odoo.addons.iot_drivers.tools import system
 from odoo.addons.iot_drivers.tools.system import (
     IOT_IDENTIFIER,
-    IS_RPI,
-    IS_WINDOWS,
     IOT_RPI_CHAR,
     IOT_WINDOWS_CHAR,
+    IS_RPI,
+    IS_WINDOWS,
 )
 
 _logger = logging.getLogger(__name__)
@@ -47,7 +49,7 @@ class IoTRestart(Thread):
 
     def run(self):
         time.sleep(self.delay)
-        service.server.restart()
+        server.restart()
 
 
 def toggleable(function):
