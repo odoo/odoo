@@ -1,6 +1,5 @@
 import { fields } from "@mail/model/export";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
 
 import { WebsiteVisitor } from "@website/common/website_visitor_model";
@@ -11,19 +10,19 @@ const { DateTime } = luxon;
 const websiteVisitorPatch = {
     setup() {
         super.setup();
-        /** @type {Array<[string, string]>} */
-        this.page_visit_history = [];
         this.discuss_channel_ids = fields.Many("mail.thread");
+        this.last_track_ids = fields.Many("website.track");
     },
     /** @returns {string} */
     get pageVisitHistoryText() {
-        const history = [];
-        for (const h of this.page_visit_history) {
-            const [label, date] = h;
-            const time = deserializeDateTime(date).toLocaleString(DateTime.TIME_24_SIMPLE);
-            history.push(`${label} (${time})`);
-        }
-        return history.join(" → ");
+        return this.last_track_ids
+            .map(
+                (track) =>
+                    `${track.page_id.name} (${track.visit_datetime.toLocaleString(
+                        DateTime.TIME_24_SIMPLE
+                    )})`
+            )
+            .join(" → ");
     },
 };
 patch(WebsiteVisitor.prototype, websiteVisitorPatch);

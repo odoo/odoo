@@ -1,6 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { websiteModels } from "@website/../tests/helpers";
 
 export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
@@ -57,27 +57,26 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
 
     _to_store(store) {
         super._to_store(store);
+        /** @type {import("mock_models").WebsiteTrack} */
+        const WebsiteTrack = this.env["website.track"];
         for (const visitor of this) {
             const visitor_model = this.browse(visitor.id);
             const [data] = this._read_format(visitor.id, []);
-            data.page_visit_history = visitor_model._get_visitor_history();
+            const track_records = WebsiteTrack.search_read(
+                [
+                    ["page_id", "!=", false],
+                    ["visitor_id", "=", visitor.id],
+                ],
+                { limit: 3 }
+            );
+            data.last_track_ids = mailDataHelpers.Store.many(
+                WebsiteTrack.browse(track_records.map((t) => t.id)),
+                makeKwArgs({
+                    fields: [mailDataHelpers.Store.one("page_id", ["name"]), "visit_datetime"],
+                    sort: (a, b) => (a.visit_datetime < b.visit_datetime ? 1 : -1),
+                })
+            );
             store._add_record_fields(visitor_model, data);
         }
-    }
-
-    _get_visitor_history() {
-        const recent_history = this.env["website.track"].search_read(
-            [
-                ["page_id", "!=", false],
-                ["visitor_id", "=", this[0].id],
-            ],
-            { limit: 3 }
-        );
-        return recent_history
-            .map((track) => [
-                this.env["website.page"].browse(track.page_id)[0].name,
-                track.visit_datetime,
-            ])
-            .sort((a, b) => (a[1] < b[1] ? -1 : 1));
     }
 }
