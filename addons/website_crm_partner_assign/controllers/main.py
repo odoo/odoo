@@ -10,7 +10,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
-from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
 
 from odoo.tools.translate import _, LazyTranslate
@@ -185,7 +185,7 @@ class WebsiteAccount(CustomerPortal):
             })
 
 
-class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
+class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
     _references_per_page = 40
 
     def _get_gmap_domains(self, **kw):
