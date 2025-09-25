@@ -500,7 +500,7 @@ class AccountMove(models.Model):
             'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
         if line.name:
-            line_details['PrdDesc'] = line.name.replace("\n", "")
+            line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
         return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, json_payload):
