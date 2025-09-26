@@ -40,6 +40,7 @@ import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
+import { loadCssFromBundle } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -137,6 +138,7 @@ export class Message extends Component {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
+                loadCssFromBundle(this.shadowRoot, "mail.assets_message_email");
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
