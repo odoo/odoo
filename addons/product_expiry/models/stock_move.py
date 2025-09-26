@@ -23,8 +23,10 @@ class StockMove(models.Model):
         if product.use_expiration_date:
             from_date = picking.scheduled_date or fields.Datetime.today()
             expiration_date = from_date + datetime.timedelta(days=product.expiration_time)
+            removal_date = from_date + datetime.timedelta(days=product.removal_time)
             for vals in vals_list:
                 vals['expiration_date'] = expiration_date
+                vals['removal_date'] = removal_date
         return vals_list
 
     def _generate_serial_move_line_commands(self, field_data, location_dest_id=False, origin_move_line=None):

@@ -60,3 +60,15 @@ class StockMoveLine(models.Model):
         if self.expiration_date:
             vals['expiration_date'] = self.expiration_date
         return vals
+
+    @api.onchange('expiration_date')
+    def _onchange_expiration_date(self):
+        """ Set removal date based on expiration date and product's removal time. """
+        for move_line in self:
+            if move_line.lot_id.removal_date:
+                move_line.removal_date = move_line.lot_id.removal_date
+            elif move_line.picking_type_use_create_lots:
+                if move_line.product_id.use_expiration_date and move_line.expiration_date:
+                    move_line.removal_date = move_line.expiration_date - datetime.timedelta(days=move_line.product_id.removal_time)
+                else:
+                    move_line.removal_date = False
