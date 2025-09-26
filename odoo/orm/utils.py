@@ -6,7 +6,7 @@ from collections.abc import Set as AbstractSet
 import dateutil.relativedelta
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tools import SQL
+from odoo.tools import OrderedSet, SQL
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -239,4 +239,12 @@ class Prefetch:
     many2one = PrefetchMany2one
     x2many = PrefetchX2many
     origin = OriginIds
-    union = ConcatIds
+
+    @staticmethod
+    def union(iterables):
+        iterables = OrderedSet(it for it in iterables if it)
+        if not iterables:
+            return ()
+        if len(iterables) == 1:
+            return next(iter(iterables))
+        return ConcatIds(iterables)

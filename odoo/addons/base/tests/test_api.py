@@ -385,8 +385,9 @@ class TestAPI(SavepointCaseWithUserDemo):
         for child in children:
             self.assertEqual(prefetch_ids, child._prefetch_ids)
 
-        self.assertEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
-        self.assertEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
+        # both concat() and union() deduplicate prefetching objects
+        self.assertEqual(prefetch_ids, partners.browse().concat(*children)._prefetch_ids)
+        self.assertEqual(prefetch_ids, partners.browse().union(*children)._prefetch_ids)
 
     @mute_logger('odoo.models')
     def test_60_prefetch_read(self):
