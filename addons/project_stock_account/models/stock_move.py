@@ -20,9 +20,6 @@ class StockMove(models.Model):
             res['category'] = 'picking_entry'
         return res
 
-    def _get_valid_moves_domain(self):
-        return ['&', ('picking_id.project_id', '!=', False), ('picking_type_id.analytic_costs', '!=', False)]
-
     def _prepare_analytic_lines(self):
         res = super()._prepare_analytic_lines()
         if res and self.picking_id:
