@@ -206,13 +206,13 @@ export class ImageTransformation extends Component {
         this.image.style.transform = prevImageTransform;
 
         this.positionTransfoContainer();
-        this.props.onChange();
     }
 
     mouseUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
         this.props.onApply?.();
+        this.props.onChange();
     }
 
     mouseDown(ev) {
