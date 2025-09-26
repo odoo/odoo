@@ -392,7 +392,10 @@ class ProductProduct(models.Model):
                 continue
             elif product.cost_method == 'fifo':
                 fifo_price = product.total_value / product.qty_available if product.qty_available else 0
-                product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
+                if fifo_price != 0:
+                    product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
+                elif last_in := self.env['stock.move'].search([('is_in', '=', True), ('product_id', '=', product.id)], order='date desc, id desc', limit=1):
+                    product.with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
             new_standard_price = product._run_avco()[0]
             if new_standard_price:
