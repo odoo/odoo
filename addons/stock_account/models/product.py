@@ -297,7 +297,43 @@ class ProductProduct(models.Model):
 
         return avco_value, avco_total_value
 
+    def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
+        """ Returns the value for the next outgoing product base on the qty give as argument."""
+        self.ensure_one()
+        external_location = location and location.is_valued_external
+
+        fifo_cost = 0
+        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
+        last_move = False
+        # Going up to get the quantity in the argument
+        while quantity > 0 and fifo_stack:
+            move = fifo_stack.pop(0)
+            last_move = move
+            if qty_on_first_move:
+                valued_qty = move._get_valued_qty()
+                in_qty = qty_on_first_move
+                in_value = move.value * in_qty / valued_qty
+                qty_on_first_move = 0
+            else:
+                in_qty = move._get_valued_qty()
+                in_value = move.value
+            if at_date and not external_location:
+                in_value = move._get_value(at_date=at_date)
+            if in_qty > quantity:
+                in_value = in_value * quantity / in_qty
+                in_qty = quantity
+            fifo_cost += in_value
+            quantity -= in_qty
+        # When we required more quantity than available we extrapolate with the last known price
+        if quantity > 0:
+            if last_move:
+                fifo_cost += quantity * last_move.value
+            else:
+                fifo_cost += quantity * self.standard_price
+        return fifo_cost
+
     def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
+        # TODO: return a list of tuple (move, valued_qty) instead
         external_location = location and location.is_valued_external
         fifo_stack = []
         fifo_stack_size = 0
@@ -325,10 +361,15 @@ class ProductProduct(models.Model):
         else:
             moves_domain &= Domain([('is_in', '=', True)])
 
-        moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=fifo_stack_size * 10)
-        # TODO: fetch more if 10 times quantity is not enough
+        # Base limit to 100 to avoid issue with other UoM than Unit
+        initial_limit = fifo_stack_size * 10
+        unit_uom = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
+        if unit_uom and self.uom_id != unit_uom:
+            initial_limit = max(initial_limit, 100)
+        moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=initial_limit)
 
         remaining_qty_on_first_stack_move = 0
+        current_offset = 0
         # Go to the bottom of the stack
         while fifo_stack_size > 0 and moves_in:
             move = moves_in[0]
@@ -337,35 +378,12 @@ class ProductProduct(models.Model):
             fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
+            if fifo_stack_size > 0 and not moves_in:
+                # We need to fetch more moves
+                current_offset += 1
+                moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', offset=current_offset * initial_limit, limit=initial_limit)
         fifo_stack.reverse()
         return fifo_stack, remaining_qty_on_first_stack_move
-
-    def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
-        """ Returns the value for the next outgoing product base on the qty give as argument."""
-        self.ensure_one()
-        external_location = location and location.is_valued_external
-
-        fifo_cost = 0
-        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
-        # Going up to get the quantity in the argument
-        while quantity > 0 and fifo_stack:
-            move = fifo_stack.pop(0)
-            if qty_on_first_move:
-                valued_qty = move._get_valued_qty()
-                in_qty = qty_on_first_move
-                in_value = move.value * in_qty / valued_qty
-                qty_on_first_move = 0
-            else:
-                in_qty = move._get_valued_qty()
-                in_value = move.value
-            if at_date and not external_location:
-                in_value = move._get_value(at_date=at_date)
-            if in_qty > quantity:
-                in_value = in_value * quantity / in_qty
-                in_qty = quantity
-            fifo_cost += in_value
-            quantity -= in_qty
-        return fifo_cost
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
