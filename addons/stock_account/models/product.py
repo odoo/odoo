@@ -65,11 +65,20 @@ class ProductTemplate(models.Model):
                 product_template.company_id).property_valuation or self.env.company.inventory_valuation
 
     def write(self, vals):
+        product_to_update = set()
+        if 'categ_id' in vals:
+            category = self.env['product.category'].browse(vals['categ_id'])
+            valuation = category.property_valuation if category else self.env.company.inventory_valuation
+            for product in self:
+                if product.valuation != valuation:
+                    product_to_update.update(product.product_variant_ids.ids)
         res = super().write(vals)
         if 'lot_valuated' in vals:
             self.env['stock.lot'].search([
                 ('product_id', 'in', self.product_variant_ids.ids),
             ])._update_standard_price()
+        if 'product_to_update':
+            self.env['product.product'].browse(product_to_update)._update_standard_price()
         return res
 
     # -------------------------------------------------------------------------
@@ -119,6 +128,7 @@ class ProductProduct(models.Model):
              "to the totaled value of the product's valuation layers")
 
     @api.depends_context('to_date', 'company')
+    @api.depends('cost_method', 'stock_move_ids.value')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
@@ -415,3 +425,14 @@ class ProductCategory(models.Model):
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):
         self.anglo_saxon_accounting = self.env.company.anglo_saxon_accounting
+
+    def write(self, vals):
+        products_to_update = self.env['product.product']
+        if 'property_cost_method' in vals:
+            updated_categories = self.filtered(lambda c: c.property_cost_method != vals['property_cost_method'])
+            if updated_categories:
+                products_to_update = self.env['product.product'].search([('categ_id', 'in', updated_categories.ids)])
+        res = super().write(vals)
+        if products_to_update:
+            products_to_update._update_standard_price()
+        return res
