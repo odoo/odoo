@@ -200,6 +200,10 @@ const StepperManager = (function StepperManagerClosure() {
     active: false,
     // Stepper specific functions.
     create(pageIndex) {
+      const pageContainer = document.querySelector(
+        `#viewer div[data-page-number="${pageIndex + 1}"]`
+      );
+
       const debug = document.createElement("div");
       debug.id = "stepper" + pageIndex;
       debug.hidden = true;
@@ -210,7 +214,12 @@ const StepperManager = (function StepperManagerClosure() {
       b.value = pageIndex;
       stepperChooser.append(b);
       const initBreakPoints = breakPoints[pageIndex] || [];
-      const stepper = new Stepper(debug, pageIndex, initBreakPoints);
+      const stepper = new Stepper(
+        debug,
+        pageIndex,
+        initBreakPoints,
+        pageContainer
+      );
       steppers.push(stepper);
       if (steppers.length === 1) {
         this.selectStepper(pageIndex, false);
@@ -277,7 +286,7 @@ class Stepper {
     return simpleObj;
   }
 
-  constructor(panel, pageIndex, initialBreakPoints) {
+  constructor(panel, pageIndex, initialBreakPoints, pageContainer) {
     this.panel = panel;
     this.breakPoint = 0;
     this.nextBreakPoint = null;
@@ -286,11 +295,20 @@ class Stepper {
     this.currentIdx = -1;
     this.operatorListIdx = 0;
     this.indentLevel = 0;
+    this.operatorsGroups = null;
+    this.pageContainer = pageContainer;
   }
 
   init(operatorList) {
     const panel = this.panel;
     const content = this.#c("div", "c=continue, s=step");
+
+    const showBoxesToggle = this.#c("label", "Show bounding boxes");
+    const showBoxesCheckbox = this.#c("input");
+    showBoxesCheckbox.type = "checkbox";
+    showBoxesToggle.prepend(showBoxesCheckbox);
+    content.append(this.#c("br"), showBoxesToggle);
+
     const table = this.#c("table");
     content.append(table);
     table.cellSpacing = 0;
@@ -305,6 +323,22 @@ class Stepper {
     panel.append(content);
     this.table = table;
     this.updateOperatorList(operatorList);
+
+    const hoverStyle = this.#c("style");
+    this.hoverStyle = hoverStyle;
+    content.prepend(hoverStyle);
+    table.addEventListener("mouseover", this.#handleStepHover.bind(this));
+    table.addEventListener("mouseleave", e => {
+      hoverStyle.innerText = "";
+    });
+
+    showBoxesCheckbox.addEventListener("change", () => {
+      if (showBoxesCheckbox.checked) {
+        this.pageContainer.classList.add("showDebugBoxes");
+      } else {
+        this.pageContainer.classList.remove("showDebugBoxes");
+      }
+    });
   }
 
   updateOperatorList(operatorList) {
@@ -374,6 +408,14 @@ class Stepper {
         table.classList.add("showText");
         decArgs.append(table);
         table.append(charCodeRow, fontCharRow, unicodeRow);
+      } else if (fn === "constructPath") {
+        const [op, [path], minMax] = args;
+        decArgs = this.#c("td");
+        decArgs.append(JSON.stringify(this.#simplifyArgs(path)));
+        decArgs.append(this.#c("br"));
+        decArgs.append(`minMax: ${JSON.stringify(this.#simplifyArgs(minMax))}`);
+        decArgs.append(this.#c("br"));
+        decArgs.append(`→ ${opMap[op]}`);
       } else if (fn === "restore" && this.indentLevel > 0) {
         this.indentLevel--;
       }
@@ -397,10 +439,195 @@ class Stepper {
     this.table.append(chunk);
   }
 
-  getNextBreakPoint() {
-    this.breakPoints.sort(function (a, b) {
-      return a - b;
+  setOperatorBBoxes(bboxes, metadata) {
+    let boxesContainer = this.pageContainer.querySelector(".pdfBugGroupsLayer");
+    if (!boxesContainer) {
+      boxesContainer = this.#c("div");
+      boxesContainer.classList.add("pdfBugGroupsLayer");
+      this.pageContainer.append(boxesContainer);
+
+      boxesContainer.addEventListener(
+        "click",
+        this.#handleDebugBoxClick.bind(this)
+      );
+      boxesContainer.addEventListener(
+        "mouseover",
+        this.#handleDebugBoxHover.bind(this)
+      );
+    }
+    boxesContainer.innerHTML = "";
+
+    const dependents = new Map();
+    for (const [dependentIdx, { dependencies: ownDependencies }] of metadata) {
+      for (const dependencyIdx of ownDependencies) {
+        let ownDependents = dependents.get(dependencyIdx);
+        if (!ownDependents) {
+          dependents.set(dependencyIdx, (ownDependents = new Set()));
+        }
+        ownDependents.add(dependentIdx);
+      }
+    }
+
+    const groups = Array.from({ length: bboxes.length }, (_, i) => {
+      let minX = null;
+      let minY = null;
+      let maxX = null;
+      let maxY = null;
+      if (!bboxes.isEmpty(i)) {
+        minX = bboxes.minX(i);
+        minY = bboxes.minY(i);
+        maxX = bboxes.maxX(i);
+        maxY = bboxes.maxY(i);
+      }
+
+      return {
+        minX,
+        minY,
+        maxX,
+        maxY,
+        dependencies: Array.from(metadata.get(i)?.dependencies ?? []).sort(),
+        dependents: Array.from(dependents.get(i) ?? []).sort(),
+        isRenderingOperation: metadata.get(i)?.isRenderingOperation ?? false,
+        idx: i,
+      };
     });
+    this.operatorsGroups = groups;
+
+    const operatorsGroupsByZindex = groups.toSorted((a, b) => {
+      if (a.minX === null) {
+        return b.minX === null ? 0 : 1;
+      }
+      if (b.minX === null) {
+        return -1;
+      }
+
+      const diffs = [
+        a.minY - b.minY,
+        a.minX - b.minX,
+        b.maxY - a.maxY,
+        b.maxX - a.maxX,
+      ];
+      for (const diff of diffs) {
+        if (Math.abs(diff) > 0.01) {
+          return Math.sign(diff);
+        }
+      }
+      for (const diff of diffs) {
+        if (Math.abs(diff) > 0.0001) {
+          return Math.sign(diff);
+        }
+      }
+      return 0;
+    });
+
+    for (let i = 0; i < operatorsGroupsByZindex.length; i++) {
+      const group = operatorsGroupsByZindex[i];
+      if (group.minX !== null) {
+        const el = this.#c("div");
+        el.style.left = `${group.minX * 100}%`;
+        el.style.top = `${group.minY * 100}%`;
+        el.style.width = `${(group.maxX - group.minX) * 100}%`;
+        el.style.height = `${(group.maxY - group.minY) * 100}%`;
+        el.dataset.idx = group.idx;
+        boxesContainer.append(el);
+      }
+    }
+  }
+
+  #handleStepHover(e) {
+    const tr = e.target.closest("tr");
+    if (!tr || tr.dataset.idx === undefined) {
+      return;
+    }
+
+    const index = +tr.dataset.idx;
+    this.#highlightStepsGroup(index);
+  }
+
+  #handleDebugBoxHover(e) {
+    if (e.target.dataset.idx === undefined) {
+      return;
+    }
+
+    const idx = Number(e.target.dataset.idx);
+    this.#highlightStepsGroup(idx);
+  }
+
+  #handleDebugBoxClick(e) {
+    if (e.target.dataset.idx === undefined) {
+      return;
+    }
+
+    const idx = Number(e.target.dataset.idx);
+
+    this.table.childNodes[idx].scrollIntoView();
+  }
+
+  #highlightStepsGroup(index) {
+    const group = this.operatorsGroups?.[index];
+    if (!group) {
+      return;
+    }
+
+    const renderingColor = `rgba(0, 0, 0, 0.1)`;
+    const dependencyColor = `rgba(0, 255, 255, 0.1)`;
+    const dependentColor = `rgba(255, 0, 0, 0.1)`;
+
+    const solid = color => `background-color: ${color}`;
+    // Used for operations that have an empty bounding box
+    const striped = color => `
+      background-image: repeating-linear-gradient(
+        -45deg,
+        white,
+        white 10px,
+        ${color} 10px,
+        ${color} 20px
+      )
+    `;
+
+    const select = idx => `#${this.panel.id} tr[data-idx="${idx}"]`;
+    const selectN = idxs =>
+      idxs.length === 0 ? "q:not(q)" : idxs.map(select).join(", ");
+
+    const isEmpty = idx =>
+      !this.operatorsGroups[idx] || this.operatorsGroups[idx].minX === null;
+
+    const selfColor = group.isRenderingOperation
+      ? renderingColor
+      : dependentColor;
+
+    this.hoverStyle.innerText = `${select(index)} {
+      ${group.minX === null ? striped(selfColor) : solid(selfColor)}
+    }`;
+    if (group.dependencies.length > 0) {
+      this.hoverStyle.innerText += `
+        ${selectN(group.dependencies.filter(idx => !isEmpty(idx)))} {
+          ${solid(dependencyColor)}
+        }
+        ${selectN(group.dependencies.filter(isEmpty))} {
+          ${striped(dependencyColor)}
+        }`;
+    }
+    if (group.dependents.length > 0) {
+      this.hoverStyle.innerText += `
+        ${selectN(group.dependents.filter(idx => !isEmpty(idx)))} {
+          ${solid(dependentColor)}
+        }
+        ${selectN(group.dependents.filter(isEmpty))} {
+          ${striped(dependentColor)}
+        }`;
+    }
+
+    this.hoverStyle.innerText += `
+      #viewer [data-page-number="${this.pageIndex + 1}"] .pdfBugGroupsLayer [data-idx="${index}"] {
+        background-color: var(--hover-background-color);
+        outline-style: var(--hover-outline-style);
+      }
+    `;
+  }
+
+  getNextBreakPoint() {
+    this.breakPoints.sort((a, b) => a - b);
     for (const breakPoint of this.breakPoints) {
       if (breakPoint > this.currentIdx) {
         return breakPoint;
@@ -487,9 +714,7 @@ const Stats = (function Stats() {
       statsDiv.textContent = stat.toString();
       wrapper.append(title, statsDiv);
       stats.push({ pageNumber, div: wrapper });
-      stats.sort(function (a, b) {
-        return a.pageNumber - b.pageNumber;
-      });
+      stats.sort((a, b) => a.pageNumber - b.pageNumber);
       clear(this.panel);
       for (const entry of stats) {
         this.panel.append(entry.div);
@@ -586,7 +811,7 @@ class PDFBug {
 
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = url.replace(/\.js$/, ".css");
+    link.href = url.replace(/\.mjs$/, ".css");
 
     document.head.append(link);
   }

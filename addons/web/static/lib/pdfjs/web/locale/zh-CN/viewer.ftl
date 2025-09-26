@@ -112,14 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB（{ $b } 字节）
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } 字节)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } 字节)
 pdfjs-document-properties-title = 标题:
 pdfjs-document-properties-author = 作者:
 pdfjs-document-properties-subject = 主题:
@@ -129,10 +121,6 @@ pdfjs-document-properties-modification-date = 修改日期:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = 创建者:
 pdfjs-document-properties-producer = PDF 生成器：
 pdfjs-document-properties-version = PDF 版本:
@@ -267,10 +255,6 @@ pdfjs-rendering-error = 渲染页面时发生错误。
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }，{ $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -294,9 +278,13 @@ pdfjs-web-fonts-disabled = Web 字体已被禁用：无法使用嵌入的 PDF �
 
 pdfjs-editor-free-text-button =
     .title = 文本
+pdfjs-editor-color-picker-free-text-input =
+    .title = 更改文本颜色
 pdfjs-editor-free-text-button-label = 文本
 pdfjs-editor-ink-button =
     .title = 绘图
+pdfjs-editor-color-picker-ink-input =
+    .title = 更改绘图颜色
 pdfjs-editor-ink-button-label = 绘图
 pdfjs-editor-stamp-button =
     .title = 添加或编辑图像
@@ -308,6 +296,33 @@ pdfjs-highlight-floating-button1 =
     .title = 高亮
     .aria-label = 高亮
 pdfjs-highlight-floating-button-label = 高亮
+pdfjs-comment-floating-button =
+    .title = 批注
+    .aria-label = 批注
+pdfjs-comment-floating-button-label = 批注
+pdfjs-editor-comment-button =
+    .title = 批注
+    .aria-label = 批注
+pdfjs-editor-comment-button-label = 批注
+pdfjs-editor-signature-button =
+    .title = 添加签名
+pdfjs-editor-signature-button-label = 添加签名
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = 高亮编辑器
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = 绘图编辑器
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = 签名编辑器：{ $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = 图像编辑器
 
 ## Remove button for the various kind of editor.
 
@@ -319,6 +334,8 @@ pdfjs-editor-remove-stamp-button =
     .title = 移除图像
 pdfjs-editor-remove-highlight-button =
     .title = 移除高亮
+pdfjs-editor-remove-signature-button =
+    .title = 移除签名
 
 ##
 
@@ -335,23 +352,41 @@ pdfjs-editor-stamp-add-image-button-label = 添加图像
 pdfjs-editor-free-highlight-thickness-input = 粗细
 pdfjs-editor-free-highlight-thickness-title =
     .title = 更改高亮粗细（用于文本以外项目）
-pdfjs-free-text =
+pdfjs-editor-add-signature-container =
+    .aria-label = 签名管理和保存的签名
+pdfjs-editor-signature-add-signature-button =
+    .title = 添加新签名
+pdfjs-editor-signature-add-signature-button-label = 添加新签名
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = 保存的签名：{ $description }
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
     .aria-label = 文本编辑器
-pdfjs-free-text-default-content = 开始输入…
-pdfjs-ink =
-    .aria-label = 绘图编辑器
-pdfjs-ink-canvas =
-    .aria-label = 用户创建图像
+    .default-content = 在此键入…
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title = 批注
+pdfjs-editor-comments-sidebar-close-button =
+    .title = 关闭侧栏
+    .aria-label = 关闭侧栏
+pdfjs-editor-comments-sidebar-close-button-label = 关闭侧栏
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = 发现值得注意的地方？可为其添加高亮并批注。
+pdfjs-editor-comments-sidebar-no-comments-link = 详细了解
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = 替换文字
-pdfjs-editor-alt-text-edit-button-label = 编辑替换文字
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = 编辑替换文字
 pdfjs-editor-alt-text-dialog-label = 选择一项
 pdfjs-editor-alt-text-dialog-description = 替换文字可在用户无法看到或加载图像时，描述其内容。
 pdfjs-editor-alt-text-add-description-label = 添加描述
-pdfjs-editor-alt-text-add-description-description = 描述主题、背景或动作，长度尽量控制在两句话内。
+pdfjs-editor-alt-text-add-description-description = 用一两个句子，描述主题、背景或动作。
 pdfjs-editor-alt-text-mark-decorative-label = 标记为装饰
 pdfjs-editor-alt-text-mark-decorative-description = 用于装饰的图像，例如边框和水印。
 pdfjs-editor-alt-text-cancel-button = 取消
@@ -360,18 +395,13 @@ pdfjs-editor-alt-text-decorative-tooltip = 已标记为装饰
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = 例如：一个少年坐到桌前，准备吃饭
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button =
+    .aria-label = 替换文字
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-pdfjs-editor-resizer-label-top-left = 调整尺寸 - 左上角
-pdfjs-editor-resizer-label-top-middle = 调整尺寸 - 顶部中间
-pdfjs-editor-resizer-label-top-right = 调整尺寸 - 右上角
-pdfjs-editor-resizer-label-middle-right = 调整尺寸 - 右侧中间
-pdfjs-editor-resizer-label-bottom-right = 调整尺寸 - 右下角
-pdfjs-editor-resizer-label-bottom-middle = 调整大小 - 底部中间
-pdfjs-editor-resizer-label-bottom-left = 调整尺寸 - 左下角
-pdfjs-editor-resizer-label-middle-left = 调整尺寸 - 左侧中间
 pdfjs-editor-resizer-top-left =
     .aria-label = 调整尺寸 - 左上角
 pdfjs-editor-resizer-top-middle =
@@ -437,14 +467,19 @@ pdfjs-editor-new-alt-text-error-close-button = 关闭
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-#   $percent (Number) - the percentage of the downloaded size.
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = 正在下载提供替换文字的 AI 模型（{ $downloadedSize }/{ $totalSize } MB）
     .aria-valuetext = 正在下载提供替换文字的 AI 模型（{ $downloadedSize }/{ $totalSize } MB）
 # This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button =
+    .aria-label = 已添加替换文字
 pdfjs-editor-new-alt-text-added-button-label = 已添加替换文字
 # This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button =
+    .aria-label = 缺少替换文字
 pdfjs-editor-new-alt-text-missing-button-label = 缺少替换文字
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button =
+    .aria-label = 检查替换文字
 pdfjs-editor-new-alt-text-to-review-button-label = 检查替换文字
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -471,3 +506,139 @@ pdfjs-editor-alt-text-settings-editor-title = 替换文字编辑器
 pdfjs-editor-alt-text-settings-show-dialog-button-label = 添加图像后立即显示替换文字编辑器
 pdfjs-editor-alt-text-settings-show-dialog-description = 帮助确保所有图像均拥有替换文字。
 pdfjs-editor-alt-text-settings-close-button = 关闭
+
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = 已添加高亮
+pdfjs-editor-freetext-added-alert = 已添加文本
+pdfjs-editor-ink-added-alert = 已添加绘图
+pdfjs-editor-stamp-added-alert = 已添加图像
+pdfjs-editor-signature-added-alert = 已添加签名
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-highlight = 已移除高亮
+pdfjs-editor-undo-bar-message-freetext = 已移除文本
+pdfjs-editor-undo-bar-message-ink = 已移除绘图
+pdfjs-editor-undo-bar-message-stamp = 已移除图像
+pdfjs-editor-undo-bar-message-signature = 签名已移除
+# Variables:
+#   $count (Number) - the number of removed annotations.
+pdfjs-editor-undo-bar-message-multiple = 已移除 { $count } 条注释
+pdfjs-editor-undo-bar-undo-button =
+    .title = 撤销
+pdfjs-editor-undo-bar-undo-button-label = 撤销
+pdfjs-editor-undo-bar-close-button =
+    .title = 关闭
+pdfjs-editor-undo-bar-close-button-label = 关闭
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-label = 用户可通过此模态对话框创建要添加到 PDF 文档中的签名、编辑其名称（同时用作替换文字），并可保存签名以便重复使用。
+pdfjs-editor-add-signature-dialog-title = 添加签名
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = 键入
+    .title = 键入
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = 绘制
+    .title = 绘制
+pdfjs-editor-add-signature-image-button = 图像
+    .title = 图像
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = 键入签名
+    .placeholder = 键入签名
+pdfjs-editor-add-signature-draw-placeholder = 绘制签名
+pdfjs-editor-add-signature-draw-thickness-range-label = 粗细
+# Variables:
+#   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
+pdfjs-editor-add-signature-draw-thickness-range =
+    .title = 笔画粗细：{ $thickness }
+pdfjs-editor-add-signature-image-placeholder = 拖放文件到此处以上传
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] 或选取图像文件
+       *[other] 或浏览图像文件
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = 描述（替换文字）
+pdfjs-editor-add-signature-description-input =
+    .title = 描述（替换文字）
+pdfjs-editor-add-signature-description-default-when-drawing = 签名
+pdfjs-editor-add-signature-clear-button-label = 清除签名
+pdfjs-editor-add-signature-clear-button =
+    .title = 清除签名
+pdfjs-editor-add-signature-save-checkbox = 保存签名
+pdfjs-editor-add-signature-save-warning-message = 最多可保存 5 个签名，请移除一个以继续保存。
+pdfjs-editor-add-signature-image-upload-error-title = 无法上传图像
+pdfjs-editor-add-signature-image-upload-error-description = 请检查网络连接，或尝试上传其他图像。
+pdfjs-editor-add-signature-image-no-data-error-title = 无法将此图像转换为签名
+pdfjs-editor-add-signature-image-no-data-error-description = 请尝试上传其他图像。
+pdfjs-editor-add-signature-error-close-button = 关闭
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = 取消
+pdfjs-editor-add-signature-add-button = 添加
+pdfjs-editor-edit-signature-update-button = 更新
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = 编辑批注
+pdfjs-editor-edit-comment-popup-button =
+    .title = 编辑批注
+pdfjs-editor-delete-comment-popup-button-label = 移除批注
+pdfjs-editor-delete-comment-popup-button =
+    .title = 移除批注
+pdfjs-show-comment-button =
+    .title = 显示批注
+
+##  Edit a comment dialog
+
+pdfjs-editor-edit-comment-actions-button-label = 操作
+pdfjs-editor-edit-comment-actions-button =
+    .title = 操作
+pdfjs-editor-edit-comment-close-button-label = 关闭
+pdfjs-editor-edit-comment-close-button =
+    .title = 关闭
+pdfjs-editor-edit-comment-actions-edit-button-label = 编辑
+pdfjs-editor-edit-comment-actions-delete-button-label = 删除
+pdfjs-editor-edit-comment-manager-text-input =
+    .placeholder = 输入批注
+pdfjs-editor-edit-comment-manager-cancel-button = 取消
+pdfjs-editor-edit-comment-manager-save-button = 保存
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = 编辑批注
+pdfjs-editor-edit-comment-dialog-save-button-when-editing = 更新
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = 添加批注
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = 添加
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = 开始键入…
+pdfjs-editor-edit-comment-dialog-cancel-button = 取消
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-edit-comment-button =
+    .title = 编辑批注
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = 移除已保存的签名
+pdfjs-editor-delete-signature-button-label1 = 移除已保存的签名
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = 编辑描述
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = 编辑描述

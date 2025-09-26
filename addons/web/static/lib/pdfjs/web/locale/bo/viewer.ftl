@@ -89,24 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Document Properties…
 pdfjs-document-properties-file-name = File name:
 pdfjs-document-properties-file-size = File size:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = Title:
 pdfjs-document-properties-author = Author:
 pdfjs-document-properties-subject = Subject:
 pdfjs-document-properties-keywords = Keywords:
 pdfjs-document-properties-creation-date = Creation Date:
 pdfjs-document-properties-modification-date = Modification Date:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Creator:
 pdfjs-document-properties-producer = PDF Producer:
 pdfjs-document-properties-version = PDF Version:
@@ -207,9 +195,6 @@ pdfjs-page-scale-actual = Actual Size
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = An error occurred while loading the PDF.
@@ -235,13 +220,3 @@ pdfjs-password-invalid = Invalid password. Please try again.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Cancel
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

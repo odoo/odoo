@@ -77,24 +77,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = दस्तऐवज गुणधर्म…
 pdfjs-document-properties-file-name = फाइलचे नाव:
 pdfjs-document-properties-file-size = फाइल आकार:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } बाइट्स)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } बाइट्स)
 pdfjs-document-properties-title = शिर्षक:
 pdfjs-document-properties-author = लेखक:
 pdfjs-document-properties-subject = विषय:
 pdfjs-document-properties-keywords = मुख्यशब्द:
 pdfjs-document-properties-creation-date = निर्माण दिनांक:
 pdfjs-document-properties-modification-date = दुरूस्ती दिनांक:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = निर्माता:
 pdfjs-document-properties-producer = PDF निर्माता:
 pdfjs-document-properties-version = PDF आवृत्ती:
@@ -195,9 +183,6 @@ pdfjs-page-scale-actual = प्रत्यक्ष आकार
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF लोड करतेवेळी त्रुटी आढळली.
@@ -208,10 +193,6 @@ pdfjs-rendering-error = पृष्ठ दाखवतेवेळी त्र
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -227,13 +208,3 @@ pdfjs-password-invalid = अवैध पासवर्ड. कृपया प
 pdfjs-password-ok-button = ठीक आहे
 pdfjs-password-cancel-button = रद्द करा
 pdfjs-web-fonts-disabled = वेब टंक असमर्थीत आहेत: एम्बेडेड PDF टंक वापर अशक्य.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

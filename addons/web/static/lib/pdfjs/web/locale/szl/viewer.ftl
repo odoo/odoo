@@ -89,24 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Włosności dokumyntu…
 pdfjs-document-properties-file-name = Miano zbioru:
 pdfjs-document-properties-file-size = Srogość zbioru:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } B)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } B)
 pdfjs-document-properties-title = Tytuł:
 pdfjs-document-properties-author = Autōr:
 pdfjs-document-properties-subject = Tymat:
 pdfjs-document-properties-keywords = Kluczowe słowa:
 pdfjs-document-properties-creation-date = Data zrychtowanio:
 pdfjs-document-properties-modification-date = Data zmiany:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Zrychtowane ôd:
 pdfjs-document-properties-producer = PDF ôd:
 pdfjs-document-properties-version = Wersyjo PDF:
@@ -213,9 +201,6 @@ pdfjs-page-scale-actual = Aktualno srogość
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Przi ladowaniu PDFa pokozoł sie feler.
@@ -226,10 +211,6 @@ pdfjs-rendering-error = Przi renderowaniu strōny pokozoł sie feler.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -245,13 +226,3 @@ pdfjs-password-invalid = Hasło je złe. Sprōbuj jeszcze roz.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Pociep
 pdfjs-web-fonts-disabled = Necowe fōnty sōm zastawiōne: niy idzie użyć wkludzōnych fōntōw PDF.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

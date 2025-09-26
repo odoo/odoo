@@ -82,24 +82,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = دستاویز خواص…
 pdfjs-document-properties-file-name = نام مسل:
 pdfjs-document-properties-file-size = مسل سائز:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = عنوان:
 pdfjs-document-properties-author = تخلیق کار:
 pdfjs-document-properties-subject = موضوع:
 pdfjs-document-properties-keywords = کلیدی الفاظ:
 pdfjs-document-properties-creation-date = تخلیق کی تاریخ:
 pdfjs-document-properties-modification-date = ترمیم کی تاریخ:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }، { $time }
 pdfjs-document-properties-creator = تخلیق کار:
 pdfjs-document-properties-producer = PDF پیدا کار:
 pdfjs-document-properties-version = PDF ورژن:
@@ -217,10 +205,6 @@ pdfjs-rendering-error = صفحہ بناتے ہوئے نقص آ گیا۔
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }.{ $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -236,13 +220,3 @@ pdfjs-password-invalid = ناجائز پاس ورڈ. براےؑ کرم دوبا�
 pdfjs-password-ok-button = ٹھیک ہے
 pdfjs-password-cancel-button = منسوخ کریں
 pdfjs-web-fonts-disabled = ویب فانٹ نا اہل ہیں: شامل PDF فانٹ استعمال کرنے میں ناکام۔
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

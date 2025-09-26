@@ -89,24 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Document Properties…
 pdfjs-document-properties-file-name = File nemme:
 pdfjs-document-properties-file-size = File size:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = Title:
 pdfjs-document-properties-author = Author:
 pdfjs-document-properties-subject = Subjeck:
 pdfjs-document-properties-keywords = Keywirds:
 pdfjs-document-properties-creation-date = Date o Makkin:
 pdfjs-document-properties-modification-date = Date o Chynges:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Makker:
 pdfjs-document-properties-producer = PDF Producer:
 pdfjs-document-properties-version = PDF Version:
@@ -233,10 +221,6 @@ pdfjs-rendering-error = A mishanter tuik place while renderin the page.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -252,13 +236,3 @@ pdfjs-password-invalid = Passwird no suithfest. Gonnae gie it anither shot.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Stap
 pdfjs-web-fonts-disabled = Wab fonts are disabled: cannae yaise embeddit PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
