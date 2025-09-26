@@ -16,19 +16,16 @@ class LoyaltyRule(models.Model):
         # as they are not both accessible from a website.
         with_code = self.filtered(lambda r: r.mode == 'with_code')
         mapped_codes = with_code.mapped('code')
-        read_result = self.env['loyalty.rule'].search_read(
-            [('website_id', 'in', [False] + [w.id for w in self.website_id]),
-            ('mode', '=', 'with_code'), ('code', 'in', mapped_codes),
-            ('id', 'not in', with_code.ids)],
-            fields=['code', 'website_id']) + [{'code': p.code, 'website_id': p.website_id} for p in with_code]
-        existing_codes = set()
-        for res in read_result:
-            website_checks = (res['website_id'], False) if res['website_id'] else (False,)
-            for website in website_checks:
-                val = (res['code'], website)
-                if val in existing_codes:
-                    raise ValidationError(_('The promo code must be unique.'))
-                existing_codes.add(val)
+        domain = [
+            ('mode', '=', 'with_code'), ('code', 'in', mapped_codes), ('id', 'not in', self.ids)
+        ]
+        if self.website_id:
+            domain.append(('website_id', 'in', [False] + [w.id for w in self.website_id]))
+        if (
+            len(mapped_codes) != len(set(mapped_codes))
+            or self.env['loyalty.rule'].search_count(domain)
+        ):
+            raise ValidationError(_('The promo code must be unique.'))
         # Prevent coupons and programs from sharing a code
         if self.env['loyalty.card'].search_count([('code', 'in', mapped_codes)]):
             raise ValidationError(_('A coupon with the same code was found.'))
