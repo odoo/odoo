@@ -239,16 +239,17 @@ export const assets = {
      *
      * @param {string} url the url of the script
      * @param {Document} targetDoc document to which the bundle will be applied (e.g. iframe document)
+     * @param {String} type type of JavaScript file (e.g. javascript or module)
      * @returns {Promise<void>} resolved when the script has been loaded
      */
-    loadJS(url, { targetDoc = document } = {}) {
+    loadJS(url, { type = "text/javascript", targetDoc = document } = {}) {
         const cacheMap = getAssetCache(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
-        scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
+        scriptEl.type = type;
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
