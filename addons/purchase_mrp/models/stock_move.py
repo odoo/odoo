@@ -15,32 +15,6 @@ class StockMove(models.Model):
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
-    def _get_price_unit(self):
-        if self.product_id == self.purchase_line_id.product_id or not self.bom_line_id or not self.purchase_line_id:
-            return super()._get_price_unit()
-        line = self.purchase_line_id
-        # price_unit here with uom of product
-        kit_price_unit = line._get_gross_price_unit()
-        bom_line = self.bom_line_id
-        bom = bom_line.bom_id
-        if line.currency_id != self.company_id.currency_id:
-            kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
-        cost_share = self.bom_line_id._get_cost_share()
-        uom_factor = 1.0
-        kit_product = bom.product_id or bom.product_tmpl_id
-
-        # Convert uom from product_uom to bom_uom for kit product
-        uom_factor = bom.product_uom_id._compute_quantity(uom_factor, kit_product.uom_id)
-
-        # Convert uom from bom_line_uom to product_uom for bom_line
-        uom_factor = bom_line.product_id.uom_id._compute_quantity(uom_factor, bom_line.product_uom_id)
-
-        price_unit = kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty
-        if self.product_id.lot_valuated:
-            return {lot: price_unit for lot in self.lot_ids}
-        else:
-            return {self.env['stock.lot']: price_unit}
-
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
         boms = self.env['mrp.bom']._bom_find(related_aml.product_id, company_id=related_aml.company_id.id, bom_type='phantom')
