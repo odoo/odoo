@@ -231,10 +231,7 @@
             ('active', '=', True),
             '|',
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.collaborator_ids', 'any', [
-                    ('partner_id', '=', user.partner_id.id),
-                    ('limited_access', '=', False),
-                ]),
+                ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="False"/>
