@@ -132,30 +132,24 @@ export const catalogSuggestion = {
     },
 
     /**
-     * Checks a product Kanban record is highlighted and in the specified place.
-     * @param {string} productName
-     * @param {number} expectedOrder
-     * @param {boolean} [highlightOn=true]
+     * Checks a product's record order in Kanban
+     * @param {string} product product display name
+     * @param {number } expectedOrder 0 is the first card
      */
-    checkKanbanRecordHighlight(productName, expectedOrder, highlightOn = true) {
-        return {
-            trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view .o_kanban_record",
-            run() {
-                const cards = [...document.querySelectorAll(".o_kanban_record")];
-                const productCard = cards.find((card) => card.textContent.includes(productName));
-                const highlighted = productCard.className.includes("o_suggest_highlight");
-                if (highlightOn === true) {
-                    assert(highlighted, true, `${productName} record should be highlighted.`);
-                    assert(
-                        productCard == cards[expectedOrder],
-                        true,
-                        `Card in position ${cards.indexOf(productCard)} not ${expectedOrder}.`
-                    );
-                } else if (highlightOn === false) {
-                    assert(highlighted, false, `${productName} record should not be highlighted.`);
-                }
-            },
+    checkKanbanRecordPosition(product, expectedOrder) {
+        const trigger = `.o_purchase_product_kanban_catalog_view article.o_kanban_record:nth-child(${expectedOrder + 1}):contains("${product}")`;
+        return [{ trigger }];
+    },
+
+    removeSuggestFilter() {
+        const content = "Remove the Suggested filter";
+        const trigger = '.o_facet_value:contains("Suggested")';
+        const run = async (actions) => {
+            const filters = [...document.querySelectorAll(".o_searchview_facet")];
+            const suggestedFilter = filters.find((el) => el.textContent.includes("Suggested"));
+            await actions.click(suggestedFilter.querySelector(".o_facet_remove"));
         };
+        return [{ content, trigger, run }];
     },
 
     addAllSuggestions() {
