@@ -36,7 +36,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         suggest_context = {
             "order_id": po.id,
             "partner_id": po.partner_id.id,
-            "domain": domain,
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_days": days,
