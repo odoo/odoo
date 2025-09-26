@@ -33,8 +33,7 @@
                     <field name="peppol_activate_self_billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')"/>
                     <field name="peppol_self_billing_reception_journal_id" invisible="account_peppol_proxy_state != 'receiver'"/>
                 </group>
-                <group string="Configure your Peppol Services and allowed formats" invisible="account_peppol_proxy_state != 'receiver'">
-                    <field name="service_json" invisible="1"/>
+                <group string="Configure your Peppol Services and allowed formats" invisible="not service_ids">
                     <div colspan="2">
                         <field name="service_info" role="status" class="o_field_html alert alert-info" invisible="not service_info"/>
                         <field name="service_ids"
