@@ -886,7 +886,7 @@ class StockPicking(models.Model):
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
 
             shipping_weight = picking.weight_bulk
-            relevant_packages = picking.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
             children_packages_by_pack = relevant_packages._get_all_children_package_dest_ids()[0]
             for package in relevant_packages:
                 if package.shipping_weight:
