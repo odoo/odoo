@@ -12,7 +12,7 @@ export class GalleryElementOptionPlugin extends Plugin {
             withSequence(SNIPPET_SPECIFIC, {
                 template: "website.GalleryElementOption",
                 selector:
-                    ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
+                    ".s_image_gallery img:not([aria-hidden]), .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             }),
         ],
         builder_actions: {

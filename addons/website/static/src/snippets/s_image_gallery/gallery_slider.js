@@ -17,18 +17,20 @@ export class GallerySlider extends Interaction {
 
     setup() {
         this.hideOnClickIndicator = true;
-        this.carouselEl = this.el.classList.contains("carousel") ? this.el : this.el.querySelector(".carousel");
+        this.carouselEl = this.el.classList.contains("carousel")
+            ? this.el
+            : this.el.querySelector(".carousel");
         this.indicatorEl = this.carouselEl?.querySelector(".carousel-indicators");
         if (this.indicatorEl) {
-            this.prevEl = this.indicatorEl.querySelector("li.o_indicators_left");
-            this.nextEl = this.indicatorEl.querySelector("li.o_indicators_right");
+            this.prevEl = this.indicatorEl.querySelector(".o_indicators_left");
+            this.nextEl = this.indicatorEl.querySelector(".o_indicators_right");
             if (this.prevEl) {
                 this.prevEl.style.visibility = ""; // force visibility as some databases have it hidden
             }
             if (this.nextEl) {
                 this.nextEl.style.visibility = "";
             }
-            this.liEls = this.indicatorEl.querySelectorAll("li[data-bs-slide-to]");
+            this.btnEls = this.indicatorEl.querySelectorAll("[data-bs-slide-to]");
             let indicatorWidth = this.indicatorEl.getBoundingClientRect().width;
             if (indicatorWidth === 0) {
                 // An ancestor may be hidden so we try to find it and make it
@@ -46,9 +48,10 @@ export class GallerySlider extends Interaction {
                     indicatorParentEl = indicatorParentEl.parentElement;
                 }
             }
-            this.nbPerPage = Math.floor(indicatorWidth / (this.liEls.length > 0 ? this.liEls[0].getBoundingClientRect().width : undefined)) - 3; // - navigator - 1 to leave some space
+            this.nbPerPage =
+                Math.floor(indicatorWidth / this.btnEls[0].getBoundingClientRect().width) - 3; // - navigator - 1 to leave some space
             this.realNbPerPage = this.nbPerPage || 1;
-            this.nbPages = Math.ceil(this.liEls.length / this.realNbPerPage);
+            this.nbPages = Math.ceil(this.btnEls.length / this.realNbPerPage);
         }
         this.onSlidCarousel();
     }
@@ -63,7 +66,7 @@ export class GallerySlider extends Interaction {
     }
 
     onSlideCarousel() {
-        if (!this.carouselEl || !this.liEls) {
+        if (!this.carouselEl || !this.btnEls) {
             return;
         }
         this.waitForTimeout(() => {
@@ -72,11 +75,9 @@ export class GallerySlider extends Interaction {
                 return;
             }
             const index = [...itemEl.parentElement.children].indexOf(itemEl);
-            for (const liEl of this.liEls) {
-                liEl.classList.remove("active");
+            for (const btnEl of this.btnEls) {
+                btnEl.classList.toggle("active", btnEl.dataset.bsSlideTo === String(index));
             }
-            const selectedLiEl = [...this.liEls].find(el => el.dataset.bsSlideTo === `${index}`);
-            selectedLiEl?.classList.add("active");
         }, 0);
     }
 
@@ -85,7 +86,7 @@ export class GallerySlider extends Interaction {
      */
     onClickIndicator(ev) {
         // Delegate from this.indicatorEl.
-        const dispatchedEl = ev.target.closest("li:not([data-bs-slide-to])");
+        const dispatchedEl = ev.target.closest("span:not([data-bs-slide-to])");
         if (!dispatchedEl || dispatchedEl.parentElement !== this.indicatorEl) {
             return;
         }
@@ -100,15 +101,18 @@ export class GallerySlider extends Interaction {
     }
 
     hide() {
-        for (let i = 0; i < this.liEls?.length; i++) {
-            this.liEls[i].classList.toggle("d-none", i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage);
+        for (let i = 0; i < this.btnEls?.length; i++) {
+            this.btnEls[i].classList.toggle(
+                "d-none",
+                i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage
+            );
         }
         if (this.prevEl) {
             if (this.page <= 0) {
                 this.prevEl.remove();
             } else {
                 this.prevEl.classList.remove("d-none");
-                this.indicatorEl.insertAdjacentElement("afterbegin", this.prevEl);
+                this.insert(this.prevEl, this.indicatorEl, "afterbegin");
             }
         }
         if (this.nextEl) {
@@ -116,15 +120,17 @@ export class GallerySlider extends Interaction {
                 this.nextEl.remove();
             } else {
                 this.nextEl.classList.remove("d-none");
-                this.insert(this.nextEl, this.indicatorEl, "beforeend")
+                this.insert(this.nextEl, this.indicatorEl, "beforeend");
             }
         }
     }
 
     onSlidCarousel() {
-        if (this.liEls) {
-            const active = [...this.liEls].filter((el) => el.classList.contains("active"));
-            const index = active.length ? [...this.liEls].indexOf(active[0]) : 0;
+        if (this.btnEls) {
+            const activeElIndex = [...this.btnEls].findIndex((el) =>
+                el.classList.contains("active")
+            );
+            const index = Math.max(activeElIndex, 0);
             this.page = Math.floor(index / this.realNbPerPage);
         }
         this.hide();
