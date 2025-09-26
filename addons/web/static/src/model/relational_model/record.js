@@ -313,6 +313,9 @@ export class Record extends DataPoint {
     async urgentSave() {
         this.model._urgentSave = true;
         this.model.bus.trigger("WILL_SAVE_URGENTLY");
+        if (!this.resId && !this.dirty) {
+            return true;
+        }
         const succeeded = await this._save({ reload: false });
         this.model._urgentSave = false;
         return succeeded;
