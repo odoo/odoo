@@ -1326,3 +1326,24 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(mls[0].quantity, 1)
         self.assertEqual(mls[1].lot_id.name, '1002')
         self.assertEqual(mls[1].quantity, 2)
+
+    def test_import_so_to_pos_no_existing_lot(self):
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+            'taxes_id': False,
+            'tracking': 'lot',
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 31,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_import_so_to_pos_no_existing_lot', login="accountman")
