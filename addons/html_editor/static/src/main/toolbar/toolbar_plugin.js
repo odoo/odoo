@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -356,8 +356,7 @@ export class ToolbarPlugin extends Plugin {
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
-                    (node.nodeType !== Node.TEXT_NODE ||
-                        (node.textContent.trim().length && !isZWS(node)))
+                    (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
             )
             .filter((node) => {
                 const element = closestElement(node);
