@@ -299,6 +299,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
+        self.start_pos_tour('SplitBillScreenTourPay')
 
     def test_08_refund_stay_current_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
