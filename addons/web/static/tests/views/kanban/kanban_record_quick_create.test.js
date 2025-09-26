@@ -25,6 +25,7 @@ import {
     getKanbanRecord,
     getKanbanRecordTexts,
     getService,
+    hideTab,
     makeServerError,
     models,
     mountView,
@@ -3855,4 +3856,104 @@ test("Auto save on closing tab/browser (invalid)", async () => {
     expect(event.defaultPrevented).toBe(true);
     expect(".o_kanban_quick_create [name=date]").toHaveClass("o_field_invalid");
     expect.verifySteps([]);
+});
+
+test("Auto save on hiding tab (no quick create view)", async () => {
+    onRpc("partner", "name_create", ({ args }) => {
+        expect.step("name_create"); // should be called
+        expect(args[0]).toEqual("test");
+    });
+
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("display_name", "test");
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps(["name_create"]);
+    expect(".o_kanban_quick_create").toHaveCount(0);
+});
+
+test("Auto save on hiding tab (quick create view)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+        </form>`;
+
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save"); // should be called
+        expect(args[1]).toEqual({ foo: "test" });
+    });
+
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps(["web_save"]);
+    expect(".o_kanban_quick_create").toHaveCount(0);
+});
+
+test("Auto save on hiding tab (invalid)", async () => {
+    Partner._views["form,quick_create_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="date" required="1"/>
+        </form>`;
+
+    onRpc("partner", "web_save", ({ args }) => {
+        throw new Error("should not save");
+    });
+
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="quick_create_ref">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+    });
+
+    await quickCreateKanbanRecord(1);
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await hideTab();
+    await animationFrame();
+    expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create .o_field_widget[name=date]").toHaveClass("o_field_invalid");
 });
