@@ -4,7 +4,6 @@ import itertools
 import logging
 import typing
 from collections import defaultdict
-from collections.abc import Reversible
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -19,7 +18,7 @@ from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
 from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
+from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
@@ -355,12 +354,12 @@ class Many2one(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
-        prefetch_ids = PrefetchMany2one(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
-        prefetch_ids = PrefetchMany2one(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
@@ -649,7 +648,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
-        prefetch_ids = PrefetchX2many(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         Comodel = record.pool[self.comodel_name]
         corecords = Comodel(record.env, value, prefetch_ids)
         if (
@@ -661,7 +660,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record_multi(self, values, records):
         # return the list of ids as a recordset without duplicates
-        prefetch_ids = PrefetchX2many(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         Comodel = records.pool[self.comodel_name]
         ids = tuple(unique(id_ for ids in values for id_ in ids))
         corecords = Comodel(records.env, ids, prefetch_ids)
@@ -1739,52 +1738,4 @@ class Many2many(_RelationalMulti):
             SQL.identifier(alias, 'id'),
             SQL.identifier(rel_alias, rel_id2),
             coquery.subselect(),
-        )
-
-
-class PrefetchMany2one(Reversible):
-    """ Iterable for the values of a many2one field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record: BaseModel, field: Many2one):
-        self.record = record
-        self.field = field
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in self.record._prefetch_ids
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in reversed(self.record._prefetch_ids)
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-
-class PrefetchX2many(Reversible):
-    """ Iterable for the values of an x2many field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record: BaseModel, field: _RelationalMulti):
-        self.record = record
-        self.field = field
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in self.record._prefetch_ids
-            for coid in field_cache.get(id_, ())
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in reversed(self.record._prefetch_ids)
-            for coid in field_cache.get(id_, ())
         )
