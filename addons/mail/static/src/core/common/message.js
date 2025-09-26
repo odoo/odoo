@@ -39,6 +39,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
+import { loadCssFromBundle } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -139,6 +140,7 @@ export class Message extends Component {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = this.store.isOdooWhiteTheme ? "dark" : "white";
+                loadCssFromBundle(this.shadowRoot, "mail.assets_message_email");
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
