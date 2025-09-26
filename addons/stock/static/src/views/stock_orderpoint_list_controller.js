@@ -34,4 +34,25 @@ export class StockOrderpointListController extends ListController {
             onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
         });
     }
+
+    async createRecord() {
+        const domain = this.model.root?.domain || [];
+        const location_id = domain.find((d) => d[0] === "location_id")?.[2] || null;
+        const list = this.model.root;
+
+        if (this.editable && !list.isGrouped) {
+            await list.leaveEditMode();
+            if (!list.editedRecord) {
+                await list.addNewRecord(this.editable === "top");
+            }
+
+            if (list.editedRecord && location_id) {
+                list.editedRecord.update({
+                    location_id: { id: location_id },
+                });
+            }
+        } else {
+            await this.props.createRecord(...arguments);
+        }
+    }
 }
