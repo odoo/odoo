@@ -9,6 +9,7 @@ export class AnimateOption extends BaseOptionComponent {
         canHaveHoverEffect: Function,
         requireAnimation: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
+        isFloatingToolbar: { type: Boolean, optional: true },
     };
     static defaultProps = { requireAnimation: false };
 
