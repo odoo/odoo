@@ -255,7 +255,9 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             remaining_quantity -= splitted_line.quantity;
                         }
                     } else if (new_line.get_product().tracking == "lot") {
+                        let total_lot_quantity = 0;
                         for (const lot of line.lot_names) {
+                            total_lot_quantity += line.lot_qty_by_name[lot] || 0;
                             const splitted_line = new Orderline({ env: this.env }, line_values);
                             splitted_line.set_quantity(line.lot_qty_by_name[lot] || 0, true);
                             splitted_line.set_unit_price(line.price_unit);
@@ -265,6 +267,14 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                                 newPackLotLines: [{ lot_name: lot }],
                                 setQuantity: false,
                             });
+                            this.pos.get_order().add_orderline(splitted_line);
+                        }
+                        if (total_lot_quantity < new_line.quantity) {
+                            const remaining_quantity = new_line.quantity - total_lot_quantity;
+                            const splitted_line = new Orderline({ env: this.env }, line_values);
+                            splitted_line.set_quantity(remaining_quantity, true);
+                            splitted_line.set_unit_price(line.price_unit);
+                            splitted_line.set_discount(line.discount);
                             this.pos.get_order().add_orderline(splitted_line);
                         }
                     } else {
