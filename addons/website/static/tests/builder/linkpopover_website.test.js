@@ -4,13 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { cleanLinkArtifacts } from "@html_editor/../tests/_helpers/format";
 import { getContent, setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { base64Img, setupEditor } from "@html_editor/../tests/_helpers/editor";
-import {
-    contains,
-    defineModels,
-    onRpc,
-    serverState,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, onRpc, serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     click as mailClick,
     mailModels,
@@ -20,8 +14,12 @@ import {
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { HtmlField } from "@html_editor/fields/html_field";
 import { browser } from "@web/core/browser/browser";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
-defineModels(mailModels);
+defineWebsiteModels();
 
 test("autocomplete should shown and able to edit the link", async () => {
     onRpc("/website/get_suggested_links", () => {
@@ -217,6 +215,128 @@ test("link redirection should be prefixed for url of website pages only", async 
     await waitFor(".o-we-linkpopover");
     await click(".o-we-linkpopover a");
     expect.verifySteps([]);
+});
+test("should open seo advanced popup when gear icon is clicked", async () => {
+    await setupWebsiteBuilder(`
+        <div id="wrapwrap">
+            <p>this is a <a href="http://test.com/">link</a></p>
+        </div>
+    `);
+    const linkText = queryOne(":iframe #wrapwrap a");
+    setSelection({
+        anchorNode: linkText.firstChild,
+        anchorOffset: 1,
+    });
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_edit_link").click();
+    await waitFor(".o_we_href_input_link");
+    await contains(".o_we_href_input_link").click();
+    await contains(".o-we-linkpopover .fa-gear").click();
+    expect(".o_advance_option_panel").toHaveCount(1);
+    expect(".o_advance_option_panel .o_seo_option_row").toHaveCount(4);
+});
+test("should add rel='nofollow' when checkbox is selected and applied", async () => {
+    await setupWebsiteBuilder(`
+        <div id="wrapwrap">
+            <p>this is a <a href="http://test.com/">link</a></p>
+        </div>
+    `);
+    const linkText = queryOne(":iframe #wrapwrap a");
+    setSelection({
+        anchorNode: linkText.firstChild,
+        anchorOffset: 1,
+    });
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_edit_link").click();
+    await waitFor(".o_we_href_input_link");
+    await contains(".o_we_href_input_link").click();
+    await contains(".o-we-linkpopover .fa-gear").click();
+    expect(".o_advance_option_panel").toHaveCount(1);
+    await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
+    await contains(".o_advance_option_panel .fa-angle-left").click();
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_apply_link").click();
+    expect(linkText).toHaveAttribute("rel", "nofollow");
+});
+test("should add multipule relAttribute in anchor tag when checkbox is selected and applied", async () => {
+    await setupWebsiteBuilder(`
+        <div id="wrapwrap">
+            <p>this is a <a href="http://test.com/">link</a></p>
+        </div>
+    `);
+    const linkText = queryOne(":iframe #wrapwrap a");
+    setSelection({
+        anchorNode: linkText.firstChild,
+        anchorOffset: 1,
+    });
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_edit_link").click();
+    await waitFor(".o_we_href_input_link");
+    await contains(".o_we_href_input_link").click();
+    await contains(".o-we-linkpopover .fa-gear").click();
+    expect(".o_advance_option_panel").toHaveCount(1);
+    await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
+    await contains(".o_seo_option_row:nth-of-type(2) input[type='checkbox']").click();
+    await contains(".o_seo_option_row:nth-of-type(3) input[type='checkbox']").click();
+    await contains(".o_advance_option_panel .fa-angle-left").click();
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_apply_link").click();
+    expect(linkText).toHaveAttribute("rel", "nofollow noreferrer sponsored");
+});
+test("should add _blank attribute on open in a new window is checked", async () => {
+    await setupWebsiteBuilder(`
+        <div id="wrapwrap">
+            <p>this is a <a href="http://test.com/">link</a></p>
+        </div>
+    `);
+    const linkText = queryOne(":iframe #wrapwrap a");
+    setSelection({
+        anchorNode: linkText.firstChild,
+        anchorOffset: 1,
+    });
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_edit_link").click();
+    await waitFor(".o_we_href_input_link");
+    await contains(".o_we_href_input_link").click();
+    await contains(".o-we-linkpopover .fa-gear").click();
+    expect(".o_advance_option_panel").toHaveCount(1);
+    await contains(".o_advance_option_panel .target-blank-option").click();
+    await contains(".o_seo_option_row:nth-of-type(5) input[type='checkbox']").click();
+    await click(".o_advance_option_panel .fa-angle-left");
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_apply_link").click();
+    expect(linkText).toHaveAttribute("target", "_blank");
+    expect(linkText).toHaveAttribute("rel", "noopener");
+});
+
+test("should allow target _blank on custom button", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div id="wrapwrap">
+            <p>Hello</p>
+        </div>
+    `);
+    const editor = getEditor();
+    const linkText = editor.editable.querySelector("p");
+    setSelection({
+        anchorNode: linkText.firstChild,
+        anchorOffset: 0,
+        focusOffset: 5,
+    });
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .fa-link");
+    await waitFor(".o_we_href_input_link");
+    await contains(".o_we_href_input_link").click();
+    await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
+        confirm: false,
+    });
+    await contains(".o-we-linkpopover .fa-gear").click();
+    expect(".o_advance_option_panel").toHaveCount(1);
+    await contains(".o_advance_option_panel .target-blank-option").click();
+    await click(".o_advance_option_panel .fa-angle-left");
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_apply_link").click();
+    const anchor = editor.editable.querySelector("a");
+    expect(anchor).toHaveAttribute("target", "_blank");
 });
 
 test("link redirection should not be prefixed when the current page is not a website page", async () => {

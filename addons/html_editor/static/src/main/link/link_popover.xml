@@ -142,9 +142,11 @@
                                 <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark" t-on-click.prevent="onClickRemove" title="Remove Link">
                                     <i class="fa fa-chain-broken"></i>
                                 </a>
-                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
-                                    <i class="fa fa-gear"/>
-                                </button>
+                                <t t-if="showGearIcon()">
+                                    <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
+                                        <i class="fa fa-gear"/>
+                                    </button>
+                                </t>
                             </div>
                         </div>
                     </div>
