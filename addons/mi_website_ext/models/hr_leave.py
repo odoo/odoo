@@ -24,8 +24,10 @@ class HrLeave(models.Model):
        
         if self.env.user.id == 6:
             return 
-    
-        # 1. Identificamos si es una 'Solicitud de permiso'
+
+        if is_write and self.create_uid.id == 6:
+            return    
+
         leave_type_id = vals.get('holiday_status_id') or (self.holiday_status_id.id if is_write else False)
         if not leave_type_id:
             return
@@ -34,7 +36,6 @@ class HrLeave(models.Model):
         if not leave_type or leave_type.name != 'Solicitud de permiso':
             return 
 
-        # 2. Obtenemos el empleado y la fecha de la nueva solicitud
         employee_id = vals.get('employee_id') or (self.employee_id.id if is_write else False)
         if not employee_id:
             return
@@ -46,7 +47,6 @@ class HrLeave(models.Model):
 
         request_date = fields.Date.to_date(request_date_from_str)
         
-        # 3. Calculamos las horas de la solicitud
         requested_hours = 0.0
         if 'number_of_hours' in vals:
             requested_hours = vals.get('number_of_hours', 0.0)
@@ -56,7 +56,6 @@ class HrLeave(models.Model):
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             requested_hours = vals.get('number_of_days', 0.0) * hours_per_day
 
-        # 4. Buscamos y sumamos las horas 
         month_start = request_date.replace(day=1)
         month_end = month_start + relativedelta(months=1, days=-1)
 
@@ -73,11 +72,8 @@ class HrLeave(models.Model):
         approved_leaves = self.env['hr.leave'].search(domain)
         used_hours = sum(approved_leaves.mapped('number_of_hours'))
 
-        # 5. validación final
         monthly_limit = 8.0
         if used_hours + requested_hours > monthly_limit:
-            available_hours = monthly_limit - used_hours
-            
             raise ValidationError(_("Usted ha utilizado el límite mensual de horas de permiso permitidas.")) 
                 
                 
