@@ -3731,13 +3731,13 @@ class AccountMove(models.Model):
         }
 
         currencies = set()
-        has_term_lines = False
+        term_lines = []
         for line in self.line_ids:
             if line.account_type in ('asset_receivable', 'liability_payable'):
                 sign = 1 if line.balance > 0.0 else -1
 
                 currencies.add(line.currency_id)
-                has_term_lines = True
+                term_lines.append(line)
                 values['total_balance'] += sign * line.balance
                 values['total_residual'] += sign * line.amount_residual
                 values['total_amount_currency'] += sign * line.amount_currency
@@ -3751,7 +3751,7 @@ class AccountMove(models.Model):
                 values['to_process_lines'].append(('base', line))
                 currencies.add(line.currency_id)
 
-        if not values['to_process_lines'] or not has_term_lines:
+        if not values['to_process_lines'] or not term_lines:
             return None
 
         # Compute the currency on which made the percentage.

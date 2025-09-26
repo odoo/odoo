@@ -516,7 +516,7 @@ class AccountPartialReconcile(models.Model):
             move = move_values['move']
             pending_cash_basis_lines = []
 
-            for partial_values in move_values['partials']:
+            for partial_index, partial_values in enumerate(move_values['partials']):
                 partial = partial_values['partial']
 
                 # Init the journal entry.
@@ -550,6 +550,7 @@ class AccountPartialReconcile(models.Model):
                     amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
                     if (
                         caba_treatment == 'tax'
+                        and not self._context.get('skip_tax_residual_fallback')
                         and (
                             move_values['is_fully_paid']
                             or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
