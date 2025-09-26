@@ -297,7 +297,7 @@ export class ColorPlugin extends Plugin {
                         font = [];
                     }
                 } else if (
-                    (node.nodeType === Node.TEXT_NODE && !isWhitespace(node) && !isZwnbsp(node)) ||
+                    (node.nodeType === Node.TEXT_NODE && !isZwnbsp(node)) ||
                     (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                         ["inline", "inline-block"].includes(getComputedStyle(node).display) &&
