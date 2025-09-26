@@ -150,9 +150,7 @@ class ResourceResource(models.Model):
         start_datetime = localized(start)
         end_datetime = localized(end)
         resource_mapping = {}
-        calendar_mapping = defaultdict(lambda: self.env['resource.resource'])
-        for resource in self:
-            calendar_mapping[resource.calendar_id or resource.company_id.resource_calendar_id] |= resource
+        calendar_mapping = self.grouped(lambda r: r.calendar_id or r.company_id.resource_calendar_id)
 
         for calendar, resources in calendar_mapping.items():
             if not calendar:

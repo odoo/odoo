@@ -33,9 +33,7 @@ class MrpProduction(models.Model):
 
     def _inverse_move_line_raw_ids(self):
         for production in self:
-            line_by_product = defaultdict(lambda: self.env['stock.move.line'])
-            for line in production.move_line_raw_ids:
-                line_by_product[line.product_id] |= line
+            line_by_product = production.move_line_raw_ids.grouped('product_id')
             for move in production.move_raw_ids:
                 move.move_line_ids = line_by_product.pop(move.product_id, self.env['stock.move.line'])
             for product_id, lines in line_by_product.items():

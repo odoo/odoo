@@ -44,18 +44,14 @@ class StockMoveLine(models.Model):
             notification_title = _('The following wave transfer has been created')
         else:
             notification_title = _('The following wave transfer has been updated')
-        line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
-        for line in self:
-            line_by_picking[line.picking_id] |= line
+        line_by_picking = self.grouped('picking_id')
         picking_to_wave_vals_list = []
         split_pickings_ids = set()
         for picking, lines in line_by_picking.items():
             # Move the entire picking if all the line are taken
-            line_by_move = defaultdict(lambda: self.env['stock.move.line'])
+            line_by_move = lines.grouped('move_id')
             qty_by_move = defaultdict(float)
             for line in lines:
-                move = line.move_id
-                line_by_move[move] |= line
                 qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
                 qty_by_move[line.move_id] += qty
 

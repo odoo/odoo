@@ -298,14 +298,13 @@ class AccountTax(models.Model):
 
     @api.depends('company_id', 'country_id')
     def _compute_tax_group_id(self):
-        by_country_company = defaultdict(self.browse)
-        for tax in self:
-            if (
+        by_country_company = self.filtered(
+            lambda tax: (
                 not tax.tax_group_id
                 or tax.tax_group_id.country_id != tax.country_id
                 or tax.tax_group_id.company_id != tax.company_id
-            ):
-                by_country_company[(tax.country_id, tax.company_id)] += tax
+            )
+        ).grouped(lambda tax: (tax.country_id, tax.company_id))
         for (country, company), taxes in by_country_company.items():
             taxes.tax_group_id = self.env['account.tax.group'].search([
                 *self.env['account.tax.group']._check_company_domain(company),

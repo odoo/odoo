@@ -116,9 +116,10 @@ class SaleOrder(models.Model):
     def _compute_project_ids(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
         projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
-        projects_per_so = defaultdict(lambda: self.env['project.project'])
-        for project in projects:
-            projects_per_so[project.sale_order_id.id or project.reinvoiced_sale_order_id.id] |= project
+        projects_per_so = defaultdict(
+            lambda: self.env['project.project'],
+            projects.grouped(lambda p: p.sale_order_id.id or p.reinvoiced_sale_order_id.id)
+        )
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.project_id

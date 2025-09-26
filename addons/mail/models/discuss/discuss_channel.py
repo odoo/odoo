@@ -537,10 +537,7 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
-        notifications = defaultdict(lambda: self.env["discuss.channel.member"])
-        for member in new_members:
-            bus_channel = member._bus_channel()
-            notifications[bus_channel] |= member
+        notifications = new_members.grouped(lambda m: m._bus_channel())
         for bus_channel, members in notifications.items():
             members = members.with_prefetch(new_members.ids)
             Store(bus_channel=bus_channel).add(members.channel_id).add(

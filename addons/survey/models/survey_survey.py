@@ -889,14 +889,14 @@ class SurveySurvey(models.Model):
     # ------------------------------------------------------------
 
     def _get_conditional_maps(self):
-        triggering_answers_by_question = defaultdict(lambda: self.env['survey.question.answer'])
-        triggered_questions_by_answer = defaultdict(lambda: self.env['survey.question'])
-        for question in self.question_ids:
-            triggering_answers_by_question[question] |= question.triggering_answer_ids
-
-            for triggering_answer_id in question.triggering_answer_ids:
-                triggered_questions_by_answer[triggering_answer_id] |= question
-
+        triggering_answers_by_question = {
+            question: question.triggering_answer_ids
+            for question in self.question_ids
+        }
+        triggered_questions_by_answer = {
+            answer: self.question_ids.filtered(lambda question: answer in question.triggering_answer_ids)
+            for answer in self.question_ids.triggering_answer_ids
+        }
         return triggering_answers_by_question, triggered_questions_by_answer
 
     # ------------------------------------------------------------

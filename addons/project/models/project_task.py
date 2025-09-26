@@ -470,11 +470,8 @@ class ProjectTask(models.Model):
         # Assign the default personal stage for those that are missing
         personal_stages_without_stage = self.env['project.task.stage.personal'].sudo().search([('task_id', 'in', self.ids), ('stage_id', '=', False)])
         if personal_stages_without_stage:
-            user_ids = personal_stages_without_stage.user_id
-            personal_stage_by_user = defaultdict(lambda: self.env['project.task.stage.personal'])
-            for personal_stage in personal_stages_without_stage:
-                personal_stage_by_user[personal_stage.user_id] |= personal_stage
-            for user_id in user_ids:
+            personal_stage_by_user = personal_stages_without_stage.grouped('user_id')
+            for user_id, personal_stages in personal_stage_by_user.items():
                 stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
                 # In the case no stages have been found, we create the default stages for the user
                 if not stage:
@@ -482,7 +479,7 @@ class ProjectTask(models.Model):
                         self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
                     )
                     stage = stages[0]
-                personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
+                personal_stages.sudo().write({'stage_id': stage.id})
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # Set task notification based on project notification preference if user follow the project

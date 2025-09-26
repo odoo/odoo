@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
@@ -816,10 +815,7 @@ class PurchaseOrder(models.Model):
         if len(rfq_to_merge) < 2:
             raise UserError(_("Please select at least two purchase orders with state RFQ and RFQ sent to merge."))
 
-        rfqs_grouped = defaultdict(lambda: self.env['purchase.order'])
-        for rfq in rfq_to_merge:
-            key = self._prepare_grouped_data(rfq)
-            rfqs_grouped[key] += rfq
+        rfqs_grouped = rfq_to_merge.grouped(self._prepare_grouped_data)
 
         bunches_of_rfq_to_be_merge = list(rfqs_grouped.values())
         if all(len(rfq_bunch) == 1 for rfq_bunch in list(bunches_of_rfq_to_be_merge)):
@@ -1145,21 +1141,18 @@ class PurchaseOrder(models.Model):
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
         if section_id is None:
             section_id = (
                 self.order_line[:1].id
                 if self.order_line[:1].display_type == 'line_section'
                 else False
             )
-        for line in self.order_line:
-            if (
-                line.display_type
-                or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != section_id
-            ):
-                continue
-            grouped_lines[line.product_id] |= line
+        filtered_lines = self.order_line.filtered(lambda l: not (
+            l.display_type
+            or l.product_id.id not in product_ids
+            or l.get_parent_section_line().id != section_id
+        ))
+        grouped_lines = filtered_lines.grouped('product_id')
         return grouped_lines
 
     def _get_product_price_and_data(self, product):

@@ -173,9 +173,14 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         # Group data from selected move lines
         counterpart_balances = defaultdict(lambda: defaultdict(lambda: 0))
         counterpart_distribution_amount = defaultdict(lambda: defaultdict(lambda: {}))
-        grouped_source_lines = defaultdict(lambda: self.env['account.move.line'])
-
-        for line in self.move_line_ids.filtered(lambda x: x.account_id != self.destination_account_id):
+        lines_with_different_destination_account = self.move_line_ids.filtered(lambda line: line.account_id != self.destination_account_id)
+        grouped_source_lines = lines_with_different_destination_account.grouped(lambda l: (
+            l.partner_id,
+            l.currency_id,
+            l.account_id,
+            l.analytic_distribution and frozendict(l.analytic_distribution),
+        ))
+        for line in lines_with_different_destination_account:
             counterpart_currency = line.currency_id
             counterpart_amount_currency = line.amount_currency
 
@@ -194,12 +199,6 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     distribution_values = counterpart_distribution_amount[grouping_key]
                     distribution_values[account_id] = (line.balance * distribution + distribution_values.get(account_id, 0) * 100) / 100
             counterpart_balances[grouping_key]['analytic_distribution'] = counterpart_distribution_amount[grouping_key] or {}
-            grouped_source_lines[(
-                line.partner_id,
-                line.currency_id,
-                line.account_id,
-                line.analytic_distribution and frozendict(line.analytic_distribution),
-            )] += line
 
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
@@ -466,11 +465,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         new_move = self.env['account.move'].create(move_vals)
         new_move._post()
 
-        # Group lines
-        grouped_lines = defaultdict(lambda: self.env['account.move.line'])
         destination_lines = self.move_line_ids.filtered(lambda x: x.account_id == self.destination_account_id)
-        for line in self.move_line_ids - destination_lines:
-            grouped_lines[(line.partner_id, line.currency_id, line.account_id)] += line
+        # Group lines
+        grouped_lines = (self.move_line_ids - destination_lines).grouped(lambda l: (l.partner_id, l.currency_id, l.account_id))
 
         # Reconcile
         for (partner, currency, account), lines in grouped_lines.items():

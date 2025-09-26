@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, time, timedelta
 from itertools import chain
@@ -186,10 +185,7 @@ class HrWorkEntry(models.Model):
         :return: leave work entries completely outside the contract's calendar
         """
         work_entries = self._get_leaves_entries_outside_schedule()
-        entries_by_calendar = defaultdict(lambda: self.env['hr.work.entry'])
-        for work_entry in work_entries:
-            calendar = work_entry.version_id.resource_calendar_id
-            entries_by_calendar[calendar] |= work_entry
+        entries_by_calendar = work_entries.grouped(lambda we: we.version_id.resource_calendar_id)
 
         outside_entries = self.env['hr.work.entry']
         for calendar, entries in entries_by_calendar.items():

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 import pytz
 
 from odoo import models
@@ -27,9 +26,7 @@ class HrVersion(models.Model):
             ('date_to', '>=', start_dt.astimezone(pytz.utc).replace(tzinfo=None)),
             ('l10n_fr_date_to_changed', '=', True),
         ])
-        leaves_per_employee = defaultdict(lambda: self.env['hr.leave'])
-        for leave in all_leaves:
-            leaves_per_employee[leave.employee_id] |= leave
+        leaves_per_employee = all_leaves.grouped('employee_id')
         for contract in fr_contracts:
             employee = contract.employee_id
             employee_calendar = contract.resource_calendar_id
