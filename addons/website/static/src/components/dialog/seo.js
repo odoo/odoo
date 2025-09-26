@@ -989,6 +989,7 @@ export class OptimizeSEODialog extends Component {
 
             seoContext.metaImage =
                 this.data.website_meta_og_img || this.getMeta({ property: "og:image" });
+            this.previousMetaImage = seoContext.metaImage;
 
             this.pageImages = this.getImages();
             this.socialPreviewDescription = _t(
@@ -1062,7 +1063,9 @@ export class OptimizeSEODialog extends Component {
                 data.seo_name = seoContext.seoName;
             }
         }
-        data.website_meta_og_img = seoContext.metaImage;
+        if (seoContext.metaImage !== this.previousMetaImage) {
+            data.website_meta_og_img = seoContext.metaImage;
+        }
         await this.orm.write(this.object.model, [this.object.id], data, {
             context: {
                 lang: this.website.currentWebsite.metadata.lang,
