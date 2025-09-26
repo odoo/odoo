@@ -233,10 +233,14 @@ export class MediaDialog extends Component {
                     if (typeof name === "string") {
                         extraClassesToRemove.push(name);
                     } else {
-                        // Regex
-                        for (const className of element.classList) {
-                            if (className.match(name)) {
-                                extraClassesToRemove.push(className);
+                        if (typeof name === "function") {
+                            continue;
+                        } else {
+                            // Regex
+                            for (const className of element.classList) {
+                                if (className.match(name)) {
+                                    extraClassesToRemove.push(className);
+                                }
                             }
                         }
                     }
@@ -251,10 +255,14 @@ export class MediaDialog extends Component {
                                     return false;
                                 }
                             } else {
-                                // Regex
-                                for (const className of element.classList) {
-                                    if (className.match(candidateName)) {
-                                        return false;
+                                if (typeof name === "function") {
+                                    continue;
+                                } else {
+                                    // Regex
+                                    for (const className of element.classList) {
+                                        if (className.match(candidateName)) {
+                                            return false;
+                                        }
                                     }
                                 }
                             }
@@ -263,6 +271,17 @@ export class MediaDialog extends Component {
                     })
                 );
             }
+
+            for (const otherTab of Object.keys(this.tabs).filter(
+                (key) => key === this.state.activeTab
+            )) {
+                for (const candidateFunc of this.tabs[otherTab].Component.mediaExtraClasses) {
+                    if (typeof candidateFunc === "function") {
+                        element.classList.add(candidateFunc(this.props));
+                    }
+                }
+            }
+
             element.classList.remove(...this.initialIconClasses);
             element.classList.remove("o_modified_image_to_save");
             element.classList.remove("oe_edited_link");
