@@ -46,6 +46,18 @@
                             <field name="parent_package_id" domain="[('id', '!=', id), '|', ('location_id', '=', location_id), ('location_id', '=', False)]" widget="package_m2o" context="{'show_src_package': 1}"/>
                         </group>
                         <group>
+                            <label for="shipping_weight"/>
+                            <div class="o_row" name="Shipping Weight">
+                                <field name="shipping_weight" class="oe_inline"/>
+                                <span><field name="weight_uom_name"/></span>
+                                <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
+                            </div>
+                            <label for="shipping_volume"/>
+                            <div class="o_row" name="Shipping Volume">
+                                <field name="shipping_volume" class="oe_inline"/>
+                                <span><field name="volume_uom_name"/></span>
+                                <span class="text-muted">(computed: <field name="volume" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="volume_uom_name" nolabel="1" class="oe_inline"/>)</span>
+                            </div>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name="pack_date"/>
                         </group>

@@ -1000,7 +1000,7 @@ class StockMoveLine(models.Model):
                 'location_id': package.location_id.id,
                 'location_dest_id': package.location_dest_id.id,
                 'move_line_ids': [Command.set(package.move_line_ids.filtered(lambda ml: ml.result_package_id == package).ids)],
-                'picking_ids': [Command.set(package.picking_ids.ids)],
+                'picking_ids': [Command.set(self.picking_id.ids)],
                 'package_id': package.id,
                 'package_name': package.complete_name,
                 'parent_orig_id': package.parent_package_id.id,

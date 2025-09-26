@@ -13,26 +13,6 @@ class StockRoute(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True,
-        # In case of a big database with a lot of stock moves, the RAM gets exhausted
-        # To prevent a process from being killed We create the column 'weight' manually
-        # Then we do the computation in a query by multiplying product weight with qty
-        init_storage=lambda model: model.env.cr.execute("""
-                UPDATE stock_move move
-                SET weight = move.product_qty * product.weight
-                FROM product_product product
-                WHERE move.product_id = product.id
-                AND move.state != 'cancel'
-                """),
-    )
-
-    @api.depends('product_id', 'product_uom_qty', 'uom_id')
-    def _cal_move_weight(self):
-        moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
-        for move in moves_with_weight:
-            move.weight = (move.product_qty * move.product_id.weight)
-        (self - moves_with_weight).weight = 0
-
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         if not any(rule.propagate_carrier for rule in self.rule_id):
@@ -118,7 +98,13 @@ class StockMoveLine(models.Model):
     def _post_put_in_pack_hook(self, package):
         weight = self.env.context.get('weight')
         if not weight and self.carrier_id:
-            weight = package._get_weight(self.picking_id[:1].id).get(package, 0.0)
+            picking = self.picking_id[:1]
+            relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
+            __, all_pack_ids = relevant_packages._get_all_children_package_dest_ids()
+            in_scope_pack_ids = set(self.env['stock.package'].search_fetch([('id', 'in', all_pack_ids), ('picking_ids', 'in', picking.id)]).ids)
+            defined_weights_per_pack = self.env['stock.package']._get_defined_weights_per_package(in_scope_pack_ids)
+            content_weight_per_picking = self.env['stock.package']._get_content_weight_per_pickings(in_scope_pack_ids, picking.ids)
+            weight = package._get_effective_weight_in_pickings(picking, defined_weights_per_pack, content_weight_per_picking, in_scope_pack_ids)
         if weight:
             package.shipping_weight = weight
         return super()._post_put_in_pack_hook(package)

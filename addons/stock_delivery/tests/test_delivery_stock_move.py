@@ -263,8 +263,8 @@ class TestStockMoveInvoice(TestSaleCommon):
         so.action_confirm()
         picking = so.picking_ids
         self.assertEqual(picking.weight, 1.0, "The weight of the picking should be 1.0")
-        self.product_cable_management_box.weight = 2.0
-        self.assertEqual(picking.weight, 1.0, "The weight of the picking should not change")
+        self.product_cable_management_box.weight = 1.5
+        self.assertEqual(picking.weight, 1.5, "The weight of the picking should be 1.5")
         picking.move_ids.product_id = self.product_a
         self.assertEqual(picking.weight, 2.0, "The weight of the picking should be 2.0")
 

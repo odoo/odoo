@@ -22,6 +22,26 @@ class StockPackageHistory(models.Model):
     outermost_dest_id = fields.Many2one('stock.package', 'Outermost Destination Container')
     picking_ids = fields.Many2many('stock.picking', string='Transfers')
 
+    def _get_all_history_children_package_dest_ids(self):
+        """
+        Gets all child packages using history records of packages recursively.
+        Should be the same as stock_package._get_all_children_package_dest_ids() but this method
+        uses history records (used when pickings are done) and returns as dict the direct children
+        only per package (not all children per package) and the set of all child packages.
+        :returns: A dict mapping each package in self to a list of its direct child packages
+        :returns: A set of all child packages
+        """
+        all_children_ids = set(self.package_id.ids)
+        direct_children_by_pack = {}
+
+        histories_by_parent_pack = self.grouped('parent_dest_id')
+        for history in self:
+            children = histories_by_parent_pack.get(history.package_id)
+            if children:
+                direct_children_by_pack[history.package_id.id] = children.package_id
+
+        return direct_children_by_pack, all_children_ids
+
     def _get_complete_dest_name_except_outermost(self):
         self.ensure_one()
         if not self.parent_dest_id:
