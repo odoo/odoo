@@ -58,6 +58,14 @@ $o-discuss-talkingColor: lighten($success, 10%);
     &.o-simulateDarkTheme {
         background-color: $gray-800;
         border-color: $gray-700 !important;
+
+        * {
+            color: white;
+        }
+
+        select, .form-check-input {
+            border-color: $gray-600;
+        }
     }
 
     .o_bottom_sheet_sheet:has(&) {
