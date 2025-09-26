@@ -8,12 +8,50 @@
                     <t t-if="package.valid_sscc">
                         <t t-set="barcode" t-value="'00' + package.name"/>
                         <t t-if="package.pack_date" name="datamatrix_pack_date" t-set="barcode" t-value="barcode + '13' + package.pack_date.strftime('%y%m%d')"/>
+                        <t t-if="package.shipping_weight or package.weight">
+                            <t t-if="package.shipping_weight" t-set="weight_str" t-value="str(int(package.shipping_weight/package.weight_uom_rounding))"/>
+                            <t t-else="" t-set="weight_str" t-value="str(int(package.weight/package.weight_uom_rounding))"/>
+                            <t t-if="len(weight_str) &lt;= 6">
+                                <t t-if="package.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
+                                <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
+                                <t t-set="barcode" t-value="barcode + str(len(str(package.weight_uom_rounding).split('.')[1]))"/>
+                                <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
+                            </t>
+                        </t>
+                        <t t-if="package.shipping_volume or package.volume">
+                            <t t-if="package.shipping_volume" t-set="volume_str" t-value="str(int(package.shipping_volume/package.volume_uom_rounding))"/>
+                            <t t-else="" t-set="volume_str" t-value="str(int(package.volume/package.volume_uom_rounding))"/>
+                            <t t-if="len(volume_str) &lt;= 6">
+                                <t t-if="package.volume_is_m3" t-set="barcode" t-value="barcode + '316'"/>
+                                <t t-else="" t-set="barcode" t-value="barcode + '365'"/>
+                                <t t-set="barcode" t-value="barcode + str(len(str(package.volume_uom_rounding).split('.')[1]))"/>
+                                <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(volume_str))) + volume_str"/>
+                            </t>
+                        </t>
 ^FO310,50
 ^A0N,44,33^FDSSCC: <t t-out="package.name"/>^FS
 ^FO310,100^BY3
 <t t-if="package.pack_date">^A0N,44,33^FDPack Date: <t t-out="package.pack_date" t-options='{"widget": "date"}'/>^FS</t>
 ^FO310,150^BY3
 <t t-if="package.package_type_id">^A0N,44,33^FDPackage Type: <t t-out="package.package_type_id.name"/>^FS</t>
+                        <t t-if="package.shipping_weight or package.weight">
+^FO310,200
+                            <t t-if="package.shipping_weight">
+^A0N,44,33^FDShipping Weight: <t t-out="package.shipping_weight"/> <t t-out="package.weight_uom_name"/>^FS
+                            </t>
+                            <t t-else="">
+^A0N,44,33^FDWeight: <t t-out="package.weight"/> <t t-out="package.weight_uom_name"/>^FS
+                            </t>
+                        </t>
+                        <t t-if="package.shipping_volume or package.volume">
+^FO310,250
+                            <t t-if="package.shipping_volume">
+^A0N,44,33^FDShipping Volume: <t t-out="package.shipping_volume"/> <t t-out="package.volume_uom_name"/>^FS
+                            </t>
+                            <t t-else="">
+^A0N,44,33^FDVolume: <t t-out="package.volume"/> <t t-out="package.volume_uom_name"/>^FS
+                            </t>
+                        </t>
 ^FO100,50^BY3
 ^BXN,10,200
 ^FD<t t-out="barcode"/>^FS

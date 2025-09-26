@@ -22,6 +22,7 @@ class StockPackageType(models.Model):
     height = fields.Float('Height', help="Packaging Height")
     width = fields.Float('Width', help="Packaging Width")
     packaging_length = fields.Float('Length', help="Packaging Length")
+    base_volume = fields.Float('Technical field for type volume instead of replecating inline code.', compute='_compute_base_volume')
     base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
     barcode = fields.Char('Barcode', copy=False)
@@ -85,6 +86,13 @@ class StockPackageType(models.Model):
     def _compute_weight_uom_name(self):
         for package_type in self:
             package_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    @api.depends('packaging_length', 'width', 'height')
+    def _compute_base_volume(self):
+        uom_id = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
+        volume_factor = 1e-9 if uom_id == self.env.ref('uom.product_uom_cubic_meter') else 1.0
+        for package_type in self:
+            package_type.base_volume = package_type.packaging_length * package_type.width * package_type.height * volume_factor
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
