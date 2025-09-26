@@ -544,7 +544,11 @@ test("quick create record should focus first field input", async function () {
     });
 
     await createKanbanRecord();
+    expect(".o_field_widget[name=foo] input:first").toBeFocused();
 
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await contains(".o_kanban_quick_create .o_kanban_add").click();
+    expect(".o_field_widget[name=foo] input:first").toHaveValue("");
     expect(".o_field_widget[name=foo] input:first").toBeFocused();
 });
 

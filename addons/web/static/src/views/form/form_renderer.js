@@ -76,12 +76,12 @@ export class FormRenderer extends Component {
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
             useEffect(
-                (isNew, rootEl) => {
+                (record, rootEl) => {
                     if (!rootEl) {
                         return;
                     }
                     let elementToFocus;
-                    if (isNew) {
+                    if (record.isNew) {
                         const focusableSelectors = [
                             'input[type="text"]',
                             "textarea",
@@ -105,7 +105,7 @@ export class FormRenderer extends Component {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isNew, rootRef.el]
+                () => [this.props.record, rootRef.el]
             );
         }
 
