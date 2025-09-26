@@ -161,6 +161,7 @@ export class KanbanQuickCreateController extends Component {
         useSetupAction({
             beforeLeave: () => this.validate("close"),
             beforeUnload: (ev) => this.beforeUnload(ev),
+            beforeVisibilityChange: () => this.beforeVisibilityChange(),
         });
 
         // Key Navigation
@@ -187,6 +188,12 @@ export class KanbanQuickCreateController extends Component {
         if (!succeeded) {
             ev.preventDefault();
             ev.returnValue = "Unsaved changes";
+        }
+    }
+
+    beforeVisibilityChange() {
+        if (document.visibilityState === "hidden") {
+            return this.validate("close");
         }
     }
 
