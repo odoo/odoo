@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_dpo" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos.dpo</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="dpo_client_id" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+                <field name="dpo_client_secret" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+                <field name="dpo_mid" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+                <field name="dpo_tid" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+                <field name="dpo_allowed_payment_modes" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+                <field name="dpo_test_mode" invisible="use_payment_terminal != 'dpo'" required="use_payment_terminal == 'dpo'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

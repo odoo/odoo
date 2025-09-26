@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_payment_form_inherited_pos_dpo" model="ir.ui.view">
+        <field name="name">pos.payment.form.inherit.pos.dpo</field>
+        <field name="model">pos.payment</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transaction_id']" position='after'>
+                <field name="dpo_rrn" invisible="not dpo_rrn"/>
+                <field name="dpo_receipt_number" invisible="not dpo_receipt_number"/>
+                <field name="dpo_transaction_ref" invisible="not dpo_transaction_ref"/>
+                <field name="dpo_mobile_money_phone" invisible="not dpo_mobile_money_phone"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
