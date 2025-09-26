@@ -160,12 +160,14 @@
             <xpath expr="//div[@id='total_payment_term_details_table']//td" position="before">
                 <td name="td_payment_term_ar" t-if="display_in_ar" t-translation="off">
                     <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
-                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="rtl">30.00</span> المبلغ المستحق إذا تم الدفع قبل
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax, currency=o.currency_id, cash_rounding=o.invoice_cash_rounding_id)"
+                          dir="rtl">30.00</span> المبلغ المستحق إذا تم الدفع قبل
                     <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="rtl">2024-01-01</span>
                 </td>
                 <td name="td_payment_term_en" t-if="display_in_en" t-translation="off">
                     <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
-                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="ltr">30.00</span> due if paid before
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax, currency=o.currency_id, cash_rounding=o.invoice_cash_rounding_id)"
+                          dir="ltr">30.00</span> due if paid before
                     <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="ltr">2024-01-01</span>
                 </td>
             </xpath>

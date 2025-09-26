@@ -287,8 +287,9 @@ class TestAccountPayment(AccountPaymentCommon):
             flow='direct',
             state='done',
             amount=invoice.invoice_payment_term_id._get_amount_due_after_discount(
-                total_amount=invoice.amount_residual,
-                untaxed_amount=invoice.amount_tax,
+                invoice.amount_residual,
+                invoice.amount_tax,
+                currency=invoice.currency_id,
             ),
             invoice_ids=[invoice.id],
             partner_id=self.partner.id,

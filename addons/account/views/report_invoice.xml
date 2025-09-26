@@ -426,7 +426,7 @@
                                                 <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
                                                     <td>
                                                         <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                              t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> due if paid before
+                                                              t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax, currency=o.currency_id, cash_rounding=o.invoice_cash_rounding_id)">30.00</span> due if paid before
                                                         <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
                                                     </td>
                                                 </t>
