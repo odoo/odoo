@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="spreadsheet.DateFilterDropdown">
-        <t t-foreach="dateOptions" t-as="option" t-key="option.id">
+        <t t-foreach="dateOptions" t-as="option" t-key="option.type">
             <DropdownItem tag="'div'"
                             class="{ 'selected': isSelected(option), 'd-flex justify-content-between o-date-filter-dropdown': true }"
                             closingMode="'none'"
-                            attrs="{ 'data-id': option.id }"
+                            attrs="{ 'data-id': option.type }"
                             onSelected="() => this.update(option)">
 
                 <div class="o-date-option-label" t-esc="option.label"/>
@@ -16,7 +16,7 @@
                         <DateTimeInput type="'date'" value="dateTo()" onChange="(dateTo) => this.setDateTo(dateTo)" />
                     </div>
                 </t>
-                <t t-elif="isMonthQuarterYear(option)">
+                <t t-elif="isFixedPeriod(option.type)">
                     <div class="d-flex justify-content-between">
                         <button class="btn-previous fa fa-caret-left" t-on-click="() => this.selectPrevious(option.type)" />
                         <input class="o_input" type="text" t-att-value="getDescription(option.type)" readonly="true"/>
