@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
+import logging
 
 from odoo import api, fields, models
-
-import logging
+from odoo.addons.point_of_sale.models.pos_config import format_epson_certified_domain
 
 _logger = logging.getLogger(__name__)
 
@@ -356,3 +355,9 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
+
+    @api.onchange("pos_epson_printer_ip")
+    def _onchange_epson_printer_ip(self):
+        for rec in self:
+            if rec.pos_epson_printer_ip:
+                rec.pos_epson_printer_ip = format_epson_certified_domain(rec.pos_epson_printer_ip)
