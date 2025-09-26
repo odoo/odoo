@@ -514,11 +514,10 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         expectUnloadPage: true,
     },
     {
-        content: "Click on 'Continue checkout' button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
-        run: "click",
-        expectUnloadPage: true,
+        content: "Wait for the extra info page to load",
+        trigger: 'h3:contains("Extra info")',
     },
+    tourUtils.confirmOrder(),
     ...tourUtils.payWithTransfer({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
     {
         content: "Check payment status confirmation window",
