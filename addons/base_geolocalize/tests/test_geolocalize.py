@@ -28,7 +28,7 @@ class TestGeoLocalize(TransactionCase):
         the service doesn't work."""
         test_partner = self.env.ref('base.res_partner_address_4')
         google_map = self.env.ref('base_geolocalize.geoprovider_google_map').id
-        self.env['ir.config_parameter'].set_param('base_geolocalize.geo_provider', google_map)
+        self.env['ir.config_parameter'].set_str('base_geolocalize.geo_provider', google_map)
         with self.assertRaises(UserError):
             test_partner.geo_localize()
         self.assertFalse(test_partner.partner_longitude)

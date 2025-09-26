@@ -93,10 +93,8 @@ class BusBus(models.Model):
 
     @api.autovacuum
     def _gc_messages(self):
-        gc_retention_seconds = int(
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("bus.gc_retention_seconds", DEFAULT_GC_RETENTION_SECONDS)
+        gc_retention_seconds = self.env["ir.config_parameter"].sudo().get_int(
+            "bus.gc_retention_seconds", DEFAULT_GC_RETENTION_SECONDS
         )
         timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=gc_retention_seconds)
         # Direct SQL to avoid ORM overhead; this way we can delete millions of rows quickly.

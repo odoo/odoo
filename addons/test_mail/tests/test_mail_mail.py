@@ -1071,10 +1071,10 @@ class TestMailMailServer(MailCommon):
                 max_size_test_succeed = max_size_never_exceed
                 max_size_test_fail = max_size_always_exceed * n_attachment
             if mail_server:
-                self.env['ir.config_parameter'].sudo().set_param('base.default_max_email_size', max_size_test_fail)
+                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_fail)
                 mail_server.max_email_size = max_size_test_succeed
             else:
-                self.env['ir.config_parameter'].sudo().set_param('base.default_max_email_size', max_size_test_succeed)
+                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_succeed)
 
             attachments = self.env['ir.attachment'].sudo().create([{
                 'name': f'attachment{idx_attachment}',

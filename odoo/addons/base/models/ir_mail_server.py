@@ -244,7 +244,7 @@ class IrMail_Server(models.Model):
     def _get_max_email_size(self):
         if self.max_email_size:
             return self.max_email_size
-        return float(self.env['ir.config_parameter'].sudo().get_param('base.default_max_email_size', '10'))
+        return self.env['ir.config_parameter'].sudo().get_float('base.default_max_email_size') or 10
 
     def _get_test_email_from(self):
         self.ensure_one()

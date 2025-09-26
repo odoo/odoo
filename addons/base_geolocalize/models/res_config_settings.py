@@ -11,6 +11,7 @@ class ResConfigSettings(models.TransientModel):
         'base.geo_provider',
         string='API',
         config_parameter='base_geolocalize.geo_provider',
+        use_default_if_falsy=True,
         default=lambda x: x.env['base.geocoder']._get_provider()
     )
     geoloc_provider_techname = fields.Char(related='geoloc_provider_id.tech_name', readonly=True)

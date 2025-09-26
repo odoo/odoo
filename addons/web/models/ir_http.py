@@ -182,7 +182,7 @@ class IrHttp(models.AbstractModel):
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
-            'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'show_effect': request.env['ir.config_parameter'].sudo().get_bool('base_setup.show_effect'),
             'currencies': self.env['res.currency'].get_all_currencies(),
             'quick_login': str2bool(request.env['ir.config_parameter'].sudo().get_param('web.quick_login', default=True), True),
             'bundle_params': {
