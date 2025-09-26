@@ -1,6 +1,9 @@
 from markupsafe import Markup
 
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import UserError
+
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
 SELF_BILLING_DOCUMENT_TYPES = {
@@ -66,7 +69,10 @@ class PeppolConfigWizard(models.TransientModel):
     def _compute_service_json(self):
         for wizard in self:
             if wizard.account_peppol_proxy_state == 'receiver':
-                wizard.service_json = wizard.account_peppol_edi_user._peppol_get_services().get('services')
+                try:
+                    wizard.service_json = wizard.account_peppol_edi_user._peppol_get_services().get('services')
+                except (AccountEdiProxyError, UserError):
+                    wizard.service_json = False
             else:
                 wizard.service_json = False
 
@@ -93,7 +99,7 @@ class PeppolConfigWizard(models.TransientModel):
                     )
             wizard.service_info = message
 
-    @api.depends('account_peppol_proxy_state')
+    @api.depends('account_peppol_proxy_state', 'service_json')
     def _compute_service_ids(self):
         """Get the selectable document types.
 
@@ -102,7 +108,7 @@ class PeppolConfigWizard(models.TransientModel):
         """
         supported_doctypes = self.env['res.company']._peppol_supported_document_types()
         for wizard in self:
-            if wizard.account_peppol_proxy_state == 'receiver':
+            if wizard.account_peppol_proxy_state == 'receiver' and wizard.service_json:
                 wizard.service_ids = [
                     Command.create({
                         'document_identifier': identifier,
