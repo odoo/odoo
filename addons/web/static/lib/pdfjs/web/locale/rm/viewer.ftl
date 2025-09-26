@@ -112,14 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = Titel:
 pdfjs-document-properties-author = Autur:
 pdfjs-document-properties-subject = Tema:
@@ -129,10 +121,6 @@ pdfjs-document-properties-modification-date = Data da modificaziun:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date } { $time }
 pdfjs-document-properties-creator = Creà da:
 pdfjs-document-properties-producer = Creà il PDF cun:
 pdfjs-document-properties-version = Versiun da PDF:
@@ -275,10 +263,6 @@ pdfjs-rendering-error = Ina errur è cumparida cun visualisar questa pagina.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -302,9 +286,13 @@ pdfjs-web-fonts-disabled = Scrittiras dal web èn deactivadas: impussibel dad ut
 
 pdfjs-editor-free-text-button =
     .title = Text
+pdfjs-editor-color-picker-free-text-input =
+    .title = Midar la colur dal text
 pdfjs-editor-free-text-button-label = Text
 pdfjs-editor-ink-button =
     .title = Dissegnar
+pdfjs-editor-color-picker-ink-input =
+    .title = Midar la colur per dissegnar
 pdfjs-editor-ink-button-label = Dissegnar
 pdfjs-editor-stamp-button =
     .title = Agiuntar u modifitgar maletgs
@@ -316,6 +304,33 @@ pdfjs-highlight-floating-button1 =
     .title = Marcar
     .aria-label = Marcar
 pdfjs-highlight-floating-button-label = Marcar
+pdfjs-comment-floating-button =
+    .title = Commentar
+    .aria-label = Commentar
+pdfjs-comment-floating-button-label = Commentar
+pdfjs-editor-comment-button =
+    .title = Commentari
+    .aria-label = Commentari
+pdfjs-editor-comment-button-label = Commentari
+pdfjs-editor-signature-button =
+    .title = Agiuntar ina signatura
+pdfjs-editor-signature-button-label = Agiuntar ina signatura
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = Editur per relevar
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = Editur per dissegnar
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = Editur da signatura: { $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = Editur per maletgs
 
 ## Remove button for the various kind of editor.
 
@@ -327,6 +342,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Allontanar la grafica
 pdfjs-editor-remove-highlight-button =
     .title = Allontanar l'emfasa
+pdfjs-editor-remove-signature-button =
+    .title = Allontanar la signatura
 
 ##
 
@@ -343,19 +360,41 @@ pdfjs-editor-stamp-add-image-button-label = Agiuntar in maletg
 pdfjs-editor-free-highlight-thickness-input = Grossezza
 pdfjs-editor-free-highlight-thickness-title =
     .title = Midar la grossezza cun relevar elements betg textuals
-pdfjs-free-text =
+pdfjs-editor-add-signature-container =
+    .aria-label = Controllas da signatura e signaturas memorisadas
+pdfjs-editor-signature-add-signature-button =
+    .title = Agiuntar ina nova signatura
+pdfjs-editor-signature-add-signature-button-label = Agiuntar ina nova signatura
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = Signatura memorisada: { $description }
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
     .aria-label = Editur da text
-pdfjs-free-text-default-content = Cumenzar a tippar…
-pdfjs-ink =
-    .aria-label = Editur dissegn
-pdfjs-ink-canvas =
-    .aria-label = Maletg creà da l'utilisader
+    .default-content = Cumenza a tippar…
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] Commentari
+       *[other] Commentaris
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .title = Serrar la trav laterala
+    .aria-label = Serrar la trav laterala
+pdfjs-editor-comments-sidebar-close-button-label = Serrar la trav laterala
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = Vesas insatge interessant? Marchescha la passascha ed agiuntescha in commentari.
+pdfjs-editor-comments-sidebar-no-comments-link = Ulteriuras infurmaziuns
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Text alternativ
-pdfjs-editor-alt-text-edit-button-label = Modifitgar il text alternativ
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = Modifitgar il text alternativ
 pdfjs-editor-alt-text-dialog-label = Tscherner ina opziun
 pdfjs-editor-alt-text-dialog-description = Il text alternativ (alt text) gida en cas che persunas na vesan betg il maletg u sch'i na reussescha betg d'al chargiar.
 pdfjs-editor-alt-text-add-description-label = Agiuntar ina descripziun
@@ -368,18 +407,13 @@ pdfjs-editor-alt-text-decorative-tooltip = Marcà sco decorativ
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = Per exempel: «In um giuven sesa a maisa per mangiar in past»
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button =
+    .aria-label = Text alternativ
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-pdfjs-editor-resizer-label-top-left = Chantun sura a sanestra — redimensiunar
-pdfjs-editor-resizer-label-top-middle = Sura amez — redimensiunar
-pdfjs-editor-resizer-label-top-right = Chantun sura a dretga — redimensiunar
-pdfjs-editor-resizer-label-middle-right = Da vart dretga amez — redimensiunar
-pdfjs-editor-resizer-label-bottom-right = Chantun sut a dretga — redimensiunar
-pdfjs-editor-resizer-label-bottom-middle = Sutvart amez — redimensiunar
-pdfjs-editor-resizer-label-bottom-left = Chantun sut a sanestra — redimensiunar
-pdfjs-editor-resizer-label-middle-left = Vart sanestra amez — redimensiunar
 pdfjs-editor-resizer-top-left =
     .aria-label = Chantun sura a sanestra — redimensiunar
 pdfjs-editor-resizer-top-middle =
@@ -445,14 +479,19 @@ pdfjs-editor-new-alt-text-error-close-button = Serrar
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-#   $percent (Number) - the percentage of the downloaded size.
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Telechargiar il model IA da text alternativ ({ $downloadedSize } da { $totalSize } MB)
     .aria-valuetext = Telechargiar il model IA da text alternativ ({ $downloadedSize } da { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button =
+    .aria-label = Agiuntà text alternativ
 pdfjs-editor-new-alt-text-added-button-label = Text alternativ agiuntà
 # This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button =
+    .aria-label = Text alternativ manca
 pdfjs-editor-new-alt-text-missing-button-label = Text alternativ manca
 # This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button =
+    .aria-label = Repassar il text alternativ
 pdfjs-editor-new-alt-text-to-review-button-label = Repassar il text alternativ
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -479,3 +518,139 @@ pdfjs-editor-alt-text-settings-editor-title = Editur per text alternativ
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mussar l’editur per text alternativ directamain cun agiuntar in maletg
 pdfjs-editor-alt-text-settings-show-dialog-description = Ta gida a garantir che tut tes maletgs hajan in text alternativ.
 pdfjs-editor-alt-text-settings-close-button = Serrar
+
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = Agiuntà ina emfasa
+pdfjs-editor-freetext-added-alert = Agiuntà in text
+pdfjs-editor-ink-added-alert = Agiuntà in dissegn
+pdfjs-editor-stamp-added-alert = Agiuntà in maletg
+pdfjs-editor-signature-added-alert = Agiuntà ina signatura
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-highlight = Allontanà la marcaziun
+pdfjs-editor-undo-bar-message-freetext = Allontanà il text
+pdfjs-editor-undo-bar-message-ink = Allontanà il dissegn
+pdfjs-editor-undo-bar-message-stamp = Allontanà il maletg
+pdfjs-editor-undo-bar-message-signature = Allontanà la signatura
+# Variables:
+#   $count (Number) - the number of removed annotations.
+pdfjs-editor-undo-bar-message-multiple =
+    { $count ->
+        [one] { $count } annotaziun allontanada
+       *[other] { $count } annotaziuns allontanadas
+    }
+pdfjs-editor-undo-bar-undo-button =
+    .title = Revocar
+pdfjs-editor-undo-bar-undo-button-label = Revocar
+pdfjs-editor-undo-bar-close-button =
+    .title = Serrar
+pdfjs-editor-undo-bar-close-button-label = Serrar
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-label = Questa fanestra permetta a l’utilisader da crear ina signatura per l’agiuntar ad in document PDF. L’utilisader po modifitgar il num (che serva era sco text alternativ) e memorisar opziunalmain la signatura per l’utilisar anc ina giada en l’avegnir.
+pdfjs-editor-add-signature-dialog-title = Agiuntar ina signatura
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = Tippar
+    .title = Tippar
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = Dissegnar
+    .title = Dissegnar
+pdfjs-editor-add-signature-image-button = Maletg
+    .title = Maletg
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = Tippa tia signatura
+    .placeholder = Tippa tia signatura
+pdfjs-editor-add-signature-draw-placeholder = Dissegna tia signatura
+pdfjs-editor-add-signature-draw-thickness-range-label = Grossezza
+# Variables:
+#   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
+pdfjs-editor-add-signature-draw-thickness-range =
+    .title = Grossezza dal stritg: { $thickness }
+pdfjs-editor-add-signature-image-placeholder = Trair na qua ina datoteca per la transferir
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] U tscherner datotecas da maletg
+       *[other] U tscherner datotecas da maletg
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = Descripziun (text alternativ)
+pdfjs-editor-add-signature-description-input =
+    .title = Descripziun (text alternativ)
+pdfjs-editor-add-signature-description-default-when-drawing = Signatura
+pdfjs-editor-add-signature-clear-button-label = Stizzar la signatura
+pdfjs-editor-add-signature-clear-button =
+    .title = Stizzar la signatura
+pdfjs-editor-add-signature-save-checkbox = Memorisar la signatura
+pdfjs-editor-add-signature-save-warning-message = Ti has cuntanschì il dumber maximal da 5 signaturas memorisadas. Allontanar ina per memorisar in’autra.
+pdfjs-editor-add-signature-image-upload-error-title = Impussibel da transferir il maletg
+pdfjs-editor-add-signature-image-upload-error-description = Controllescha tia connexiun cun la rait u emprova cun in’auter maletg.
+pdfjs-editor-add-signature-image-no-data-error-title = Impussibel da convertir quest maletg en ina signatura
+pdfjs-editor-add-signature-image-no-data-error-description = Emprova per plaschair da transferir in auter maletg.
+pdfjs-editor-add-signature-error-close-button = Serrar
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Interrumper
+pdfjs-editor-add-signature-add-button = Agiuntar
+pdfjs-editor-edit-signature-update-button = Actualisar
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = Modifitgar il commentari
+pdfjs-editor-edit-comment-popup-button =
+    .title = Modifitgar il commentari
+pdfjs-editor-delete-comment-popup-button-label = Allontanar il commentari
+pdfjs-editor-delete-comment-popup-button =
+    .title = Allontanar il commentari
+
+##  Edit a comment dialog
+
+pdfjs-editor-edit-comment-actions-button-label = Acziuns
+pdfjs-editor-edit-comment-actions-button =
+    .title = Acziuns
+pdfjs-editor-edit-comment-close-button-label = Serrar
+pdfjs-editor-edit-comment-close-button =
+    .title = Serrar
+pdfjs-editor-edit-comment-actions-edit-button-label = Modifitgar
+pdfjs-editor-edit-comment-actions-delete-button-label = Stizzar
+pdfjs-editor-edit-comment-manager-text-input =
+    .placeholder = Endatar in commentari
+pdfjs-editor-edit-comment-manager-cancel-button = Interrumper
+pdfjs-editor-edit-comment-manager-save-button = Memorisar
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = Modifitgar il commentari
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Agiuntar in commentari
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Cumenzar a tippar…
+pdfjs-editor-edit-comment-dialog-cancel-button = Interrumper
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-edit-comment-button =
+    .title = Modifitgar il commentari
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = Allontanar la signatura memorisada
+pdfjs-editor-delete-signature-button-label1 = Allontanar la signatura memorisada
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = Modifitgar la descripziun
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = Modifitgar la descripziun

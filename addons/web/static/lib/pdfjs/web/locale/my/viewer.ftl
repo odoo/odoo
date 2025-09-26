@@ -65,36 +65,16 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = မှတ်တမ်းမှတ်ရာ ဂုဏ်သတ္တိများ
 pdfjs-document-properties-file-name = ဖိုင် :
 pdfjs-document-properties-file-size = ဖိုင်ဆိုဒ် :
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } ကီလိုဘိုတ် ({ $size_b }ဘိုတ်)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = ခေါင်းစဉ်‌ -
 pdfjs-document-properties-author = ရေးသားသူ:
 pdfjs-document-properties-subject = အကြောင်းအရာ:
 pdfjs-document-properties-keywords = သော့ချက် စာလုံး:
 pdfjs-document-properties-creation-date = ထုတ်လုပ်ရက်စွဲ:
 pdfjs-document-properties-modification-date = ပြင်ဆင်ရက်စွဲ:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = ဖန်တီးသူ:
 pdfjs-document-properties-producer = PDF ထုတ်လုပ်သူ:
 pdfjs-document-properties-version = PDF ဗားရှင်း:
 pdfjs-document-properties-page-count = စာမျက်နှာအရေအတွက်:
-
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
 
 ##
 
@@ -166,9 +146,6 @@ pdfjs-page-scale-actual = အမှန်တကယ်ရှိတဲ့ အရ�
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ဖိုင် ကိုဆွဲတင်နေချိန်မှာ အမှားတစ်ခုတွေ့ရပါတယ်။
@@ -194,13 +171,3 @@ pdfjs-password-invalid = စာဝှက် မှားသည်။ ထပ်�
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = ပယ်​ဖျက်ပါ
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
