@@ -128,12 +128,12 @@ class AccountAnalyticAccount(models.Model):
     def _read_group_select(self, aggregate_spec, query):
         # flag balance/debit/credit as aggregatable, and manually sum the values
         # from the records in the group
-        if aggregate_spec in ('balance:sum', 'debit:sum', 'credit:sum'):
+        if aggregate_spec in ('balance:sum', 'debit:sum', 'credit:sum', 'debit:sum_currency', 'credit:sum_currency', 'balance:sum_currency'):
             return super()._read_group_select('id:recordset', query)
         return super()._read_group_select(aggregate_spec, query)
 
     def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
-        if aggregate_spec in ('balance:sum', 'debit:sum', 'credit:sum'):
+        if aggregate_spec in ('balance:sum', 'debit:sum', 'credit:sum', 'debit:sum_currency', 'credit:sum_currency', 'balance:sum_currency'):
             field_name = aggregate_spec.split(':')[0]
             column = super()._read_group_postprocess_aggregate('id:recordset', raw_values)
             return (sum(records.mapped(field_name)) for records in column)
