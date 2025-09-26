@@ -376,7 +376,9 @@ class ProductProduct(models.Model):
                 fifo_price = product.total_value / product.qty_available if product.qty_available else 0
                 product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
                 continue
-            product.with_context(disable_auto_revaluation=True).standard_price = product._run_avco()[0]
+            new_standard_price = product._run_avco()[0]
+            if new_standard_price:
+                product.with_context(disable_auto_revaluation=True).standard_price = new_standard_price
 
 
 class ProductCategory(models.Model):
