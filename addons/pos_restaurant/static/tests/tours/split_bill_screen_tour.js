@@ -77,6 +77,20 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "1"),
             ProductScreen.clickOrderline("Minute Maid", "2"),
+
+            //Split pay by selecting products
+            ProductScreen.clickControlButton("Split"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickContinueOrder(),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
