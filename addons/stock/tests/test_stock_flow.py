@@ -2422,7 +2422,7 @@ class TestStockFlow(TestStockCommon):
                 'product_max_qty': 5,
             })
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
 
         out_moves = self.env['stock.move'].search([
             ('product_id', 'in', products.ids), ('picking_id', '!=', False), ('location_id', '=', wh01_stock_location.id)
