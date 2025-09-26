@@ -152,9 +152,11 @@
                                 <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
                                 <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
                             </div>
-                            <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
-                                <i class="fa fa-gear"/>
-                            </button>
+                            <t t-if="this.props.document.getElementById('wrapwrap') and props.allowTargetBlank">
+                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
+                                    <i class="fa fa-gear"/>
+                                </button>
+                            </t>
                         </div>
                     </div>
                 </t>
