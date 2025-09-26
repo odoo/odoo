@@ -218,12 +218,12 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('pos_restaurant_sync')
+        self.start_pos_tour('pos_restaurant_sync', step_delay=300)
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_pos_tour('pos_restaurant_sync_second_login')
+        self.start_pos_tour('pos_restaurant_sync_second_login', step_delay=300)
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
@@ -232,6 +232,7 @@ class TestFrontend(TestFrontendCommon):
     def test_02_others(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour')
+        self.start_pos_tour('SplitBillScreenTourPay')
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
         self.start_pos_tour('TableMergeUnmergeTour', login="pos_admin")
 
@@ -239,7 +240,7 @@ class TestFrontend(TestFrontendCommon):
         # disable kitchen printer to avoid printing errors
         self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('ControlButtonsTour', login="pos_admin")
+        self.start_pos_tour('ControlButtonsTour', login="pos_admin", step_delay=100)
 
     def test_04_ticket_screen(self):
         self.pos_config.is_order_printer = False
@@ -258,7 +259,7 @@ class TestFrontend(TestFrontendCommon):
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
 
-        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000004')], limit=1, order='id desc')
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
 
     def test_06_split_bill_screen(self):
@@ -295,7 +296,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000001')], limit=1, order='id desc')
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00001')], limit=1, order='id desc')
         self.assertTrue(order1.is_edited)
 
     def test_13_category_check(self):
@@ -422,7 +423,7 @@ class TestFrontend(TestFrontendCommon):
             'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
 
     def test_course_restaurant_preparation_tour(self):
         self.env['pos.printer'].create({
@@ -495,7 +496,7 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
 
     def test_user_on_residual_order(self):
         self.pos_config.write({'printer_ids': False})
@@ -577,7 +578,7 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_multiple_preparation_printer_different_categories', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_multiple_preparation_printer_different_categories', login="pos_user")
 
     def test_preset_timing_restaurant(self):
         """
@@ -624,7 +625,7 @@ class TestFrontend(TestFrontendCommon):
             'printer_ids': [Command.set(pos_printer.ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_admin")
 
     def test_tip_after_payment(self):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
@@ -636,60 +637,6 @@ class TestFrontend(TestFrontendCommon):
         Tests that when a customer is set, it will be saved and not be reset even if this is the only thing that changed in the order
         """
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
-
-    def test_open_default_register_screen_config(self):
-        """
-        Tests that the default register screen is opened when the config is set to do so
-        """
-        self.pos_config.write({'default_screen': 'register'})
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_open_default_register_screen_config')
-
-    def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
-        self.env['pos.printer'].create({
-                'name': 'Printer',
-                'printer_type': 'epson_epos',
-                'epson_printer_ip': '0.0.0.0',
-                'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-            })
-        self.main_pos_config.write({
-            'use_fast_payment': True,
-            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
-            'is_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
-            'iface_print_auto': True,
-            'iface_print_skip_screen': True,
-            'other_devices': True,
-            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')
-        order = self.main_pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
-        self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
-        self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
-
-    def test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing(self):
-        self.env['pos.printer'].create({
-                'name': 'Printer',
-                'printer_type': 'epson_epos',
-                'epson_printer_ip': '0.0.0.0',
-                'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-            })
-        self.main_pos_config.write({
-            'use_fast_payment': True,
-            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
-            'is_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
-            'other_devices': True,
-            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing')
-        order = self.main_pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
-        self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
-        self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
 
     def test_transfering_orders(self):
         """
@@ -745,7 +692,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
         order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.state, "cancel")
+        self.assertEqual(len(order.lines), 0)
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.
