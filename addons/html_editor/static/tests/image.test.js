@@ -123,6 +123,26 @@ test("can add an image description & tooltip", async () => {
     expect("img").toHaveAttribute("title", "tooltip modified");
 });
 
+test("should close image description popover on escape", async () => {
+    await setupEditor(`
+        <img src="${base64Img}" alt="description" title="tooltip">
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar .btn-group[name='image_description'] button");
+    await animationFrame();
+
+    expect(".o-we-image-description-popover").toHaveCount(1);
+    await contains("input[name='description']").edit("description modified");
+    await contains("input[name='tooltip']").edit("tooltip modified");
+    await press("Escape");
+    await animationFrame();
+    expect(".o-we-image-description-popover").toHaveCount(0);
+    expect("img").toHaveAttribute("alt", "description");
+    expect("img").toHaveAttribute("title", "tooltip");
+});
+
 test("can edit an image description & tooltip", async () => {
     await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}" alt="description" title="tooltip">
