@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import urllib.parse
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -80,7 +81,10 @@ class WebsiteSeoMetadata(models.AbstractModel):
             opengraph_meta['og:title'] = self.website_meta_title
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
-        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or opengraph_meta['og:image']))
+        og_image = self.website_meta_og_img and urllib.parse.urlunsplit(
+            ["", "", *urllib.parse.urlsplit(self.website_meta_og_img)[2:]]
+        )
+        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or opengraph_meta['og:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
