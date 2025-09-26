@@ -36,15 +36,28 @@ export function loadSuggestToggleState(poState) {
     return { isOn: false };
 }
 
-/** Add "In the Order" filter, returning products in PO, if it wasn't already there. */
-export function filterInTheOrder() {
-    const sm = this.env.searchModel;
-    const inTheOrderFilter = Object.values(sm.searchItems).find(
-        (searchItem) => searchItem.name === "products_in_purchase_order"
-    );
-    const isActive = sm.query.some((f) => f.searchItemId === inTheOrderFilter.id);
-    sm.toggleSearchItem(inTheOrderFilter.id);
-    if (isActive) {
-        sm.toggleSearchItem(inTheOrderFilter.id); // Reapply with new updated values
+/** Toggles searchModel filters based on filter name and desired state
+ * @param {SearchModel} sm the view's searchModel
+ * @param {Array[string]} filterNames eg. "suggested_or_ordered"
+ * @param {boolean} turnOn eg. toggles filter "On" if turnOn = true and filter is currently "Off"
+ */
+export function toggleFilters(sm, filterNames, turnOn) {
+    const searchFilters = new Map(Object.values(sm.searchItems).map((i) => [i.name, i]));
+    const activeFilters = new Set(sm.query.map((q) => q.searchItemId));
+
+    const toToggle = [];
+    for (const name of filterNames) {
+        const item = searchFilters.get(name);
+        const isOn = activeFilters.has(item.id);
+        if ((turnOn && !isOn) || (!turnOn && isOn)) {
+            toToggle.push(item.id);
+        }
+    }
+
+    // Prevent toggleSearchItem from trying to reload with partial domain
+    for (let i = 0; i < toToggle.length; i++) {
+        const isLast = i === toToggle.length - 1;
+        sm.blockNotification = !isLast;
+        sm.toggleSearchItem(toToggle[i]);
     }
 }

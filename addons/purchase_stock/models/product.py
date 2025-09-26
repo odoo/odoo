@@ -33,36 +33,40 @@ class ProductProduct(models.Model):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines")  # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
-    suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
+    suggested_qty = fields.Integer(compute='_compute_suggested_quantity', search='_search_product_with_suggested_quantity')
     suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
     @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
-        """ IMPROVE: computes too many time for one suggestion """
         ctx = self.env.context
-        for product in self:
-            if not ctx.get("suggest_based_on"):
-                product.suggested_qty = 0
-                continue
-            elif ctx.get("suggest_based_on") == "actual_demand":
+        self.suggested_qty = 0
+        if not ctx.get("suggest_based_on"):
+            return
+        elif ctx.get("suggest_based_on") == "actual_demand":
+            for product in self:
+                if product.virtual_available >= 0:
+                    continue
                 qty = - product.virtual_available * ctx.get("suggest_percent", 0) / 100
-            else:
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+        else:
+            for product in self:
+                if product.monthly_demand <= 0:
+                    continue
                 monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
                 qty = product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100
                 qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
 
     @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggest_estimated_price(self):
-        """ IMPROVE: computes too many time for one suggestion """
         seller_args = {
             "partner_id": self.env['res.partner'].browse(self.env.context.get("partner_id")),
             "params": {'order_id': self.env['purchase.order'].browse(self.env.context.get("order_id"))}
         }
+        self.suggest_estimated_price = 0.0
         for product in self:
-            product.suggest_estimated_price = 0.0
             if product.suggested_qty <= 0:
                 continue
             # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
@@ -71,6 +75,17 @@ class ProductProduct(models.Model):
 
             price = seller.price_discounted if seller else product.standard_price
             product.suggest_estimated_price = price * product.suggested_qty
+
+    def _search_product_with_suggested_quantity(self, operator, value):
+        if operator in ["in", "not in"]:
+            return NotImplemented
+
+        search_domain = self.env.context.get("suggest_domain") or [('type', '=', 'consu')]
+        safe_search_domain = [c if c[0] != "suggested_qty" else [1, "=", 1] for c in search_domain]
+        products = self.search_fetch(safe_search_domain, ["suggested_qty"])
+        ids = products.filtered_domain([("suggested_qty", operator, value)]).ids
+
+        return [('id', 'in', ids)]
 
     @api.depends_context('suggest_days', 'suggest_based_on', 'warehouse_id')
     def _compute_quantities(self):
