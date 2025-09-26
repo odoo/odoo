@@ -766,6 +766,8 @@ class _RelationalMulti(_Relational):
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
         comodel = model.env[self.comodel_name]
+        if not self.store:
+            raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
         # update the operator to 'any'
         if operator in ('in', 'not in'):
