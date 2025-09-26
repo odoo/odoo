@@ -36,9 +36,7 @@
                     placeholder="New project"
                     domain="[
                         ('is_template', '=', True),
-                        '|',
-                        ('company_id', '=', context.get('sale_company_id')),
-                        ('company_id', '=', False),
+                        '|', ('company_id', '=?', context.get('sale_company_id')), ('company_id', '=', False),
                     ]"
                     context="{'default_is_template': True}"
                 />
