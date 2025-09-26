@@ -34,7 +34,7 @@ export const mailPopoutService = {
                 return;
             }
             const doc = popout.externalWindow?.document;
-            if (doc) {
+            if (doc && !popout.externalWindow?.closed) {
                 doc.head.textContent = "";
                 if (useAlternativeAssets) {
                     await mailPopoutService.addAssets(popout.externalWindow);

@@ -26,6 +26,7 @@ export const callPipService = {
         function closePip() {
             state.active = false;
             pipWindow?.close();
+            popout.reset();
         }
         /**
          * @param {Object} [param0] native pip options
