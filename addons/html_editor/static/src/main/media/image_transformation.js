@@ -178,12 +178,12 @@ export class ImageTransformation extends Component {
         settings.scalex = Math.round(settings.scalex * 100) / 100;
         settings.scaley = Math.round(settings.scaley * 100) / 100;
         this.positionTransfoContainer();
-        this.props.onChange();
     }
 
     mouseUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
+        this.props.onChange();
     }
 
     mouseDown(ev) {
