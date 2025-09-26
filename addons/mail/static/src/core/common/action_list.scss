@@ -30,6 +30,13 @@
             &.o-odooControlPanelSwitchStyle i {
                 opacity: var(--mail-ActionList-buttonInlineIconOpacity);
             }
+
+            i.o-xsmaller {
+                transform: translateY(-2px);
+            }
+            &:not(:has(i.o-xsmaller)) {
+                aspect-ratio: 1;
+            }
         }
 
         &:not(.o-inline) > i {

@@ -198,7 +198,10 @@ export class Store extends BaseStore {
 
     shouldSimulateDarkTheme(ctx) {
         return (
-            (ctx?.env?.inDiscussCallView || ctx?.env?.inCallInvitation) &&
+            (ctx?.env?.inDiscussCallView ||
+                ctx?.env?.inCallInvitation ||
+                ctx?.env.isDiscussPipBanner ||
+                ctx?.env?.inWelcomePage) &&
             this.isOdooWhiteTheme &&
             !ctx?.env.inMeetingSideActions &&
             !ctx?.env.inDiscussActionPanel
@@ -453,7 +456,7 @@ export class Store extends BaseStore {
 
     /** Provides an override point for when the store service has started. */
     onStarted() {
-        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark";
+        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {
