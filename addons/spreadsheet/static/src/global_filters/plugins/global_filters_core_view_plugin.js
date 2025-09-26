@@ -20,13 +20,12 @@ import {
     checkFilterValueIsValid,
     getDateDomain,
     getDateRange,
+    getDateGlobalFilterValueFromDefault,
 } from "@spreadsheet/global_filters/helpers";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
-
-const { DateTime } = luxon;
 
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
 const uuidGenerator = new UuidGenerator();
@@ -320,33 +319,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {DateValue|undefined}
      */
     _getDateValueFromDefaultValue(defaultValue) {
-        const year = DateTime.local().year;
-        switch (defaultValue) {
-            case "this_year":
-                return { type: "year", year };
-            case "this_month": {
-                const month = DateTime.local().month;
-                return { type: "month", year, month };
-            }
-            case "this_quarter": {
-                const quarter = Math.floor(new Date().getMonth() / 3) + 1;
-                return { type: "quarter", year, quarter };
-            }
-            case "today":
-            case "yesterday":
-            case "last_7_days":
-            case "last_30_days":
-            case "last_90_days":
-            case "month_to_date":
-            case "last_month":
-            case "last_12_months":
-            case "year_to_date":
-                return {
-                    type: "relative",
-                    period: defaultValue,
-                };
-        }
-        return undefined;
+        return getDateGlobalFilterValueFromDefault(defaultValue);
     }
 
     /**

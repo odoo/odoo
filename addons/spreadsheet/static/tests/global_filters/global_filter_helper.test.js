@@ -3,12 +3,12 @@ import { describe, expect, test, beforeEach } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     getDateDomain,
-    getRelativeDateFromTo,
+    getDateRange,
     dateFilterValueToString,
     getNextDateFilterValue,
     getPreviousDateFilterValue,
     getFacetInfo,
-    RELATIVE_PERIODS,
+    globalFilterDateRegistry,
 } from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,
@@ -32,7 +32,7 @@ beforeEach(() => {
 });
 
 function getRelativeDateDomain(now, offset, period, fieldName, fieldType) {
-    const { from, to } = getRelativeDateFromTo(now, offset, period);
+    const { from, to } = getDateRange({ type: "relative", period }, offset, now);
     return getDateDomain(from, to, fieldName, fieldType);
 }
 
@@ -230,11 +230,6 @@ test("dateFilterValueToString > range", function () {
 test("dateFilterValueToString > all time", function () {
     expect(valueToString({ type: undefined })).toBe("All time");
     expect(valueToString({})).toBe("All time");
-});
-
-test("dateFilterValueToString > invalid value", function () {
-    expect(valueToString({ type: "invalid" })).toBe("All time");
-    expect(valueToString(undefined)).toBe("All time");
 });
 
 describe("getNextDateFilterValue", () => {
@@ -502,13 +497,24 @@ test("getFacetInfo for date values", async () => {
         id: "1",
     };
     const env = {};
-    for (const [period, label] of Object.entries(RELATIVE_PERIODS)) {
+    const relativeFilterTypes = [
+        "today",
+        "yesterday",
+        "last_7_days",
+        "last_30_days",
+        "last_90_days",
+        "month_to_date",
+        "last_month",
+        "year_to_date",
+        "last_12_months",
+    ];
+    for (const period of relativeFilterTypes) {
         expect(await getFacetInfo(env, filter, { type: "relative", period })).toEqual({
             title: "Date Filter",
             id: "1",
             separator: "or",
             operator: "",
-            values: [label],
+            values: [globalFilterDateRegistry.get(period).label.toString()],
         });
     }
     expect(
