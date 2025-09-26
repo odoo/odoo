@@ -42,7 +42,7 @@ export const importRecordsItem = {
     isDisplayed: ({ config, isSmall }) =>
         !isSmall &&
         config.actionType === "ir.actions.act_window" &&
-        ["kanban", "list"].includes(config.viewType) &&
+        ["kanban", "list", "grid"].includes(config.viewType) &&
         exprToBoolean(config.viewArch.getAttribute("import"), true) &&
         exprToBoolean(config.viewArch.getAttribute("create"), true),
 };
