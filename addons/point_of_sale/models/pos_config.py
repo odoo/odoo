@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 from uuid import uuid4
 import pytz
-import secrets
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
@@ -12,6 +10,7 @@ from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import SQL, convert
 from odoo.service.common import exp_version
+from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -201,7 +200,13 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
-    epson_printer_ip = fields.Char(string='Epson Printer IP', help="Local IP address of an Epson receipt printer.")
+    epson_printer_ip = fields.Char(
+        string='Epson Printer IP',
+        help=(
+            "Local IP address of an Epson receipt printer, or its serial number if the "
+            "'Automatic Certificate Update' option is enabled in the printer settings."
+        ),
+    )
     use_fast_payment = fields.Boolean('Fast Payment Validation', help="Enable fast payment methods to validate orders on the product screen.")
     fast_payment_method_ids = fields.Many2many(
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
@@ -1219,3 +1224,9 @@ class PosConfig(models.Model):
 
     def _is_quantities_set(self):
         return self.is_closing_entry_by_product
+
+    @api.onchange("epson_printer_ip")
+    def _onchange_epson_printer_ip(self):
+        for rec in self:
+            if rec.epson_printer_ip:
+                rec.epson_printer_ip = format_epson_certified_domain(rec.epson_printer_ip)
