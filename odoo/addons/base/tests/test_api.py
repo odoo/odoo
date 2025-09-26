@@ -457,11 +457,11 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # check prefetching across x2many field
         prefetch_ids = records.child_ids.ids
-        reversed_ids = list(unique(
+        reversed_ids = [
             child.id
             for record in reversed(records)
             for child in record.child_ids
-        ))
+        ]
 
         self.assertEqual(list(first.child_ids._prefetch_ids), prefetch_ids)
         self.assertEqual(list(last.child_ids._prefetch_ids), reversed_ids)

@@ -127,6 +127,41 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
+#
+# The value of records._prefetch_ids must be iterable and reversible
+#
+
+class PrefetchRelational(Reversible):
+    """ A prefetch object for the values of a relational field. """
+    __slots__ = ('_field', '_records')
+
+    def __init__(self, field, records):
+        self._field = field
+        self._records = records
+
+    def __iter__(self):
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in self._records._prefetch_ids:
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in self._records._prefetch_ids:
+                if (coids := field_cache.get(id_)):
+                    yield from coids
+
+    def __reversed__(self):
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in reversed(self._records._prefetch_ids):
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in reversed(self._records._prefetch_ids):
+                if (coids := field_cache.get(id_)):
+                    yield from coids
+
+
 class OriginIds(Reversible):
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
@@ -145,3 +180,8 @@ class OriginIds(Reversible):
         for id_ in reversed(self.ids):
             if id_ := id_ or id_.origin:
                 yield id_
+
+
+class Prefetch:
+    relational = PrefetchRelational
+    origin = OriginIds
