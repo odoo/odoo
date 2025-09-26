@@ -304,13 +304,15 @@ export class HistoryPlugin extends Plugin {
                 focusNode: undefined,
                 focusOffset: undefined,
             },
-            mutations: childNodes(this.editable).map((node) => ({
-                type: "add",
-                parentNodeId: "root",
-                nodeId: this.nodeMap.getId(node),
-                serializedNode: this.serializeNode(node),
-                nextNodeId: null,
-            })),
+            mutations: childNodes(this.editable)
+                .filter((node) => this.nodeMap.hasNode(node))
+                .map((node) => ({
+                    type: "add",
+                    parentNodeId: "root",
+                    nodeId: this.nodeMap.getId(node),
+                    serializedNode: this.serializeNode(node),
+                    nextNodeId: null,
+                })),
             id: this.steps[this.steps.length - 1]?.id || this.generateId(),
             previousStepId: undefined,
         };
@@ -1727,13 +1729,13 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param {Tree} tree
-     * @returns {SerializedNode}
+     * @returns {SerializedNode|null}
      */
     serializeTree(tree) {
         const node = tree.node;
         const nodeId = this.nodeMap.getId(node);
         if (!nodeId) {
-            throw new Error("Missing nodeId for serialization");
+            return null;
         }
         const result = {
             nodeType: node.nodeType,
