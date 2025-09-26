@@ -36,7 +36,7 @@ class AccountMoveLine(models.Model):
                     factor = components_qty[product.id]['qty']
                     prod_moves = moves.filtered(lambda m: m.product_id == product)
                     product = product.with_company(self.company_id)
-                    average_price_unit += factor * prod_moves._get_average_price_unit()
+                    average_price_unit += factor * prod_moves._get_price_unit()
                 price_unit = average_price_unit / bom.product_qty or price_unit
                 price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
         return price_unit
