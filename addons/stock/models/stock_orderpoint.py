@@ -710,6 +710,8 @@ class StockWarehouseOrderpoint(models.Model):
             This is appropriate for batch jobs only.
         """
         self = self.with_company(company_id)
+        total_task = len(self.ids)
+        task_done = 0
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
@@ -779,10 +781,11 @@ class StockWarehouseOrderpoint(models.Model):
             finally:
                 if use_new_cursor:
                     try:
-                        cr.commit()
+                        task_done += len(orderpoints_batch_ids)
+                        self.env['ir.cron']._commit_progress(processed=task_done, remaining=total_task - task_done)
                     finally:
                         cr.close()
-                    _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
+                    _logger.info("Processed and committed %d out of %d orderpoints", task_done, total_task)
 
         return {}
 
