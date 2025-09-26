@@ -50,15 +50,20 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
     await contains(".o-discuss-CallMenu-buttonContent");
-    await contains(".o-discuss-CallActionList button", { count: 6 });
+    await contains(".o-discuss-CallActionList button", { count: 7 });
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
-    await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
+    await contains("button[aria-label='Voice Settings']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
+    await contains("button[aria-label='Video Settings']");
     await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
     await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
+    await contains(".o-dropdown-item", { count: 2 });
     await contains(".o-dropdown-item:contains('Raise Hand')");
+    await contains(".o-dropdown-item:contains('Disable speaker autofocus')");
+    await contains(".o-discuss-Call-layoutActions button", { count: 2 });
+    await contains(".o-discuss-Call-layoutActions button[title='Picture in Picture']");
     await contains(".o-discuss-Call-layoutActions button[title='Fullscreen']");
 });
 
@@ -71,7 +76,6 @@ test("mobile UI", async () => {
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     expect(isMobileOS()).toBe(true);
-    await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains("[title='Share Screen']", { count: 0 });
 });
 
@@ -378,7 +382,8 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
     await click("[title='Mute']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Deafen']");
+    await click("[title='Voice Settings']");
+    await click(".dropdown-menu button:contains('Deafen')");
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
@@ -626,7 +631,6 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     await openDiscuss(channelId);
     expect("[title='Disconnect']").not.toHaveCount();
     expect("[title='Mute']").not.toHaveCount();
-    expect("[title='Deafen']").not.toHaveCount();
     broadcastChannel.postMessage({
         type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
         hostedChannelId: channelId,
@@ -639,7 +643,7 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
         },
     });
     await contains("[title='Disconnect']");
-    await contains("[title='Deafen']");
+    await contains("[title='Mute']");
 
     broadcastChannel.onmessage = (event) => {
         if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
