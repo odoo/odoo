@@ -42,30 +42,32 @@ class ProductProduct(models.Model):
     @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
-        """ IMPROVE: computes too many time for one suggestion """
         ctx = self.env.context
-        for product in self:
-            if not ctx.get("suggest_based_on"):
-                product.suggested_qty = 0
-                continue
-            elif ctx.get("suggest_based_on") == "actual_demand":
+        self.suggested_qty = 0
+        if ctx.get("suggest_based_on") == "actual_demand":
+            for product in self:
+                if product.virtual_available >= 0:
+                    continue
                 qty = - product.virtual_available * ctx.get("suggest_percent", 0) / 100
-            else:
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+        elif ctx.get("suggest_based_on"):
+            for product in self:
+                if product.monthly_demand <= 0:
+                    continue
                 monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
                 qty = product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100
                 qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
 
-    @api.depends("monthly_demand")
+    @api.depends("suggested_qty")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggest_estimated_price(self):
-        """ IMPROVE: computes too many time for one suggestion """
         seller_args = {
             "partner_id": self.env['res.partner'].browse(self.env.context.get("partner_id")),
             "params": {'order_id': self.env['purchase.order'].browse(self.env.context.get("order_id"))}
         }
+        self.suggest_estimated_price = 0.0
         for product in self:
-            product.suggest_estimated_price = 0.0
             if product.suggested_qty <= 0:
                 continue
             # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist

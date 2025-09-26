@@ -7,6 +7,11 @@
         </xpath>
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
+            <t t-if="suggest.suggestToggle.isOn">
+                <attribute name="class">o_search_panel_sections mt-4</attribute>
+            </t>
+        </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
             <t t-if="displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
@@ -34,7 +39,7 @@
                         type="checkbox"
                         role="switch"
                         t-att-checked="suggest.suggestToggle.isOn? true : false"
-                        t-on-click="onSuggestToggle"
+                        t-on-click="toggleSuggest"
                     />
                 </div>
             </div>
@@ -46,7 +51,8 @@
             <span class="me-2 fw-bold">Replenish for</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
                 t-att-value="suggest.numberOfDays"
-                t-on-input="onDaysInput"/>
+                t-on-input="onDaysInput"
+                t-on-mousedown="selectAllOnClick"/>
             <span class="ms-2">day(s)</span>
         </div>
     </t>
@@ -60,7 +66,8 @@
             <span class="m-1">x</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
                 t-att-value="suggest.percentFactor"
-                t-on-input="onPercentFactorInput"/>
+                t-on-input="onPercentFactorInput"
+                t-on-mousedown="selectAllOnClick"/>
             <span>%</span>
         </div>
     </t>
