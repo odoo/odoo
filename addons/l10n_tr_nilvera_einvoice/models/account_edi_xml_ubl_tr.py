@@ -4,6 +4,7 @@ from num2words import num2words
 
 from odoo import api, models
 from odoo.exceptions import UserError
+from odoo.tools import html2plaintext
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -66,6 +67,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 if vals['currency_id'] != vals['company_currency_id'] else None,
             'cbc:LineCountNumeric': {'_text': len(invoice.line_ids)},
             'cbc:BuyerReference': None,  # Nilvera will reject any <BuyerReference> tag, so remove it
+            'cbc:Note': {
+                '_text': html2plaintext(invoice.narration, include_references=False) if invoice.narration else None,
+            },
         })
 
         if invoice.invoice_line_ids._fields.get('deferred_start_date'):
