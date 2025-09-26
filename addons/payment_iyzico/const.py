@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 PAYMENT_RETURN_ROUTE = '/payment/iyzico/return'
+WEBHOOK_ROUTE = '/payment/iyzico/webhook'
 
 # The currencies supported by Iyzico, in ISO 4217 format.
 SUPPORTED_CURRENCIES = [

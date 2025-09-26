@@ -25,3 +25,7 @@ class IyzicoCommon(PaymentCommon):
             'paymentStatus': 'SUCCESS',
             'token': 'dummy_token',
         }
+        cls.webhook_data = {
+            **cls.payment_data,
+            'paymentConversationId': cls.reference,
+        }
