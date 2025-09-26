@@ -2,6 +2,7 @@
 
 import logging
 import re
+import urllib.parse
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -89,8 +90,12 @@ class WebsiteSeoMetadata(models.AbstractModel):
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
             twitter_meta['twitter:description'] = self.website_meta_description
-        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or opengraph_meta['og:image']))
-        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
+        # 19.0: remove domain of absolute URL before odoo/odoo#228253
+        og_image = self.website_meta_og_img and urllib.parse.urlunsplit(
+            ["", "", *urllib.parse.urlsplit(self.website_meta_og_img)[2:]]
+        )
+        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or opengraph_meta['og:image']))
+        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or twitter_meta['twitter:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
