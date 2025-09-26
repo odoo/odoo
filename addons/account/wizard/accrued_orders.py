@@ -182,23 +182,23 @@ class AccruedExpenseRevenue(models.TransientModel):
                         if any(tax.price_include for tax in order_line.taxes_id):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             price_subtotal = order_line.taxes_id.compute_all(
-                                order_line.price_unit,
+                                order_line.price_unit_discounted,
                                 currency=order_line.order_id.currency_id,
                                 quantity=order_line.qty_to_invoice,
                                 product=order_line.product_id,
                                 partner=order_line.order_id.partner_id)['total_excluded']
                         else:
-                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit_discounted
                         amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
-                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id))
                     else:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
-                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id))
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                     if not is_purchase and order.analytic_account_id:
                         analytic_account_id = str(order.analytic_account_id.id)

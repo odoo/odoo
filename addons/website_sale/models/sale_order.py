@@ -112,6 +112,16 @@ class SaleOrder(models.Model):
             if order.website_id:
                 order.payment_term_id = order.website_id.with_company(order.company_id).sale_get_payment_term(order.partner_id)
 
+    def _compute_pricelist_id(self):
+        # Override to compute pricelists for carts using the partner's GeoIP,
+        # providing a fallback in case they don't have an address set.
+        if not (country_code := self.env['website']._get_geoip_country_code()):
+            return super()._compute_pricelist_id()
+        if website_orders := self.filtered('website_id'):
+            website_orders = website_orders.with_context(country_code=country_code)
+            super(SaleOrder, website_orders)._compute_pricelist_id()
+        return super(SaleOrder, self - website_orders)._compute_pricelist_id()
+
     def _search_abandoned_cart(self, operator, value):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         deadlines = [[
