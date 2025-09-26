@@ -137,6 +137,10 @@ export class Message extends Component {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
+                const fontLink = document.createElement("link");
+                fontLink.rel = "stylesheet";
+                fontLink.href = "/web/static/lib/odoo_ui_icons/style.css";
+                this.shadowRoot.appendChild(fontLink);
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
