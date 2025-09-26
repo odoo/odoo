@@ -301,6 +301,7 @@
                                     <field name="product_uom" groups="!uom.group_uom" column_invisible="True"/>
                                     <field name="picked" optional="hide" column_invisible="parent.state=='draft'"/>
                                     <field name="lot_ids" widget="many2many_tags"
+                                        readonly="has_tracking != 'serial'"
                                         column_invisible="parent.state == 'draft'"
                                         groups="stock.group_production_lot"
                                         invisible="not show_details_visible or has_tracking == 'none'"
