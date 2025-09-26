@@ -56,7 +56,7 @@ export class CaptionPlugin extends Plugin {
             // Embed the captions.
             const image = figure.querySelector("img");
             figure.before(image);
-            const caption = figure.querySelector("figcaption").textContent;
+            const caption = figure.querySelector("figcaption")?.textContent;
             figure.remove();
             this.addImageCaption(image, caption, false);
         }

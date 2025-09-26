@@ -963,3 +963,25 @@ test("previewing an image without caption doesn't show the caption as title (eve
     titleSpan = queryOne(".o-FileViewer .o-FileViewer-header span.text-truncate");
     expect(titleSpan.textContent).toBe(base64Img.replaceAll("\n", "%0A"));
 });
+
+test("should properly parse figure without fig caption", async () => {
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<figure>
+                <img class="img-fluid test-image" src="${base64Img}">
+            </figure>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p><br></p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="1" data-caption="">
+                <figcaption data-embedded="caption" data-oe-protected="true" contenteditable="false" class="mt-2" data-embedded-props='{"id":"1","focusInput":false}'>
+                <input type="text" maxlength="100" class="border-0 p-0" placeholder="Write your caption here">
+                </figcaption>
+            </figure>
+            <p><br></p>
+            `
+        ),
+    });
+});
