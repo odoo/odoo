@@ -21,6 +21,12 @@ class StockPackage(models.Model):
     _parent_store = True
     _rec_name = 'complete_name'
 
+    def _get_default_weight_uom(self):
+        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    def _get_default_volume_uom(self):
+        return self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+
     name = fields.Char('Package Reference', copy=False, index='trigram', required=True)
     complete_name = fields.Char("Full Package Name", compute='_compute_complete_name', recursive=True, store=True)
     dest_complete_name = fields.Char("Package Name At Destination", compute='_compute_dest_complete_name', recursive=True)
@@ -44,11 +50,16 @@ class StockPackage(models.Model):
     child_package_ids = fields.One2many('stock.package', 'parent_package_id', string='Contained Packages')
     all_children_package_ids = fields.One2many('stock.package', compute='_compute_all_children_package_ids', search="_search_all_children_package_ids")
     package_dest_id = fields.Many2one('stock.package', 'Destination Container', index='btree_not_null')
-    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id", search="_search_outermost_package_id")
+    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id", search="_search_outermost_package_id", recursive=True)
     child_package_dest_ids = fields.One2many('stock.package', 'package_dest_id', 'Assigned Contained Packages')
     move_line_ids = fields.One2many('stock.move.line', compute="_compute_move_line_ids", search="_search_move_line_ids")
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
+    weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.")
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
+    volume = fields.Float(compute='_compute_volume', digits='Stock Volume', help="Total volume of the package.")
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', readonly=True, default=_get_default_volume_uom)
+    shipping_volume = fields.Float(string='Shipping Volume', help="Total volume of the package.")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
     parent_path = fields.Char(index=True)
@@ -180,6 +191,26 @@ class StockPackage(models.Model):
             picking_ids.update(pickings_by_package.get(package.id, []))
             package.picking_ids = [Command.set(list(picking_ids))]
 
+    @api.depends('quant_ids', 'package_type_id.base_weight')
+    def _compute_weight(self):
+        packages_weight = self.sudo()._get_weight()
+        for package in self:
+            package.weight = packages_weight[package]
+
+    def _compute_weight_uom_name(self):
+        for package in self:
+            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    @api.depends('quant_ids', 'package_type_id.packaging_length', 'package_type_id.height', 'package_type_id.width')
+    def _compute_volume(self):
+        packages_volume = self.sudo()._get_volume()
+        for package in self:
+            package.volume = packages_volume[package.id]
+
+    def _compute_volume_uom_name(self):
+        for package in self:
+            package.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+
     @api.depends('quant_ids.owner_id')
     def _compute_owner_id(self):
         for package in self:
@@ -189,7 +220,7 @@ class StockPackage(models.Model):
             ):
                 package.owner_id = package.quant_ids[0].owner_id
 
-    @api.depends()
+    @api.depends('package_dest_id', 'package_dest_id.outermost_package_id')
     def _compute_outermost_package_id(self):
         def fetch_outermost_package(package):
             if package.package_dest_id:
@@ -428,6 +459,49 @@ class StockPackage(models.Model):
                 for quant in package.contained_quant_ids:
                     weight += quant.quantity * quant.product_id.weight
                 res[package] = weight
+        return res
+
+    def _get_volume(self, picking_id=False):
+        res = defaultdict(float)
+        for package in self:
+            volume = 0.0
+            if package.package_type_id:
+                volume = (package.package_type_id.packaging_length *
+                          package.package_type_id.width *
+                          package.package_type_id.height) * (0.000001 if package.volume_uom_name == 'm³' else 1.0)
+
+            if volume <= 0 and package.child_package_ids:
+                volume = sum(child_package.volume for child_package in package.child_package_ids)
+
+            if volume <= 0:
+                for quant in package.contained_quant_ids:
+                    volume += quant.quantity * quant.product_id.volume
+
+            res[package.id] = volume
+
+        if picking_id:
+            packages_still_to_compute = self.filtered(lambda package: res[package.id] <= 0)
+            for package in packages_still_to_compute:
+                volume = 0.0
+                if package.child_package_dest_ids:
+                    volume = sum(child_package.shipping_volume or child_package._get_volume(picking_id)[child_package.id] for child_package in package.child_package_dest_ids)
+
+                if volume <= 0:
+                    products_volume = 0
+                    res_groups = self.env['stock.move.line']._read_group(
+                        [('product_id', '!=', False), ('result_package_id', '=', package.id), ('picking_id', '=', picking_id)],
+                        ['product_id', 'product_uom_id', 'quantity'],
+                        ['__count'],
+                    )
+                    for product, product_uom, quantity, count in res_groups:
+                        products_volume += (
+                            count
+                            * product_uom._compute_quantity(quantity, product.uom_id)
+                            * product.volume
+                        )
+                    volume = products_volume
+
+                res[package.id] += volume
         return res
 
     def _has_issues(self):

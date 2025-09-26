@@ -29,15 +29,6 @@ class StockMove(models.Model):
                 """)
         return super()._auto_init()
 
-    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
-
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
-    def _cal_move_weight(self):
-        moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
-        for move in moves_with_weight:
-            move.weight = (move.product_qty * move.product_id.weight)
-        (self - moves_with_weight).weight = 0
-
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.reference_ids.sale_ids.carrier_id.id

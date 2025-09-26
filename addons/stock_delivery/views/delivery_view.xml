@@ -38,6 +38,11 @@
                             <field name="shipping_weight" class="oe_inline"/>
                             <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
+                        <label for="shipping_volume" string="Volume for shipping"/>
+                        <div>
+                            <field name="shipping_volume" class="oe_inline"/>
+                            <field name="volume_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        </div>
                     </group>
                 </xpath>
                 <div name="button_box" position="inside">
@@ -94,6 +99,12 @@
                         <field name="shipping_weight" class="oe_inline"/>
                         <span><field name="weight_uom_name"/></span>
                         <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
+                    </div>
+                    <label for="shipping_volume"/>
+                    <div class="o_row" name="Shipping Volume">
+                        <field name="shipping_volume" class="oe_inline"/>
+                        <span><field name="volume_uom_name"/></span>
+                        <span class="text-muted">(computed: <field name="volume" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="volume_uom_name" nolabel="1" class="oe_inline"/>)</span>
                     </div>
                 </field>
             </field>
