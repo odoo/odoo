@@ -20,19 +20,19 @@
                 <t name="qty_forecasted" t-if="record.qty_available.raw_value != record.virtual_available.raw_value">
                     <span> / </span>
                     <span class="fw-bold" t-att-class="record.virtual_available.raw_value &lt; 0 ? 'text-danger' : ''" t-out="record.virtual_available.raw_value"  name="o_kanban_forecasted_qty"/>
-                    <span class="text-muted small"> Forecasted</span>
+                    <span class="text-muted small ms-1">Forecasted</span>
                 </t>
             </t>
             <div name="o_kanban_qty_available_and_on_hand" position="after">
                 <div t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="kanban_monthly_demand">
-                    <span class="text-muted small">Monthly Demand: </span>
-                    <span class="fw-bold ms-1" t-out="Math.round(record.monthly_demand.raw_value *100)/100"  name="kanban_monthly_demand_qty"/>
+                    <span class="text-muted small me-1">Monthly Demand:</span>
+                    <span class="fw-bold ms-1" t-esc="Math.round(record.monthly_demand.raw_value *100)/100" name="kanban_monthly_demand_qty"/>
                     <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
                 </div>
                 <div name="kanban_purchase_suggest" t-if="record.suggested_qty.raw_value != 0">
-                    <span class="text-info fw-bold fs-5"> Suggest </span>
-                    <span class="text-info fw-bold fs-5" t-out="record.suggested_qty.raw_value or 0" name="kanban_purchase_suggest_qty" />
-                    <span class="text-info fw-bold fs-5"> units </span>
+                    <span class="text-info fw-bold fs-5 me-1">Suggest</span>
+                    <span class="text-info fw-bold fs-5 me-1" t-out="record.suggested_qty.raw_value or 0" name="kanban_purchase_suggest_qty" />
+                    <span class="text-info fw-bold fs-5 me-1">units</span>
                 </div>
             </div>
         </field>
@@ -50,5 +50,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
