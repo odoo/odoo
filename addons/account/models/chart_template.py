@@ -342,8 +342,9 @@ class AccountChartTemplate(models.AbstractModel):
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
                     # if xmlid is not in xmlid2fiscal_position and we do not force create so we will skip_update for that record
-                    if xmlid not in xmlid2fiscal_position and not force_create:
-                        skip_update.add((model_name, xmlid))
+                    if xmlid not in xmlid2fiscal_position:
+                        if not force_create:
+                            skip_update.add((model_name, xmlid))
                         continue
                     # Only add accounts and taxes mappings containing new records
                     for model in ['account', 'tax']:
