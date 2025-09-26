@@ -740,6 +740,8 @@ class _RelationalMulti(_Relational):
         assert field_expr == self.name, "Supporting condition only to field"
         model._check_field_access(self, 'read')
         comodel = model.env[self.comodel_name]
+        if not self.store:
+            raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
         # update the operator to 'any'
         if operator in ('in', 'not in'):
