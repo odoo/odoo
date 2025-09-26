@@ -63,19 +63,24 @@ export class CashMovePopup extends Component {
             `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
             "CASH_DRAWER_ACTION"
         );
-        const data = {
-            company: this.pos.company,
-            config: this.pos.config,
-            preset_id: this.pos.config.defualt_preset_id,
-            getCashierName: () => this.pos.getCashier().name,
-        };
+        const order = this.pos.models["pos.order"].create({
+            session_id: this.session,
+            company_id: this.company,
+            config_id: this.config,
+            user_id: this.user,
+            ticket_code: "",
+            tracking_number: "",
+            sequence_number: 0,
+            pos_reference: "",
+        });
         await this.printer.print(CashMoveReceipt, {
             reason,
             translatedType,
-            order: data,
+            order: order,
             formattedAmount,
             date: new Date().toLocaleString(),
         });
+        this.pos.models["pos.order"].delete(order);
 
         this.props.close();
         this.notification.add(
