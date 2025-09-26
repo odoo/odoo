@@ -131,60 +131,41 @@ def expand_ids(id0, ids):
 # The value of _prefetch_ids must be iterable, reversible, and hashable.
 #
 
-class PrefetchMany2one(Reversible, Hashable):
+class PrefetchRelational(Reversible, Hashable):
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
+    __slots__ = ('_field', '_records')
 
-    def __init__(self, record, field):
-        self.record = record
-        self.field = field
+    def __init__(self, field, records):
+        self._field = field
+        self._records = records
 
     def __hash__(self):
-        return hash(self.field) ^ hash(self.record._prefetch_ids)
+        return hash(self._field) ^ hash(self._records._prefetch_ids)
 
     def __eq__(self, other):
-        return isinstance(other, PrefetchMany2one) and (
-            self.field is other.field and self.record._prefetch_ids == other.record._prefetch_ids
+        return isinstance(other, PrefetchRelational) and (
+            self._field is other._field and self._records._prefetch_ids == other._records._prefetch_ids
         )
 
     def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        for id_ in self.record._prefetch_ids:
-            if (coid := field_cache.get(id_)) is not None:
-                yield coid
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in self._records._prefetch_ids:
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in self._records._prefetch_ids:
+                yield from field_cache.get(id_, ())
 
     def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        for id_ in reversed(self.record._prefetch_ids):
-            if (coid := field_cache.get(id_)) is not None:
-                yield coid
-
-
-class PrefetchX2many(Reversible, Hashable):
-    """ Iterable for the values of an x2many field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record, field):
-        self.record = record
-        self.field = field
-
-    def __hash__(self):
-        return hash(self.field) ^ hash(self.record._prefetch_ids)
-
-    def __eq__(self, other):
-        return isinstance(other, PrefetchX2many) and (
-            self.field is other.field and self.record._prefetch_ids == other.record._prefetch_ids
-        )
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        for id_ in self.record._prefetch_ids:
-            yield from field_cache.get(id_, ())
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        for id_ in reversed(self.record._prefetch_ids):
-            yield from field_cache.get(id_, ())
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in reversed(self._records._prefetch_ids):
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in reversed(self._records._prefetch_ids):
+                yield from field_cache.get(id_, ())
 
 
 class OriginIds(Reversible, Hashable):
@@ -236,8 +217,7 @@ class ConcatIds(Reversible, Hashable):
 
 
 class Prefetch:
-    many2one = PrefetchMany2one
-    x2many = PrefetchX2many
+    relational = PrefetchRelational
     origin = OriginIds
 
     @staticmethod

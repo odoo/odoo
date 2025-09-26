@@ -348,12 +348,12 @@ class Many2one(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
-        prefetch_ids = Prefetch.many2one(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
-        prefetch_ids = Prefetch.many2one(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
@@ -629,7 +629,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
-        prefetch_ids = Prefetch.x2many(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         Comodel = record.pool[self.comodel_name]
         corecords = Comodel(record.env, value, prefetch_ids)
         if (
@@ -641,7 +641,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record_multi(self, values, records):
         # return the list of ids as a recordset without duplicates
-        prefetch_ids = Prefetch.x2many(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         Comodel = records.pool[self.comodel_name]
         ids = tuple(unique(id_ for ids in values for id_ in ids))
         corecords = Comodel(records.env, ids, prefetch_ids)
