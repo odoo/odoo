@@ -16007,11 +16007,12 @@ const PDFViewerApplication = {
     const queryString = document.location.search.substring(1);
     const params = parseQueryString(queryString);
     file = params.get("file") ?? AppOptions.get("defaultUrl");
-    try {
-      file = new URL(decodeURIComponent(file)).href;
-    } catch {
-      file = encodeURIComponent(file).replaceAll("%2F", "/");
-    }
+    // TODO This code produce a bug when oppening file in Document
+    // try {
+    //   file = new URL(decodeURIComponent(file)).href;
+    // } catch {
+    //   file = encodeURIComponent(file).replaceAll("%2F", "/");
+    // }
     validateFileURL(file);
     const fileInput = this._openFileInput = document.createElement("input");
     fileInput.id = "fileInput";
