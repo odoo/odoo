@@ -5395,6 +5395,11 @@ class BaseModel(metaclass=MetaModel):
         """
         if prefetch_ids is None:
             prefetch_ids = self._ids
+        else:
+            try:
+                hash(prefetch_ids)  # make sure it is hashable
+            except TypeError:
+                prefetch_ids = tuple(prefetch_ids)
         return self.__class__(self.env, self._ids, prefetch_ids)
 
     def _update_cache(self, values: ValuesType, validate: bool = True) -> None:
