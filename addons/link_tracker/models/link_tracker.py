@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import io
 import logging
+import qrcode
 import random
 import string
 
@@ -44,6 +47,7 @@ class LinkTracker(models.Model):
     # Tracking
     link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
     code = fields.Char(string='Short URL code', compute='_compute_code', inverse="_inverse_code", readonly=False)
+    qrcode = fields.Binary(string='QR Code', compute='_compute_qrcode', store=True)
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
@@ -92,6 +96,14 @@ class LinkTracker(models.Model):
         record = self.env['link.tracker.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
         if record:
             record.code = self.code
+
+    @api.depends("short_url")
+    def _compute_qrcode(self):
+        for tracker in self.filtered("code"):
+            data = io.BytesIO()
+            short_url_quoted = urls.url_quote_plus(tracker.short_url)
+            qrcode.make(short_url_quoted).save(data, optimize=True, format="PNG")
+            tracker.qrcode = base64.b64encode(data.getvalue()).decode()
 
     @api.depends('url')
     def _compute_redirected_url(self):
@@ -254,6 +266,17 @@ class LinkTracker(models.Model):
 
     def _convert_links_text(self, body, vals, blacklist=None):
         raise NotImplementedError('Moved on mail.render.mixin')
+
+    def action_download_qrcode(self):
+        self.ensure_one()
+        if not self.qrcode:
+            raise UserError(_("No QR code available to download."))
+
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/web/content/link.tracker/%s/qrcode?download=1" % (self.id,),
+            "target": "download",
+        }
 
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window']._for_xml_id('link_tracker.link_tracker_click_action_statistics')

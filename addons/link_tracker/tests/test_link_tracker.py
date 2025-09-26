@@ -261,3 +261,16 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '?debug=1'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#model=project.task&id=3603607'})
+
+    def test_qrcode(self):
+        link_tracker = self.env["link.tracker"].create({
+            "url": "odoo.com",
+            "title": "Odoo",
+        })
+        self.assertTrue(link_tracker.qrcode, "The QR code should be generated when the link tracker is created.")
+
+        prev_qrcode = link_tracker.qrcode
+        link_tracker.code = "mycode"
+
+        self.assertTrue(link_tracker.qrcode, "New QR code is generated on changing the code.")
+        self.assertNotEqual(prev_qrcode, link_tracker.qrcode, "The QR code should be updated when the code is changed.")
