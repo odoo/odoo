@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { effect } from "@web/core/utils/reactive";
 
@@ -249,4 +250,36 @@ export function effectWithCleanup({ effect: effectFn, dependencies, reactiveTarg
             prevDependencies = [...nextDependencies];
         }
     }, reactiveTargets);
+}
+
+/**
+ * @param {HTMLElement} targetNode
+ * @param {string} bundleName
+ */
+export async function loadCssFromBundle(targetNode, bundleName) {
+    try {
+        const res = await getBundle(bundleName);
+        for (const url of res.cssLibs) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = url;
+            targetNode.appendChild(link);
+            await new Promise((res, rej) => {
+                link.addEventListener("load", res);
+                link.addEventListener("error", rej);
+            });
+        }
+    } catch (e) {
+        if (e instanceof AssetsLoadingError && e.cause instanceof TypeError) {
+            // an AssetsLoadingError caused by a TypeError means that the
+            // fetch request has been cancelled by the browser. It can occur
+            // when the user changes page, or navigate away from the website
+            // client action, so the iframe is unloaded. In this case, we
+            // don't care abour reporting the error, it is actually a normal
+            // situation.
+            return new Promise(() => {});
+        } else {
+            throw e;
+        }
+    }
 }
