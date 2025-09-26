@@ -228,6 +228,57 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         )
 
     @users('survey_manager')
+    def test_simple_choice_validation_multiple_answers(self):
+        """
+        Check that a 'simple_choice' question fails validation if more than one
+        valid answer is provided.
+        """
+        question = self._add_question(
+            self.page_0, 'Simple Choice Constraint Test', 'simple_choice',
+            constr_mandatory=True,
+            comments_allowed=True,
+            comment_count_as_answer=True,
+            labels=[{'value': 'Choice X'}, {'value': 'Choice Y'}]
+        )
+        answer_choice_x_id = question.suggested_answer_ids[0].id
+        answer_choice_y_id = question.suggested_answer_ids[1].id
+
+        scenarios = [
+            (
+                'Two selected choices should not be allowed',
+                [answer_choice_x_id, answer_choice_y_id],
+                None,
+                True,
+            ),
+            (
+                'One choice and one comment that counts as an answer',
+                answer_choice_x_id,
+                'This is my comment, which is also an answer.',
+                True,
+            ),
+            (
+                'A single valid answer should pass validation',
+                answer_choice_x_id,
+                None,
+                False,
+            ),
+            (
+                'A single valid comment should pass validation',
+                '',
+                'This is my comment, which is also an answer.',
+                False,
+            ),
+        ]
+
+        for case_description, answers, comment, is_multiple_answers in scenarios:
+            with self.subTest(answers=answers, comment=comment):
+                self.assertEqual(
+                    question.validate_question(answers, comment),
+                    {question.id: 'For this question, you can only select one answer.'} if is_multiple_answers else {},
+                    case_description,
+                )
+
+    @users('survey_manager')
     def test_answer_validation_comment(self):
         """ Check that a comment validates a mandatory question based on 'comment_count_as_answer'. """
         # Scenario 1: A comment counts as a valid answer.
