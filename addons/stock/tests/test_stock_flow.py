@@ -2773,3 +2773,254 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
         self.assertEqual(new_location_complete_name, 'NoPrefixLocation')
+
+    def test_picking_weight_with_packages(self):
+        """Test the correctness of pickings' Shipping Weight calculations when using packages.
+        The picking's shipping weight should consider the weight of the products outside packages,
+        the weight of the products inside packages and the weight of the packages themselves.
+        """
+        # activate packages in the settings
+        config = self.env['res.config.settings'].create({
+            'group_stock_tracking_lot': True
+        })
+        config.execute()
+
+        # set weights on products
+        self.productA.weight = 1.0
+        self.productB.weight = 2.0
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 50)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 50)
+
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'uom_id': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        # check shipping_weight is correct without packages
+        picking_out.action_assign()
+        self.assertEqual(picking_out.shipping_weight, 10.0)
+
+        # check shipping_weight is correct with a package of weight = 0
+        picking_out.action_put_in_pack()
+        self.assertEqual(picking_out.shipping_weight, 10.0)
+
+        self.MoveObj.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'uom_id': self.productB.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        # check shipping_weight is correct with 2 products, 1 in a package and the other is not.
+        picking_out.action_assign()
+        self.assertEqual(picking_out.shipping_weight, 30.0)
+
+        pack_type = self.env['stock.package.type'].create({
+            'name': 'BOX',
+            'base_weight': 0.5,
+        })
+        pack = self.env['stock.package'].create({
+            'name': 'PACK_B',
+            'package_type_id': pack_type.id,
+        })
+
+        # check shipping_weight is correct with 2 products in 2 different packages
+        picking_out.action_put_in_pack(package_id=pack.id)
+        self.assertEqual(picking_out.shipping_weight, 30.5)
+
+        outer_pack_type_1 = self.env['stock.package.type'].create({
+            'name': 'BOX_OUTER_1',
+            'base_weight': 1.0,
+        })
+        outer_pack_1 = self.env['stock.package'].create({
+            'name': 'PACK_OUTER_1',
+            'package_type_id': outer_pack_type_1.id,
+        })
+
+        # check shipping_weight is correct with 2 packages put in an other package
+        picking_out.action_put_in_pack(package_id=outer_pack_1.id)
+        self.assertEqual(picking_out.shipping_weight, 31.5)
+
+        # check shipping_weight is correct when the package's shipping_weight is set.
+        # if package's shipping_weight is set, it overrides the computed weight of the package.
+        outer_pack_1.shipping_weight = 40.0
+        self.assertEqual(picking_out.shipping_weight, 40.0)
+
+        # check shipping_weight is correct when setting the package's shipping_weight to 0.
+        # shipping_weight should now be the sum of the products weights + base_weight of the packages
+        outer_pack_1.shipping_weight = 0.0
+        self.assertEqual(picking_out.shipping_weight, 31.5)
+
+        # we will put the outer pack in another outer pack and then change the type
+        # of the inner pack to check if shipping_weight of the picking has changed correctly.
+        outer_pack_type_2 = self.env['stock.package.type'].create({
+            'name': 'BOX_OUTER_2',
+            'base_weight': 1.0,
+        })
+        outer_pack_2 = self.env['stock.package'].create({
+            'name': 'PACK_OUTER_2',
+            'package_type_id': outer_pack_type_2.id,
+        })
+
+        # check the new shipping_weight after adding an extra outer package
+        picking_out.action_put_in_pack(package_id=outer_pack_2.id)
+        self.assertEqual(picking_out.shipping_weight, 32.5)
+
+        # we will set the outer package's shipping_weight (the first outer package) and
+        # check if it is added to the picking's shipping_weight correctly.
+        # this should consider this package's weight to be 2kg with everything inside it.
+        # So we add only the weight of the second outer package which is 1kg.
+        outer_pack_1.shipping_weight = 2.0
+        self.assertEqual(picking_out.shipping_weight, 3)
+
+        # we will remove the outer package's shipping_weight (the first outer package).
+        # and also the type of the outer package (first outer as well).
+        # now this package's weight should be 0, so the picking's shipping_weight
+        # shouldn't consider this package's weight.
+        outer_pack_1.shipping_weight = 0.0
+        outer_pack_1.package_type_id = False
+        self.assertEqual(picking_out.shipping_weight, 31.5)
+
+    def test_picking_volume_with_packages(self):
+        """Test the correctness of pickings' Shipping Volume calculations when using packages.
+        The picking's shipping volume should consider the volume of the products outside packages
+        and the volume of the outermost packages. In case the outermost package's volume was set
+        to 0, the volume of whatever inside the package is taken into calculations and so on.
+        """
+        # activate packages in the settings
+        config = self.env['res.config.settings'].create({
+            'group_stock_tracking_lot': True
+        })
+        config.execute()
+
+        # set volumes on products
+        self.productA.volume = 1.0
+        self.productB.volume = 2.0
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 50)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 50)
+
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'uom_id': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        # check shipping_volume is correct without packages
+        picking_out.action_assign()
+        self.assertEqual(picking_out.shipping_volume, 10.0)
+
+        # check shipping_volume is correct with a package of volume = 0
+        picking_out.action_put_in_pack()
+        self.assertEqual(picking_out.shipping_volume, 10.0)
+
+        self.MoveObj.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'uom_id': self.productB.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        # check shipping_volume is correct with 2 products, 1 in a package and the other is not.
+        picking_out.action_assign()
+        self.assertEqual(picking_out.shipping_volume, 30.0)
+
+        # default dimensions (length) are in mm but volume is in m3
+        pack_type = self.env['stock.package.type'].create({
+            'name': 'BOX',
+            'packaging_length': 2000,
+            'width': 3000,
+            'height': 4000,
+        })
+        pack = self.env['stock.package'].create({
+            'name': 'PACK_B',
+            'package_type_id': pack_type.id,
+        })
+
+        # check shipping_volume is correct with 2 products in 2 different packages.
+        # note, the second package's volume is now 24 not 20 because of the package_type dimensions.
+        picking_out.action_put_in_pack(package_id=pack.id)
+        self.assertEqual(picking_out.shipping_volume, 34)
+
+        outer_pack_type_1 = self.env['stock.package.type'].create({
+            'name': 'BOX_OUTER_1',
+            'packaging_length': 3000,
+            'width': 3000,
+            'height': 4000,
+        })
+        outer_pack_1 = self.env['stock.package'].create({
+            'name': 'PACK_OUTER_1',
+            'package_type_id': outer_pack_type_1.id,
+        })
+
+        # check shipping_volume is correct with 2 packages put in an other package
+        # note, the picking's shipping_volume is the outermost package's volume
+        picking_out.action_put_in_pack(package_id=outer_pack_1.id)
+        self.assertEqual(picking_out.shipping_volume, 36)
+
+        # check shipping_volume is correct when the package's shipping_volume is set.
+        # if package's shipping_volume is set, it overrides the computed volume of the package.
+        outer_pack_1.shipping_volume = 40.0
+        self.assertEqual(picking_out.shipping_volume, 40.0)
+
+        # check shipping_volume is correct when setting the package's shipping_volume to 0.
+        # shipping_volume should now be based on the package's type dimensions.
+        outer_pack_1.shipping_volume = 0.0
+        self.assertEqual(picking_out.shipping_volume, 36)
+
+        # we will put the outer pack in another outer pack and then change the type
+        # of the inner pack to check if shipping_volume of the picking doesn't change.
+        outer_pack_type_2 = self.env['stock.package.type'].create({
+            'name': 'BOX_OUTER_2',
+            'packaging_length': 3000,
+            'width': 2000,
+            'height': 7000,
+        })
+        outer_pack_2 = self.env['stock.package'].create({
+            'name': 'PACK_OUTER_2',
+            'package_type_id': outer_pack_type_2.id,
+        })
+
+        # check the new shipping_volume after adding an extra outer package
+        picking_out.action_put_in_pack(package_id=outer_pack_2.id)
+        self.assertEqual(picking_out.shipping_volume, 42)
+
+        # we will set the outer package's shipping_volume (the first outer package) and
+        # check if it doesn't change the picking's shipping_volume.
+        # it shouldn't change the picking's volume as the outermost package's volume didn't change.
+        outer_pack_1.shipping_volume = 40
+        self.assertEqual(picking_out.shipping_volume, 42)
+
+        # we will set the outermost package's volume to 0 (by removing the package_type) and
+        # check if the picking's volume opt out to what's inside (the first outer package's volume)
+        outer_pack_2.package_type_id = False
+        self.assertEqual(picking_out.shipping_volume, 40)
+
+        # we will go a step further and set the first outer package's volume to 0 (by setting
+        # its shipping_volume to 0 and removing the package_type).
+        # the picking's volume should opt out to what's inside (the volume of the 2 packages)
+        outer_pack_1.shipping_volume = 0.0
+        outer_pack_1.package_type_id = False
+        self.assertEqual(picking_out.shipping_volume, 34)

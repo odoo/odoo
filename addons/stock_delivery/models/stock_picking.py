@@ -11,21 +11,12 @@ from odoo.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_weight_uom_name(self):
-        for package in self:
-            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     allowed_carrier_ids = fields.Many2many('delivery.carrier', compute='_compute_allowed_carrier_ids')
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True)
-    weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
@@ -63,11 +54,6 @@ class StockPicking(models.Model):
             return json.loads(self.carrier_tracking_url)
         except (ValueError, TypeError):
             return False
-
-    @api.depends('move_ids.weight')
-    def _cal_weight(self):
-        for picking in self:
-            picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
     def button_validate(self):
         res = super().button_validate()

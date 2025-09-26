@@ -63,9 +63,9 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     estimated_shipping_weight = fields.Float(
-        "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
+        "shipping_weight", compute='_compute_estimated_shipping_weight', digits='Product Unit')
     estimated_shipping_volume = fields.Float(
-        "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
+        "shipping_volume", compute='_compute_estimated_shipping_volume', digits='Product Unit')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
 
     @api.depends('description')
@@ -81,28 +81,28 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
-    def _compute_estimated_shipping_capacity(self):
+    def _compute_estimated_shipping_weight(self):
+        outermost_packages = self.move_line_ids.result_package_id.outermost_package_id
+        result_package_ids_weights, __ = self.picking_ids._get_result_package_ids_weight_and_volume()
+        packages_weights = outermost_packages._get_package_usable_weight(result_package_ids_weights)
+
         for batch in self:
+            outermost_packages = batch.move_line_ids.result_package_id.outermost_package_id
             estimated_shipping_weight = 0
-            estimated_shipping_volume = 0
-            done_package_ids = set()
-            # packs
-            for pack in batch.move_line_ids.result_package_id:
-                p_type = pack.package_type_id
-                if pack.shipping_weight:
-                    # shipping_weight was computed, so base_weight should be included.
-                    estimated_shipping_weight += pack.shipping_weight
-                    done_package_ids.add(pack.id)
-                elif p_type:
-                    estimated_shipping_weight += p_type.base_weight or 0
-                    estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
-            # move without packs
-            for move_line in batch.picking_ids.move_ids.move_line_ids:
-                if move_line.result_package_id.id in done_package_ids:
-                    continue
-                estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
-                estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
+            estimated_shipping_weight += sum(packages_weights[package.id] for package in outermost_packages)
+            estimated_shipping_weight += sum(picking.weight_bulk for picking in self.picking_ids)
             batch.estimated_shipping_weight = estimated_shipping_weight
+
+    def _compute_estimated_shipping_volume(self):
+        outermost_packages = self.move_line_ids.result_package_id.outermost_package_id
+        __, result_package_ids_volumes = self.picking_ids._get_result_package_ids_weight_and_volume()
+        packages_volumes = outermost_packages._get_package_usable_volume(result_package_ids_volumes)
+
+        for batch in self:
+            outermost_packages = batch.move_line_ids.result_package_id.outermost_package_id
+            estimated_shipping_volume = 0
+            estimated_shipping_volume += sum(packages_volumes[package.id] for package in outermost_packages)
+            estimated_shipping_volume += sum(picking.volume_bulk for picking in self.picking_ids)
             batch.estimated_shipping_volume = estimated_shipping_volume
 
     @api.depends('company_id', 'picking_type_id', 'state')

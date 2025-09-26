@@ -49,7 +49,12 @@ class StockPackage(models.Model):
     child_package_dest_ids = fields.One2many('stock.package', 'package_dest_id', 'Assigned Contained Packages')
     move_line_ids = fields.One2many('stock.move.line', compute="_compute_move_line_ids", search="_search_move_line_ids")
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
+    weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.", recursive=True)
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True)
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
+    volume = fields.Float(compute='_compute_volume', digits='Stock Volume', help="Total volume of the package.", recursive=True)
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', readonly=True)
+    shipping_volume = fields.Float(string='Shipping Volume', help="Total volume of the package.")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
     parent_path = fields.Char(index=True)
@@ -180,6 +185,38 @@ class StockPackage(models.Model):
             picking_ids = {picking_id for child_id in children_by_dest_pack[package] for picking_id in pickings_by_package.get(child_id, [])}
             picking_ids.update(pickings_by_package.get(package.id, []))
             package.picking_ids = [Command.set(list(picking_ids))]
+
+    @api.depends('quant_ids', 'package_type_id.base_weight', 'all_children_package_ids.weight', 'all_children_package_ids.shipping_weight')
+    def _compute_weight(self):
+        for package in self:
+            weight = package.package_type_id.base_weight or 0.0
+            weight += sum(child_package.shipping_weight or child_package.weight for child_package in package.child_package_ids)
+            for quant in package.quant_ids:
+                weight += quant.quantity * quant.product_id.weight
+            package.weight = weight
+
+    def _compute_weight_uom_name(self):
+        for package in self:
+            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    @api.depends('quant_ids', 'package_type_id.packaging_length', 'package_type_id.height', 'package_type_id.width', 'all_children_package_ids.volume')
+    def _compute_volume(self):
+        for package in self:
+            volume = 0.0
+            if package.package_type_id:
+                volume = (package.package_type_id.packaging_length *
+                          package.package_type_id.width *
+                          package.package_type_id.height) * (1e-9 if package.volume_uom_name == 'm³' else 1.0)
+
+            if volume <= 0:
+                volume = sum(child_package.shipping_volume or child_package.volume for child_package in package.child_package_ids)
+                for quant in package.quant_ids:
+                    volume += quant.quantity * quant.product_id.volume
+            package.volume = volume
+
+    def _compute_volume_uom_name(self):
+        for package in self:
+            package.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
 
     @api.depends('quant_ids.owner_id')
     def _compute_owner_id(self):
@@ -432,41 +469,45 @@ class StockPackage(models.Model):
         return all(float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
            and all(float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops)
 
-    def _get_weight(self, picking_id=False):
-        res = {}
-        if picking_id:
-            package_weights = defaultdict(float)
-            # If we check the weight of an ongoing package, we may need to check its current child dest as well to known their own weight.
-            children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
-            base_weight_per_package_group = self.env['stock.package']._read_group(
-                domain=[('id', 'in', all_pack_ids)],
-                groupby=['id', 'package_type_id.base_weight']
-            )
-            base_weight_per_package = {pack.id: weight for pack, weight in base_weight_per_package_group}
-
-            res_groups = self.env['stock.move.line']._read_group(
-                [('result_package_id', 'in', all_pack_ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
-                ['result_package_id', 'product_id', 'uom_id', 'quantity'],
-                ['__count'],
-            )
-            for result_package, product, uom_id, quantity, count in res_groups:
-                package_weights[result_package.id] += (
-                    count
-                    * uom_id._compute_quantity(quantity, product.uom_id)
-                    * product.weight
-                )
+    def _get_package_usable_weight(self, result_package_ids_weights):
+        """
+        This method is used to get the `real` shipping weight of packages in picking.
+        It is called when calculating shipping_weight in picking or picking_batch
+        """
+        res = defaultdict(float)
         for package in self:
-            weight = package.package_type_id.base_weight or 0.0
-            if picking_id:
-                res[package] = weight + package_weights[package.id]
-                for child_id in children_by_dest_pack.get(package, []):
-                    res[package] += base_weight_per_package.get(child_id, 0) + package_weights.get(child_id, 0)
-            else:
-                # Take the base_weight of every contained package, so we include package only containing packages
-                weight += sum(package.all_children_package_ids.mapped(lambda p: p.package_type_id.base_weight))
-                for quant in package.contained_quant_ids:
-                    weight += quant.quantity * quant.product_id.weight
-                res[package] = weight
+            if package.shipping_weight:
+                res[package.id] = package.shipping_weight
+                continue
+            weight = package.weight
+            weight += sum(child_package._get_package_usable_weight(result_package_ids_weights)[child_package.id] for child_package in package.child_package_dest_ids)
+
+            if package.id in result_package_ids_weights and not package.child_package_ids and not package.quant_ids:
+                weight += result_package_ids_weights[package.id]
+            res[package.id] = weight
+        return res
+
+    def _get_package_usable_volume(self, result_package_ids_volumes):
+        """
+        This method is used to get the `real` shipping volume of packages in picking.
+        It is called when calculating shipping_volume in picking or picking_batch
+        """
+        res = defaultdict(float)
+        for package in self:
+            if package.shipping_volume:
+                res[package.id] = package.shipping_volume
+                continue
+            if package.package_type_id:
+                res[package.id] = package.volume
+                continue
+
+            volume = package.volume
+            volume += sum(child_package._get_package_usable_volume(result_package_ids_volumes)[child_package.id] for child_package in package.child_package_dest_ids)
+
+            if package.id in result_package_ids_volumes and not package.child_package_ids and not package.quant_ids:
+                volume += result_package_ids_volumes[package.id]
+            res[package.id] = volume
+
         return res
 
     def _has_issues(self):
