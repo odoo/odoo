@@ -301,6 +301,19 @@ class WithContext(HttpCase):
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertIn(canonical_url, [f"{website.domain}/", f"{website.domain}/page_1"])
 
+    def test_opengraph_image_with_absolute_url(self):
+        base_url = self.base_url()
+        with MockRequest(self.env, website=self.env['website'].browse(1)):
+            self.page.website_meta_og_img = 'http://wrong.example.com/favicon.ico'
+            r = self.url_open(self.page.url)
+            self.assertEqual(r.status_code, 200)
+            self.assertIn(f'"og:image" content="{base_url}/favicon.ico"', r.text)
+
+            self.page.website_meta_og_img = '/logo'
+            r = self.url_open(self.page.url)
+            self.assertEqual(r.status_code, 200)
+            self.assertIn(f'"og:image" content="{base_url}/logo"', r.text)
+
     def test_website_homepage_url_change(self):
         website = self.env['website'].browse([1])
         self.assertFalse(website.homepage_url)
