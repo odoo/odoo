@@ -18,6 +18,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'company_id': False,
         })
         cls.env['res.currency.rate'].search([]).unlink()
+        cls.customer = cls.env['res.partner'].create({
+            'name': 'Customer',
+        })
 
     #########
     # UTILS #
@@ -26,8 +29,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def _create_sale_order(self):
         return self.env['sale.order'].create({
             'name': 'Sale order',
-            'partner_id': self.env.ref('base.partner_admin').id,
-            'partner_invoice_id': self.env.ref('base.partner_admin').id,
+            'partner_id': self.customer.id,
+            'partner_invoice_id': self.customer.id,
             'pricelist_id': self.pricelist.id,
         })
 

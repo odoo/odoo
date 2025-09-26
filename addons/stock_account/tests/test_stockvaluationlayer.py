@@ -15,7 +15,14 @@ class TestStockValuationCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.company = cls.env['res.company'].create({'name': 'Inventory Test Company'})
+        cls.env.user.company_id = cls.company
+        cls.warehouse = cls.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TW',
+            'company_id': cls.company.id,
+        })
+        cls.stock_location = cls.warehouse.lot_stock_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -24,19 +31,21 @@ class TestStockValuationCommon(TransactionCase):
             'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_goods').id,
         })
-        cls.picking_type_in = cls.env.ref('stock.picking_type_in')
-        cls.picking_type_out = cls.env.ref('stock.picking_type_out')
+        cls.picking_type_in = cls.warehouse.in_type_id
+        cls.picking_type_out = cls.warehouse.out_type_id
         cls.env.ref('base.EUR').active = True
+        cls.stock_journal = cls.env['account.journal'].create({
+            'name': 'Stock Journal',
+            'code': 'StockJurnal',
+            'type': 'general',
+            'company_id': cls.company.id,
+        })
+        cls.env.company.account_stock_journal_id = cls.stock_journal
 
     def setUp(self):
         super().setUp()
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
-
-    # def _get_remaining_qty(self, product):
-    #     moves = self.env['stock.move'].search([('product_id', '=', product.id)])
-    #     moves.invalidate_recordset(['remaining_qty'])
-    #     return sum(moves.mapped('remaining_qty'))
 
     def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None, lot_ids=False):
         """ Helper to create and validate a receipt move.
