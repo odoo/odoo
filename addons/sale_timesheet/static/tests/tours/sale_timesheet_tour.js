@@ -182,9 +182,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="allow_billable"] input',
     content: 'Check the allow_billable',
-    run: function (actions) {
+    async run(actions) {
         if (!this.anchor.checked) {
-            actions.click();
+            await actions.click();
         }
     }
 }, {
