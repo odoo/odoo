@@ -618,7 +618,9 @@
         </record>
 
         <!-- Run Scheduler -->
-        <function model="stock.rule" name="run_scheduler"/>
+        <function model="stock.rule" name="run_scheduler_orderpoints"/>
+        <function model="stock.rule" name="run_scheduler_reservations"/>
+        <function model="stock.rule" name="run_scheduler_clean_quants"/>
 
 
         <!-- OEE -->

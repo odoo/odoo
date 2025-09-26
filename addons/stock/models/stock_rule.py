@@ -684,54 +684,78 @@ class StockRule(models.Model):
         ])
 
     @api.model
-    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(remaining=self._get_scheduler_tasks_to_do())
-
-        # Minimum stock rules
+    def _run_scheduler_orderpoints(self, use_new_cursor=False, company_id=False):
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
-        orderpoints.sudo()._compute_qty_to_order_computed()
-        orderpoints.sudo()._compute_deadline_date()
-        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+
+        if orderpoints:
+            orderpoints.sudo()._compute_qty_to_order_computed()
+            orderpoints.sudo()._compute_deadline_date()
+            orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
 
-        # Search all confirmed stock_moves and try to assign them
+    @api.model
+    def _run_scheduler_reservations(self, use_new_cursor=False, company_id=False):
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='reservation_date, priority desc, date asc, id asc')
+        total_task = len(moves_to_assign)
+
+        task_done = 0
         for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
+            task_done += len(moves_chunk)
+
             if use_new_cursor:
-                self.env.cr.commit()
-                _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
+                self.env['ir.cron']._commit_progress(processed=task_done, remaining=total_task - task_done)
+                _logger.info("Assigned and committed %d out of %d moves", task_done, total_task)
 
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+        _logger.info("Stock reservation assignment completed: %d moves processed", task_done)
 
-        # Merge duplicated quants
+    @api.model
+    def _run_scheduler_clean_quants(self, use_new_cursor=False):
         self.env['stock.quant']._quant_tasks()
-
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
 
+    # The following run_scheduler methods are part of the stock scheduler system and are intended to be run
+    # as SUPERUSER to avoid access rights and multi-company issues. They perform automated warehouse operations,
+    # including orderpoint replenishment, stock reservation assignment, and periodic quant cleanup.
     @api.model
-    def _get_scheduler_tasks_to_do(self):
-        """ Number of task to be executed by the stock scheduler. This number will be given in log
-        message to know how many tasks succeeded."""
-        return 3
+    def run_scheduler_orderpoints(self, use_new_cursor=False, company_id=False):
+        """It computes the quantity to order, calculates the deadline date, and creates procurements as needed."""
+        try:
+            self._run_scheduler_orderpoints(use_new_cursor=use_new_cursor, company_id=company_id)
+        except Exception:
+            _logger.exception("An error occurred while processing orderpoint replenishment.")
+            raise
+        return {}
 
     @api.model
-    def run_scheduler(self, use_new_cursor=False, company_id=False):
-        """ Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
-        and the availability of moves. This function is intended to be run for all the companies at the same time, so
-        we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
+    def run_scheduler_reservations(self, use_new_cursor=False, company_id=False):
+        """Assign stock reservations to confirmed or partially available moves,
+        processing them in order of reservation date and priority.
+        """
         try:
-            self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+            self._run_scheduler_reservations(use_new_cursor=use_new_cursor, company_id=company_id)
         except Exception:
-            _logger.error("Error during stock scheduler", exc_info=True)
+            _logger.exception("An error occurred while processing stock reservation assignments.")
+            raise
+        return {}
+
+    @api.model
+    def run_scheduler_clean_quants(self, use_new_cursor=False, company_id=False):
+        """ Perform periodic cleanup of stock quants by
+            - Merging duplicate quants created under concurrent transactions.
+            - Synchronize reserved quantities on quants with actual reservations from move lines.
+            - Remove quants with zero quantity and zero reserved quantity.
+        """
+        try:
+            self._run_scheduler_clean_quants(use_new_cursor=use_new_cursor)
+        except Exception:
+            _logger.exception("An error occurred while periodic stock quant cleanup.")
             raise
         return {}
 
