@@ -341,7 +341,8 @@ class IrModuleModule(models.Model):
     def check_external_dependencies(self, module_name, newstate='to install'):
         try:
             manifest = modules.Manifest.for_addon(module_name)
-            manifest.check_manifest_dependencies()
+            if isinstance(manifest, modules.Manifest):
+                manifest.check_manifest_dependencies()
         except MissingDependency as e:
             if newstate == 'to install':
                 msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
