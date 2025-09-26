@@ -256,13 +256,3 @@ pdfjs-password-invalid = Գաղտնաբառը սխալ է: Կրկին փորձէ
 pdfjs-password-ok-button = Լաւ
 pdfjs-password-cancel-button = Չեղարկել
 pdfjs-web-fonts-disabled = Վեբ-տառատեսակները անջատուած են. հնարաւոր չէ աւգտագործել ներկառուցուած PDF տառատեսակները։
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

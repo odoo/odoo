@@ -183,9 +183,6 @@ pdfjs-page-scale-actual = ទំហំ​ជាក់ស្ដែង
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = មាន​កំហុស​បាន​កើតឡើង​ពេល​កំពុង​ផ្ទុក PDF ។
@@ -211,13 +208,3 @@ pdfjs-password-invalid = ពាក្យសម្ងាត់​មិន​ត�
 pdfjs-password-ok-button = យល់​ព្រម
 pdfjs-password-cancel-button = បោះបង់
 pdfjs-web-fonts-disabled = បាន​បិទ​ពុម្ពអក្សរ​បណ្ដាញ ៖ មិន​អាច​ប្រើ​ពុម្ពអក្សរ PDF ដែល​បាន​បង្កប់​បាន​ទេ ។
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

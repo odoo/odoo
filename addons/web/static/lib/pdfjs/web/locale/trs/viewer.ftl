@@ -154,9 +154,6 @@ pdfjs-toggle-sidebar-button =
 pdfjs-toggle-sidebar-button-label = Nadunā barrâ nù yi'nïn
 pdfjs-findbar-button-label = Narì'
 
-## Thumbnails panel item (tooltip and alt text for images)
-
-
 ## Find panel button title and messages
 
 pdfjs-find-previous-button-label = Sa gachîn
@@ -172,26 +169,7 @@ pdfjs-page-scale-actual = Dàj yàchi akuan' nín
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
-## Loading indicator messages
-
-
-## Annotations
-
-
 ## Password
 
 pdfjs-password-ok-button = Ga'ue
 pdfjs-password-cancel-button = Duyichin'
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

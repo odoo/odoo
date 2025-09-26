@@ -152,7 +152,7 @@ pdfjs-print-progress-message = Aparitzende s'imprenta de su documentu…
 # Variables:
 #   $progress (Number) - percent value
 pdfjs-print-progress-percent = { $progress }%
-pdfjs-print-progress-close-button = Cantzella
+pdfjs-print-progress-close-button = Annulla
 pdfjs-printing-not-supported = Atentzione: s'imprenta no est funtzionende de su totu in custu navigadore.
 pdfjs-printing-not-ready = Atentzione: su PDF no est istadu carrigadu de su totu pro s'imprenta.
 
@@ -246,7 +246,7 @@ pdfjs-annotation-date-string = { $date }, { $time }
 pdfjs-password-label = Inserta sa crae pro abèrrere custu archìviu PDF.
 pdfjs-password-invalid = Sa crae no est curreta. Torra a nche proare.
 pdfjs-password-ok-button = Andat bene
-pdfjs-password-cancel-button = Cantzella
+pdfjs-password-cancel-button = Annulla
 pdfjs-web-fonts-disabled = Is tipografias web sunt disativadas: is tipografias incrustadas a su PDF non podent èssere impreadas.
 
 ## Editing
@@ -301,7 +301,6 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Testu alternativu
 pdfjs-editor-alt-text-edit-button-label = Modifica su testu alternativu
 pdfjs-editor-alt-text-dialog-label = Sèbera un’optzione
@@ -309,10 +308,6 @@ pdfjs-editor-alt-text-dialog-description = Su testu alternativu (“alt text”)
 pdfjs-editor-alt-text-add-description-label = Agiunghe una descritzione
 pdfjs-editor-alt-text-cancel-button = Annulla
 pdfjs-editor-alt-text-save-button = Sarva
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
 
 ## Color picker
 
@@ -329,16 +324,10 @@ pdfjs-editor-colorpicker-blue =
 pdfjs-editor-colorpicker-pink =
     .title = Rosa
 
-## Show all highlights
-## This is a toggle button to show/hide all the highlights.
-
-
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-# This is a button that users can click to open the alt text editor and add alt text when it is not present.
 pdfjs-editor-new-alt-text-missing-button-label = Mancat su testu alternativu
-# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
 pdfjs-editor-new-alt-text-to-review-button-label = Revisiona su testu alternativu
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:

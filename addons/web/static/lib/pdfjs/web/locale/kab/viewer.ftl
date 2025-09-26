@@ -316,6 +316,25 @@ pdfjs-highlight-floating-button1 =
     .title = Derrer
     .aria-label = Derrer
 pdfjs-highlight-floating-button-label = Derrer
+pdfjs-editor-signature-button =
+    .title = Rnu azmul
+pdfjs-editor-signature-button-label = Rnu azmul
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = Amaẓrag usebrureq
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = Amaẓrag n usuneɣ
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = usuneɣ n uzmul: { $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = Amaẓrag n tugna
 
 ## Remove button for the various kind of editor.
 
@@ -327,6 +346,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Kkes tugna
 pdfjs-editor-remove-highlight-button =
     .title = Kkes aderrer
+pdfjs-editor-remove-signature-button =
+    .title = Kkes azmul
 
 ##
 
@@ -343,6 +364,20 @@ pdfjs-editor-stamp-add-image-button-label = Rnu tawlaft
 pdfjs-editor-free-highlight-thickness-input = Tuzert
 pdfjs-editor-free-highlight-thickness-title =
     .title = Beddel tuzert mi ara d-tesbeggneḍ iferdisen niḍen ur nelli d aḍris
+pdfjs-editor-add-signature-container =
+    .aria-label = Isenqaden n uzmul d yizmulen yettwaskelsen
+pdfjs-editor-signature-add-signature-button =
+    .title = Rnu azmul amaynut
+pdfjs-editor-signature-add-signature-button-label = Rnu azmul amaynut
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = Yettwasekles uzmul: { $description }
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = Amaẓrag n uḍris
+    .default-content = Bdu tira…
 pdfjs-free-text =
     .aria-label = Amaẓrag n uḍris
 pdfjs-free-text-default-content = Bdu tira...
@@ -353,15 +388,25 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Aḍris amaskal
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = Ẓreg aḍris amaskal
 pdfjs-editor-alt-text-edit-button-label = Ẓreg aḍris amaskal
 pdfjs-editor-alt-text-dialog-label = Fren taxtirt
+pdfjs-editor-alt-text-dialog-description = Aḍris amaskal yettallel mi ara yili imdanen ur ttwalin ara tugna neɣ mi ara yili ur d-tuli ara.
 pdfjs-editor-alt-text-add-description-label = Rnu aglam
+pdfjs-editor-alt-text-add-description-description = Yettuwelleh tira n tefyirt neɣ n snat ideg ara d-yettwaglem asentel, akatar neɣ tigawin.
 pdfjs-editor-alt-text-mark-decorative-label = Creḍ d adlag
+pdfjs-editor-alt-text-mark-decorative-description = Taxtiṛt-a tettwaseqdacay i tugniwin n ucebbaḥ, am tamiwin neɣ i tecraḍ tifrawanin.
 pdfjs-editor-alt-text-cancel-button = Sefsex
 pdfjs-editor-alt-text-save-button = Sekles
 pdfjs-editor-alt-text-decorative-tooltip = Yettwacreḍ d adlag
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = D amedya, “Yiwen yilemẓi iqqim ɣer ṭṭabla,ad yečč imekli”
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button =
+    .aria-label = Aḍris amaskal
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
@@ -420,6 +465,8 @@ pdfjs-editor-highlight-show-all-button =
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Ẓreg aḍris niḍen (aglam n tugna)
 # Modal header positioned above a text box where users can add the alt text.
 pdfjs-editor-new-alt-text-dialog-add-label = Rnu aḍris niḍen (aglam n tugna)
 pdfjs-editor-new-alt-text-textarea =
@@ -429,10 +476,125 @@ pdfjs-editor-new-alt-text-create-automatically-button-label = Rnu aḍris niḍe
 pdfjs-editor-new-alt-text-not-now-button = Mačči tura
 pdfjs-editor-new-alt-text-error-title = D awezɣi timerna n uḍris niḍen s wudem awurman
 pdfjs-editor-new-alt-text-error-close-button = Mdel
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Asader n tmudemt n IA n uḍris amlellay ({ $downloadedSize } n { $totalSize } MB)
+    .aria-valuetext = Asader n tmudemt n IA n uḍris amlellay ({ $downloadedSize } n { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button =
+    .aria-label = Yettwarna weḍris amlellay
+pdfjs-editor-new-alt-text-added-button-label = Yettwarna weḍris amlellay
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button =
+    .aria-label = Ixuṣ uḍris amlellay
+pdfjs-editor-new-alt-text-missing-button-label = Ixuṣ uḍris amlellay
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button =
+    .aria-label = Senqed aḍris amlellay
+pdfjs-editor-new-alt-text-to-review-button-label = Senqed aḍris amlellay
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Yettwarna s wudem awurman: { $generatedAltText }
 
 ## Image alt-text settings
 
+pdfjs-image-alt-text-settings-button =
+    .title = Iɣewwaṛen n weḍris amlellay n tugna
+pdfjs-image-alt-text-settings-button-label = Iɣewwaṛen n weḍris amlellay n tugna
+pdfjs-editor-alt-text-settings-dialog-label = Iɣewwaṛen n weḍris amlellay n tugna
+pdfjs-editor-alt-text-settings-automatic-title = Aḍris amlellay awurman
+pdfjs-editor-alt-text-settings-create-model-button-label = Rnu aḍris niḍen s wudem awurman
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Tamudemt n IA n uḍris amlellay ({ $totalSize } MB)
 pdfjs-editor-alt-text-settings-delete-model-button = Kkes
 pdfjs-editor-alt-text-settings-download-model-button = Sader
 pdfjs-editor-alt-text-settings-downloading-model-button = Asader…
+pdfjs-editor-alt-text-settings-editor-title = Amaẓrag n weḍris amlellay
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Sken amaẓrag n uḍris amlellay akken kan ara ternuḍ tugna
+pdfjs-editor-alt-text-settings-show-dialog-description = Yettall ad tḍemneḍ tugniwin sɛant aḍris amlellay.
 pdfjs-editor-alt-text-settings-close-button = Mdel
+
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-stamp-added-alert = Tugna tettwarna
+pdfjs-editor-signature-added-alert = Azmul yettwarna
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-highlight = Yettwakkes usebrureq
+pdfjs-editor-undo-bar-message-freetext = Aḍris yettwakkes
+pdfjs-editor-undo-bar-message-ink = Asuneɣ yettwakkes
+pdfjs-editor-undo-bar-message-stamp = Tugna tettwakkes
+pdfjs-editor-undo-bar-message-signature = Azmul yettwakkes
+pdfjs-editor-undo-bar-undo-button =
+    .title = Sefsex
+pdfjs-editor-undo-bar-undo-button-label = Sefsex
+pdfjs-editor-undo-bar-close-button =
+    .title = Mdel
+pdfjs-editor-undo-bar-close-button-label = Mdel
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-title = Rnu azmul
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = Anaw
+    .title = Anaw
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = Suneɣ
+    .title = Suneɣ
+pdfjs-editor-add-signature-image-button = Tugna
+    .title = Tugna
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = Zru azmul-ik
+    .placeholder = Zru azmul-ik
+pdfjs-editor-add-signature-draw-placeholder = Suneɣ azmul-ik
+pdfjs-editor-add-signature-draw-thickness-range-label = Tuzert
+pdfjs-editor-add-signature-image-placeholder = Seḥnucceḍ afaylu da akken ad t-saliṭ
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] neɣ fren ifuyla n tugna
+       *[other] neɣ inig ifuyla n tugna
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = Aglam (aḍris amlellay)
+pdfjs-editor-add-signature-description-input =
+    .title = Aglam (aḍris amlellay)
+pdfjs-editor-add-signature-description-default-when-drawing = Azmul
+pdfjs-editor-add-signature-clear-button-label = Sfeḍ azmul
+pdfjs-editor-add-signature-clear-button =
+    .title = Sfeḍ azmul
+pdfjs-editor-add-signature-save-checkbox = Sekles azmul
+pdfjs-editor-add-signature-image-upload-error-title = Ur izmir ara ad yessali tugna
+pdfjs-editor-add-signature-image-upload-error-description = Ssefqed tuqqna-inek⋅inem n uẓeṭṭa neɣ ɛreḍ tugna-nniḍen.
+pdfjs-editor-add-signature-error-close-button = Mdel
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Semmet
+pdfjs-editor-add-signature-add-button = Rnu
+pdfjs-editor-edit-signature-update-button = Leqqem
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = Kkes azmul yettwakelsen
+pdfjs-editor-delete-signature-button-label1 = Kkes azmul yettwakelsen
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = Ẓreg aglam
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = Ẓreg aglam

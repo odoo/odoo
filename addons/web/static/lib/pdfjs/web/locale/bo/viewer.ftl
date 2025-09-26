@@ -207,9 +207,6 @@ pdfjs-page-scale-actual = Actual Size
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = An error occurred while loading the PDF.
@@ -235,13 +232,3 @@ pdfjs-password-invalid = Invalid password. Please try again.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Cancel
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

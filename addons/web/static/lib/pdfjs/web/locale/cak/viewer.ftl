@@ -269,6 +269,9 @@ pdfjs-editor-free-text-button-label = Rucholajem tz'ib'
 pdfjs-editor-ink-button =
     .title = Tiwachib'ëx
 pdfjs-editor-ink-button-label = Tiwachib'ëx
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = B'onil
 pdfjs-editor-free-text-size-input = Nimilem
@@ -282,10 +285,3 @@ pdfjs-ink =
     .aria-label = Nuk'unel wachib'äl
 pdfjs-ink-canvas =
     .aria-label = Wachib'äl nuk'un ruma okisaxel
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

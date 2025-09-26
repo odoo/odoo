@@ -252,13 +252,3 @@ pdfjs-password-invalid = Passwird no suithfest. Gonnae gie it anither shot.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Stap
 pdfjs-web-fonts-disabled = Wab fonts are disabled: cannae yaise embeddit PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

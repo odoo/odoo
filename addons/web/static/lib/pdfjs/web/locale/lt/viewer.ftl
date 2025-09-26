@@ -256,13 +256,3 @@ pdfjs-password-invalid = Slaptažodis neteisingas. Bandykite dar kartą.
 pdfjs-password-ok-button = Gerai
 pdfjs-password-cancel-button = Atsisakyti
 pdfjs-web-fonts-disabled = Saityno šriftai išjungti – PDF faile esančių šriftų naudoti negalima.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

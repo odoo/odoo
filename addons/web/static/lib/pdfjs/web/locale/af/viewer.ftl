@@ -94,14 +94,6 @@ pdfjs-document-properties-producer = PDF-vervaardiger:
 pdfjs-document-properties-version = PDF-weergawe:
 pdfjs-document-properties-page-count = Aantal bladsye:
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = Sluit
@@ -172,9 +164,6 @@ pdfjs-page-scale-actual = Werklike grootte
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = 'n Fout het voorgekom met die laai van die PDF.
@@ -200,13 +189,3 @@ pdfjs-password-invalid = Ongeldige wagwoord. Probeer gerus weer.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Kanselleer
 pdfjs-web-fonts-disabled = Webfonte is gedeaktiveer: kan nie PDF-fonte wat ingebed is, gebruik nie.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

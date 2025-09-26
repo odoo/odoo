@@ -206,7 +206,7 @@ pdfjs-find-previous-button-label = Kent
 pdfjs-find-next-button =
     .title = Kavout an tamm frazenn war-lerc'h o klotañ ganti
 pdfjs-find-next-button-label = War-lerc'h
-pdfjs-find-highlight-checkbox = Usskediñ pep tra
+pdfjs-find-highlight-checkbox = Sklêrijennañ pep tra
 pdfjs-find-match-case-checkbox-label = Teurel evezh ouzh ar pennlizherennoù
 pdfjs-find-match-diacritics-checkbox-label = Doujañ d’an tiredoù
 pdfjs-find-entire-word-checkbox-label = Gerioù a-bezh
@@ -272,9 +272,13 @@ pdfjs-editor-ink-button-label = Tresañ
 pdfjs-editor-stamp-button =
     .title = Ouzhpennañ pe aozañ skeudennoù
 pdfjs-editor-stamp-button-label = Ouzhpennañ pe aozañ skeudennoù
-
-## Remove button for the various kind of editor.
-
+pdfjs-editor-highlight-button =
+    .title = Sklerijennañ
+pdfjs-editor-highlight-button-label = Sklerijennañ
+pdfjs-highlight-floating-button1 =
+    .title = Sklerijennañ
+    .aria-label = Sklerijennañ
+pdfjs-highlight-floating-button-label = Sklerijennañ
 
 ##
 
@@ -287,6 +291,8 @@ pdfjs-editor-ink-opacity-input = Boullder
 pdfjs-editor-stamp-add-image-button =
     .title = Ouzhpennañ ur skeudenn
 pdfjs-editor-stamp-add-image-button-label = Ouzhpennañ ur skeudenn
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Tevded
 pdfjs-free-text =
     .aria-label = Aozer testennoù
 pdfjs-ink =
@@ -299,14 +305,41 @@ pdfjs-ink-canvas =
 pdfjs-editor-alt-text-add-description-label = Ouzhpennañ un deskrivadur
 pdfjs-editor-alt-text-cancel-button = Nullañ
 pdfjs-editor-alt-text-save-button = Enrollañ
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = Da skouer, “Ur paotr yaouank ouzh taol o tebriñ boued”
 
 ## Color picker
 
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Liv sklêrijennañ
+pdfjs-editor-colorpicker-button =
+    .title = Cheñch liv
+pdfjs-editor-colorpicker-yellow =
+    .title = Melen
+pdfjs-editor-colorpicker-blue =
+    .title = Glas
+pdfjs-editor-colorpicker-pink =
+    .title = Roz
+pdfjs-editor-colorpicker-red =
+    .title = Ruz
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
+pdfjs-editor-highlight-show-all-button-label = Diskouez pep tra
+pdfjs-editor-highlight-show-all-button =
+    .title = Diskouez pep tra
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Gouzout hiroc’h
+pdfjs-editor-new-alt-text-error-close-button = Serriñ
+
+## Image alt-text settings
+
+pdfjs-editor-alt-text-settings-delete-model-button = Dilemel
+pdfjs-editor-alt-text-settings-download-model-button = Pellgargañ
+pdfjs-editor-alt-text-settings-downloading-model-button = O pellgargañ…
+pdfjs-editor-alt-text-settings-close-button = Serriñ

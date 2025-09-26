@@ -213,9 +213,6 @@ pdfjs-page-scale-actual = Grandaria actual
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = S'ha produciu una error en cargar o PDF.
@@ -245,13 +242,3 @@ pdfjs-password-invalid = Clau invalida. Torna a intentar-lo.
 pdfjs-password-ok-button = Acceptar
 pdfjs-password-cancel-button = Cancelar
 pdfjs-web-fonts-disabled = As fuents web son desactivadas: no se puet incrustar fichers PDF.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

@@ -213,9 +213,6 @@ pdfjs-page-scale-actual = Hazırkı Həcm
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF yüklenərkən bir səhv yarandı.
@@ -245,13 +242,3 @@ pdfjs-password-invalid = Parol səhvdir. Bir daha yoxlayın.
 pdfjs-password-ok-button = Tamam
 pdfjs-password-cancel-button = Ləğv et
 pdfjs-web-fonts-disabled = Web Şriftlər söndürülüb: yerləşdirilmiş PDF şriftlərini istifadə etmək mümkün deyil.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

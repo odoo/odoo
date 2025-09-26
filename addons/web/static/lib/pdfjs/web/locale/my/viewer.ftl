@@ -88,14 +88,6 @@ pdfjs-document-properties-producer = PDF ထုတ်လုပ်သူ:
 pdfjs-document-properties-version = PDF ဗားရှင်း:
 pdfjs-document-properties-page-count = စာမျက်နှာအရေအတွက်:
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = ပိတ်
@@ -166,9 +158,6 @@ pdfjs-page-scale-actual = အမှန်တကယ်ရှိတဲ့ အရ�
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ဖိုင် ကိုဆွဲတင်နေချိန်မှာ အမှားတစ်ခုတွေ့ရပါတယ်။
@@ -194,13 +183,3 @@ pdfjs-password-invalid = စာဝှက် မှားသည်။ ထပ်�
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = ပယ်​ဖျက်ပါ
 pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

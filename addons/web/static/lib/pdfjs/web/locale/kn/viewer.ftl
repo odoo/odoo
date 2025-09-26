@@ -97,14 +97,6 @@ pdfjs-document-properties-page-size-unit-inches = ಇದರಲ್ಲಿ
 pdfjs-document-properties-page-size-orientation-portrait = ಭಾವಚಿತ್ರ
 pdfjs-document-properties-page-size-orientation-landscape = ಪ್ರಕೃತಿ ಚಿತ್ರ
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = ಮುಚ್ಚು
@@ -173,9 +165,6 @@ pdfjs-page-scale-actual = ನಿಜವಾದ ಗಾತ್ರ
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ಅನ್ನು ಲೋಡ್ ಮಾಡುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ.
@@ -201,13 +190,3 @@ pdfjs-password-invalid = ಅಮಾನ್ಯವಾದ ಗುಪ್ತಪದ, ದ�
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = ರದ್ದು ಮಾಡು
 pdfjs-web-fonts-disabled = ಜಾಲ ಅಕ್ಷರಶೈಲಿಯನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ: ಅಡಕಗೊಳಿಸಿದ PDF ಅಕ್ಷರಶೈಲಿಗಳನ್ನು ಬಳಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

@@ -207,9 +207,6 @@ pdfjs-page-scale-actual = Saiz Sebenar
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Masalah berlaku semasa menuatkan sebuah PDF.
@@ -235,13 +232,3 @@ pdfjs-password-invalid = Kata laluan salah. Cuba lagi.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Batal
 pdfjs-web-fonts-disabled = Fon web dinyahdayakan: tidak dapat menggunakan fon terbenam PDF.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

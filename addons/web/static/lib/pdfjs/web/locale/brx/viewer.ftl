@@ -174,9 +174,6 @@ pdfjs-page-scale-actual = थार महर
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF ल'ड खालामनाय समाव मोनसे गोरोन्थि जाबाय।
@@ -206,13 +203,3 @@ pdfjs-password-invalid = बाहायजायै पासवार्ड।
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = नेवसि
 pdfjs-web-fonts-disabled = वेब फन्टखौ लोरबां खालामबाय: अरजाबहोनाय PDF फन्टखौ बाहायनो हायाखै।
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

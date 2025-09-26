@@ -257,12 +257,6 @@ pdfjs-password-ok-button = Sobib
 pdfjs-password-cancel-button = Loobu
 pdfjs-web-fonts-disabled = Veebifondid on keelatud: PDFiga kaasatud fonte pole võimalik kasutada.
 
-## Editing
+## Image alt-text settings
 
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
+pdfjs-editor-alt-text-settings-delete-model-button = Kustuta

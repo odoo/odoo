@@ -207,9 +207,6 @@ pdfjs-page-scale-actual = ચોક્કસ માપ
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = ભૂલ ઉદ્ભવી જ્યારે PDF ને લાવી રહ્યા હોય.
@@ -235,13 +232,3 @@ pdfjs-password-invalid = અયોગ્ય પાસવર્ડ. મહેર�
 pdfjs-password-ok-button = બરાબર
 pdfjs-password-cancel-button = રદ કરો
 pdfjs-web-fonts-disabled = વેબ ફોન્ટ નિષ્ક્રિય થયેલ છે: ઍમ્બેડ થયેલ PDF ફોન્ટને વાપરવાનું અસમર્થ.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

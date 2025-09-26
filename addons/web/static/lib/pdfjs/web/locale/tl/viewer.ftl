@@ -213,9 +213,6 @@ pdfjs-page-scale-actual = Totoong sukat
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Nagkaproblema habang niloload ang PDF.
@@ -245,13 +242,3 @@ pdfjs-password-invalid = Maling password. Subukan uli.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Kanselahin
 pdfjs-web-fonts-disabled = Naka-disable ang mga Web font: hindi kayang gamitin ang mga naka-embed na PDF font.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

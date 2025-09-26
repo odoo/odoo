@@ -81,14 +81,6 @@ pdfjs-document-properties-producer = PDF ishlab chiqaruvchi:
 pdfjs-document-properties-version = PDF versiyasi:
 pdfjs-document-properties-page-count = Sahifa soni:
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = Yopish
@@ -148,9 +140,6 @@ pdfjs-page-scale-actual = Haqiqiy hajmi
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF yuklanayotganda xato yuz berdi.
@@ -175,13 +164,3 @@ pdfjs-password-label = PDF faylni ochish uchun parolni kiriting.
 pdfjs-password-invalid = Parol - notoʻgʻri. Qaytadan urinib koʻring.
 pdfjs-password-ok-button = OK
 pdfjs-web-fonts-disabled = Veb shriftlar oʻchirilgan: ichki PDF shriftlardan foydalanib boʻlmmaydi.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

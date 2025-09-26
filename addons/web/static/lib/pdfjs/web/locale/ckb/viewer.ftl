@@ -198,9 +198,6 @@ pdfjs-page-scale-actual = قەبارەی ڕاستی
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = هەڵەیەک ڕوویدا لە کاتی بارکردنی  PDF.
@@ -230,13 +227,3 @@ pdfjs-password-invalid = وشەی تێپەڕ هەڵەیە. تکایە دووبا
 pdfjs-password-ok-button = باشە
 pdfjs-password-cancel-button = پاشگەزبوونەوە
 pdfjs-web-fonts-disabled = جۆرەپیتی وێب ناچالاکە: نەتوانی جۆرەپیتی تێخراوی ناو pdfـەکە بەکاربێت.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
