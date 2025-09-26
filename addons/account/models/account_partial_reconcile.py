@@ -516,7 +516,11 @@ class AccountPartialReconcile(models.Model):
             move = move_values['move']
             pending_cash_basis_lines = []
 
-            for partial_values in move_values['partials']:
+            # Track how much of each tax line has been allocated across all partials
+            # to avoid double-counting when multiple partials process the same tax line
+            tax_line_allocated = {}
+
+            for partial_index, partial_values in enumerate(move_values['partials']):
                 partial = partial_values['partial']
 
                 # Init the journal entry.
@@ -548,14 +552,15 @@ class AccountPartialReconcile(models.Model):
 
                     # Percentage expressed in the foreign currency.
                     amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
-                    if (
-                        caba_treatment == 'tax'
-                        and (
-                            move_values['is_fully_paid']
+
+                    if caba_treatment == 'tax':
+                        if (
+                            (move_values['is_fully_paid'] and partial_index == len(move_values['partials']) - 1)
                             or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
-                        )
-                    ):
-                        amount_currency = line.amount_residual_currency
+                        ):
+                            # Use the remaining residual, accounting for what was already allocated to previous partials
+                            amount_currency = line.amount_residual_currency - tax_line_allocated.get(line.id, 0.0)
+                        tax_line_allocated[line.id] = tax_line_allocated.get(line.id, 0.0) + amount_currency
                     balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
 
                     # ==========================================================================
