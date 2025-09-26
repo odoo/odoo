@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons.pos_epson_printer.models.pos_config import format_epson_certified_domain
 
 
 class ResConfigSettings(models.TransientModel):
@@ -24,3 +24,9 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_epson_printer_ip = ''
             else:
                 res_config.pos_epson_printer_ip = res_config.pos_config_id.epson_printer_ip
+
+    @api.onchange("pos_epson_printer_ip")
+    def _onchange_epson_printer_ip(self):
+        for rec in self:
+            if rec.pos_epson_printer_ip:
+                rec.pos_epson_printer_ip = format_epson_certified_domain(rec.pos_epson_printer_ip)
