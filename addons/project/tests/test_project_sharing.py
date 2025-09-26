@@ -671,3 +671,46 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should still be a follower after sharing the project")
         self.assertEqual(len(project.message_follower_ids), 2, "number of followers should be 2")
+
+    def test_portal_user_with_edit_limited_access_can_create_task(self):
+        """
+        Test that a portal user with 'edit_limited' access can create a task in a shared project.
+        """
+        ProjectShare = self.env['project.share.wizard'].with_context(
+            active_model="project.project",
+            active_id=self.project_portal.id,
+        )
+        self.project_portal.write({
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id}),
+            ],
+        })
+        with Form(ProjectShare) as project_share_form:
+            with project_share_form.collaborator_ids.edit(0) as collaborator_form:
+                collaborator_form.access_mode = 'edit_limited'
+
+        portal_task = self.env['project.task'].with_user(self.user_portal).with_context(
+            default_project_id=self.project_portal.id,
+        ).create({
+            'name': 'Portal Task',
+            'child_ids': [
+                Command.create({'name': 'Limited Edit Subtask'}),
+            ],
+        })
+        subtask = portal_task.child_ids[0]
+
+        self.assertTrue(
+            subtask, "Portal user with edit_limited access should be able to create a subtask."
+        )
+        self.assertEqual(
+            portal_task.project_id, self.project_portal,
+            "Parent task should belong to the shared project."
+        )
+        self.assertEqual(
+            subtask.project_id, self.project_portal,
+            "Subtask should belong to the shared project."
+        )
+        self.assertEqual(
+            subtask.parent_id, portal_task,
+            "Subtask should be linked to the correct parent task."
+        )
