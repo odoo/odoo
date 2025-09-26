@@ -84,28 +84,17 @@ export function toggleSuggest(turnOn) {
 }
 
 /**
- * Checks a product Kanban is highlighted and in a specified place
+ * Checks a product's record order in Kanban
  * @param {string} product product display name
- * @param {number} expected_order  1 == [0], 2 == [1] ...
- * @param {boolean} highlightOn default to true
+ * @param {number | false } expectedOrder 0 is the first card
  */
-export function checkKanbanRecordHighlight(product, expected_order, highlightOn = true) {
+export function checkKanbanRecordPosition(product, expectedOrder) {
     return {
         trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view .o_kanban_record",
         run() {
             const cards = [...document.querySelectorAll(".o_kanban_record")];
-            const product_card = cards.find((card) => card.textContent.includes(product));
-            const highlighted = product_card.className.includes("o_suggest_highlight");
-            if (highlightOn === true) {
-                assert(highlighted, true, `${product} record should be highlighted.`);
-                assert(
-                    product_card == cards[expected_order - 1],
-                    true,
-                    `Card in position ${cards.indexOf(product_card)} not ${expected_order}.`
-                );
-            } else if (highlightOn === false) {
-                assert(highlighted, false, `${product} record should not be highlighted.`);
-            }
+            assert(expectedOrder + 1 <= cards.length, true, "expectedOrder out of range.");
+            assert(cards[expectedOrder].textContent.includes(product), true, "Wrong order");
         },
     };
 }

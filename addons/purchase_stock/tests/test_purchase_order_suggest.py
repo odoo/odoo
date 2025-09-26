@@ -36,7 +36,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         suggest_context = {
             "order_id": po.id,
             "partner_id": po.partner_id.id,
-            "domain": domain,
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_days": days,
@@ -602,6 +601,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         today = fields.Datetime.now()
         test_product = self.env['product.product'].create([{
             'name': "test_product",
+            'categ_id': 2,  # Expense caegory id
             'is_storable': True,
         }])
         self.env['product.supplierinfo'].create([{
