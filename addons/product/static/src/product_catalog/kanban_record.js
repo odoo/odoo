@@ -86,7 +86,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             return;
         }
         this.productCatalogData.quantity = quantity || 0;
-        this.debouncedUpdateQuantity();
+        return this.debouncedUpdateQuantity();
     }
 
     /**

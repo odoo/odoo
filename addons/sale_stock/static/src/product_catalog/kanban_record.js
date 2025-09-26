@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 patch(ProductCatalogKanbanRecord.prototype, {
     updateQuantity(quantity) {
         if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
-            super.updateQuantity(...arguments);
+            return super.updateQuantity(...arguments);
         } else if (
             this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&
             quantity < this.productCatalogData.quantity
@@ -16,7 +16,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
             this.props.record.load();
             this.props.record.model.notify();
         } else {
-            super.updateQuantity(Math.max(quantity, this.productCatalogData.deliveredQty));
+            return super.updateQuantity(Math.max(quantity, this.productCatalogData.deliveredQty));
         }
     },
 

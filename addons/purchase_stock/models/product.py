@@ -100,15 +100,12 @@ class ProductProduct(models.Model):
             ('date', '>=', start_date),
             ('date', '<', limit_date),
         ])
-        move_domain = Domain.AND([
-            move_domain,
-            self._get_monthly_demand_moves_location_domain(),
-        ])
         if warehouse_id:
             move_domain = Domain.AND([
                 move_domain,
                 [('location_id.warehouse_id', '=', warehouse_id)]
             ])
+        # TODO double check not counted twice on backorders
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
 
@@ -121,16 +118,6 @@ class ProductProduct(models.Model):
             factor = 7 / (365.25 / 12)  # 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
         for product in self:
             product.monthly_demand = qty_by_product.get(product.id, 0) / factor
-
-    @api.model
-    def _get_monthly_demand_moves_location_domain(self):
-        return Domain.OR([
-            [('location_dest_usage', 'in', ['customer', 'production'])],
-            Domain.AND([
-                [('location_final_id.usage', '=', 'customer')],
-                [('move_dest_ids', '=', False)],
-            ])
-        ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:

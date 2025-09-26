@@ -40,7 +40,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
             this.notifyLineCountChange(lineCountChange);
         }
 
-        super.updateQuantity(quantity);
+        return super.updateQuantity(quantity);
     },
 
     notifyLineCountChange(lineCountChange) {

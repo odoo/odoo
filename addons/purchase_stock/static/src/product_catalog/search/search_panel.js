@@ -22,49 +22,48 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
 
     setup() {
         super.setup();
-        this.suggest = useState(useEnv().suggest);
+        this.suggestState = useState(useEnv().suggestState);
+        this.suggestParams = useState(useEnv().suggestParams);
+        this.toggleSuggest = useEnv().toggleSuggest;
+        this.reloadKanban = useEnv().reloadKanban;
         this.addAllProducts = useEnv().addAllProducts;
-        this.displaySuggest = useEnv().suggest.poState === "draft";
+        this.displaySuggest = this.suggestParams.poState === "draft";
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand, incoming quantities, " +
                 "and expected sales volumes.\n\n Set a reference period to estimate sales, and use the percentage " +
                 "to take into account seasonality and the increase/decrease of business.",
-            { vendorName: this.suggest.vendorName }
+            { vendorName: this.suggestParams.vendorName }
         );
     }
     onDaysInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
-        this.suggest.numberOfDays = boundedVal;
+        this.suggestState.numberOfDays = boundedVal;
         ev.target.value = boundedVal;
+        this.reloadKanban();
     }
     onPercentFactorInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
-        this.suggest.percentFactor = boundedVal;
+        this.suggestState.percentFactor = boundedVal;
         ev.target.value = boundedVal;
-    }
-    async onSuggestToggle() {
-        this.suggest.suggestToggle.isOn = !this.suggest.suggestToggle.isOn;
-        localStorage.setItem(
-            "purchase_stock.suggest_toggle_state",
-            JSON.stringify({ isOn: this.suggest.suggestToggle.isOn })
-        );
+        this.reloadKanban();
     }
     get estimatedSuggestPrice() {
-        const { currencyId, digits } = this.suggest;
-        return formatMonetary(this.suggest.totalEstimatedPrice, { currencyId, digits });
+        const { currencyId, digits } = this.suggestParams;
+        return formatMonetary(this.suggestState.totalEstimatedPrice, { currencyId, digits });
     }
     get timePeriodProps() {
         return {
             name: "based_on",
             required: true,
             record: {
-                data: { based_on: this.suggest.basedOn },
+                data: { based_on: this.suggestState.basedOn },
                 fields: { based_on: { selection: this.constructor.basedOnOptions } },
             },
             onChange: (val) => {
-                this.suggest.basedOn = val;
+                this.suggestState.basedOn = val;
+                this.reloadKanban();
             },
         };
     }

@@ -7,10 +7,15 @@
         </xpath>
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
+            <t t-if="suggestState.suggestToggle.isOn">
+                <attribute name="class">o_search_panel_sections mt-4</attribute>
+            </t>
+        </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
             <t t-if="displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                <t t-if="suggest.suggestToggle.isOn">
+                <t t-if="suggestState.suggestToggle.isOn">
                     <div class="o_suggest_feature">
                         <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                         <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
@@ -33,8 +38,8 @@
                         class="form-check-input"
                         type="checkbox"
                         role="switch"
-                        t-att-checked="suggest.suggestToggle.isOn? true : false"
-                        t-on-click="onSuggestToggle"
+                        t-att-checked="suggestState.suggestToggle.isOn? true : false"
+                        t-on-click="toggleSuggest"
                     />
                 </div>
             </div>
@@ -45,7 +50,7 @@
         <div class="d-flex align-items-center ms-2 pt-2">
             <span class="me-2 fw-bold">Replenish for</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="suggest.numberOfDays"
+                t-att-value="suggestState.numberOfDays"
                 t-on-input="onDaysInput"/>
             <span class="ms-2">day(s)</span>
         </div>
@@ -59,7 +64,7 @@
             </div>
             <span class="m-1">x</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="suggest.percentFactor"
+                t-att-value="suggestState.percentFactor"
                 t-on-input="onPercentFactorInput"/>
             <span>%</span>
         </div>

@@ -6,13 +6,9 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
      * hiding suggest line if suggest_qty == qty in PO */
     getRecordClasses(...args) {
         const classes = super.getRecordClasses(args) || "";
-
         const catalogData = this.productCatalogData || {};
-        if (catalogData.suggested_qty) {
-            if (catalogData.suggested_qty == catalogData.quantity) {
-                return classes + " o_suggest_highlight" + " o_hide_suggest_qty";
-            }
-            return classes + " o_suggest_highlight";
+        if (catalogData.suggested_qty && catalogData.suggested_qty == catalogData.quantity) {
+            return classes + " o_hide_suggest_qty";
         }
         return classes;
     }
@@ -25,5 +21,9 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
     addProduct() {
         const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
         super.addProduct(Math.max(min_qty, suggested_qty, 1));
+    }
+
+    async updateQuantity(quantity) {
+        await super.updateQuantity(quantity);
     }
 }
