@@ -51,6 +51,9 @@ class SaleOrderLine(models.Model):
     def _can_be_invoiced_alone(self):
         return super()._can_be_invoiced_alone() and not self.is_reward_line
 
+    def _is_discount_line(self):
+        return super()._is_discount_line() or self.reward_id.reward_type == 'discount'
+
     def _reset_loyalty(self, complete=False):
         """
         Reset the line(s) to a state which does not impact reward computation.
