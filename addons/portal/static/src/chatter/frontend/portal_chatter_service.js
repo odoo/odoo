@@ -1,11 +1,11 @@
 import { PortalChatter } from "@portal/chatter/frontend/portal_chatter";
 import { App } from "@odoo/owl";
-import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
+import { loadCssFromBundle } from "@mail/utils/common/misc";
 
 export class PortalChatterService {
     constructor(env, services) {
@@ -19,31 +19,7 @@ export class PortalChatterService {
 
     async createShadow(root) {
         const shadow = root.attachShadow({ mode: "open" });
-        try {
-            const res = await getBundle("portal.assets_chatter_style");
-            for (const url of res.cssLibs) {
-                const link = document.createElement("link");
-                link.rel = "stylesheet";
-                link.href = url;
-                shadow.appendChild(link);
-                await new Promise((res, rej) => {
-                    link.addEventListener("load", res);
-                    link.addEventListener("error", rej);
-                });
-            }
-        } catch (e) {
-            if (e instanceof AssetsLoadingError && e.cause instanceof TypeError) {
-                // an AssetsLoadingError caused by a TypeError means that the
-                // fetch request has been cancelled by the browser. It can occur
-                // when the user changes page, or navigate away from the website
-                // client action, so the iframe is unloaded. In this case, we
-                // don't care abour reporting the error, it is actually a normal
-                // situation.
-                return new Promise(() => {});
-            } else {
-                throw e;
-            }
-        }
+        await loadCssFromBundle(shadow, "portal.assets_chatter_style");
         return shadow;
     }
 
