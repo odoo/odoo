@@ -418,6 +418,28 @@ test("save on closing tab/browser (not dirty)", async () => {
     expect.verifySteps([]);
 });
 
+test("save on closing tab/browser (new record, not dirty)", async () => {
+    mockSendBeacon(() => expect.step("sendBeacon"));
+    onRpc("partner", "web_save", () => expect.step("save"));
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        `,
+    });
+
+    const [event] = await unload();
+    await animationFrame();
+    expect.verifySteps([]);
+    expect(event.defaultPrevented).toBe(false);
+});
+
 test("save on closing tab/browser (not dirty but trailing spaces)", async () => {
     Partner._fields.expertise = fields.Char({ trim: true });
     Partner._records[0].expertise = "name with trailing spaces   ";
