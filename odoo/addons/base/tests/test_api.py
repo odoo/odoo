@@ -354,9 +354,9 @@ class TestAPI(SavepointCaseWithUserDemo):
         partners = partners.create([vals0, vals1])
         for partner in partners:
             self.assertEqual(partner._prefetch_ids, partners._prefetch_ids)
-            self.assertEqual(set(partner.country_id._prefetch_ids), set(partners.country_id._prefetch_ids))
-            self.assertEqual(set(partner.bank_ids._prefetch_ids), set(partners.bank_ids._prefetch_ids))
-            self.assertEqual(set(partner.category_id._prefetch_ids), set(partners.category_id._prefetch_ids))
+            self.assertEqual(partner.country_id._prefetch_ids, partners.country_id._prefetch_ids)
+            self.assertEqual(partner.bank_ids._prefetch_ids, partners.bank_ids._prefetch_ids)
+            self.assertEqual(partner.category_id._prefetch_ids, partners.category_id._prefetch_ids)
 
         # records concatenation, union, intersection, difference
         partners = self.partners
@@ -383,7 +383,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         prefetch_ids = partners.child_ids._prefetch_ids
         children = [partner.child_ids[:1] for partner in partners]
         for child in children:
-            self.assertEqual(set(prefetch_ids), set(child._prefetch_ids))
+            self.assertEqual(prefetch_ids, child._prefetch_ids)
 
         self.assertEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
         self.assertEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))

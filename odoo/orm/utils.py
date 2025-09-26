@@ -1,6 +1,6 @@
 import re
 import warnings
-from collections.abc import Reversible
+from collections.abc import Hashable, Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
@@ -127,7 +127,11 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
-class PrefetchMany2one(Reversible):
+#
+# The value of _prefetch_ids must be iterable, reversible, and hashable.
+#
+
+class PrefetchMany2one(Reversible, Hashable):
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
     __slots__ = ('field', 'record')
 
@@ -135,6 +139,14 @@ class PrefetchMany2one(Reversible):
         self.record = record
         self.field = field
 
+    def __hash__(self):
+        return hash(self.field) ^ hash(self.record._prefetch_ids)
+
+    def __eq__(self, other):
+        return isinstance(other, PrefetchMany2one) and (
+            self.field is other.field and self.record._prefetch_ids == other.record._prefetch_ids
+        )
+
     def __iter__(self):
         field_cache = self.field._get_cache(self.record.env)
         for id_ in self.record._prefetch_ids:
@@ -148,7 +160,7 @@ class PrefetchMany2one(Reversible):
                 yield coid
 
 
-class PrefetchX2many(Reversible):
+class PrefetchX2many(Reversible, Hashable):
     """ Iterable for the values of an x2many field on the prefetch set of a given record. """
     __slots__ = ('field', 'record')
 
@@ -156,6 +168,14 @@ class PrefetchX2many(Reversible):
         self.record = record
         self.field = field
 
+    def __hash__(self):
+        return hash(self.field) ^ hash(self.record._prefetch_ids)
+
+    def __eq__(self, other):
+        return isinstance(other, PrefetchX2many) and (
+            self.field is other.field and self.record._prefetch_ids == other.record._prefetch_ids
+        )
+
     def __iter__(self):
         field_cache = self.field._get_cache(self.record.env)
         for id_ in self.record._prefetch_ids:
@@ -167,7 +187,7 @@ class PrefetchX2many(Reversible):
             yield from field_cache.get(id_, ())
 
 
-class OriginIds(Reversible):
+class OriginIds(Reversible, Hashable):
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
@@ -175,6 +195,12 @@ class OriginIds(Reversible):
 
     def __init__(self, ids):
         self.ids = ids
+
+    def __hash__(self):
+        return hash(self.ids)
+
+    def __eq__(self, other):
+        return isinstance(other, OriginIds) and self.ids == other.ids
 
     def __iter__(self):
         for id_ in self.ids:
@@ -187,12 +213,18 @@ class OriginIds(Reversible):
                 yield id_
 
 
-class ConcatIds(Reversible):
+class ConcatIds(Reversible, Hashable):
     """ A reversible iterable returning the union of collections of ``ids``. """
     __slots__ = ['_iterables']
 
     def __init__(self, iterables):
         self._iterables = tuple(iterables)
+
+    def __hash__(self):
+        return hash(self._iterables)
+
+    def __eq__(self, other):
+        return isinstance(other, ConcatIds) and self._iterables == other._iterables
 
     def __iter__(self):
         for iterable in self._iterables:
