@@ -5,9 +5,9 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
-    waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 

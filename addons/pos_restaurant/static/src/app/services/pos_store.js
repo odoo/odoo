@@ -450,7 +450,7 @@ patch(PosStore.prototype, {
         ) {
             this.removeOrder(order);
         }
-        super.navigate(routeName, routeParams);
+        return super.navigate(routeName, routeParams);
     },
     showDefault() {
         const page = this.defaultPage;
@@ -581,7 +581,7 @@ patch(PosStore.prototype, {
             startingValue: order.floating_order_name || "",
         });
         if (payload) {
-            if (typeof order.id == "number") {
+            if (order.isSynced) {
                 this.data.write("pos.order", [order.id], {
                     floating_order_name: payload,
                 });

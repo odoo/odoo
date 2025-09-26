@@ -1,12 +1,11 @@
 import { expect, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
-    getDragHelper,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-    waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { getDragHelper, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 
 defineWebsiteModels();

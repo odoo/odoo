@@ -2,13 +2,15 @@ import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "@website/../tests/builder/website_helpers";
+import {
     dummyBase64Img,
     getDragHelper,
     getDragMoveHelper,
-    setupWebsiteBuilder,
-    setupWebsiteBuilderWithSnippet,
     waitForEndOfOperation,
-} from "../website_helpers";
+} from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 

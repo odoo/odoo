@@ -4,14 +4,16 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     addOption,
-    getSnippetStructure,
-    getInnerContent,
-    getSnippetView,
-    dummyBase64Img,
     addPlugin,
     addActionOption,
     waitForSnippetDialog,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
+import {
+    dummyBase64Img,
+    getInnerContent,
+    getSnippetStructure,
+    getSnippetView,
+} from "@html_builder/../tests/helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame, Deferred, queryText, tick, waitFor } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";

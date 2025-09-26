@@ -8,7 +8,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -357,14 +357,14 @@ test("Changing max files number option updates file input 'multiple' attribute",
         </form>
     </section>
         `);
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
     await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("2");
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2");
     expect(":iframe input[type=file]").toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
     await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("1");
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
 });

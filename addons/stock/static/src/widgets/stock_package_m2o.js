@@ -40,7 +40,7 @@ export class StockPackageMany2One extends Component {
 
     get displayValue() {
         const displayVal = this.props.record.data[this.props.name];
-        if (this.isDone) {
+        if (this.isDone && displayVal?.display_name) {
             displayVal["display_name"] = displayVal["display_name"].split(" > ").pop();
         }
         return displayVal;
