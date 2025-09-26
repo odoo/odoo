@@ -258,7 +258,7 @@ class StockMoveLine(models.Model):
         if self.env.context.get('avoid_putaway_rules'):
             return
         self = self.with_context(do_not_unreserve=True)
-        for package, smls in groupby(self, lambda sml: sml.result_package_id):
+        for package, smls in groupby(self, lambda sml: sml.result_package_id.outermost_package_id):
             smls = self.env['stock.move.line'].concat(*smls)
             excluded_smls = set(smls.ids)
             if package.package_type_id:
@@ -984,7 +984,7 @@ class StockMoveLine(models.Model):
                 'parent_orig_name': package.parent_package_id.complete_name,
                 'parent_dest_id': package.package_dest_id.id,
                 'parent_dest_name': package.package_dest_id.dest_complete_name,
-                'outermost_dest_id': package.outermost_package_id.id or package.id,
+                'outermost_dest_id': package.outermost_package_id.id,
             })
 
         return history_vals
@@ -1144,7 +1144,7 @@ class StockMoveLine(models.Model):
         if done_pack and not self.env.context.get('force_move_lines'):
             return done_pack
         elif lines_with_pack_to_pack := move_lines._to_pack(without_pack=False):
-            packs_to_pack = lines_with_pack_to_pack.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            packs_to_pack = lines_with_pack_to_pack.result_package_id.outermost_package_id
             if done_pack:
                 packs_to_pack = packs_to_pack.filtered(lambda p: p.id != done_pack.id)
                 package_id = done_pack.id
