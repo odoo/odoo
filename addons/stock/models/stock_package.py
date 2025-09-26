@@ -44,7 +44,7 @@ class StockPackage(models.Model):
     child_package_ids = fields.One2many('stock.package', 'parent_package_id', string='Contained Packages')
     all_children_package_ids = fields.One2many('stock.package', compute='_compute_all_children_package_ids', search="_search_all_children_package_ids")
     package_dest_id = fields.Many2one('stock.package', 'Destination Container', index='btree_not_null')
-    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id", search="_search_outermost_package_id")
+    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id", search="_search_outermost_package_id", recursive=True)
     child_package_dest_ids = fields.One2many('stock.package', 'package_dest_id', 'Assigned Contained Packages')
     move_line_ids = fields.One2many('stock.move.line', compute="_compute_move_line_ids", search="_search_move_line_ids")
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
@@ -189,15 +189,13 @@ class StockPackage(models.Model):
             ):
                 package.owner_id = package.quant_ids[0].owner_id
 
-    @api.depends()
+    @api.depends('package_dest_id', 'package_dest_id.outermost_package_id')
     def _compute_outermost_package_id(self):
-        def fetch_outermost_package(package):
-            if package.package_dest_id:
-                return fetch_outermost_package(package.package_dest_id)
-            return package
-
         for package in self:
-            package.outermost_package_id = fetch_outermost_package(package.package_dest_id)
+            if package.package_dest_id:
+                package.outermost_package_id = package.package_dest_id.outermost_package_id
+            else:
+                package.outermost_package_id = package
 
     @api.depends('name')
     def _compute_valid_sscc(self):
@@ -351,9 +349,13 @@ class StockPackage(models.Model):
         if packs_to_clear := previous_dest_packages.filtered(lambda p: not p.move_line_ids):
             # If following the put in pack, we broke the existing chain somehow, we need to free all now irrelevant packages
             packs_to_clear.package_dest_id = False
+
+        # Since the uppermost package changed, there might be some new putaway to apply.
+        package.move_line_ids._apply_putaway_strategy()
         return package._post_put_in_pack_hook()
 
     def action_remove_package(self):
+        all_move_line_ids = set(self.move_line_ids.ids)
         move_line_ids_to_unlink = set()
         related_move_ids = set()
         move_line_ids_to_update = set()
@@ -375,6 +377,9 @@ class StockPackage(models.Model):
         # If packages in self are dest containers of other packages, remove them as their dest as well
         self.child_package_dest_ids.package_dest_id = False
         self.package_dest_id = False
+
+        # If outermost packages were changed, different putaway rules may apply.
+        self.env['stock.move.line'].browse(all_move_line_ids - move_line_ids_to_unlink)._apply_putaway_strategy()
         return True
 
     def action_view_picking(self):
