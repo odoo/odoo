@@ -3021,6 +3021,33 @@ test("quick create: keyboard navigation to buttons", async () => {
     expect(".o_kanban_edit").toBeFocused();
 });
 
+test.tags("desktop");
+test("quick create: press 'Enter' on trash icon", async () => {
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <div t-name="card">
+                        <field name="display_name"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+        resModel: "partner",
+        type: "kanban",
+    });
+
+    await createKanbanRecord();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    await press("Tab");
+    await press("Tab");
+    await press("Tab");
+    expect(".o_kanban_cancel").toBeFocused();
+    await press("Enter");
+    await animationFrame();
+    expect(".o_kanban_quick_create").toHaveCount(0);
+});
+
 test("Quick created record is rendered after load", async () => {
     let def;
     onRpc("web_read", () => {

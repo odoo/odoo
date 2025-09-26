@@ -164,7 +164,10 @@ export class KanbanQuickCreateController extends Component {
         });
 
         // Key Navigation
-        useHotkey("enter", () => this.validate("add"), { bypassEditableProtection: true });
+        useHotkey("enter", () => this.validate("add"), {
+            area: () => this.rootRef.el.querySelector(".o_kanban_quick_create_form"),
+            bypassEditableProtection: true,
+        });
         useHotkey("escape", () => this.cancel(true));
     }
 

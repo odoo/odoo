@@ -180,14 +180,6 @@ export class KanbanRenderer extends Component {
         useHotkey(
             "Enter",
             ({ target }) => {
-                if (target.closest(".o_kanban_selection_active") !== null) {
-                    return;
-                }
-
-                if (!target.classList.contains("o_kanban_record")) {
-                    return;
-                }
-
                 if (this.props.archInfo.canOpenRecords) {
                     target.click();
                     return;
@@ -199,7 +191,21 @@ export class KanbanRenderer extends Component {
                     firstLink.click();
                 }
             },
-            { area: () => this.rootRef.el }
+            {
+                area: () => this.rootRef.el,
+                isAvailable: (target) => {
+                    if (this.props.quickCreateState.isOpen) {
+                        return false;
+                    }
+                    if (target.closest(".o_kanban_selection_active") !== null) {
+                        return false;
+                    }
+                    if (!target.classList.contains("o_kanban_record")) {
+                        return false;
+                    }
+                    return true;
+                },
+            }
         );
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
