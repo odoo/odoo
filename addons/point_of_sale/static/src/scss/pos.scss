@@ -202,7 +202,10 @@ body.modal-open {
 .pos .internal-note-container span {
     text-align: start;
 }
-
+// Remove extra ok button
+.modal-footer button.o-default-button:nth-child(3) {
+    display: none;
+}
 .pos .internal-note-container span > div {
     white-space: normal;
 }
