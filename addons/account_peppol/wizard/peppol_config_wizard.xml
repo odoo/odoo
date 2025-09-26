@@ -26,8 +26,7 @@
                     </div>
                     <field name="account_peppol_migration_key"/>
                 </group>
-                <group string="Configure your Peppol Services and allowed formats" invisible="account_peppol_proxy_state != 'receiver'">
-                    <field name="service_json" invisible="1"/>
+                <group string="Configure your Peppol Services and allowed formats" invisible="not service_ids">
                     <div colspan="2">
                         <field name="service_info" role="status" class="o_field_html alert alert-info" invisible="not service_info"/>
                         <field name="service_ids"
