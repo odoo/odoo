@@ -116,7 +116,16 @@ export class MessagingMenu extends Component {
     }
 
     get threads() {
-        return this.store.menuThreads;
+        const menuThreads = this.store.menuThreads;
+        const inbox = this.store.inbox;
+        if (!inbox || !inbox.messages.filter(m => !m.thread).length) {
+            return menuThreads;
+        }
+        const tab = this.store.discuss.activeTab;
+        if (tab === "main" || tab === "others") {
+            return [inbox, ...menuThreads];
+        }
+        return menuThreads;
     }
 
     /**

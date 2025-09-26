@@ -59,6 +59,10 @@ const threadPatch = {
             this.openChatWindow(options);
             return;
         }
+        if (this.model === "mail.box" && this.id === "inbox") {
+            this.setAsDiscussThread();
+            return;
+        }
         if (this.model !== "discuss.channel") {
             this.store.env.services.action.doAction({
                 type: "ir.actions.act_window",

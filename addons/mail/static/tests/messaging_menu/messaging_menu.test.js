@@ -47,7 +47,7 @@ test("messaging menu should have topbar buttons", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-header button", { count: 4 });
+    await contains(".o-mail-MessagingMenu-header button", { count: 5 });
     await contains("button.fw-bold", { text: "All" });
     await contains("button:not(.fw-bold)", { text: "Chats" });
     await contains("button:not(.fw-bold)", { text: "Channels" });
@@ -639,7 +639,7 @@ test("basic rendering", async () => {
     await contains('.o_menu_systray .dropdown:has(i[aria-label="Messages"]).show');
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-header");
-    await contains(".o-mail-MessagingMenu-header button", { count: 4 });
+    await contains(".o-mail-MessagingMenu-header button", { count: 5 });
     await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
@@ -1261,4 +1261,30 @@ test("failure is removed from messaging menu when message is deleted", async () 
     });
     pyEnv["mail.message"].unlink([messageId]);
     await contains(".o-mail-NotificationItem", { count: 0 });
+});
+
+test("ensure the messaging menu displays inbox notifications even without an associated thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    // no record set
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Message with needaction",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem-name", { text: "Inbox" });
+    await contains(".o-mail-NotificationItem .badge", { text: "1" });
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message-author", { text: "Partner1" });
+    await contains(".o-mail-Message-textContent", { text: "Message with needaction" });
 });
