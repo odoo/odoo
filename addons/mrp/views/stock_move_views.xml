@@ -98,9 +98,22 @@
             action="stock.action_stock_scrap"
             sequence="25"/>
 
-    <menuitem id="menu_procurement_compute_mrp"
-        action="stock.ir_cron_scheduler_action_ir_actions_server"
-        parent="mrp_planning_menu_root"
-        groups="base.group_no_one"
-        sequence="135"/>
+    <!-- Run Scheduler Menus -->
+    <menuitem id="menu_procurement_compute_mrp_orderpoints"
+            action="stock.ir_cron_scheduler_orderpoints_action_ir_actions_server"
+            parent="mrp_planning_menu_root"
+            groups="base.group_no_one"
+            sequence="110"/>
+
+    <menuitem id="menu_procurement_compute_mrp_reservations"
+            action="stock.ir_cron_scheduler_reservations_action_ir_actions_server"
+            parent="mrp_planning_menu_root"
+            groups="base.group_no_one"
+            sequence="120"/>
+
+    <menuitem id="menu_procurement_compute_mrp_clean_quants"
+            action="stock.ir_cron_scheduler_clean_quants_action_ir_actions_server"
+            parent="mrp_planning_menu_root"
+            groups="base.group_no_one"
+            sequence="130"/>
 </odoo>
