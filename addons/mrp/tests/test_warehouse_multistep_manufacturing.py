@@ -406,7 +406,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
         pickings = mo.picking_ids
         self.assertEqual(len(pickings), 1)
@@ -475,7 +475,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_form.location_id = self.warehouse.lot_stock_id
         rr_raw = rr_form.save()
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
 
         pickings_component = self.env['stock.picking'].search(
             [('product_id', '=', self.wood_product.id)])
@@ -523,7 +523,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_form.product_max_qty = 40
         rr_form.save()
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
 
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         mo_form = Form(mo)
@@ -614,7 +614,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'route_id': manufacturing_route.id,
             'bom_id': bom_2.id,
         })
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         self.assertEqual(len(mo), 1)
         self.assertEqual(mo.product_qty, 1.0)
@@ -801,7 +801,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.rule'].run_scheduler_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', demo.id)])
         mo.action_confirm()
 

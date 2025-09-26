@@ -1716,6 +1716,17 @@ class PosSession(models.Model):
                     )
                 )
 
+    @api.model
+    def run_scheduler_alert_old_sessions(self):
+        """This scheduler checks for POS sessions older than 7 days that are still open
+        and schedules a reminder to close them.
+        """
+        try:
+            self._alert_old_session()
+        except Exception:
+            _logger.exception("An error occurred while the POS old session alert scheduler.")
+            raise
+
     def _check_if_no_draft_orders(self):
         draft_orders = self.get_session_orders().filtered(lambda order: order.state == 'draft')
         if draft_orders:
