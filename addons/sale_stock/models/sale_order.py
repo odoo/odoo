@@ -3,8 +3,7 @@
 import json
 import logging
 
-from odoo import api, fields, models, _
-from odoo.fields import Command
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
@@ -255,7 +254,14 @@ class SaleOrder(models.Model):
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
                 documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
-        self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
+            sale_order.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
+            outgoing_picking = sale_order.picking_ids.filtered(lambda p: p.state == 'done' and p.picking_type_id.code == 'outgoing')
+            if not outgoing_picking:
+                for picking in sale_order.picking_ids.filtered(lambda p: p.state == 'done'):
+                    return_picking = self.with_context(active_model='stock.picking', active_id=picking.id).env['stock.return.picking'].create({})
+                    for line in return_picking.product_return_moves:
+                        line.quantity = line.move_id.quantity
+                    return_picking._create_return()
         if documents:
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
