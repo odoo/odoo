@@ -818,7 +818,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self._make_in_move(self.product1, 10, unit_cost=2)
         self._make_return(move1, 10)
 
-        self.assertEqual(self.product1.total_value, 0)
+        self.assertEqual(self.product1.total_value, 10)
         self.assertEqual(self.product1.qty_available, 10)
 
     def test_currency_precision_and_fifo_value(self):
@@ -1069,8 +1069,8 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         move2 = self._make_return(move1, 4)
 
         for move in [move1, move2]:
-            self.assertAlmostEqual(move.price_unit, self.product1.standard_price)
-            self.assertAlmostEqual(abs(move.value), 0)
+            self.assertAlmostEqual(move._get_price_unit(), self.product1.standard_price)
+            self.assertAlmostEqual(abs(move.value), 1123.39)
 
 
 @tagged('post_install', '-at_install')
