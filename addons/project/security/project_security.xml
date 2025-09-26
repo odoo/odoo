@@ -63,5 +63,18 @@
         <field name="active">0</field>
     </record>
 
+    <record id="project_task_rule_portal_project_sharing_create_access" model="ir.access">
+        <field name="name">Project/Task: portal users: portal user can create with project sharing feature</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="operation">c</field>
+        <field name="domain">[
+            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+            ('active', '=', True),
+            ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
+        ]</field>
+        <field name="active" model="ir.access"
+            eval="obj().env.ref('project.project_task_rule_portal_project_sharing').active"/>
+    </record>
     </data>
 </odoo>
