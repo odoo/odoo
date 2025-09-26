@@ -3,6 +3,7 @@
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
@@ -116,9 +117,13 @@ class ResConfigSettings(models.TransientModel):
         return True
 
     def button_account_peppol_configure_services(self):
+        try:
+            services = self.account_peppol_edi_user._peppol_get_services().get('services', {})
+        except AccountEdiProxyError:
+            services = {}
         wizard = self.env['account_peppol.service.wizard'].create({
             'edi_user_id': self.account_peppol_edi_user.id,
-            'service_json': self.account_peppol_edi_user._peppol_get_services().get('services'),
+            'service_json': services,
         })
         return {
             'type': 'ir.actions.act_window',
