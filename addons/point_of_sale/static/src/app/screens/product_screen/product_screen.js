@@ -5,7 +5,7 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, useState, onWillRender, onWillUnmount, derived } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -113,18 +113,17 @@ export class ProductScreen extends Component {
         this.longPressHandlers = useLongPress((product) => this.pos.onProductInfoClick(product));
         this.onScroll = debounce(this.longPressHandlers.onScroll, 200, { leading: true });
 
-        useEffect(
-            () => {
-                this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
+        Object.defineProperty(this.state, "quantityByProductTmplId", {
+            get: derived(() =>
+                this.currentOrder?.lines?.reduce((acc, ol) => {
                     if (!ol.combo_parent_id) {
                         const productTmplId = ol.product_id.product_tmpl_id.id;
                         acc[productTmplId] = (acc[productTmplId] || 0) + ol.qty;
                     }
                     return acc;
-                }, {});
-            },
-            () => [this.currentOrder, this.currentOrder.totalQuantity]
-        );
+                }, {})
+            ),
+        });
     }
 
     onMouseDown(event, product) {

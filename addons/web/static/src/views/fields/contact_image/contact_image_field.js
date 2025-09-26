@@ -9,9 +9,9 @@ export class ContactImageField extends ImageField {
     getUrl(imageFieldName) {
         if (
             this.props.previewImage &&
-            (!this.props.record.data[this.props.name] || !this.state.isValid)
+            (!this.props.record.orecord[this.props.name] || !this.state.isValid)
         ) {
-            if (isBinarySize(this.props.record.data[imageFieldName])) {
+            if (isBinarySize(this.props.record.orecord[imageFieldName])) {
                 this.lastURL = imageUrl(
                     this.props.record.resModel,
                     this.props.record.resId,
@@ -20,8 +20,10 @@ export class ContactImageField extends ImageField {
                 );
             } else {
                 const magic =
-                    fileTypeMagicWordMap[this.props.record.data[imageFieldName][0]] || "png";
-                this.lastURL = `data:image/${magic};base64,${this.props.record.data[imageFieldName]}`;
+                    fileTypeMagicWordMap[
+                        this.props.record.orecord.reactiveData[imageFieldName][0]
+                    ] || "png";
+                this.lastURL = `data:image/${magic};base64,${this.props.record.orecord.reactiveData[imageFieldName]}`;
             }
             return this.lastURL;
         }
@@ -30,14 +32,14 @@ export class ContactImageField extends ImageField {
 
     get imgClass() {
         let classes = super.imgClass;
-        if (!this.props.record.data[this.props.name] || !this.state.isValid) {
+        if (!this.props.record.orecord[this.props.name] || !this.state.isValid) {
             classes += " opacity-100 opacity-25-hover";
         }
         return classes;
     }
 
     get containsValidImage() {
-        return this.props.record.data[this.props.name] && this.state.isValid;
+        return this.props.record.orecord[this.props.name] && this.state.isValid;
     }
 }
 

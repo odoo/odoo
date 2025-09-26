@@ -5,7 +5,7 @@ import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 
-import { markRaw } from "@odoo/owl";
+import { markRaw, derived } from "@odoo/owl";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -86,6 +86,7 @@ export class StaticList extends DataPoint {
      */
     setup(_config, data, options = {}) {
         this._parent = options.parent;
+        // example for ged: impossible to track where does tho onUpdate comes from
         this._onUpdate = options.onUpdate;
 
         this._cache = markRaw({});
@@ -104,57 +105,268 @@ export class StaticList extends DataPoint {
         this._extendedRecords = new Set();
 
         /** @type {RelationalRecord[]} */
-        this.records = data
-            .slice(this.offset, this.limit)
-            .map((r) => this._createRecordDatapoint(r));
+        // const records = data
+        //     .slice(this.offset, this.limit)
+        //     .map((r) => this._createRecordDatapoint(r));
+        debugger;
+        // const dataPoint =
+        const dataPoints = {};
+        const records = derived(() => data.slice(this.offset, this.limit));
+        Object.defineProperty(this, "records", { get: records });
+
         this.count = this.resIds.length;
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
     }
 
-    // -------------------------------------------------------------------------
-    // Getters
-    // -------------------------------------------------------------------------
-
+    // List infos - basic ----------------------------------------------------
+    get resIds() {
+        return this.config.resIds;
+    }
     get currentIds() {
         return this._currentIds;
     }
 
+    // List infos - config -----------------------------------------------------
+    get limit() {
+        return this.config.limit;
+    }
+    get offset() {
+        return this.config.offset;
+    }
+    get orderBy() {
+        return this.config.orderBy;
+    }
+    // List infos --------------------------------------------------------------
+    canResequence() {
+        return this.handleField && this.orderBy.length && this.orderBy[0].name === this.handleField;
+    }
+    // UI state - editable list ------------------------------------------------
     get editedRecord() {
         return this.records.find((record) => record.isInEdition);
     }
+    async enterEditMode(record) {
+        const canProceed = await this.leaveEditMode();
+        if (canProceed) {
+            await record.switchMode("edit");
+        }
+        return canProceed;
+    }
+    async leaveEditMode({ discard, canAbandon, validate } = {}) {
+        if (this.editedRecord) {
+            await this.model._askChanges(false);
+        }
+        return this.model.mutex.exec(async () => {
+            let editedRecord = this.editedRecord;
+            if (editedRecord) {
+                const isValid = editedRecord._checkValidity();
+                if (!isValid && validate) {
+                    return false;
+                }
+                if (canAbandon !== false && !validate) {
+                    this._abandonRecords([editedRecord], { force: true });
+                }
+                // if we still have an editedRecord, it means it hasn't been abandonned
+                editedRecord = this.editedRecord;
+                if (editedRecord) {
+                    if (isValid && !editedRecord.dirty && discard) {
+                        return false;
+                    }
+                    if (isValid || (!editedRecord.dirty && !editedRecord._manuallyAdded)) {
+                        editedRecord._switchMode("readonly");
+                    }
+                }
+            }
+            return !this.editedRecord;
+        });
+    }
+    // UI state - selection ----------------------------------------------------
+    get selection() {
+        return [];
+    }
 
+    // Context -----------------------------------------------------------------
     get evalContext() {
         const evalContext = getBasicEvalContext(this.config);
         evalContext.parent = this._parent.evalContext;
         return evalContext;
     }
-
-    get limit() {
-        return this.config.limit;
+    _updateContext(context) {
+        Object.assign(this.context, context);
+        for (const record of Object.values(this._cache)) {
+            record._setEvalContext();
+        }
     }
 
-    get offset() {
-        return this.config.offset;
+    // Actions -----------------------------------------------------------------
+    /**
+     * @param {RelationalRecord[]} records
+     * @param {Object} [options={}]
+     * @param {number} [options.targetIndex]
+     * @returns {Promise<void>}
+     */
+    duplicateRecords(records = [], options = {}) {
+        return this.model.mutex.exec(async () => {
+            await this._duplicateRecords(records, options);
+            await this._onUpdate();
+        });
+    }
+    /**
+     * @fixme: this method is naive and ineffective (it triggers a lot of onchange rpcs)
+     */
+    async _duplicateRecords(records, options) {
+        const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
+        const copyFields = options.copyFields || [];
+        let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
+        const newRecords = await Promise.all(
+            records.map(async () =>
+                this._createNewRecordDatapoint({
+                    mode: "readonly",
+                })
+            )
+        );
+        await Promise.all(
+            records.map((record, index) =>
+                newRecords[index]._update({
+                    ...copyRecordData(record, copyFields),
+                    [this.handleField]: sequence++,
+                })
+            )
+        );
+
+        const localIncreaseLimit = this.records.length + records.length - this.limit;
+        if (localIncreaseLimit > 0) {
+            this._tmpIncreaseLimit += localIncreaseLimit;
+            const nextLimit = this.limit + localIncreaseLimit;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
+
+        const commands = [];
+        // `this.records.slice(targetIndex)` is wrong
+        // we need to iterate on ALL the next records even the ones on the next pages..
+        for (const record of this.records.slice(targetIndex)) {
+            commands.push(
+                x2ManyCommands.update(record.resId || record._virtualId, {
+                    [this.handleField]: sequence++,
+                })
+            );
+        }
+        await this._applyCommands(commands);
+
+        await Promise.all(newRecords.map((record) => this._addRecord(record, { sort: false })));
+
+        await this._sort();
+    }
+    delete(record) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            // All records of last page are deleted => reload the new last page
+            if (this.count === this.offset) {
+                await this._load({ offset: this.offset - this.limit });
+            }
+            await this._onUpdate();
+        });
     }
 
-    get orderBy() {
-        return this.config.orderBy;
+    // Server / load -----------------------------------------------------------
+    load({ limit, offset, orderBy } = {}) {
+        return this.model.mutex.exec(async () => {
+            const editedRecord = this.editedRecord;
+            if (editedRecord && !(await editedRecord.checkValidity())) {
+                return;
+            }
+            limit = limit !== undefined ? limit : this.limit;
+            offset = offset !== undefined ? offset : this.offset;
+            orderBy = orderBy !== undefined ? orderBy : this.orderBy;
+            return this._load({ limit, offset, orderBy });
+        });
+    }
+    async _load({
+        limit = this.limit,
+        offset = this.offset,
+        orderBy = this.orderBy,
+        nextCurrentIds = this._currentIds,
+    } = {}) {
+        const currentIds = nextCurrentIds.slice(offset, offset + limit);
+        const resIds = this._getResIdsToLoad(currentIds);
+        if (resIds.length) {
+            const records = await this.model._loadRecords(
+                { ...this.config, resIds },
+                this.evalContext
+            );
+            for (const record of records) {
+                this._createRecordDatapoint(record);
+            }
+        }
+        this.records = currentIds.map((id) => this._cache[id]);
+        this._currentIds = nextCurrentIds;
+        await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
+    }
+    _getResIdsToLoad(resIds, fieldNames = this.fieldNames) {
+        return resIds.filter((resId) => {
+            if (typeof resId === "string") {
+                // this is a virtual id, we don't want to read it
+                return false;
+            }
+            const record = this._cache[resId];
+            if (!record) {
+                // record hasn't been loaded yet
+                return true;
+            }
+            // record has already been loaded -> check if we already read all orderBy fields
+            fieldNames = fieldNames.filter((fieldName) => fieldName !== "id");
+            return intersection(fieldNames, record.fieldNames).length !== fieldNames.length;
+        });
     }
 
-    get resIds() {
-        return this.config.resIds;
+    // Save point --------------------------------------------------------------
+    _addSavePoint() {
+        for (const id in this._cache) {
+            this._cache[id]._addSavePoint();
+        }
+        this._savePoint = markRaw({
+            _commands: [...this._commands],
+            _currentIds: [...this._currentIds],
+            count: this.count,
+        });
     }
-
-    get selection() {
-        return [];
+    // Should not be necessary -------------------------------------------------
+    linkTo(resId, serverData) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.LINK, resId, serverData]]);
+            await this._onUpdate();
+        });
     }
-
-    // -------------------------------------------------------------------------
-    // Public
-    // -------------------------------------------------------------------------
-
+    unlinkFrom(resId, serverData) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.UNLINK, resId, serverData]]);
+            await this._onUpdate();
+        });
+    }
+    // ??? ---------------------------------------------------------------------
+    /**
+     * This method is meant to be called when a record, which has previously been extended to be
+     * displayed in a form view dialog (see @extendRecord) is saved. In this case, we may need to
+     * add this record to the list (if it is a new one), and to notify the parent record of the
+     * update. We may also want to sort the list.
+     *
+     * @param {RelationalRecord} record
+     */
+    validateExtendedRecord(record) {
+        return this.model.mutex.exec(async () => {
+            if (!this._currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
+                // new record created, not yet in the list
+                await this._addRecord(record);
+            } else if (!record.dirty) {
+                return;
+            }
+            await this._onUpdate();
+            record._restoreActiveFields();
+            record._savePoint = undefined;
+        });
+    }
+    // Mutations ---------------------------------------------------------------
     /**
      * Adds a new record to an x2many relation. If params.record is given, adds
      * given record (use case: after saving the form dialog in a, e.g., non
@@ -183,7 +395,39 @@ export class StaticList extends DataPoint {
             return record;
         });
     }
-
+    async _addRecord(record, { position, sort = true } = {}) {
+        const command = [x2ManyCommands.CREATE, record._virtualId];
+        if (position === "top") {
+            this.records.unshift(record);
+            if (this.records.length > this.limit) {
+                this.records.pop();
+            }
+            this._currentIds.splice(this.offset, 0, record._virtualId);
+            this._commands.unshift(command);
+        } else if (position === "bottom") {
+            this.records.push(record);
+            this._currentIds.splice(this.offset + this.limit, 0, record._virtualId);
+            if (this.records.length > this.limit) {
+                this._tmpIncreaseLimit++;
+                const nextLimit = this.limit + 1;
+                this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+            }
+            this._commands.push(command);
+        } else {
+            const currentIds = [...this._currentIds, record._virtualId];
+            if (this.orderBy.length && sort) {
+                await this._sort(currentIds);
+            } else {
+                if (this.records.length < this.limit) {
+                    this.records.push(record);
+                }
+            }
+            this._currentIds = currentIds;
+            this._commands.push(command);
+        }
+        this.count++;
+        this._needsReordering = true;
+    }
     /**
      * @param {number} index
      * @param {Object} [options]
@@ -197,7 +441,22 @@ export class StaticList extends DataPoint {
             return newRecord;
         });
     }
-
+    async _addNewRecordAtIndex(index, options = {}) {
+        const newRecord = await this._createNewRecordDatapoint({
+            context: options.context,
+            manuallyAdded: true,
+            mode: options.mode || "edit",
+        });
+        if (this.records.length === this.limit) {
+            this._tmpIncreaseLimit++;
+            const nextLimit = this.limit + 1;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
+        await this._addRecord(newRecord);
+        await this._resequence(newRecord.id, this.records[index].id);
+        newRecord.dirty = false;
+        return newRecord;
+    }
     /**
      * @param {[number, any, any][]} commands
      * @param {Object} [options]
@@ -214,43 +473,6 @@ export class StaticList extends DataPoint {
             await this._onUpdate();
         });
     }
-
-    canResequence() {
-        return this.handleField && this.orderBy.length && this.orderBy[0].name === this.handleField;
-    }
-
-    delete(record) {
-        return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
-            // All records of last page are deleted => reload the new last page
-            if (this.count === this.offset) {
-                await this._load({ offset: this.offset - this.limit });
-            }
-            await this._onUpdate();
-        });
-    }
-
-    /**
-     * @param {RelationalRecord[]} records
-     * @param {Object} [options={}]
-     * @param {number} [options.targetIndex]
-     * @returns {Promise<void>}
-     */
-    duplicateRecords(records = [], options = {}) {
-        return this.model.mutex.exec(async () => {
-            await this._duplicateRecords(records, options);
-            await this._onUpdate();
-        });
-    }
-
-    async enterEditMode(record) {
-        const canProceed = await this.leaveEditMode();
-        if (canProceed) {
-            await record.switchMode("edit");
-        }
-        return canProceed;
-    }
-
     /**
      * This method is meant to be used in a very specific usecase: when an x2many record is viewed
      * or edited through a form view dialog (e.g. x2many kanban or non editable list). In this case,
@@ -357,76 +579,85 @@ export class StaticList extends DataPoint {
             return record;
         });
     }
-
+    _discard() {
+        for (const id in this._cache) {
+            this._cache[id]._discard();
+        }
+        if (this._savePoint) {
+            this._commands = this._savePoint._commands;
+            this._currentIds = this._savePoint._currentIds;
+            this.count = this._savePoint.count;
+        } else {
+            this._commands = [];
+            this._currentIds = [...this.resIds];
+            this.count = this.resIds.length;
+        }
+        this._unknownRecordCommands = {};
+        const limit = this.limit - this._tmpIncreaseLimit;
+        this._tmpIncreaseLimit = 0;
+        this.model._updateConfig(this.config, { limit }, { reload: false });
+        this.records = this._currentIds
+            .slice(this.offset, this.limit)
+            .map((resId) => this._cache[resId]);
+        if (!this._savePoint) {
+            this._applyCommands(this._initialCommands);
+        }
+        this._savePoint = undefined;
+    }
+    // Mutations - to define ---------------------------------------------------
     forget(record) {
         return this.model.mutex.exec(async () => {
             await this._applyCommands([[x2ManyCommands.UNLINK, record.resId]]);
             await this._onUpdate();
         });
     }
-
-    async leaveEditMode({ discard, canAbandon, validate } = {}) {
-        if (this.editedRecord) {
-            await this.model._askChanges(false);
-        }
-        return this.model.mutex.exec(async () => {
-            let editedRecord = this.editedRecord;
-            if (editedRecord) {
-                const isValid = editedRecord._checkValidity();
-                if (!isValid && validate) {
-                    return false;
-                }
-                if (canAbandon !== false && !validate) {
-                    this._abandonRecords([editedRecord], { force: true });
-                }
-                // if we still have an editedRecord, it means it hasn't been abandonned
-                editedRecord = this.editedRecord;
-                if (editedRecord) {
-                    if (isValid && !editedRecord.dirty && discard) {
-                        return false;
-                    }
-                    if (isValid || (!editedRecord.dirty && !editedRecord._manuallyAdded)) {
-                        editedRecord._switchMode("readonly");
-                    }
-                }
-            }
-            return !this.editedRecord;
-        });
-    }
-
-    linkTo(resId, serverData) {
-        return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.LINK, resId, serverData]]);
-            await this._onUpdate();
-        });
-    }
-
-    unlinkFrom(resId, serverData) {
-        return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.UNLINK, resId, serverData]]);
-            await this._onUpdate();
-        });
-    }
-
-    load({ limit, offset, orderBy } = {}) {
-        return this.model.mutex.exec(async () => {
-            const editedRecord = this.editedRecord;
-            if (editedRecord && !(await editedRecord.checkValidity())) {
-                return;
-            }
-            limit = limit !== undefined ? limit : this.limit;
-            offset = offset !== undefined ? offset : this.offset;
-            orderBy = orderBy !== undefined ? orderBy : this.orderBy;
-            return this._load({ limit, offset, orderBy });
-        });
-    }
-
     moveRecord(dataRecordId, _dataGroupId, refId, _targetGroupId) {
         return this.resequence(dataRecordId, refId);
     }
-
     sortBy(fieldName) {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
+    }
+    async _sortBy(fieldName) {
+        let orderBy = [...this.orderBy];
+        if (fieldName) {
+            if (orderBy.length && orderBy[0].name === fieldName) {
+                if (!this._needsReordering) {
+                    if (orderBy[0].asc) {
+                        orderBy[0] = { name: orderBy[0].name, asc: false };
+                    } else {
+                        orderBy = [{ name: "id", asc: true }];
+                    }
+                }
+            } else {
+                orderBy = orderBy.filter((o) => o.name !== fieldName);
+                orderBy.unshift({
+                    name: fieldName,
+                    asc: true,
+                });
+            }
+        }
+        return this._sort(this._currentIds, orderBy);
+    }
+    async _sort(currentIds = this.currentIds, orderBy = this.orderBy) {
+        const fieldNames = orderBy.map((o) => o.name);
+        const resIds = this._getResIdsToLoad(currentIds, fieldNames);
+        if (resIds.length) {
+            const activeFields = pick(this.activeFields, ...fieldNames);
+            const config = { ...this.config, resIds, activeFields };
+            const records = await this.model._loadRecords(config);
+            for (const record of records) {
+                this._createRecordDatapoint(record, { activeFields });
+            }
+        }
+        const allRecords = currentIds.map((id) => this._cache[id]);
+        const sortedRecords = allRecords.sort((r1, r2) =>
+            compareRecords(r1, r2, orderBy, this.fields)
+        );
+        await this._load({
+            orderBy,
+            nextCurrentIds: sortedRecords.map((r) => r.resId || r._virtualId),
+        });
+        this._needsReordering = false;
     }
 
     async addAndRemove({ add, remove } = {}) {
@@ -439,36 +670,73 @@ export class StaticList extends DataPoint {
             await this._onUpdate();
         });
     }
-
     async resequence(movedId, targetId) {
         return this.model.mutex.exec(() => this._resequence(movedId, targetId));
     }
+    async _resequence(movedId, targetId) {
+        const records = [...this.records];
+        const order = this.orderBy.find((o) => o.name === this.handleField);
+        const asc = !order || order.asc;
 
-    /**
-     * This method is meant to be called when a record, which has previously been extended to be
-     * displayed in a form view dialog (see @extendRecord) is saved. In this case, we may need to
-     * add this record to the list (if it is a new one), and to notify the parent record of the
-     * update. We may also want to sort the list.
-     *
-     * @param {RelationalRecord} record
-     */
-    validateExtendedRecord(record) {
-        return this.model.mutex.exec(async () => {
-            if (!this._currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
-                // new record created, not yet in the list
-                await this._addRecord(record);
-            } else if (!record.dirty) {
-                return;
+        // Find indices
+        const fromIndex = records.findIndex((r) => r.id === movedId);
+        let toIndex = 0;
+        if (targetId !== null) {
+            const targetIndex = records.findIndex((r) => r.id === targetId);
+            toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
+        }
+
+        const getSequence = (rec) => rec && rec.data[this.handleField];
+
+        // Determine what records need to be modified
+        const firstIndex = Math.min(fromIndex, toIndex);
+        const lastIndex = Math.max(fromIndex, toIndex) + 1;
+        let reorderAll = false;
+        let lastSequence = (asc ? -1 : 1) * Infinity;
+        for (let index = 0; index < records.length; index++) {
+            const sequence = getSequence(records[index]);
+            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
+                reorderAll = true;
+                break;
             }
-            await this._onUpdate();
-            record._restoreActiveFields();
-            record._savePoint = undefined;
-        });
-    }
+            lastSequence = sequence;
+        }
 
-    // -------------------------------------------------------------------------
-    // Protected
-    // -------------------------------------------------------------------------
+        // Perform the resequence in the list of records
+        const [record] = records.splice(fromIndex, 1);
+        records.splice(toIndex, 0, record);
+
+        // Creates the list of to modify
+        let toReorder = records;
+        if (!reorderAll) {
+            toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
+            if (fromIndex < toIndex) {
+                toReorder.push(record);
+            } else {
+                toReorder.unshift(record);
+            }
+        }
+        if (!asc) {
+            toReorder.reverse();
+        }
+
+        const sequences = toReorder.map(getSequence);
+        const offset = sequences.length && Math.min(...sequences);
+
+        const proms = [];
+        for (const [i, record] of Object.entries(toReorder)) {
+            proms.push(
+                record._update(
+                    { [this.handleField]: offset + Number(i) },
+                    { withoutParentUpdate: true }
+                )
+            );
+        }
+        await Promise.all(proms);
+
+        await this._sort();
+        await this._onUpdate();
+    }
 
     _abandonRecords(records = this.records, { force } = {}) {
         for (const record of records) {
@@ -492,68 +760,6 @@ export class StaticList extends DataPoint {
                 }
             }
         }
-    }
-
-    async _addRecord(record, { position, sort = true } = {}) {
-        const command = [x2ManyCommands.CREATE, record._virtualId];
-        if (position === "top") {
-            this.records.unshift(record);
-            if (this.records.length > this.limit) {
-                this.records.pop();
-            }
-            this._currentIds.splice(this.offset, 0, record._virtualId);
-            this._commands.unshift(command);
-        } else if (position === "bottom") {
-            this.records.push(record);
-            this._currentIds.splice(this.offset + this.limit, 0, record._virtualId);
-            if (this.records.length > this.limit) {
-                this._tmpIncreaseLimit++;
-                const nextLimit = this.limit + 1;
-                this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-            }
-            this._commands.push(command);
-        } else {
-            const currentIds = [...this._currentIds, record._virtualId];
-            if (this.orderBy.length && sort) {
-                await this._sort(currentIds);
-            } else {
-                if (this.records.length < this.limit) {
-                    this.records.push(record);
-                }
-            }
-            this._currentIds = currentIds;
-            this._commands.push(command);
-        }
-        this.count++;
-        this._needsReordering = true;
-    }
-
-    async _addNewRecordAtIndex(index, options = {}) {
-        const newRecord = await this._createNewRecordDatapoint({
-            context: options.context,
-            manuallyAdded: true,
-            mode: options.mode || "edit",
-        });
-        if (this.records.length === this.limit) {
-            this._tmpIncreaseLimit++;
-            const nextLimit = this.limit + 1;
-            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
-        await this._addRecord(newRecord);
-        await this._resequence(newRecord.id, this.records[index].id);
-        newRecord.dirty = false;
-        return newRecord;
-    }
-
-    _addSavePoint() {
-        for (const id in this._cache) {
-            this._cache[id]._addSavePoint();
-        }
-        this._savePoint = markRaw({
-            _commands: [...this._commands],
-            _currentIds: [...this._currentIds],
-            count: this.count,
-        });
     }
 
     _applyCommands(commands, { canAddOverLimit } = {}) {
@@ -893,79 +1099,6 @@ export class StaticList extends DataPoint {
         this._unknownRecordCommands = {};
     }
 
-    _discard() {
-        for (const id in this._cache) {
-            this._cache[id]._discard();
-        }
-        if (this._savePoint) {
-            this._commands = this._savePoint._commands;
-            this._currentIds = this._savePoint._currentIds;
-            this.count = this._savePoint.count;
-        } else {
-            this._commands = [];
-            this._currentIds = [...this.resIds];
-            this.count = this.resIds.length;
-        }
-        this._unknownRecordCommands = {};
-        const limit = this.limit - this._tmpIncreaseLimit;
-        this._tmpIncreaseLimit = 0;
-        this.model._updateConfig(this.config, { limit }, { reload: false });
-        this.records = this._currentIds
-            .slice(this.offset, this.limit)
-            .map((resId) => this._cache[resId]);
-        if (!this._savePoint) {
-            this._applyCommands(this._initialCommands);
-        }
-        this._savePoint = undefined;
-    }
-
-    /**
-     * @fixme: this method is naive and ineffective (it triggers a lot of onchange rpcs)
-     */
-    async _duplicateRecords(records, options) {
-        const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
-        const copyFields = options.copyFields || [];
-        let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
-        const newRecords = await Promise.all(
-            records.map(async () =>
-                this._createNewRecordDatapoint({
-                    mode: "readonly",
-                })
-            )
-        );
-        await Promise.all(
-            records.map((record, index) =>
-                newRecords[index]._update({
-                    ...copyRecordData(record, copyFields),
-                    [this.handleField]: sequence++,
-                })
-            )
-        );
-
-        const localIncreaseLimit = this.records.length + records.length - this.limit;
-        if (localIncreaseLimit > 0) {
-            this._tmpIncreaseLimit += localIncreaseLimit;
-            const nextLimit = this.limit + localIncreaseLimit;
-            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
-
-        const commands = [];
-        // `this.records.slice(targetIndex)` is wrong
-        // we need to iterate on ALL the next records even the ones on the next pages..
-        for (const record of this.records.slice(targetIndex)) {
-            commands.push(
-                x2ManyCommands.update(record.resId || record._virtualId, {
-                    [this.handleField]: sequence++,
-                })
-            );
-        }
-        await this._applyCommands(commands);
-
-        await Promise.all(newRecords.map((record) => this._addRecord(record, { sort: false })));
-
-        await this._sort();
-    }
-
     _getCommands({ withReadonly } = {}) {
         const { CREATE, UPDATE, LINK } = x2ManyCommands;
         const commands = [];
@@ -1003,45 +1136,6 @@ export class StaticList extends DataPoint {
         return commands;
     }
 
-    _getResIdsToLoad(resIds, fieldNames = this.fieldNames) {
-        return resIds.filter((resId) => {
-            if (typeof resId === "string") {
-                // this is a virtual id, we don't want to read it
-                return false;
-            }
-            const record = this._cache[resId];
-            if (!record) {
-                // record hasn't been loaded yet
-                return true;
-            }
-            // record has already been loaded -> check if we already read all orderBy fields
-            fieldNames = fieldNames.filter((fieldName) => fieldName !== "id");
-            return intersection(fieldNames, record.fieldNames).length !== fieldNames.length;
-        });
-    }
-
-    async _load({
-        limit = this.limit,
-        offset = this.offset,
-        orderBy = this.orderBy,
-        nextCurrentIds = this._currentIds,
-    } = {}) {
-        const currentIds = nextCurrentIds.slice(offset, offset + limit);
-        const resIds = this._getResIdsToLoad(currentIds);
-        if (resIds.length) {
-            const records = await this.model._loadRecords(
-                { ...this.config, resIds },
-                this.evalContext
-            );
-            for (const record of records) {
-                this._createRecordDatapoint(record);
-            }
-        }
-        this.records = currentIds.map((id) => this._cache[id]);
-        this._currentIds = nextCurrentIds;
-        await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
-    }
-
     async _replaceWith(ids, { reload = false } = {}) {
         const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
         if (resIds.length) {
@@ -1065,122 +1159,6 @@ export class StaticList extends DataPoint {
             this._tmpIncreaseLimit = this._currentIds.length - this.limit;
             const nextLimit = this.limit + this._tmpIncreaseLimit;
             this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
-    }
-
-    async _resequence(movedId, targetId) {
-        const records = [...this.records];
-        const order = this.orderBy.find((o) => o.name === this.handleField);
-        const asc = !order || order.asc;
-
-        // Find indices
-        const fromIndex = records.findIndex((r) => r.id === movedId);
-        let toIndex = 0;
-        if (targetId !== null) {
-            const targetIndex = records.findIndex((r) => r.id === targetId);
-            toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
-        }
-
-        const getSequence = (rec) => rec && rec.data[this.handleField];
-
-        // Determine what records need to be modified
-        const firstIndex = Math.min(fromIndex, toIndex);
-        const lastIndex = Math.max(fromIndex, toIndex) + 1;
-        let reorderAll = false;
-        let lastSequence = (asc ? -1 : 1) * Infinity;
-        for (let index = 0; index < records.length; index++) {
-            const sequence = getSequence(records[index]);
-            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
-                reorderAll = true;
-                break;
-            }
-            lastSequence = sequence;
-        }
-
-        // Perform the resequence in the list of records
-        const [record] = records.splice(fromIndex, 1);
-        records.splice(toIndex, 0, record);
-
-        // Creates the list of to modify
-        let toReorder = records;
-        if (!reorderAll) {
-            toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
-            if (fromIndex < toIndex) {
-                toReorder.push(record);
-            } else {
-                toReorder.unshift(record);
-            }
-        }
-        if (!asc) {
-            toReorder.reverse();
-        }
-
-        const sequences = toReorder.map(getSequence);
-        const offset = sequences.length && Math.min(...sequences);
-
-        const proms = [];
-        for (const [i, record] of Object.entries(toReorder)) {
-            proms.push(
-                record._update(
-                    { [this.handleField]: offset + Number(i) },
-                    { withoutParentUpdate: true }
-                )
-            );
-        }
-        await Promise.all(proms);
-
-        await this._sort();
-        await this._onUpdate();
-    }
-
-    async _sort(currentIds = this.currentIds, orderBy = this.orderBy) {
-        const fieldNames = orderBy.map((o) => o.name);
-        const resIds = this._getResIdsToLoad(currentIds, fieldNames);
-        if (resIds.length) {
-            const activeFields = pick(this.activeFields, ...fieldNames);
-            const config = { ...this.config, resIds, activeFields };
-            const records = await this.model._loadRecords(config);
-            for (const record of records) {
-                this._createRecordDatapoint(record, { activeFields });
-            }
-        }
-        const allRecords = currentIds.map((id) => this._cache[id]);
-        const sortedRecords = allRecords.sort((r1, r2) =>
-            compareRecords(r1, r2, orderBy, this.fields)
-        );
-        await this._load({
-            orderBy,
-            nextCurrentIds: sortedRecords.map((r) => r.resId || r._virtualId),
-        });
-        this._needsReordering = false;
-    }
-
-    async _sortBy(fieldName) {
-        let orderBy = [...this.orderBy];
-        if (fieldName) {
-            if (orderBy.length && orderBy[0].name === fieldName) {
-                if (!this._needsReordering) {
-                    if (orderBy[0].asc) {
-                        orderBy[0] = { name: orderBy[0].name, asc: false };
-                    } else {
-                        orderBy = [{ name: "id", asc: true }];
-                    }
-                }
-            } else {
-                orderBy = orderBy.filter((o) => o.name !== fieldName);
-                orderBy.unshift({
-                    name: fieldName,
-                    asc: true,
-                });
-            }
-        }
-        return this._sort(this._currentIds, orderBy);
-    }
-
-    _updateContext(context) {
-        Object.assign(this.context, context);
-        for (const record of Object.values(this._cache)) {
-            record._setEvalContext();
         }
     }
 }

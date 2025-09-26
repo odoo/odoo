@@ -1,3 +1,4 @@
+import { getOrMakeModel, loadRecordWithRelated } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -123,7 +124,7 @@ export class ORM {
      * @param {any} [kwargs={}]
      * @returns {Promise<any>}
      */
-    call(model, method, args = [], kwargs = {}) {
+    call(model, method, args = [], kwargs = {}, { cacheCallback } = {}) {
         validateModel(model);
         const url = `/web/dataset/call_kw/${model}/${method}`;
         const fullContext = Object.assign({}, user.context, kwargs.context || {});
@@ -136,7 +137,13 @@ export class ORM {
         };
         return this.rpc(url, params, {
             silent: this._silent,
-            cache: this._cache,
+            cache: {
+                ...this._cache,
+                callback: (result, hasChanged) => {
+                    this._cache.callback?.(result, hasChanged);
+                    cacheCallback?.(result, hasChanged);
+                },
+            },
         });
     }
 
@@ -302,9 +309,18 @@ export class ORM {
      * @param {Object} [kwargs.context]
      * @returns {Promise<any[]>}
      */
-    webRead(model, ids, kwargs = {}) {
+    async webRead(model, ids, kwargs = {}) {
         validatePrimitiveList("ids", "number", ids);
-        return this.call(model, "web_read", [ids], kwargs);
+        const result = await this.call(model, "web_read", [ids], kwargs, {
+            cacheCallback: (result, hasChanged) => {
+                if (hasChanged) {
+                    this._updateStore(model, result);
+                }
+            },
+        });
+        console.warn(`result:`, result);
+        this._updateStore(model, result);
+        return result;
     }
 
     /**
@@ -380,6 +396,11 @@ export class ORM {
             validateObject("data item", d);
         });
         return this.call(model, "web_save_multi", [ids, data], kwargs);
+    }
+
+    _updateStore(modelId, recordsData) {
+        const Model = getOrMakeModel(modelId);
+        recordsData.forEach((data) => loadRecordWithRelated(Model, data));
     }
 }
 

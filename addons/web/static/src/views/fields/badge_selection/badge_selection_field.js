@@ -117,7 +117,7 @@ export const badgeSelectionField = {
             default: "md",
         },
     ],
-    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    isEmpty: (record, fieldName) => !record.orecord[fieldName],
     extractProps: (fieldInfo, dynamicInfo) => ({
         domain: dynamicInfo.domain,
         size: fieldInfo.options.size,

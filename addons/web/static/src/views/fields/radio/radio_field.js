@@ -34,8 +34,8 @@ export class RadioField extends Component {
                     .call(relation, "web_search_read", [], kwargs)
                     .catch((error) => {
                         if (error instanceof ConnectionLostError) {
-                            if (this.props.record.data[this.props.name]) {
-                                return { records: [this.props.record.data[this.props.name]] };
+                            if (this.props.record.orecord[this.props.name]) {
+                                return { records: [this.props.record.orecord[this.props.name]] };
                             }
                             return { records: [] };
                         }
@@ -58,7 +58,7 @@ export class RadioField extends Component {
         }
     }
     get value() {
-        const value = this.props.record.data[this.props.name];
+        const value = this.props.record.orecord[this.props.name];
         switch (this.type) {
             case "selection":
                 return value;
@@ -97,7 +97,7 @@ export const radioField = {
         },
     ],
     supportedTypes: ["many2one", "selection"],
-    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    isEmpty: (record, fieldName) => !record.orecord[fieldName],
     extractProps: ({ options, string }, dynamicInfo) => ({
         orientation: options.horizontal ? "horizontal" : "vertical",
         label: string,

@@ -11,6 +11,8 @@ export const currencyService = {
          * Reload the currencies (initially given in session_info)
          */
         async function reloadCurrencies() {
+            // could be derived
+            // could be relational model
             const result = await orm.call("res.currency", "get_all_currencies");
             for (const k in currencies) {
                 delete currencies[k];

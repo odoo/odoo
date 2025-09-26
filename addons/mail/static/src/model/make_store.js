@@ -16,6 +16,7 @@ import { RecordInternal } from "./record_internal";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
+    // map recordId -> record
     const recordByLocalId = reactive(new Map());
     // fake store for now, until it becomes a model
     /** @type {import("models").Store} */
@@ -63,6 +64,7 @@ export function makeStore(env, { localRegistry } = {}) {
                          * @param {Record} recordFullProxy
                          */
                         get(record, name, recordFullProxy) {
+                            // feature: user.name -> user.partner_id.name
                             if (Model._.parentFields.has(name)) {
                                 const parentFieldName = Model._.parentFields.get(name);
                                 const parentRecordFullProxy = recordFullProxy[parentFieldName];
@@ -77,6 +79,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                 return Reflect.get(parentRecordFullProxy, name);
                             }
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
+                            // feature2: !field on fait rien
                             if (record._.gettingField || !Model._.fields.get(name)) {
                                 let res = Reflect.get(...arguments);
                                 if (typeof res === "function") {
@@ -84,12 +87,16 @@ export function makeStore(env, { localRegistry } = {}) {
                                 }
                                 return res;
                             }
+                            // eager stuff
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
+                                // inNeed = means read on value
                                 record._.fieldsComputeInNeed.set(name, true);
+                                // onNeed = dirty
                                 if (record._.fieldsComputeOnNeed.get(name)) {
                                     record._.compute(record, name);
                                 }
                             }
+                            // derived sorted
                             if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsSortInNeed.set(name, true);
                                 if (record._.fieldsSortOnNeed.get(name)) {
@@ -117,6 +124,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                 const parentFieldName = Model._.parentFields.get(name);
                                 const parentRecordProxyInternal =
                                     record._proxyInternal[parentFieldName];
+                                // parentRecordProxyInternal record of patrner
                                 return Reflect.deleteProperty(parentRecordProxyInternal, name);
                             }
                             return store.MAKE_UPDATE(function recordDeleteProperty() {

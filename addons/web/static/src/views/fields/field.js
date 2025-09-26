@@ -151,7 +151,7 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     if ("isEmpty" in field) {
         empty = empty && field.isEmpty(record, fieldName);
     } else {
-        empty = empty && !record.data[fieldName];
+        empty = empty && !record.orecord.reactiveData[fieldName];
     }
     empty = inEdit ? empty && readonly : empty;
     return {
@@ -427,7 +427,7 @@ export class Field extends Component {
                 }
                 if (fieldInfo.attrs.placeholder || fieldInfo.options.placeholder_field) {
                     fieldInfo.placeholder =
-                        record.data[fieldInfo.options.placeholder_field] ||
+                        record.orecord[fieldInfo.options.placeholder_field] ||
                         fieldInfo.attrs.placeholder;
                 }
 

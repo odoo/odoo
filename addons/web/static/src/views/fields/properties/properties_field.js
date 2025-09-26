@@ -603,7 +603,10 @@ export class PropertiesField extends Component {
 
         if (newType === "separator" && oldType !== "separator") {
             // unfold automatically the new separator
-            await this._toggleSeparators([propertyDefinition.name], propertyDefinition.fold_by_default);
+            await this._toggleSeparators(
+                [propertyDefinition.name],
+                propertyDefinition.fold_by_default
+            );
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
@@ -612,7 +615,10 @@ export class PropertiesField extends Component {
                 (property, index) => index < propertyIndex && property.type === "separator"
             );
             if (previousSeperator) {
-                await this._toggleSeparators([previousSeperator.name], propertyDefinition.fold_by_default);
+                await this._toggleSeparators(
+                    [previousSeperator.name],
+                    propertyDefinition.fold_by_default
+                );
             }
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
@@ -858,7 +864,7 @@ export class PropertiesField extends Component {
         // initial properties values, if the type or the model changed, the
         // name will be regenerated in order to reset the value on the children
         this.initialValues = {};
-        for (const propertiesValues of this.props.record.data[this.props.name] || []) {
+        for (const propertiesValues of this.props.record.orecord[this.props.name] || []) {
             this.initialValues[propertiesValues.name] = {
                 name: propertiesValues.name,
                 type: propertiesValues.type,

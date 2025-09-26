@@ -124,7 +124,7 @@ export const selectionField = {
         },
     ],
     supportedTypes: ["many2one", "selection"],
-    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    isEmpty: (record, fieldName) => !record.orecord[fieldName],
     extractProps({ viewType, placeholder }, dynamicInfo) {
         const props = {
             autosave: viewType === "kanban",

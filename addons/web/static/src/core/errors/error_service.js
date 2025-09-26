@@ -185,4 +185,4 @@ export const errorService = {
     },
 };
 
-registry.category("services").add("error", errorService, { sequence: 1 });
+// registry.category("services").add("error", errorService, { sequence: 1 });

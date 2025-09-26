@@ -697,6 +697,7 @@ export class SearchModel extends EventBus {
     }
 
     search() {
+        // problem with generic name: who listen update?
         this.trigger("update");
     }
 

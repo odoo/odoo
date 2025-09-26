@@ -77,6 +77,7 @@ export function _makeUser(session) {
         cookie.set("cids", activeCompanies.map((c) => c.id).join("-"));
         Object.assign(context, { allowed_company_ids: activeCompanies.map((c) => c.id) });
 
+        // could be derived
         userBus.trigger("ACTIVE_COMPANIES_CHANGED");
     }
 
@@ -190,6 +191,7 @@ export function _makeUser(session) {
             return accessRightCache.read(model, operation, ensureArray(ids), this.context);
         },
         async setUserSettings(key, value) {
+            // should be relational model?
             const model = "res.users.settings";
             const method = "set_res_users_settings";
             const changedSettings = await rpc(`/web/dataset/call_kw/${model}/${method}`, {

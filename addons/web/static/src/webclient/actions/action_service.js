@@ -961,6 +961,7 @@ export function makeActionManager(env, router = _router) {
                 }
                 if (!controller.isMounted && status(this) === "mounted") {
                     // The error occured during an onMounted hook of one of the components.
+                    // could be derived?
                     env.bus.trigger("ACTION_MANAGER:UPDATE", {
                         id: ++id,
                         Component: BlankComponent,

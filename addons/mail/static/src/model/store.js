@@ -40,6 +40,7 @@ export class Store extends Record {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
             while (
+                // field compute
                 this._.FC_QUEUE.size > 0 ||
                 this._.FS_QUEUE.size > 0 ||
                 this._.FA_QUEUE.size > 0 ||

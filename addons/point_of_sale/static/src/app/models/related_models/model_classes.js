@@ -19,7 +19,7 @@ const INITIALIZED_CLASSES = new Set();
  * Processes model definitions to dynamically define getter and setter properties
  * on model fields, providing controlled access to the raw data.
  */
-export function processModelClasses(modelDefs, modelClasses = {}) {
+export function makeRelatedFields(modelDefs, modelClasses = {}) {
     const modelNames = new Set(Object.keys(modelDefs));
     for (const modelName of modelNames) {
         if (INITIALIZED_CLASSES.has(modelName)) {
@@ -28,6 +28,7 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
 
         const fields = modelDefs[modelName];
         const ModelRecordClass = modelClasses[modelName] || class ModelRecord extends Base {};
+        // todo
         const excludedLazyGetters = [];
 
         if (modelClasses[modelName]) {
@@ -46,14 +47,20 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
                     `The property "${fieldName}" defined in the class "${ModelRecordClass.name}" matches an existing model "${modelName}" property. Please use a different property name.`
                 );
             }
+            // todo?
             const isRelationNotInModelDef = field.relation && !modelNames.has(field.relation);
             if (!RELATION_TYPES.has(field.type) || isRelationNotInModelDef) {
                 if (!DATE_TIME_TYPE.has(field.type)) {
                     excludedLazyGetters.push(fieldName);
                 }
+                // partner.messages = [];
+                // partner.messages()
+                // partner.messages.add(message2)
+                // message2.partner = partner
                 Object.defineProperty(ModelRecordClass.prototype, fieldName, {
                     get: function () {
                         const value = this[RAW_SYMBOL][fieldName];
+                        // todo
                         if (DATE_TIME_TYPE.has(field.type)) {
                             return field.type === "datetime"
                                 ? convertRawToDateTime(this, value, field)
@@ -114,6 +121,7 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
         }
     }
 }
+// todo?
 export function createExtraField(record, extraFields, serverData, vals) {
     if (!extraFields?.length) {
         return;

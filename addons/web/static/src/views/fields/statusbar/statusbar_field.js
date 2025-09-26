@@ -371,7 +371,7 @@ export const statusBarField = {
         },
     ],
     supportedTypes: ["many2one", "selection"],
-    isEmpty: (record, fieldName) => !record.data[fieldName],
+    isEmpty: (record, fieldName) => !record.orecord[fieldName],
     extractProps: ({ attrs, options, viewType }, dynamicInfo) => ({
         isDisabled: !options.clickable || dynamicInfo.readonly,
         visibleSelection: attrs.statusbar_visible?.trim().split(/\s*,\s*/g),

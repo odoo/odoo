@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { EventBus, reactive } from "@odoo/owl";
-import { Reactive, effect, withComputedProperties } from "@web/core/utils/reactive";
+import { Reactive, withComputedProperties } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
 
@@ -48,90 +48,6 @@ describe("class", () => {
         bus.trigger("change");
         expect(obj.counter).toBe(2);
         expect.verifySteps(["counter: 2"]);
-    });
-});
-
-describe("effect", () => {
-    test("effect runs once immediately", async () => {
-        const state = reactive({ counter: 0 });
-        expect.verifySteps([]);
-        effect(
-            (state) => {
-                expect.step(`counter: ${state.counter}`);
-            },
-            [state]
-        );
-        expect.verifySteps(["counter: 0"]);
-    });
-
-    test("effect runs when reactive deps change", async () => {
-        const state = reactive({ counter: 0 });
-        expect.verifySteps([]);
-        effect(
-            (state) => {
-                expect.step(`counter: ${state.counter}`);
-            },
-            [state]
-        );
-        // effect runs immediately
-        expect.verifySteps(["counter: 0"]);
-
-        state.counter++;
-        // first mutation runs the effect
-        expect.verifySteps(["counter: 1"]);
-
-        state.counter++;
-        // subsequent mutations run the effect
-        expect.verifySteps(["counter: 2"]);
-    });
-
-    test("Original reactive callback is not subscribed to keys observed by effect", async () => {
-        let reactiveCallCount = 0;
-        const state = reactive(
-            {
-                counter: 0,
-            },
-            () => reactiveCallCount++
-        );
-        expect.verifySteps([]);
-        expect(reactiveCallCount).toBe(0);
-        effect(
-            (state) => {
-                expect.step(`counter: ${state.counter}`);
-            },
-            [state]
-        );
-        expect.verifySteps(["counter: 0"]);
-        expect(reactiveCallCount).toBe(0, {
-            message: "did not call the original reactive's callback",
-        });
-        state.counter = 1;
-        expect.verifySteps(["counter: 1"]);
-        expect(reactiveCallCount).toBe(0, {
-            message: "did not call the original reactive's callback",
-        });
-        state.counter; // subscribe the original reactive
-        state.counter = 2;
-        expect.verifySteps(["counter: 2"]);
-        expect(reactiveCallCount).toBe(1, {
-            message: "the original callback was called because it is subscribed independently",
-        });
-    });
-
-    test("mutating keys not observed by the effect doesn't cause it to run", async () => {
-        const state = reactive({ counter: 0, unobserved: 0 });
-        effect(
-            (state) => {
-                expect.step(`counter: ${state.counter}`);
-            },
-            [state]
-        );
-
-        expect.verifySteps(["counter: 0"]);
-        state.counter = 1;
-        expect.verifySteps(["counter: 1"]);
-        state.unobserved = 1;
-        expect.verifySteps([]);
     });
 });
 

@@ -17,6 +17,7 @@ const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
 const CONSOLE_COLOR = "#28ffeb";
 
+//
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
     static serviceDependencies = ["orm", "bus_service"];
@@ -402,7 +403,6 @@ export class PosData extends Reactive {
             relations[model] = values.relations;
             fields[model] = values.fields;
         }
-
         for (const posModel of registry.category("pos_available_models").getAll()) {
             const pythonModel = posModel.pythonModel;
             const extraFields = posModel.extraFields || {};

@@ -12,6 +12,7 @@ export class FetchRecordError extends Error {
         this.resIds = resIds;
     }
 }
+window.FetchRecordError = FetchRecordError;
 function fetchRecordErrorHandler(env, error, originalError) {
     if (originalError instanceof FetchRecordError) {
         env.services.notification.add(originalError.message, { sticky: true, type: "danger" });

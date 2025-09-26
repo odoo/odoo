@@ -578,6 +578,7 @@ export class PosOrderline extends Base {
     }
 
     get allPrices() {
+        console.warn(`allPrices`);
         return this.getAllPrices();
     }
 

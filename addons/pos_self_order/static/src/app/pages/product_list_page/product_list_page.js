@@ -1,4 +1,4 @@
-import { Component, useRef, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillUnmount, derived, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
@@ -61,10 +61,9 @@ export class ProductListPage extends Component {
         useDraggableScroll(this.categoryListRef);
         useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
         useDraggableScroll(this.subCategoryListRef);
-
-        useEffect(
-            (lines) => {
-                this.state.quantityByProductTmplId = lines
+        Object.defineProperty(this.state, "quantityByProductTmplId", {
+            get: derived(() => {
+                this.selfOrder.currentOrder.lines
                     .filter((line) => !line.combo_parent_id)
                     .reduce((acc, { product_id, qty }) => {
                         const tmplId = product_id.product_tmpl_id.id;
@@ -73,9 +72,8 @@ export class ProductListPage extends Component {
                         }
                         return acc;
                     }, {});
-            },
-            () => [this.selfOrder.currentOrder.lines]
-        );
+            }),
+        });
 
         onMounted(() => {
             this.toggleSubCategoryPanel();

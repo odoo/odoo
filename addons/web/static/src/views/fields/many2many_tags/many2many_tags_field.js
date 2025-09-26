@@ -67,70 +67,65 @@ export class Many2ManyTagsField extends Component {
     static SEARCH_MORE_LIMIT = 320;
 
     setup() {
-        this.orm = useService("orm");
-        this.previousColorsMap = {};
-        this.popover = usePopover(this.constructor.components.Popover);
-        this.dialog = useService("dialog");
-        this.dialogClose = [];
-        useTagNavigation("many2ManyTagsField", {
-            isEnabled: () => !this.props.readonly,
-            delete: (index) => this.deleteTagByIndex(index),
-        });
-        this.autoCompleteRef = useRef("autoComplete");
-        this.mutex = new Mutex();
-
-        const { saveRecord, removeRecord } = useX2ManyCrud(
-            () => this.props.record.data[this.props.name],
-            true
-        );
-
-        this.activeActions = useActiveActions({
-            fieldType: "many2many",
-            crudOptions: {
-                create: this.props.canCreate && this.props.createExpression,
-                createEdit: this.props.canCreateEdit,
-                onDelete: removeRecord,
-                edit: this.props.record.isInEdition,
-            },
-            getEvalParams: (props) => ({
-                evalContext: this.evalContext,
-                readonly: props.readonly,
-            }),
-        });
-
-        this.openMany2xRecord = useOpenMany2XRecord({
-            resModel: this.relation,
-            activeActions: {
-                create: false,
-                write: true,
-            },
-            onRecordSaved: (record) => {
-                const records = this.props.record.data[this.props.name].records;
-                return records.find((r) => r.resId === record.resId).load();
-            },
-        });
-
-        this.update = (recordlist) => {
-            recordlist = recordlist
-                ? recordlist.filter(
-                      (element) => !this.tags.some((record) => record.resId === element.id)
-                  )
-                : [];
-            if (!recordlist.length) {
-                return;
-            }
-            const resIds = recordlist.map((rec) => rec.id);
-            return saveRecord(resIds);
-        };
-
-        if (this.props.canQuickCreate) {
-            this.quickCreate = async (name) => {
-                const created = await this.orm.call(this.relation, "name_create", [name], {
-                    context: this.props.context,
-                });
-                return saveRecord([created[0]]);
-            };
-        }
+        // this.orm = useService("orm");
+        // this.previousColorsMap = {};
+        // this.popover = usePopover(this.constructor.components.Popover);
+        // this.dialog = useService("dialog");
+        // this.dialogClose = [];
+        // useTagNavigation("many2ManyTagsField", {
+        //     isEnabled: () => !this.props.readonly,
+        //     delete: (index) => this.deleteTagByIndex(index),
+        // });
+        // this.autoCompleteRef = useRef("autoComplete");
+        // this.mutex = new Mutex();
+        // const { saveRecord, removeRecord } = useX2ManyCrud(
+        //     () => this.props.record.data[this.props.name],
+        //     true
+        // );
+        // this.activeActions = useActiveActions({
+        //     fieldType: "many2many",
+        //     crudOptions: {
+                // create: this.props.canCreate && this.props.createExpression,
+        //         createEdit: this.props.canCreateEdit,
+        //         onDelete: removeRecord,
+        //         edit: this.props.record.isInEdition,
+        //     },
+        //     getEvalParams: (props) => ({
+        //         evalContext: this.evalContext,
+        //         readonly: props.readonly,
+        //     }),
+        // });
+        // this.openMany2xRecord = useOpenMany2XRecord({
+        //     resModel: this.relation,
+        //     activeActions: {
+        //         create: false,
+        //         write: true,
+        //     },
+        //     onRecordSaved: (record) => {
+        //         const records = this.props.record.data[this.props.name].records;
+        //         return records.find((r) => r.resId === record.resId).load();
+        //     },
+        // });
+        // this.update = (recordlist) => {
+        //     recordlist = recordlist
+        //         ? recordlist.filter(
+        //               (element) => !this.tags.some((record) => record.resId === element.id)
+        //           )
+        //         : [];
+        //     if (!recordlist.length) {
+        //         return;
+        //     }
+        //     const resIds = recordlist.map((rec) => rec.id);
+        //     return saveRecord(resIds);
+        // };
+        // if (this.props.canQuickCreate) {
+        //     this.quickCreate = async (name) => {
+        //         const created = await this.orm.call(this.relation, "name_create", [name], {
+        //             context: this.props.context,
+        //         });
+        //         return saveRecord([created[0]]);
+        //     };
+        // }
     }
 
     get relation() {

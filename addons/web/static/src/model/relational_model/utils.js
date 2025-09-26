@@ -349,6 +349,7 @@ export function getBasicEvalContext(config) {
         current_company_id: user.activeCompany?.id,
     };
 }
+window.getBasicEvalContext = getBasicEvalContext;
 
 function getFieldContextForSpec(activeFields, fields, fieldName, evalContext) {
     let context = activeFields[fieldName].context;
@@ -362,6 +363,7 @@ function getFieldContextForSpec(activeFields, fields, fieldName, evalContext) {
     }
 }
 
+// todo: what is this
 export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, withInvisible } = {}) {
     const fieldsSpec = {};
     const properties = [];
@@ -451,6 +453,7 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
     }
     return fieldsSpec;
 }
+window.getFieldsSpec = getFieldsSpec;
 
 let nextId = 0;
 /**
@@ -537,6 +540,9 @@ export function parseServerValue(field, value) {
     }
     return value;
 }
+window.parseServerValue = parseServerValue;
+window.deserializeDate = deserializeDate;
+window.deserializeDateTime = deserializeDateTime;
 
 export function getAggregateSpecifications(fields) {
     const aggregatableFields = Object.values(fields)

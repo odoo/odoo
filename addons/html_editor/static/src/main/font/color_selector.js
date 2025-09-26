@@ -1,11 +1,10 @@
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, withoutReactivity, effect } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
 } from "@web/core/color_picker/color_picker";
-import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -45,17 +44,20 @@ export class ColorSelector extends Component {
             getCSSVariableValue("body-color", htmlStyle), // Default applied color
             "#00000000", //Default Background color
         ];
-        effect(
-            (selectedColors) => {
+        effect(() => {
+            // todo: check if it works
+            const selectedColors = this.props.getSelectedColors();
+            // Object.keys(selectedColors); // track any key changes? is it necessary
+
+            withoutReactivity(() => {
                 this.state.selectedColor = selectedColors[this.props.mode];
                 this.state.defaultTab = "solid";
                 this.state.selectedTab = this.getCorrespondingColorTab(
                     selectedColors[this.props.mode]
                 );
                 this.state.getTargetedElements = this.props.getTargetedElements;
-            },
-            [this.props.getSelectedColors()]
-        );
+            });
+        });
 
         const colorPickerRef = useChildRef();
         this.colorPicker = useColorPicker(

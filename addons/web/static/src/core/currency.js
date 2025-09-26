@@ -53,6 +53,7 @@ export async function getCurrencyRates() {
             },
         },
     });
+    // could be derived async?
     Object.assign(rates, recordsToRates(records));
     return rates;
 }

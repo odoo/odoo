@@ -19,3 +19,5 @@ export class Operation {
         }
     }
 }
+
+window.Operation = Operation;

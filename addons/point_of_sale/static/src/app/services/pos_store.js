@@ -58,6 +58,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
 
+//
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
@@ -918,6 +919,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
 
+        debugger;
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);

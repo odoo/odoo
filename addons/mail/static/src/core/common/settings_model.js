@@ -41,6 +41,7 @@ export class Settings extends Record {
      */
     channel_notifications = fields.Attr("mentions", {
         compute() {
+            //
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });

@@ -32,6 +32,7 @@ export class BusMonitoringService {
      *
      * @param {WORKER_STATE[keyof WORKER_STATE]} state
      */
+    // case analysis for derived
     workerStateOnChange(state) {
         switch (state) {
             case WORKER_STATE.CONNECTING: {

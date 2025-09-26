@@ -17,6 +17,7 @@ function getRelation(fieldDef, followRelationalProperties = false) {
     return null;
 }
 
+// why is this a service?
 export const fieldService = {
     dependencies: ["orm"],
     async: [

@@ -19,6 +19,7 @@ export function useRegistry(registry) {
         }
     };
 
+    // could be derived
     onWillStart(() => registry.addEventListener("UPDATE", listener));
     onWillDestroy(() => registry.removeEventListener("UPDATE", listener));
     return state;

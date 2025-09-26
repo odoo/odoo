@@ -47,6 +47,7 @@ export class NavBar extends Component {
         onWillDestroy(() => debouncedAdapt.cancel());
         useExternalListener(window, "resize", debouncedAdapt);
 
+        // could be derived
         let adaptCounter = 0;
         const renderAndAdapt = () => {
             adaptCounter++;

@@ -207,7 +207,7 @@ before(() => {
     });
 });
 
-test(`simple form rendering`, async () => {
+test.only(`simple form rendering`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",

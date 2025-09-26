@@ -42,9 +42,10 @@ import {
     useEffect,
     useRef,
     useState,
+    effect,
+    withoutReactivity,
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
-import { effect } from "@web/core/utils/reactive";
 
 const viewRegistry = registry.category("views");
 
@@ -211,14 +212,11 @@ export class FormController extends Component {
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
 
         onMounted(() => {
-            effect(
-                (model) => {
-                    if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
-                    }
-                },
-                [this.model]
-            );
+            effect(() => {
+                if (status(this) === "mounted") {
+                    this.props.updateActionState({ resId: this.model.root.resId });
+                }
+            });
         });
 
         onError((error) => {
@@ -301,7 +299,9 @@ export class FormController extends Component {
         });
 
         onRendered(() => {
-            this.env.config.setDisplayName(this.displayName());
+            withoutReactivity(() => {
+                this.env.config.setDisplayName(this.displayName());
+            });
         });
 
         const { disableAutofocus } = this.archInfo;
@@ -462,7 +462,11 @@ export class FormController extends Component {
     }
 
     displayName() {
-        return this.model.root.data.display_name || (this.model.root.isNew && _t("New")) || "";
+        const r =
+            this.model.root.orecord.reactiveData.display_name ||
+            // (this.model.root.isNew && _t("New")) ||
+            "";
+        return r;
     }
 
     async onPagerUpdate({ offset, resIds }) {
@@ -516,10 +520,14 @@ export class FormController extends Component {
                 isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
                 icon: "fa fa-cogs",
-                description: this.propertiesState.editable ? _t("Save Properties") : _t("Edit Properties"),
+                description: this.propertiesState.editable
+                    ? _t("Save Properties")
+                    : _t("Edit Properties"),
                 callback: () => {
                     this.propertiesState.editable = !this.propertiesState.editable;
-                    this.model.bus.trigger("PROPERTY_FIELD:EDIT", { editable: this.propertiesState.editable });
+                    this.model.bus.trigger("PROPERTY_FIELD:EDIT", {
+                        editable: this.propertiesState.editable,
+                    });
                 },
             },
             duplicate: {

@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, xml } from "@odoo/owl";
+import { Component, useEffect, useRef, xml, effect } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -58,12 +58,9 @@ export class ListContainer extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
 
-        useEffect(
-            () => {
-                this.sizing.reload();
-            },
-            () => [this.props.items]
-        );
+        useEffect(() => {
+            Promise.resolve().then(() => this.sizing.reload());
+        });
     }
     shouldBeInvisible(itemIndex) {
         return itemIndex >= this.sizing.maxItems;

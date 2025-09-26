@@ -81,7 +81,7 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        useRecordObserver((record) => this.updateRecipients(record));
+        // useRecordObserver((record) => this.updateRecipients(record));
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
             composerType: false,
@@ -179,7 +179,9 @@ patch(Chatter.prototype, {
             return;
         }
         // Hack: Make the useRecordObserver subscribe to the record changes
+        window.d = false;
         Object.keys(record.data).forEach((field) => record.data[field]);
+        window.d = true;
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
         (this.state.thread?.partner_fields ?? []).forEach((field) => {

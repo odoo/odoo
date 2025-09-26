@@ -30,6 +30,7 @@ export function usePager(getProps) {
         },
     });
     onWillRender(() => {
+        // could be derived?
         Object.assign(pagerState, getProps() || { total: 0 });
     });
 }

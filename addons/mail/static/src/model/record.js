@@ -213,6 +213,7 @@ export class Record {
         });
     }
     /** @returns {Record|Record[]} */
+    // get or create
     static insert(data, options = {}) {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);

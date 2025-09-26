@@ -1,6 +1,6 @@
 import { clone, getBackRef, RELATION_TYPES } from "./utils";
 
-export function processModelDefs(modelDefs) {
+export function processInverseFields(modelDefs) {
     modelDefs = clone(modelDefs);
     const inverseMap = new Map();
     const many2oneFields = [];

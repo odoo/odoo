@@ -110,7 +110,7 @@ export const integerField = {
         },
     ],
     supportedTypes: ["integer"],
-    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    isEmpty: (record, fieldName) => !record.orecord[fieldName],
     extractProps: ({ options }) => ({
         formatNumber:
             options?.enable_formatting !== undefined ? Boolean(options.enable_formatting) : true,

@@ -13,9 +13,10 @@ import {
     useRef,
     useState,
     useSubEnv,
+    withoutReactivity,
+    effect,
 } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
 function isConnectedElement(el) {
@@ -242,21 +243,23 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         if (env.editor.isDestroyed) {
             return;
         }
-        let currentItem;
-        let itemPriority = 0;
-        for (const selectableItem of selectableItems) {
-            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
-                currentItem = selectableItem;
-                itemPriority = selectableItem.priority;
+        withoutReactivity(() => {
+            let currentItem;
+            let itemPriority = 0;
+            for (const selectableItem of selectableItems) {
+                if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
+                    currentItem = selectableItem;
+                    itemPriority = selectableItem.priority;
+                }
             }
-        }
-        if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
-            state.currentSelectedItem = currentItem;
-            env.dependencyManager.triggerDependencyUpdated();
-        }
-        if (currentItem) {
-            onItemChange?.(currentItem);
-        }
+            if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
+                state.currentSelectedItem = currentItem;
+                env.dependencyManager.triggerDependencyUpdated();
+            }
+            if (currentItem) {
+                onItemChange?.(currentItem);
+            }
+        });
     }
 
     if (id) {
@@ -266,7 +269,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         });
     }
 
-    onMounted(refreshCurrentItem);
+    onMounted(() => withoutReactivity(refreshCurrentItem));
     useBus(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
     function cleanSelectedItem(...args) {
         if (state.currentSelectedItem) {
@@ -324,14 +327,11 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         state = useState({
             isActive: false,
         });
-        effect(
-            ({ currentSelectedItem }) => {
-                state.isActive =
-                    toRaw(currentSelectedItem) === selectableItem ||
-                    (id && currentSelectedItem?.id === id);
-            },
-            [selectableState]
-        );
+        effect(() => {
+            state.isActive =
+                toRaw(selectableState.currentSelectedItem) === selectableItem ||
+                (id && selectableState.currentSelectedItem?.id === id);
+        });
         env.selectableContext.refreshCurrentItem();
         onMounted(env.selectableContext.update);
         onWillDestroy(() => {

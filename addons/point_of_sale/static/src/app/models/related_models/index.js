@@ -1,5 +1,4 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { createLazyGetter } from "@point_of_sale/lazy_getter";
 import { RecordStore } from "./record_store";
 import {
@@ -17,8 +16,8 @@ import {
     AggregatedUpdates,
 } from "./utils";
 import { Base } from "./base";
-import { processModelDefs } from "./model_defs";
-import { computeBackLinks, createExtraField, processModelClasses } from "./model_classes";
+import { processInverseFields } from "./model_defs";
+import { computeBackLinks, createExtraField, makeRelatedFields } from "./model_classes";
 import { ormSerialization } from "./serialization";
 
 const AVAILABLE_EVENT = ["create", "update", "delete"];
@@ -27,8 +26,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const database = opts.databaseTable || {};
     const dynamicModels = opts.dynamicModels || [];
     const store = new RecordStore(Object.keys(modelDefs), opts.databaseIndex);
-    const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
-    processModelClasses(processedModelDefs, modelClasses);
+    const [inverseMap, processedModelDefs] = processInverseFields(modelDefs);
+    makeRelatedFields(processedModelDefs, modelClasses);
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
         delete: new Map(),
@@ -37,7 +36,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function getFields(model) {
         return processedModelDefs[model];
     }
-    const disabler = new TrapDisabler();
 
     /**
      * A model (e.g. pos.order) points to an instance of this class.
@@ -67,7 +65,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         create(vals) {
-            return disabler.call((...args) => this._create(...args), vals);
+            return this._create(vals);
         }
 
         deserialize(vals) {
@@ -83,13 +81,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         update(record, vals, opts = {}) {
-            return disabler.call((...args) => this._update(...args), record, vals, {
-                ...opts,
-            });
+            return this._update(record, vals, opts);
         }
 
         delete(record, opts = {}) {
-            return disabler.call((...args) => this._delete(...args), record, opts);
+            return this._delete(record, opts);
         }
 
         deleteMany(toDelete, opts = {}) {
@@ -314,6 +310,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 serverData,
                 connectRecords,
             });
+            debugger;
             const ModelRecordClass = modelClasses[this.name];
             let record = new ModelRecordClass({
                 model: this,
@@ -379,6 +376,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
                 if (coModel) {
                     if (X2MANY_TYPES.has(field.type)) {
+                        // todo?
                         const commands = convertToX2ManyCommands(vals[name], opts.strict);
                         for (const cmd of commands) {
                             const [command, ...records] = cmd;
@@ -500,6 +498,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return id;
         }
 
+        // todo?
         backLink(record, link) {
             if (!link.startsWith(BACKREF_PREFIX)) {
                 link = BACKREF_PREFIX + link;
@@ -511,6 +510,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             if (!field) {
                 return undefined;
             }
+            // debugger;
             createLazyGetter(record, link, computeBackLinks(field));
             return record[link];
         }
@@ -550,7 +550,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         loadConnectedData(data, modelsToLoad = []) {
-            return disabler.call((...args) => this._loadData(...args), data, modelsToLoad, {
+            return this._loadData(data, modelsToLoad, {
                 connectRecords: false,
                 serverData: true,
             });
@@ -566,7 +566,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         connectNewData(data, serverData = true) {
-            return disabler.call((...args) => this._loadData(...args), data, [], {
+            return this._loadData(data, [], {
                 connectRecords: true,
                 serverData: serverData,
             });

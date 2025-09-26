@@ -13,6 +13,7 @@ export class FormStatusIndicator extends Component {
         this.state = useState({
             fieldIsDirty: false,
         });
+        // could be derived
         useBus(
             this.props.model.bus,
             "FIELD_IS_DIRTY",
