@@ -272,7 +272,7 @@ class StockMove(models.Model):
                 move.package_ids = move.move_line_ids.package_history_id.outermost_dest_id
             else:
                 # Only display the top-level packages until the move is done.
-                move.package_ids = move.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+                move.package_ids = move.move_line_ids.result_package_id.outermost_package_id
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
