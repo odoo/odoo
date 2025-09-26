@@ -1,8 +1,8 @@
 import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_controller";
 import { onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
+import { getSuggestToggleState, editSuggestContext, toggleFilters } from "./utils";
 import { useBus } from "@web/core/utils/hooks";
-import { getSuggestToggleState, editSuggestContext } from "./utils";
 
 /* Controller reacts to most UI events on product catalog view (eg. next page, filters, suggestion changes),
  * pass suggestion inputs to backend through context, and reorders kanban records based on backend computations.
@@ -20,6 +20,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             currencyId: this.props.context.product_catalog_currency_id,
             digits: this.props.context.product_catalog_digits,
             poState: this.props.context.po_state,
+            recomputeTotalPriceFlag: true,
             vendorName: this.props.context.vendor_name,
             warehouse_id: this.props.context.warehouse_id,
             suggestToggle: getSuggestToggleState(this.props.context.po_state),
@@ -27,9 +28,15 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         onWillStart(async () => {
             this._baseContext = { ...this.model.config.context }; // For resetting when suggest is off
-            if (this.state.suggestToggle.isOn) {
-                this._kanbanReload();
+            this._kanbanReload(); // Double rpc on first visit to give context to search model
+        });
+
+        // Recompute Kanban on filter changes (incl. sidebar category filters)
+        useBus(this.env.searchModel, "update", () => {
+            if (this.state.suggestToggle.isOn && this.state.recomputeTotalPriceFlag) {
+                this._computeTotalEstimatedPrice(); // To do only recompute if necessary
             }
+            this.state.recomputeTotalPriceFlag = true;
         });
 
         // Recompute Kanban on filter changes (incl. sidebar category filters)
@@ -51,24 +58,26 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
     // Reloads catalog with suggestions
     async _kanbanReload() {
-        this.model.config.context = this._editSuggestContext();
-        await this.model.root.load({}); // Reload the Kanban with ctx
-
         if (this.state.suggestToggle.isOn) {
             this._computeTotalEstimatedPrice();
-            await this._reorderKanbanGrid();
+            this.state.recomputeTotalPriceFlag = false;
         }
+        this.env.searchModel.globalContext = this._editSuggestContext(this._baseContext);
+        this.env.searchModel.searchPanelInfo.shouldReload = true; // Changing suggestion might change categories available
+        this.env.searchModel._notify(); // Reload through searchModel with ctx (without double reload)
+        this.env.searchModel.searchPanelInfo.shouldReload = false;
     }
 
+    /** Method to add all suggestions to purchase order */
     async onAddAll() {
-        const ctx = this._filter_add_all_ctx(this._editSuggestContext()); // IMPROVE: Quickfix
+        const sm = this.env.searchModel;
         await this.model.orm.call(
             "purchase.order",
             "action_purchase_order_suggest",
-            [ctx["order_id"], ctx["domain"]],
-            { context: ctx }
+            [this._baseContext["order_id"], sm.domain],
+            { context: this._editSuggestContext() }
         );
-        this._filterInTheOrder(); // Apply filter to show what was added
+        this._toggleSuggestFilters(true);
     }
 
     toggleSuggest() {
@@ -78,20 +87,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             JSON.stringify({ isOn: this.state.suggestToggle.isOn })
         );
         this._kanbanReload();
-    }
-
-    /**
-     * Removes inOrderFilter from domain key in passed context, preventing circular domain issues
-     * (ie. AddAll impacts what goes in order but shouldn't be impacted by what is in order)
-     * Improve: Assumes filters are always added as & in domains. (OR Domain.all would alter logic)
-     * Simply removing inOrderFilter before "Add All" doesn't work due to SearchModel update trigger
-     */
-    _filter_add_all_ctx(ctx) {
-        const domain_all = ["id", "!=", 0];
-        ctx.domain = Array.from(ctx.domain, (el) =>
-            el[0] === "is_in_purchase_order" && el[1] === "=" && el[2] === true ? domain_all : el
-        );
-        return ctx;
     }
 
     /** Calculate estimated price (might differ from actual PO price on purpose)
@@ -110,44 +105,13 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
     }
 
     /**
-     * Moves records with suggested_qty > 0 to the front, keeping original order.
-     * Works with normal and group filters but not accross pagination (eg if 41st
-     * record has suggested qty > 0 it won't show).
-     * @returns {null} Forces a refresh (only if changed order) by not sorting in place.
+     * Helper to toggle filters on Suggestion feature activation / deactivation
+     * @param {boolean} toggleOn true to activate filters, false to deactivate
+     * @return {none} Triggers a reload if filters didn't change
      */
-    async _reorderKanbanGrid() {
-        const sortBySuggested = (list) => {
-            const suggestProducts = list.filter((record) => record.data.suggested_qty > 0);
-            const notSuggestedProducts = list.filter((record) => record.data.suggested_qty == 0);
-            return [...suggestProducts, ...notSuggestedProducts];
-        };
-
-        const isGroupFilterOff = this.model.config.groupBy.length === 0;
-        if (isGroupFilterOff) {
-            this.model.root.records = sortBySuggested(this.model.root.records);
-        } else {
-            for (const group of this.model.root.groups || []) {
-                group.list.records = sortBySuggested(group.list.records);
-            }
-        }
-    }
-
-    /** On pagination change (eg. left and right arrow) */
-    async onUpdatedPager() {
-        this._kanbanReload();
-    }
-
-    /** Add "In the Order" filter, returning products in PO, if it wasn't already there. */
-    _filterInTheOrder() {
+    _toggleSuggestFilters(toggleOn) {
         const sm = this.env.searchModel;
-        const inTheOrderFilter = Object.values(sm.searchItems).find(
-            (searchItem) => searchItem.name === "products_in_purchase_order"
-        );
-        const isActive = sm.query.some((f) => f.searchItemId === inTheOrderFilter.id);
-        sm.toggleSearchItem(inTheOrderFilter.id);
-        if (isActive) {
-            sm.toggleSearchItem(inTheOrderFilter.id); // Reapply with new updated values
-        }
+        toggleFilters(sm, ["suggested", "products_in_purchase_order"], toggleOn);
         this._kanbanReload();
     }
 
@@ -157,7 +121,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
      */
     _editSuggestContext() {
         const suggestCtx = {
-            domain: this.env.searchModel.domain,
+            suggest_domain: this.env.searchModel.domain,
             suggest_based_on: this.state.basedOn,
             suggest_days: this.state.numberOfDays,
             suggest_percent: this.state.percentFactor,
