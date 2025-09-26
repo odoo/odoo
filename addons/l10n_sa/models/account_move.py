@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
+from datetime import datetime
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, format_datetime
@@ -20,11 +22,26 @@ class AccountMove(models.Model):
                                         In case of multiple deliveries, you should take the date of the latest one.""")
     l10n_sa_show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
-    l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date',
-                                                    readonly=True,
+    l10n_sa_confirmation_datetime = fields.Datetime(string='Issue Date',
+                                                    default=fields.Datetime.now,
                                                     copy=False,
-                                                    help="""Date when the invoice is confirmed and posted.
-                                                    In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals).""")
+                                                    compute='_compute_l10n_sa_confirmation_datetime',
+                                                    inverse='_inverse_l10n_sa_confirmation_datetime',
+                                                    store=True,
+                                                    readonly=False,
+                                                    help="""Date on which the invoice is generated as final document (after securing all internal approvals).""")
+
+    @api.depends('invoice_date')
+    def _compute_l10n_sa_confirmation_datetime(self):
+        for move in self.filtered(lambda move: move.state == 'draft' and move.l10n_sa_show_delivery_date):
+            time = fields.Datetime.now().time() if move.invoice_date == fields.Date.today() else datetime.strptime('09:00:00', '%H:%M:%S').time()
+            move.l10n_sa_confirmation_datetime = move.invoice_date and datetime.combine(move.invoice_date, time)
+
+    def _inverse_l10n_sa_confirmation_datetime(self):
+        zatca_moves = self.filtered(lambda move: move.state == 'draft' and move.l10n_sa_show_delivery_date)
+        for move in zatca_moves:
+            move.invoice_date = move.l10n_sa_confirmation_datetime
+        self.env.add_to_compute(self._fields['date'], zatca_moves)
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):

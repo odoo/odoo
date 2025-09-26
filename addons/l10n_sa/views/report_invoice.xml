@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="arabic_english_invoice" inherit_id="l10n_gcc_invoice.arabic_english_invoice">
+        <div name="invoice_date" position="after">
+            <div class="row" t-if="o.l10n_sa_confirmation_datetime and o.move_type in ('out_invoice', 'out_refund')" name="issue_date">
+                <div class="col-2 offset-6">
+                    <strong style="white-space:nowrap">Issue Date:
+                    </strong>
+                </div>
+                <div class="col-2">
+                    <span t-out="o.get_l10n_sa_confirmation_datetime_sa_tz()"/>
+                </div>
+                <div class="col-2 text-end">
+                    <strong style="white-space:nowrap">:
+                        تاريخ الإصدار
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div name="invoice_date" position="attributes">
+            <attribute name="t-att-class">'d-none' if o.l10n_sa_confirmation_datetime and o.move_type in ('out_invoice', 'out_refund') else 'row'</attribute>
+        </div>
         <xpath expr="//div[@name='due_date']" position="after">
             <div class="row" t-if="o.l10n_sa_delivery_date" name="delivery_date">
                 <div class="col-6"></div>
@@ -112,9 +131,6 @@
         </xpath>
         <xpath expr="//div[hasclass('clearfix')]" position="attributes">
             <attribute name="class">clearfix pt-2 pb-2</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('page')]">
-            <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/> <!-- This is to show the issue date on the footer of all layouts. -->
         </xpath>
     </template>
 </odoo>

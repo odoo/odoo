@@ -294,6 +294,12 @@ class AccountMove(models.Model):
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
         }
 
+    def button_draft(self):
+        for move in self:
+            if move.company_id.country_code == 'SA' and move.edi_error_count:
+                move.edi_document_ids.filtered(lambda doc: doc.state not in ('sent', 'cancelled')).state = 'cancelled'
+        super().button_draft()
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

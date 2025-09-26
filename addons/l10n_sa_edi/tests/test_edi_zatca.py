@@ -4,7 +4,7 @@ from freezegun import freeze_time
 import logging
 from pytz import timezone
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import tagged
 from odoo.tools import misc
 
@@ -225,7 +225,7 @@ class TestEdiZatca(TestSaEdiCommon):
             user=self.user_saudi,
         )
         errors = self.edi_format.with_user(self.user_saudi.id)._check_move_configuration(move)
-        msg = '- Please, make sure the invoice date is set to either the same as or before Today.'
+        msg = '- Please, make sure the Issue Date is set to either the same as or before Today.'
         self.assertFalse(msg in errors)
 
     @freeze_time("2022-09-21 15:30:00", tz_offset=0)
@@ -240,6 +240,7 @@ class TestEdiZatca(TestSaEdiCommon):
             price=320.0,
             user=self.user_saudi,
         )
+        move.l10n_sa_confirmation_datetime = fields.Datetime.from_string("2022-09-22 15:30:00")
         errors = self.edi_format.with_user(self.user_saudi.id)._check_move_configuration(move)
-        msg = '- Please, make sure the invoice date is set to either the same as or before Today.'
+        msg = '- Please, make sure the Issue Date is set to either the same as or before Today.'
         self.assertTrue(msg in errors)
