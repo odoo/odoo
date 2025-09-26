@@ -574,6 +574,7 @@ export class Rtc extends Record {
 
     async openPip(options) {
         if (this.isHost) {
+            this.exitFullscreen();
             await this.pipService.openPip(options);
             return;
         }
