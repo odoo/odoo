@@ -158,3 +158,10 @@ export function checkProductOutOfStock(productName) {
         trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
     };
 }
+
+export function checkCountCartItems(count) {
+    return {
+        content: `Check that the cart has ${count} items`,
+        trigger: `.to-order .o-so-tabular-nums.text-bg-secondary:contains(/^${count}$/)`,
+    };
+}

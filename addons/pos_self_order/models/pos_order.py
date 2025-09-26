@@ -35,6 +35,10 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     table_stand_number = fields.Char(string="Table Stand Number")
+    device_type = fields.Selection([
+        ('mobile', 'Mobile'),
+        ('kiosk', 'Kiosk'),
+    ], string='Device Type', help="Type of device used to create the order.")
 
     @api.model
     def _load_pos_self_data_domain(self, data):

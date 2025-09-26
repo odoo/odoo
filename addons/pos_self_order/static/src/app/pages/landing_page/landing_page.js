@@ -107,7 +107,10 @@ export class LandingPage extends Component {
         ) {
             return;
         }
-        if (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id) {
+        if (
+            this.selfOrder.hasPresets() &&
+            (this.selfOrder.kioskMode || this.selfOrder.mobileMode)
+        ) {
             this.router.navigate("location");
         } else {
             this.router.navigate("product_list");

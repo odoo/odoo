@@ -1114,18 +1114,10 @@ class PosOrder(models.Model):
         (payment_receivable_lines | invoice_receivable_lines).sudo().with_company(invoice.company_id).reconcile()
 
     def action_pos_order_cancel(self):
-        if self.env.context.get('active_ids'):
-            orders = self.browse(self.env.context.get('active_ids'))
-            order_is_in_futur = any(order.preset_time and order.preset_time.date() > fields.Date.today() for order in orders)
-            if order_is_in_futur:
-                raise UserError(_('The order delivery / pickup date is in the future. You cannot cancel it.'))
-
-        today_orders = self.filtered(lambda order: order.state == 'draft' and (not order.preset_time or order.preset_time.date() <= fields.Date.today()))
-        next_days_orders = self.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
-        next_days_orders.session_id = False
-        today_orders.write({'state': 'cancel'})
+        drafts = self.filtered(lambda order: order.state == 'draft')
+        drafts.write({'state': 'cancel'})
         return {
-            'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+            'pos.order': drafts.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False),
         }
 
     def _get_open_order(self, order):

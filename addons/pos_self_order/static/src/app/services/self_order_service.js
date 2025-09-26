@@ -56,7 +56,6 @@ export class SelfOrder extends Reactive {
         this.rpcLoading = false;
         this.paymentError = false;
         this.selectedOrderUuid = null;
-        this.ordering = false;
         this.orderTakeAwayState = {};
         this.orderSubscribtion = new Set();
         this.kitchenPrinters = [];
@@ -88,7 +87,6 @@ export class SelfOrder extends Reactive {
             this.data.connectWebSocket("STATUS", ({ status }) => {
                 if (status === "closed") {
                     this.pos_session = [];
-                    this.ordering = false;
                 } else {
                     // reload to get potential new settings
                     // more easier than RPC for now
@@ -359,6 +357,14 @@ export class SelfOrder extends Reactive {
         return this.createNewOrder();
     }
 
+    get useTimedPreset() {
+        return this.preset?.use_timing;
+    }
+
+    get preset() {
+        return this.currentOrder?.preset_id;
+    }
+
     createNewOrder() {
         const autoSelectedPresets =
             this.models["pos.preset"].length === 1 && this.config.use_presets;
@@ -384,6 +390,10 @@ export class SelfOrder extends Reactive {
 
     get kioskMode() {
         return this.config.self_ordering_mode === "kiosk";
+    }
+
+    get mobileMode() {
+        return this.config.self_ordering_mode === "mobile";
     }
 
     markupDescriptions() {
@@ -505,10 +515,6 @@ export class SelfOrder extends Reactive {
         }
     }
     async initKioskData() {
-        if (this.session && this.access_token) {
-            this.ordering = true;
-        }
-
         await this.config.cacheReceiptLogo();
 
         window.addEventListener("click", (event) => {
@@ -542,14 +548,20 @@ export class SelfOrder extends Reactive {
                         (t) => t.identifier === tableIdentifier
                     );
                 }
-
-                this.ordering = true;
-            }
-
-            if (!this.ordering) {
-                return;
             }
         }
+    }
+
+    get ordering() {
+        if (this.kioskMode) {
+            return this.session && this.access_token;
+        }
+
+        if (this.mobileMode) {
+            return (this.session || this.useTimedPreset) && this.access_token;
+        }
+
+        return false;
     }
 
     cancelOrder() {
@@ -587,7 +599,7 @@ export class SelfOrder extends Reactive {
         this.currentOrder.recomputeChanges();
         if (Math.max(this.currentOrder.lines.map((l) => l.qty)) <= 0) {
             this.router.navigate("default");
-            this.currentOrder.delete();
+            this.currentOrder.state = "cancel";
             this.selectedOrderUuid = null;
         }
     }

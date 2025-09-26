@@ -1,4 +1,5 @@
 /* global posmodel */
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function clickBtn(buttonName) {
     return {
@@ -26,6 +27,13 @@ export function checkIsDisabledBtn(buttonName) {
     return {
         content: `Check if button '${buttonName}' is disabled`,
         trigger: `button.disabled:contains("${buttonName}")`,
+    };
+}
+
+export function checkIsNotDisabledBtn(buttonName) {
+    return {
+        content: `Check if button '${buttonName}' is not disabled`,
+        trigger: `button:contains("${buttonName}"):not(.disabled)`,
     };
 }
 
@@ -76,6 +84,13 @@ export function clickBackBtn() {
     };
 }
 
+export function noBackButton() {
+    return {
+        content: `Check that there is no back button`,
+        trigger: negate(".btn.btn-back"),
+    };
+}
+
 export function checkQRCodeGenerated() {
     return {
         content: `Check that the QR code is shown`,
@@ -121,5 +136,26 @@ export function setProductAvailability(productName, value) {
             }
             product.self_order_available = value;
         },
+    };
+}
+
+export function noTopAlert() {
+    return {
+        content: `Check that there is no top alert`,
+        trigger: negate(".o-self-closed"),
+    };
+}
+
+export function closedTopAlert() {
+    return {
+        content: `Check that the POS is closed`,
+        trigger: `.o-self-closed:contains('We are currently closed. Ordering is not possible but you can still have a look at the menu!')`,
+    };
+}
+
+export function nextAvailabilityTopAlert() {
+    return {
+        content: `Check that the POS is closed`,
+        trigger: `.o-self-closed:contains('We are currently closed. Next available pickup/delivery:')`,
     };
 }

@@ -1,10 +1,12 @@
 import { registry } from "@web/core/registry";
-import * as Utils from "@pos_self_order/../tests/tours/utils/common";
+import * as UtilsGeneric from "@point_of_sale/../tests/generic_helpers/utils";
+import * as UtilsCommon from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+const Utils = { ...UtilsGeneric, ...UtilsCommon };
 
 registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
     steps: () => [
@@ -100,6 +102,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_in", {
         ...CartPage.selectTable("3"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
@@ -127,6 +130,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_out", {
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
@@ -153,6 +157,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_in", 
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
@@ -180,6 +185,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_out",
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
@@ -205,6 +211,11 @@ registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
         ...ProductPage.clickCancel(),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-Takeout"),
+        ProductPage.checkCountCartItems(0),
+        Utils.checkIsDisabledBtn("Checkout"),
+        Utils.refresh(),
+        ProductPage.checkCountCartItems(0),
+        Utils.checkIsDisabledBtn("Checkout"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
@@ -214,6 +225,7 @@ registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.clickBack(),
@@ -236,6 +248,11 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
         ...ProductPage.clickCancel(),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-Takeout"),
+        ProductPage.checkCountCartItems(0),
+        Utils.checkIsDisabledBtn("Checkout"),
+        Utils.refresh(),
+        ProductPage.checkCountCartItems(0),
+        Utils.checkIsDisabledBtn("Checkout"),
         Utils.checkIsDisabledBtn("Checkout"),
         ProductPage.clickProduct("Fanta"),
         Utils.clickBtn("Checkout"),
