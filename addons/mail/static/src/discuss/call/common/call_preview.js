@@ -1,9 +1,10 @@
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
-    blurBackgroundAction,
     cameraOnAction,
     muteAction,
+    quickActionSettings,
+    quickVideoSettings,
 } from "@mail/discuss/call/common/call_actions";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { closeStream, onChange } from "@mail/utils/common/misc";
@@ -75,6 +76,13 @@ export class CallPreview extends Component {
             onChange(this.store.settings, "audioOutputDeviceId", (deviceId) => {
                 this.audioRef.el?.setSinkId?.(deviceId).catch(() => {});
             });
+            onChange(this.store.settings, "useBlur", () => {
+                if (this.store.settings.useBlur) {
+                    this.enableBlur();
+                } else {
+                    this.disableBlur();
+                }
+            });
             onWillDestroy(() => {
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
@@ -124,32 +132,35 @@ export class CallPreview extends Component {
             name: ({ action }) => (action.isActive ? _t("Unmute") : _t("Mute")),
             onSelected: () => this.toggleMic(),
         };
-        const blurActionUpdated = {
-            ...blurBackgroundAction,
-            isActive: () => this.state.blurManager,
-            disabledCondition: () => !this.state.videoStream,
-            onSelected: () => this.toggleBlur(),
-            tags: ({ action }) => (action.isActive ? [ACTION_TAGS.SUCCESS] : []),
-        };
         return [
-            new Action({
-                id: "toggle-microphone",
-                owner: this,
-                definition: muteActionUpdated,
-                store: this.store,
-            }),
-            new Action({
-                id: "toggle-camera",
-                owner: this,
-                definition: cameraOnActionUpdated,
-                store: this.store,
-            }),
-            new Action({
-                id: "toggle-blur",
-                owner: this,
-                definition: blurActionUpdated,
-                store: this.store,
-            }),
+            [
+                new Action({
+                    id: "toggle-microphone",
+                    owner: this,
+                    definition: muteActionUpdated,
+                    store: this.store,
+                }),
+                new Action({
+                    id: "audio-settings",
+                    owner: this,
+                    definition: quickActionSettings,
+                    store: this.store,
+                }),
+            ],
+            [
+                new Action({
+                    id: "toggle-camera",
+                    owner: this,
+                    definition: cameraOnActionUpdated,
+                    store: this.store,
+                }),
+                new Action({
+                    id: "video-settings",
+                    owner: this,
+                    definition: quickVideoSettings,
+                    store: this.store,
+                }),
+            ],
         ];
     }
 
