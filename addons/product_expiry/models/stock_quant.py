@@ -35,6 +35,12 @@ class StockQuant(models.Model):
             if quant.use_expiration_date and quant.removal_date and quant.removal_date <= current_date:
                 quant.available_quantity = 0
 
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for quant in self:
+            if quant.use_expiration_date and quant.removal_date:
+                quant.display_name = f"{quant.display_name} - {quant.removal_date.strftime('%b %-d, %Y')}"
+
     def _set_view_context(self):
         self_with_context = self
         if self.env.context.get('default_product_id') and self.env['product.product'].browse(self.env.context.get('default_product_id')).use_expiration_date:

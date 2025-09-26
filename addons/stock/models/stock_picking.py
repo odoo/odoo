@@ -1237,6 +1237,7 @@ class StockPicking(models.Model):
                 'show_lots_text': self.show_lots_text,
                 'picking_code': self.picking_type_code,
                 'create': self.state not in ('done', 'cancel'),
+                'use_create_lots': self.use_create_lots,
             }
         }
 

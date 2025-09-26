@@ -914,6 +914,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'context': dict(
                 self.env.context,
                 allow_parent_move_picked_reset=True,
+                use_create_lots=self.picking_type_id.use_create_lots,
             ),
         }
 

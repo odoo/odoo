@@ -32,11 +32,17 @@ class StockLot(models.Model):
                     name += self.env._("\t--Expired--")
                 elif lot.alert_date and fields.Datetime.now() >= lot.alert_date:
                     name += self.env._("\t--Expire on %(date)s--", date=fields.Datetime.to_string(lot.expiration_date))
+                elif lot.env.context.get('use_create_lots') and lot.removal_date:
+                    name += self.env._("\t--%(date)s--", date=lot.removal_date.strftime("%b %-d, %Y"))
                 lot.display_name = name
             else:
                 lots_to_process_ids.append(lot.id)
         if lots_to_process_ids:
             super(StockLot, self.env['stock.lot'].browse(lots_to_process_ids))._compute_display_name()
+            lots_to_process = self.env['stock.lot'].browse(lots_to_process_ids)
+            for lot in lots_to_process:
+                if lot.env.context.get('use_create_lots') and lot.use_expiration_date and lot.removal_date:
+                    lot.display_name = lot.display_name + " - " + lot.removal_date.strftime("%b %-d, %Y")
 
     @api.depends('expiration_date')
     def _compute_product_expiry_alert(self):
