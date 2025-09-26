@@ -6,7 +6,7 @@ from collections.abc import Set as AbstractSet
 import dateutil.relativedelta
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tools import SQL, unique
+from odoo.tools import SQL
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -137,17 +137,15 @@ class PrefetchMany2one(Reversible):
 
     def __iter__(self):
         field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in self.record._prefetch_ids
-            if (coid := field_cache.get(id_)) is not None
-        )
+        for id_ in self.record._prefetch_ids:
+            if (coid := field_cache.get(id_)) is not None:
+                yield coid
 
     def __reversed__(self):
         field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in reversed(self.record._prefetch_ids)
-            if (coid := field_cache.get(id_)) is not None
-        )
+        for id_ in reversed(self.record._prefetch_ids):
+            if (coid := field_cache.get(id_)) is not None:
+                yield coid
 
 
 class PrefetchX2many(Reversible):
@@ -160,19 +158,13 @@ class PrefetchX2many(Reversible):
 
     def __iter__(self):
         field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in self.record._prefetch_ids
-            for coid in field_cache.get(id_, ())
-        )
+        for id_ in self.record._prefetch_ids:
+            yield from field_cache.get(id_, ())
 
     def __reversed__(self):
         field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in reversed(self.record._prefetch_ids)
-            for coid in field_cache.get(id_, ())
-        )
+        for id_ in reversed(self.record._prefetch_ids):
+            yield from field_cache.get(id_, ())
 
 
 class OriginIds(Reversible):
