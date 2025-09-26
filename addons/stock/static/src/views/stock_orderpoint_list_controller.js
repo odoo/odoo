@@ -33,4 +33,12 @@ export class StockOrderpointListController extends ListController {
             onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
         });
     }
+
+    async createRecord() {
+        const location_id = this.env.searchModel.categories.find((category) => category.fieldName === "location_id")?.activeValueId;
+        await super.createRecord(...arguments);
+        if (this.editedRecord && location_id) {
+            this.editedRecord.update({ location_id: { id: location_id } });
+        }
+    }
 }
