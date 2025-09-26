@@ -192,6 +192,16 @@ class ProductProduct(models.Model):
 
     catalog_is_in_order = fields.Boolean(search="_search_is_in_catalog_order", store=False)
 
+    _positive_weight = models.Constraint(
+        'CHECK(weight>=0.0)',
+        'Product weight must be positive.'
+    )
+
+    _positive_volume = models.Constraint(
+        'CHECK(volume>=0.0)',
+        'Product volume must be positive.'
+    )
+
     def _search_is_in_catalog_order(self, operator, value):  # noqa: ARG002
         if operator != "in":
             return NotImplemented
