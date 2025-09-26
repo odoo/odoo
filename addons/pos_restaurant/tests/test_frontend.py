@@ -232,6 +232,7 @@ class TestFrontend(TestFrontendCommon):
     def test_02_others(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour')
+        self.start_pos_tour('SplitBillScreenTourPay')
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
         self.start_pos_tour('TableMergeUnmergeTour', login="pos_admin")
 
