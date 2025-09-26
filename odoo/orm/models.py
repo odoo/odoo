@@ -69,7 +69,7 @@ from .fields_textual import Char
 
 from .identifiers import NewId
 from .utils import (
-    ConcatIds, OriginIds, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
@@ -5900,7 +5900,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.__class__(self.env, tuple(ids), ConcatIds(prefetch_ids_list))
+        return self.__class__(self.env, tuple(ids), Prefetch.union(prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5950,7 +5950,7 @@ class BaseModel(metaclass=MetaModel):
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
         ids = tuple(dict.fromkeys(ids))
-        return self.__class__(self.env, ids, ConcatIds(prefetch_ids_list))
+        return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """

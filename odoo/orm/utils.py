@@ -6,7 +6,7 @@ from collections.abc import Set as AbstractSet
 import dateutil.relativedelta
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, unique
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -127,6 +127,54 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
+class PrefetchMany2one(Reversible):
+    """ Iterable for the values of a many2one field on the prefetch set of a given record. """
+    __slots__ = ('field', 'record')
+
+    def __init__(self, record, field):
+        self.record = record
+        self.field = field
+
+    def __iter__(self):
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid for id_ in self.record._prefetch_ids
+            if (coid := field_cache.get(id_)) is not None
+        )
+
+    def __reversed__(self):
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid for id_ in reversed(self.record._prefetch_ids)
+            if (coid := field_cache.get(id_)) is not None
+        )
+
+
+class PrefetchX2many(Reversible):
+    """ Iterable for the values of an x2many field on the prefetch set of a given record. """
+    __slots__ = ('field', 'record')
+
+    def __init__(self, record, field):
+        self.record = record
+        self.field = field
+
+    def __iter__(self):
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid
+            for id_ in self.record._prefetch_ids
+            for coid in field_cache.get(id_, ())
+        )
+
+    def __reversed__(self):
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid
+            for id_ in reversed(self.record._prefetch_ids)
+            for coid in field_cache.get(id_, ())
+        )
+
+
 class OriginIds(Reversible):
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
@@ -161,3 +209,10 @@ class ConcatIds(Reversible):
     def __reversed__(self):
         for iterable in reversed(self._iterables):
             yield from reversed(iterable)
+
+
+class Prefetch:
+    many2one = PrefetchMany2one
+    x2many = PrefetchX2many
+    origin = OriginIds
+    union = ConcatIds
