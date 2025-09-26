@@ -89,24 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Mga Katangian ng Dokumento…
 pdfjs-document-properties-file-name = File name:
 pdfjs-document-properties-file-size = File size:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = Pamagat:
 pdfjs-document-properties-author = May-akda:
 pdfjs-document-properties-subject = Paksa:
 pdfjs-document-properties-keywords = Mga keyword:
 pdfjs-document-properties-creation-date = Petsa ng Pagkakagawa:
 pdfjs-document-properties-modification-date = Petsa ng Pagkakabago:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Tagalikha:
 pdfjs-document-properties-producer = PDF Producer:
 pdfjs-document-properties-version = PDF Version:
@@ -213,9 +201,6 @@ pdfjs-page-scale-actual = Totoong sukat
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Nagkaproblema habang niloload ang PDF.
@@ -226,10 +211,6 @@ pdfjs-rendering-error = Nagkaproblema habang nirerender ang pahina.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -245,13 +226,3 @@ pdfjs-password-invalid = Maling password. Subukan uli.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Kanselahin
 pdfjs-web-fonts-disabled = Naka-disable ang mga Web font: hindi kayang gamitin ang mga naka-embed na PDF font.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

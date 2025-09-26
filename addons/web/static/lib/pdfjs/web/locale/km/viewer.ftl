@@ -71,24 +71,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = លក្ខណ​សម្បត្តិ​ឯកសារ…
 pdfjs-document-properties-file-name = ឈ្មោះ​ឯកសារ៖
 pdfjs-document-properties-file-size = ទំហំ​ឯកសារ៖
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } បៃ)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } បៃ)
 pdfjs-document-properties-title = ចំណងជើង៖
 pdfjs-document-properties-author = អ្នក​និពន្ធ៖
 pdfjs-document-properties-subject = ប្រធានបទ៖
 pdfjs-document-properties-keywords = ពាក្យ​គន្លឹះ៖
 pdfjs-document-properties-creation-date = កាលបរិច្ឆេទ​បង្កើត៖
 pdfjs-document-properties-modification-date = កាលបរិច្ឆេទ​កែប្រែ៖
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = អ្នក​បង្កើត៖
 pdfjs-document-properties-producer = កម្មវិធី​បង្កើត PDF ៖
 pdfjs-document-properties-version = កំណែ PDF ៖
@@ -183,9 +171,6 @@ pdfjs-page-scale-actual = ទំហំ​ជាក់ស្ដែង
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = មាន​កំហុស​បាន​កើតឡើង​ពេល​កំពុង​ផ្ទុក PDF ។
@@ -211,13 +196,3 @@ pdfjs-password-invalid = ពាក្យសម្ងាត់​មិន​ត�
 pdfjs-password-ok-button = យល់​ព្រម
 pdfjs-password-cancel-button = បោះបង់
 pdfjs-web-fonts-disabled = បាន​បិទ​ពុម្ពអក្សរ​បណ្ដាញ ៖ មិន​អាច​ប្រើ​ពុម្ពអក្សរ PDF ដែល​បាន​បង្កប់​បាន​ទេ ។
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

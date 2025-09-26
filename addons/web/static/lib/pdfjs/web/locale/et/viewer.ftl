@@ -92,24 +92,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Dokumendi omadused…
 pdfjs-document-properties-file-name = Faili nimi:
 pdfjs-document-properties-file-size = Faili suurus:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KiB ({ $size_b } baiti)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MiB ({ $size_b } baiti)
 pdfjs-document-properties-title = Pealkiri:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Teema:
 pdfjs-document-properties-keywords = Märksõnad:
 pdfjs-document-properties-creation-date = Loodud:
 pdfjs-document-properties-modification-date = Muudetud:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date } { $time }
 pdfjs-document-properties-creator = Looja:
 pdfjs-document-properties-producer = Generaator:
 pdfjs-document-properties-version = Generaatori versioon:
@@ -237,10 +225,6 @@ pdfjs-rendering-error = Lehe renderdamisel esines viga.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date } { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -257,12 +241,6 @@ pdfjs-password-ok-button = Sobib
 pdfjs-password-cancel-button = Loobu
 pdfjs-web-fonts-disabled = Veebifondid on keelatud: PDFiga kaasatud fonte pole võimalik kasutada.
 
-## Editing
+## Image alt-text settings
 
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
+pdfjs-editor-alt-text-settings-delete-model-button = Kustuta

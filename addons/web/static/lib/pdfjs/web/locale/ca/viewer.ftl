@@ -98,24 +98,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Propietats del document…
 pdfjs-document-properties-file-name = Nom del fitxer:
 pdfjs-document-properties-file-size = Mida del fitxer:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bytes)
 pdfjs-document-properties-title = Títol:
 pdfjs-document-properties-author = Autor:
 pdfjs-document-properties-subject = Assumpte:
 pdfjs-document-properties-keywords = Paraules clau:
 pdfjs-document-properties-creation-date = Data de creació:
 pdfjs-document-properties-modification-date = Data de modificació:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Creador:
 pdfjs-document-properties-producer = Generador de PDF:
 pdfjs-document-properties-version = Versió de PDF:
@@ -243,10 +231,6 @@ pdfjs-rendering-error = S'ha produït un error mentre es renderitzava la pàgina
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -272,9 +256,6 @@ pdfjs-editor-ink-button =
     .title = Dibuixa
 pdfjs-editor-ink-button-label = Dibuixa
 
-## Remove button for the various kind of editor.
-
-
 ##
 
 # Editor Parameters
@@ -283,31 +264,15 @@ pdfjs-editor-free-text-size-input = Mida
 pdfjs-editor-ink-color-input = Color
 pdfjs-editor-ink-thickness-input = Gruix
 pdfjs-editor-ink-opacity-input = Opacitat
-pdfjs-free-text =
-    .aria-label = Editor de text
-pdfjs-free-text-default-content = Escriviu…
-pdfjs-ink =
-    .aria-label = Editor de dibuix
-pdfjs-ink-canvas =
-    .aria-label = Imatge creada per l'usuari
 
 ## Alt-text dialog
 
+pdfjs-editor-alt-text-cancel-button = Cancel·la
 
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
+## Dialog buttons
 
+pdfjs-editor-add-signature-cancel-button = Cancel·la
 
-## Color picker
+##  Edit a comment dialog
 
-
-## Show all highlights
-## This is a toggle button to show/hide all the highlights.
-
-
-## New alt-text dialog
-## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
-
-
-## Image alt-text settings
-
+pdfjs-editor-edit-comment-manager-cancel-button = Cancel·la

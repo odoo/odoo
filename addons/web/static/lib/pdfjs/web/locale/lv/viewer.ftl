@@ -89,24 +89,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Dokumenta iestatījumi…
 pdfjs-document-properties-file-name = Faila nosaukums:
 pdfjs-document-properties-file-size = Faila izmērs:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } biti)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } biti)
 pdfjs-document-properties-title = Nosaukums:
 pdfjs-document-properties-author = Autors:
 pdfjs-document-properties-subject = Tēma:
 pdfjs-document-properties-keywords = Atslēgas vārdi:
 pdfjs-document-properties-creation-date = Izveides datums:
 pdfjs-document-properties-modification-date = LAbošanas datums:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Radītājs:
 pdfjs-document-properties-producer = PDF producents:
 pdfjs-document-properties-version = PDF versija:
@@ -207,9 +195,6 @@ pdfjs-page-scale-actual = Patiesais izmērs
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Ielādējot PDF notika kļūda.
@@ -235,13 +220,3 @@ pdfjs-password-invalid = Nepareiza parole, mēģiniet vēlreiz.
 pdfjs-password-ok-button = Labi
 pdfjs-password-cancel-button = Atcelt
 pdfjs-web-fonts-disabled = Tīmekļa fonti nav aktivizēti: Nevar iegult PDF fontus.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

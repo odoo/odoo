@@ -68,24 +68,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Својства на документот…
 pdfjs-document-properties-file-name = Име на датотека:
 pdfjs-document-properties-file-size = Големина на датотеката:
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } бајти)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } МБ ({ $size_b } бајти)
 pdfjs-document-properties-title = Наслов:
 pdfjs-document-properties-author = Автор:
 pdfjs-document-properties-subject = Тема:
 pdfjs-document-properties-keywords = Клучни зборови:
 pdfjs-document-properties-creation-date = Датум на создавање:
 pdfjs-document-properties-modification-date = Датум на промена:
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Креатор:
 pdfjs-document-properties-version = Верзија на PDF:
 pdfjs-document-properties-page-count = Број на страници:
@@ -178,9 +166,6 @@ pdfjs-page-scale-actual = Вистинска големина
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Настана грешка при вчитувањето на PDF-от.
@@ -189,13 +174,6 @@ pdfjs-missing-file-error = Недостасува PDF документ.
 pdfjs-unexpected-response-error = Неочекуван одговор од серверот.
 pdfjs-rendering-error = Настана грешка при прикажувањето на страницата.
 
-## Annotations
-
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
-
 ## Password
 
 pdfjs-password-label = Внесете ја лозинката за да ја отворите оваа датотека.
@@ -203,13 +181,3 @@ pdfjs-password-invalid = Невалидна лозинка. Обидете се 
 pdfjs-password-ok-button = Во ред
 pdfjs-password-cancel-button = Откажи
 pdfjs-web-fonts-disabled = Интернет фонтовите се оневозможени: не може да се користат вградените PDF фонтови.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
