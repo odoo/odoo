@@ -116,7 +116,6 @@ class StockLot(models.Model):
         """
         try:
             self._alert_date_exceeded()
-            self.env.cr.commit()
         except Exception:
             _logger.exception("An error occurred while the product lot expiry alert scheduler.")
             raise

@@ -1722,7 +1722,6 @@ class PosSession(models.Model):
         """
         try:
             self._alert_old_session()
-            self.env.cr.commit()
         except Exception:
             _logger.exception("An error occurred while the POS old session alert scheduler.")
             raise
