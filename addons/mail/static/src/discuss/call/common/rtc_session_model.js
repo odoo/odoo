@@ -10,7 +10,7 @@ export class RtcSession extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {Promies<import("models").RtcSession>} */
+    /** @returns {Promise<import("models").RtcSession>} */
     static async getWhenReady(id) {
         const session = this.get(id);
         if (!session) {
