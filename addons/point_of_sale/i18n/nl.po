@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-19 18:37+0000\n"
+"POT-Creation-Date: 2025-09-26 18:37+0000\n"
 "PO-Revision-Date: 2025-08-27 00:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -3077,6 +3077,7 @@ msgstr "Kort.:"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Discard"
 msgstr "Negeren"
@@ -3442,12 +3443,6 @@ msgstr "Extra belastinggegevens"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
 msgstr "Mislukte leveringen"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Failed in printing %s changes of the order"
-msgstr "Mislukt bij het afdrukken van %s wijzigingen van de order"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6155,6 +6150,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"Please note that some printers could not be contacted. The changes will be "
+"taken into account locally, but a preparation ticket may be missing. Here is "
+"the list of printers with errors: %s\n"
+"Do you want to retry ?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid "Please print the invoice from the backend"
 msgstr "Je dient de factuur via de backend af te drukken"
@@ -7401,6 +7406,7 @@ msgstr "Retail"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
@@ -8102,6 +8108,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Sommige serie-/partijnummers ontbreken"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8260,12 +8272,6 @@ msgstr "Bewerkte orders opslaan in de backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -10169,12 +10175,6 @@ msgstr "Je kunt een betaling voor een geplaatste order niet bewerken."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "Je kunt orders van verschillende bedrijven niet factureren."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10575,6 +10575,12 @@ msgstr "om de knoppen te activeren."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "gebruikende"
+
+#~ msgid "Failed in printing %s changes of the order"
+#~ msgstr "Mislukt bij het afdrukken van %s wijzigingen van de order"
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr "Je kunt orders van verschillende bedrijven niet factureren."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Registreer het vouchernummer"
