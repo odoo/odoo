@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_peppol
-# 
+#
 # Translators:
 # Ali Reza Feizi Derakhshi, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
@@ -10,38 +10,42 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # Hanna Kheradroosta, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-09-25 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Hanna Kheradroosta, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                            If you need a Peppol compliant software, we recommend"
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid ""
 "<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        The invoice will be sent automatically to PEPPOL\n"
 "                    </span>"
 msgstr ""
-"<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (آزمایشی)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (آزمایشی)</"
+"span>\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        فاکتور به صورت خودکار با PEPPOL تنظیم می‌شود\n"
 "                    </span>"
 
@@ -51,31 +55,39 @@ msgid ""
 "<span class=\"o_form_label\">\n"
 "                                    Peppol Details\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Values set here are company-specific.\"/>"
 msgstr ""
 "<span class=\"o_form_label\">\n"
 "                                    جزئیات PEPPOL\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"NV در اینجا مقادیر، مختص هر شرکت تعیین می‌شوند.\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"NV در اینجا مقادیر، مختص هر شرکت تعیین می‌شوند.\"/>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'demo'\"> (Demo)</span>\n"
-"                                        <span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
+"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == "
+"'demo'\"> (Demo)</span>\n"
+"                                        <span class=\"text-info\" "
+"invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
 msgstr ""
-"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'demo'\"> (آزمایشی)</span>\n"
-"                                        <span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
+"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == "
+"'demo'\"> (آزمایشی)</span>\n"
+"                                        <span class=\"text-info\" "
+"invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "<span>\n"
-"                                    I want to migrate my Peppol connection to Odoo (optional):\n"
+"                                    I want to migrate my Peppol connection "
+"to Odoo (optional):\n"
 "                                </span>"
 msgstr ""
 "<span>\n"
-"                                    می‌خواهم اتصال Peppol خود را به اودوو منتقل کنم (اختیاری):\n"
+"                                    می‌خواهم اتصال Peppol خود را به اودوو "
+"منتقل کنم (اختیاری):\n"
 "                                </span>"
 
 #. module: account_peppol
@@ -83,10 +95,8 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"A participant with these details has already been registered on the network."
-" If you have previously registered to an alternative Peppol service, please "
-"deregister from that service, or request a migration key before trying "
-"again. "
+"A participant with these details has already been registered on the network. "
+"If you have previously registered to a Peppol service, please deregister."
 msgstr ""
 
 #. module: account_peppol
@@ -142,8 +152,8 @@ msgstr "وضعیت درخواست:"
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
-"با کلیک بر روی دکمه‌ی زیر می‌پذیرم که اودوو ممکن است فاکتورهای الکترونیک مرا"
-" پردازش کند."
+"با کلیک بر روی دکمه‌ی زیر می‌پذیرم که اودوو ممکن است فاکتورهای الکترونیک مرا "
+"پردازش کند."
 
 #. module: account_peppol
 #. odoo-python
@@ -153,8 +163,8 @@ msgid ""
 "Can't cancel an active registration. Please request a migration or "
 "deregister instead."
 msgstr ""
-"امکان لغو یک ثبت‌نام فعال وجود ندارد. لطفاً به جای آن د رخواستی برای انتقال "
-"یا لغو ثبت‌نام ارائه دهید."
+"امکان لغو یک ثبت‌نام فعال وجود ندارد. لطفاً به جای آن د رخواستی برای انتقال یا "
+"لغو ثبت‌نام ارائه دهید."
 
 #. module: account_peppol
 #. odoo-python
@@ -216,10 +226,12 @@ msgstr "بررسی شده"
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
 "کد مورد استفاده برای شناسایی مقصد صدور صورت‌حساب BIS 3.0 و مشتقات آن.\n"
-"فهرست کدها در https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/ قابل دسترسی است"
+"فهرست کدها در https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/ قابل "
+"دسترسی است"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -316,20 +328,13 @@ msgid "Fetch from Peppol"
 msgstr "بازیابی از Peppol"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"In Belgium, electronic invoicing will be <u>mandatory as of January "
-"2026</u>."
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "In demo mode sending and receiving invoices is simulated. There will be no "
 "communication with the Peppol network."
 msgstr ""
-"در حالت آزمایشی، ارسال و دریافت فاکتورها شبیه‌سازی می‌شود. هیچ اتصالی با "
-"شبکه‌ی Peppol وجود ندارد."
+"در حالت آزمایشی، ارسال و دریافت فاکتورها شبیه‌سازی می‌شود. هیچ اتصالی با شبکه‌ی "
+"Peppol وجود ندارد."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -466,20 +471,6 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: به روزرسانی وضعیت شرکت‌کننده‌ها"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
-"invoice on Peppol.</b>"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
-"color\">sent on Peppol</b>."
-msgstr ""
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
 msgid "Pending"
 msgstr "معلق"
@@ -549,7 +540,6 @@ msgstr "اعتبار مقصد Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
 msgstr "خطای Peppol: %s"
@@ -574,8 +564,7 @@ msgstr "به روزرسانی وضعیت Peppol: %s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"Please do not hesitate to contact our support if you need further "
-"assistance."
+"Please do not hesitate to contact our support if you need further assistance."
 msgstr "در صورت نیاز به کمک بیشتر، لطفاً با بخش پشتیبانی ما تماس بگیرید."
 
 #. module: account_peppol
@@ -697,8 +686,7 @@ msgstr "گذر شده"
 msgid ""
 "Start sending and receiving documents via Peppol as soon as your "
 "registration is complete."
-msgstr ""
-"به محض تکمیل ثبت‌نام، ارسال و دریافت اسناد از طریق Peppol را آغاز کنید."
+msgstr "به محض تکمیل ثبت‌نام، ارسال و دریافت اسناد از طریق Peppol را آغاز کنید."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -720,7 +708,8 @@ msgstr "تست"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Test mode allows registration of the user on the test Peppol network.\n"
-"                                        By clicking the button below I accept that Odoo may process my e-invoices."
+"                                        By clicking the button below I "
+"accept that Odoo may process my e-invoices."
 msgstr ""
 "روش آزمایش امکان ثبت‌نام کاربر در شبکه‌ی Peppol را فراهم می‌کند.\n"
 "با کلیک بر روی دکمه‌ی زیر می‌پذیرم که اودوو ممکن است فاکتورهای مرا پردازش کند."
@@ -754,8 +743,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
-"شماره‌ی مقصد ممکن است صحیح نباشد. لطفاً بررسی کنید که آیا شماره را درست وارد"
-" کرده‌اید یا نه."
+"شماره‌ی مقصد ممکن است صحیح نباشد. لطفاً بررسی کنید که آیا شماره را درست وارد "
+"کرده‌اید یا نه."
 
 #. module: account_peppol
 #. odoo-python
@@ -766,8 +755,8 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
-"همکاران زیر برای دریافت اسناد Peppol به درستی وارد نشده‌اند. لطفاً مقصد "
-"Peppol و قالب صدور فاکتور الکترونیک آنها را بررسی کنید: %s"
+"همکاران زیر برای دریافت اسناد Peppol به درستی وارد نشده‌اند. لطفاً مقصد Peppol "
+"و قالب صدور فاکتور الکترونیک آنها را بررسی کنید: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -795,14 +784,6 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended EAS code for Belgium is 0208. The Endpoint should be the "
-"Company Registry number."
-msgstr "کد EAS بلژیک 0208 است. مقصد باید شماره‌ی ثبت شرکت باشد."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "The rejection reason has been sent to you via email."
 msgstr "علت رد درخواست از طریق ایمیل برای شما ارسال شده است."
 
@@ -810,8 +791,8 @@ msgstr "علت رد درخواست از طریق ایمیل برای شما ار
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
 msgid "The unique id that identifies this user, typically the vat"
 msgstr ""
-"شناسه‌ی منحصر به فردی که هویت این کاربر را مشخص می‌کند، که معمولاً کد مالیات"
-" بر ارزش افزوده"
+"شناسه‌ی منحصر به فردی که هویت این کاربر را مشخص می‌کند، که معمولاً کد مالیات بر "
+"ارزش افزوده"
 
 #. module: account_peppol
 #. odoo-python
@@ -832,8 +813,12 @@ msgstr "کد تأیید اعتبار باید شش رقمی باشد."
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"This feature is deprecated. Contact odoo support if you need a migration "
-"key."
+"This feature is deprecated. Contact odoo support if you need a migration key."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "This invoice has also been"
 msgstr ""
 
 #. module: account_peppol
@@ -856,8 +841,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Too many attempts to request an SMS code. Please try again later."
-msgstr ""
-"درخواست بیش از حد برای دریافت کد از طریق پیامک. لطفاً بعداً امتحان کنید."
+msgstr "درخواست بیش از حد برای دریافت کد از طریق پیامک. لطفاً بعداً امتحان کنید."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -866,8 +850,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"شناسه‌ی منحصر به فرد مورد استفاده‌ی BIS Billing 3.0 و مشتقات آن، که «شناسه‌ی"
-" مقصد» نیز نامیده می‌شود. "
+"شناسه‌ی منحصر به فرد مورد استفاده‌ی BIS Billing 3.0 و مشتقات آن، که «شناسه‌ی "
+"مقصد» نیز نامیده می‌شود. "
 
 #. module: account_peppol
 #. odoo-javascript
@@ -887,8 +871,8 @@ msgid ""
 "Using the config params, this field specifies which edi modes may be "
 "selected from the UI"
 msgstr ""
-"این فیلد با استفاده از پارامترهای پیکربندی، مشخص می‌کند که کدام حالت‌های edi"
-" ممکن است از UI انتخاب شوند"
+"این فیلد با استفاده از پارامترهای پیکربندی، مشخص می‌کند که کدام حالت‌های edi "
+"ممکن است از UI انتخاب شوند"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
@@ -897,7 +881,6 @@ msgstr "معتبر"
 
 #. module: account_peppol
 #. odoo-javascript
-#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "Validate registration"
@@ -963,8 +946,8 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-"دیگر نمی‌توانید  اسناد  Peppol را در اودوو ارسال یا دریافت کنید. آیا "
-"می‌خواهید ادامه دهید؟"
+"دیگر نمی‌توانید  اسناد  Peppol را در اودوو ارسال یا دریافت کنید. آیا می‌خواهید "
+"ادامه دهید؟"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
@@ -993,3 +976,28 @@ msgstr "کلید انتقال شما این است:"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
 msgstr "ثبت‌نام شما باید ظرف یک روز فعال شود."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "could not be sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "to send invoices, but this one"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "uses"
+msgstr ""
+
+#~ msgid ""
+#~ "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
+#~ "Company Registry number."
+#~ msgstr "کد EAS بلژیک 0208 است. مقصد باید شماره‌ی ثبت شرکت باشد."
