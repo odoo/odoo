@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-25 17:35+0000\n"
+"PO-Revision-Date: 2025-09-27 02:30+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/auth_timeout/es_419/>\n"
@@ -137,31 +137,34 @@ msgstr "Tiempo de espera de inactividad"
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_2fa_selection
 msgid "Lock Timeout 2Fa Selection"
 msgstr ""
+"Selección de bloqueo por tiempo de espera en autenticación de dos factores"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_delay_in_unit
 msgid "Lock Timeout Delay In Unit"
-msgstr ""
+msgstr "Retraso de bloqueo por tiempo de espera en unidad"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_delay_unit
 msgid "Lock Timeout Delay Unit"
-msgstr ""
+msgstr "Unidad de retraso de bloqueo por tiempo de espera"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_2fa_selection
 msgid "Lock Timeout Inactivity 2Fa Selection"
 msgstr ""
+"Selección de bloqueo por inactividad en tiempo de espera por autentificación "
+"de dos factores"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_delay_in_unit
 msgid "Lock Timeout Inactivity Delay In Unit"
-msgstr ""
+msgstr "Unidad de retraso de bloqueo por inactividad"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_delay_unit
 msgid "Lock Timeout Inactivity Delay Unit"
-msgstr ""
+msgstr "Unidad de retraso de bloqueo por inactividad"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__without_2fa
@@ -171,7 +174,7 @@ msgstr "Cerrar sesión"
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__with_2fa
 msgid "Logout with two-factor authentication"
-msgstr ""
+msgstr "Cerrar sesión con autenticación de dos factores"
 
 #. module: auth_timeout
 #. odoo-javascript
@@ -198,32 +201,33 @@ msgstr "Contraseña"
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_mfa
 msgid "Require MFA on inactivity timeout"
-msgstr ""
+msgstr "Requiere autenticación multifactor al expirar la sesión por inactividad"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_mfa
 msgid "Require MFA on session timeout"
-msgstr ""
+msgstr "Requiere autentificación multifactor al expirar la sesión"
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout_inactivity
 msgid "Requires re-authentication after a period of user inactivity"
 msgstr ""
+"Requiere volver a autenticar después de un periodo de inactividad del usuario"
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout
 msgid "Requires re-authentication after the user's last connection"
-msgstr ""
+msgstr "Requiere volver a autenticar después de la última conexión del usuario"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__without_2fa
 msgid "Screen lock"
-msgstr ""
+msgstr "Bloqueo de pantalla"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__with_2fa
 msgid "Screen lock with two-factor authentication"
-msgstr ""
+msgstr "Bloqueo de pantalla con autenticación de dos factores"
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
@@ -233,13 +237,13 @@ msgstr "Sesión"
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout
 msgid "Session timeout"
-msgstr ""
+msgstr "Tiempo de sesión agotado"
 
 #. module: auth_timeout
 #. odoo-javascript
 #: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
 msgid "Signed in as"
-msgstr ""
+msgstr "Conectado como"
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity
@@ -247,6 +251,8 @@ msgid ""
 "Time (in minutes) of user inactivity after which re-authentication is "
 "required."
 msgstr ""
+"Tiempo (en minutos) de inactividad del usuario después del cual es necesario "
+"volver a autenticarse."
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout
@@ -254,17 +260,19 @@ msgid ""
 "Time interval (in minutes) after which re-authentication is required, "
 "regardless of inactivity."
 msgstr ""
+"Intervalo de tiempo (en minutos) tras el cual es necesario volver a "
+"autenticarse, sin importar la inactividad."
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Timeouts"
-msgstr ""
+msgstr "Tiempos de espera"
 
 #. module: auth_timeout
 #. odoo-javascript
 #: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
 msgid "Use an authentication code sent by email"
-msgstr ""
+msgstr "Usar un código de autenticación enviado por correo electrónico"
 
 #. module: auth_timeout
 #. odoo-javascript
