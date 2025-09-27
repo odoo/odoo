@@ -74,6 +74,9 @@ class ActionAdapter extends ComponentAdapter {
             Object.assign(this.tempQuery, query);
             return;
         }
+        if (!this.widget && this.__widget) {
+            this.widget = this.__widget;
+        }
         if (this.widget) {
             const actionTitle = this.widget.getTitle();
             if (actionTitle) {
