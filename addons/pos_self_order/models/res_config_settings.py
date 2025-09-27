@@ -96,6 +96,17 @@ class ResConfigSettings(models.TransientModel):
         qr.make(fit=True)
         return qr.make_image(fill_color="black", back_color="transparent")
 
+    def get_pos_qr_stands(self):
+        """Redirect to the get the free stands with the data of QR codes for the current POS config"""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "pos_qr_stands",
+            "params": {
+                "data": self.pos_config_id.get_pos_qr_order_data(),
+            },
+        }
+
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
             raise ValidationError(_("QR codes can only be generated in mobile or consultation mode."))

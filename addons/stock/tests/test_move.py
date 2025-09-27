@@ -4815,6 +4815,46 @@ class StockMove(TransactionCase):
         internal_transfer.button_validate()
         self.assertEqual(internal_transfer.state, 'done')
 
+    def test_validate_picking_wihtout_picked_reservations(self):
+        """
+        Check that validating a picking where every picked move is unreserved
+        raises a user error for validating an an empty transfer
+        """
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_type': 'one',
+            'move_ids_without_package': [
+                Command.create({
+                    'name': 'test_out_with_reservation',
+                    'product_id': self.product_consu.id,
+                    'product_uom': self.product_consu.uom_id.id,
+                    'product_uom_qty': 1.0,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+                Command.create({
+                    'name': 'test_out_without_reservation',
+                    'product_id': self.product.id,
+                    'product_uom': self.product.uom_id.id,
+                    'product_uom_qty': 1.0,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ]
+        })
+        picking.action_confirm()
+        # pick only the unreserved move
+        picking.move_ids[1].picked = True
+        self.assertRecordValues(picking.move_ids, [
+            {'quantity': 1.0, 'picked': False, 'state': 'assigned'},
+            {'quantity': 0.0, 'picked': True, 'state': 'confirmed'},
+        ])
+        # there is nothing to validate
+        with self.assertRaises(UserError):
+            picking.button_validate()
+
     def test_set_quantity_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_1',

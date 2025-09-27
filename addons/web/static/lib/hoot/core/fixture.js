@@ -75,7 +75,7 @@ export function makeFixtureManager(runner) {
 
     function getFixture() {
         if (!allowFixture) {
-            throw new HootError(`Cannot access fixture outside of a test.`);
+            throw new HootError(`cannot access fixture outside of a test.`);
         }
         if (!currentFixture) {
             // Prepare fixture once to not force layouts/reflows

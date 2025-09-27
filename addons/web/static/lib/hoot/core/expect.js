@@ -303,7 +303,7 @@ function listJoin(list, separator, lastSeparator) {
 /** @type {typeof makeLabel} */
 function makeLabelOrString(...args) {
     const label = makeLabel(...args);
-    if (logger.allows("debug")) {
+    if (logger.canLog("debug")) {
         debugLabelCache.set(label, args[0]);
     }
     return label[1] === null ? label[0] : label;
@@ -1010,7 +1010,7 @@ export class CaseResult {
             }
         }
         if (caseEvent) {
-            if (logger.allows("debug") && CASE_EVENT_LOG_COLORS.includes(type)) {
+            if (logger.canLog("debug") && CASE_EVENT_LOG_COLORS.includes(type)) {
                 const colorName = caseEvent.pass === false ? "rose" : CASE_EVENT_TYPES[type].color;
                 const logArgs = [[caseEvent.label, getColorHex(colorName)]];
                 for (const part of caseEvent.message) {

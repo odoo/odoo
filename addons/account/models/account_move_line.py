@@ -1077,18 +1077,28 @@ class AccountMoveLine(models.Model):
                     list({int(account_id) for ids in related_distribution for account_id in ids.split(',')})
                 ).exists().root_plan_id
 
-                arguments = frozendict({
-                    "product_id": line.product_id.id,
-                    "product_categ_id": line.product_id.categ_id.id,
-                    "partner_id": line.partner_id.id,
-                    "partner_category_id": line.partner_id.category_id.ids,
-                    "account_prefix": line.account_id.code,
-                    "company_id": line.company_id.id,
-                    "related_root_plan_ids": root_plans,
-                })
+                arguments = frozendict(line._get_analytic_distribution_arguments(root_plans))
                 if arguments not in cache:
                     cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
                 line.analytic_distribution = related_distribution | cache[arguments] or line.analytic_distribution
+
+    def _get_analytic_distribution_arguments(self, root_plans):
+        """
+        Get arguments to determine analytic distribution.
+        This function aims to be overridden by partner submodules
+        :param root_plans: account.analytic.plan recordset
+        :return: dict
+        """
+        arguments = {
+            "product_id": self.product_id.id,
+            "product_categ_id": self.product_id.categ_id.id,
+            "partner_id": self.partner_id.id,
+            "partner_category_id": self.partner_id.category_id.ids,
+            "account_prefix": self.account_id.code,
+            "company_id": self.company_id.id,
+            "related_root_plan_ids": root_plans,
+        }
+        return arguments
 
     @api.depends('discount_date', 'date_maturity')
     def _compute_payment_date(self):

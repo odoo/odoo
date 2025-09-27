@@ -220,7 +220,7 @@ function shuffle(array) {
  */
 function handleConsoleIssues(test, shouldSuppress) {
     if (shouldSuppress && test.config.todo) {
-        return logger.suppressIssues(`suppressed by "test.todo"`);
+        return logger.setIssueLevel("suppressed");
     } else {
         const cleanups = [];
         if (isInstanceOf(globalThis.console, EventTarget)) {
@@ -246,7 +246,7 @@ function warnUserEvent(ev) {
         return;
     }
 
-    logger.warn(
+    logger.global.warn(
         `User event detected: "${ev.type}"\n\n`,
         `This kind of interaction can interfere with the current test and should be avoided.`
     );
@@ -475,7 +475,9 @@ export class Runner {
      */
     addSuite(config, name, fn) {
         if (!name) {
-            throw new HootError(`a suite name must not be empty, got ${name}`);
+            throw new HootError(`a suite name must not be empty, got ${name}`, {
+                level: "critical",
+            });
         }
         const names = ensureArray(name).flatMap((n) => normalize(n).split("/").filter(Boolean));
         const [suiteName, ...otherNames] = names;
@@ -529,18 +531,15 @@ export class Runner {
                 if (err instanceof HootError) {
                     throw err;
                 } else {
-                    error = String(err);
+                    error = err;
                 }
             }
         }
         this.suiteStack.pop();
         if (error) {
-            throw suiteError({ name: suiteName, parent: parentSuite }, error);
+            throw suiteError(suite, error);
         } else if (result !== undefined) {
-            throw suiteError(
-                { name: suiteName, parent: parentSuite },
-                `the suite function cannot return a value`
-            );
+            throw suiteError(suite, `the suite function cannot return a value`);
         }
 
         return suite;
@@ -553,7 +552,9 @@ export class Runner {
      */
     addTest(config, name, fn) {
         if (!name) {
-            throw new HootError(`a test name must not be empty, got ${name}`);
+            throw new HootError(`a test name must not be empty, got ${name}`, {
+                level: "critical",
+            });
         }
         const parentSuite = this.suiteStack.at(-1);
         if (!parentSuite) {
@@ -577,7 +578,7 @@ export class Runner {
         if (originalTest && !originalTest.isMinimized) {
             if (this.dry || originalTest.run) {
                 throw testError(
-                    { name, parent: parentSuite },
+                    test,
                     `a test with that name already exists in the suite ${stringify(
                         parentSuite.name
                     )}`
@@ -745,7 +746,7 @@ export class Runner {
         } else {
             if (lastPresetWarn !== presetId) {
                 this._handleGlobalWarning(WARNINGS.viewport);
-                logger.warn(
+                logger.global.warn(
                     WARNINGS.viewport,
                     `\n> expected:`,
                     width,
@@ -777,10 +778,14 @@ export class Runner {
      */
     async dryRun(callback) {
         if (this.state.status !== "ready") {
-            throw new HootError("cannot run a dry run after the test runner started");
+            throw new HootError("cannot run a dry run after the test runner started", {
+                level: "global",
+            });
         }
         if (this._prepared) {
-            throw new HootError("cannot run a dry run: runner has already been prepared");
+            throw new HootError("cannot run a dry run: runner has already been prepared", {
+                level: "global",
+            });
         }
 
         this.dry = true;
@@ -891,7 +896,9 @@ export class Runner {
             this._prepareRunner();
             await this._setupStart();
         } else if (!jobs.length) {
-            throw new HootError("cannot start test runner: runner has already started");
+            throw new HootError("cannot start test runner: runner has already started", {
+                level: "global",
+            });
         }
 
         if (this.state.status === "done") {
@@ -999,17 +1006,12 @@ export class Runner {
 
                 if (timeout && !this.debug) {
                     // Set timeout
-                    timeoutId = setTimeout(
-                        () =>
-                            reject(
-                                new HootError(
-                                    `test ${stringify(
-                                        test.name
-                                    )} timed out after ${timeout} milliseconds`
-                                )
-                            ),
-                        timeout
-                    );
+                    timeoutId = setTimeout(() => {
+                        const msg = `test ${stringify(
+                            test.name
+                        )} timed out after ${timeout} milliseconds`;
+                        reject(new HootError(msg, { level: "global" }));
+                    }, timeout);
                 }
             }).then(() => {
                 this.aborted = true;
@@ -1074,7 +1076,7 @@ export class Runner {
                         ...lastResults.currentErrors.map((error) => `\n${error.message}`)
                     );
                 }
-                logger.logGlobalError(
+                logger.global.error(
                     [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
                 );
 
@@ -1178,6 +1180,8 @@ export class Runner {
             // all suites have passed.
             logger.logRun("Test suite succeeded");
         }
+
+        logger.setIssueLevel("critical"); // Goes back to critical mode after a test run
 
         return false;
     }
@@ -1338,14 +1342,15 @@ export class Runner {
                 case Tag.DEBUG:
                     if (typeof this.debug !== "boolean" && this.debug !== job) {
                         throw new HootError(
-                            `cannot set multiple tests or suites as "debug" at the same time`
+                            `cannot set multiple tests or suites as "debug" at the same time`,
+                            { level: "critical" }
                         );
                     }
                     this.debug = job;
                 // Falls through
                 case Tag.ONLY:
                     if (!this.dry) {
-                        logger.logGlobalWarning(
+                        logger.global.warn(
                             `${stringify(job.fullName)} is marked as ${stringify(
                                 tag.name
                             )}. This is not suitable for CI`
@@ -1365,7 +1370,7 @@ export class Runner {
 
         if (shouldSkip) {
             if (ignoreSkip) {
-                logger.logGlobalWarning(
+                logger.global.warn(
                     `${stringify(
                         job.fullName
                     )} is marked as skipped but explicitly included: "skip" modifier has been ignored`
@@ -1610,8 +1615,8 @@ export class Runner {
             let debugTest = this.debug;
             while (debugTest instanceof Suite) {
                 if (debugTest.jobs.length > 1) {
-                    throw new HootError(
-                        `cannot debug a suite with more than 1 job, got ${debugTest.jobs.length}`
+                    logger.global.warn(
+                        `debugging a suite with ${debugTest.jobs.length} jobs: only the first one will be run`
                     );
                 }
                 debugTest = debugTest.jobs[0];
@@ -1682,7 +1687,9 @@ export class Runner {
         if (this.config.preset) {
             const preset = this.presets[this.config.preset];
             if (!preset) {
-                throw new HootError(`unknown preset: "${this.config.preset}"`);
+                throw new HootError(`unknown preset: "${this.config.preset}"`, {
+                    level: "critical",
+                });
             }
             if (preset.tags?.length) {
                 this._include(this.state.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
@@ -1716,7 +1723,7 @@ export class Runner {
             this._handleGlobalWarning(
                 WARNINGS.tagNames + similarities.map((s) => `\n- ${s.map(stringify).join(" / ")}`)
             );
-            logger.logGlobalWarning(WARNINGS.tagNames, similarities);
+            logger.global.warn(WARNINGS.tagNames, similarities);
         }
 
         this._populateState = true;
@@ -1724,7 +1731,7 @@ export class Runner {
         this._populateState = false;
 
         if (!this.state.tests.length) {
-            throw new HootError(`no tests to run`);
+            throw new HootError(`no tests to run`, { level: "critical" });
         }
 
         // Reduce non-included suites & tests info to a miminum
@@ -1802,9 +1809,11 @@ export class Runner {
         safePrevent(ev);
 
         // Log error
-        if (this.dry || error.global) {
-            // Stringify the error to avoid logging whole traceback on CI
-            logger.logGlobalError(String(error));
+        if (error.level) {
+            const restoreLogger = logger.setIssueLevel(error.level);
+            // Stringify global errors to avoid logging whole tracebacks on CI
+            logger.error(error.level === "global" ? String(error) : error);
+            restoreLogger();
         } else {
             logger.error(error);
         }
@@ -1880,6 +1889,7 @@ export class Runner {
             logger.table(table);
         });
         logger.logRun("Starting test suites");
+        logger.setIssueLevel("trace");
 
         // Adjust debug mode if more or less than 1 test will be run
         if (this.debug) {
@@ -1887,7 +1897,7 @@ export class Runner {
                 (test) => !test.config.skip && !test.config.multi
             );
             if (activeSingleTests.length !== 1) {
-                logger.logGlobalWarning(
+                logger.global.warn(
                     `Disabling debug mode: ${activeSingleTests.length} tests will be run`
                 );
                 this.config.debugTest = false;
@@ -1897,7 +1907,7 @@ export class Runner {
                     destroy,
                     getFixture: this.fixture.get,
                 });
-                logger.setLevel("debug");
+                logger.setLogLevel("debug");
                 logger.logDebug(
                     `Debug mode is active: Hoot helpers available from \`window.${nameSpace}\``
                 );
@@ -1925,7 +1935,7 @@ export class Runner {
             cleanupTime
         );
 
-        enableEventLogs(logger.allows("debug"));
+        enableEventLogs(logger.canLog("debug"));
         setFrameRate(this.config.fps);
 
         await this._callbacks.call("before-all", this, logger.error);

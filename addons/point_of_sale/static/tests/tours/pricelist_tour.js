@@ -44,28 +44,3 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ProductScreen.closePos(),
         ].flat(),
 });
-
-registry.category("web_tour.tours").add("test_default_pricelist_when_creating_partner", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCreateCustomerButton(),
-            ProductScreen.clickPartnerTab("Sales"),
-            {
-                content: "Get the displayed pricelist",
-                trigger: "input#property_product_pricelist_0",
-                run: function () {
-                    const value = document.querySelector(
-                        "input#property_product_pricelist_0"
-                    )?.value;
-                    if (value !== "Default Pricelist (USD)") {
-                        throw new Error(
-                            `The default pricelist should be the one displayed, but "${value}" is.`
-                        );
-                    }
-                },
-            },
-        ].flat(),
-});

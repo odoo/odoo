@@ -753,7 +753,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // TODO we should investigate if this is normal the websiteRootInstance
         // is being accessed while being dead following a wysiwyg adapter event.
         if (!websiteRootInstance) {
-            if (eventData.onFailure) {
+            if (eventData.onFailure && !eventData.onSuccess) {
                 return eventData.onFailure();
             }
             return false;

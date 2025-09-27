@@ -81,7 +81,7 @@ export class FloorScreen extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.ui = useState(useService("ui"));
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,

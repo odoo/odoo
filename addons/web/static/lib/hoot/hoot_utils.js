@@ -1255,7 +1255,9 @@ export function makeRuntimeHook(name) {
                 valid ||= Boolean(last.global);
             }
             if (!valid) {
-                throw new HootError(`cannot call "${name}" callback outside of a suite`);
+                throw new HootError(`cannot call "${name}" callback outside of a suite`, {
+                    level: "critical",
+                });
             }
             return runner[name](...callbacks);
         },
@@ -1764,6 +1766,22 @@ export class ElementMap extends Map {
 
 export class HootError extends Error {
     name = "HootError";
+    /** @type {keyof typeof import("./core/logger").ISSUE_LEVELS} */
+    level;
+
+    /**
+     *
+     * @param {string} [message]
+     * @param {ErrorOptions & {
+     *  level?: keyof typeof import("./core/logger").ISSUE_LEVELS;
+     * }} [options]
+     */
+    constructor(message, options) {
+        super(message, options);
+
+        // See 'logger.js' for details on each issue level
+        this.level = options?.level;
+    }
 }
 
 /** @template [T=string] */
