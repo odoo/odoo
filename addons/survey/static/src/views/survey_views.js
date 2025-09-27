@@ -69,7 +69,6 @@ registry.category('views').add('survey_view_tree', {
 export class SurveyKanbanRenderer extends KanbanRenderer {
     setup() {
         super.setup();
-        this.canCreate = this.props.archInfo.activeActions.create;
         if (this.canCreate) {
             useSurveyLoadSampleHook('.o_survey_load_sample');
         }
