@@ -321,27 +321,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Beste <t t-out="
-"\"client_name\">Klantnaam</t>,</t>\n"
+"                        <t t-if=\"client_name\">Beste <t t-"
+"out=\"client_name\">Klantnaam</t>,</t>\n"
 "                        <t t-else=\"\">Beste,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Bedankt voor je aankoop bij <t t-out=\"store_name\""
-">Winkelnaam</t>!</div>\n"
+"                    <div>Bedankt voor je aankoop bij <t t-"
+"out=\"store_name\">Winkelnaam</t>!</div>\n"
 "                    <div>In de bijlage vind je je kassabon voor de aankoop "
 "op <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">datum</t> om <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">tijd</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">tijd</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Met vriendelijke groeten,</div>\n"
@@ -372,9 +372,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %(is_invoiced)"
-"svoor             %(pos_name)s voor een bedrag van %(amount)s bij "
-"%(company_name)s. </p>"
+"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %"
+"(is_invoiced)svoor             %(pos_name)s voor een bedrag van %(amount)s "
+"bij %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -404,8 +404,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Deze instelling geldt voor alle kassa's.\" pos-data-toggle="
-"\"tooltip\"/>"
+"title=\"Deze instelling geldt voor alle kassa's.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -428,9 +428,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tip: voeg een retourprijslijst toe (bijv. € "
-"0)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tip: voeg een retourprijslijst toe (bijv. € 0)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -4257,8 +4256,8 @@ msgstr "Factuurstatus"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Factuurbetaling van %(order)s (%(account_move)s) aan de hand van "
-"%(payment_method)s"
+"Factuurbetaling van %(order)s (%(account_move)s) aan de hand van %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5175,9 +5174,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Geen grootboekschema geconfigureerd, ga naar het menu "
-"\"configuratie / instellingen\" en installeer er een via het Facturatie-"
-"tabblad."
+"Geen grootboekschema geconfigureerd, ga naar het menu \"configuratie / "
+"instellingen\" en installeer er een via het Facturatie-tabblad."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5463,7 +5461,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
+msgstr ""
+"Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -8382,6 +8381,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe-betaalterminal"
@@ -8648,8 +8653,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"De Kassa ondersteunt alleen de afrondingsstrategie "
-"\"voeg een afrondingsregel toe\"."
+"De Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
+"afrondingsregel toe\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9359,8 +9364,8 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "Dit dagboek is gekoppeld aan betaalmethode %(payment_method)s die wordt "
-"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie "
-"%(pos_session)s."
+"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie %"
+"(pos_session)s."
 
 #. module: point_of_sale
 #. odoo-javascript

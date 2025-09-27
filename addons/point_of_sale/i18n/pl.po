@@ -48,8 +48,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
-"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
@@ -348,28 +348,28 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Witaj <t t-out="
-"\"client_name\">Client name</t>,</t>\n"
+"                        <t t-if=\"client_name\">Witaj <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Dzień dobry,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Dziękujemy za dokonanie zakupu w <t t-out="
-"\"store_name\">Store name</t>!</div>\n"
+"                    <div>Dziękujemy za dokonanie zakupu w <t t-"
+"out=\"store_name\">Store name</t>!</div>\n"
 "                    <div>Poniżej znajdziesz dołączony do tej wiadomości "
-"rachunek za zakup z dnia <span><t t-out=\"format_datetime("
-"dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;"
-",                          lang_code=lg) or ''\">date</t> <t t-out=\""
-"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">time</t>.</span>\n"
+"rachunek za zakup z dnia <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">date</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">time</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Z pozdrowieniami,</div>\n"
@@ -384,9 +384,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"To ustawienie jest wspólne dla wszystkich punktów sprzedaży.\" pos-data-"
-"toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"To ustawienie jest wspólne dla "
+"wszystkich punktów sprzedaży.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -401,8 +400,8 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Drogi/Droga %(client_name)s,<br/>Oto Twój rachunek %(is_invoiced)s od "
-"%(company_name)s   za             %(pos_name)s w wysokości %(amount)s. </p>"
+"<p>Drogi/Droga %(client_name)s,<br/>Oto Twój rachunek %(is_invoiced)s od %"
+"(company_name)s   za             %(pos_name)s w wysokości %(amount)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -410,8 +409,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Do "
-"ustalenia</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Do ustalenia</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -431,8 +430,8 @@ msgid ""
 "title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Kody kreskowe</span>\n"
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
+"PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -455,8 +454,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Wskazówka: dodaj cennik zwrotu (np. 0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Wskazówka: dodaj cennik zwrotu (np. 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -542,8 +541,8 @@ msgstr "<strong>Suma</strong>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
 msgstr ""
-"<sup title=\"Działa tylko w przypadku zamówienia samodzielnego i online\""
-">?</sup>"
+"<sup title=\"Działa tylko w przypadku zamówienia samodzielnego i online\">?</"
+"sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1225,7 +1224,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr "Buty do lekkoatletyki, zaprojektowane z myślą o komforcie i wydajności."
+msgstr ""
+"Buty do lekkoatletyki, zaprojektowane z myślą o komforcie i wydajności."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -4619,8 +4619,8 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "Pozostaw puste, aby użyć konta należności klienta.\n"
-"Określa dziennik, w którym mają zostać zaksięgowane skumulowane płatności ("
-"lub pojedyncza płatność, jeśli Identify Customer ma wartość true) po "
+"Określa dziennik, w którym mają zostać zaksięgowane skumulowane płatności "
+"(lub pojedyncza płatność, jeśli Identify Customer ma wartość true) po "
 "zamknięciu sesji.\n"
 "W przypadku dziennika gotówkowego zapisujemy bezpośrednio na domyślne konto "
 "w dzienniku za pośrednictwem linii wyciągu.\n"
@@ -6247,8 +6247,8 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Zdefiniuj rachunek zysków i strat dla tego produktu: '%(product)s' (id: "
-"%(id)d)."
+"Zdefiniuj rachunek zysków i strat dla tego produktu: '%(product)s' (id: %"
+"(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7582,8 +7582,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Odwrócenie wpisu zamknięcia POS %(entry)s dla zamówienia %(order)s z sesji "
-"%(session)s"
+"Odwrócenie wpisu zamknięcia POS %(entry)s dla zamówienia %(order)s z sesji %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8402,6 +8402,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminal płatniczy Stripe"
@@ -8667,8 +8673,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Punkt sprzedaży obsługuje tylko strategię zaokrąglania "
-"\"dodaj linię zaokrąglania\"."
+"Punkt sprzedaży obsługuje tylko strategię zaokrąglania \"dodaj linię "
+"zaokrąglania\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9019,7 +9025,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity."
-msgstr "Wnioskowana ilość do zwrotu jest wyższa niż ilość podlegająca zwrotowi."
+msgstr ""
+"Wnioskowana ilość do zwrotu jest wyższa niż ilość podlegająca zwrotowi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9160,7 +9167,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_com
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Viva.com on terminal or tap on phone."
-msgstr "Transakcje są przetwarzane przez Viva.com w terminalu lub na telefonie."
+msgstr ""
+"Transakcje są przetwarzane przez Viva.com w terminalu lub na telefonie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
@@ -9356,8 +9364,8 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "Ten dziennik jest powiązany z metodą płatności %(payment_method)s, która "
-"jest używana przez zamówienie %(pos_order)s w aktywnej sesji pos "
-"%(pos_session)s"
+"jest używana przez zamówienie %(pos_order)s w aktywnej sesji pos %"
+"(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10372,8 +10380,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Włączyłeś opcję \"Identyfikuj klienta\" dla metody płatności "
-"%(payment_method)s, ale zamówienie %(order)s nie zawiera klienta."
+"Włączyłeś opcję \"Identyfikuj klienta\" dla metody płatności %"
+"(payment_method)s, ale zamówienie %(order)s nie zawiera klienta."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

@@ -319,27 +319,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">مرحباً <t t-out="
-"\"client_name\">اسم العميل</t>،</t>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-"
+"out=\"client_name\">اسم العميل</t>،</t>\n"
 "                        <t t-else=\"\">مرحباً،</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>شكراً لشرائكم من <t t-out=\"store_name\">اسم "
-"المتجر</t>!</div>\n"
-"                    <div>ستجد في المرفقات إيصال مشترياتك بتاريخ <span><t "
-"t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
-"MMMM&quot;,                          lang_code=lg) or ''"
-"\">التاريخ</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">اليوم</t>.</span>\n"
+"                    <div>شكراً لشرائكم من <t t-out=\"store_name\">اسم المتجر</"
+"t>!</div>\n"
+"                    <div>ستجد في المرفقات إيصال مشترياتك بتاريخ <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">التاريخ</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">اليوم</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>مع أطيب التحيات،</div>\n"
@@ -371,8 +371,8 @@ msgid ""
 "(company_name)s. </p>"
 msgstr ""
 "<p>عزيزنا %(client_name)s،<br/>إليك الإيصال %(is_invoiced)sالخاص "
-"بالطلب             %(pos_name)s والذي تبلغ قيمته %(amount)s من "
-"%(company_name)s. </p>"
+"بالطلب             %(pos_name)s والذي تبلغ قيمته %(amount)s من %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -402,8 +402,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">الباركودات</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"هذا الإعداد مشترك لدى كافة نقاط البيع. \" pos-data-toggle=\"tooltip\""
-"/>"
+"title=\"هذا الإعداد مشترك لدى كافة نقاط البيع. \" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -426,9 +426,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">نصيحة: أضف قائمة أسعار للمرتجعات (مثال: "
-"0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">نصيحة: أضف قائمة أسعار للمرتجعات (مثال: 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -988,7 +987,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__is_total_cost_computed
 msgid "Allows to know if the total cost has already been computed or not"
-msgstr "يتيح لك معرفة ما إذا كانت التكلفة الإجمالية قد تم احتسابها بالفعل أم لا"
+msgstr ""
+"يتيح لك معرفة ما إذا كانت التكلفة الإجمالية قد تم احتسابها بالفعل أم لا"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2554,7 +2554,8 @@ msgstr "إنشاء منتج جديد"
 msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
-msgstr "أنشئ فاتورة واحدة لكافة الطلبات المتعلقة بنفس العميل ونفس عنوان الفوترة"
+msgstr ""
+"أنشئ فاتورة واحدة لكافة الطلبات المتعلقة بنفس العميل ونفس عنوان الفوترة"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -7977,7 +7978,8 @@ msgstr "تعيين الوضع المالي"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "تعيين أسعار متعددة لكل منتج بالإضافة إلى الخصومات المؤتمتة وما إلى ذلك."
+msgstr ""
+"تعيين أسعار متعددة لكل منتج بالإضافة إلى الخصومات المؤتمتة وما إلى ذلك."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8202,7 +8204,8 @@ msgstr "مسار محدد"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr "قم بتحديد الرقم التسلسلي/رقم الدفعة الخاص بالمنتج في بند طلب نقطة البيع"
+msgstr ""
+"قم بتحديد الرقم التسلسلي/رقم الدفعة الخاص بالمنتج في بند طلب نقطة البيع"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
@@ -8298,6 +8301,12 @@ msgstr "تخزين الطلبات التي تم تحريرها في الواجه
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -10084,8 +10093,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
-"لا يمكنك أرشفة '%(picking_type)s' حيث إنه مستخدم في تهيئة نقطة البيع "
-"'%(config)s'."
+"لا يمكنك أرشفة '%(picking_type)s' حيث إنه مستخدم في تهيئة نقطة البيع '%"
+"(config)s'."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10182,8 +10191,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
-"لا تملك الإذن لفتح جلسة عمل نقاط البيع. يرجى محاولة فتح الجلسة عن طريق مُستخدِ"
-"م آخر"
+"لا تملك الإذن لفتح جلسة عمل نقاط البيع. يرجى محاولة فتح الجلسة عن طريق "
+"مُستخدِم آخر"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10235,7 +10244,8 @@ msgstr "عليك إزالة هذا المنتج من %s الكومبو"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You must have at least one payment method configured to launch a session."
-msgstr "يجب أن تكون لديك طريقة دفع مهيأة واحدة على الأقل حتى تتمكن من بدء جلسة."
+msgstr ""
+"يجب أن تكون لديك طريقة دفع مهيأة واحدة على الأقل حتى تتمكن من بدء جلسة."
 
 #. module: point_of_sale
 #. odoo-python

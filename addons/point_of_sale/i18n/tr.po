@@ -97,8 +97,8 @@ msgstr "%(name)s İADESİ"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, %(new_amount)"
-"s olarak güncellendi."
+"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, %"
+"(new_amount)s olarak güncellendi."
 
 #. module: point_of_sale
 #. odoo-python
@@ -375,8 +375,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\""
-">Belirlenecek</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Belirlenecek</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -2368,7 +2368,8 @@ msgstr "Yazıcıya bağlantı başarısız"
 msgid ""
 "Connection to the server has been lost. Please check your internet "
 "connection."
-msgstr "Sunucu ile bağlantı kesildi. Lütfen internet bağlantınızı kontrol edin."
+msgstr ""
+"Sunucu ile bağlantı kesildi. Lütfen internet bağlantınızı kontrol edin."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__consolidated_billing
@@ -3835,7 +3836,8 @@ msgstr "POS’ta görselleri gizle"
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
-msgstr "Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
+msgstr ""
+"Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4518,8 +4520,8 @@ msgid ""
 "journal entries."
 msgstr ""
 "Şirket ayarından varsayılan hesabı kullanmak için boş bırakın.\n"
-"Yevmiye kayıtlarında kullanılan şirketin alacak hesabını (Satış Noktası için)"
-" geçersiz kılar."
+"Yevmiye kayıtlarında kullanılan şirketin alacak hesabını (Satış Noktası "
+"için) geçersiz kılar."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -5402,7 +5404,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "Yalnızca yöneticiler fiş başlıklarını ve alt bilgilerini düzenleyebilir"
+msgstr ""
+"Yalnızca yöneticiler fiş başlıklarını ve alt bilgilerini düzenleyebilir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -6474,7 +6477,8 @@ msgstr "Satış Noktası"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
+msgstr ""
+"Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -8303,6 +8307,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe Ödeme Terminali"
@@ -8910,7 +8920,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity."
-msgstr "İade edilmesi talep edilen miktar, iade edilebilir miktardan yüksektir."
+msgstr ""
+"İade edilmesi talep edilen miktar, iade edilebilir miktardan yüksektir."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10114,8 +10125,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
-"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%(picking_type)"
-"s' arşivlenemez."
+"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%"
+"(picking_type)s' arşivlenemez."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10144,7 +10155,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
-msgstr "%(lock_date_info)s tarihinden önce başlayan bir oturum oluşturamazsınız"
+msgstr ""
+"%(lock_date_info)s tarihinden önce başlayan bir oturum oluşturamazsınız"
 
 #. module: point_of_sale
 #. odoo-python

@@ -22,8 +22,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
@@ -322,27 +322,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hola <t t-out=\"client_name\""
-">nombre del cliente</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hola <t t-"
+"out=\"client_name\">nombre del cliente</t>,</t>\n"
 "                        <t t-else=\"\">Hola,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Gracias por comprar en <t t-out=\"store_name\""
-">Nombre de la tienda</t>.</div>\n"
+"                    <div>Gracias por comprar en <t t-"
+"out=\"store_name\">Nombre de la tienda</t>.</div>\n"
 "                    <div>Aquí encontrará el recibo de la compra que ha hecho "
 "el <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">fecha</t> a las <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">hora</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">hora</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Saludos cordiales,</div>\n"
@@ -374,8 +374,8 @@ msgid ""
 "(company_name)s. </p>"
 msgstr ""
 "<p>Estimado/a %(client_name)s:<br/>Aquí tiene su recibo %(is_invoiced)s "
-"para             %(pos_name)s con un importe de %(amount)s de %(company_name)"
-"s. </p>"
+"para             %(pos_name)s con un importe de %(amount)s de %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -420,7 +420,8 @@ msgstr "<span class=\"o_stat_text\">Apuntes contables</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr "<span class=\"oe_inline\"><b>Saltar pantalla de vista previa</b></span>"
+msgstr ""
+"<span class=\"oe_inline\"><b>Saltar pantalla de vista previa</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -428,9 +429,9 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Consejo: añada una lista de precios de "
-"devolución (es decir, 0 €)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Consejo: añada una lista de precios de devolución (es decir, 0 "
+"€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1483,8 +1484,8 @@ msgid ""
 "products."
 msgstr ""
 "Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
-"tarjetas de regalo y fidelidad. Puede establecer condiciones específicas ("
-"productos, clientes, importe de compra mínimo, periodo). Las recompensas "
+"tarjetas de regalo y fidelidad. Puede establecer condiciones específicas "
+"(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
 "pueden ser descuentos (% o un importe) o productos gratis."
 
 #. module: point_of_sale
@@ -1778,7 +1779,8 @@ msgstr "Control de caja - apertura"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr "Diferencia de efectivo observada durante el recuento (pérdida) - cierre"
+msgstr ""
+"Diferencia de efectivo observada durante el recuento (pérdida) - cierre"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3890,8 +3892,8 @@ msgid ""
 "plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
-"¡Un momento! No archive productos mientras las sesiones de TPV están activas."
-"\n"
+"¡Un momento! No archive productos mientras las sesiones de TPV están "
+"activas.\n"
 "Asegúrese de cerrar todas las sesiones primero para evitar errores."
 
 #. module: point_of_sale
@@ -4565,8 +4567,8 @@ msgid ""
 "Overrides the company's receivable account (for Point of Sale) used in the "
 "journal entries."
 msgstr ""
-"Deje vacío para utilizar la cuenta por defecto de los ajustes de la compañía."
-"\n"
+"Deje vacío para utilizar la cuenta por defecto de los ajustes de la "
+"compañía.\n"
 "Anula la cuenta por cobrar de la compañía (para el punto de venta) utilizada "
 "en los asientos contables."
 
@@ -5172,8 +5174,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"No hay un plan contable configurado. Vaya al menú \"configuración / ajustes\""
-" e instale uno desde la pestaña Facturación."
+"No hay un plan contable configurado. Vaya al menú \"configuración / "
+"ajustes\" e instale uno desde la pestaña Facturación."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8049,7 +8051,8 @@ msgstr "Establecer posición fiscal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Establezca precios múltiples por producto, descuentos automáticos, etc."
+msgstr ""
+"Establezca precios múltiples por producto, descuentos automáticos, etc."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8377,6 +8380,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminal de pago Stripe"
@@ -8645,8 +8654,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"El punto de venta solo admite la estrategia de redondeo "
-"\"añadir una línea de redondeo\"."
+"El punto de venta solo admite la estrategia de redondeo \"añadir una línea "
+"de redondeo\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10417,7 +10426,8 @@ msgstr "Necesita una cuenta de pérdidas y ganancias en su diario de caja."
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "You need to select the customer before you can invoice or ship an order."
-msgstr "Debe seleccionar el cliente antes de poder facturar o enviar un pedido."
+msgstr ""
+"Debe seleccionar el cliente antes de poder facturar o enviar un pedido."
 
 #. module: point_of_sale
 #. odoo-python

@@ -347,25 +347,25 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hei <t t-out=\"client_name\""
-">Asiakkaan Nimi </t>,</t>\n"
+"                        <t t-if=\"client_name\">Hei <t t-"
+"out=\"client_name\">Asiakkaan Nimi </t>,</t>\n"
 "                        <t t-else=\"\">Hei,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Kiitos, kun teit ostoksesi <t t-out=\"store_name\""
-">Myymälän nimi</t>!</div>\n"
-"                    <div>Liitteenä löydät kuitin <span><t t-out="
-"\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
-"MMMM&quot;,                          lang_code=lg) or ''"
-"\">päivämäärä</t> klo. <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"                    <div>Kiitos, kun teit ostoksesi <t t-"
+"out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Liitteenä löydät kuitin <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> "
+"klo. <t t-out=\"format_time(time=object.date_order, tz=tz, "
 "time_format='short',                          lang_code=lg)\">aika</t> "
 "tekemästäsi ostoksesta.</span>\n"
 "                    </div>\n"
@@ -429,8 +429,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Viivakoodit</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Tämä asetus on yhteinen kaikille kassoille.\" pos-data-toggle="
-"\"tooltip\"/>"
+"title=\"Tämä asetus on yhteinen kaikille kassoille.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -453,8 +453,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Vinkki: lisää palautushinnasto (esim. 0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Vinkki: lisää palautushinnasto (esim. 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1218,7 +1218,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr "Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
+msgstr ""
+"Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -2024,8 +2025,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Valitse verovelvollisuusasema tilauksen yhteydessä asiakastyypin mukaan ("
-"verovapaa, paikan päällä tai take away jne.)."
+"Valitse verovelvollisuusasema tilauksen yhteydessä asiakastyypin mukaan "
+"(verovapaa, paikan päällä tai take away jne.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5483,8 +5484,8 @@ msgstr "Sovelletaan pyöristämistä vain käteisvaroihin"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" -"
-"tyyppisiä päiväkirjoja."
+"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" "
+"-tyyppisiä päiväkirjoja."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5643,8 +5644,8 @@ msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
-"Valinnaisia tuotteita ehdotetaan, kun asiakas lisää tuotteita ostoskoriin ("
-"esim. hampurilaisen lisäämisen yhteydessä ehdottaa juomia tai ranskalaisia)."
+"Valinnaisia tuotteita ehdotetaan, kun asiakas lisää tuotteita ostoskoriin "
+"(esim. hampurilaisen lisäämisen yhteydessä ehdottaa juomia tai ranskalaisia)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8379,6 +8380,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe-maksupääte"
@@ -10328,8 +10335,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Olet ottanut \"Tunnista asiakas\" -vaihtoehdon käyttöön maksutapaa "
-"%(payment_method)s varten, mutta tilauksessa %(order)s ei ole asiakasta."
+"Olet ottanut \"Tunnista asiakas\" -vaihtoehdon käyttöön maksutapaa %"
+"(payment_method)s varten, mutta tilauksessa %(order)s ei ole asiakasta."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

@@ -87,9 +87,9 @@ msgstr "%(old_pm)s 更改为 %(new_pm)s 支付 %(old_amount)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "POS "
-"付款，付款方式：%(payment_method)s，合作伙伴：%(partner)s，操作时段：%(sessio"
-"n)s"
+msgstr ""
+"POS 付款，付款方式：%(payment_method)s，合作伙伴：%(partner)s，操作时段：%"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -316,27 +316,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">您好<t t-out=\"client_name\""
-">客户名称</t>，</t>\n"
+"                        <t t-if=\"client_name\">您好<t t-out=\"client_name\">"
+"客户名称</t>，</t>\n"
 "                        <t t-else=\"\">您好，</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>感谢您光临<t t-out=\"store_name\""
-">商店名称</t>！</div>\n"
-"                    <div>随函附上您的购物收据<span><t t-out=\"format_datetime"
-"(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;"
-",                          lang_code=lg) or ''\">日期</t> <t t-out=\""
-"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">时间</t>。</span>\n"
+"                    <div>感谢您光临<t t-out=\"store_name\">商店名称</t>！</"
+"div>\n"
+"                    <div>随函附上您的购物收据<span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">日期</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">时间</t>。</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>谨致问候，</div>\n"
@@ -367,8 +367,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>亲爱的 %(client_name)s：<br/>附上您的收据 %(is_invoiced)s 销售点："
-"             %(pos_name)s，总金额：%(amount)s，公司：%(company_name)s。</p>"
+"<p>亲爱的 %(client_name)s：<br/>附上您的收据 %(is_invoiced)s 销售"
+"点：             %(pos_name)s，总金额：%(amount)s，公司：%(company_name)s。</"
+"p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -420,8 +421,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">提示：添加退货价格表（即 0€）</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">提示：添加退货价格表（即 0€）</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -898,7 +899,8 @@ msgid ""
 "All available pricelists must be in the same currency as the company or as "
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
-msgstr "如果您使用会计应用，所有可用的价格表必须使用相同的币别作为公司或销售日记账设"
+msgstr ""
+"如果您使用会计应用，所有可用的价格表必须使用相同的币别作为公司或销售日记账设"
 "置POS。"
 
 #. module: point_of_sale
@@ -1440,9 +1442,8 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"通过多种计划提高您的销售额：优惠券、促销、礼品卡、会员。 "
-"可以设置特定条件（产品、客户、最小采购金额、期限）。 "
-"奖励可以是折扣（百分比或金额）或免费产品。"
+"通过多种计划提高您的销售额：优惠券、促销、礼品卡、会员。 可以设置特定条件（产"
+"品、客户、最小采购金额、期限）。 奖励可以是折扣（百分比或金额）或免费产品。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -4150,7 +4151,8 @@ msgstr "发票状态"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "发票付款：订单 %(order)s (%(account_move)s)，以 %(payment_method)s 付款"
+msgstr ""
+"发票付款：订单 %(order)s (%(account_move)s)，以 %(payment_method)s 付款"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -4475,8 +4477,8 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "留空即使用客户的应收账户。 \n"
-"定义在营业点结束时累积付款（或如果启用“识别客户”则为单个付款）的记账日记账。 "
-"\n"
+"定义在营业点结束时累积付款（或如果启用“识别客户”则为单个付款）的记账日记"
+"账。 \n"
 "对于现金日记账，我们直接通过报表行写入日记账中的默认账户。 \n"
 "对于银行日记账，我们写入此付款方式中指定的未清账户。 仅允许现金和银行日记账。"
 
@@ -5487,7 +5489,8 @@ msgstr "可选产品："
 msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
-msgstr "顾客将商品加入购物车时，会建议加购产品（例如：购买汉堡包时，会建议加购冻饮或"
+msgstr ""
+"顾客将商品加入购物车时，会建议加购产品（例如：购买汉堡包时，会建议加购冻饮或"
 "薯条）。"
 
 #. module: point_of_sale
@@ -7387,7 +7390,8 @@ msgstr ""
 msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
-msgstr "撤回销售点结算记项%(entry)s，相关订单：%(order)s，操作时段：%(session)s"
+msgstr ""
+"撤回销售点结算记项%(entry)s，相关订单：%(order)s，操作时段：%(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8191,6 +8195,12 @@ msgid "Stripe"
 msgstr "Stripe支付"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe支付终端"
@@ -8533,8 +8543,9 @@ msgstr "字段%s必须填写。"
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
-msgstr "原始订单中使用的财务状况未加载。请确保通过在 POS "
-"配置中添加该财务状况来加载它。"
+msgstr ""
+"原始订单中使用的财务状况未加载。请确保通过在 POS 配置中添加该财务状况来加载"
+"它。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8796,8 +8807,9 @@ msgid ""
 "The session has been already closed by another User. All sales completed in "
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr "会话已被另一用户关闭。在此期间完成的所有销售已保存在救援会话中，可以随时查看"
-"，并从POS仪表板过账至Accounting应用程序。"
+msgstr ""
+"会话已被另一用户关闭。在此期间完成的所有销售已保存在救援会话中，可以随时查"
+"看，并从POS仪表板过账至Accounting应用程序。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -9060,8 +9072,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"此日记账已与付款方式 %(payment_method)s 相关联，该付款方式由订单 %(pos_order)"
-"s 所使用，相关的生效销售点操作时段：%(pos_session)s"
+"此日记账已与付款方式 %(payment_method)s 相关联，该付款方式由订单 %"
+"(pos_order)s 所使用，相关的生效销售点操作时段：%(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9889,8 +9901,8 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"您不能：从后台界面创建 pos 订单，或取消设置价格表，或使用表单工具在 python "
-"测试中创建 pos.order，或者在工作室中编辑表单视图（如果不存在 PoS 订单）"
+"您不能：从后台界面创建 pos 订单，或取消设置价格表，或使用表单工具在 python 测"
+"试中创建 pos.order，或者在工作室中编辑表单视图（如果不存在 PoS 订单）"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10022,8 +10034,9 @@ msgstr "您没有获取POS关闭控制数据的访问权限。"
 msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
-msgstr "您为 "
-"%(payment_method)s付款方式启用了“区分客户”选项，但订单%(order)s中没有客户。"
+msgstr ""
+"您为 %(payment_method)s付款方式启用了“区分客户”选项，但订单%(order)s中没有客"
+"户。"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

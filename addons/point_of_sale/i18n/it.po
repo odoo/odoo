@@ -22,8 +22,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
@@ -324,27 +324,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Ciao <t t-out=\"client_name\""
-">nome cliente</t>,</t>\n"
+"                        <t t-if=\"client_name\">Ciao <t t-"
+"out=\"client_name\">nome cliente</t>,</t>\n"
 "                        <t t-else=\"\">Ciao,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>grazie per aver acquistato da <t t-out="
-"\"store_name\">nome negozio</t>!</div>\n"
+"                    <div>grazie per aver acquistato da <t t-"
+"out=\"store_name\">nome negozio</t>!</div>\n"
 "                    <div>In allegato, troverai la ricevuta per l'acquisto "
 "effettuato il <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">data</t> alle <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">orario</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">orario</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>A presto,</div>\n"
@@ -359,8 +359,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
+"PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -375,9 +375,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Gentile %(client_name)s,<br/>di seguito lo scontrino %(is_invoiced)"
-"sper             %(pos_name)s dell'importo di %(amount)s da %(company_name)"
-"s. </p>"
+"<p>Gentile %(client_name)s,<br/>di seguito lo scontrino %"
+"(is_invoiced)sper             %(pos_name)s dell'importo di %(amount)s da %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -385,8 +385,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Da "
-"stabilire</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Da stabilire</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -430,9 +430,9 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Consiglio: aggiungi un listino prezzi per il "
-"reso (ad es. 0 €)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Consiglio: aggiungi un listino prezzi per il reso (ad es. 0 €)</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1495,8 +1495,8 @@ msgid ""
 "products."
 msgstr ""
 "Incrementa le vendite con vari tipi di programmi: buoni sconto, promozioni, "
-"carte regalo e fedeltà. È possibile impostate condizioni specifiche ("
-"prodotti, clienti, importo minimo di acquisto, periodo). Le ricompense "
+"carte regalo e fedeltà. È possibile impostate condizioni specifiche "
+"(prodotti, clienti, importo minimo di acquisto, periodo). Le ricompense "
 "possono essere sconti (% o importo) oppure prodotti gratuiti."
 
 #. module: point_of_sale
@@ -2894,7 +2894,8 @@ msgstr "Imposta di vendita predefinita per i prodotti"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Unità di misura predefinita usata per tutte le operazioni di magazzino."
+msgstr ""
+"Unità di misura predefinita usata per tutte le operazioni di magazzino."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -3573,7 +3574,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_butter_croissant_product_template
 msgid "Flaky all butter pastry, layered for a light and golden croissant."
-msgstr "Pasta sfoglia al burro, stratificata per un croissant leggero e dorato."
+msgstr ""
+"Pasta sfoglia al burro, stratificata per un croissant leggero e dorato."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
@@ -4269,8 +4271,8 @@ msgstr "Stato fattura"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Pagamento fattura per %(order)s (%(account_move)s) utilizzando "
-"%(payment_method)s"
+"Pagamento fattura per %(order)s (%(account_move)s) utilizzando %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5185,8 +5187,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Nessuno piano dei conti configurato, vai al menu "
-"\"configurazione/impostazioni\" e installane uno dalla scheda Fatturazione."
+"Nessuno piano dei conti configurato, vai al menu \"configurazione/"
+"impostazioni\" e installane uno dalla scheda Fatturazione."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6876,7 +6878,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_basic_receipt
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print basic ticket without prices. Can be used for gifts."
-msgstr "Stampa scontrino base senza prezzi. Può essere utilizzato per i regali."
+msgstr ""
+"Stampa scontrino base senza prezzi. Può essere utilizzato per i regali."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -8396,6 +8399,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminale di pagamento Stripe"
@@ -8664,8 +8673,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Il punto vendita supporta solo la strategia "
-"\"Aggiunta di una riga di arrotondamento\"."
+"Il punto vendita supporta solo la strategia \"Aggiunta di una riga di "
+"arrotondamento\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8889,8 +8898,8 @@ msgid ""
 "device."
 msgstr ""
 "L'ordine è stato modificato su un altro dispositivo. Se hai modificato righe "
-"d'ordine esistenti, assicurati che le modifiche non siano state sostituite.  "
-"\n"
+"d'ordine esistenti, assicurati che le modifiche non siano state "
+"sostituite.  \n"
 "\n"
 "L'ordine verrà inviato al server con le ultime modifiche effettuate su "
 "questo dispositivo."
@@ -9935,7 +9944,8 @@ msgstr "Usa mappatura automatica imposte con AvaTax nel POS"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr "Utilizzo di codici a barre per lettura prodotti, tessere clienti ecc..."
+msgstr ""
+"Utilizzo di codici a barre per lettura prodotti, tessere clienti ecc..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

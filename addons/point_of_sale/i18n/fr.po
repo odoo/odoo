@@ -322,27 +322,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Bonjour <t t-out="
-"\"client_name\">Nom du client</t>,</t>\n"
+"                        <t t-if=\"client_name\">Bonjour <t t-"
+"out=\"client_name\">Nom du client</t>,</t>\n"
 "                        <t t-else=\"\">Bonjour,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Merci pour votre achat chez <t t-out=\"store_name\""
-">Nom du magasin</t> !</div>\n"
+"                    <div>Merci pour votre achat chez <t t-"
+"out=\"store_name\">Nom du magasin</t> !</div>\n"
 "                    <div>Vous trouverez ci-joint le reçu pour votre commande "
 "du <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">date</t> à <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">heure</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">heure</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Cordialement,</div>\n"
@@ -373,9 +373,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Bonjour %(client_name)s,<br/>Voici votre reçu %(is_invoiced)"
-"spour             %(pos_name)s d'un montant de %(amount)s de %(company_name)"
-"s. </p>"
+"<p>Bonjour %(client_name)s,<br/>Voici votre reçu %"
+"(is_invoiced)spour             %(pos_name)s d'un montant de %(amount)s de %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -383,8 +383,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">À "
-"déterminer</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">À déterminer</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -430,9 +430,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Astuce : ajoutez une liste de prix de retour ("
-"ex. : 0 €)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Astuce : ajoutez une liste de prix de retour (ex. : 0 €)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2019,8 +2018,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Choisir un régime fiscal adapté à la commande en fonction du type de client ("
-"exonération de taxes, sur place ou à emporter, etc.)."
+"Choisir un régime fiscal adapté à la commande en fonction du type de client "
+"(exonération de taxes, sur place ou à emporter, etc.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2997,7 +2996,8 @@ msgstr "Nom démo"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_rye_bread_product_template
 msgid "Dense and dark, made with rye flour, perfect for sandwiches."
-msgstr "Dense et foncé, à base de farine de seigle, parfait pour les sandwichs."
+msgstr ""
+"Dense et foncé, à base de farine de seigle, parfait pour les sandwichs."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4842,7 +4842,8 @@ msgstr "Gérer les commandes par heure"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
-msgstr "Gérer la promotion qui accordera des remises ou des cadeaux aux clients"
+msgstr ""
+"Gérer la promotion qui accordera des remises ou des cadeaux aux clients"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
@@ -5211,9 +5212,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Aucun plan comptable n'est configuré. Allez au menu "
-"\"configuration / paramètres\" et installez-en un depuis l'onglet "
-"Facturation."
+"Aucun plan comptable n'est configuré. Allez au menu \"configuration / "
+"paramètres\" et installez-en un depuis l'onglet Facturation."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6270,8 +6270,8 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Veuillez définir un compte de revenu pour ce produit : '%(product)s' "
-"(id:%(id)d)."
+"Veuillez définir un compte de revenu pour ce produit : '%(product)s' (id:%"
+"(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7610,8 +7610,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Extourne de l'écriture de fermeture du PdV %(entry)s pour la commande "
-"%(order)s liée à la session %(session)s"
+"Extourne de l'écriture de fermeture du PdV %(entry)s pour la commande %"
+"(order)s liée à la session %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8432,6 +8432,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminal de paiement Stripe"
@@ -8641,7 +8647,8 @@ msgstr "La Disponibilité après doit être définie entre 00:00 et 24:00."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
-msgstr "La Disponibilité jusqu'à doit être supérieure à la Disponibilité après."
+msgstr ""
+"La Disponibilité jusqu'à doit être supérieure à la Disponibilité après."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9345,8 +9352,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
-"Le mode de paiement en espèces est déjà utilisé dans un autre Point de Vente."
-"\n"
+"Le mode de paiement en espèces est déjà utilisé dans un autre Point de "
+"Vente.\n"
 "Un nouveau mode de paiement en espèces doit être créé pour ce Point de Vente."
 
 #. module: point_of_sale
@@ -9414,8 +9421,8 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "Ce journal est associé au mode de paiement %(payment_method)s, qui est "
-"utilisé par la commande %(pos_order)s dans la session PdV active "
-"%(pos_session)s"
+"utilisé par la commande %(pos_order)s dans la session PdV active %"
+"(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10335,8 +10342,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr ""
-"Vous ne pouvez pas créer une session qui commence avant le : "
-"%(lock_date_info)s"
+"Vous ne pouvez pas créer une session qui commence avant le : %"
+"(lock_date_info)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10525,8 +10532,8 @@ msgid ""
 "Your IoT box cannot find the printer, please ensure it is connected and "
 "turned on before retrying."
 msgstr ""
-"Votre IoT Box ne parvient pas à trouver l’imprimante. Veuillez vérifier qu’"
-"elle est allumée et connectée, puis réessayez."
+"Votre IoT Box ne parvient pas à trouver l’imprimante. Veuillez vérifier "
+"qu’elle est allumée et connectée, puis réessayez."
 
 #. module: point_of_sale
 #. odoo-python

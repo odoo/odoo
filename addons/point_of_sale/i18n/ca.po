@@ -99,7 +99,8 @@ msgstr "REEMBORSAMENT de %(name)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s va canviar a %(new_pm)s i de %(old_amount)s a %(new_amount)s"
+msgstr ""
+"%(old_pm)s va canviar a %(new_pm)s i de %(old_amount)s a %(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -264,8 +265,8 @@ msgstr "45"
 msgid ""
 "5 digits alphanumeric code to be used by portal user to request an invoice"
 msgstr ""
-"Codi alfanumèric de 5 dígits que utilitzarà l'usuari del portal per sol·"
-"licitar una factura"
+"Codi alfanumèric de 5 dígits que utilitzarà l'usuari del portal per "
+"sol·licitar una factura"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans
@@ -365,9 +366,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Estimat %(client_name)s:<br/>Aquí està el seu rebut %(is_invoiced)"
-"sassociat a             %(pos_name)s per un import de %(amount)s procedent "
-"de %(company_name)s. </p>"
+"<p>Estimat %(client_name)s:<br/>Aquí està el seu rebut %"
+"(is_invoiced)sassociat a             %(pos_name)s per un import de %"
+"(amount)s procedent de %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -4231,8 +4232,8 @@ msgstr ""
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Pagament de factura per a %(order)s (%(account_move)s) usant "
-"%(payment_method)s"
+"Pagament de factura per a %(order)s (%(account_move)s) usant %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5344,7 +5345,8 @@ msgstr "Nombre de missatges amb error d'entrega"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of orders where items from this order were refunded"
-msgstr "Nombre de comandes en què s'ha reemborsat alguns articles de la comanda"
+msgstr ""
+"Nombre de comandes en què s'ha reemborsat alguns articles de la comanda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -8340,6 +8342,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminal de pagament Stripe"
@@ -9218,8 +9226,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
-"Aquest mètode de pagament en efectiu ja s'utilitza en un altre punt de venda."
-"\n"
+"Aquest mètode de pagament en efectiu ja s'utilitza en un altre punt de "
+"venda.\n"
 "Cal crear un nou mètode de pagament en efectiu per a aquest TPV."
 
 #. module: point_of_sale
@@ -10300,8 +10308,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Heu activat l'opció \"Identifica el client\" per al mètode de pagament "
-"%(payment_method)s, però la comanda %(order)s no conté cap client."
+"Heu activat l'opció \"Identifica el client\" per al mètode de pagament %"
+"(payment_method)s, però la comanda %(order)s no conté cap client."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
