@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-18 18:38+0000\n"
-"PO-Revision-Date: 2025-09-23 01:41+0000\n"
+"PO-Revision-Date: 2025-09-27 01:41+0000\n"
 "Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
 "website_crm_partner_assign/pt/>\n"
@@ -62,7 +62,7 @@ msgstr "<i class=\"fa fa-file-text-o\"/> Eu estou interesado"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-fw fa-times\"/> I'm not interested"
-msgstr "<i class=\"fa fa-fw fa-times\"/> Eu não estou interessado."
+msgstr "<i class=\"fa fa-fw fa-times\"/> Não estou interessado"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -864,7 +864,7 @@ msgstr "Encaminhar para parceiro"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
-msgstr ""
+msgstr "Enc: Prospecto: {{ ctx['partner_id'].name }}"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
@@ -884,7 +884,7 @@ msgstr "Geolocalização"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Geolocation:"
-msgstr ""
+msgstr "Geolocalização:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
@@ -892,11 +892,13 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
+"Mostra a probabilidade para atribuir um prospeto a este parceiro. (0 "
+"significa sem atribuição.)"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Go to reseller"
-msgstr ""
+msgstr "Ir ao revendedor"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_gold
@@ -918,26 +920,26 @@ msgstr "Agrupar por"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am interested by this lead."
-msgstr ""
+msgstr "Estou interessado neste prospeto."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr ""
+msgstr "Não estou interessado neste prospeto. Contactei o prospeto."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr ""
+msgstr "Não estou interessado neste prospeto. Não ontactei o prospeto."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I have contacted the customer"
-msgstr ""
+msgstr "Contactei o cliente"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
@@ -958,7 +960,7 @@ msgstr "Referências de Implementação"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr ""
+msgstr "Contagem de Parceiro Implementado"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -969,7 +971,7 @@ msgstr "Implementado por"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
-msgstr ""
+msgstr "Data da Conta da Fatura"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__is_published
@@ -1013,32 +1015,32 @@ msgstr "Prospeto"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead -"
-msgstr ""
+msgstr "Prospeto -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr ""
+msgstr "Atribuição de Prospeto"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Resposta do Prospeto"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,name:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Lead Forward: Send to partner"
-msgstr ""
+msgstr "Encaminhamento do Prospeto: Enviar o parceiro"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
-msgstr ""
+msgstr "Localização do Prospeto"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr ""
+msgstr "Encaminhamento do Prospeto ao Parceiro"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -1060,7 +1062,7 @@ msgstr "Nivel"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
 msgid "Level Name"
-msgstr ""
+msgstr "Nome do Nível"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
@@ -1072,7 +1074,7 @@ msgstr "Nível de Peso"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
 msgid "Link to Lead"
-msgstr ""
+msgstr "Ligação ao Prospeto"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1141,19 +1143,19 @@ msgstr "Sem dados!"
 #. module: website_crm_partner_assign
 #: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
 msgid "No more partner available"
-msgstr ""
+msgstr "Sem parceiro disponível"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No results found for \""
-msgstr ""
+msgstr "Sem resultados para \""
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "Not allowed to update the following field(s): %s."
-msgstr ""
+msgstr "Não têm permissão para alterar o(s) seguinte(s) campo(s): %s."
 
 #. module: website_crm_partner_assign
 #. odoo-python
