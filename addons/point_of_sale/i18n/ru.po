@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-18 18:37+0000\n"
+"POT-Creation-Date: 2025-09-26 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -7811,6 +7811,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Некоторые серийные/лот-номера отсутствуют"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -7972,12 +7978,6 @@ msgstr "Сохранять отредактированные заказы в б
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -9819,13 +9819,6 @@ msgstr "Нельзя редактировать оплату в уже пров�
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr ""
-"Вы не можете выставлять счета на заказы, принадлежащие разным компаниям."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10195,6 +10188,10 @@ msgstr "для активации кнопок."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "используя"
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr ""
+#~ "Вы не можете выставлять счета на заказы, принадлежащие разным компаниям."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Укажите номер ваучера"

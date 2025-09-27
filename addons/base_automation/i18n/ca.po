@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-09-26 18:38+0000\n"
 "PO-Revision-Date: 2025-08-29 01:00+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -67,8 +67,8 @@ msgstr "<code>env</code>: entorn en el qual es desencadena l'acció"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: model del registre en el qual s'activa l'acció; és un "
 "conjunt de registres buit"
@@ -120,19 +120,25 @@ msgstr "<span class=\"text-muted\">Variables disponibles</span>"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
-"<span invisible=\"trigger != 'on_time_created'\">després de la creació</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">després de la darrera actualització</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">després</span>"
+"<span invisible=\"trigger != 'on_time_created'\">després de la creació</"
+"span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">després de la darrera actualització</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">després</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-lock\"/>Mantenir-ho en secret, mantenir-ho "
-"segur</strong>"
+"<strong><i class=\"fa fa-lock\"/>Mantenir-ho en secret, mantenir-ho segur</"
+"strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
@@ -173,7 +179,6 @@ msgstr "Aplicar a"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arxivat"
 
@@ -285,8 +290,8 @@ msgid ""
 "meeting."
 msgstr ""
 "Retard després de la data d'activació. Podeu posar un número negatiu si "
-"necessiteu un retard abans de la data d'activació, com enviar un recordatori"
-" 15 minuts abans d'una reunió."
+"necessiteu un retard abans de la data d'activació, com enviar un recordatori "
+"15 minuts abans d'una reunió."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -320,8 +325,10 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
 
@@ -416,8 +423,8 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Si és present, aquesta condició s'ha de complir abans d'executar la regla "
 "d'automatització."
@@ -430,6 +437,11 @@ msgid ""
 msgstr ""
 "Si és present, aquesta condició ha de complir-se abans de l'actualització "
 "del registre. No es comprova en la creació de registre."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -493,8 +505,8 @@ msgstr "Nom del model"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 
 #. module: base_automation
@@ -641,15 +653,16 @@ msgstr "Enviar SMS"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 
@@ -674,8 +687,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 
 #. module: base_automation
@@ -713,19 +726,18 @@ msgstr ""
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"El \"%(trigger_value)s\" %(trigger_label)s només es pot utilitzar amb el "
-"\"%(state_value)s\" tipus d'acció"
+"El \"%(trigger_value)s\" %(trigger_label)s només es pot utilitzar amb el \"%"
+"(state_value)s\" tipus d'acció"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -876,10 +888,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Quan s'ha d'activar la condició.\n"
-"                Si hi és, el programador ho comprovarà. Si està buit, es comprovarà en crear i actualitzar."
+"                Si hi és, el programador ho comprovarà. Si està buit, es "
+"comprovarà en crear i actualitzar."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

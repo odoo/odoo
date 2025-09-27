@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-18 18:37+0000\n"
+"POT-Creation-Date: 2025-09-26 18:38+0000\n"
 "PO-Revision-Date: 2025-09-12 01:00+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -7936,6 +7936,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Certains numéros de lot/série sont manquants"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8100,12 +8106,6 @@ msgstr "Stocker les commandes modifiées dans le backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -10041,14 +10041,6 @@ msgstr "Vous ne pouvez pas modifier un paiement pour une commande enregistrée."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr ""
-"Vous ne pouvez pas facturer des commandes appartenant à des sociétés "
-"différentes."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10424,6 +10416,11 @@ msgstr "pour activer les boutons."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "utilisant"
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr ""
+#~ "Vous ne pouvez pas facturer des commandes appartenant à des sociétés "
+#~ "différentes."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Veuillez enregistrer le numéro du bon"
