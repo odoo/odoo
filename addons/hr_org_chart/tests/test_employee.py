@@ -10,10 +10,12 @@ class TestEmployee(TestHrCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.employee_georges, cls.employee_paul, cls.employee_pierre = cls.env['hr.employee'].with_user(cls.res_users_hr_officer).create([
+        cls.employee_georges, cls.employee_paul, cls.employee_pierre, cls.employee_john, cls.employee_alice = cls.env['hr.employee'].with_user(cls.res_users_hr_officer).create([
             {'name': 'Georges'},
             {'name': 'Paul'},
             {'name': 'Pierre'},
+            {'name': 'John'},
+            {'name': 'Alice'},
         ])
 
     def test_is_subordinate(self):
@@ -119,3 +121,38 @@ class TestEmployee(TestHrCommon):
         self.assertEqual(len(result), 2)
         self.assertIn(get_expected_dict(self.employee_pierre), result)
         self.assertIn(get_expected_dict(self.employee_georges), result)
+
+    def test_child_all_count(self):
+        # hierarchy   child_all_count
+        #
+        #   georges         4
+        #      |
+        #     paul          3
+        #    /    \
+        # pierre   \        0
+        #         john      1
+        #            \
+        #           alice   0
+
+        self.employee_paul.parent_id = self.employee_georges
+        self.employee_pierre.parent_id = self.employee_paul
+        self.employee_john.parent_id = self.employee_paul
+        self.employee_alice.parent_id = self.employee_john
+        self.env.flush_all()
+
+        self.assertEqual(self.employee_georges.child_all_count, 4)
+        self.assertEqual(self.employee_paul.child_all_count, 3)
+        self.assertEqual(self.employee_pierre.child_all_count, 0)
+        self.assertEqual(self.employee_john.child_all_count, 1)
+        self.assertEqual(self.employee_alice.child_all_count, 0)
+
+        # create a cycle between Alice and Georges
+        self.employee_georges.parent_id = self.employee_alice
+        self.env.flush_all()
+
+        # all employees in the cycle should have 4 subordinates
+        self.assertEqual(self.employee_georges.child_all_count, 4)
+        self.assertEqual(self.employee_paul.child_all_count, 4)
+        self.assertEqual(self.employee_pierre.child_all_count, 0)
+        self.assertEqual(self.employee_john.child_all_count, 4)
+        self.assertEqual(self.employee_alice.child_all_count, 4)

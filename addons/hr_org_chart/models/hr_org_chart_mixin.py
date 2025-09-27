@@ -10,7 +10,7 @@ class HrEmployee(models.Model):
 
     child_all_count = fields.Integer(
         'Indirect Subordinates Count',
-        compute='_compute_subordinates', recursive=True, store=False,
+        compute='_compute_child_all_count_count', recursive=True, store=False,
         compute_sudo=True)
     department_color = fields.Integer("Department Color", related="department_id.color")
     child_count = fields.Integer(
@@ -41,7 +41,33 @@ class HrEmployee(models.Model):
     def _compute_subordinates(self):
         for employee in self:
             employee.subordinate_ids = employee._get_subordinates()
-            employee.child_all_count = len(employee.subordinate_ids)
+
+    @api.depends('child_ids', 'child_ids.child_all_count')
+    def _compute_child_all_count_count(self):
+        self.env.cr.execute("""
+            WITH RECURSIVE employee_tree AS (
+                SELECT
+                    id,
+                    ARRAY[id] AS path_ids,
+                    id AS root_id
+                FROM hr_employee
+                WHERE id IN %(employee_ids)s
+
+                UNION ALL
+
+                SELECT
+                    e.id,
+                    et.path_ids || e.id,
+                    et.root_id
+                FROM hr_employee e
+                INNER JOIN employee_tree et ON e.parent_id = et.id
+                WHERE NOT e.id = ANY(et.path_ids)
+            )
+            SELECT root_id, COUNT(*) - 1 FROM employee_tree GROUP BY root_id;
+        """, {'employee_ids': self._ids})
+        result_dict = dict(self.env.cr.fetchall())
+        for employee in self:
+            employee.child_all_count = result_dict.get(employee.id, 0)
 
     @api.depends_context('uid', 'company')
     @api.depends('parent_id')
