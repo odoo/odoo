@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2025-08-29 08:46+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
@@ -56,8 +56,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"\"Canlı güncellemede\" otomasyon kuralları yalnızca \"Python Kodu Çalıştır\""
-" eylem türüyle kullanılabilir."
+"\"Canlı güncellemede\" otomasyon kuralları yalnızca \"Python Kodu Çalıştır\" "
+"eylem türüyle kullanılabilir."
 
 #. module: base_automation
 #. odoo-javascript
@@ -79,8 +79,8 @@ msgstr "<code>env</code>: eylemin tetiklendiği ortam"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: işlemin tetiklendiği kaydın modeli; boş bir kayıt "
 "kümesidir"
@@ -138,22 +138,28 @@ msgstr "<span class=\"text-muted\"> Kullanılabilir değişkenler: </span>"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value'\">-{</span>\n"
-"                                                        <span invisible="
-"\"evaluation_type != 'equation'\">olarak</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">olarak</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
-"<span invisible=\"trigger != 'on_time_created'\">oluşturulduktan sonra</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">son güncellemeden sonra</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">ardından</span>"
+"<span invisible=\"trigger != 'on_time_created'\">oluşturulduktan sonra</"
+"span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">son güncellemeden sonra</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">ardından</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -177,7 +183,8 @@ msgstr "<span>şu ayar ile:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr "<strong><i class=\"fa fa-lock\"/> Gizli tutun, güvende tutun.</strong>"
 
 #. module: base_automation
@@ -236,7 +243,6 @@ msgstr "Uygula"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arşivlendi"
 
@@ -369,8 +375,8 @@ msgid ""
 "meeting."
 msgstr ""
 "Tetikleme tarihinden sonraki gecikme. Toplantıdan 15 dakika önce hatırlatma "
-"göndermek gibi tetikleme tarihinden önce gerçekleşmesi gereken durumlar için"
-" negatif bir sayı girebilirsiniz."
+"göndermek gibi tetikleme tarihinden önce gerçekleşmesi gereken durumlar için "
+"negatif bir sayı girebilirsiniz."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -409,11 +415,14 @@ msgstr "Otomasyon Kuralını Devre Dışı Bırak"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
-"Bu otomasyon kuralını devre dışı bırakmak iş akışınıza devam etmenizi sağlar \n"
+"Bu otomasyon kuralını devre dışı bırakmak iş akışınıza devam etmenizi "
+"sağlar \n"
 "                ancak, bu noktadan sonra oluşturulan veriler bozulabilir;\n"
 "                çünkü muhtemelen önemli ve/veya zorunlu alanları ayarlayan\n"
 "                bir özelleştirmeyi devre dışı bırakmış oluyorsunuz."
@@ -504,8 +513,8 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr "Varsa, bu koşul otomasyon kuralı çalıştırılmadan önce sağlanmalıdır."
 
 #. module: base_automation
@@ -516,6 +525,11 @@ msgid ""
 msgstr ""
 "Varsa, bu koşul kaydın güncellenmesinden önce sağlanmalıdır. Kayıt "
 "oluşturulurken kontrol edilmez."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -581,8 +595,8 @@ msgstr "Model Adı"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "%(action_name)s eyleminin modeli, %(rule_name)s otomasyon kuralınınkiyle "
 "eşleşmelidir."
@@ -751,18 +765,20 @@ msgstr "Webhook Bildirimi Gönder"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Bir nesne durum değiştirdiğinde e-posta gönderin, bir ay boyunca \n"
-"                etkin olmayan kayıtları arşivleyin veya belirli bir etiket eklendiğinde görevleri takip etmek\n"
+"                etkin olmayan kayıtları arşivleyin veya belirli bir etiket "
+"eklendiğinde görevleri takip etmek\n"
 "                için kendinize hatırlatma gönderin."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Bir nesne durum değiştirdiğinde e-posta gönderin, bir aydan fazla "
@@ -799,8 +815,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Bazı tetikleyicilerin başka bir alana referansa ihtiyacı vardır. Bu alan, o "
 "referansı saklamak için kullanılır."
@@ -840,8 +856,7 @@ msgstr "Hedef Kayıt"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "%(action_names)s eylemlerinin hedef modeli kural modeliyle uyumlu değil."
 
@@ -849,8 +864,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
 "\"%(trigger_value)s\" %(trigger_label)s sadece \"%(state_value)s\" eylem "
 "türü ile kullanılabilir"
@@ -1021,10 +1036,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Koşul ne zaman tetiklenmeli?\n"
-"Varsa, zamanlayıcı tarafından kontrol edilecektir. Boşsa, oluşturma ve güncelleme sırasında kontrol edilecektir."
+"Varsa, zamanlayıcı tarafından kontrol edilecektir. Boşsa, oluşturma ve "
+"güncelleme sırasında kontrol edilecektir."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

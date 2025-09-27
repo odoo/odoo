@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_epson_printer
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -29,8 +30,8 @@ msgstr "Tiroir caisse"
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"Check on the printer configuration for the 'Device ID' setting. It should be"
-" set to: "
+"Check on the printer configuration for the 'Device ID' setting. It should be "
+"set to: "
 msgstr ""
 "Vérifiez le paramètre 'ID Appareil' dans la configuration de l'imprimante. "
 "Il doit être défini sur : "
@@ -66,8 +67,8 @@ msgstr "Adresse IP de l'imprimante de reçus Epson"
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"If you are on a secure server (HTTPS) please make sure you manually accepted"
-" the certificate by accessing %s. "
+"If you are on a secure server (HTTPS) please make sure you manually accepted "
+"the certificate by accessing %s. "
 msgstr ""
 "Si vous êtes sur un serveur sécurisé (HTTPS), assurez-vous d'avoir "
 "manuellement accepté le certificat en allant à %s."
@@ -75,8 +76,10 @@ msgstr ""
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_printer__epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
-msgstr "Adresse IP locale d'une imprimante de reçus Epson."
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
+msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -151,3 +154,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
 msgstr "Utiliser une imprimante Epson"
+
+#~ msgid "Local IP address of an Epson receipt printer."
+#~ msgstr "Adresse IP locale d'une imprimante de reçus Epson."

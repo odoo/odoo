@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_epson_printer
-# 
+#
 # Translators:
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Petko Karamotchev, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Petko Karamotchev, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_epson_printer
@@ -30,8 +30,8 @@ msgstr "Чекмедеже на каса"
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"Check on the printer configuration for the 'Device ID' setting. It should be"
-" set to: "
+"Check on the printer configuration for the 'Device ID' setting. It should be "
+"set to: "
 msgstr ""
 "Проверете конфигурацията на принтера за настройката „Идентификатор на "
 "устройство (Device ID)“. Тя трябва да бъде зададена на:"
@@ -67,15 +67,17 @@ msgstr "IP адрес на Epson касов принтер "
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"If you are on a secure server (HTTPS) please make sure you manually accepted"
-" the certificate by accessing %s. "
+"If you are on a secure server (HTTPS) please make sure you manually accepted "
+"the certificate by accessing %s. "
 msgstr ""
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_printer__epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
-msgstr "Локален IP адрес на Epson касов принтер"
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
+msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -123,8 +125,8 @@ msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
-"Касовият принтер Epson ще бъде използван вместо принтера за бележки, свързан"
-" към IoT Box."
+"Касовият принтер Epson ще бъде използван вместо принтера за бележки, свързан "
+"към IoT Box."
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -148,3 +150,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
 msgstr ""
+
+#~ msgid "Local IP address of an Epson receipt printer."
+#~ msgstr "Локален IP адрес на Epson касов принтер"
