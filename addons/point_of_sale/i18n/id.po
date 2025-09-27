@@ -76,8 +76,8 @@ msgstr "%(name)s REFUND"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s diubah menjadi %(new_pm)s dan dari %(old_amount)s menjadi "
-"%(new_amount)s"
+"%(old_pm)s diubah menjadi %(new_pm)s dan dari %(old_amount)s menjadi %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -319,27 +319,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Halo <t t-out=\"client_name\""
-">Nama klien</t>,</t>\n"
+"                        <t t-if=\"client_name\">Halo <t t-"
+"out=\"client_name\">Nama klien</t>,</t>\n"
 "                        <t t-else=\"\">Halo,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Terima kasih sudah membeli dari <t t-out="
-"\"store_name\">Nama toko</t>!</div>\n"
+"                    <div>Terima kasih sudah membeli dari <t t-"
+"out=\"store_name\">Nama toko</t>!</div>\n"
 "                    <div>Terlampir, Anda akan menemukan resi untuk pembelian "
 "<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">tanggal</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">waktu</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">waktu</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Dengan salam hormat,</div>\n"
@@ -354,8 +354,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"Ini pengaturan umum untuk semua POS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"Ini pengaturan umum untuk semua "
+"POS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -370,9 +370,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)"
-"sfor             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
-"</p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -425,9 +425,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tip: tambahkan pricelist pengembalian (misal. "
-"0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tip: tambahkan pricelist pengembalian (misal. 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -602,7 +601,8 @@ msgstr "Terima pembayaran dengan Mercado Pago pada terminal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva.com on a terminal or tap on phone"
-msgstr "Menerima pembayaran dengan Viva.com di terminal atau ketuk pada telepon"
+msgstr ""
+"Menerima pembayaran dengan Viva.com di terminal atau ketuk pada telepon"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -664,7 +664,8 @@ msgstr "Account Move"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
-msgstr "Jumlah pembayaran yang mewakili pembayaran bank yang agregat dan split."
+msgstr ""
+"Jumlah pembayaran yang mewakili pembayaran bank yang agregat dan split."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -1989,8 +1990,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Pilih posisi fiskal spesifik pada order tergantung pada tipe pelanggan ("
-"pengecualian pajak, di tempat vs take out, dsb.)."
+"Pilih posisi fiskal spesifik pada order tergantung pada tipe pelanggan "
+"(pengecualian pajak, di tempat vs take out, dsb.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3549,7 +3550,8 @@ msgstr "Flaky all butter pastry, layered for a light and golden croissant."
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
 msgid "Flaky croissant filled with creamy cheese, a savory twist on a classic."
-msgstr "Flaky croissant filled with creamy cheese, a savory twist on a classic."
+msgstr ""
+"Flaky croissant filled with creamy cheese, a savory twist on a classic."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4233,8 +4235,8 @@ msgstr "Status Faktur"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Pembayaran faktur untuk %(order)s (%(account_move)s) menggunakan "
-"%(payment_method)s"
+"Pembayaran faktur untuk %(order)s (%(account_move)s) menggunakan %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5148,8 +5150,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Tidak ada bagan akun yang dikonfigurasi, pergi ke menu "
-"\"konfigurasi / pengaturan\", dan instal satu dari tab Faktur."
+"Tidak ada bagan akun yang dikonfigurasi, pergi ke menu \"konfigurasi / "
+"pengaturan\", dan instal satu dari tab Faktur."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6198,8 +6200,8 @@ msgstr "Mohon buat/pilih POS di atas untuk menunjukkan opsi konfigurasi."
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: "
-"%(id)d)."
+"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: %"
+"(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6222,8 +6224,8 @@ msgstr "Mohon pastikan Anda terhubung ke internet sebelum mencoba lagi."
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Mohon masukkan informasi billing Anda <small class=\"text-muted\""
-">atau</small>"
+"Mohon masukkan informasi billing Anda <small class=\"text-muted\">atau</"
+"small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7533,8 +7535,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Reversal entri closing POS %(entry)s untuk pesanan %(order)s dari sesi "
-"%(session)s"
+"Reversal entri closing POS %(entry)s untuk pesanan %(order)s dari sesi %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8348,6 +8350,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Terminal Pembayaran Stripe"
@@ -8611,7 +8619,8 @@ msgstr ""
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr "POS hanya mendukung strategi pembulatan \"tambahkan baris pembulatan\"."
+msgstr ""
+"POS hanya mendukung strategi pembulatan \"tambahkan baris pembulatan\"."
 
 #. module: point_of_sale
 #. odoo-python

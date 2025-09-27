@@ -77,8 +77,8 @@ msgstr "%(name)s: ERSTATTUNG"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s wurde auf %(new_pm)s geändert und von %(old_amount)s auf "
-"%(new_amount)s"
+"%(old_pm)s wurde auf %(new_pm)s geändert und von %(old_amount)s auf %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -323,27 +323,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hallo <t t-out="
-"\"client_name\">Name des Kunden</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hallo <t t-"
+"out=\"client_name\">Name des Kunden</t>,</t>\n"
 "                        <t t-else=\"\">Hallo,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Vielen Dank für Ihren Einkauf bei <t t-out="
-"\"store_name\">Name des Shops</t>!</div>\n"
+"                    <div>Vielen Dank für Ihren Einkauf bei <t t-"
+"out=\"store_name\">Name des Shops</t>!</div>\n"
 "                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
 "vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">Datum</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">Uhrzeit</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">Uhrzeit</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Mit freundlichen Grüßen</div>\n"
@@ -374,9 +374,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hallo %(client_name)s,<br/>Hier ist Ihr Beleg %(is_invoiced)"
-"sfür             %(pos_name)s in Höhe von %(amount)s von %(company_name)s. "
-"</p>"
+"<p>Hallo %(client_name)s,<br/>Hier ist Ihr Beleg %"
+"(is_invoiced)sfür             %(pos_name)s in Höhe von %(amount)s von %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -384,8 +384,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Zu "
-"bestimmen</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Zu bestimmen</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -421,7 +421,8 @@ msgstr "<span class=\"o_stat_text\">Buchungszeilen</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr "<span class=\"oe_inline\"><b>Vorschaubildschirm überspringen</b></span>"
+msgstr ""
+"<span class=\"oe_inline\"><b>Vorschaubildschirm überspringen</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -429,9 +430,9 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tipp: Fügen Sie eine Preisliste für Retouren "
-"hinzu (z. B. 0 €)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tipp: Fügen Sie eine Preisliste für Retouren hinzu (z. B. 0 €)</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3895,7 +3896,8 @@ msgstr "Bild im Kassensystem verbergen"
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
-msgstr "Ballaststoffreicher Laib. Mit feinem Vollkornmehl gebacken, sehr weich."
+msgstr ""
+"Ballaststoffreicher Laib. Mit feinem Vollkornmehl gebacken, sehr weich."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4820,7 +4822,8 @@ msgstr "Aufträge nach Zeit verwalten"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
-msgstr "Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren"
+msgstr ""
+"Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
@@ -6150,7 +6153,8 @@ msgstr "Pekannusskuchen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr "Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind"
+msgstr ""
+"Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -7581,8 +7585,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Rückbuchung der Abschlussbuchung %(entry)s des Kassensystems für Auftrag "
-"%(order)s aus Sitzung %(session)s"
+"Rückbuchung der Abschlussbuchung %(entry)s des Kassensystems für Auftrag %"
+"(order)s aus Sitzung %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8405,6 +8409,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe-Zahlungsterminal"
@@ -8795,7 +8805,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The free quantity must be smaller or equal to the maximum quantity."
-msgstr "Die kostenlose Menge muss kleiner oder gleich der maximalen Menge sein."
+msgstr ""
+"Die kostenlose Menge muss kleiner oder gleich der maximalen Menge sein."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10401,8 +10412,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You don't have the access rights to get the cash in/out list."
 msgstr ""
-"Sie haben nicht die Zugriffsrechte, um die Liste der Barein- und -"
-"auszahlungen einzusehen."
+"Sie haben nicht die Zugriffsrechte, um die Liste der Barein- und "
+"-auszahlungen einzusehen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10421,8 +10432,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Sie haben die Option „Kunde identifizieren“ für die Zahlungsmethode "
-"%(payment_method)s deaktiviert, aber der Auftrag %(order)s enthält keinen "
+"Sie haben die Option „Kunde identifizieren“ für die Zahlungsmethode %"
+"(payment_method)s deaktiviert, aber der Auftrag %(order)s enthält keinen "
 "Kunden."
 
 #. module: point_of_sale

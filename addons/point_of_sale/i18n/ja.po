@@ -74,8 +74,9 @@ msgstr "%(name)s 返金"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s が %(new_pm)s に、%(old_amount)s から %(new_amount)s "
-"に変わりました。"
+msgstr ""
+"%(old_pm)s が %(new_pm)s に、%(old_amount)s から %(new_amount)s に変わりまし"
+"た。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -314,27 +315,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\"> <t t-out=\"client_name\""
-">顧客名</t>様、</t>\n"
+"                        <t t-if=\"client_name\"> <t t-out=\"client_name\">顧"
+"客名</t>様、</t>\n"
 "                        <t t-else=\"\">こんにちは。</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div><t t-out=\"store_name\">Store "
-"name</t>をご利用頂き誠にありがとうございます。</div>\n"
-"                    <div>領収書をお送りします。(ご購入日時: <span><t t-out="
-"\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
-"MMMM&quot;,                          lang_code=lg) or ''\">日</t> <t t-out=\""
-"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">時間</t>)</span>\n"
+"                    <div><t t-out=\"store_name\">Store name</t>をご利用頂き誠"
+"にありがとうございます。</div>\n"
+"                    <div>領収書をお送りします。(ご購入日時: <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">日</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">時間</t>)</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>宜しくお願い致します。</div>\n"
@@ -349,8 +350,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
+"PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -365,8 +366,8 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p> %(client_name)s様、<br/>領収書 %(is_invoiced)s             %(pos_name)"
-"s金額 %(amount)s 発行元:%(company_name)sをお送りします</p>"
+"<p> %(client_name)s様、<br/>領収書 %(is_invoiced)s             %(pos_name)s金"
+"額 %(amount)s 発行元:%(company_name)sをお送りします</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -418,9 +419,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">ヒント: 返品用の価格表を追加して下さい (例: "
-"0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">ヒント: 返品用の価格表を追加して下さい (例: 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -560,7 +560,8 @@ msgstr ""
 msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
-msgstr "オーダ用のセッション固有のシーケンス番号。クライアントから生成された場合は負"
+msgstr ""
+"オーダ用のセッション固有のシーケンス番号。クライアントから生成された場合は負"
 "の値です。"
 
 #. module: point_of_sale
@@ -661,7 +662,8 @@ msgstr "アカウント決済は、アグリゲート決済と銀行分割支払
 msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
-msgstr "銀行支払の会計支払記録を作成する際に、未消込勘定として使用される勘定科目。"
+msgstr ""
+"銀行支払の会計支払記録を作成する際に、未消込勘定として使用される勘定科目。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -682,7 +684,8 @@ msgstr "請求作成に使用する会計仕訳帳。"
 msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
-msgstr "POSセッションの仕訳とPOS請求書の支払を計上するために使用される会計仕訳帳。"
+msgstr ""
+"POSセッションの仕訳とPOS請求書の支払を計上するために使用される会計仕訳帳。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
@@ -772,7 +775,8 @@ msgstr "チップ追加"
 msgid ""
 "Add a 5-digit code on the receipt to allow the user to request the invoice "
 "for an order on the portal."
-msgstr "レシートに5桁のコードを追加し、ユーザがポータル上でオーダの請求書をリクエスト"
+msgstr ""
+"レシートに5桁のコードを追加し、ユーザがポータル上でオーダの請求書をリクエスト"
 "できるようにします。"
 
 #. module: point_of_sale
@@ -903,7 +907,8 @@ msgid ""
 "All available pricelists must be in the same currency as the company or as "
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
-msgstr "会計アプリを利用する場合、すべての有効な価格表は会社、もしくは、このPOSの売上"
+msgstr ""
+"会計アプリを利用する場合、すべての有効な価格表は会社、もしくは、このPOSの売上"
 "仕訳帳と同じ通貨でなければなりません。"
 
 #. module: point_of_sale
@@ -994,7 +999,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s 用の金額が %(old_amount)s から %(new_amount)s に変わりました"
+msgstr ""
+"%(old_pm)s 用の金額が %(old_amount)s から %(new_amount)s に変わりました"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1029,7 +1035,8 @@ msgstr ""
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
-msgstr "プロダクト価格の読み込み中にエラーが発生しました。すべての価格表がPOSで利用可"
+msgstr ""
+"プロダクト価格の読み込み中にエラーが発生しました。すべての価格表がPOSで利用可"
 "能であることを確認してください。"
 
 #. module: point_of_sale
@@ -1038,7 +1045,8 @@ msgstr "プロダクト価格の読み込み中にエラーが発生しました
 msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
-msgstr "セッションを閉じている間にエラーが発生しました。同期されていないオーダは次の"
+msgstr ""
+"セッションを閉じている間にエラーが発生しました。同期されていないオーダは次の"
 "セッションで利用可能になります。ページが再読み込みされます。"
 
 #. module: point_of_sale
@@ -1140,7 +1148,8 @@ msgstr "なるべく早く"
 msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
-msgstr "銀行アプリでQRコード決済を登録できるようにするには、仕訳帳上で少なくとも1つの"
+msgstr ""
+"銀行アプリでQRコード決済を登録できるようにするには、仕訳帳上で少なくとも1つの"
 "銀行口座を定義する必要があります。"
 
 #. module: point_of_sale
@@ -1454,9 +1463,9 @@ msgid ""
 "products."
 msgstr ""
 "クーポン、プロモーション、ギフトカード、ロイヤリティなど、様々なキャンペーン"
-"で売上を向上させます。特定な条件を設定できます "
-"(プロダクト、お客様、最低購入数、期間)。リワードとしては、値引 "
-"(%又は値引額)や無料プロダクトを提供できます。"
+"で売上を向上させます。特定な条件を設定できます (プロダクト、お客様、最低購入"
+"数、期間)。リワードとしては、値引 (%又は値引額)や無料プロダクトを提供できま"
+"す。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -1846,7 +1855,8 @@ msgstr "綿100％のカジュアルTシャツ。カラーバリエーション�
 msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
-msgstr "カテゴリは、タッチスクリーンインターフェイスを介してプロダクトを閲覧するため"
+msgstr ""
+"カテゴリは、タッチスクリーンインターフェイスを介してプロダクトを閲覧するため"
 "に使用されます。"
 
 #. module: point_of_sale
@@ -1906,7 +1916,8 @@ msgstr "このプロダクトをPOSに表示するかどうかを確認します
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
-msgstr "このユニットのプロダクトをPOSオーダでグループ化する場合はチェックして下さい。"
+msgstr ""
+"このユニットのプロダクトをPOSオーダでグループ化する場合はチェックして下さい。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1945,7 +1956,8 @@ msgstr "チェリーパイ"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_bagel_product_template
 msgid "Chewy and dense bagel, perfect for sandwiches or with cream cheese."
-msgstr "もちもちで歯ごたえのあるベーグル、サンドウィッチやクリームチーズにぴったり。"
+msgstr ""
+"もちもちで歯ごたえのあるベーグル、サンドウィッチやクリームチーズにぴったり。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_ids
@@ -1957,9 +1969,9 @@ msgstr "子カテゴリ"
 msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
-msgstr "顧客の種類 "
-"(免税、イートインとお持ち帰りなど)に応じて、注文時に特定の会計ポジションを選"
-"択します。"
+msgstr ""
+"顧客の種類 (免税、イートインとお持ち帰りなど)に応じて、注文時に特定の会計ポジ"
+"ションを選択します。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2454,7 +2466,8 @@ msgstr "肌触りの良いセーター"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.cozy_sweater_product_template
 msgid "Cozy sweater, perfect for colder weather. Available in various colors."
-msgstr "寒い季節にぴったりの肌触りの良いセーター。様々なカラーをご用意しています。"
+msgstr ""
+"寒い季節にぴったりの肌触りの良いセーター。様々なカラーをご用意しています。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2526,7 +2539,8 @@ msgstr "新規プロダクト作成"
 msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
-msgstr "同じ顧客、同じ請求先住所に関連するすべてのオーダに対して1つの請求書を作成しま"
+msgstr ""
+"同じ顧客、同じ請求先住所に関連するすべてのオーダに対して1つの請求書を作成しま"
 "す。"
 
 #. module: point_of_sale
@@ -2849,7 +2863,8 @@ msgstr "新規カテゴリを定義"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Define presets to manage taxes & prices for dine in, take out, members..."
-msgstr "店内飲食、テイクアウト、会員などに対応する税率や価格を管理するためのプリセッ"
+msgstr ""
+"店内飲食、テイクアウト、会員などに対応する税率や価格を管理するためのプリセッ"
 "トを定義してください。"
 
 #. module: point_of_sale
@@ -3159,7 +3174,8 @@ msgstr ""
 msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
-msgstr "自動生成される締め仕訳において、売上明細をプロダクトごとに内訳表示します。"
+msgstr ""
+"自動生成される締め仕訳において、売上明細をプロダクトごとに内訳表示します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -3170,7 +3186,8 @@ msgstr "電子値札によるプロダクト価格の表示"
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "アクセス権がありません。ユーザのレポートメール用にこのデータをスキップしてく"
+msgstr ""
+"アクセス権がありません。ユーザのレポートメール用にこのデータをスキップしてく"
 "ださい"
 
 #. module: point_of_sale
@@ -3206,8 +3223,8 @@ msgid ""
 "            its linked categories."
 msgstr ""
 "各プリンタは、特定のカテゴリのプロダクトを印刷するように設定できます。\n"
-"           プリンタは、"
-"リンクされたカテゴリのいずれかに属するプロダクトの更新のみ\n"
+"           プリンタは、リンクされたカテゴリのいずれかに属するプロダクトの更新"
+"のみ\n"
 "            印刷します。"
 
 #. module: point_of_sale
@@ -3333,7 +3350,8 @@ msgstr "終了残高"
 msgid ""
 "Ensure that there is an existing bank journal. Check if chart of accounts is "
 "installed in your company."
-msgstr "既存の銀行仕訳帳があることを確認して下さい。御社に勘定科目表がインストールさ"
+msgstr ""
+"既存の銀行仕訳帳があることを確認して下さい。御社に勘定科目表がインストールさ"
 "れているか確認して下さい。"
 
 #. module: point_of_sale
@@ -3493,7 +3511,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "会計ポジションは、特定の顧客、または特定の販売オーダ/請求書で税金と勘定を調整"
+msgstr ""
+"会計ポジションは、特定の顧客、または特定の販売オーダ/請求書で税金と勘定を調整"
 "するために使用されます。デフォルト値は顧客から取得されます。"
 
 #. module: point_of_sale
@@ -3600,7 +3619,8 @@ msgstr "強制未消込勘定"
 msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
-msgstr "この決済方法を使用する場合、強制的に顧客を設定する必要があり、顧客ごとに仕訳"
+msgstr ""
+"この決済方法を使用する場合、強制的に顧客を設定する必要があり、顧客ごとに仕訳"
 "が分割されます。クロージング処理が遅くなる可能性があります。"
 
 #. module: point_of_sale
@@ -3782,7 +3802,8 @@ msgstr "ヘッダ"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_multigrain_bread_product_template
 msgid "Hearty multigrain loaf with seeds and grains for extra nutrition."
-msgstr "栄養価の高い種と穀物を使った、ボリュームたっぷりのマルチグレイン・ローフ。"
+msgstr ""
+"栄養価の高い種と穀物を使った、ボリュームたっぷりのマルチグレイン・ローフ。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_qr_code_method
@@ -3818,9 +3839,8 @@ msgid ""
 "plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
-"お待ち下さい! "
-"POSセッションがまだアクティブなのに商品をアーカイブするのは、まるで食事の途中"
-"でお皿を下げるようなものです。\n"
+"お待ち下さい! POSセッションがまだアクティブなのに商品をアーカイブするのは、ま"
+"るで食事の途中でお皿を下げるようなものです。\n"
 "問題を避けるために、必ずすべてのセッションをクローズしてからにして下さい。"
 
 #. module: point_of_sale
@@ -3961,7 +3981,8 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
 "this field."
-msgstr "このオーダが払戻である場合、払戻されたオーダがこのフィールドに指定されます。"
+msgstr ""
+"このオーダが払戻である場合、払戻されたオーダがこのフィールドに指定されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4508,8 +4529,8 @@ msgstr ""
 "顧客の売掛金勘定を使用する場合は、空のままにします。\n"
 "セッション終了後、累積支払(または顧客の識別がTRUEの場合は個別支払)を計上する"
 "仕訳を定義します。\n"
-"現金出納帳の場合は、明細行を使用して出納帳のデフォルト勘定に直接書き込みます"
-"。\n"
+"現金出納帳の場合は、明細行を使用して出納帳のデフォルト勘定に直接書き込みま"
+"す。\n"
 "銀行仕訳帳の場合、この支払方法で指定された未消込勘定に書き込まれます。\n"
 "現金出納帳と銀行仕訳帳のみが許可されます。"
 
@@ -4528,7 +4549,8 @@ msgstr "ライトブルースリムジーンズ"
 msgid ""
 "Lightweight bomber jacket in linen with a ribbed stand-up collar and zip "
 "down the front."
-msgstr "リネン製の軽量ボンバージャケット。リブ編みのスタンドカラーで、フロントにジッ"
+msgstr ""
+"リネン製の軽量ボンバージャケット。リブ編みのスタンドカラーで、フロントにジッ"
 "パー付き。"
 
 #. module: point_of_sale
@@ -4690,7 +4712,8 @@ msgstr ""
 msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
-msgstr "Odooデータベースに関連付けられたIoT Boxサブスクリプションがあることを確認し、"
+msgstr ""
+"Odooデータベースに関連付けられたIoT Boxサブスクリプションがあることを確認し、"
 "その後IoT Boxを再起動します。"
 
 #. module: point_of_sale
@@ -4699,8 +4722,9 @@ msgstr "Odooデータベースに関連付けられたIoT Boxサブスクリプ�
 msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
-msgstr "IoT Boxv18.12以降を使用していることを確認してください。 %sに移動して、IoT "
-"Boxの証明書を受け入れます。"
+msgstr ""
+"IoT Boxv18.12以降を使用していることを確認してください。 %sに移動して、IoT Box"
+"の証明書を受け入れます。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5054,7 +5078,8 @@ msgstr "税金なし"
 msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
-msgstr "バーコードの命名法が設定されていません。これは設定の管理設定で変更できます。"
+msgstr ""
+"バーコードの命名法が設定されていません。これは設定の管理設定で変更できます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5077,8 +5102,9 @@ msgstr ""
 msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
-msgstr "勘定科目表が設定されていません。\" 設定 / 管理設定 \"メニューの \"請求\""
-"タブからインストールして下さい。"
+msgstr ""
+"勘定科目表が設定されていません。\" 設定 / 管理設定 \"メニューの \"請求\"タブ"
+"からインストールして下さい。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5128,7 +5154,8 @@ msgstr "\"%s\"の顧客がもう見つかりません。"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No open session available. Please open a new session to capture the order."
-msgstr "現在、未決済のセッションはありません。オーダを確定するには、新しいセッション"
+msgstr ""
+"現在、未決済のセッションはありません。オーダを確定するには、新しいセッション"
 "を開いて下さい。"
 
 #. module: point_of_sale
@@ -5355,7 +5382,8 @@ msgstr "POS用オンライン予約"
 msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
-msgstr "この払戻し行には、マイナスの数量しか入力できません。返金数量を変更するには+/-"
+msgstr ""
+"この払戻し行には、マイナスの数量しか入力できません。返金数量を変更するには+/-"
 "をクリックして下さい。"
 
 #. module: point_of_sale
@@ -5389,7 +5417,8 @@ msgstr "現金方式のみ"
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
-msgstr "PoSアプリのマネージャーアクセス権を持つユーザのみが、オーダのプロダクト価格を"
+msgstr ""
+"PoSアプリのマネージャーアクセス権を持つユーザのみが、オーダのプロダクト価格を"
 "変更できます。"
 
 #. module: point_of_sale
@@ -6090,8 +6119,9 @@ msgstr "オーダに有効な顧客を追加して下さい。"
 msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
-msgstr "終了する前に、この期間のすべてのPOSセッションを終了してください。開いているセ"
-"ッションは次のとおりです:%s "
+msgstr ""
+"終了する前に、この期間のすべてのPOSセッションを終了してください。開いている"
+"セッションは次のとおりです:%s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -6124,8 +6154,9 @@ msgstr "このプロダクトの収益勘定を定義して下さい: '%(product
 msgid ""
 "Please ensure the IoT box is turned on and connected to the network before "
 "retrying."
-msgstr "再試行する前に、IoT box "
-"の電源が入っていて、ネットワークに接続されていることを確認してください。"
+msgstr ""
+"再試行する前に、IoT box の電源が入っていて、ネットワークに接続されていること"
+"を確認してください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6151,7 +6182,8 @@ msgstr "すべての必要なフィールドに入力して下さい。"
 msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
-msgstr "%s仕訳帳にアクセスして、損失勘定を定義してください。このアカウントは、現金の"
+msgstr ""
+"%s仕訳帳にアクセスして、損失勘定を定義してください。このアカウントは、現金の"
 "差額を記録するために使用されます。"
 
 #. module: point_of_sale
@@ -6160,7 +6192,8 @@ msgstr "%s仕訳帳にアクセスして、損失勘定を定義してくださ�
 msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
-msgstr "%s仕訳帳にアクセスして、利益勘定を定義してください。このアカウントは、現金の"
+msgstr ""
+"%s仕訳帳にアクセスして、利益勘定を定義してください。このアカウントは、現金の"
 "差額を記録するために使用されます。"
 
 #. module: point_of_sale
@@ -6426,7 +6459,8 @@ msgstr "POS"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "柔らかなかぎ針編み風ニットのポンチョで、丸く緩やかなドレープを描くネックライ"
+msgstr ""
+"柔らかなかぎ針編み風ニットのポンチョで、丸く緩やかなドレープを描くネックライ"
 "ン。"
 
 #. module: point_of_sale
@@ -6569,8 +6603,8 @@ msgid ""
 "the\n"
 "            orders at the kitchen/bar when the waiter updates an order."
 msgstr ""
-"調理用プリンタは通常、レストランやバーで使用され、"
-"ウェイターがオーダを更新した際に\n"
+"調理用プリンタは通常、レストランやバーで使用され、ウェイターがオーダを更新し"
+"た際に\n"
 "            キッチンやバーでそのオーダを印刷するために使われます。"
 
 #. module: point_of_sale
@@ -6753,8 +6787,9 @@ msgstr "価格を表示しない基本チケットを印刷します。ギフト
 msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
-msgstr "顧客がいつでもOdooのポータルから顧客請求書に簡単にアクセスできるように、レシ"
-"ートに情報を印刷します。"
+msgstr ""
+"顧客がいつでもOdooのポータルから顧客請求書に簡単にアクセスできるように、レ"
+"シートに情報を印刷します。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7312,7 +7347,8 @@ msgstr "POSメニューを再ロード"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Reload all data (may take longer depending on the amount of data)."
-msgstr "すべてのデータを再読み込み(データ量によっては、さらに時間がかかる場合がありま"
+msgstr ""
+"すべてのデータを再読み込み(データ量によっては、さらに時間がかかる場合がありま"
 "す)"
 
 #. module: point_of_sale
@@ -7512,7 +7548,8 @@ msgstr "支払明細の丸め誤差"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
-msgstr "偽のツアーを実行すると、ランダムなオーダが作成されます。ご自身の責任でご利用"
+msgstr ""
+"偽のツアーを実行すると、ランダムなオーダが作成されます。ご自身の責任でご利用"
 "下さい。"
 
 #. module: point_of_sale
@@ -7620,8 +7657,9 @@ msgstr "スキャン"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
-msgstr "バーコードをスキャンして自動的に作成するか、サンプルデータを読み込んで下さい"
-"。"
+msgstr ""
+"バーコードをスキャンして自動的に作成するか、サンプルデータを読み込んで下さ"
+"い。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -8089,7 +8127,8 @@ msgstr "小さな棚"
 #: model:product.template,description_sale:point_of_sale.product_cinnamon_roll_product_template
 msgid ""
 "Soft dough with a buttery cinnamon filling, topped with cream cheese icing."
-msgstr "柔らかな生地にバター風味のシナモンフィリング、クリームチーズアイシングをトッ"
+msgstr ""
+"柔らかな生地にバター風味のシナモンフィリング、クリームチーズアイシングをトッ"
 "ピング。"
 
 #. module: point_of_sale
@@ -8137,7 +8176,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some, if not all, post-processing after syncing order failed."
-msgstr "すべてでなければ、いくつかについて、同期オーダー後の後処理に失敗しました。"
+msgstr ""
+"すべてでなければ、いくつかについて、同期オーダー後の後処理に失敗しました。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -8250,6 +8290,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Stripe決済端末"
@@ -8257,7 +8303,8 @@ msgstr "Stripe決済端末"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.leather_jacket_product_template
 msgid "Stylish leather jacket, durable and fashionable for all occasions."
-msgstr "スタイリッシュなレザージャケット。長く着られて、どんなオケージョンでもおしゃ"
+msgstr ""
+"スタイリッシュなレザージャケット。長く着られて、どんなオケージョンでもおしゃ"
 "れ。"
 
 #. module: point_of_sale
@@ -8301,7 +8348,8 @@ msgstr "サマーハット。ビーチや天気の良い日にぴったり。"
 #: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
 msgid ""
 "Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
-msgstr "ピーカンがたっぷり入った甘いパイ。濃厚なバター風味のフィリングとフレーク状の"
+msgstr ""
+"ピーカンがたっぷり入った甘いパイ。濃厚なバター風味のフィリングとフレーク状の"
 "塩味が特徴。"
 
 #. module: point_of_sale
@@ -8505,7 +8553,8 @@ msgstr "ロット/シリアル番号は無効です。"
 msgid ""
 "The Point of Sale could not find any product, customer, employee or action "
 "associated with the scanned barcode."
-msgstr "POSは、スキャンされたバーコードに関連するプロダクト、顧客、従業員、またはアク"
+msgstr ""
+"POSは、スキャンされたバーコードに関連するプロダクト、顧客、従業員、またはアク"
 "ションを見つけることができませんでした。"
 
 #. module: point_of_sale
@@ -8527,7 +8576,8 @@ msgstr "チケット番号は14文字以上で入力して下さい。"
 msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
-msgstr "現金での支払方法を設定していない場合は、支払期日を超える金額を設定することは"
+msgstr ""
+"現金での支払方法を設定していない場合は、支払期日を超える金額を設定することは"
 "できません。"
 
 #. module: point_of_sale
@@ -8564,7 +8614,8 @@ msgstr "デフォルトの価格表は、利用可能な価格表に含まれて
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr "デフォルトの価格表は、どの企業にも属さないか、またはPOSの企業に属している必要"
+msgstr ""
+"デフォルトの価格表は、どの企業にも属さないか、またはPOSの企業に属している必要"
 "があります。"
 
 #. module: point_of_sale
@@ -8573,7 +8624,8 @@ msgstr "デフォルトの価格表は、どの企業にも属さないか、ま
 msgid ""
 "The default tip product is missing. Please manually specify the tip product. "
 "(See Tips field.)"
-msgstr "デフォルトチッププロダクトがありません。チッププロダクトを手動で指定して下さ"
+msgstr ""
+"デフォルトチッププロダクトがありません。チッププロダクトを手動で指定して下さ"
 "い。(チップフィールドを見て下さい)"
 
 #. module: point_of_sale
@@ -8598,8 +8650,9 @@ msgstr "フィールド %sを入力する必要があります。"
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
-msgstr "元のオーダで使用された会計ポジションがロードされていません。POS設定に追加して"
-"、ロードされていることを確認して下さい。"
+msgstr ""
+"元のオーダで使用された会計ポジションがロードされていません。POS設定に追加し"
+"て、ロードされていることを確認して下さい。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8733,8 +8786,9 @@ msgstr ""
 msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
-msgstr "注文は以前に同期されています。注文のバックエンドから請求書を作成してください"
-"。 "
+msgstr ""
+"注文は以前に同期されています。注文のバックエンドから請求書を作成してくださ"
+"い。 "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8785,7 +8839,8 @@ msgstr "このPOSの事前定義されたメモ。"
 msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale "
 "Pricelist configured if any."
-msgstr "顧客が選択されていない場合、または顧客に販売価格表が設定されていない場合に使"
+msgstr ""
+"顧客が選択されていない場合、または顧客に販売価格表が設定されていない場合に使"
 "用される価格表。"
 
 #. module: point_of_sale
@@ -8799,7 +8854,8 @@ msgstr ""
 msgid ""
 "The product will be available after this hour for online order and self "
 "order."
-msgstr "このプロダクトは、この時間以降にオンラインオーダとセルフオーダでご利用頂けま"
+msgstr ""
+"このプロダクトは、この時間以降にオンラインオーダとセルフオーダでご利用頂けま"
 "す。"
 
 #. module: point_of_sale
@@ -8807,8 +8863,9 @@ msgstr "このプロダクトは、この時間以降にオンラインオーダ
 msgid ""
 "The product will be available until this hour for online order and self "
 "order."
-msgstr "このプロダクトは、この時間までオンラインオーダとセルフオーダでご利用頂けます"
-"。"
+msgstr ""
+"このプロダクトは、この時間までオンラインオーダとセルフオーダでご利用頂けま"
+"す。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8837,8 +8894,9 @@ msgstr "領収書は、各注文の最後に自動的に印刷されます。"
 msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
-msgstr "返金要求数量がオーダ数量より多いです。%sがリクエストされましたが、"
-"返金できるのは %sだけです。"
+msgstr ""
+"返金要求数量がオーダ数量より多いです。%sがリクエストされましたが、返金できる"
+"のは %sだけです。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8891,7 +8949,8 @@ msgstr "セッションは異常に長い間開かれました。閉鎖をご検
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "The session is being closed by another user. The page will be reloaded."
-msgstr "セッションが他のユーザによって終了されています。ページが再読み込みされます。"
+msgstr ""
+"セッションが他のユーザによって終了されています。ページが再読み込みされます。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8905,7 +8964,8 @@ msgstr "開始時間は終了時間より前にして下さい。"
 msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
-msgstr "オーダにチップが追加されました。ただし、選択された支払明細ではチップを追加で"
+msgstr ""
+"オーダにチップが追加されました。ただし、選択された支払明細ではチップを追加で"
 "きません。"
 
 #. module: point_of_sale
@@ -8914,7 +8974,8 @@ msgstr "オーダにチップが追加されました。ただし、選択され
 msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
-msgstr "取引はAdyenによって処理されます。関連する支払い方法でAdyenの認証情報を設定し"
+msgstr ""
+"取引はAdyenによって処理されます。関連する支払い方法でAdyenの認証情報を設定し"
 "ます。"
 
 #. module: point_of_sale
@@ -8927,8 +8988,9 @@ msgstr "取引はMercado Pagoにより端末で処理されます。"
 msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
-msgstr "取引はMercado Pagoによって処理されます。関連する支払方法にMercado "
-"Pagoの認証情報を設定して下さい。"
+msgstr ""
+"取引はMercado Pagoによって処理されます。関連する支払方法にMercado Pagoの認証"
+"情報を設定して下さい。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8940,8 +9002,9 @@ msgstr "取引は端末上で Pine Labs によって処理されます。"
 msgid ""
 "The transactions are processed by Pine Labs. Set your Pine Labs credentials "
 "on the related payment method."
-msgstr "取引は Pine Labs によって処理されます。関連する支払方法に Pine Labs "
-"の認証情報を設定してください。"
+msgstr ""
+"取引は Pine Labs によって処理されます。関連する支払方法に Pine Labs の認証情"
+"報を設定してください。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8961,8 +9024,9 @@ msgstr ""
 msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on "
 "the related payment method."
-msgstr "取引は Razorpay "
-"によって処理されます。関連する支払方法にRazorpayの認証情報を設定して下さい。"
+msgstr ""
+"取引は Razorpay によって処理されます。関連する支払方法にRazorpayの認証情報を"
+"設定して下さい。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8970,14 +9034,16 @@ msgstr "取引は Razorpay "
 msgid ""
 "The transactions are processed by Stripe. Set your Stripe credentials on the "
 "related payment method."
-msgstr "取引はStripeによって処理されます。関連する支払方法にStripeの認証情報を設定し"
+msgstr ""
+"取引はStripeによって処理されます。関連する支払方法にStripeの認証情報を設定し"
 "て下さい。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_com
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Viva.com on terminal or tap on phone."
-msgstr "取引は、Viva.com によって端末またはスマートフォンのタップで処理されます。"
+msgstr ""
+"取引は、Viva.com によって端末またはスマートフォンのタップで処理されます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
@@ -9012,7 +9078,8 @@ msgstr ""
 msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
-msgstr "計上する金額とオーダ金額に差異があるのは、おそらく税金か会計設定の変更が原因"
+msgstr ""
+"計上する金額とオーダ金額に差異があるのは、おそらく税金か会計設定の変更が原因"
 "です。"
 
 #. module: point_of_sale
@@ -9062,7 +9129,8 @@ msgstr "このPOSセッションの現金レジはありません。"
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr "選択したプロダクトにシリアル/ロット番号がなく、POSアプリから作成できません。"
+msgstr ""
+"選択したプロダクトにシリアル/ロット番号がなく、POSアプリから作成できません。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9070,8 +9138,9 @@ msgstr "選択したプロダクトにシリアル/ロット番号がなく、PO
 msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
-msgstr "検証・請求前に、オーダに少なくとも1つのプロダクトが含まれている必要があります"
-"。"
+msgstr ""
+"検証・請求前に、オーダに少なくとも1つのプロダクトが含まれている必要がありま"
+"す。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
@@ -9085,8 +9154,9 @@ msgstr ""
 msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a "
 "fallback barcode parser from the PoS settings."
-msgstr "このバーコードは GS1 標準規格に対応していません。PoS "
-"設定からフォールバックバーコードパーサーの設定をご検討ください。"
+msgstr ""
+"このバーコードは GS1 標準規格に対応していません。PoS 設定からフォールバック"
+"バーコードパーサーの設定をご検討ください。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9159,9 +9229,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"この仕訳帳は、支払方法%(payment_method)s "
-"(オーダ%(pos_order)sで使用されている、アクティブなposセッション%(pos_session)"
-"s内)に関連付けられています。"
+"この仕訳帳は、支払方法%(payment_method)s (オーダ%(pos_order)sで使用されてい"
+"る、アクティブなposセッション%(pos_session)s内)に関連付けられています。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9190,7 +9259,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
-msgstr "このオーダはすでに支払いが完了しています。ドラフトに戻したり、編集したりする"
+msgstr ""
+"このオーダはすでに支払いが完了しています。ドラフトに戻したり、編集したりする"
 "ことはできません。"
 
 #. module: point_of_sale
@@ -9199,8 +9269,9 @@ msgstr "このオーダはすでに支払いが完了しています。ドラフ
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr "このオーダはまだサーバに同期されていません。同期されていることを確認してから"
-"、もう一度試して下さい。"
+msgstr ""
+"このオーダはまだサーバに同期されていません。同期されていることを確認してか"
+"ら、もう一度試して下さい。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9340,7 +9411,8 @@ msgstr ""
 msgid ""
 "To ensure due balance follow-up, generate an invoice or download the "
 "accounting application. "
-msgstr "支払残高を確実にフォローアップするために、顧客請求書を作成するか、会計アプリ"
+msgstr ""
+"支払残高を確実にフォローアップするために、顧客請求書を作成するか、会計アプリ"
 "ケーションをダウンロードして下さい。 "
 
 #. module: point_of_sale
@@ -9467,7 +9539,8 @@ msgstr "オーダ編集を追跡"
 msgid ""
 "Trainers in cotton canvas with a padded top edge, tongue and lacing at the "
 "front."
-msgstr "コットン・キャンバスのトレーナー。パッド入りのトップエッジ、タン、フロントの"
+msgstr ""
+"コットン・キャンバスのトレーナー。パッド入りのトップエッジ、タン、フロントの"
 "紐が特徴。"
 
 #. module: point_of_sale
@@ -9777,13 +9850,15 @@ msgstr "数値"
 msgid ""
 "Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
 "closure."
-msgstr "調節可能なドローストリング付きフード、フロントジッパー開閉の多用途コットンパ"
-"ーカー。"
+msgstr ""
+"調節可能なドローストリング付きフード、フロントジッパー開閉の多用途コットン"
+"パーカー。"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
-msgstr "ヴィンテージのジーンズジャケット。どんなカジュアルなスタイルにも合う、タイム"
+msgstr ""
+"ヴィンテージのジーンズジャケット。どんなカジュアルなスタイルにも合う、タイム"
 "レスなアイテム。"
 
 #. module: point_of_sale
@@ -9880,7 +9955,8 @@ msgstr "全プロダクトが準備できてから"
 msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
-msgstr "無効の場合、POSマネジャーだけがプロダクト情報の中からプロダクトのマージンと原"
+msgstr ""
+"無効の場合、POSマネジャーだけがプロダクト情報の中からプロダクトのマージンと原"
 "価を見ることができます。"
 
 #. module: point_of_sale
@@ -9937,7 +10013,8 @@ msgstr "はい"
 msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
-msgstr "現在オフラインです。ページを再読み込みすると、未保存のデータが失われる可能性"
+msgstr ""
+"現在オフラインです。ページを再読み込みすると、未保存のデータが失われる可能性"
 "があります。"
 
 #. module: point_of_sale
@@ -9946,7 +10023,8 @@ msgstr "現在オフラインです。ページを再読み込みすると、未
 msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
-msgstr "それを使用するPOSセッションがすでに開かれている間は、現金丸め構成を変更する権"
+msgstr ""
+"それを使用するPOSセッションがすでに開かれている間は、現金丸め構成を変更する権"
 "限がありません。"
 
 #. module: point_of_sale
@@ -9957,8 +10035,8 @@ msgid ""
 "are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
-"シリアル番号やロット番号が設定されているプロダクトを販売しようとしていますが"
-"、設定されていないものがあります。\n"
+"シリアル番号やロット番号が設定されているプロダクトを販売しようとしています"
+"が、設定されていないものがあります。\n"
 "このまま進めますか？"
 
 #. module: point_of_sale
@@ -9973,7 +10051,8 @@ msgstr ""
 msgid ""
 "You can only cancel a session that is in opening control state and has no "
 "orders."
-msgstr "セッションをキャンセルできるのは、開始コントロールステータスかつオーダがない"
+msgstr ""
+"セッションをキャンセルできるのは、開始コントロールステータスかつオーダがない"
 "セッションのみです。"
 
 #. module: point_of_sale
@@ -9988,7 +10067,8 @@ msgstr "同一オーダのプロダクトのみ返金が可能です。"
 msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
-msgstr "リンク解除できるのは、新規またはキャンセル状態のオーダに関連するPOSオーダ明細"
+msgstr ""
+"リンク解除できるのは、新規またはキャンセル状態のオーダに関連するPOSオーダ明細"
 "のみです。"
 
 #. module: point_of_sale
@@ -10006,9 +10086,9 @@ msgid ""
 "the form view in studio if no PoS order exist"
 msgstr ""
 "POSオーダが存在しない場合は、バックエンドのインターフェイスからPOSオーダを作"
-"成したり、プライスリストを解除したり、フォームツールを使ってPythonテストでpos"
-".orderを作成したり、スタジオでフォームビューを編集したりすることはできません"
-"。"
+"成したり、プライスリストを解除したり、フォームツールを使ってPythonテストで"
+"pos.orderを作成したり、スタジオでフォームビューを編集したりすることはできませ"
+"ん。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10016,7 +10096,8 @@ msgstr ""
 msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
-msgstr "'%(picking_type)s'はPOS設定'%(config)s'で使用されているため、アーカイブするこ"
+msgstr ""
+"'%(picking_type)s'はPOS設定'%(config)s'で使用されているため、アーカイブするこ"
 "とはできません。"
 
 #. module: point_of_sale
@@ -10046,7 +10127,8 @@ msgstr "その日の未確定オーダが残っている間は、POSを閉じる
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
-msgstr "次より前に開始するセッションを作成することはできません: %(lock_date_info)s"
+msgstr ""
+"次より前に開始するセッションを作成することはできません: %(lock_date_info)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10099,7 +10181,8 @@ msgstr "異なる会社に属しているオーダを請求することはでき
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
-msgstr "同じ通貨を使用していない設定のオープンオーダを共有することはできません。"
+msgstr ""
+"同じ通貨を使用していない設定のオープンオーダを共有することはできません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10113,8 +10196,9 @@ msgstr "複数の現金支払方法で同じ仕訳帳を使用することはで
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr "POSセッションを開く権限がありません。別のユーザでセッションを開いてみて下さい"
-"。"
+msgstr ""
+"POSセッションを開く権限がありません。別のユーザでセッションを開いてみて下さ"
+"い。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10143,8 +10227,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"%(payment_method)s支払方法の\"顧客の特定\"オプションを有効にしましたが"
-"、オーダ%(order)sに顧客が含まれていません。"
+"%(payment_method)s支払方法の\"顧客の特定\"オプションを有効にしましたが、オー"
+"ダ%(order)sに顧客が含まれていません。"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -10174,7 +10258,8 @@ msgstr ""
 msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
-msgstr "この支払方法でQRコードを生成するには、QRコード方法を選択する必要があります。"
+msgstr ""
+"この支払方法でQRコードを生成するには、QRコード方法を選択する必要があります。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10187,8 +10272,9 @@ msgstr "現金出納帳に損益勘定が必要です。"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "You need to select the customer before you can invoice or ship an order."
-msgstr "請求書を発行したり、オーダを発送したりする前に、顧客を選択する必要があります"
-"。"
+msgstr ""
+"請求書を発行したり、オーダを発送したりする前に、顧客を選択する必要がありま"
+"す。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10209,9 +10295,9 @@ msgstr "まだ"
 msgid ""
 "Your IoT box cannot find the printer, please ensure it is connected and "
 "turned on before retrying."
-msgstr "お使いのIoT box "
-"がプリンターを検出できません。再試行する前に、プリンターが接続されていて電源"
-"が入っていることを確認してください。"
+msgstr ""
+"お使いのIoT box がプリンターを検出できません。再試行する前に、プリンターが接"
+"続されていて電源が入っていることを確認してください。"
 
 #. module: point_of_sale
 #. odoo-python

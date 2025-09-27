@@ -77,8 +77,8 @@ msgstr "ĐƠN HOÀN TIỀN %(name)s"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành "
-"%(new_amount)s"
+"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -320,27 +320,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Xin chào <t t-out="
-"\"client_name\">Tên khách hàng</t>,</t>\n"
+"                        <t t-if=\"client_name\">Xin chào <t t-"
+"out=\"client_name\">Tên khách hàng</t>,</t>\n"
 "                        <t t-else=\"\">Xin chào,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Cảm ơn bạn vì đã mua hàng tại <t t-out="
-"\"store_name\">Tên cửa hàng</t>!</div>\n"
+"                    <div>Cảm ơn bạn vì đã mua hàng tại <t t-"
+"out=\"store_name\">Tên cửa hàng</t>!</div>\n"
 "                    <div>Tệp đính kèm là biên lai cho giao dịch mua hàng của "
 "bạn vào <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">ngày</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">giờ</t>.</span>"
-"\n"
+"time_format='short',                          lang_code=lg)\">giờ</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Trân trọng,</div>\n"
@@ -381,8 +381,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Cần xác "
-"định</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Cần xác định</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -403,8 +403,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Mã vạch</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Cài đặt này dùng chung cho tất cả POS.\" pos-data-toggle=\"tooltip\""
-"/>"
+"title=\"Cài đặt này dùng chung cho tất cả POS.\" pos-data-toggle=\"tooltip\"/"
+">"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -427,8 +427,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Mẹo: Thêm bảng giá hoàn trả (VD: 0€).</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Mẹo: Thêm bảng giá hoàn trả (VD: 0€).</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -513,7 +513,8 @@ msgstr "<strong>Tổng tiền</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
-msgstr "<sup title=\"Chỉ khả dụng cho đơn hàng online và tự đặt hàng.\">?</sup>"
+msgstr ""
+"<sup title=\"Chỉ khả dụng cho đơn hàng online và tự đặt hàng.\">?</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1019,8 +1020,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành "
-"%(new_amount)s"
+"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -5203,7 +5204,8 @@ msgstr "Không tìm thấy thêm khách hàng nào cho \"%s\"."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No open session available. Please open a new session to capture the order."
-msgstr "Không có phiên đang mở nào. Vui lòng mở phiên mới để ghi nhận đơn hàng."
+msgstr ""
+"Không có phiên đang mở nào. Vui lòng mở phiên mới để ghi nhận đơn hàng."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -6202,8 +6204,8 @@ msgstr "Vui lòng tạo/chọn một POS ở trên để hiển thị các tùy 
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' "
-"(id:%(id)d)."
+"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' (id:%"
+"(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6516,7 +6518,8 @@ msgstr "POS"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "Poncho kiểu đan móc mềm mại với đường viền cổ tròn, rủ xuống nhẹ nhàng."
+msgstr ""
+"Poncho kiểu đan móc mềm mại với đường viền cổ tròn, rủ xuống nhẹ nhàng."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -7534,8 +7537,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Đảo ngược bút toán đóng phiên POS %(entry)s cho đơn hàng %(order)s từ phiên "
-"%(session)s"
+"Đảo ngược bút toán đóng phiên POS %(entry)s cho đơn hàng %(order)s từ phiên %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8345,6 +8348,12 @@ msgstr "Lưu trữ các đơn hàng đã chỉnh sửa trong backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -9924,7 +9933,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
-msgstr "Áo khoác jean cổ điển, món đồ vượt thời gian cho mọi trang phục casual."
+msgstr ""
+"Áo khoác jean cổ điển, món đồ vượt thời gian cho mọi trang phục casual."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -10297,8 +10307,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Bạn đã bật tùy chọn \"Xác định khách hàng\" cho phương thức thanh toán "
-"%(payment_method)s, nhưng đơn hàng %(order)s không chứa khách hàng."
+"Bạn đã bật tùy chọn \"Xác định khách hàng\" cho phương thức thanh toán %"
+"(payment_method)s, nhưng đơn hàng %(order)s không chứa khách hàng."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

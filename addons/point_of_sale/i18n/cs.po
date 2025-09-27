@@ -324,27 +324,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Dobrý den <t t-out="
-"\"client_name\">Jméno zákazníka</t>,</t>\n"
+"                        <t t-if=\"client_name\">Dobrý den <t t-"
+"out=\"client_name\">Jméno zákazníka</t>,</t>\n"
 "                        <t t-else=\"\">Vítejte,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Děkujeme za objednání v <t t-out=\"store_name\""
-">Název obchodu</t>!</div>\n"
+"                    <div>Děkujeme za objednání v <t t-"
+"out=\"store_name\">Název obchodu</t>!</div>\n"
 "                    <div>V příloze najdete účtenku za objednávku ze dne "
 "<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">datum</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">čas</t>.</span>"
-"\n"
+"time_format='short',                          lang_code=lg)\">čas</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>S přátelským pozdravem,</div>\n"
@@ -375,8 +375,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Dobrý den %(client_name)s,<br/>Zde je váš doklad %(is_invoiced)"
-"sk             %(pos_name)s ve výši %(amount)s od %(company_name)s. </p>"
+"<p>Dobrý den %(client_name)s,<br/>Zde je váš doklad %"
+"(is_invoiced)sk             %(pos_name)s ve výši %(amount)s od %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -384,8 +385,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">K "
-"určení</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">K určení</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -430,8 +431,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tip: přidejte ceník pro vrácení (tj. 0 €)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tip: přidejte ceník pro vrácení (tj. 0 €)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2387,7 +2388,8 @@ msgstr "Připojení k tiskárně selhalo"
 msgid ""
 "Connection to the server has been lost. Please check your internet "
 "connection."
-msgstr "Bylo přerušeno připojení k serveru. Zkontrolujte připojení k internetu."
+msgstr ""
+"Bylo přerušeno připojení k serveru. Zkontrolujte připojení k internetu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__consolidated_billing
@@ -4571,8 +4573,8 @@ msgstr ""
 "relace.\n"
 "U peněžního deníku zapisujeme přímo na výchozí účet v deníku přes položky "
 "výpisu.\n"
-"U bankovního deníku zapisujeme na dlužný účet uvedený v tomto způsobu platby."
-"\n"
+"U bankovního deníku zapisujeme na dlužný účet uvedený v tomto způsobu "
+"platby.\n"
 "Povoleny jsou pouze peněžní a bankovní deníky."
 
 #. module: point_of_sale
@@ -4988,8 +4990,8 @@ msgstr "Potřeba zákazníka fakturovat"
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
 msgstr ""
-"Pro zaúčtování ztracené částky potřebujete účet ztrát pro následující deníky:"
-" %s\n"
+"Pro zaúčtování ztracené částky potřebujete účet ztrát pro následující "
+"deníky: %s\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5608,8 +5610,8 @@ msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
-"Volitelné produkty se navrhují, když zákazníci přidávají položky do košíku ("
-"např. při přidání hamburgeru se navrhují studené nápoje nebo hranolky)."
+"Volitelné produkty se navrhují, když zákazníci přidávají položky do košíku "
+"(např. při přidání hamburgeru se navrhují studené nápoje nebo hranolky)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7526,8 +7528,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Storno záznam uzávěrky POS %(entry)s pro objednávku %(order)s z relace "
-"%(session)s"
+"Storno záznam uzávěrky POS %(entry)s pro objednávku %(order)s z relace %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8344,6 +8346,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Platební terminál Stripe"
@@ -8648,8 +8656,8 @@ msgstr "Značka platební karty (např. Visa, MasterCard, American Express...)"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr ""
-"Strategie zaokrouhlování hotovosti v prodejním místě %(pos)s musí být: "
-"'%(value)s'"
+"Strategie zaokrouhlování hotovosti v prodejním místě %(pos)s musí být: '%"
+"(value)s'"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8674,8 +8682,8 @@ msgid ""
 "The default tip product is missing. Please manually specify the tip product. "
 "(See Tips field.)"
 msgstr ""
-"Chybí výchozí zpropitné produktu. Zadejte prosím zpropitné produktu ručně. ("
-"Viz pole Zpropitné.)"
+"Chybí výchozí zpropitné produktu. Zadejte prosím zpropitné produktu ručně. "
+"(Viz pole Zpropitné.)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8815,7 +8823,8 @@ msgstr "Objednávka nemohla být odeslána na server z důvodu neznámé chyby"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
-msgstr "Datum doručení/vyzvednutí objednávky je v budoucnosti. Nelze ji zrušit."
+msgstr ""
+"Datum doručení/vyzvednutí objednávky je v budoucnosti. Nelze ji zrušit."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10162,8 +10171,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
-"Nelze archivovat '%(picking_type)s', protože je použiváno nastavení POS "
-"'%(config)s'."
+"Nelze archivovat '%(picking_type)s', protože je použiváno nastavení POS '%"
+"(config)s'."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10200,7 +10209,8 @@ msgstr "Nelze vytvořit relaci začínající před: %(lock_date_info)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot delete a cash move that is not linked to this session."
-msgstr "Nelze smazat hotovostní transakci, která není propojena s touto relací."
+msgstr ""
+"Nelze smazat hotovostní transakci, která není propojena s touto relací."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10298,8 +10308,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Pro %(payment_method)s způsob platby jste povolili možnost "
-"\"Identifikovat zákazníka\", ale objednávka %(order)s neobsahuje zákazníka."
+"Pro %(payment_method)s způsob platby jste povolili možnost \"Identifikovat "
+"zákazníka\", ale objednávka %(order)s neobsahuje zákazníka."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

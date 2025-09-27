@@ -342,8 +342,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"Denna inställning är gemensam för alla PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"Denna inställning är gemensam "
+"för alla PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -358,9 +358,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Kära %(client_name)s,<br/>Här är ditt kvitto %(is_invoiced)"
-"sför             %(pos_name)s uppgående till %(amount)s från %(company_name)"
-"s. </p>"
+"<p>Kära %(client_name)s,<br/>Här är ditt kvitto %"
+"(is_invoiced)sför             %(pos_name)s uppgående till %(amount)s från %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -389,8 +389,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Barkoder</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Denna inställning är gemensam för alla PoS.\" pos-data-toggle="
-"\"tooltip\"/>"
+"title=\"Denna inställning är gemensam för alla PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1466,9 +1466,9 @@ msgid ""
 "products."
 msgstr ""
 "Förbättra dina försäljningar med olika typer av program: Kuponger, "
-"Kampanjer, Presentkort, Loyalty. Specifika villkor kan ställas in ("
-"produkter, kunder, minimiköpbelopp, period). Belöningar kan vara rabatter (% "
-"eller belopp) eller gratisprodukter."
+"Kampanjer, Presentkort, Loyalty. Specifika villkor kan ställas in "
+"(produkter, kunder, minimiköpbelopp, period). Belöningar kan vara rabatter "
+"(% eller belopp) eller gratisprodukter."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -1974,8 +1974,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Välj en specifik skatteposition vid beställningen beroende på typ av kund ("
-"skattebefriad, på plats vs. takeaway, etc.)."
+"Välj en specifik skatteposition vid beställningen beroende på typ av kund "
+"(skattebefriad, på plats vs. takeaway, etc.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3218,7 +3218,8 @@ msgstr "Nedladdningar"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
-msgstr "Ladda ner en rapport med all försäljning för den aktuella PoS-sessionen"
+msgstr ""
+"Ladda ner en rapport med all försäljning för den aktuella PoS-sessionen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5116,8 +5117,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Ingen kontoplan konfigurerad, gå till menyn \"konfiguration / inställningar\""
-" och installera en från fliken Fakturering."
+"Ingen kontoplan konfigurerad, gå till menyn \"konfiguration / "
+"inställningar\" och installera en från fliken Fakturering."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7484,8 +7485,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Återföring av POS stängningspost %(entry)s för order %(order)s från session "
-"%(session)s"
+"Återföring av POS stängningspost %(entry)s för order %(order)s från session %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8298,6 +8299,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
 msgstr "Betalningsterminal för Stripe"
@@ -8505,7 +8512,8 @@ msgstr "Tillgänglighet efter måste ställas in mellan 00:00 och 24:00"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
-msgstr "Tillgängligheten fram till måste vara större än tillgängligheten efter."
+msgstr ""
+"Tillgängligheten fram till måste vara större än tillgängligheten efter."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8563,8 +8571,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Point of Sale stöder endast avrundningsstrategin "
-"\"lägg till en avrundningslinje\"."
+"Point of Sale stöder endast avrundningsstrategin \"lägg till en "
+"avrundningslinje\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8603,8 +8611,8 @@ msgstr "Betalkortets varumärke (t.ex. Visa, AMEX, ...)"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr ""
-"Kontantavrundningsstrategin för försäljningsstället %(pos)s måste vara: "
-"\"%(value)s\""
+"Kontantavrundningsstrategin för försäljningsstället %(pos)s måste vara: \"%"
+"(value)s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -8758,7 +8766,8 @@ msgstr "Antalet försäljningsorder relaterade till denna kund"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid "The order could not be sent to the server due to an unknown error"
-msgstr "Beställningen kunde inte skickas till servern på grund av ett okänt fel"
+msgstr ""
+"Beställningen kunde inte skickas till servern på grund av ett okänt fel"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10237,8 +10246,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Du har aktiverat alternativet \"Identifiera kund\" för betalningsmetoden "
-"%(payment_method)s, men ordern %(order)s innehåller inte någon kund."
+"Du har aktiverat alternativet \"Identifiera kund\" för betalningsmetoden %"
+"(payment_method)s, men ordern %(order)s innehåller inte någon kund."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

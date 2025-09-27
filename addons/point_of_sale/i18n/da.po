@@ -319,27 +319,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hej <t t-out=\"client_name\""
-">Kundenavn</t></t>\n"
+"                        <t t-if=\"client_name\">Hej <t t-"
+"out=\"client_name\">Kundenavn</t></t>\n"
 "                        <t t-else=\"\">Hej</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Tak for dit køb fra <t t-out=\"store_name\""
-">Butiksnavn</t>!</div>\n"
+"                    <div>Tak for dit køb fra <t t-"
+"out=\"store_name\">Butiksnavn</t>!</div>\n"
 "                    <div>Vi har vedhæftet din kvittering for købet den "
 "<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">dato</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">tidspunkt</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">tidspunkt</t>."
+"</span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Med venlig hilsen</div>\n"
@@ -354,8 +354,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"værktøjstip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
+"PoS.\" pos-data-toggle=\"værktøjstip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -370,8 +370,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hej %(client_name)s.<br/>Her er din kvittering %(is_invoiced)"
-"sfor             %(pos_name)s på %(amount)s fra %(company_name)s. </p>"
+"<p>Hej %(client_name)s.<br/>Her er din kvittering %"
+"(is_invoiced)sfor             %(pos_name)s på %(amount)s fra %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -401,8 +402,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Stregkoder</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"værktøjstip\""
-"/>"
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"værktøjstip\"/"
+">"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -425,9 +426,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tip: Tilføj en returprisliste (f.eks. 0 "
-"kr.)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tip: Tilføj en returprisliste (f.eks. 0 kr.)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1874,7 +1874,8 @@ msgstr "Slank afslappet T-shirt i ren bomuld. Fås i forskellige størrelser"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr "Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
+msgstr ""
+"Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1994,8 +1995,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Vælg en specifik skatteposition ved bestillingen afhængigt af kundetypen ("
-"f.eks. momsfri, spisested vs. takeaway osv.)."
+"Vælg en specifik skatteposition ved bestillingen afhængigt af kundetypen "
+"(f.eks. momsfri, spisested vs. takeaway osv.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2566,7 +2567,8 @@ msgstr "Opret nyt produkt"
 msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
-msgstr "Opret én faktura for alle ordrer med samme kunde og faktureringsadresse"
+msgstr ""
+"Opret én faktura for alle ordrer med samme kunde og faktureringsadresse"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -4238,7 +4240,8 @@ msgstr "Fakturastatus"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
+msgstr ""
+"Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -4371,8 +4374,8 @@ msgstr ""
 "Det ser ud til, at der ikke er tilknyttet nogen kunde til POS-ordren/ordrene "
 "%(order_ref)s.\n"
 "\n"
-"Ønsker du at tilknytte %(customer_name)s som kunde for de(n) valgte "
-"POS-ordre/ordrer?"
+"Ønsker du at tilknytte %(customer_name)s som kunde for de(n) valgte POS-"
+"ordre/ordrer?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4570,8 +4573,8 @@ msgid ""
 msgstr ""
 "Lad feltet stå tomt for at bruge kundens tilgodehavendekonto.\n"
 "Angiver den journal, hvor betalingerne skal bogføres, når sessionen "
-"afsluttes (enten samlet eller enkeltvis, afhængigt af om "
-"\"Identificér kunde\" er slået til.\n"
+"afsluttes (enten samlet eller enkeltvis, afhængigt af om \"Identificér "
+"kunde\" er slået til.\n"
 "Kassekladder bogføres direkte på journalens standardkonto via "
 "kontoudtogslinjerne.\n"
 "I bankjournaler bogføres der i stedet på den konto, der er angivet i denne "
@@ -5614,8 +5617,8 @@ msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
-"Valgfrie produkter foreslås, når kunder lægger varer i deres indkøbskurv ("
-"f.eks. foreslås pomfritter og kolde drikkevarer, når en burger tilføjes)."
+"Valgfrie produkter foreslås, når kunder lægger varer i deres indkøbskurv "
+"(f.eks. foreslås pomfritter og kolde drikkevarer, når en burger tilføjes)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6225,8 +6228,8 @@ msgstr ""
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Indtast venligst dine faktureringsoplysninger <small class=\"text-muted\""
-">eller</small>"
+"Indtast venligst dine faktureringsoplysninger <small class=\"text-"
+"muted\">eller</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7536,8 +7539,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Tilbageførsel af kassesystemets afsluttende bogføring %(entry)s for ordre "
-"%(order)s fra session%(session)s"
+"Tilbageførsel af kassesystemets afsluttende bogføring %(entry)s for ordre %"
+"(order)s fra session%(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8350,6 +8353,12 @@ msgstr "Gem redigerede ordrer i backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -9504,7 +9513,8 @@ msgstr "For at registrere nye ordrer bedes du starte en ny session."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
+msgstr ""
+"For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10212,8 +10222,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr ""
-"Det er ikke muligt at oprette en session, der starter inden: "
-"%(lock_date_info)s"
+"Det er ikke muligt at oprette en session, der starter inden: %"
+"(lock_date_info)s"
 
 #. module: point_of_sale
 #. odoo-python

@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
@@ -74,14 +74,15 @@ msgstr "%(name)s ВОЗВРАТ"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Метод оплаты изменен с %(old_pm)s на %(new_pm)s и сумма с %(old_amount)s на "
-"%(new_amount)s"
+"Метод оплаты изменен с %(old_pm)s на %(new_pm)s и сумма с %(old_amount)s на %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
-msgstr "Метод оплаты изменен с %(old_pm)s на %(new_pm)s на сумму %(old_amount)s"
+msgstr ""
+"Метод оплаты изменен с %(old_pm)s на %(new_pm)s на сумму %(old_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1745,7 +1746,8 @@ msgstr "Обнаружено расхождение при подсчете на
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Profit) - closing"
-msgstr "Обнаружено расхождение при подсчете наличности (прибыль) – при закрытии"
+msgstr ""
+"Обнаружено расхождение при подсчете наличности (прибыль) – при закрытии"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2856,7 +2858,8 @@ msgstr "Определите товары и категории POS для ма�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr "Определите наименьший номинал валюты, используемой для оплаты наличными"
+msgstr ""
+"Определите наименьший номинал валюты, используемой для оплаты наличными"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -4190,8 +4193,8 @@ msgstr ""
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Оплата счета-фактуры за %(order)s (%(account_move)s) с использованием "
-"%(payment_method)s"
+"Оплата счета-фактуры за %(order)s (%(account_move)s) с использованием %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -7471,8 +7474,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
 "(session)s"
 msgstr ""
-"Сторнирование записи закрытия POS %(entry)s для ордера %(order)s из сессии "
-"%(session)s"
+"Сторнирование записи закрытия POS %(entry)s для ордера %(order)s из сессии %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8284,6 +8287,12 @@ msgstr "Сохранять отредактированные заказы в б
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -9377,8 +9386,8 @@ msgid ""
 msgstr ""
 "Чтобы удалить товар, убедитесь, что все сессии POS закрыты.\n"
 "\n"
-"Удаление товара из активной сессии – это как вырвать бургер у клиента из рук:"
-" повсюду полетят кетчуп и майонез!"
+"Удаление товара из активной сессии – это как вырвать бургер у клиента из "
+"рук: повсюду полетят кетчуп и майонез!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10211,8 +10220,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Вы включили опцию \"Определить клиента\" для метода оплаты %(payment_method)"
-"s, но заказ %(order)s не содержит клиента."
+"Вы включили опцию \"Определить клиента\" для метода оплаты %"
+"(payment_method)s, но заказ %(order)s не содержит клиента."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
