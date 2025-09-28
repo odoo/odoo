@@ -34,39 +34,39 @@ Promise.prototype.constructor = function (...args) {
     return instance;
 };
 
-window.Promise = new Proxy(OriginalPromise, {
-    construct(target, args, newTarget) {
-        const instance = Reflect.construct(target, args, newTarget);
-        instance.execContext = execContexts.at(-1); // Add context
-        // console.warn("Proxied 'new Promise()'"); // For debugging
-        return instance;
-    },
-    get(target, prop, receiver) {
-        if (
-            typeof target[prop] === "function" &&
-            ["resolve", "reject", "all", "race", "allSettled", "any"].includes(prop)
-        ) {
-            return function (...args) {
-                const newPromise = Reflect.apply(target[prop], target, args);
-                newPromise.execContext = execContexts.at(-1); // Add context
-                // console.warn(`Proxied 'Promise.${prop}()'`); // For debugging
-                return newPromise;
-            };
-        }
-        return Reflect.get(target, prop, receiver);
-    },
-});
+// window.Promise = new Proxy(OriginalPromise, {
+//     construct(target, args, newTarget) {
+//         const instance = Reflect.construct(target, args, newTarget);
+//         instance.execContext = execContexts.at(-1); // Add context
+//         // console.warn("Proxied 'new Promise()'"); // For debugging
+//         return instance;
+//     },
+//     get(target, prop, receiver) {
+//         if (
+//             typeof target[prop] === "function" &&
+//             ["resolve", "reject", "all", "race", "allSettled", "any"].includes(prop)
+//         ) {
+//             return function (...args) {
+//                 const newPromise = Reflect.apply(target[prop], target, args);
+//                 newPromise.execContext = execContexts.at(-1); // Add context
+//                 // console.warn(`Proxied 'Promise.${prop}()'`); // For debugging
+//                 return newPromise;
+//             };
+//         }
+//         return Reflect.get(target, prop, receiver);
+//     },
+// });
 
-Promise.prototype.then = function (onFulfilled, onRejected) {
-    // if (!_compute) {
-    // return originalThen.call(this, onFulfilled, onRejected);
-    // }
-    return originalThen.call(
-        this,
-        onFulfilled ? (...args) => _exec(this.execContext, onFulfilled, args) : undefined,
-        onRejected ? (...args) => _exec(this.execContext, onRejected, args) : undefined
-    );
-};
+// Promise.prototype.then = function (onFulfilled, onRejected) {
+//     // if (!_compute) {
+//     // return originalThen.call(this, onFulfilled, onRejected);
+//     // }
+//     return originalThen.call(
+//         this,
+//         onFulfilled ? (...args) => _exec(this.execContext, onFulfilled, args) : undefined,
+//         onRejected ? (...args) => _exec(this.execContext, onRejected, args) : undefined
+//     );
+// };
 
 // window.Promise = CancellablePromise;
 
