@@ -229,7 +229,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     unknown = [
                         key
                         for key in child.attrib
-                        if key not in ('name', 'add', 'remove', 'separator','merge') 
+                        if key not in ('name', 'add', 'remove', 'separator', 'merge') 
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
