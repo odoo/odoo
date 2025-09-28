@@ -462,7 +462,17 @@ export class CartService {
         });
         // TODO should not redirect if errors in data.
         if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
-            window.location = '/shop/cart';
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedProducts = urlParams.get('shared_products');
+            let redirectUrl = '/shop/cart';
+
+            // If shared products exist in the URL, preserve them
+            // so they continue to appear in the cart/checkout
+            if (sharedProducts) {
+                redirectUrl += `?shared_products=${encodeURIComponent(sharedProducts)}`;
+            }
+
+            window.location = redirectUrl;
             return data.quantity;
         }
         if (data.cart_quantity && (

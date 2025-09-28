@@ -872,3 +872,14 @@ class SaleOrder(models.Model):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()
         self._recompute_prices()
+
+    def _is_cart_ready_to_share(self):
+        """ Whether the cart is valid and can be shared."""
+        return bool(self)
+
+    def _is_share_cart_allowed(self):
+        self.ensure_one()
+        return self._is_cart_ready_to_share() and any(
+            line._is_share_allowed() for line in self.order_line if line.product_id
+        )
+

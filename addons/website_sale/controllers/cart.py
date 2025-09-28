@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound
+from werkzeug.urls import url_encode
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -8,6 +9,7 @@ from odoo.http import request, route
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
 from odoo.tools.translate import _
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -50,10 +52,28 @@ class Cart(PaymentPortal):
             elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
                 values.update({'id': abandoned_order.id, 'access_token': abandoned_order.access_token})
 
+        shared_products = []
+
+        if product_ids := post.get('shared_products'):
+            # Get IDs of products already in the cart
+            existing_product_ids = order_sudo.order_line.mapped('product_id').ids if order_sudo else []
+
+            for pid in product_ids.split(","):
+                try:
+                    product_id = int(pid)
+                    product = request.env['product.product'].sudo().browse(product_id)
+                    # Only add if the product exists, can be added to the cart, and is not already in the cart
+                    if product.exists() and product._is_add_to_cart_allowed() and product_id not in existing_product_ids:
+                        shared_products.append(product)
+                except ValueError:
+                    # Ignore incorrectly formatted IDs
+                    continue
+
         values.update({
             'website_sale_order': order_sudo,
             'date': fields.Date.today(),
             'suggested_products': [],
+            'shared_products': shared_products,
         })
         if order_sudo:
             order_sudo.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
@@ -63,6 +83,7 @@ class Cart(PaymentPortal):
         values.update(request.website._get_checkout_step_values())
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
+        values.update(self._prepare_share_cart_items())
         return request.render('website_sale.cart', values)
 
     def _cart_values(self, **post):
@@ -247,6 +268,12 @@ class Cart(PaymentPortal):
                 **self._prepare_order_history(),
             }
         )
+        values['website_sale.share_cart_button'] = IrUiView._render_template(
+            'website_sale.share_cart_button', {
+                'website_sale_order': order_sudo,
+                **self._prepare_share_cart_items(),
+            }
+        )
         values['cart_ready'] = order_sudo._is_cart_ready()
         return values
 
@@ -334,6 +361,12 @@ class Cart(PaymentPortal):
             'website_sale.quick_reorder_history', {
                 'website_sale_order': order_sudo,
                 **self._prepare_order_history(),
+            }
+        )
+        values['website_sale.share_cart_button'] = IrUiView._render_template(
+            'website_sale.share_cart_button', {
+                'website_sale_order': order_sudo,
+                **self._prepare_share_cart_items(),
             }
         )
         return values
@@ -529,3 +562,41 @@ class Cart(PaymentPortal):
             infos['uom_name'] = line.product_uom_id.name
 
         return infos
+
+    def _prepare_share_cart_items(self):
+        """Get the IDs of cart items that are allowed to be shared.
+
+        :rtype: dict
+        :return: A dictionary containing a list of product IDs that can be shared
+        """
+        order_sudo = request.cart
+
+        order_shared_products = []
+        if order_sudo and order_sudo._is_share_cart_allowed():
+            lines = order_sudo.order_line.filtered(
+                lambda line: line._is_share_allowed()
+            )
+            order_shared_products = [line.product_id.id for line in lines]
+
+        website_id = order_sudo.website_id or request.env.website
+
+        # Build comma-separated IDs for URL
+        params = url_encode({
+            'shared_products': ",".join(map(str, order_shared_products)) if order_shared_products else ""
+        })
+        url = url_join(
+            website_id.get_base_url(),
+            f"/shop/cart?{params}" if params else "/shop/cart"
+        )
+
+        return {
+            'cart_share_values': {
+                'order_shared_products': order_shared_products,
+                'share_link': url,
+                'share_title': _("My Cart"),
+                'share_description': _(
+                    "Hello! I'm sharing this cart I created on %(site)s",
+                    site=website_id.name
+                )
+            }
+        }

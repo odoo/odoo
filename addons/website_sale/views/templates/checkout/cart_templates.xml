@@ -54,7 +54,7 @@
             </div>
         </t>
         <div id="cart_products"
-             t-if="website_sale_order and website_sale_order.website_order_line"
+             t-if="(website_sale_order and website_sale_order.website_order_line) or shared_products"
              class="js_cart_lines d-flex flex-column mb32">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
@@ -307,6 +307,7 @@
                 <div class="d-flex align-items-center mb-3">
                     <h4 class="mb-0">Order summary</h4>
                     <div class="ms-3 border-start ps-2"><t t-call="website_sale.quick_reorder_button"/></div>
+                    <div class="ms-3 border-start ps-2"><t t-call="website_sale.share_cart_button"/></div>
                 </div>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
@@ -483,12 +484,33 @@
         name="Accessory Products in my cart"
     >
         <xpath expr="//div[@id='cart_products']" position="inside">
-            <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
-            <div t-if="suggested_products"
+            <t t-call="website_sale.cart_extra_product_list"
+               products="suggested_products"
+               title="'Suggested accessories'"
+            />
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.shared_products_list"
+        inherit_id="website_sale.cart_lines"
+        name="Shared Products in my cart"
+    >
+        <xpath expr="//div[@id='cart_products']" position="inside">
+            <t t-call="website_sale.cart_extra_product_list"
+               products="shared_products"
+               title="'Shared Products'"
+            />
+        </xpath>
+    </template>
+
+    <template id="website_sale.cart_extra_product_list">
+        <h5 t-attf-class="mt-3 mb-0" t-if="products" t-out="title"/>
+        <div t-if="products"
                  id="suggested_products"
                  class="d-flex flex-column align-items-stretch">
                 <div
-                    t-foreach="suggested_products"
+                    t-foreach="products"
                     t-as="product"
                     t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
@@ -550,7 +572,19 @@
                     </div>
                 </div>
             </div>
-        </xpath>
+    </template>
+
+    <template id="website_sale.share_cart_button">
+        <span class="o_wsale_share_cart" t-if="website_sale_order and website_sale_order._is_share_cart_allowed()" title="Share My Cart">
+            <button
+                id="share_cart_button"
+                type="button"
+                class="btn btn-sm btn-link"
+                t-att-data-share-vals="json.dumps(cart_share_values)"
+            >
+                <i class="fa fa-share me-2"/>Share My Cart
+            </button>
+        </span>
     </template>
 
 </odoo>

@@ -130,3 +130,11 @@ class SaleOrderLine(models.Model):
         :rtype: bool
         """
         return self.product_id.is_published and not self.is_delivery
+
+    def _is_share_allowed(self):
+        self.ensure_one()
+        return (
+            bool(self.product_id)
+            and self.product_id._is_add_to_cart_allowed()
+            and self._show_in_cart()
+        )
