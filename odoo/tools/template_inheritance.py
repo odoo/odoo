@@ -229,7 +229,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     unknown = [
                         key
                         for key in child.attrib
-                        if key not in ('name', 'add', 'remove', 'separator', 'merge') 
+                        if key not in ('name', 'add', 'remove', 'separator', 'merge')
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
@@ -290,8 +290,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                                 (v for v in values if v and v not in to_remove),
                                 to_add
                             ))
-                            
-                    if child.get('merge'):
+                    elif child.get('merge'):
                         merge_from: str = node.attrib.get(attribute)
                         merge_to: str = child.get('merge', '')
 
