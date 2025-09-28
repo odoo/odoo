@@ -6,7 +6,9 @@ import {
     reactive,
     status,
     useEffect,
+    effect,
     xml,
+    toRaw,
 } from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
@@ -17,7 +19,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
 
 function getFirstElementOfNode(node) {
     if (!node) {
@@ -166,10 +167,18 @@ export class Dropdown extends Component {
 
         // As the popover is in another context we need to force
         // its re-rendering when the dropdown re-renders
-        onRendered(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null));
+        // todo: think about if we could use another logic
+        // if we still want this, how to deal with the read/write in the same
+        // effect? we probably want to prevent a render we read/write or
+        // write/read in the same effect.
+        onRendered(() => {
+            this.popoverRefresher
+                ? (this.popoverRefresher.token = toRaw(this.popoverRefresher).token + 1)
+                : null;
+        });
 
         onMounted(() => this.onStateChanged(this.state));
-        effect((state) => this.onStateChanged(state), [this.state]);
+        effect(() => this.onStateChanged(this.state));
 
         useEffect(
             (target) => this.setTargetElement(target),
