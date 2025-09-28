@@ -1,0 +1,15 @@
+[Unit]
+Description=Zengi Merchant Portal Backend
+
+[Service]
+Type=simple
+User=mp
+Group=mp
+WorkingDirectory=/home/mp/mp
+ExecStart=/home/mp/env_mp/bin/odoo -c /home/mp/prod.conf
+StandardOutput=journal+console
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
