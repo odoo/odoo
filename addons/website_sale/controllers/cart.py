@@ -578,7 +578,7 @@ class Cart(PaymentPortal):
             )
             order_shared_products = [line.product_id.id for line in lines]
 
-        website_id = order_sudo.website_id or request.env.website
+        website_id = order_sudo.website_id or request.website
 
         # Build comma-separated IDs for URL
         params = url_encode({
