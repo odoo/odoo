@@ -76,7 +76,7 @@ function updateCartSummary(data) {
     if (data['website_sale.share_cart_button']) {
         const shareCartEl = document.querySelector('.o_wsale_share_cart');
         if (shareCartEl) {
-            shareCartEl.outerHTML = markup(data['website_sale.share_cart_button']);
+            shareCartEl.outerHTML = data['website_sale.share_cart_button'];
         }
     }
 }

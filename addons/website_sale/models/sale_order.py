@@ -882,4 +882,3 @@ class SaleOrder(models.Model):
         return self._is_cart_ready_to_share() and any(
             line._is_share_allowed() for line in self.order_line if line.product_id
         )
-
