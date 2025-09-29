@@ -105,16 +105,6 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             "invoice_cash_rounding_id": rounding.id,
         })
         cls.invoice_cash_rounding.action_post()
-        cls.sez_partner = cls.env['res.partner'].create({
-            'name': 'SEZ Partner',
-            'vat': '36AAAAA1234AAZA',
-            'l10n_in_gst_treatment': 'special_economic_zone',
-            'street': 'Block no. 402',
-            'city': 'Some city',
-            'zip': '500002',
-            'state_id': cls.env.ref('base.state_in_gj').id,
-            'country_id': cls.env.ref('base.in').id,
-        })
         cls.invoice_with_intra_igst = cls.init_invoice(
             "out_invoice", partner=cls.sez_partner, post=False, products=cls.product_a
         )
@@ -163,7 +153,6 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         # 945 + 1.591 ~= 946.59
         # 946.59 * 0.06 = 56.80
         # total tax: 160.19
-        json_value = self.invoice._l10n_in_edi_generate_invoice_json()
         expected = {
             "Version": "1.1",
             "TranDtls": {"TaxSch": "GST", "SupTyp": "B2B", "RegRev": "N", "IgstOnIntra": "N"},
@@ -206,246 +195,159 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1999.59
             }
         }
-        self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
+        with self.subTest(scenario="Taxable Invoice"):
+            json_value = self.invoice._l10n_in_edi_generate_invoice_json()
+            self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
         expected_copy_rounding = expected.copy()
 
         # ================================== Credit Note ============================================
-        credit_note_expected = expected.copy()
-        credit_note_expected['DocDtls'] = {"Typ": "CRN", "No": "RINV/23-24/0001", "Dt": "25/12/2023"}
-        self.assertDictEqual(
-            self.invoice_reverse._l10n_in_edi_generate_invoice_json(),
-            credit_note_expected,
-            "Indian E-invoice Credit note json value is not matched"
-        )
+        with self.subTest(scenario="Credit Note"):
+            credit_note_expected = expected.copy()
+            credit_note_expected['DocDtls'] = {"Typ": "CRN", "No": "RINV/23-24/0001", "Dt": "25/12/2023"}
+            self.assertDictEqual(
+                self.invoice_reverse._l10n_in_edi_generate_invoice_json(),
+                credit_note_expected,
+                "Indian E-invoice Credit note json value is not matched"
+            )
 
         # =================================== Full discount test =====================================
-        json_value = self.invoice_full_discount._l10n_in_edi_generate_invoice_json()
-        expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0002", "Dt": "01/01/2019"},
-            "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
-                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
-                "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
-                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                "OthChrg": 0.0, "TotItemVal": 0.0}],
-            "ValDtls": {"AssVal": 0.0, "CgstVal": 0.0, "SgstVal": 0.0, "IgstVal": 0.0, "CesVal": 0.0,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 0.0}
-        })
-        self.assertDictEqual(json_value, expected, "Indian EDI with 100% discount sent json value is not matched")
+        with self.subTest(scenario="Full Discount Invoice"):
+            json_value = self.invoice_full_discount._l10n_in_edi_generate_invoice_json()
+            expected.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0002", "Dt": "01/01/2019"},
+                "ItemList": [{
+                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
+                    "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
+                    "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0, "TotItemVal": 0.0}],
+                "ValDtls": {"AssVal": 0.0, "CgstVal": 0.0, "SgstVal": 0.0, "IgstVal": 0.0, "CesVal": 0.0,
+                    "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 0.0}
+            })
+            self.assertDictEqual(json_value, expected, "Indian EDI with 100% discount sent json value is not matched")
 
         # =================================== Zero quantity test =============================================
-        json_value = self.invoice_zero_qty._l10n_in_edi_generate_invoice_json()
-        expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0003", "Dt": "01/01/2019"},
-            "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 0.0,
-                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
-                "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
-                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                "OthChrg": 0.0, "TotItemVal": 0.0}],
-        })
-        self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
+        with self.subTest(scenario="Zero Quantity Invoice"):
+            json_value = self.invoice_zero_qty._l10n_in_edi_generate_invoice_json()
+            expected.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0003", "Dt": "01/01/2019"},
+                "ItemList": [{
+                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 0.0,
+                    "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
+                    "GstRt": 0.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0, "TotItemVal": 0.0}],
+            })
+            self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
 
         # =================================== Negative unit price test =============================================
         json_value = self.invoice_negative_unit_price._l10n_in_edi_generate_invoice_json()
-        expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0004", "Dt": "01/01/2019"},
-            "ItemList": [
-                {
+        with self.subTest(scenario="Negative Unit Price Invoice"):
+            expected.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0004", "Dt": "01/01/2019"},
+                "ItemList": [
+                    {
+                        "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
+                        "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 400.0, "AssAmt": 600.0,
+                        "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 15.0, "SgstAmt": 15.0, "CesRt": 0.0, "CesAmt": 0.0,
+                        "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                        "OthChrg": 0.0, "TotItemVal": 630.0
+                    },
+                    {
+                        "SlNo": "3", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
+                        "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 0.0, "AssAmt": 1000.0,
+                        "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 60.0, "SgstAmt": 60.0, "CesRt": 5.0, "CesAmt": 50.0,
+                        "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                        "OthChrg": 0.0, "TotItemVal": 1171.59
+                    }
+                ],
+                "ValDtls": {
+                    "AssVal": 1600.0, "CgstVal": 75.0, "SgstVal": 75.0, "IgstVal": 0.0, "CesVal": 51.59,
+                    "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1801.59
+                },
+            })
+            self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price sent json value is not matched")
+
+        with self.subTest(scenario="Negative quantity Invoice"):
+            expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0005", "Dt": "01/01/2019"}})
+            json_value = self.invoice_negative_qty._l10n_in_edi_generate_invoice_json()
+            self.assertDictEqual(json_value, expected, "Indian EDI with negative quantity sent json value is not matched")
+
+        with self.subTest(scenario="Negative unit price and quantity Invoice"):
+            expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0006", "Dt": "01/01/2019"}})
+            json_value = self.invoice_negative_unit_price_and_qty._l10n_in_edi_generate_invoice_json()
+            self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
+
+        with self.subTest(scenario="Negative unit price with discount Invoice"):
+            expected.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0007", "Dt": "01/01/2019"},
+                "ItemList": [{
                     "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
-                    "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 400.0, "AssAmt": 600.0,
+                    "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 1400.0, "AssAmt": 600.0,
                     "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 15.0, "SgstAmt": 15.0, "CesRt": 0.0, "CesAmt": 0.0,
                     "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
                     "OthChrg": 0.0, "TotItemVal": 630.0
+                }],
+                "ValDtls": {
+                    "AssVal": 600.0, "CgstVal": 15.0, "SgstVal": 15.0, "IgstVal": 0.0, "CesVal": 0.0,
+                    "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 630.0
+                },
+            })
+            json_value = self.invoice_negative_with_discount._l10n_in_edi_generate_invoice_json()
+            self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
+
+        with self.subTest(scenario="Negative value more than max line"):
+            expected.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0008", "Dt": "01/01/2019"},
+                "ItemList": [{
+                    "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
+                    "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 2000.0, "AssAmt": 0.0,
+                    "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0, "TotItemVal": 0.0
                 },
                 {
-                    "SlNo": "3", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "333333", "Qty": 1.0,
-                    "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 0.0, "AssAmt": 1000.0,
-                    "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 60.0, "SgstAmt": 60.0, "CesRt": 5.0, "CesAmt": 50.0,
-                    "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                    "OthChrg": 0.0, "TotItemVal": 1171.59
-                }
-            ],
-            "ValDtls": {
-                "AssVal": 1600.0, "CgstVal": 75.0, "SgstVal": 75.0, "IgstVal": 0.0, "CesVal": 51.59,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 1801.59
-            },
-        })
-        self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price sent json value is not matched")
+                    "SlNo": "2", "PrdDesc": "product_b", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
+                    "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
+                    "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 22.5, "SgstAmt": 22.5, "CesRt": 0.0, "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0, "TotItemVal": 945.0
+                }],
+                "ValDtls": {
+                    "AssVal": 900.0, "CgstVal": 22.5, "SgstVal": 22.5, "IgstVal": 0.0, "CesVal": 0.0,
+                    "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 945.0
+                },
+            })
+            json_value = self.invoice_negative_more_than_max_line._l10n_in_edi_generate_invoice_json()
+            self.assertDictEqual(json_value, expected, "Indian EDI with negative value more than max line sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0005", "Dt": "01/01/2019"}})
-        json_value = self.invoice_negative_qty._l10n_in_edi_generate_invoice_json()
-        self.assertDictEqual(json_value, expected, "Indian EDI with negative quantity sent json value is not matched")
+        with self.subTest(scenario="Cash Rounding Invoice"):
+            json_value = self.invoice_cash_rounding._l10n_in_edi_generate_invoice_json()
+            expected_copy_rounding.update({
+                "DocDtls": {"Typ": "INV", "No": "INV/18-19/0009", "Dt": "01/01/2019"},
+                "ValDtls": {
+                    "AssVal": 1800.0, "CgstVal": 76.5, "SgstVal": 76.5, "IgstVal": 0.0, "CesVal": 46.59,
+                    "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.41, "TotInvVal": 2000.00
+                }})
+            self.assertDictEqual(json_value, expected_copy_rounding, "Indian EDI with cash rounding sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0006", "Dt": "01/01/2019"}})
-        json_value = self.invoice_negative_unit_price_and_qty._l10n_in_edi_generate_invoice_json()
-        self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
-
-        expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0007", "Dt": "01/01/2019"},
-            "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
-                "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 1400.0, "AssAmt": 600.0,
-                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 15.0, "SgstAmt": 15.0, "CesRt": 0.0, "CesAmt": 0.0,
-                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                "OthChrg": 0.0, "TotItemVal": 630.0
-            }],
-            "ValDtls": {
-                "AssVal": 600.0, "CgstVal": 15.0, "SgstVal": 15.0, "IgstVal": 0.0, "CesVal": 0.0,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 630.0
-            },
-        })
-        json_value = self.invoice_negative_with_discount._l10n_in_edi_generate_invoice_json()
-        self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
-
-        expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0008", "Dt": "01/01/2019"},
-            "ItemList": [{
-                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
-                "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 2000.0, "AssAmt": 0.0,
-                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
-                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                "OthChrg": 0.0, "TotItemVal": 0.0
-            },
-            {
-                "SlNo": "2", "PrdDesc": "product_b", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
-                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
-                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 22.5, "SgstAmt": 22.5, "CesRt": 0.0, "CesAmt": 0.0,
-                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
-                "OthChrg": 0.0, "TotItemVal": 945.0
-            }],
-            "ValDtls": {
-                "AssVal": 900.0, "CgstVal": 22.5, "SgstVal": 22.5, "IgstVal": 0.0, "CesVal": 0.0,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.0, "TotInvVal": 945.0
-            },
-        })
-        json_value = self.invoice_negative_more_than_max_line._l10n_in_edi_generate_invoice_json()
-        self.assertDictEqual(json_value, expected, "Indian EDI with negative value more than max line sent json value is not matched")
-
-        json_value = self.invoice_cash_rounding._l10n_in_edi_generate_invoice_json()
-        expected_copy_rounding.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0009", "Dt": "01/01/2019"},
-            "ValDtls": {
-                "AssVal": 1800.0, "CgstVal": 76.5, "SgstVal": 76.5, "IgstVal": 0.0, "CesVal": 46.59,
-                "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": 0.41, "TotInvVal": 2000.00
-            }})
-        self.assertDictEqual(json_value, expected_copy_rounding, "Indian EDI with cash rounding sent json value is not matched")
-
-        json_value = self.invoice_with_intra_igst._l10n_in_edi_generate_invoice_json()
-        expected_with_intra_igst = {
-            'Version': '1.1',
-            'TranDtls': {'TaxSch': 'GST', 'SupTyp': 'SEZWP', 'RegRev': 'N', 'IgstOnIntra': 'Y'},
-            'DocDtls': {'Typ': 'INV', 'No': 'INV/18-19/0010', 'Dt': '01/01/2019'},
-            'SellerDtls': expected['SellerDtls'],
-            'BuyerDtls': {
-                'Addr1': 'Block no. 402',
-                'Loc': 'Some city',
-                'Pin': 500002,
-                'Stcd': '24',
-                'POS': '24',
-                'LglNm': 'SEZ Partner',
-                'GSTIN': '36AAAAA1234AAZA'
-            },
-            'ItemList': [{
-                'SlNo': '1',
-                'PrdDesc': 'product_a',
-                'IsServc': 'N',
-                'HsnCd': '111111',
-                'Qty': 1.0,
-                'Unit': 'UNT',
-                'UnitPrice': 1000.0,
-                'TotAmt': 1000.0,
-                'Discount': 0.0,
-                'AssAmt': 1000.0,
-                'GstRt': 18.0,
-                'IgstAmt': 180.0,
-                'CgstAmt': 0.0,
-                'SgstAmt': 0.0,
-                'CesRt': 0.0,
-                'CesAmt': 0.0,
-                'CesNonAdvlAmt': 0.0,
-                'StateCesRt': 0.0,
-                'StateCesAmt': 0.0,
-                'StateCesNonAdvlAmt': 0.0,
-                'OthChrg': 0.0,
-                'TotItemVal': 1180.0
-            }],
-            'ValDtls': {
-                'AssVal': 1000.0,
-                'Discount': 0.0,
-                'CgstVal': 0.0,
-                'SgstVal': 0.0,
-                'IgstVal': 180.0,
-                'CesVal': 0.0,
-                'StCesVal': 0.0,
-                'RndOffAmt': 0.0,
-                'TotInvVal': 1180.0
-            }
-        }
-        self.assertDictEqual(
-            json_value,
-            expected_with_intra_igst,
-            "Indian EDI with Intra IGST sent json value is not matched"
-        )
-        json_value = self.invoice_with_export._l10n_in_edi_generate_invoice_json()
-        expected_with_overseas = expected_with_intra_igst.copy()
-        expected_with_overseas.update({
-            'TranDtls': {'TaxSch': 'GST', 'SupTyp': 'EXPWP', 'RegRev': 'N', 'IgstOnIntra': 'N'},
-            'BuyerDtls': {
-                'Addr1': 'Block no. 402',
-                'Loc': 'Some city',
-                'Pin': 999999,
-                'Stcd': '96',
-                'POS': '96',
-                'LglNm': 'Overseas',
-                'GSTIN': 'URP'
-            },
-            'DocDtls': {'Dt': '01/01/2019', 'No': 'INV/18-19/0011', 'Typ': 'INV'},
-            'ExpDtls': {'CntCode': 'US', 'ForCur': 'INR', 'RefClm': 'Y'}
-        })
-        self.assertDictEqual(
-            json_value,
-            expected_with_overseas,
-            "Indian EDI with Overseas sent json value is not matched"
-        )
-
-        # ==================================== Global Discount Line Test ==============================================
-        self.assertDictEqual(
-            self.invoice_global_discount._l10n_in_edi_generate_invoice_json(),
-            {
+        with self.subTest(scenario="SEZ Intra IGST Invoice"):
+            json_value = self.invoice_with_intra_igst._l10n_in_edi_generate_invoice_json()
+            expected_with_intra_igst = {
                 'Version': '1.1',
-                'TranDtls': {
-                    'TaxSch': 'GST',
-                    'SupTyp': 'B2B',
-                    'RegRev': 'N',
-                    'IgstOnIntra': 'N'
-                },
-                'DocDtls': {
-                    'Typ': 'INV',
-                    'No': 'INV/18-19/0012',
-                    'Dt': '01/01/2019'
-                },
-                'SellerDtls': {
-                    'Addr1': 'Khodiyar Chowk',
-                    'Loc': 'Amreli',
-                    'Pin': 365220,
-                    'Stcd': '24',
-                    'Addr2': 'Sala Number 3',
-                    'LglNm': 'Default Company',
-                    'GSTIN': '24AAGCC7144L6ZE'
-                },
+                'TranDtls': {'TaxSch': 'GST', 'SupTyp': 'SEZWP', 'RegRev': 'N', 'IgstOnIntra': 'N'},
+                'DocDtls': {'Typ': 'INV', 'No': 'INV/18-19/0010', 'Dt': '01/01/2019'},
+                'SellerDtls': expected['SellerDtls'],
                 'BuyerDtls': {
-                    'Addr1': 'Karansinhji Rd',
-                    'Loc': 'Rajkot',
-                    'Pin': 360001,
+                    'Addr1': 'Block no. 402',
+                    'Loc': 'Some city',
+                    'Pin': 500002,
                     'Stcd': '24',
-                    'Addr2': 'Karanpara',
                     'POS': '24',
-                    'LglNm': 'Partner Intra State',
-                    'GSTIN': '24ABCPM8965E1ZE'
+                    'LglNm': 'SEZ Partner',
+                    'GSTIN': '36AAAAA1234AAZA'
                 },
-                'ItemList': [
-                    {
+                'ItemList': [{
                     'SlNo': '1',
                     'PrdDesc': 'product_a',
                     'IsServc': 'N',
@@ -456,10 +358,10 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                     'TotAmt': 1000.0,
                     'Discount': 0.0,
                     'AssAmt': 1000.0,
-                    'GstRt': 5.0,
-                    'IgstAmt': 0.0,
-                    'CgstAmt': 25.0,
-                    'SgstAmt': 25.0,
+                    'GstRt': 18.0,
+                    'IgstAmt': 180.0,
+                    'CgstAmt': 0.0,
+                    'SgstAmt': 0.0,
                     'CesRt': 0.0,
                     'CesAmt': 0.0,
                     'CesNonAdvlAmt': 0.0,
@@ -467,20 +369,451 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                     'StateCesAmt': 0.0,
                     'StateCesNonAdvlAmt': 0.0,
                     'OthChrg': 0.0,
-                    'TotItemVal': 1050.0
-                    }
-                ],
+                    'TotItemVal': 1180.0
+                }],
                 'ValDtls': {
                     'AssVal': 1000.0,
-                    'CgstVal': 25.0,
-                    'SgstVal': 25.0,
+                    'Discount': 0.0,
+                    'CgstVal': 0.0,
+                    'SgstVal': 0.0,
+                    'IgstVal': 180.0,
+                    'CesVal': 0.0,
+                    'StCesVal': 0.0,
+                    'RndOffAmt': 0.0,
+                    'TotInvVal': 1180.0
+                }
+            }
+            self.assertDictEqual(
+                json_value,
+                expected_with_intra_igst,
+                "Indian EDI with Intra IGST sent json value is not matched"
+            )
+        with self.subTest(scenario="Overseas Export Invoice"):
+            json_value = self.invoice_with_export._l10n_in_edi_generate_invoice_json()
+            expected_with_overseas = expected_with_intra_igst.copy()
+            expected_with_overseas.update({
+                'TranDtls': {'TaxSch': 'GST', 'SupTyp': 'EXPWP', 'RegRev': 'N', 'IgstOnIntra': 'N'},
+                'BuyerDtls': {
+                    'Addr1': 'Block no. 402',
+                    'Loc': 'Some city',
+                    'Pin': 999999,
+                    'Stcd': '96',
+                    'POS': '96',
+                    'LglNm': 'Overseas',
+                    'GSTIN': 'URP'
+                },
+                'DocDtls': {'Dt': '01/01/2019', 'No': 'INV/18-19/0011', 'Typ': 'INV'},
+                'ExpDtls': {'CntCode': 'US', 'ForCur': 'INR', 'RefClm': 'Y'}
+            })
+            self.assertDictEqual(
+                json_value,
+                expected_with_overseas,
+                "Indian EDI with Overseas sent json value is not matched"
+            )
+
+        # =================================== RCM Tax test =============================================
+        with self.subTest(scenario="RCM Tax Invoice"):
+            json_value = self.invoice_with_rcm._l10n_in_edi_generate_invoice_json()
+            self.assertEqual(
+                json_value['TranDtls'],
+                {
+                    "TaxSch": "GST",
+                    "SupTyp": "B2B",
+                    "RegRev": "Y",
+                    "IgstOnIntra": "N"
+                },
+                "Indian EDI with RCM tax TranDtls json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ItemList'][0],
+                {
+                    "SlNo": "1",
+                    "PrdDesc": "product_a",
+                    "IsServc": "N",
+                    "HsnCd": "111111",
+                    "Qty": 1.0,
+                    "Unit": "UNT",
+                    "UnitPrice": 1000.0,
+                    "TotAmt": 1000.0,
+                    "Discount": 0.0,
+                    "AssAmt": 1000.0,
+                    "GstRt": 18.0,
+                    "IgstAmt": 180.0,
+                    "CgstAmt": 0.0,
+                    "SgstAmt": 0.0,
+                    "CesRt": 0.0,
+                    "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0,
+                    "StateCesRt": 0.0,
+                    "StateCesAmt": 0.0,
+                    "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0,
+                    "TotItemVal": 1000.0
+                },
+                "Indian EDI with RCM tax ItemList json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ValDtls'],
+                {
+                    "AssVal": 1000.0,
+                    "CgstVal": 0.0,
+                    "SgstVal": 0.0,
+                    "IgstVal": 180.0,
+                    "CesVal": 0.0,
+                    "StCesVal": 0.0,
+                    "Discount": 0.0,
+                    "RndOffAmt": 0.0,
+                    "TotInvVal": 1000.0
+                },
+                "Indian EDI with RCM tax ValDtls json value is not matched"
+            )
+
+        # =================================== SEZ LUT Tax test =============================================
+        with self.subTest(scenario="SEZ LUT Tax Invoice"):
+            json_value = self.invoice_with_sez_lut._l10n_in_edi_generate_invoice_json()
+            self.assertEqual(
+                json_value['TranDtls'],
+                {
+                    "TaxSch": "GST",
+                    "SupTyp": "SEZWOP",
+                    "RegRev": "N",
+                    "IgstOnIntra": "N"
+                },
+                "Indian EDI with SEZ LUT tax TranDtls json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ItemList'][0],
+                {
+                    "SlNo": "1",
+                    "PrdDesc": "product_a",
+                    "IsServc": "N",
+                    "HsnCd": "111111",
+                    "Qty": 1.0,
+                    "Unit": "UNT",
+                    "UnitPrice": 1000.0,
+                    "TotAmt": 1000.0,
+                    "Discount": 0.0,
+                    "AssAmt": 1000.0,
+                    "GstRt": 18.0,
+                    "IgstAmt": 0.0,
+                    "CgstAmt": 0.0,
+                    "SgstAmt": 0.0,
+                    "CesRt": 0.0,
+                    "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0,
+                    "StateCesRt": 0.0,
+                    "StateCesAmt": 0.0,
+                    "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0,
+                    "TotItemVal": 1000.0
+                },
+                "Indian EDI with SEZ LUT tax ItemList json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ValDtls'],
+                {
+                    "AssVal": 1000.0,
+                    "CgstVal": 0.0,
+                    "SgstVal": 0.0,
+                    "IgstVal": 0.0,
+                    "CesVal": 0.0,
+                    "StCesVal": 0.0,
+                    "Discount": 0.0,
+                    "RndOffAmt": 0.0,
+                    "TotInvVal": 1000.0
+                },
+                "Indian EDI with SEZ LUT tax ValDtls json value is not matched"
+            )
+
+        # =================================== SEZ without LUT Tax test =============================================
+        with self.subTest(scenario="SEZ Tax Invoice"):
+            json_value = self.invoice_with_sez_without_lut._l10n_in_edi_generate_invoice_json()
+            self.assertEqual(
+                json_value['TranDtls'],
+                {
+                    "TaxSch": "GST",
+                    "SupTyp": "SEZWP",
+                    "RegRev": "N",
+                    "IgstOnIntra": "N"
+                },
+                "Indian EDI without SEZ LUT tax TranDtls json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ItemList'][0],
+                {
+                    "SlNo": "1",
+                    "PrdDesc": "product_a",
+                    "IsServc": "N",
+                    "HsnCd": "111111",
+                    "Qty": 1.0,
+                    "Unit": "UNT",
+                    "UnitPrice": 1000.0,
+                    "TotAmt": 1000.0,
+                    "Discount": 0.0,
+                    "AssAmt": 1000.0,
+                    "GstRt": 18.0,
+                    "IgstAmt": 180.0,
+                    "CgstAmt": 0.0,
+                    "SgstAmt": 0.0,
+                    "CesRt": 0.0,
+                    "CesAmt": 0.0,
+                    "CesNonAdvlAmt": 0.0,
+                    "StateCesRt": 0.0,
+                    "StateCesAmt": 0.0,
+                    "StateCesNonAdvlAmt": 0.0,
+                    "OthChrg": 0.0,
+                    "TotItemVal": 1180.0
+                },
+                "Indian EDI without SEZ LUT tax ItemList json value is not matched"
+            )
+            self.assertDictEqual(
+                json_value['ValDtls'],
+                {
+                    "AssVal": 1000.0,
+                    "CgstVal": 0.0,
+                    "SgstVal": 0.0,
+                    "IgstVal": 180.0,
+                    "CesVal": 0.0,
+                    "StCesVal": 0.0,
+                    "Discount": 0.0,
+                    "RndOffAmt": 0.0,
+                    "TotInvVal": 1180.0
+                },
+                "Indian EDI with SEZ without LUT tax ValDtls json value is not matched"
+            )
+        # =================================== Export LUT Tax test =============================================
+        with self.subTest(scenario="Export LUT Tax Invoice"):
+            self.assertEqual(
+                self.invoice_with_export_lut._l10n_in_edi_generate_invoice_json(),
+                {
+                  'Version': '1.1',
+                  'TranDtls': {
+                    'TaxSch': 'GST',
+                    'SupTyp': 'EXPWOP',
+                    'RegRev': 'N',
+                    'IgstOnIntra': 'N'
+                  },
+                  'DocDtls': {
+                    'Typ': 'INV',
+                    'No': False,
+                    'Dt': '01/01/2019'
+                  },
+                  'SellerDtls': {
+                    'Addr1': 'Khodiyar Chowk',
+                    'Loc': 'Amreli',
+                    'Pin': 365220,
+                    'Stcd': '24',
+                    'Addr2': 'Sala Number 3',
+                    'LglNm': 'Default Company',
+                    'GSTIN': '24AAGCC7144L6ZE'
+                  },
+                  'BuyerDtls': {
+                    'Addr1': '351 Horner Chapel Rd',
+                    'Loc': 'Peebles',
+                    'Pin': 999999,
+                    'Stcd': '96',
+                    'POS': '96',
+                    'LglNm': 'Foreign Partner',
+                    'GSTIN': 'URP'
+                  },
+                  'ItemList': [
+                    {
+                      'SlNo': '1',
+                      'PrdDesc': 'product_a',
+                      'IsServc': 'N',
+                      'HsnCd': '111111',
+                      'Qty': 1.0,
+                      'Unit': 'UNT',
+                      'UnitPrice': 1000.0,
+                      'TotAmt': 1000.0,
+                      'Discount': 0.0,
+                      'AssAmt': 1000.0,
+                      'GstRt': 18.0,
+                      'IgstAmt': 0.0,
+                      'CgstAmt': 0.0,
+                      'SgstAmt': 0.0,
+                      'CesRt': 0.0,
+                      'CesAmt': 0.0,
+                      'CesNonAdvlAmt': 0.0,
+                      'StateCesRt': 0.0,
+                      'StateCesAmt': 0.0,
+                      'StateCesNonAdvlAmt': 0.0,
+                      'OthChrg': 0.0,
+                      'TotItemVal': 1000.0
+                    }
+                  ],
+                  'ValDtls': {
+                    'AssVal': 1000.0,
+                    'CgstVal': 0.0,
+                    'SgstVal': 0.0,
                     'IgstVal': 0.0,
                     'CesVal': 0.0,
                     'StCesVal': 0.0,
-                    'Discount': 100.0,
+                    'Discount': 0.0,
                     'RndOffAmt': 0.0,
-                    'TotInvVal': 950.0
+                    'TotInvVal': 1000.0
+                  },
+                  'ExpDtls': {
+                    'RefClm': 'N',
+                    'ForCur': 'INR',
+                    'CntCode': 'US'
+                  }
                 }
-            },
-            "Indian EDI with global discount did not match"
-        )
+            )
+
+        # =================================== Export without LUT Tax test =============================================
+        with self.subTest(scenario="Export Tax Invoice"):
+            self.assertEqual(
+                self.invoice_with_export_without_lut._l10n_in_edi_generate_invoice_json(),
+                {
+                  'Version': '1.1',
+                  'TranDtls': {
+                    'TaxSch': 'GST',
+                    'SupTyp': 'EXPWP',
+                    'RegRev': 'N',
+                    'IgstOnIntra': 'N'
+                  },
+                  'DocDtls': {
+                    'Typ': 'INV',
+                    'No': False,
+                    'Dt': '01/01/2019'
+                  },
+                  'SellerDtls': {
+                    'Addr1': 'Khodiyar Chowk',
+                    'Loc': 'Amreli',
+                    'Pin': 365220,
+                    'Stcd': '24',
+                    'Addr2': 'Sala Number 3',
+                    'LglNm': 'Default Company',
+                    'GSTIN': '24AAGCC7144L6ZE'
+                  },
+                  'BuyerDtls': {
+                    'Addr1': '351 Horner Chapel Rd',
+                    'Loc': 'Peebles',
+                    'Pin': 999999,
+                    'Stcd': '96',
+                    'POS': '96',
+                    'LglNm': 'Foreign Partner',
+                    'GSTIN': 'URP'
+                  },
+                  'ItemList': [
+                    {
+                      'SlNo': '1',
+                      'PrdDesc': 'product_a',
+                      'IsServc': 'N',
+                      'HsnCd': '111111',
+                      'Qty': 1.0,
+                      'Unit': 'UNT',
+                      'UnitPrice': 1000.0,
+                      'TotAmt': 1000.0,
+                      'Discount': 0.0,
+                      'AssAmt': 1000.0,
+                      'GstRt': 18.0,
+                      'IgstAmt': 180.0,
+                      'CgstAmt': 0.0,
+                      'SgstAmt': 0.0,
+                      'CesRt': 0.0,
+                      'CesAmt': 0.0,
+                      'CesNonAdvlAmt': 0.0,
+                      'StateCesRt': 0.0,
+                      'StateCesAmt': 0.0,
+                      'StateCesNonAdvlAmt': 0.0,
+                      'OthChrg': 0.0,
+                      'TotItemVal': 1000.0
+                    }
+                  ],
+                  'ValDtls': {
+                    'AssVal': 1000.0,
+                    'CgstVal': 0.0,
+                    'SgstVal': 0.0,
+                    'IgstVal': 180.0,
+                    'CesVal': 0.0,
+                    'StCesVal': 0.0,
+                    'Discount': 0.0,
+                    'RndOffAmt': 0.0,
+                    'TotInvVal': 1000.0
+                  },
+                  'ExpDtls': {
+                    'RefClm': 'Y',
+                    'ForCur': 'INR',
+                    'CntCode': 'US'
+                  }
+                }
+            )
+
+        # ==================================== Global Discount Line Test ==============================================
+        with self.subTest(scenario="Global Discount Line"):
+            self.assertDictEqual(
+                self.invoice_global_discount._l10n_in_edi_generate_invoice_json(),
+                {
+                    'Version': '1.1',
+                    'TranDtls': {
+                        'TaxSch': 'GST',
+                        'SupTyp': 'B2B',
+                        'RegRev': 'N',
+                        'IgstOnIntra': 'N'
+                    },
+                    'DocDtls': {
+                        'Typ': 'INV',
+                        'No': 'INV/18-19/0012',
+                        'Dt': '01/01/2019'
+                    },
+                    'SellerDtls': {
+                        'Addr1': 'Khodiyar Chowk',
+                        'Loc': 'Amreli',
+                        'Pin': 365220,
+                        'Stcd': '24',
+                        'Addr2': 'Sala Number 3',
+                        'LglNm': 'Default Company',
+                        'GSTIN': '24AAGCC7144L6ZE'
+                    },
+                    'BuyerDtls': {
+                        'Addr1': 'Karansinhji Rd',
+                        'Loc': 'Rajkot',
+                        'Pin': 360001,
+                        'Stcd': '24',
+                        'Addr2': 'Karanpara',
+                        'POS': '24',
+                        'LglNm': 'Partner Intra State',
+                        'GSTIN': '24ABCPM8965E1ZE'
+                    },
+                    'ItemList': [
+                        {
+                        'SlNo': '1',
+                        'PrdDesc': 'product_a',
+                        'IsServc': 'N',
+                        'HsnCd': '111111',
+                        'Qty': 1.0,
+                        'Unit': 'UNT',
+                        'UnitPrice': 1000.0,
+                        'TotAmt': 1000.0,
+                        'Discount': 0.0,
+                        'AssAmt': 1000.0,
+                        'GstRt': 5.0,
+                        'IgstAmt': 0.0,
+                        'CgstAmt': 25.0,
+                        'SgstAmt': 25.0,
+                        'CesRt': 0.0,
+                        'CesAmt': 0.0,
+                        'CesNonAdvlAmt': 0.0,
+                        'StateCesRt': 0.0,
+                        'StateCesAmt': 0.0,
+                        'StateCesNonAdvlAmt': 0.0,
+                        'OthChrg': 0.0,
+                        'TotItemVal': 1050.0
+                        }
+                    ],
+                    'ValDtls': {
+                        'AssVal': 1000.0,
+                        'CgstVal': 25.0,
+                        'SgstVal': 25.0,
+                        'IgstVal': 0.0,
+                        'CesVal': 0.0,
+                        'StCesVal': 0.0,
+                        'Discount': 100.0,
+                        'RndOffAmt': 0.0,
+                        'TotInvVal': 950.0
+                    }
+                },
+                "Indian EDI with global discount did not match"
+            )
