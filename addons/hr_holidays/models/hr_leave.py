@@ -469,12 +469,46 @@ Versions:
     @api.depends('leave_type_request_unit')
     def _compute_request_unit_half(self):
         for holiday in self:
+<<<<<<< 34409128de0bb84cdee309b031b307c46d8b07c7
             holiday.request_unit_half = holiday.leave_type_request_unit == 'half_day'
+||||||| 0934b11fbefdc0d900cadc45b72ebaeef3ac5720
+            if holiday.holiday_status_id or holiday.request_unit_hours:
+                holiday.request_unit_half = False
+=======
+            if (holiday.holiday_status_id and holiday.leave_type_request_unit not in ['half_day', 'hour']) or holiday.request_unit_hours:
+                holiday.request_unit_half = False
+>>>>>>> b474d63fd58e1c24cbcc0865ffb3cdb61246b439
 
     @api.depends('leave_type_request_unit')
     def _compute_request_unit_hours(self):
         for holiday in self:
+<<<<<<< 34409128de0bb84cdee309b031b307c46d8b07c7
             holiday.request_unit_hours = holiday.leave_type_request_unit == 'hour'
+||||||| 0934b11fbefdc0d900cadc45b72ebaeef3ac5720
+            if holiday.holiday_status_id or holiday.request_unit_half:
+                holiday.request_unit_hours = False
+
+    @api.depends('employee_ids')
+    def _compute_from_employee_ids(self):
+        for holiday in self:
+            if len(holiday.employee_ids) == 1:
+                holiday.employee_id = holiday.employee_ids[0]._origin
+            else:
+                holiday.employee_id = False
+            holiday.multi_employee = (len(holiday.employee_ids) > 1)
+=======
+            if (holiday.holiday_status_id and holiday.leave_type_request_unit != 'hour') or holiday.request_unit_half:
+                holiday.request_unit_hours = False
+
+    @api.depends('employee_ids')
+    def _compute_from_employee_ids(self):
+        for holiday in self:
+            if len(holiday.employee_ids) == 1:
+                holiday.employee_id = holiday.employee_ids[0]._origin
+            else:
+                holiday.employee_id = False
+            holiday.multi_employee = (len(holiday.employee_ids) > 1)
+>>>>>>> b474d63fd58e1c24cbcc0865ffb3cdb61246b439
 
     def _get_employee_domain(self):
         domain = [
