@@ -1163,25 +1163,17 @@ $_wsale_products_roundness_map: (
 }
 
 // ==== Products list thumb options
-.o_wsale_products_opt_thumb_16_9 {
-    --o-wsale-card-thumb-aspect-ratio: 16/9;
-}
-.o_wsale_products_opt_thumb_4_3 {
-    --o-wsale-card-thumb-aspect-ratio: 4/3;
-}
-.o_wsale_products_opt_thumb_6_5 {
-    --o-wsale-card-thumb-aspect-ratio: 6/5;
-}
-.o_wsale_products_opt_thumb_4_5 {
-    --o-wsale-card-thumb-aspect-ratio: 4/5;
-}
-.o_wsale_products_opt_thumb_2_3 {
-    --o-wsale-card-thumb-aspect-ratio: 2/3;
-}
-.o_wsale_products_opt_thumb_cover {
-    --o-wsale-card-thumb-fill-mode: cover;
-}
+#o_wsale_products_grid, #o_comparelist_table, .s_dynamic_snippet_products {
+    @each $name, $ratio in $o-wsale-shop-ratios {
+        &.o_wsale_products_opt_thumb_#{$name} {
+            --o-wsale-card-thumb-aspect-ratio: #{$ratio};
+        }
+    }
 
+    &.o_wsale_products_opt_thumb_cover {
+        --o-wsale-card-thumb-fill-mode: cover;
+    }
+}
 
 // ==== Actions
 
