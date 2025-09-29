@@ -4,7 +4,7 @@
 import { onChange } from "@mail/utils/common/misc";
 import { IS_DELETED_SYM, IS_RECORD_SYM, isRelation } from "./misc";
 import { RecordList } from "./record_list";
-import { reactive, toRaw } from "@odoo/owl";
+import { reactive, toRaw, effect } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 
 export class RecordInternal {
@@ -108,10 +108,15 @@ export class RecordInternal {
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
-            const cb = function computeObserver() {
+            // const cb = function computeObserver() {
+            //     self.requestCompute(record, fieldName);
+            // };
+            const computeProxy2 = reactive(recordProxy);
+            effect(() => {
+                // todo: should I track everything or just part of the record?
+                Object.keys(recordProxy);
                 self.requestCompute(record, fieldName);
-            };
-            const computeProxy2 = reactive(recordProxy, cb);
+            });
             this.fieldsComputeProxy2.set(fieldName, computeProxy2);
         }
         if (Model._.fieldsSort.get(fieldName)) {
@@ -131,7 +136,10 @@ export class RecordInternal {
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
-            const sortProxy2 = reactive(recordProxy, function sortObserver() {
+            const sortProxy2 = reactive(recordProxy);
+            effect(() => {
+                // todo: should I track everything or just part of the record?
+                Object.keys(recordProxy);
                 self.requestSort(record, fieldName);
             });
             this.fieldsSortProxy2.set(fieldName, sortProxy2);

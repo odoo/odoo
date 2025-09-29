@@ -1,3 +1,1 @@
-declare module "@odoo/owl" {
-    export * from "@odoo/owl/dist/types/owl";
-}
+/Users/goaman/projects/external/git-repos/owl/dist/types/owl.d.ts

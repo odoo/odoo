@@ -275,11 +275,15 @@ export class RecordList extends Array {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
                 recordListFullProxy = recordList._.downgradeProxy(recordList, recordListFullProxy);
+                // if (name === "data") {
+                //     return Reflect.get(recordList, "data", recordList._proxy);
+                // }
                 if (
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
                     Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
                 ) {
+                    // let res = Reflect.get(recordList, name, recordList._proxy);
                     let res = Reflect.get(...arguments);
                     if (typeof res === "function") {
                         res = res.bind(recordListFullProxy);
@@ -375,6 +379,9 @@ export class RecordList extends Array {
                     return true;
                 });
             },
+            // ownKeys(recordList) {
+            //     return Reflect.ownKeys(recordList._proxy.data);
+            // },
         });
         recordList._proxyInternal = recordListProxyInternal;
         recordList._proxy = reactive(recordListProxyInternal);
@@ -391,7 +398,9 @@ export class RecordList extends Array {
                     recordList,
                     val,
                     function recordListPushInsert(record) {
-                        recordList._proxy.data.push(record.localId);
+                        // console.warn(`recordList._proxy:`, recordList._proxy);
+                        // console.warn("recordList._proxy.data", recordList._proxy.data);
+                        recordList._proxy.data.push(record.localId); // here
                         recordList._.syncLength(recordList);
                         record._.uses.add(recordList);
                     }

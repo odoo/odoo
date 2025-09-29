@@ -18,6 +18,7 @@ import {
     useEffect,
     useRef,
     useState,
+    effect,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -93,7 +94,9 @@ export class Thread extends Component {
             ? useState(this.env.messageHighlight)
             : null;
         this.scrollingToHighlight = false;
-        this.refByMessageId = reactive(new Map(), () => {
+        this.refByMessageId = reactive(new Map());
+        effect(() => {
+            this.refByMessageId.keys(); // track key changes
             this.scrollToHighlighted();
         });
         useEffect(
@@ -633,6 +636,12 @@ export class Thread extends Component {
     }
 
     get orderedMessages() {
+        // todo: why messages and not messages.data?
+        // find a way to track changes when doing [...messages] or [...messages.data]
+        Object.keys(this.props.thread.messages.data);
+        Object.keys(this.props.thread.phantomMessages.data);
+        // console.warn(`this.props.thread.messages:`, this.props.thread.messages);
+        // debugger;
         const messages = this.state.mountedAndLoaded
             ? this.props.thread.messages
             : this.props.thread.phantomMessages;
