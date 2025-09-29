@@ -78,11 +78,7 @@ class TestResConfig(TransactionCase):
     def test_30_get_config_warning_wo_menu(self):
         """ The get_config_warning() method should return a Warning exception """
         res = self.ResConfig.get_config_warning(self.error_msg_wo_menu)
-
-        # Check type
         self.assertIsInstance(res, exceptions.UserError)
-
-        # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
 
     # TODO: ASK DLE if this test can be removed
@@ -159,7 +155,7 @@ class TestResConfigExecute(TransactionCase):
         """
         all_config_settings = self.env['ir.model'].search([('name', 'like', 'config.settings')])
         for config_settings in all_config_settings:
-            _logger.info("Testing %s" % (config_settings.name))
+            _logger.info("Testing %s", config_settings.name)
             self.env[config_settings.name].create({}).execute()
 
     def test_settings_access(self):
@@ -171,7 +167,6 @@ class TestResConfigExecute(TransactionCase):
         """
         ResUsers = self.env['res.users']
         group_system = self.env.ref('base.group_system')
-        self.settings_view = self.env.ref('base.res_config_settings_view_form')
         settings_only_user = ResUsers.create({
             'name': 'Sleepy Joe',
             'login': 'sleepy',
@@ -201,15 +196,13 @@ class TestResConfigExecute(TransactionCase):
         # Check user has access to all models of relational fields in view
         # because the webclient makes a read of display_name request for all specified records
         # even if they are not shown to the user.
-        settings_view_arch = etree.fromstring(settings.get_view(view_id=self.settings_view.id)['arch'])
-        seen_fields = set()
-        for node in settings_view_arch.iterdescendants(tag='field'):
-            fname = node.get('name')
-            if fname not in settings._fields:
-                # fname isn't a settings fields, but the field of a model
-                # linked to settings through a relational field
-                continue
-            seen_fields.add(fname)
+        settings_view = self.env.ref('base.res_config_settings_view_form')
+        settings_view_arch = etree.fromstring(settings.get_view(view_id=settings_view.id)['arch'])
+        seen_fields = {
+            fname
+            for node in settings_view_arch.iterdescendants(tag='field')
+            if (fname := node.get('name')) in settings._fields
+        }
 
         models_to_check = defaultdict(set)
         for field_name in seen_fields:
