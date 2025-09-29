@@ -725,6 +725,20 @@ class ResPartner(models.Model):
             raise UserError(_('Partners that are used in hashed entries cannot be merged.'))
         return super()._merge_method(destination, source)
 
+    def _deduce_country_code(self):
+        """ deduce the country code based on the information available.
+        we have three cases:
+        - country_code is BE but the VAT number starts with FR, the country code is FR, not BE
+        - if a country-specific field is set (e.g. the codice_fiscale), that country is used for the country code
+        - if the VAT number has no ISO country code, use the country_code in that case.
+        """
+        self.ensure_one()
+
+        country_code = self.country_code
+        if self.vat and self.vat[:2].isalpha():
+            country_code = self.vat[:2].upper()
+        return country_code
+
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
         """ Checks a VAT number syntactically to ensure its validity upon saving.
         A first check is made by using the first two characters of the VAT as

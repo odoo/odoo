@@ -431,7 +431,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if invoice.company_id.early_pay_discount_computation != 'mixed':
             return {}
         tax_to_discount = defaultdict(lambda: 0)
-        for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd'):
+        currency = invoice.currency_id
+        # There can be 'epd' lines with a zero amount. We ignore those lines since we do not output
+        # the AllowanceTotalAmount / ChargeTotalAmount in the LegalMonetaryTotal node
+        # if the total allowance / charge amount are 0 respectively.
+        # So we should not create AllowanceCharge nodes for 0 amounts either.
+        # This way we do not violate the following rules:
+        # - https://docs.peppol.eu/poacc/billing/3.0/2024-Q2/rules/ubl-tc434/BR-CO-11/
+        # - https://docs.peppol.eu/poacc/billing/3.0/2024-Q2/rules/ubl-tc434/BR-CO-12/
+        for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd' and not currency.is_zero(l.amount_currency)):
             for tax in line.tax_ids:
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
@@ -503,7 +511,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
                          and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
         # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
-        order_reference = invoice.ref or invoice.name if sales_order_id else invoice.ref
+        order_reference = invoice.ref or invoice.name
 
         vals = {
             'builder': self,

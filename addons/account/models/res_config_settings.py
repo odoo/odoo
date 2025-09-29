@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, _
 
+from odoo.addons.account.models.company import PEPPOL_LIST
+
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -179,6 +181,19 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.account_journal_early_pay_discount_gain_account_id',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
     )
+
+    # PEPPOL
+    is_account_peppol_eligible = fields.Boolean(
+        string='PEPPOL eligible',
+        compute='_compute_is_account_peppol_eligible',
+    )  # technical field used for showing the Peppol settings conditionally
+
+    @api.depends('country_code')
+    def _compute_is_account_peppol_eligible(self):
+        # we want to show Peppol settings only to customers that are eligible for Peppol,
+        # except countries that are not in Europe
+        for config in self:
+            config.is_account_peppol_eligible = config.country_code in PEPPOL_LIST
 
     def set_values(self):
         super().set_values()

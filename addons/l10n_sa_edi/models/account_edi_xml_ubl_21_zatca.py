@@ -308,6 +308,12 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'PaymentMeansType_template': 'l10n_sa_edi.ubl_21_PaymentMeansType_zatca',
         })
 
+        # OrderReference/SalesOrderID (sales_order_id) is optional
+        sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
+                         and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+        # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
+        order_reference = invoice.ref or invoice.name if sales_order_id else invoice.ref
+
         vals['vals'].update({
             'profile_id': 'reporting:1.0',
             'invoice_type_code_attrs': {'name': self._l10n_sa_get_invoice_transaction_code(invoice)},
@@ -319,6 +325,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'tax_total_vals': self._l10n_sa_get_additional_tax_total_vals(invoice, vals),
             # Due date is not required for ZATCA UBL 2.1
             'due_date': None,
+            'order_reference': order_reference,
         })
 
         vals['vals']['legal_monetary_total_vals'].update(self._l10n_sa_get_monetary_vals(invoice, vals))

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_send_wizard_form_inherit_account_peppol">
+            <field name="name">account.invoice.send.form.inherit.peppol</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='composition_mode']" position="before">
+                    <field name="enable_peppol" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': ['|', ('checkbox_send_peppol', '=', False), ('peppol_warning', '=', False)]}">
+                        <field name="peppol_warning"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='option_email']" position='after'>
+                    <field name="checkbox_send_peppol_readonly" invisible="1"/>
+                    <div name="option_peppol"
+                         attrs="{'invisible': [('enable_peppol', '=', False)]}">
+                        <field name="checkbox_send_peppol"
+                               attrs="{'readonly': [('checkbox_send_peppol_readonly', '=', True)]}"/>
+                        <b>
+                            <label for="checkbox_send_peppol"/>
+                        </b>
+                        <field name="account_peppol_edi_mode_info" class="oe_inline o_form_label text-muted"/>
+                    </div>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('send_and_print')]" position='after'>
+                    <!-- Show a button in case the peppol option but neither the print nor email option are selected. -->
+                    <!-- In case only the print option is selected there is only a "Print" button; which has to be used. -->
+                    <!-- This way we cause less issues than with overriding the `attrs` which are e.g. also overridden in `snailmail_account`. -->
+                    <button string="Send (Peppol)"
+                        attrs="{'invisible': ['|', '|', ('is_email', '=', True), ('is_print', '=', True), ('checkbox_send_peppol', '=', False)]}" data-hotkey="q"
+                        name="send_and_print_action" type="object" class="send_peppol btn-primary o_mail_send"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

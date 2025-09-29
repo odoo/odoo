@@ -35,6 +35,19 @@ ONBOARDING_STEP_STATES = [
 ]
 DASHBOARD_ONBOARDING_STATES = ONBOARDING_STEP_STATES + [('closed', 'Closed')]
 
+# List of countries where Peppol should be used by default.
+PEPPOL_DEFAULT_COUNTRIES = [
+    'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
+    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
+]
+
+# List of countries where Peppol is accessible.
+PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
+    'AD', 'AL', 'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
+    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+]
+
 
 class ResCompany(models.Model):
     _name = "res.company"

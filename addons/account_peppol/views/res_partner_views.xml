@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- In  17.0 this is done in module account_edi_ubl_cii -->
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_by']" position="after">
+                <filter name="ubl_cii_format" string="EDI Format" context="{'group_by':'ubl_cii_format'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_form_account_peppol" model="ir.ui.view">
+        <field name="name">res.partner.form.account.peppol</field>
+            <field name="model">res.partner</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='banks']" position="after">
+                    <group string="Peppol" name="peppol">
+                        <field name="bank_account_count" invisible="1"/>
+                        <div class="alert alert-warning"
+                             colspan="2"
+                             role="alert"
+                             attrs="{'invisible': ['|', ('account_peppol_is_endpoint_valid', '=', False), ('country_code', '!=', False)]}">
+                             To generate complete electronic invoices, also set a country for this partner.
+                        </div>
+                        <field name="ubl_cii_format" widget="selection"/>
+                        <field name="peppol_eas" widget="selection"
+                               attrs="{'invisible': [('ubl_cii_format', '=', False)]}"/>
+                        <field name="peppol_endpoint"
+                               attrs="{'invisible': [('ubl_cii_format', '=', False)]}"/>
+                        <field name="account_peppol_is_endpoint_valid" invisible="1"/>
+                        <field name="account_peppol_validity_last_check" invisible="1"/>
+                        <label for="account_peppol_verification_label"
+                               attrs="{'invisible': ['|', ('ubl_cii_format', '=', False), ('peppol_endpoint', '=', False)]}"/>
+                        <div class="row"
+                             attrs="{'invisible': ['|', ('ubl_cii_format', '=', False), ('peppol_endpoint', '=', False)]}">
+                            <div class="col-4">
+                                <field name="account_peppol_verification_label"/>
+                            </div>
+                            <div class="col-8 pt-0">
+                                <button name="button_account_peppol_check_partner_endpoint"
+                                        class="btn btn-secondary"
+                                        type="object"
+                                        string="Verify"
+                                        help="Verify partner's PEPPOL endpoint"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="ubl_cii_format" string="EDI Format" optional="hide"/>
+                <field name="peppol_eas" string="Peppol EAS" optional="hide"/>
+                <field name="peppol_endpoint" string="Peppol Endpoint" optional="hide"/>
+                <field name="account_peppol_is_endpoint_valid" string="Peppol Validity" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_peppol" model="ir.actions.server">
+        <field name="name">Verify Peppol</field>
+        <field name="model_id" ref="account_peppol.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_account_peppol_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>
