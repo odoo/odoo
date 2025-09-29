@@ -3,7 +3,7 @@ import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_inter
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { offlineErrorHandler, handleRPCError } from "@point_of_sale/app/utils/error_handlers";
-import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { registry } from "@web/core/registry";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 const REQUEST_TIMEOUT_MS = 5000;
@@ -259,4 +259,4 @@ export class PaymentPineLabs extends PaymentInterface {
     }
 }
 
-register_payment_method("pine_labs", PaymentPineLabs);
+registry.category("electronic_payment_interfaces").add("pine_labs", PaymentPineLabs);

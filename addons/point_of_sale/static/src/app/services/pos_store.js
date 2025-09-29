@@ -420,7 +420,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
-            const PaymentInterface = this.electronic_payment_interfaces[pm.use_payment_terminal];
+            const PaymentInterface = registry
+                .category("electronic_payment_interfaces")
+                .get(pm.use_payment_terminal, null);
             if (PaymentInterface) {
                 pm.payment_terminal = new PaymentInterface(this, pm);
             }
@@ -2720,25 +2722,6 @@ export class PosStore extends WithLazyGetterTrap {
         });
         await validation.validateOrder(false);
     }
-}
-
-PosStore.prototype.electronic_payment_interfaces = {};
-
-/**
- * Call this function to map your PaymentInterface implementation to
- * the use_payment_terminal field. When the POS loads it will take
- * care of instantiating your interface and setting it on the right
- * payment methods.
- *
- * @param {string} use_payment_terminal - value used in the
- * use_payment_terminal selection field
- *
- * @param {Object} ImplementedPaymentInterface - implemented
- * PaymentInterface
- */
-export function register_payment_method(use_payment_terminal, ImplementedPaymentInterface) {
-    PosStore.prototype.electronic_payment_interfaces[use_payment_terminal] =
-        ImplementedPaymentInterface;
 }
 
 export const posService = {

@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { registry } from "@web/core/registry";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 export class PaymentStripe extends PaymentInterface {
@@ -335,4 +335,4 @@ export class PaymentStripe extends PaymentInterface {
     }
 }
 
-register_payment_method("stripe", PaymentStripe);
+registry.category("electronic_payment_interfaces").add("stripe", PaymentStripe);

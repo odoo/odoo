@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { registry } from "@web/core/registry";
 
 export class PaymentMercadoPago extends PaymentInterface {
     async createPaymentIntent() {
@@ -191,4 +191,4 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 }
 
-register_payment_method("mercado_pago", PaymentMercadoPago);
+registry.category("electronic_payment_interfaces").add("mercado_pago", PaymentMercadoPago);
