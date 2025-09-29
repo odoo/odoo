@@ -58,12 +58,12 @@ class ResLang(models.Model):
     def _get_date_format_selection(self):
         current_year = fields.Date.today().year
         return [
-            ('%d/%m/%Y', '01/31/%s' % current_year),
-            ('%m/%d/%Y', '31/01/%s' % current_year),
-            ('%Y/%m/%d', '%s/31/01' % current_year),
-            ('%d-%m-%Y', '01-31-%s' % current_year),
-            ('%m-%d-%Y', '31-01-%s' % current_year),
-            ('%Y-%m-%d', '%s-31-01' % current_year),
+            ('%d/%m/%Y', '31/01/%s' % current_year),
+            ('%m/%d/%Y', '01/31/%s' % current_year),
+            ('%Y/%m/%d', '%s/01/31' % current_year),
+            ('%d-%m-%Y', '31-01-%s' % current_year),
+            ('%m-%d-%Y', '01-31-%s' % current_year),
+            ('%Y-%m-%d', '%s-01-31' % current_year),
         ]
 
     name = fields.Char(required=True)
