@@ -250,3 +250,10 @@ export function checkPartnerPoints(name, points) {
         },
     ];
 }
+
+export function isLoyaltyPointsAvailable() {
+    return {
+        content: "Loyalty Points are visible on the receipt",
+        trigger: ".pos-receipt .loyalty",
+    };
+}

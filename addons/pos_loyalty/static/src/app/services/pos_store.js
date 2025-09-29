@@ -27,6 +27,7 @@ patch(PosStore.prototype, {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
+        await this.updateOrder(this.getOrder());
     },
     async afterProcessServerData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
