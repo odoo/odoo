@@ -60,7 +60,7 @@ export class PosOrder extends Base {
         if (!this.uiState) {
             this.uiState = {
                 lineToRefund: {},
-                displayed: true,
+                displayed: this.state !== "cancel",
                 booked: false,
                 screen_data: {},
                 selected_orderline_uuid: undefined,
