@@ -1,4 +1,5 @@
 import { patch } from "@web/core/utils/patch";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 
 
@@ -30,9 +31,15 @@ export const patchAvatarCardResourcePopover = {
         return this.skills.map(({ id, display_name, color }) => ({
             id,
             text: display_name,
-            colorIndex: color,
+            color,
         }));
     },
 };
 
 export const unpatchAvatarCardResourcePopover = patch(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);
+patch(AvatarCardResourcePopover, {
+    components: {
+        ...AvatarCardResourcePopover.components,
+        SkillTag: BadgeTag,
+    },
+});

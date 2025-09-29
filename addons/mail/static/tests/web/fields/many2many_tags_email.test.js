@@ -64,8 +64,8 @@ test("fieldmany2many tags email (edition)", async () => {
         count: 2,
     });
     expect(tags[0].innerText).toBe("gold");
-    expect(tags[0].querySelector(".o_badge_text")).toHaveAttribute(
-        "title",
+    expect(tags[0]).toHaveAttribute(
+        "data-tooltip",
         "coucou@petite.perruche"
     );
     // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.

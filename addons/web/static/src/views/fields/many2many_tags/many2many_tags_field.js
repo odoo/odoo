@@ -12,6 +12,7 @@ import {
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { standardFieldProps } from "../standard_field_props";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -38,6 +39,7 @@ class Many2ManyTagsFieldColorListPopover extends Component {
 export class Many2ManyTagsField extends Component {
     static template = "web.Many2ManyTagsField";
     static components = {
+        Tag: BadgeTag,
         TagsList,
         Many2XAutocomplete,
     };
@@ -65,6 +67,8 @@ export class Many2ManyTagsField extends Component {
 
     static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     static SEARCH_MORE_LIMIT = 320;
+
+    visibleItemsLimit = Number.POSITIVE_INFINITY;
 
     setup() {
         this.orm = useService("orm");
@@ -143,21 +147,28 @@ export class Many2ManyTagsField extends Component {
         return this.props.string || this.props.record.fields[this.props.name].string || "";
     }
 
+    get tagsListProps() {
+        return {
+            mapTooltip: (tag) => tag.props.tooltip,
+            tags: this.tags,
+            visibleItemsLimit: this.visibleItemsLimit,
+        };
+    }
+
     getTagProps(record) {
         return {
-            id: record.id, // datapoint_X
-            resId: record.resId,
-            text: record.data.display_name,
-            colorIndex: record.data[this.props.colorField],
-            canEdit: this.props.canEditTags,
+            color: record.data[this.props.colorField],
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
+            text: record.data.display_name || "",
+            tooltip: record.data.display_name || "",
         };
     }
 
     get tags() {
-        return this.props.record.data[this.props.name].records.map((record) =>
-            this.getTagProps(record)
-        );
+        return this.props.record.data[this.props.name].records.map((record) => ({
+            id: record.id,
+            props: this.getTagProps(record),
+        }));
     }
 
     get showM2OSelectionField() {

@@ -5,7 +5,9 @@
             <div t-if="skills?.length">
                 <span class="fw-bold">Skills</span>
                 <div class="d-flex flex-wrap gap-1 o_employee_skills_tags mt-1 overflow-hidden">
-                    <TagsList tags="skillTags" visibleItemsLimit="5"/>
+                    <TagsList tags="skillTags" visibleItemsLimit="5" t-slot-scope="tag">
+                        <SkillTag text="tag.text" color="tag.color"/>
+                    </TagsList>
                 </div>
             </div>
         </xpath>

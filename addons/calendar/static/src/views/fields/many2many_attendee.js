@@ -1,10 +1,10 @@
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
-import { AttendeeTagsList } from "@calendar/views/fields/attendee_tags_list";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 const ICON_BY_STATUS = {
@@ -12,11 +12,21 @@ const ICON_BY_STATUS = {
     declined: "fa-times",
     tentative: "fa-question",
 };
+
+export class AttendeeTag extends Component {
+    static template = "calendar.AttendeeTag";
+    static props = ["imageUrl", "isUnavailable?", "noEmail?", "onDelete?", "status?", "text", "tooltip"];
+
+    get statusIcon() {
+        return ICON_BY_STATUS[this.props.status];
+    }
+}
+
 export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     static template = "calendar.Many2ManyAttendee";
     static components = {
-        ...Many2ManyAttendee.components,
-        TagsList: AttendeeTagsList,
+        ...super.components,
+        Tag: AttendeeTag,
     };
     setup() {
         super.setup();
@@ -40,37 +50,46 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
         });
     }
 
-    get tags() {
-        const partnerIds = this.specialData.data;
+    getTagProps(record) {
+        const tag = super.getTagProps(record);
+        const result = {
+            text: tag.text,
+            tooltip: tag.tooltip,
+            imageUrl: tag.imageUrl,
+            onDelete: tag.onDelete,
+        };
+
+        const partner = this.specialData.data.find((partner) => record.resId === partner.id);
+        if (partner) {
+            result.status = partner.status;
+        }
+
         const noEmailPartnerIds = this.props.record.data.invalid_email_partner_ids
             ? this.props.record.data.invalid_email_partner_ids.records
             : [];
+        const noEmail = noEmailPartnerIds.find(
+            (noEmailPartner) => record.resId == noEmailPartner.resId
+        );
+        if (noEmail) {
+            result.noEmail = true;
+        }
+
         const unavailablePartnerIds = this.props.record.data.unavailable_partner_ids
             ? this.props.record.data.unavailable_partner_ids.records
             : [];
-        const tags = super.tags.map((tag) => {
-            const partner = partnerIds.find((partner) => tag.resId === partner.id);
-            const noEmail = noEmailPartnerIds.find(
-                (noEmailPartner) => tag.resId == noEmailPartner.resId
-            );
-            if (partner) {
-                tag.status = partner.status;
-                tag.statusIcon = ICON_BY_STATUS[partner.status];
-            }
-            if (noEmail) {
-                tag.noEmail = true;
-            }
-            if (
-                unavailablePartnerIds.find(
-                    (unavailablePartner) => tag.resId == unavailablePartner.resId
-                )
-            ) {
-                tag.isUnavailable = true;
-            }
-            return tag;
-        });
+        if (
+            unavailablePartnerIds.find(
+                (unavailablePartner) => record.resId == unavailablePartner.resId
+            )
+        ) {
+            result.isUnavailable = true;
+        }
+        return result;
+    }
 
-        const organizer = partnerIds.find((partner) => partner.is_organizer);
+    get tags() {
+        const tags = super.tags;
+        const organizer = this.specialData.data.find((partner) => partner.is_organizer);
         if (organizer) {
             const orgId = organizer.id;
             // sort elements according to the partner id

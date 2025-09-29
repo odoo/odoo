@@ -4,19 +4,21 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
-import { onMounted } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 
-export class FieldMany2ManyTagsBanksTagsList extends TagsList {
-    static template = "FieldMany2ManyTagsBanksTagsList";
+class BankTag extends Component {
+    static template = "account.BankTag";
+    static components = { BadgeTag };
+    static props = ["allowOutPayment?", "color", "onClick", "onDelete" , "text"];
 }
 
 export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
     static template = "account.FieldMany2ManyTagsBanks";
     static components = {
-        ...FieldMany2ManyTagsBanks.components,
-        TagsList: FieldMany2ManyTagsBanksTagsList,
+        ...super.components,
+        Tag: BankTag,
     };
 
     setup() {

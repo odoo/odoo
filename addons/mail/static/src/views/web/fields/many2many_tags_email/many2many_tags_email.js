@@ -1,20 +1,13 @@
-import { RecipientsInputTagsList } from "@mail/core/web/recipients_input_tags_list";
-import { RecipientsPopover } from "@mail/core/web/recipients_popover";
+import { RecipientTag, useRecipientChecker } from "@mail/core/web/recipient_tag";
 import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-
-export class FieldMany2ManyTagsEmailTagsList extends RecipientsInputTagsList {
-    static template = "FieldMany2ManyTagsEmailTagsList";
-}
 
 export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplete {
     /**
@@ -35,12 +28,12 @@ export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplet
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     static template = "FieldMany2ManyTagsEmailTags";
     static components = {
-        ...FieldMany2ManyTagsEmail.components,
-        TagsList: FieldMany2ManyTagsEmailTagsList,
+        ...super.components,
+        Tag: RecipientTag,
         Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete,
     };
     static props = {
-        ...Many2ManyTagsField.props,
+        ...super.props,
         context: { type: Object, optional: true },
         canEditTags: { type: Boolean, optional: true },
     };
@@ -50,11 +43,8 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         if (this.quickCreate) {
             this.quickCreate = this.quickCreateRecipient.bind(this);
         }
-        this.openedDialogs = 0;
-        this.recordsIdsToAdd = [];
 
-        this.recipientsPopover = usePopover(RecipientsPopover);
-        this.actionService = useService("action");
+        this.recipientCheckerBus = useRecipientChecker(() => this.tags.map((tag) => ({ id: tag.id, email: tag.props.email })));
 
         const update = this.update;
         this.update = async (object) => {
@@ -73,9 +63,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             {}
         );
         tags.forEach((tag) => {
-            tag.email = emailByResId[tag.resId];
-            tag.name = tag.text;
-            tag.title = tag.text;
+            tag.props.email = emailByResId[tag.props.resId];
         });
         return tags;
     }
@@ -86,33 +74,19 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
      * @returns {Object}
      */
     getTagProps(record) {
+        const p = super.getTagProps(record);
         return {
-            ...super.getTagProps(record),
+            ...p,
             text:
                 record.data.name || record.data.email || record.data.display_name || _t("Unnamed"),
-            onClick: (ev) => this.onTagClick(ev, record),
+            bus: this.recipientCheckerBus,
+            updateRecipient: this.updateRecipient.bind(this),
+            name: p.text,
+            email: record.data.email,
+            tooltip: record.data.email || p.text,
+            id: record.id,
+            resId: record.resId,
         };
-    }
-
-    /**
-     * @param {Event} event
-     * @param {Record} record
-     */
-    onTagClick(event, record) {
-        const viewProfileBtnOverride = () => {
-            const action = {
-                type: "ir.actions.act_window",
-                res_model: "res.partner",
-                res_id: record.resId,
-                views: [[false, "form"]],
-                target: "current",
-            };
-            this.actionService.doAction(action);
-        };
-        this.recipientsPopover.open(event.target, {
-            id: record.resId,
-            viewProfileBtnOverride,
-        });
     }
 
     async quickCreateRecipient(request) {
