@@ -1,10 +1,12 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, fields, serverState } from "@web/../tests/web_test_helpers";
 import { websiteModels } from "@website/../tests/helpers";
 
 export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
     _inherit = "website.visitor";
+
+    page_visit_history = fields.Json({ compute: "_compute_page_visit_history" });
 
     /** @param {integer[]} ids */
     action_send_chat_request(ids) {
@@ -59,25 +61,27 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
         super._to_store(store);
         for (const visitor of this) {
             const visitor_model = this.browse(visitor.id);
-            const [data] = this._read_format(visitor.id, []);
-            data.page_visit_history = visitor_model._get_visitor_history();
+            this._compute_page_visit_history();
+            const [data] = this._read_format(visitor.id, ["page_visit_history"]);
             store._add_record_fields(visitor_model, data);
         }
     }
 
-    _get_visitor_history() {
-        const recent_history = this.env["website.track"].search_read(
-            [
-                ["page_id", "!=", false],
-                ["visitor_id", "=", this[0].id],
-            ],
-            { limit: 3 }
-        );
-        return recent_history
-            .map((track) => [
-                this.env["website.page"].browse(track.page_id)[0].name,
-                track.visit_datetime,
-            ])
-            .sort((a, b) => (a[1] < b[1] ? -1 : 1));
+    _compute_page_visit_history() {
+        for (const visitor of this) {
+            const recent_history = this.env["website.track"].search_read(
+                [
+                    ["page_id", "!=", false],
+                    ["visitor_id", "=", this[0].id],
+                ],
+                { limit: 3 }
+            );
+            visitor.page_visit_history = recent_history
+                .map((track) => [
+                    this.env["website.page"].browse(track.page_id)[0].name,
+                    track.visit_datetime,
+                ])
+                .sort((a, b) => (a[1] < b[1] ? -1 : 1));
+        }
     }
 }
