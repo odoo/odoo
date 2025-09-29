@@ -63,6 +63,7 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['resetTableSize'] } resetTableSize
  * @property { TablePlugin['clearColumnContent'] } clearColumnContent
  * @property { TablePlugin['clearRowContent'] } clearRowContent
+ * @property { TablePlugin['toggleAlternatingRows'] } toggleAlternatingRows
  */
 
 /**
@@ -95,6 +96,7 @@ export class TablePlugin extends Plugin {
         "resetTableSize",
         "clearColumnContent",
         "clearRowContent",
+        "toggleAlternatingRows",
     ];
     resources = {
         user_commands: [
@@ -624,6 +626,16 @@ export class TablePlugin extends Plugin {
             td.replaceChildren(baseContainer);
         });
     }
+
+    /**
+     * Toggles the CSS class that enables alternating row styles on a table.
+     *
+     * @param {HTMLTableElement} table
+     */
+    toggleAlternatingRows(table) {
+        table.classList.toggle("o_alternating_rows");
+    }
+
     deleteTable(table) {
         table =
             table || findInSelection(this.dependencies.selection.getEditableSelection(), "table");

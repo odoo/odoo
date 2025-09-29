@@ -1,5 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { click, hover, queryAllAttributes, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    hover,
+    queryAll,
+    queryAllAttributes,
+    queryOne,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
@@ -236,6 +244,7 @@ test("list of table commands in first row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -266,6 +275,7 @@ test("list of table commands in first row if it's table header (TH)", async () =
         "move_down",
         // no insert above
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -293,6 +303,7 @@ test("list of table commands in second row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -320,6 +331,7 @@ test("list of table commands in last row", async () => {
         // no move down
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -1396,4 +1408,95 @@ test("should redistribute excess width from larger columns to current column", a
                 </tbody>
             </table>`)
     );
+});
+
+test("applies alternating row colors when 'Insert Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td>2</td></tr>
+                <tr><td>3</td></tr>
+                <tr><td>4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+    const cells = queryAll("tr > :first-child");
+    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
+    expect(
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+    ).toBe(true);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Alternate row colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="o_alternating_rows">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td>2</td></tr>
+                    <tr><td>3</td></tr>
+                    <tr><td>4</td></tr>
+                </tbody>
+            </table>`)
+    );
+    expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
+    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
+    expect(secondRowCellColor).not.toBe(firstRowCellColor);
+    expect(getComputedStyle(cells[3]).backgroundColor).toBe(secondRowCellColor);
+});
+
+test("removes alternating row colors when 'Clear Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="o_alternating_rows">
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td>2</td></tr>
+                <tr><td>3</td></tr>
+                <tr><td>4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    const cells = queryAll("tr > :first-child");
+    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
+    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
+    expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
+    expect(secondRowCellColor).not.toBe(firstRowCellColor);
+    expect(getComputedStyle(cells[3]).backgroundColor).toBe(secondRowCellColor);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Clear alternate colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td>2</td></tr>
+                    <tr><td>3</td></tr>
+                    <tr><td>4</td></tr>
+                </tbody>
+            </table>`)
+    );
+    expect(
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+    ).toBe(true);
 });
