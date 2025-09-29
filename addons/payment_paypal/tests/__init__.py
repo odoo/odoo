@@ -2,4 +2,3 @@
 
 from . import common
 from . import test_paypal
-from . import test_paypal_buttons
