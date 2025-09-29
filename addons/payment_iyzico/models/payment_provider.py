@@ -20,9 +20,9 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('iyzico', "Iyzico")], ondelete={'iyzico': 'set default'}
     )
-    iyzico_key_id = fields.Char(string="Iyzico Key Id", required_if_provider='iyzico', copy=False)
+    iyzico_key_id = fields.Char(string="Iyzico API Key", required_if_provider='iyzico', copy=False)
     iyzico_key_secret = fields.Char(
-        string="Iyzico Key Secret",
+        string="Iyzico Secret Key",
         required_if_provider='iyzico',
         copy=False,
         groups='base.group_system',
