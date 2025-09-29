@@ -9,7 +9,7 @@ import {
     models,
     mountView,
 } from '@web/../tests/web_test_helpers';
-import { defineComboModels } from './sale_combo_test_helpers';
+import { defineComboModels } from '@product/../tests/product_combo_test_helpers';
 
 class SaleOrderLine extends models.Model {
     _name = 'sale.order.line'
