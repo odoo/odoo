@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, HttpCase
 
 
 @tagged("event_crm")
@@ -176,3 +179,29 @@ class TestEventCrm(TestEventFullCommon):
         })
         self.assertIn(self.test_event.question_ids[1].answer_ids[0].name, event_registration.lead_ids[0].description,
             "lead description not updated with the answer to the question")
+
+
+@tagged('event_crm', 'event_online', 'post_install', '-at_install')
+class TestEventCrmFrontend(TestEventFullCommon, HttpCase):
+
+    @freeze_time('2021-12-03')
+    def test_event_crm_company_name_propagates_to_lead_frontend(self):
+        """Company name from registration should be set on the generated lead"""
+        self.test_event.write({
+            # Skip Ecommerce/Checkout flow
+            'event_ticket_ids': [Command.update(t.id, {'price': False}) for t in self.test_event.event_ticket_ids],
+            'question_ids': [
+                Command.clear(),
+                Command.create({'title': 'Name', 'question_type': 'name'}),
+                Command.create({'title': 'Email', 'question_type': 'email'}),
+                Command.create({'title': 'Company Name', 'question_type': 'company_name'}),
+            ],
+        })
+
+        self.start_tour(f'/event/{self.test_event.id}/register', 'wevent_crm_lead_propagation')
+
+        lead = self.test_rule_attendee.lead_ids
+        self.assertEqual(len(lead), 1, 'A lead should be created from registration')
+        self.assertEqual(lead.contact_name, 'Red')
+        self.assertEqual(lead.partner_name, 'RedX Studios', 'Company name should propagate from registration')
+        self.assertEqual(lead.email_from, 'redx@test.example.com')

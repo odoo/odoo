@@ -68,6 +68,16 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
         self.assertEqual(len(captured_trigger.records), 0)
         self.assertFalse(bool(LeadRequestSudo.search([])))
 
+    def test_event_crm_company_name_propagates_to_lead(self):
+        """Company name from registration should be set on the generated lead"""
+        self.env['event.registration'].create({
+            'name': 'Tony Stark',
+            'event_id': self.event_0.id,
+            'email': 'tony.stark@test.example.com',
+            'company_name': 'Stark Industries',
+        })
+        self.assertEqual(self.test_rule_attendee.lead_ids.partner_name, 'Stark Industries')
+
     @users('user_eventregistrationdesk')
     def test_event_crm_flow_batch_create(self):
         """ Test attendee- and order-based registrations creation. Event-based
