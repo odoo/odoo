@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Iterable
 
 import psycopg2
+from psycopg2.extensions import quote_ident
 
 from .misc import named_to_positional_printf
 
@@ -760,3 +761,12 @@ def make_identifier(identifier: str) -> str:
 def make_index_name(table_name: str, column_name: str) -> str:
     """ Return an index name according to conventions for the given table and column. """
     return make_identifier(f"{table_name}__{column_name}_index")
+
+
+def quoted_identifier(cr, name: str) -> SQL:
+    """Quote a database identifier.
+
+    Use instead of `SQL.identifier` to accept all kinds of identifiers.
+    """
+    name = quote_ident(name, cr._cnx)
+    return SQL(name)

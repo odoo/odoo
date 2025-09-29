@@ -17,7 +17,7 @@ from xml.etree import ElementTree as ET
 from zoneinfo import TZPATH
 
 import psycopg2
-from psycopg2.extensions import quote_ident
+from pytz import country_timezones
 
 import odoo.api
 import odoo.modules.neutralize
@@ -27,24 +27,16 @@ import odoo.tools
 from odoo.exceptions import AccessDenied
 from odoo.release import version_info
 from odoo.sql_db import db_connect
-from odoo.tools import osutil, SQL
+from odoo.tools import SQL, osutil
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import exec_pg_environ, find_pg_tool
+from odoo.tools.sql import quoted_identifier
 
 _logger = logging.getLogger(__name__)
 
 
 class DatabaseExists(Warning):
     pass
-
-
-def database_identifier(cr, name: str) -> SQL:
-    """Quote a database identifier.
-
-    Use instead of `SQL.identifier` to accept all kinds of identifiers.
-    """
-    name = quote_ident(name, cr._cnx)
-    return SQL(name)
 
 
 def check_db_management_enabled(func, /):
@@ -180,9 +172,9 @@ def _create_empty_database(name):
             # 'C' collate is only safe with template0, but provides more useful indexes
             cr.execute(SQL(
                 "CREATE DATABASE %s ENCODING 'unicode' %s TEMPLATE %s",
-                database_identifier(cr, name),
+                quoted_identifier(cr, name),
                 SQL("LC_COLLATE 'C'") if chosen_template == 'template0' else SQL(""),
-                database_identifier(cr, chosen_template),
+                quoted_identifier(cr, chosen_template),
             ))
 
     # TODO: add --extension=trigram,unaccent
@@ -230,8 +222,8 @@ def exp_duplicate_database(db_original_name, db_name, neutralize_database=False)
         _drop_conn(cr, db_original_name)
         cr.execute(SQL(
             "CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s",
-            database_identifier(cr, db_name),
-            database_identifier(cr, db_original_name),
+            quoted_identifier(cr, db_name),
+            quoted_identifier(cr, db_original_name),
         ))
 
     registry = odoo.modules.registry.Registry.new(db_name)
@@ -278,7 +270,7 @@ def exp_drop(db_name):
         _drop_conn(cr, db_name)
 
         try:
-            cr.execute(SQL('DROP DATABASE %s', database_identifier(cr, db_name)))
+            cr.execute(SQL('DROP DATABASE %s', quoted_identifier(cr, db_name)))
         except Exception as e:
             _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
@@ -430,7 +422,7 @@ def exp_rename(old_name, new_name):
         cr._cnx.autocommit = True
         _drop_conn(cr, old_name)
         try:
-            cr.execute(SQL('ALTER DATABASE %s RENAME TO %s', database_identifier(cr, old_name), database_identifier(cr, new_name)))
+            cr.execute(SQL('ALTER DATABASE %s RENAME TO %s', quoted_identifier(cr, old_name), quoted_identifier(cr, new_name)))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception as e:
             _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
