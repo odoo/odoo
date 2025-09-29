@@ -24,6 +24,7 @@ class HrWorkEntry(models.Model):
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
+    resource_calendar_id = fields.Many2one(related='version_id.resource_calendar_id')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
     work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
@@ -31,6 +32,8 @@ class HrWorkEntry(models.Model):
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
+    is_leave = fields.Boolean(related='work_entry_type_id.is_leave')
+    is_manual = fields.Boolean(help="Marks if the work entry came from manual creation or split")
     state = fields.Selection([
         ('draft', 'New'),
         ('conflict', 'In Conflict'),
@@ -128,6 +131,7 @@ class HrWorkEntry(models.Model):
                 )
             )
         self.duration -= split_duration
+        self.is_manual = True
         split_work_entry = self.copy()
         split_work_entry.write(vals)
         return split_work_entry.id

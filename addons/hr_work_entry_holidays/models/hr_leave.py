@@ -43,7 +43,7 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    work_entries_vals_list += contracts._get_work_entries_values(leave.date_from, leave.date_to)
+                    work_entries_vals_list += contract._get_work_entries_values(leave.date_from, leave.date_to)
 
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
         new_leave_work_entries = self.env['hr.work.entry'].create(work_entries_vals_list)
