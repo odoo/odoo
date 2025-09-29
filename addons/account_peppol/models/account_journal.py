@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from odoo import _, fields, models
 
 
@@ -13,7 +11,7 @@ class AccountJournal(models.Model):
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', '=', 'active'),
             ('company_id', 'in', self.company_id.ids),
-            ('proxy_type', '=', 'peppol')
+            ('edi_format_id.code', '=', 'peppol'),
         ])
         edi_users._peppol_get_new_documents()
 
@@ -21,7 +19,7 @@ class AccountJournal(models.Model):
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', '=', 'active'),
             ('company_id', 'in', self.company_id.ids),
-            ('proxy_type', '=', 'peppol')
+            ('edi_format_id.code', '=', 'peppol'),
         ])
         edi_users._peppol_get_message_status()
 

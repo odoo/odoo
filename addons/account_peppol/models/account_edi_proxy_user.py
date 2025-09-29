@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import _, api, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
-from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
@@ -15,62 +13,53 @@ BATCH_SIZE = 50
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    peppol_verification_code = fields.Char(string='SMS verification code')
-    proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})
-
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    def _get_server_url_new(self, edi_format=None):
+        if (edi_format or self.edi_format_id).code == 'peppol':
+            return {
+                'prod': 'https://peppol.api.odoo.com',
+                'test': 'https://peppol.test.odoo.com',
+            }.get(self._get_demo_state(), 'demo')
+        return super()._get_server_url_new(edi_format=edi_format)
+
+    def _get_route(self, action, edi_format=None):
+        if (edi_format or self.edi_format_id).code == 'peppol':
+            return {
+                'create_user': '/iap/account_edi/2/create_user',
+                'renew_token': '/iap/account_edi/1/renew_token',
+            }.get(action) or super()._get_route(action, edi_format=edi_format)
+        return super()._get_route(action, edi_format=edi_format)
+
+    def _get_create_user_edi_params(self, company, edi_format, edi_identification):
+        if edi_format.code == 'peppol':
+            return {
+                'proxy_type': edi_format.code,
+                'edi_identification': edi_identification,
+            }
+        return super()._get_create_user_edi_params(company, edi_format, edi_identification)
 
     def _make_request(self, url, params=False):
-        if self.proxy_type == 'peppol':
+        if self.edi_format_id.code == 'peppol':
             return self._make_request_peppol(url, params=params)
         return super()._make_request(url, params=params)
 
     @handle_demo
     def _make_request_peppol(self, url, params=False):
-        # extends account_edi_proxy_client to update peppol_proxy_state
-        # of archived users
-        try:
-            result = super()._make_request(url, params)
-        except AccountEdiProxyError as e:
-            if (
-                e.code == 'no_such_user'
-                and not self.active
-                # only soft-delete the user in case we were actually waiting for a migration
-                and self.company_id.account_peppol_migration_key
-                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
-            ):
-                self.company_id.write({
-                    'account_peppol_proxy_state': 'not_registered',
-                    'account_peppol_migration_key': False,
-                })
-                # commit the above changes before raising below
-                if not tools.config['test_enable'] and not modules.module.current_test:
-                    self.env.cr.commit()
-            raise AccountEdiProxyError(e.code, e.message)
-        return result
-
-    def _get_proxy_urls(self):
-        urls = super()._get_proxy_urls()
-        urls['peppol'] = {
-            'prod': 'https://peppol.api.odoo.com',
-            'test': 'https://peppol.test.odoo.com',
-            'demo': 'demo',
-        }
-        return urls
+        return super()._make_request(url, params)
 
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('edi_format_id.code', '=', 'peppol')])
         edi_users._peppol_get_new_documents()
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('edi_format_id.code', '=', 'peppol')])
         edi_users._peppol_get_message_status()
 
     # -------------------------------------------------------------------------
@@ -89,8 +78,7 @@ class AccountEdiProxyClientUser(models.Model):
         # if there are existing active users, there is nothing to recover
         # explicitly check with active_test, see https://github.com/odoo/odoo/commit/4c46b696f3af73c982ba92f25d71afe8fc825ed0
         if any((
-            company.with_context(active_test=True).account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol'),
-            company.account_peppol_migration_key,
+            company.with_context(active_test=True).account_edi_proxy_client_ids.filtered(lambda user: user.edi_format_id.code == 'peppol'),
             company.account_peppol_proxy_state != 'not_registered',
         )):
             return
@@ -99,15 +87,14 @@ class AccountEdiProxyClientUser(models.Model):
         # e.g. because of refresh_token API returning no_such_user for any peppol users
         # between 2025-09-02 07:20:00 UTC and 2025-09-02 15:30:00 UTC
         domain = [
-            ('proxy_type', '=', 'peppol'),
+            ('edi_format_id.code', '=', 'peppol'),
             ('active', '=', False),
             ('refresh_token', '!=', False),
-            ('edi_mode', '!=', 'demo'),
             ('company_id', '=', company.id),
         ]
         if peppol_identifier:
             domain.append(('edi_identification', '=', peppol_identifier))
-        user = self.env['account_edi_proxy_client.user'].search(domain, limit=2)
+        user = self.env['account_edi_proxy_client.user'].search(domain, limit=2).filtered(lambda u: u._get_demo_state() != 'demo')
 
         if len(user) != 1:
             # if there is more than one user, we won't decide which one to recover
@@ -117,8 +104,8 @@ class AccountEdiProxyClientUser(models.Model):
             with self.env.cr.savepoint():
                 # fetch state from IAP and update user if relevant
                 # _peppol_get_participant_status ignores errors, and here we want to know if it failed
-                # _make_request_peppol won't commit on no_such_user error because it only does so if account_peppol_migration_key is set
-                proxy_user = user._make_request(f"{user._get_server_url()}/api/peppol/1/participant_status")
+                # _make_request_peppol won't commit on no_such_user error
+                proxy_user = user._make_request(f"{user._get_server_url_new()}/api/peppol/1/participant_status")
 
                 state_map = {
                     'active': 'active',
@@ -126,8 +113,8 @@ class AccountEdiProxyClientUser(models.Model):
                     'rejected': 'rejected',
                     'canceled': 'canceled',
                     # IAP-side is still draft (needs phone confirmation)
-                    # set to not_verified to match normal registration flow
-                    'draft': 'not_verified'
+                    # set to pending to match normal registration flow
+                    'draft': 'pending'
                 }
 
                 if proxy_user.get('peppol_state') in state_map:
@@ -142,14 +129,6 @@ class AccountEdiProxyClientUser(models.Model):
         else:
             _logger.info("PEPPOL recovery completed. Recovered user id=%s.", user.id)
             return user
-
-    def _get_proxy_identification(self, company, proxy_type):
-        if proxy_type == 'peppol':
-            if not company.peppol_eas or not company.peppol_endpoint:
-                raise UserError(
-                    _("Please fill in the EAS code and the Participant ID code."))
-            return f'{company.peppol_eas}:{company.peppol_endpoint}'
-        return super()._get_proxy_identification(company, proxy_type)
 
     def _peppol_get_new_documents(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
@@ -166,7 +145,7 @@ class AccountEdiProxyClientUser(models.Model):
             try:
                 # request all messages that haven't been acknowledged
                 messages = edi_user._make_request(
-                    url=f"{edi_user._get_server_url()}/api/peppol/1/get_all_documents",
+                    url=f"{edi_user._get_server_url_new()}/api/peppol/1/get_all_documents",
                     params=params,
                 )
             except AccountEdiProxyError as e:
@@ -187,7 +166,7 @@ class AccountEdiProxyClientUser(models.Model):
             # to create the move anyway
             if not journal:
                 journal = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company),
+                    ('company_id', '=', company.id),
                     ('type', '=', 'purchase')
                 ], limit=1)
 
@@ -197,7 +176,7 @@ class AccountEdiProxyClientUser(models.Model):
 
             # retrieve attachments for filtered messages
             all_messages = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                f"{edi_user._get_server_url_new()}/api/peppol/1/get_document",
                 {'message_uuids': message_uuids},
             )
 
@@ -247,7 +226,7 @@ class AccountEdiProxyClientUser(models.Model):
                 self.env.cr.commit()
             if proxy_acks:
                 edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/ack",
+                    f"{edi_user._get_server_url_new()}/api/peppol/1/ack",
                     {'message_uuids': proxy_acks},
                 )
 
@@ -272,7 +251,7 @@ class AccountEdiProxyClientUser(models.Model):
             need_retrigger = need_retrigger or len(edi_user_moves) > job_count
             message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves[:job_count]}
             messages_to_process = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                f"{edi_user._get_server_url_new()}/api/peppol/1/get_document",
                 {'message_uuids': list(message_uuids.keys())},
             )
 
@@ -300,7 +279,7 @@ class AccountEdiProxyClientUser(models.Model):
                 move._message_log(body=_('Peppol status update: %s', content['state']))
 
             edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/ack",
+                f"{edi_user._get_server_url_new()}/api/peppol/1/ack",
                 {'message_uuids': list(message_uuids.keys())},
             )
 
@@ -308,11 +287,11 @@ class AccountEdiProxyClientUser(models.Model):
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '!=', 'not_registered'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '!=', 'not_registered'), ('edi_format_id.code', '=', 'peppol')])
         edi_users._peppol_get_participant_status()
 
         # check if any of the users that were disabled (for whatever reason) can be re-enabled
-        disabled_companies = self.with_context(active_test=False).search([('proxy_type', '=', 'peppol'), ('active', '=', False)]).company_id
+        disabled_companies = self.with_context(active_test=False).search([('edi_format_id.code', '=', 'peppol'), ('active', '=', False)]).company_id
         for disabled_company in disabled_companies:
             self._try_recover_peppol_proxy_users(disabled_company)
 
@@ -320,7 +299,7 @@ class AccountEdiProxyClientUser(models.Model):
         for edi_user in self:
             try:
                 proxy_user = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/participant_status")
+                    f"{edi_user._get_server_url_new()}/api/peppol/1/participant_status")
             except AccountEdiProxyError as e:
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue

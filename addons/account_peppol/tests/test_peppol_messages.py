@@ -1,13 +1,17 @@
+import datetime
 import json
+import requests
 from base64 import b64encode
 from contextlib import contextmanager
 from freezegun import freeze_time
 from requests import Session, PreparedRequest, Response
+from unittest.mock import patch
 
-from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
@@ -15,14 +19,24 @@ FAKE_UUID = ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy',
              'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz']
 FILE_PATH = 'account_peppol/tests/assets'
 
-@freeze_time('2023-01-01')
+
 @tagged('-at_install', 'post_install')
-class TestPeppolMessage(TestAccountMoveSendCommon):
+class TestPeppolMessage(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+        cls.fakenow = datetime.datetime(2023, 1, 1, 12, 20, 0)
+        cls.startClassPatcher(freeze_time(cls.fakenow))
+
+        patcher = patch.object(
+            requests.sessions.Session,
+            'send',
+            lambda s, r, **kwargs: cls._request_handler(s, r, **kwargs),  # noqa: PLW0108
+        )
+        cls.startClassPatcher(patcher)
+
+        cls.env['ir.config_parameter'].sudo().set_param('account_edi_proxy_client.demo', 'test')
 
         cls.env.company.write({
             'country_id': cls.env.ref('base.be').id,
@@ -31,11 +45,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'account_peppol_proxy_state': 'active',
         })
 
-        edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
+        cls.peppol_edi_format = cls.env.ref('account_peppol.edi_peppol')
+        cls.company_data['default_journal_sale'].edi_format_ids += cls.peppol_edi_format
+
+        edi_identification = cls.peppol_edi_format._get_proxy_identification(cls.env.company)
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
-            'proxy_type': 'peppol',
-            'edi_mode': 'test',
+            'edi_format_id': cls.peppol_edi_format.id,
             'edi_identification': edi_identification,
             'private_key': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
             'refresh_token': FAKE_UUID[0],
@@ -81,6 +97,14 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 }),
             ],
         })
+
+    def create_invoice_send_wizard(self, moves, **wizard_kwargs):
+        action = moves.action_send_and_print()
+        action_context = action['context']
+        return self.env['account.invoice.send'].with_context(
+            action_context,
+            active_ids=moves.ids
+        ).create({'is_print': False, **wizard_kwargs})
 
     @classmethod
     def _get_mock_data(cls, error=False):
@@ -171,63 +195,77 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         response.json = lambda: responses[url]
         return response
 
-    def test_attachment_placeholders(self):
-        move = self.create_move(self.valid_partner)
-        move.action_post()
-
-        builder = self.valid_partner._get_edi_builder()
-        filename = builder._export_invoice_filename(move)
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=False,
-        )
-
-        # the ubl xml placeholder should be generated
-        self._assert_mail_attachments_widget(wizard, [
-            {
-                'mimetype': 'application/pdf',
-                'name': 'INV_2023_00001.pdf',
-                'placeholder': True,
-            },
-            {
-                'mimetype': 'application/xml',
-                'name': 'INV_2023_00001_ubl_bis3.xml',
-                'placeholder': True,
-            },
-        ])
-
-        # we don't want to email the xml file in addition to sending via peppol
-        wizard.checkbox_send_peppol = True
-        self.assertFalse(bool(
-            [file for file in wizard.mail_attachments_widget if file['name'] == filename]
-        ))
-
     def test_send_peppol_invalid_partner(self):
         # a warning should appear before sending invoices to an invalid partner
         move = self.create_move(self.invalid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': move.ids,
+            'company_id': self.env.company.id,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': True,
+            'checkbox_send_peppol_readonly': False,
+            'peppol_warning': (
+                "The following partners are not correctly configured to receive Peppol documents. "
+                "Please check and verify their Peppol endpoint and the Electronic Invoicing format: "
+                "Wintermute"
+            ),
+        }])
 
-        self.assertTrue(bool(wizard.peppol_warning))
+    def test_send_peppol_non_peppol_warning(self):
+        # a warning should appear before sending invoices to an invalid partner
+        move1 = self.create_move(self.invalid_partner)
+        move1.action_post()
+        self.assertTrue(bool(move1._get_peppol_document()))
+
+        non_peppol_partner = self.env['res.partner'].create([{
+            'name': 'Colombian Guy',
+            'city': 'Bogotá',
+            'country_id': self.env.ref('base.co').id,
+        }])
+        move2 = self.create_move(non_peppol_partner)
+        move2.action_post()
+        self.assertFalse(move2._get_peppol_document())
+
+        moves = move1 | move2
+
+        wizard = self.create_invoice_send_wizard(moves)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': move1.ids,
+            'company_id': self.env.company.id,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': True,
+            'checkbox_send_peppol_readonly': False,
+            'peppol_warning': (
+                "The following partners are not correctly configured to receive Peppol documents. "
+                "Please check and verify their Peppol endpoint and the Electronic Invoicing format: "
+                "Wintermute\n"
+                "The following invoices can not be sent via Peppol. Please check them: "
+                "INV/2023/00002"
+            ),
+        }])
 
     def test_resend_error_peppol_message(self):
         # should be able to resend error invoices
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': move.ids,
+            'company_id': self.env.company.id,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': True,
+            'checkbox_send_peppol_readonly': False,
+            'peppol_warning': False,
+        }])
         with self._set_context({'error': True}):
-            wizard.action_send_and_print()
+            wizard.send_and_print_action()
 
             self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
             self.assertRecordValues(
@@ -236,15 +274,18 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                     'peppol_message_uuid': FAKE_UUID[0],
                 }])
 
-        # we can't send the ubl document again unless we regenerate the pdf
-        move.invoice_pdf_report_id.unlink()
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': move.ids,
+            'company_id': self.env.company.id,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': True,
+            'checkbox_send_peppol_readonly': False,
+            'peppol_warning': False,
+        }])
 
-        wizard.action_send_and_print()
+        wizard.send_and_print_action()
 
         self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
         self.assertEqual(move.peppol_move_state, 'done')
@@ -255,14 +296,20 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         # peppol_move_state should be set to done
         move = self.create_move(self.valid_partner)
         move.action_post()
+        self.assertTrue(bool(move._get_peppol_document()))
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': move.ids,
+            'company_id': self.env.company.id,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': True,
+            'checkbox_send_peppol_readonly': False,
+            'peppol_warning': False,
+        }])
 
-        wizard.action_send_and_print()
+        wizard.send_and_print_action()
 
         self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
         self.assertRecordValues(move, [{
@@ -270,20 +317,25 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
 
-    def test_send_peppol_and_email_default_values(self):
-        # If both "Send by Email" and "Send by Peppol" are set, we deactivate the "Send by Email" option
+    def test_send_peppol_requires_peppol_document(self):
+        """Without peppol document the Peppol option in the wizard is shown but readonly."""
+        # Disable the Peppol option on the journal so that no Peppol document is generated
+        self.company_data['default_journal_sale'].edi_format_ids -= self.peppol_edi_format
         move = self.create_move(self.valid_partner)
         move.action_post()
+        self.assertFalse(move._get_peppol_document())
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_send_peppol=True,
-        )
-
-        self.assertTrue(wizard.checkbox_send_peppol)
-        self.assertFalse(wizard.checkbox_send_mail)
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': [],
+            'company_id': False,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': False,
+            'checkbox_send_peppol_readonly': True,
+            'peppol_warning': False,
+        }])
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
@@ -292,11 +344,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-        )
-        self.assertRecordValues(wizard, [{'enable_peppol': False}])
+        wizard = self.create_invoice_send_wizard(move)
+        self.assertRecordValues(wizard, [{
+            'peppol_invoice_ids': [],
+            'company_id': False,
+            'account_peppol_edi_mode_info': ' (Test)',
+            'enable_peppol': True,
+            'checkbox_send_peppol': False,
+            'checkbox_send_peppol_readonly': True,
+            'peppol_warning': False,
+        }])
 
     def test_receive_error_peppol(self):
         # an error peppol message should be created

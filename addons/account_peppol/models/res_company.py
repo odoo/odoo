@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -19,7 +18,11 @@ def _cc_checker(country_code, code_type):
 
 
 def _re_sanitizer(expression):
-    return lambda endpoint: (res.group(0) if (res := re.search(expression, endpoint)) else endpoint)
+    def _sanitize(endpoint):
+        res = re.search(expression, endpoint)
+        return res.group(0) if res else endpoint
+
+    return _sanitize
 
 
 PEPPOL_ENDPOINT_RULES = {
@@ -32,7 +35,7 @@ PEPPOL_ENDPOINT_RULES = {
 
 PEPPOL_ENDPOINT_WARNINGS = {
     '0151': _cc_checker('au', 'abn'),
-    '0201': lambda endpoint: bool(re.match('[0-9a-zA-Z]{6}$', endpoint)),
+    '0201': lambda endpoint: bool(re.match('[0-9a-zA-Z]{6}$', endpoint)),  # noqa: RUF039
     '0210': _cc_checker('it', 'codicefiscale'),
     '0211': _cc_checker('it', 'iva'),
     '9906': _cc_checker('it', 'iva'),
@@ -55,7 +58,6 @@ class ResCompany(models.Model):
         compute='_compute_account_peppol_contact_email', store=True, readonly=False,
         help='Primary contact email for Peppol-related communication',
     )
-    account_peppol_migration_key = fields.Char(string="Migration Key")
     account_peppol_phone_number = fields.Char(
         string='Mobile number (for validation)',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
@@ -64,8 +66,6 @@ class ResCompany(models.Model):
     account_peppol_proxy_state = fields.Selection(
         selection=[
             ('not_registered', 'Not registered'),
-            ('not_verified', 'Not verified'),
-            ('sent_verification', 'Verification code sent'),
             ('pending', 'Pending'),
             ('active', 'Active'),
             ('rejected', 'Rejected'),
@@ -118,8 +118,9 @@ class ResCompany(models.Model):
     def _check_peppol_endpoint_number(self, warning=False):
         self.ensure_one()
         peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES
+        endpoint_rule = peppol_dict.get(self.peppol_eas)
 
-        return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
+        return True if endpoint_rule is None else endpoint_rule(self.peppol_endpoint)
 
     # -------------------------------------------------------------------------
     # CONSTRAINTS
@@ -154,7 +155,7 @@ class ResCompany(models.Model):
         for company in self:
             if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
                 company.peppol_purchase_journal_id = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company),
+                    ('company_id', '=', company.id),
                     ('type', '=', 'purchase'),
                 ], limit=1)
                 company.peppol_purchase_journal_id.is_peppol_journal = True
@@ -196,10 +197,13 @@ class ResCompany(models.Model):
     @api.model
     def _sanitize_peppol_endpoint(self, vals, eas=False, endpoint=False):
         # TODO: remove in master
-        if not (peppol_eas := vals.get('peppol_eas', eas)) or not (peppol_endpoint := vals.get('peppol_endpoint', endpoint)):
+        peppol_eas = vals.get('peppol_eas', eas)
+        peppol_endpoint = vals.get('peppol_endpoint', endpoint)
+        if not peppol_eas or not peppol_endpoint:
             return vals
 
-        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(peppol_eas):
+        sanitizer = PEPPOL_ENDPOINT_SANITIZERS.get(peppol_eas)
+        if sanitizer:
             vals['peppol_endpoint'] = sanitizer(peppol_endpoint)
 
         return vals
@@ -210,7 +214,8 @@ class ResCompany(models.Model):
         endpoint = values.get('peppol_endpoint')
         if not eas or not endpoint:
             return
-        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
+        sanitizer = PEPPOL_ENDPOINT_SANITIZERS.get(eas)
+        if sanitizer:
             new_endpoint = sanitizer(endpoint)
             if new_endpoint:
                 values['peppol_endpoint'] = new_endpoint
@@ -227,7 +232,8 @@ class ResCompany(models.Model):
 
     def _get_peppol_edi_mode(self):
         self.ensure_one()
-        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         # by design, we can only have zero or one proxy user per company with type Peppol
-        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
-        return peppol_user.edi_mode or config_param or 'prod'
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(
+            lambda u: u.company_id.id == self.id and u.edi_format_id.code == 'peppol'
+        )
+        return peppol_user._get_demo_state()

@@ -1,9 +1,11 @@
-import json
+import datetime
+import requests
 from contextlib import contextmanager
 from freezegun import freeze_time
-from requests import Session, PreparedRequest, Response
-from urllib.parse import unquote
 from psycopg2 import IntegrityError
+from requests import Session, PreparedRequest, Response
+from unittest.mock import patch
+from urllib.parse import unquote
 
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged, TransactionCase
@@ -17,14 +19,22 @@ PDF_FILE_PATH = 'account_peppol/tests/assets/peppol_identification_test.pdf'
 SMP_OK_IDS = {'0208:0000000000', '0208:0000000001'}
 
 
-@freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolParticipant(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+        cls.fakenow = datetime.datetime(2023, 1, 1, 12, 20, 0)
+        cls.startClassPatcher(freeze_time(cls.fakenow))
+        cls.env['ir.config_parameter'].sudo().set_param('account_edi_proxy_client.demo', 'test')
+
+        patcher = patch.object(
+            requests.sessions.Session,
+            'send',
+            lambda s, r, **kwargs: cls._request_handler(s, r, **kwargs),  # noqa: PLW0108
+        )
+        cls.startClassPatcher(patcher)
 
     @classmethod
     def _get_mock_responses(cls, peppol_state='active'):
@@ -44,11 +54,6 @@ class TestPeppolParticipant(TransactionCase):
             '/api/peppol/1/send_verification_code': {'result': {}},
             '/api/peppol/1/update_user': {'result': {}},
             '/api/peppol/1/verify_phone_number': {'result': {}},
-            '/api/peppol/1/migrate_peppol_registration': {
-                'result': {
-                    'migration_key': 'test_key',
-                }
-            },
         }
 
     @staticmethod
@@ -70,21 +75,15 @@ class TestPeppolParticipant(TransactionCase):
             return response
 
         url = r.path_url
-        body = json.loads(r.body)
 
-        if custom_responses_by_id := cls.env.context.get('custom_responses_by_id'):
+        custom_responses_by_id = cls.env.context.get('custom_responses_by_id')
+        if custom_responses_by_id:
             identification = r.headers.get('odoo-edi-client-id', None)
             if identification and identification in custom_responses_by_id:
                 response.json = lambda: custom_responses_by_id[identification]
                 return response
 
         responses = cls._get_mock_responses(cls.env.context.get('peppol_state', 'active'))
-        if (
-            url == '/api/peppol/1/activate_participant'
-            and cls.env.context.get('migrate_to')
-            and not body['params']['migration_key']
-        ):
-            raise UserError('No migration key was provided')
 
         if cls.env.context.get('migrated_away'):
             response.json = lambda: {
@@ -98,7 +97,7 @@ class TestPeppolParticipant(TransactionCase):
             return response
 
         if url not in responses:
-            return super()._request_handler(s, r, **kw)
+            raise NotImplementedError
         response.json = lambda: responses[url]
         return response
 
@@ -142,11 +141,6 @@ class TestPeppolParticipant(TransactionCase):
         company = self.env.company
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         settings.button_create_peppol_proxy_user()
-        self.assertEqual(company.account_peppol_proxy_state, 'not_verified')
-        settings.button_send_peppol_verification_code()
-        self.assertEqual(company.account_peppol_proxy_state, 'sent_verification')
-        settings.account_peppol_verification_code = '123456'
-        settings.button_check_peppol_verification_code()
         self.assertEqual(company.account_peppol_proxy_state, 'pending')
         self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.assertEqual(company.account_peppol_proxy_state, 'active')
@@ -171,19 +165,6 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(IntegrityError), self.cr.savepoint():
             settings.account_peppol_proxy_state = 'not_registered'
             settings.button_create_peppol_proxy_user()
-
-    def test_save_migration_key(self):
-        # migration key should be saved
-        settings = self.env['res.config.settings']\
-            .create({
-                **self._get_participant_vals(),
-                'account_peppol_migration_key': 'helloo',
-            })
-
-        with self._set_context({'migrate_to': True}):
-            settings.button_create_peppol_proxy_user()
-            self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_verified')
-            self.assertFalse(settings.account_peppol_migration_key)  # the key should be reset once we've used it
 
     def test_restore_simple(self):
         """Test basic recovery: create user, soft-delete it, then recover it"""
@@ -291,7 +272,7 @@ class TestPeppolParticipant(TransactionCase):
         self.assertFalse(edi_user_1.active)
 
     def test_restore_user_in_draft_state(self):
-        """Test recovery when IAP-side is in KYC state (should set to not_verified and not keep in `not_registered`)"""
+        """Test recovery when IAP-side is in KYC state (should set to `pending` and not keep in `not_registered`)"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         settings.button_create_peppol_proxy_user()
         edi_user = self.env.company.account_edi_proxy_client_ids
@@ -304,10 +285,10 @@ class TestPeppolParticipant(TransactionCase):
         with self._set_context({'peppol_state': 'draft'}):
             result = self.env['account_edi_proxy_client.user']._try_recover_peppol_proxy_users(edi_user.company_id)
 
-        # should recover user and set state to not_verified
+        # should recover user and set state to 'pending'
         self.assertEqual(result, edi_user)
         self.assertTrue(edi_user.active)
-        self.assertEqual(edi_user.company_id.account_peppol_proxy_state, 'not_verified')
+        self.assertEqual(edi_user.company_id.account_peppol_proxy_state, 'pending')
 
     def test_cron_recovery_multi_company(self):
         """Test cron recovery works correctly across multi companies"""
@@ -433,7 +414,7 @@ class TestPeppolParticipant(TransactionCase):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         settings.button_create_peppol_proxy_user()
         edi_user = self.env.company.account_edi_proxy_client_ids
-        edi_user.edi_mode = 'demo'
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_proxy_client.demo', 'demo')
 
         edi_user.active = False
         edi_user.company_id.account_peppol_proxy_state = 'not_registered'
@@ -513,25 +494,6 @@ class TestPeppolParticipant(TransactionCase):
             # company 2 should not recover due to error
             self.assertFalse(edi_user_2.active)
             self.assertEqual(company_2.account_peppol_proxy_state, 'not_registered')
-
-    def test_recovery_company_with_migration_key_skip(self):
-        """Test recovery skips companies with migration keys"""
-        settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
-        edi_user = self.env.company.account_edi_proxy_client_ids
-
-        # simulate soft-delete with migration key
-        edi_user.active = False
-        edi_user.company_id.write({
-            'account_peppol_proxy_state': 'not_registered',
-            'account_peppol_migration_key': 'test_migration_key'
-        })
-
-        result = self.env['account_edi_proxy_client.user']._try_recover_peppol_proxy_users(edi_user.company_id)
-
-        # Should not recover when migration key exists
-        self.assertIsNone(result)
-        self.assertFalse(edi_user.active)
 
     def test_recovery_company_inconsistent_state_skip(self):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
