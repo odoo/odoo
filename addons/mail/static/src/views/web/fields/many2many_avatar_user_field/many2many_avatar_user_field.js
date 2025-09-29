@@ -1,7 +1,6 @@
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import {
@@ -11,13 +10,8 @@ import {
     listMany2ManyTagsAvatarField,
     KanbanMany2ManyTagsAvatarField,
     kanbanMany2ManyTagsAvatarField,
-    KanbanMany2ManyTagsAvatarFieldTagsList,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
-
-export class Many2ManyAvatarUserTagsList extends TagsList {
-    static template = "mail.Many2ManyAvatarUserTagsList";
-}
 
 const WithUserChatter = (T) =>
     class UserChatterMixin extends T {
@@ -43,11 +37,10 @@ const WithUserChatter = (T) =>
         getTagProps(record) {
             return {
                 ...super.getTagProps(...arguments),
-                onImageClicked: (ev) => {
+                onAvatarClick: (target) => {
                     if (!this.displayAvatarCard(record)) {
                         return;
                     }
-                    const target = ev.currentTarget;
                     if (
                         !this.avatarCard.isOpen ||
                         (this.lastOpenedId && record.resId !== this.lastOpenedId)
@@ -64,7 +57,6 @@ export class Many2ManyTagsAvatarUserField extends WithUserChatter(Many2ManyTagsA
     static template = "mail.Many2ManyTagsAvatarUserField";
     static components = {
         ...Many2ManyTagsAvatarField.components,
-        TagsList: Many2ManyAvatarUserTagsList,
         Many2XAutocomplete: Many2XAvatarUserAutocomplete,
     };
 }
@@ -77,20 +69,22 @@ export const many2ManyTagsAvatarUserField = {
 
 registry.category("fields").add("many2many_avatar_user", many2ManyTagsAvatarUserField);
 
-export class KanbanMany2ManyAvatarUserTagsList extends KanbanMany2ManyTagsAvatarFieldTagsList {
-    static template = "mail.KanbanMany2ManyAvatarUserTagsList";
-}
-
 export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
     KanbanMany2ManyTagsAvatarField
 ) {
-    static template = "mail.KanbanMany2ManyTagsAvatarUserField";
     static components = {
         ...KanbanMany2ManyTagsAvatarField.components,
-        TagsList: KanbanMany2ManyAvatarUserTagsList,
     };
     get displayText() {
         return !this.props.readonly;
+    }
+
+    getTagProps(record) {
+        const p = super.getTagProps(record);
+        return {
+            ...p,
+            text: this.displayText ? p.text : "",
+        };
     }
 }
 export const kanbanMany2ManyTagsAvatarUserField = {
@@ -106,12 +100,19 @@ export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
     static template = "mail.ListMany2ManyTagsAvatarUserField";
     static components = {
         ...ListMany2ManyTagsAvatarField.components,
-        TagsList: Many2ManyAvatarUserTagsList,
         Many2XAutocomplete: Many2XAvatarUserAutocomplete,
     };
 
     get displayText() {
         return this.props.record.data[this.props.name].records.length === 1 || !this.props.readonly;
+    }
+
+    getTagProps(record) {
+        const p = super.getTagProps(record);
+        return {
+            ...p,
+            text: this.displayText ? p.text : "",
+        };
     }
 }
 

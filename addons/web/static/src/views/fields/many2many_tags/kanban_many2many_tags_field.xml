@@ -3,7 +3,9 @@
 
     <t t-name="web.KanbanMany2ManyTagsField">
         <div class="d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <Tag color="tag.props.color" text="tag.props.text"/>
+            </t>
         </div>
     </t>
 </templates>

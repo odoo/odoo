@@ -30,6 +30,10 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         }
     }
 
+    get visibleItemsLimit() {
+        return this.state.expanded ? Number.POSITIVE_INFINITY : 5;
+    }
+
     onExpanderClick() {
         this.state.expanded = !this.state.expanded;
     }

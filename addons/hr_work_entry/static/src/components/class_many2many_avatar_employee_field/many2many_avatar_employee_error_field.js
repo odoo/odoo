@@ -3,10 +3,13 @@ import {
     Many2ManyTagsAvatarEmployeeField,
     many2ManyTagsAvatarEmployeeField,
 } from "@hr/views/fields/many2many_avatar_employee_field/many2many_avatar_employee_field";
-import { Many2ManyAvatarUserTagsList } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { Component } from "@odoo/owl";
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 
-export class Many2ManyAvatarUserTagsListError extends Many2ManyAvatarUserTagsList {
-    static template = "hr_work_entry.Many2ManyAvatarUserTagsListError";
+class EmployeeErrorTag extends Component {
+    static template = "hr_work_entry.EmployeeErrorTag";
+    static components = { AvatarTag };
+    static props = ["imageUrl", "inError", "onAvatarClick", "onDelete", "text", "tooltip"];
 }
 
 export class Many2ManyTagsAvatarEmployeeErrorField extends Many2ManyTagsAvatarEmployeeField {
@@ -16,7 +19,7 @@ export class Many2ManyTagsAvatarEmployeeErrorField extends Many2ManyTagsAvatarEm
     };
     static components = {
         ...Many2ManyTagsAvatarEmployeeField.components,
-        TagsList: Many2ManyAvatarUserTagsListError,
+        Tag: EmployeeErrorTag,
     };
 
     /**

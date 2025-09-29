@@ -5,7 +5,6 @@ import {
     KanbanMany2ManyTagsAvatarUserField,
     ListMany2ManyTagsAvatarUserField,
     Many2ManyTagsAvatarUserField,
-    Many2ManyAvatarUserTagsList,
     kanbanMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
@@ -13,8 +12,8 @@ import {
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { Domain } from "@web/core/domain";
-import { KanbanMany2ManyTagsAvatarFieldTagsList } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
-
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { Component } from "@odoo/owl";
 
 export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
     /**
@@ -42,8 +41,18 @@ export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
     }
 }
 
-class Many2ManyAvatarResourceTagsList extends Many2ManyAvatarUserTagsList {
-    static template = "resource_mail.Many2ManyAvatarResourceTagsList";
+class ResourceTag extends Component {
+    static template = "resource_mail.ResourceTag";
+    static components = { AvatarTag };
+    static props = {
+        color: { type: Number, optional: true },
+        imageUrl: { type: String, optional: true },
+        onAvatarClick: { type: Function, optional: true },
+        onDelete: { type: Function, optional: true },
+        text: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        type: { type: String },
+    };
 }
 
 const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
@@ -57,7 +66,7 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
     static components = {
         ...super.components,
         Many2XAutocomplete: AvatarResourceMany2XAutocomplete,
-        TagsList: Many2ManyAvatarResourceTagsList,
+        Tag: ResourceTag,
     };
     static optionTemplate = "resource_mail.Many2ManyAvatarResourceField.option";
 
@@ -68,11 +77,11 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
     getTagProps(record) {
         return {
             ...super.getTagProps(...arguments),
-            icon: record.data.resource_type === "user" ? null : "fa-wrench",
-            colorIndex: record.data.color,
-            img: record.data.resource_type === "user"
+            color: record.data.color,
+            type: record.data.resource_type,
+            imageUrl: record.data.resource_type === "user"
                 ? `/web/image/${this.relation}/${record.resId}/avatar_128`
-                : null,
+                : undefined,
         };
     }
 };
@@ -113,15 +122,7 @@ export const listMany2ManyAvatarResourceField = {
 };
 registry.category("fields").add("list.many2many_avatar_resource", listMany2ManyAvatarResourceField);
 
-export class KanbanMany2ManyAvatarResourceTagsList extends Many2ManyAvatarResourceTagsList {
-    static props = KanbanMany2ManyTagsAvatarFieldTagsList.props;
-}
 export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(KanbanMany2ManyTagsAvatarUserField) {
-    static components = {
-        ...super.components,
-        TagsList: KanbanMany2ManyAvatarResourceTagsList,
-    };
-
     get tags() {
         return super.tags.reverse();
     }
