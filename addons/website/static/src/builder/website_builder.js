@@ -61,7 +61,7 @@ export class WebsiteBuilder extends Component {
 
     async discard() {
         await revertPreview(this.editor);
-        if (this.editor.shared.history.canUndo()) {
+        if (this.editor.shared.savePlugin.hasUnsaveData()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
                 body: _t(
@@ -82,7 +82,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return;
         }
-        if (this.editor.shared.history.canUndo()) {
+        if (this.editor.shared.savePlugin.hasUnsaveData()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
@@ -92,7 +92,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return true;
         }
-        if (this.editor.shared.history.canUndo()) {
+        if (this.editor.shared.savePlugin.hasUnsaveData()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {

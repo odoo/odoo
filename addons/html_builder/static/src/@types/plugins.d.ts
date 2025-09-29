@@ -15,7 +15,7 @@ declare module "plugins" {
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { has_unsaved_data_predicates, on_saved_handlers, on_will_save_handlers, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
@@ -112,6 +112,7 @@ declare module "plugins" {
         // Predicates
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
         should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
+        has_unsaved_data_predicates: has_unsaved_data_predicates
         is_draggable_predicates: is_draggable_predicates;
         is_element_in_invisible_panel_predicates: is_element_in_invisible_panel_predicates;
         is_node_empty_predicates: is_node_empty_predicates;
