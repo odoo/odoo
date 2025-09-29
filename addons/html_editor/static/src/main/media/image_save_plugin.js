@@ -189,6 +189,7 @@ export class ImageSavePlugin extends Plugin {
             el.style["background-image"] = combined;
         } else {
             el.setAttribute("src", newAttachmentSrc);
+            this.dispatchTo("on_image_saved", el);
         }
     }
 

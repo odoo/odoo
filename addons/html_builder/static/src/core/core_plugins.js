@@ -52,6 +52,11 @@ export const MAIN_PLUGINS = [
         mainEditorPluginsToRemove
     ),
     ColorUIPlugin,
+    BuilderOverlayPlugin,
+    OverlayButtonsPlugin,
+    DropZonePlugin,
+    DropZoneSelectorPlugin,
+    CustomizeTabPlugin,
 ];
 
 export const CORE_PLUGINS = [
@@ -60,8 +65,6 @@ export const CORE_PLUGINS = [
     BuilderActionsPlugin,
     BuilderComponentPlugin,
     OperationPlugin,
-    BuilderOverlayPlugin,
-    OverlayButtonsPlugin,
     MovePlugin,
     GridLayoutPlugin,
     DragAndDropPlugin,
@@ -69,17 +72,14 @@ export const CORE_PLUGINS = [
     ClonePlugin,
     SaveSnippetPlugin,
     AnchorPlugin,
-    DropZonePlugin,
     DisableSnippetsPlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
     SavePlugin,
     VisibilityPlugin,
-    DropZoneSelectorPlugin,
     CachedModelPlugin,
     CoreBuilderActionPlugin,
     CompositeActionPlugin,
-    CustomizeTabPlugin,
     FieldChangeReplicationPlugin,
     BuilderContentEditablePlugin,
     ImageFieldPlugin,

@@ -10,6 +10,7 @@ from __future__ import annotations
 import codecs
 import fnmatch
 import functools
+import html as html_stdlib
 import inspect
 import io
 import json
@@ -77,7 +78,14 @@ TRANSLATED_ATTRS = {
     'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label',
 }
 
-TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
+# These attributes must not be exported to .po(t) files and `t-attf-` attributes
+# should not be translated.
+NO_EXPORT_TRANSLATED_ATTRS = {'src'}
+
+TRANSLATED_ATTRS.update(
+    {f't-attf-{attr}' for attr in TRANSLATED_ATTRS},
+    NO_EXPORT_TRANSLATED_ATTRS,
+)
 
 # {column value of "ir_model_fields"."translate": orm field.translate}
 FIELD_TRANSLATE = {
@@ -1239,6 +1247,16 @@ class TranslationReader:
                     _logger.exception("Failed to extract terms from %s %s", xml_name, name)
                     continue
                 for term_en, term_langs in translation_dictionary.items():
+                    term_en_unescaped = html_stdlib.unescape(term_en)
+                    value_en_unescaped = html_stdlib.unescape(value_en)
+                    re_attr_no_export = r'(%s)=[\'"]' % '|'.join(NO_EXPORT_TRANSLATED_ATTRS) + re.escape(term_en_unescaped) + r'[\'"]'
+                    if re.search(re_attr_no_export, value_en_unescaped):
+                        # That's not perfect, we could check that the term
+                        # is ONLY in src attributes, but that's not perfect
+                        # either, because we could have this HTML:
+                        # <img src="X"/> <div style="background-image: url(X)"/>
+                        continue
+
                     term_lang = term_langs.get(self._lang)
                     self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 

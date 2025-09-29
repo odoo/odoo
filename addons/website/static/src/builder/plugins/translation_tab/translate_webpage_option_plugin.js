@@ -13,10 +13,10 @@ import { TranslateWebpageOption } from "./translate_webpage_option";
  */
 class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = ["customizeTranslationTab"];
+    static dependencies = ["translateWebpageOption"];
 
     async apply() {
-        const translationState = this.dependencies.customizeTranslationTab.getTranslationState();
+        const translationState = this.dependencies.translateWebpageOption.getTranslationState();
         try {
             translationState.isTranslating = true;
             const language = this.services.website.currentWebsite.metadata.langName;
@@ -230,8 +230,8 @@ class TranslateToAction extends BuilderAction {
  * Plugin that adds a "Translation" tab to the sidebar and provides AI-powered
  * options to translate the entire webpage.
  */
-export class CustomizeTranslationTabPlugin extends Plugin {
-    static id = "customizeTranslationTab";
+export class TranslateWebpageOptionPlugin extends Plugin {
+    static id = "translateWebpageOption";
     static shared = ["getTranslationState"];
 
     translationState = reactive({
@@ -242,47 +242,23 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         builder_actions: {
             TranslateToAction,
         },
-        translate_options: [
-            withSequence(
-                1,
-                this.getTranslationOptionBlock("translate-webpage", _t("Translation"), {
-                    OptionComponent: TranslateWebpageOption,
-                    props: {
-                        translationState: this.translationState,
-                    },
-                })
-            ),
+        builder_options: [
+            withSequence(1, {
+                OptionComponent: TranslateWebpageOption,
+                selector: "body",
+                name: "translateWebpageOption",
+                isTranslationOption: true,
+                title: _t("Translation"),
+                props: { translationState: this.translationState },
+            }),
         ],
     };
 
     getTranslationState() {
         return this.translationState;
     }
-
-    /**
-     * Prepares and returns a translation option block for the sidebar.
-     *
-     * @param {string} id - Unique identifier for the block
-     * @param {string} name - Display name for the block
-     * @param {Object} options - Configuration options for the block
-     */
-    getTranslationOptionBlock(id, name, options) {
-        const el = this.document.createElement("div");
-        el.dataset.name = name;
-        this.document.body.appendChild(el);
-
-        options.selector = "*";
-        return {
-            id: id,
-            snippetModel: {},
-            element: el,
-            options: [options],
-            isRemovable: false,
-            isClonable: false,
-            containerTopButtons: [],
-        };
-    }
 }
 
-registry.category("translation-plugins")
-    .add(CustomizeTranslationTabPlugin.id, CustomizeTranslationTabPlugin);
+registry
+    .category("translation-plugins")
+    .add(TranslateWebpageOptionPlugin.id, TranslateWebpageOptionPlugin);
