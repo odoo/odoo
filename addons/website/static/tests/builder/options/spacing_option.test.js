@@ -1,7 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { Deferred, edit, queryFirst } from "@odoo/hoot-dom";
+import { edit, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilderWithSnippet,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -25,12 +28,16 @@ test("Using the 'Spacing (Y, X)' option should display a grid preview", async ()
     await contains(":iframe .s_banner").click();
     await contains("[data-label='Spacing (Y, X)'] input").click();
     await edit(20);
-    const def = new Deferred();
     expect(":iframe .o_we_grid_preview").toHaveCount(1);
-    queryFirst(":iframe .o_we_grid_preview").addEventListener("animationend", () => {
-        def.resolve();
+
+    const cell = queryOne(":iframe .o_we_grid_preview .o_we_cell");
+    expect(cell).toHaveStyle({
+        "animation-name": "gridPreview",
     });
-    await def;
+    // 'animationend' event is manually dispatched to speed up the test since the
+    // actual animation takes 2 seconds.
+    await manuallyDispatchProgrammaticEvent(cell, "animationend");
+
     expect(":iframe .o_we_grid_preview").toHaveCount(0);
 });
 
