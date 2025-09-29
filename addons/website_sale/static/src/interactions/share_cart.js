@@ -52,4 +52,27 @@ export class ShareCart extends Interaction {
 
 }
 
+export class ShareCartProductList extends Interaction {
+    static selector = "[name=\"shared_product\"]";
+    dynamicContent = {
+        "button.js_add_shared_products": { "t-on-click": this.addSharedProduct }
+    };
+
+    /**
+     * @param {Event} ev
+     */
+    addSharedProduct(ev) {
+        const dataset = ev.currentTarget.dataset;
+        this.services["cart"].add({
+            productTemplateId: parseInt(dataset.productTemplateId),
+            productId: parseInt(dataset.productId),
+            isCombo: dataset.productType === "combo"
+        }, {
+            isBuyNow: true,
+            showQuantity: Boolean(dataset.showQuantity)
+        });
+    }
+}
+
+registry.category("public.interactions").add("website_sale.share_cart_product", ShareCartProductList);
 registry.category("public.interactions").add("website_sale.share_cart", ShareCart);
