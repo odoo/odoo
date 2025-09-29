@@ -2,10 +2,11 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Domain
-from odoo.tests import Form, users, new_test_user, HttpCase, tagged
+from odoo.tests import Form, users, new_test_user, HttpCase, tagged, TransactionCase
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
@@ -633,6 +634,85 @@ class TestHrEmployeeLinks(HttpCase):
                 "check_public_employee_link_redirect",
                 login=user_amy.login,
             )
+
+
+@tagged('-at_install', 'post_install')
+class TestVersionCron(TransactionCase):
+    """Test the behavior of CRONs affecting hr.version"""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Will be used for default employee version address (contains phone)
+        cls.env.user.company_id = cls.env['res.company'].create(
+            {'name': 'Pokémon Center', 'phone': '+32404040404'}
+        )
+
+        # Employee has a default version that will be overridden
+        with freeze_time("2020-10-07"):
+            cls.employee = cls.env['hr.employee'].create(
+                {
+                    'name': 'Charizard',
+                    'work_phone': '+32404040404',
+                    "distance_home_work": 32,
+                    "distance_home_work_unit": 'miles',
+                }
+            )
+
+    def test_version_cron_update_no_fields(self):
+        """
+        Employees should not see their fields be updated if the CRON does not
+        change their version.
+        """
+        with freeze_time('2023-10-06'):
+            self.employee.create_version(
+                {'date_version': '2023-10-07', "distance_home_work": 40}
+            )
+
+        # Saving current employee data to compare later on
+        employee_values = {}
+        employee_fields = self.env['hr.employee']._fields.keys()
+        for field in employee_fields:
+            employee_values[field] = self.employee[field]
+
+        # Should not change to new version
+        with freeze_time('2023-10-06'):
+            self.env['hr.employee']._cron_update_current_version_id()
+
+        for field in employee_fields:
+            self.assertEqual(
+                employee_values[field],
+                self.employee[field],
+                f"""No field should change if _cron_update_current_version_id() does not change the version.
+    However, the field {field} changed""",
+            )
+
+    def test_version_cron_update_fields(self):
+        """
+        Employees should see some of their field be changed if the CRON changes
+        their version.
+        """
+        with freeze_time('2023-10-06'):
+            self.employee.create_version(
+                {'date_version': '2023-10-07', "distance_home_work": 40}
+            )
+        current_home_distance = self.employee.distance_home_work
+        current_version = self.employee.current_version_id
+        # Should change to new version
+        with freeze_time('2023-10-07'):
+            self.env['hr.employee']._cron_update_current_version_id()
+
+        self.assertNotEqual(
+            current_version,
+            self.employee.current_version_id,
+            "current_version_id should have changed after calling _cron_update_current_version_id()",
+        )
+        self.assertNotEqual(
+            current_home_distance,
+            self.employee.distance_home_work,
+            "distance_home_work should have changed after calling _cron_update_current_version_id()",
+        )
 
 
 @tagged('-at_install', 'post_install')
