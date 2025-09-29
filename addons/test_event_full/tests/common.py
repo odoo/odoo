@@ -312,7 +312,7 @@ class TestEventMailCommon(EventCase, SMSCase, MailCase, CronMixinCase):
         # deactivate other schedulers to avoid messing with crons
         cls.env['event.mail'].search([]).unlink()
         # consider asynchronous sending as default sending
-        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+        cls.env["ir.config_parameter"].set_bool("event.event_mail_async", False)
 
         cls.env.company.write({
             'email': 'info@yourcompany.example.com',

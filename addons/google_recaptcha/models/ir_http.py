@@ -6,7 +6,6 @@ import requests
 from odoo import api, models, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import str2bool
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class IrHttp(models.AbstractModel):
     def _add_public_key_to_session_info(self, session_info):
         """Add the ReCaptcha public key to the given session_info object"""
         config_params = self.env['ir.config_parameter'].sudo()
-        recaptcha_enabled = str2bool(config_params.get_param('enable_recaptcha', default=True))
+        recaptcha_enabled = config_params.get_bool('enable_recaptcha', True)
         public_key = config_params.get_param('recaptcha_public_key')
         if public_key and recaptcha_enabled:
             session_info['recaptcha_public_key'] = public_key
@@ -41,7 +40,7 @@ class IrHttp(models.AbstractModel):
         """
         super()._verify_request_recaptcha_token(action)
         config_params = request.env['ir.config_parameter'].sudo()
-        recaptcha_enabled = str2bool(config_params.get_param('enable_recaptcha', default=True))
+        recaptcha_enabled = config_params.get_bool('enable_recaptcha', True)
         if not recaptcha_enabled:
             return
         ip_addr = request.httprequest.remote_addr

@@ -16,7 +16,7 @@ class IapEnrichApi(models.AbstractModel):
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         params['account_token'] = account.sudo().account_token
         params['dbuuid'] = dbuuid
-        base_url = self.env['ir.config_parameter'].sudo().get_param('enrich.endpoint', self._DEFAULT_ENDPOINT)
+        base_url = self.env['ir.config_parameter'].sudo().get_str('enrich.endpoint') or self._DEFAULT_ENDPOINT
         return iap_tools.iap_jsonrpc(base_url + local_endpoint, params=params, timeout=300)
 
     @api.model

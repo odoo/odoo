@@ -37,7 +37,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         # deactivate other schedulers to avoid messing with crons
         cls.env['event.mail'].search([]).unlink()
         # consider asynchronous sending as default sending
-        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+        cls.env["ir.config_parameter"].set_bool("event.event_mail_async", False)
 
         # freeze some datetimes, and ensure more than 1D+1H before event starts
         # to ease time-based scheduler check
@@ -790,7 +790,7 @@ class TestMailSchedule(EventMailCommon):
         cron_mail = self.env.ref('mail.ir_cron_mail_scheduler_action')
         reference_now = self.reference_now
 
-        self.env['ir.config_parameter'].sudo().set_param('event.event_mail_async', True)
+        self.env['ir.config_parameter'].sudo().set_bool('event.event_mail_async', True)
         with self.capture_triggers(cron_event.id) as capt_event, \
              self.capture_triggers(cron_mail.id) as capt_mail, \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
