@@ -512,11 +512,11 @@
         }
 
         // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
-        .o_data_row > .o_data_cell {
+        .o_data_row > td {
             border-bottom-width: 0;
         }
         // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
-        .o_data_row.o_data_row_selected > .o_data_cell {
+        .o_data_row.o_data_row_selected > td {
             border-bottom-width: 1px;
         }
     }
