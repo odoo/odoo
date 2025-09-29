@@ -4,6 +4,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame, tick } from "@odoo/hoot-mock";
+import { defineStyle } from "@web/../tests/web_test_helpers";
 
 function setTag(tagName) {
     return (editor) => editor.shared.dom.setTag({ tagName });
@@ -50,6 +51,32 @@ describe("to paragraph", () => {
             contentBefore: `<div>[ab]</div>`,
             stepFunction: setTag("p"),
             contentAfter: "<p>[ab]</p>",
+        });
+    });
+
+    test("should turn a block <small> element into a paragraph", async () => {
+        defineStyle("small { display: block; }");
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("p"),
+            contentAfter: "<p>[abc]</p>",
+        });
+    });
+
+    test("shouldn't turn a normal <small> element into a paragraph", async () => {
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("p"),
+            contentAfter: "<p><small>[]abc</small></p>",
+        });
+    });
+
+    test("shouldn't turn a div into a paragraph (if div isn't eligible for a baseContainer)", async () => {
+        await testEditor({
+            contentBefore: "<div><small>[abc]</small></div>",
+            stepFunction: setTag("p"),
+            contentAfter: "<div><p><small>[abc]</small></p></div>",
+            config: { baseContainer: "P" },
         });
     });
 
@@ -165,6 +192,32 @@ describe("to heading 1", () => {
             contentBefore: "<p>a[b</p><h1>cd</h1><h2>e]f</h2>",
             stepFunction: setTag("h1"),
             contentAfter: "<h1>a[b</h1><h1>cd</h1><h1>e]f</h1>",
+        });
+    });
+
+    test("should turn a block <small> element into a heading", async () => {
+        defineStyle("small { display: block; }");
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1>[abc]</h1>",
+        });
+    });
+
+    test("shouldn't turn a normal <small> element into a heading", async () => {
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1><small>[]abc</small></h1>",
+        });
+    });
+
+    test("shouldn't turn a div into a heading (if div isn't eligible for a baseContainer)", async () => {
+        await testEditor({
+            contentBefore: "<div><small>[abc]</small></div>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<div><h1><small>[abc]</small></h1></div>",
+            config: { baseContainer: "P" },
         });
     });
 
