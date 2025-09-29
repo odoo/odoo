@@ -175,6 +175,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/lib/luxon/luxon.js',
+            'web/static/src/libs/luxon.js',
 
             ('include', 'web._assets_bootstrap_frontend'),
 
@@ -363,6 +364,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/module_loader.js',
             # libs
             'web/static/lib/luxon/luxon.js',
+            'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
             # core

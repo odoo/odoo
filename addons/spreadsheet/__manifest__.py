@@ -56,6 +56,7 @@
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/owl/owl.js',
             'web/static/lib/luxon/luxon.js',
+            'web/static/src/libs/luxon.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/core/utils/**/*.js',
             'web/static/src/core/browser/browser.js',
