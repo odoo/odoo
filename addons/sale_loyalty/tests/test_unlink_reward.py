@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo.fields import Command, Date
 from odoo.tests.common import tagged
@@ -66,6 +67,7 @@ class TestUnlinkReward(TestSaleCouponCommon):
         coupon = coupon_program.coupon_ids
         self._apply_promo_code(order, coupon.code)
         self.assertTrue(order.order_line.coupon_id)
-        coupon.expiration_date = Date.today() - timedelta(days=1)
+        with freeze_time(Date.today() - timedelta(days=1)):
+            coupon.expiration_date = Date.today()
         order._update_programs_and_rewards()
         self.assertFalse(order.order_line.coupon_id)

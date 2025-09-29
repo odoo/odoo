@@ -342,7 +342,7 @@ class TestLoyalty(TransactionCase):
 
     def test_card_write_with_past_expiration_date(self):
         """A loyalty card should not allow an expiry date in the past"""
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': "Test Partner"})
         card = self.env['loyalty.card'].create({
             'program_id': self.program.id,
             'partner_id': partner.id,
