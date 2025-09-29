@@ -994,6 +994,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
         const ignoreConnection = {};
+        const modelToSetup = [];
 
         for (const model in rawData) {
             ignoreConnection[model] = [];
@@ -1065,7 +1066,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
 
                     oldRecord.update(record, { silent: true });
-                    oldRecord.setup(record);
+                    modelToSetup.push({ raw: record, record: oldRecord });
                     ignoreConnection[model].push(record.id);
                     results[model].push(oldRecord);
                     Object.assign(baseData[model][record.id], raw);
@@ -1078,7 +1079,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         const alreadyLinkedSet = new Set();
-        const modelToSetup = [];
 
         // link the related records
         for (const model in rawData) {
