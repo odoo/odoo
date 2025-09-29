@@ -8,6 +8,7 @@ import {
     status,
     useComponent,
     useEffect,
+    effect,
     useRef,
     useState,
     useSubEnv,
@@ -22,7 +23,6 @@ import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -87,13 +87,12 @@ export class WebsiteBuilderClientAction extends Component {
             // You can't wait for rendering because the Builder depends on the
             // page style synchronously.
             effect(
-                (websiteContext) => {
+                () => {
                     if (status(this.component) === "destroyed") {
                         return;
                     }
-                    this.toggleIsMobile(websiteContext.isMobile);
-                },
-                [this.websiteContext]
+                    this.toggleIsMobile(this.websiteContext.isMobile);
+                }
             );
         });
 
@@ -159,15 +158,12 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         });
 
-        effect(
-            (state) => {
-                this.websiteContext.edition = state.isEditing;
-                if (!state.isEditing) {
-                    this.addSystrayItems();
-                }
-            },
-            [this.state]
-        );
+        effect(() => {
+            this.websiteContext.edition = this.state.isEditing;
+            if (!this.state.isEditing) {
+                this.addSystrayItems();
+            }
+        });
         useEffect(
             (isEditing) => {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);
