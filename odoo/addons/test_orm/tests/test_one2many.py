@@ -94,9 +94,6 @@ class One2manyCase(TransactionExpressionCase):
         self.operations()
 
     def test_rpcstyle_one_by_one_on_new(self):
-        self.multi = self.env["test_orm.multi"].new({
-            "name": "What is up?",
-        })
         for name in range(10):
             self.multi.lines = [Command.create({"name": str(name)})]
         self.operations()
@@ -107,9 +104,6 @@ class One2manyCase(TransactionExpressionCase):
         self.operations()
 
     def test_rpcstyle_single_on_new(self):
-        self.multi = self.env["test_orm.multi"].new({
-            "name": "What is up?",
-        })
         self.multi.lines = [Command.create({'name': str(name)}) for name in range(10)]
         self.operations()
 
