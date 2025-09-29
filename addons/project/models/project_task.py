@@ -1184,13 +1184,15 @@ class ProjectTask(models.Model):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
         self_ctx = self_with_restrict_context = self.with_context(new_context)
-        is_portal_user = self.env.user._is_portal()
+        is_portal_user = self.env.user._is_portal() and not self.env.su
         if default_project_id:
             # when subtask is created in form view of task in project sharing
             self_ctx = self_ctx.with_context(default_project_id=default_project_id, project_sharing_create=is_portal_user)
 
         self_ctx.browse().check_access('create')
         default_stage = dict()
+        if is_portal_user:
+            child_ids_list = []
         for vals, additional_vals in zip(vals_list, additional_vals_list):
             project_id = vals.get('project_id') or default_project_id
 
@@ -1205,7 +1207,8 @@ class ProjectTask(models.Model):
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
 
-            if is_portal_user and not self.env.su:
+            if is_portal_user:
+                child_ids_list.append(vals.pop('child_ids', None))
                 self_with_restrict_context._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
@@ -1261,6 +1264,10 @@ class ProjectTask(models.Model):
                 task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
+        if is_portal_user and child_ids_list:
+            for task, child_ids in zip(tasks, child_ids_list):
+                if child_ids:
+                    task.write({'child_ids': child_ids})
         return tasks
 
     def write(self, vals):
