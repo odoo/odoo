@@ -9,13 +9,14 @@
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2025-09-16 04:44+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-09-29 02:31+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/base/"
 "vi/>\n"
 "Language: vi\n"
@@ -169,8 +170,8 @@ msgstr ""
 "ứng viên, trực tiếp đăng cập nhật để gửi email cho ứng viên,\n"
 "lên lịch cuộc gọi phỏng vấn tiếp theo, đính kèm hợp đồng, thêm nhân viên "
 "nhân sự \n"
-"vào danh sách người theo dõi để thông báo cho họ về các sự kiện quan trọng "
-"(với hỗ trợ từ\n"
+"vào danh sách người theo dõi để thông báo cho họ về các sự kiện quan trọng ("
+"với hỗ trợ từ\n"
 "các loại phụ),...\n"
 "\n"
 "Truy xuất email đến trên máy chủ POP/IMAP.\n"
@@ -182,7 +183,8 @@ msgstr ""
 "kết nối SSL/TLS được mã hóa.\n"
 "Điều này có thể được sử dụng để dễ dàng thiết lập quy trình làm việc trên "
 "email cho nhiều tài liệu Odoo hỗ trợ email, chẳng hạn như:\n"
-"----------------------------------------------------------------------------------------------------------\n"
+"----------------------------------------------------------------------------------------------------------"
+"\n"
 "    * Lead/Cơ hội kinh doanh CRM\n"
 "    * Nhận CRM\n"
 "    * Vấn đề Dự án\n"
@@ -202,7 +204,7 @@ msgstr ""
 "cùng một tài liệu *cuộc trò chuyện*.\n"
 "Đối với các nhu cầu cụ thể hơn, bạn cũng có thể chỉ định các tác vụ tùy "
 "chỉnh\n"
-"(về mặt kỹ thuật: Tác vụ máy chủ) được kích hoạt cho mỗi thư đến.\n"
+"(về mặt kỹ thuật: Tác vụ phía máy chủ) được kích hoạt cho mỗi thư đến.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -28253,7 +28255,7 @@ msgid ""
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
 "Với các biểu thức Python, trường này có thể chứa một biểu thức Python có thể "
-"sử dụng các giá trị giống như trường mã trên tác vụ máy chủ. VD: "
+"sử dụng các giá trị giống như trường mã trên tác vụ phía máy chủ. VD: "
 "`env.user.name` để đặt tên người dùng hiện tại làm giá trị hoặc `record.id` "
 "để đặt ID của bản ghi mà tác vụ được chạy trên đó.\n"
 "\n"
@@ -30329,7 +30331,7 @@ msgstr "Triển khai các trường tính toán AI"
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_server_actions
 msgid "Implementation of AI server actions"
-msgstr "Triển khai các tác vụ máy chủ AI"
+msgstr "Triển khai các tác vụ phía máy chủ AI"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_sparse_field
@@ -43410,7 +43412,7 @@ msgstr "Tác vụ Phía máy chủ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
 msgid "Server action"
-msgstr "Tác vụ máy chủ"
+msgstr "Tác vụ phía máy chủ"
 
 #. module: base
 #. odoo-python
@@ -43418,8 +43420,8 @@ msgstr "Tác vụ máy chủ"
 msgid ""
 "Server action %(action_name)s has one or more warnings, address them first."
 msgstr ""
-"Tác vụ máy chủ %(action_name)s có một hoặc nhiều cảnh báo, hãy giải quyết "
-"chúng trước."
+"Tác vụ phía máy chủ %(action_name)s có một hoặc nhiều cảnh báo, hãy giải "
+"quyết chúng trước."
 
 #. module: base
 #. odoo-python
@@ -44141,7 +44143,7 @@ msgid ""
 "the server action."
 msgstr ""
 "Xác định trường được sử dụng để liên kết bản ghi mới được tạo trên bản ghi "
-"được sử dụng bởi tác vụ máy chủ."
+"được sử dụng bởi tác vụ phía máy chủ."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__new_password
@@ -46737,7 +46739,7 @@ msgid ""
 "This module allows you to update record fields with AI, in server actions."
 msgstr ""
 "Phân hệ này cho phép bạn cập nhật các trường của bản ghi bằng AI, thông qua "
-"các tác vụ máy chủ."
+"các tác vụ phía máy chủ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_test_website_sale
@@ -47697,7 +47699,7 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
-"Loại tác vụ máy chủ. Các giá trị sau đây khả dụng:\n"
+"Loại tác vụ phía máy chủ. Các giá trị sau đây khả dụng:\n"
 "- 'Cập nhật bản ghi': cập nhật giá trị của bản ghi\n"
 "- 'Tạo hoạt động': tạo một hoạt động (Thảo luận)\n"
 "- 'Gửi email': gửi tin nhắn, ghi chú hoặc email (Thảo luận)\n"
@@ -47707,7 +47709,8 @@ msgstr ""
 "- 'Thực thi mã': một khối mã Python sẽ được thực thi\n"
 "- 'Gửi thông báo Webhook': gửi yêu cầu POST tới hệ thống bên ngoài, hay còn "
 "gọi là Webhook\n"
-"- 'Nhiều tác vụ': xác định một tác vụ kích hoạt một số tác vụ máy chủ khác\n"
+"- 'Nhiều tác vụ': xác định một tác vụ kích hoạt một số tác vụ phía máy chủ "
+"khác\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
