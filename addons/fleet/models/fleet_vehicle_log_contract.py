@@ -137,7 +137,7 @@ class FleetVehicleLogContract(models.Model):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
         params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        delay_alert_contract = params.get_int('hr_fleet.delay_alert_contract', 30)
         date_today = fields.Date.from_string(fields.Date.today())
         outdated_days = fields.Date.to_string(date_today + relativedelta(days=+delay_alert_contract))
         reminder_activity_type = self.env.ref('fleet.mail_act_fleet_contract_to_renew')

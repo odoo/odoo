@@ -958,7 +958,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_empty_list_mail_alias(self):
-        use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
+        use_mailgateway = self.env['ir.config_parameter'].sudo().get_bool('hr_expense.use_mailgateway')
         expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
