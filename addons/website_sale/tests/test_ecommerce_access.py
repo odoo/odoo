@@ -76,7 +76,7 @@ class TestEcommerceAccess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         self.assertEqual(response.status_code, 200)  # Check that customers can access
 
     def test_ecommerce_menu_visibility_public_user(self):
-        self.menu = self.env['website.menu'].create({
+        menu = self.env['website.menu'].create({
             'name': 'Shop',
             'url': '/shop',
             'parent_id': self.website.menu_id.id,
@@ -85,11 +85,11 @@ class TestEcommerceAccess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         })
 
         # Check if by default public user can see shop menu
-        self.menu.with_user(self.public_user).sudo()._compute_visible()  # Needs to be sudoed as
+        menu.with_user(self.public_user).sudo()._compute_visible()  # Needs to be sudoed as
         # public user can't access _compute_visible
-        self.assertTrue(self.menu.is_visible)
+        self.assertTrue(menu.is_visible)
 
         self.website.ecommerce_access = 'logged_in'
-        self.menu.with_user(self.public_user).sudo()._compute_visible()
+        menu.with_user(self.public_user).sudo()._compute_visible()
         # Check if menu is hidden for public user when ecommerce is restricted
-        self.assertFalse(self.menu.is_visible)
+        self.assertFalse(menu.is_visible)

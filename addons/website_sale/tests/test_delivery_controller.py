@@ -32,7 +32,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
     def test_available_methods(self):
         self.env['delivery.carrier'].search([]).action_archive()
-        self.product_delivery_poste = self.env['product.product'].create({
+        product_delivery_poste = self.env['product.product'].create({
             'name': 'The Poste',
             'type': 'service',
             'categ_id': self.env.ref('delivery.product_category_deliveries').id,
@@ -44,7 +44,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             {
                 'name': 'Over 300',
                 'delivery_type': 'base_on_rule',
-                'product_id': self.product_delivery_poste.id,
+                'product_id': product_delivery_poste.id,
                 'website_published': True,
                 'price_rule_ids': [
                     Command.create({
@@ -56,7 +56,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             }, {
                 'name': 'Under 300',
                 'delivery_type': 'base_on_rule',
-                'product_id': self.product_delivery_poste.id,
+                'product_id': product_delivery_poste.id,
                 'website_published': True,
                 'price_rule_ids': [
                     Command.create({
@@ -68,11 +68,11 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             }, {
                 'name': 'No rules',
                 'delivery_type': 'base_on_rule',
-                'product_id': self.product_delivery_poste.id,
+                'product_id': product_delivery_poste.id,
                 'website_published': True,
             }, {
                 'name': 'Fixed',
-                'product_id': self.product_delivery_poste.id,
+                'product_id': product_delivery_poste.id,
                 'website_published': True,
             },
         ])

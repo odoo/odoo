@@ -232,16 +232,16 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             {'name': 'Indoor Furnitures', 'parent_id': furnitures_categ.id},
             {'name': 'Indoor Sofas', 'sequence': 2},
         ])
-        self.public_categories = sofas_categ + indoor_sofas_categ
-        self.product_template_sofa.public_categ_ids = self.public_categories
+        public_categories = sofas_categ + indoor_sofas_categ
+        self.product_template_sofa.public_categ_ids = public_categories
 
         self.update_items()
 
         self.assertListEqual(
-            list(
-                name.replace('/', '>')
-                for name in self.public_categories.sorted('sequence').mapped('display_name')
-            ),
+            [
+                c.display_name.replace('/', '>')
+                for c in public_categories.sorted('sequence')
+            ],
             self.red_sofa_item['product_type']
         )
 

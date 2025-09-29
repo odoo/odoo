@@ -384,13 +384,13 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         })
 
     def test_website_sale_add_and_remove_main_product_image_no_variant(self):
-        self.product = self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'product_tmpl_id': self.template.id,
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/'), 'add_and_remove_main_product_image_no_variant', login='admin')
         self.assertFalse(self.template.image_1920)
-        self.assertFalse(self.product.image_1920)
+        self.assertFalse(product.image_1920)
 
     def test_website_sale_remove_main_product_image_with_variant(self):
         # Set the color attribute and values on the template.
@@ -399,9 +399,9 @@ class TestWebsiteSaleRemoveImage(HttpCase):
             'product_tmpl_id': self.template.id,
             'value_ids': [(6, 0, self.attr_values.ids)]
         }])
-        self.product = self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'product_tmpl_id': self.template.id,
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'remove_main_product_image_with_variant', login='admin')
         self.assertFalse(self.template.image_1920)
-        self.assertFalse(self.product.image_1920)
+        self.assertFalse(product.image_1920)

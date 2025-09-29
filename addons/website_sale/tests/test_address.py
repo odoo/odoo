@@ -599,17 +599,17 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_11_payment_term_when_address_change(self):
         """Make sure the expected payment terms are set on ecommerce orders"""
-        self.portal_user = self.user_portal
-        self.portal_partner = self.portal_user.partner_id
+        portal_user = self.user_portal
+        portal_partner = portal_user.partner_id
         self.assertFalse(self.portal_partner.property_payment_term_id)
-        so = self._create_so(partner_id=self.portal_partner.id)
+        so = self._create_so(partner_id=portal_partner.id)
         self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
 
-        website = self.website.with_user(self.portal_user).with_context({})
+        website = self.website.with_user(portal_user).with_context({})
         with MockRequest(website.env, website=website) as req:
             req.httprequest.method = "POST"
 
-            self.default_address_values['partner_id'] = self.portal_partner.id
+            self.default_address_values['partner_id'] = portal_partner.id
             self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
 

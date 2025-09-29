@@ -26,8 +26,7 @@ class TestWebsiteSaleInvoice(AccountPaymentCommon, SaleCommon):
         self.sale_order.website_id = self.website.id
 
         # Create the payment
-        self.amount = self.sale_order.amount_total
-        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done', amount=self.sale_order.amount_total)
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._post_process()
 

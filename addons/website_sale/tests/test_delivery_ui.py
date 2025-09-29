@@ -38,7 +38,7 @@ class TestUi(odoo.tests.HttpCase):
             'free_over': True,
             'amount': 10,
         })
-        self.product_delivery_poste = self.env['product.product'].create({
+        product_delivery_poste = self.env['product.product'].create({
             'name': 'The Poste',
             'type': 'service',
             'categ_id': self.env.ref('delivery.product_category_deliveries').id,
@@ -46,12 +46,12 @@ class TestUi(odoo.tests.HttpCase):
             'purchase_ok': False,
             'list_price': 20.0,
         })
-        self.carrier = self.env['delivery.carrier'].create({
+        self.env['delivery.carrier'].create({
             'name': 'The Poste',
             'sequence': 9999, # ensure last to load price async
             'fixed_price': 20.0,
             'delivery_type': 'base_on_rule',
-            'product_id': self.product_delivery_poste.id,
+            'product_id': product_delivery_poste.id,
             'website_published': True,
             'price_rule_ids': [
                 Command.create({

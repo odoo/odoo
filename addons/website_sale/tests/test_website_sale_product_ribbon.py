@@ -84,8 +84,8 @@ class TestProductRibbon(WebsiteSaleCommon):
 
         self.new_ribbon.sequence = 1
         self.sale_ribbon.sequence = 2
-        self.auto_assign_ribbon = self.env['product.ribbon'].search([('assign', '!=', 'manual')])
-        ribbon = self.product.product_tmpl_id._get_ribbon(products_prices, self.auto_assign_ribbon)
+        auto_assign_ribbon = self.env['product.ribbon'].search([('assign', '!=', 'manual')])
+        ribbon = self.product.product_tmpl_id._get_ribbon(products_prices, auto_assign_ribbon)
         self.assertEqual(
             ribbon,
             self.new_ribbon,

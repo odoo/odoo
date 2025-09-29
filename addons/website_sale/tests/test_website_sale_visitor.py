@@ -91,7 +91,8 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
             'sale_ok': True,
         })
 
-        self.website = self.website.with_user(public_user).with_context(website_id=self.website.id)
+
+        website = self.website.with_user(public_user).with_context(website_id=self.website.id)
 
         snippet_filter = self.env.ref('website_sale.dynamic_filter_latest_viewed_products')
 
@@ -100,9 +101,9 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         self.assertFalse(res)
 
         # AFTER VISITING THE PRODUCT
-        with MockRequest(self.website.env, website=self.website):
+        with MockRequest(website.env, website=website):
             cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
-        with MockRequest(self.website.env, website=self.website, cookies=cookies):
+        with MockRequest(website.env, website=website, cookies=cookies):
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
         res_products = [res_product['_record'] for res_product in res]
         self.assertIn(product, res_products)
@@ -110,6 +111,6 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         # AFTER CHANGING PRODUCT COMPANY
         product.product_tmpl_id.company_id = new_company
         product.product_tmpl_id.flush_recordset(['company_id'])
-        with MockRequest(self.website.env, website=self.website, cookies=cookies):
+        with MockRequest(website.env, website=website, cookies=cookies):
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
         self.assertFalse(res)

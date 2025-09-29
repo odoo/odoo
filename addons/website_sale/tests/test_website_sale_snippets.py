@@ -48,7 +48,7 @@ class TestSnippets(HttpCase):
             with MockRequest(user.with_user(user).env, website=self.env['website'].get_current_website()):
                 website_visitor = Visitor.create({'partner_id': user.partner_id.id})
         self.assertEqual(website_visitor.name, user.name, "The visitor should be linked to the admin user, not OdooBot or anything.")
-        self.product = self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'name': 'Storage Box',
             'website_published': True,
             'image_512': b'/product/static/img/product_product_9-image.jpg',
@@ -56,7 +56,7 @@ class TestSnippets(HttpCase):
             'description_sale': 'Pedal-based opening system',
         })
         before_tour_product_ids = website_visitor.product_ids.ids
-        website_visitor._add_viewed_product(self.product.id)
+        website_visitor._add_viewed_product(product.id)
 
         self.start_tour('/', 'website_sale.products_snippet_recently_viewed', login='admin')
         self.assertEqual(before_tour_product_ids, website_visitor.product_ids.ids, "There shouldn't be any new product in recently viewed after this tour")

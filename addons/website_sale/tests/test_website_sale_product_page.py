@@ -40,14 +40,14 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             ("key", "=", "website_sale.product_comment")
         ]).write({"active": True})
 
-        self.product_product_7 = self.env["product.product"].create({
+        product_product_7 = self.env["product.product"].create({
             "name": "Storage Box Test",
             "standard_price": 70.0,
             "list_price": 79.0,
             "website_published": True,
             "invoice_policy": "delivery",
         })
-        message = self.product_product_7.product_tmpl_id.message_post(
+        message = product_product_7.product_tmpl_id.message_post(
             body="Bad box!",
             message_type="comment",
             rating_value="1",
