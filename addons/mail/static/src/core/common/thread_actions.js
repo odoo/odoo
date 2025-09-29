@@ -50,7 +50,7 @@ registerThreadAction("rename-thread", {
     condition: ({ owner, thread }) =>
         thread &&
         owner.props.chatWindow?.isOpen &&
-        (thread.is_editable || thread.channel_type === "chat") &&
+        (thread.is_editable || thread.channel?.channel_type === "chat") &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-pencil",
     name: _t("Rename Thread"),

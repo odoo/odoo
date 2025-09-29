@@ -264,7 +264,7 @@ export class SuggestionService {
             ...this.store.specialMentions.filter(
                 (special) =>
                     thread &&
-                    special.channel_types.includes(thread.channel_type) &&
+                    special.channel_types.includes(thread.channel?.channel_type) &&
                     cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedSearchTerm) ||
                         cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
@@ -313,23 +313,23 @@ export class SuggestionService {
     searchChannelSuggestions(cleanedSearchTerm) {
         const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
-                thread.channel_type === "channel" &&
+                thread.channel?.channel_type === "channel" &&
                 thread.displayName &&
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
-            const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;
+            const isPublicChannel1 = c1.channel.channel_type === "channel" && !c2.group_public_id;
+            const isPublicChannel2 = c2.channel.channel_type === "channel" && !c2.group_public_id;
             if (isPublicChannel1 && !isPublicChannel2) {
                 return -1;
             }
             if (!isPublicChannel1 && isPublicChannel2) {
                 return 1;
             }
-            if (c1.hasSelfAsMember && !c2.hasSelfAsMember) {
+            if (c1.channel?.hasSelfAsMember && !c2.channel?.hasSelfAsMember) {
                 return -1;
             }
-            if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
+            if (!c1.channel?.hasSelfAsMember && c2.channel?.hasSelfAsMember) {
                 return 1;
             }
             const cleanedDisplayName1 = cleanTerm(c1.displayName);

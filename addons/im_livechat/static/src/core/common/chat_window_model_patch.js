@@ -41,7 +41,7 @@ const chatWindowPatch = {
                 }
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
-                if (!isSelfVisitor && this.thread.channel_member_ids.length > 2) {
+                if (!isSelfVisitor && this.thread.channel?.channel_member_ids.length > 2) {
                     super.close(...arguments);
                     break;
                 }

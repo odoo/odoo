@@ -116,7 +116,8 @@ export class CallInvitation extends Component {
     }
 
     get inviter() {
-        return this.props.thread.self_member_id?.rtc_inviting_session_id?.channel_member_id;
+        return this.props.thread.channel?.self_member_id?.rtc_inviting_session_id
+            ?.channel_member_id;
     }
 
     get incomingCallText() {

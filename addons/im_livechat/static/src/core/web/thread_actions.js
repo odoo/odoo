@@ -44,7 +44,7 @@ registerThreadAction("livechat-status", {
 registerThreadAction("join-livechat-needing-help", {
     condition: ({ owner, thread }) =>
         thread?.livechat_status === "need_help" &&
-        !thread?.self_member_id &&
+        !thread?.channel?.self_member_id &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-sign-in",
     name: _t("Join Chat"),

@@ -3,7 +3,7 @@
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//AttachmentList" position="after">
             <div t-if="thread?.model === 'discuss.channel' and !compact and !env.inMeetingView" class="o-discuss-Typing d-flex">
-                <Typing channel="thread" size="'medium'"/>
+                <Typing thread="thread" size="'medium'"/>
             </div>
         </xpath>
     </t>

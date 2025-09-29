@@ -61,18 +61,18 @@ export class DiscussContent extends Component {
     }
 
     get showImStatus() {
-        return this.thread.channel_type === "chat";
+        return this.thread.channel?.channel_type === "chat";
     }
 
     get showThreadAvatar() {
-        return ["channel", "group", "chat"].includes(this.thread.channel_type);
+        return ["channel", "group", "chat"].includes(this.thread.channel?.channel_type);
     }
 
     get isThreadAvatarEditable() {
         return (
             !this.thread.parent_channel_id &&
             this.thread.is_editable &&
-            ["channel", "group"].includes(this.thread.channel_type)
+            ["channel", "group"].includes(this.thread.channel?.channel_type)
         );
     }
 

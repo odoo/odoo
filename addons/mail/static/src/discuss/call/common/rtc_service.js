@@ -255,8 +255,8 @@ export class Rtc extends Record {
     });
     channel = fields.One("Thread", {
         compute() {
-            if (this.state.channel) {
-                return this.state.channel;
+            if (this.state.thread) {
+                return this.state.thread;
             }
             if (this._remotelyHostedChannelId) {
                 return this.store.Thread.insert({
@@ -368,7 +368,7 @@ export class Rtc extends Record {
         this.state = reactive({
             connectionType: undefined,
             hasPendingRequest: false,
-            channel: undefined,
+            thread: undefined,
             logs: {},
             sendCamera: false,
             sendScreen: false,
@@ -442,7 +442,7 @@ export class Rtc extends Record {
             }
         });
         this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
-            const channel = this.state.channel;
+            const channel = this.state.thread;
             if (!channel) {
                 return;
             }
@@ -466,9 +466,9 @@ export class Rtc extends Record {
         );
 
         browser.addEventListener("pagehide", () => {
-            if (this.state.channel) {
+            if (this.state.thread) {
                 const data = JSON.stringify({
-                    params: { channel_id: this.state.channel.id, session_id: this.selfSession.id },
+                    params: { channel_id: this.state.thread.id, session_id: this.selfSession.id },
                 });
                 const blob = new Blob([data], { type: "application/json" });
                 // using sendBeacon allows sending a post request even when the
@@ -487,7 +487,7 @@ export class Rtc extends Record {
          * connections that were established but failed or timed out.
          */
         browser.setInterval(async () => {
-            if (!this.localSession || !this.state.channel) {
+            if (!this.localSession || !this.state.thread) {
                 return;
             }
             this._postToTabs({
@@ -495,7 +495,7 @@ export class Rtc extends Record {
                 hostedSessionId: this.localSession.id,
             });
             await this.ping();
-            if (!this.localSession || !this.state.channel) {
+            if (!this.localSession || !this.state.thread) {
                 return;
             }
             this.call();
@@ -515,7 +515,7 @@ export class Rtc extends Record {
 
     onKeyUp(ev) {
         if (
-            !this.state.channel ||
+            !this.state.thread ||
             !this.store.settings.use_push_to_talk ||
             !this.store.settings.isPushToTalkKey(ev) ||
             !this.localSession.isTalking
@@ -559,7 +559,7 @@ export class Rtc extends Record {
 
     onPushToTalk() {
         if (
-            !this.state.channel ||
+            !this.state.thread ||
             this.store.settings.isRegisteringKey ||
             !this.store.settings.use_push_to_talk
         ) {
@@ -621,25 +621,26 @@ export class Rtc extends Record {
 
     /**
      * Notifies the server and does the cleanup of the current call.
+     * @param {import("models").Thread} [thread]
      */
-    async leaveCall(channel = this.state.channel) {
+    async leaveCall(thread = this.state.thread) {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
-        await this.rpcLeaveCall(channel);
-        this.endCall(channel);
+        await this.rpcLeaveCall(thread);
+        this.endCall(thread);
         this.state.hasPendingRequest = false;
     }
 
     /**
-     * @param {import("models").Thread} [channel]
+     * @param {import("models").Thread} [thread]
      */
-    endCall(channel = this.state.channel) {
+    endCall(thread = this.state.thread) {
         this._endHost();
-        if (channel.self_member_id) {
-            channel.self_member_id.rtc_inviting_session_id = undefined;
+        if (thread.channel?.self_member_id) {
+            thread.channel.self_member_id.rtc_inviting_session_id = undefined;
         }
-        channel.activeRtcSession = undefined;
-        if (channel.eq(this.state.channel)) {
+        thread.activeRtcSession = undefined;
+        if (thread.eq(this.state.thread)) {
             this.state.logs.end = new Date().toISOString();
             this.dumpLogs();
             this.pttExtService.unsubscribe();
@@ -739,9 +740,9 @@ export class Rtc extends Record {
         if (this.state.hasPendingRequest) {
             return;
         }
-        const isActiveCall = channel.eq(this.state.channel);
-        if (this.state.channel) {
-            await this.leaveCall(this.state.channel);
+        const isActiveCall = channel.eq(this.state.thread);
+        if (this.state.thread) {
+            await this.leaveCall(this.state.thread);
         }
         if (!isActiveCall) {
             const joinCallOpts = { audio, camera };
@@ -900,7 +901,7 @@ export class Rtc extends Record {
         this.state.connectionType = CONNECTION_TYPES.P2P;
         this.network?.disconnect();
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
-        this.p2pService.connect(this.localSession.id, this.state.channel.id, {
+        this.p2pService.connect(this.localSession.id, this.state.thread.id, {
             info: this.formatInfo(),
             iceServers: this.iceServers,
         });
@@ -945,7 +946,7 @@ export class Rtc extends Record {
                 this.log(session, message, { step: "p2p", level, important: true });
             }
         });
-        if (this.state.channel) {
+        if (this.state.thread) {
             await this.call();
             this.updateUpload();
         }
@@ -987,7 +988,7 @@ export class Rtc extends Record {
     _updateRemoteTabs(changes) {
         this._postToTabs({
             type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
-            hostedChannelId: this.state.channel.id,
+            hostedChannelId: this.state.thread.id,
             hostedSessionId: this.localSession.id,
             changes,
         });
@@ -1176,7 +1177,7 @@ export class Rtc extends Record {
      * @param {any} param0.detail.payload
      */
     async _handleNetworkUpdates({ detail: { name, payload } }) {
-        if (!this.state.channel) {
+        if (!this.state.thread) {
             return;
         }
         switch (name) {
@@ -1229,7 +1230,7 @@ export class Rtc extends Record {
                     const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                         sessionId
                     );
-                    if (!session || !this.state.channel) {
+                    if (!session || !this.state.thread) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
@@ -1263,7 +1264,7 @@ export class Rtc extends Record {
                     this.selfSession?.persona.main_user_id?.share !== false ||
                     this.serverInfo ||
                     this.state.fallbackMode ||
-                    !session?.channel.eq(this.state.channel)
+                    !session?.channel.eq(this.state.thread)
                 ) {
                     return;
                 }
@@ -1295,7 +1296,7 @@ export class Rtc extends Record {
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
-                    if (!this.state.channel) {
+                    if (!this.state.thread) {
                         return;
                     }
                     let text;
@@ -1318,7 +1319,7 @@ export class Rtc extends Record {
     }
 
     async _upgradeConnection() {
-        const channelId = this.state.channel?.id;
+        const channelId = this.state.thread?.id;
         if (this.serverInfo || this.state.fallbackMode || !channelId) {
             return;
         }
@@ -1393,11 +1394,11 @@ export class Rtc extends Record {
             }
             return;
         }
-        if (this.state.channel.rtc_session_ids.length === 0) {
+        if (this.state.thread.rtc_session_ids.length === 0) {
             return;
         }
         const sequence = getSequence();
-        for (const session of this.state.channel.rtc_session_ids) {
+        for (const session of this.state.thread.rtc_session_ids) {
             if (session.eq(this.localSession)) {
                 continue;
             }
@@ -1445,7 +1446,7 @@ export class Rtc extends Record {
         this.state.hasPendingRequest = false;
         // Initializing a new session implies closing the current session.
         this.clear();
-        this.state.channel = channel;
+        this.state.thread = channel;
         this.store.insert(data);
         this.newLogs();
         this.state.updateAndBroadcastDebounce = debounce(
@@ -1471,8 +1472,8 @@ export class Rtc extends Record {
             3000,
             { leading: true, trailing: true }
         );
-        if (this.state.channel.self_member_id) {
-            this.state.channel.self_member_id.rtc_inviting_session_id = undefined;
+        if (this.state.thread.channel?.self_member_id) {
+            this.state.thread.channel.self_member_id.rtc_inviting_session_id = undefined;
         }
         if (camera) {
             await this.toggleVideo("camera");
@@ -1482,7 +1483,7 @@ export class Rtc extends Record {
         }
         await this._initConnection();
         await this.resetMicAudioTrack({ force: audio });
-        if (!this.state.channel?.id) {
+        if (!this.state.thread?.id) {
             return;
         }
         this.soundEffectsService.play("call-join");
@@ -1499,7 +1500,7 @@ export class Rtc extends Record {
 
     newLogs() {
         this.state.logs = {
-            channelId: this.state.channel.id,
+            channelId: this.state.thread.id,
             selfSessionId: this.localSession.id,
             start: new Date().toISOString(),
             hasTurn: hasTurn(this.iceServers),
@@ -1520,7 +1521,7 @@ export class Rtc extends Record {
                 value: toRaw(this.state.logs),
             });
         }
-        if (this.state.channel) {
+        if (this.state.thread) {
             logs.push(this.buildSnapshot());
         }
         if (logs.length || download) {
@@ -1539,7 +1540,7 @@ export class Rtc extends Record {
             server.state = this.sfuClient?.state;
             server.errors = this.sfuClient?.errors.map((error) => error.message);
         }
-        const sessions = this.state.channel.rtc_session_ids.map((session) => {
+        const sessions = this.state.thread.rtc_session_ids.map((session) => {
             const sessionInfo = {
                 id: session.id,
                 channelMemberId: session.channel_member_id?.id,
@@ -1583,7 +1584,7 @@ export class Rtc extends Record {
     }
 
     logSnapshot() {
-        if (!this.state.channel) {
+        if (!this.state.thread) {
             // a snapshot out of a call would not collect any data
             return;
         }
@@ -1607,8 +1608,8 @@ export class Rtc extends Record {
         const data = await rpc(
             "/discuss/channel/ping",
             {
-                channel_id: this.state.channel.id,
-                check_rtc_session_ids: this.state.channel.rtc_session_ids.map(
+                channel_id: this.state.thread.id,
+                check_rtc_session_ids: this.state.thread.rtc_session_ids.map(
                     (session) => session.id
                 ),
                 rtc_session_id: this.localSession.id,
@@ -1639,8 +1640,8 @@ export class Rtc extends Record {
     }
 
     clear() {
-        if (this.state.channel) {
-            for (const session of this.state.channel.rtc_session_ids) {
+        if (this.state.thread) {
+            for (const session of this.state.thread.rtc_session_ids) {
                 this.removeAudioFromSession(session);
                 this.removeVideoFromSession(session);
                 session.isTalking = false;
@@ -1701,7 +1702,7 @@ export class Rtc extends Record {
      */
     async setDeaf(is_deaf) {
         this.updateAndBroadcast({ is_deaf });
-        for (const session of this.state.channel.rtc_session_ids) {
+        for (const session of this.state.thread.rtc_session_ids) {
             if (!session.audioElement) {
                 continue;
             }
@@ -1712,7 +1713,7 @@ export class Rtc extends Record {
 
     async setOutputDevice(deviceId) {
         const promises = [];
-        for (const session of this.state.channel.rtc_session_ids) {
+        for (const session of this.state.thread.rtc_session_ids) {
             if (!session.audioElement) {
                 continue;
             }
@@ -1737,7 +1738,7 @@ export class Rtc extends Record {
             this._remoteAction({ raisingHand: raise });
             return;
         }
-        if (!this.localSession || !this.state.channel) {
+        if (!this.localSession || !this.state.thread) {
             return;
         }
         this.localSession.raisingHand = raise ? new Date() : undefined;
@@ -1799,7 +1800,7 @@ export class Rtc extends Record {
             });
             return;
         }
-        if (!this.state.channel?.id) {
+        if (!this.state.thread?.id) {
             return;
         }
         switch (type) {
@@ -2052,7 +2053,7 @@ export class Rtc extends Record {
         this.state.micAudioTrack = undefined;
         this.state.audioTrack?.stop();
         this.state.audioTrack = undefined;
-        if (!this.state.channel) {
+        if (!this.state.thread) {
             return;
         }
         if (this.localSession) {
@@ -2101,7 +2102,7 @@ export class Rtc extends Record {
         }
         if (
             this.store.settings.use_push_to_talk ||
-            !this.state.channel ||
+            !this.state.thread ||
             !this.state.micAudioTrack
         ) {
             this.localSession.isTalking = false;
@@ -2203,9 +2204,9 @@ export class Rtc extends Record {
             session.videoStreams.delete(type);
             if (
                 this.selfSession.videoStreams.size === 0 &&
-                this.selfSession.eq(this.state.channel.activeRtcSession)
+                this.selfSession.eq(this.state.thread.activeRtcSession)
             ) {
-                this.state.channel.activeRtcSession = undefined;
+                this.state.thread.activeRtcSession = undefined;
             }
         } else {
             if (cleanup) {
@@ -2239,10 +2240,10 @@ export class Rtc extends Record {
      * @param {boolean} [parm2.addVideo]
      */
     updateActiveSession(session, videoType, { addVideo = false } = {}) {
-        const activeRtcSession = this.state.channel.activeRtcSession;
+        const activeRtcSession = this.state.thread.activeRtcSession;
         if (addVideo) {
             if (videoType === "screen") {
-                this.state.channel.activeRtcSession = session;
+                this.state.thread.activeRtcSession = session;
                 session.mainVideoStreamType = videoType;
                 return;
             }

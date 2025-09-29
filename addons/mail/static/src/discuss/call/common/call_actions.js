@@ -28,7 +28,7 @@ export function registerCallAction(id, definition) {
 
 export const muteAction = {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
-    name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
+    name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
         store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted",
     isTracked: true,
@@ -51,7 +51,7 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 registerCallAction("deafen", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
-    name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
+    name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
     icon: ({ action }) => (action.isActive ? "fa fa-deaf" : "fa fa-headphones"),
@@ -67,7 +67,7 @@ export const cameraOnAction = {
     name: ({ store }) =>
         store.rtc?.isRemote
             ? _t("Camera is unavailable outside the call tab.")
-            : store.rtc.selfSession.is_camera_on
+            : store.rtc.selfSession?.is_camera_on
             ? _t("Stop camera")
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
@@ -101,7 +101,7 @@ export const switchCameraAction = {
 registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
-    name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
+    name: ({ store }) => (store.rtc.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
     isTracked: true,
     icon: "fa fa-hand-paper-o",
@@ -115,7 +115,7 @@ registerCallAction("share-screen", {
     name: ({ store }) =>
         store.rtc?.isRemote
             ? _t("Screen sharing is unavailable outside the call tab.")
-            : store.rtc.selfSession.is_screen_sharing_on
+            : store.rtc.selfSession?.is_screen_sharing_on
             ? _t("Stop Sharing Screen")
             : _t("Share Screen"),
     isTracked: true,
@@ -189,7 +189,7 @@ registerCallAction("picture-in-picture", {
 });
 export const acceptWithCamera = {
     condition: ({ thread }) =>
-        thread?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
+        thread?.channel?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Accept with camera"),
@@ -218,7 +218,7 @@ registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
     condition: ({ store, thread }) =>
         !thread?.eq(store.rtc?.channel) &&
-        !thread?.self_member_id?.rtc_inviting_session_id &&
+        !thread?.channel?.self_member_id?.rtc_inviting_session_id &&
         typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Join Video Call"),
@@ -243,7 +243,7 @@ registerCallAction("join", joinAction);
 export const rejectAction = {
     btnClass: ({ thread }) =>
         typeof thread?.useCameraByDefault === "boolean" ? "pe-2 rounded-pill" : undefined,
-    condition: ({ thread }) => thread?.self_member_id?.rtc_inviting_session_id,
+    condition: ({ thread }) => thread?.channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     icon: "oi oi-close",
     inlineName: ({ owner, thread }) =>
@@ -264,7 +264,7 @@ export const rejectAction = {
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
     condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) && !thread?.self_member_id?.rtc_inviting_session_id,
+        thread?.eq(store.rtc?.channel) && !thread?.channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",

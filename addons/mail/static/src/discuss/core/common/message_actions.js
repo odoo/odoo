@@ -9,16 +9,15 @@ import { patch } from "@web/core/utils/patch";
 
 registerMessageAction("set-new-message-separator", {
     condition: ({ message, thread }) =>
-        thread &&
-        thread.self_member_id &&
-        thread.eq(message.thread) &&
+        thread?.channel?.self_member_id &&
+        thread?.eq(message.thread) &&
         !message.hasNewMessageSeparator &&
         message.persistent,
     icon: "fa fa-eye-slash",
     name: _t("Mark as Unread"),
     onSelected: ({ message: msg }) => {
         const message = toRaw(msg);
-        const selfMember = message.thread?.self_member_id;
+        const selfMember = message.thread?.channel?.self_member_id;
         if (selfMember) {
             selfMember.new_message_separator = message.id;
             selfMember.new_message_separator_ui = selfMember.new_message_separator;

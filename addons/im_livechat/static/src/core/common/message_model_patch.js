@@ -19,8 +19,8 @@ const messagePatch = {
         return (
             super.isTranslatable(thread) ||
             (this.store.hasMessageTranslationFeature &&
-                thread?.channel_type === "livechat" &&
-                thread?.self_member_id?.partner_id?.main_user_id?.share === false)
+                thread?.channel?.channel_type === "livechat" &&
+                thread?.channel?.self_member_id?.partner_id?.main_user_id?.share === false)
         );
     },
 };

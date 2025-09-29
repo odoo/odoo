@@ -36,7 +36,7 @@ patch(storeService, {
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "notification";
             if (services.ui.isSmall && store.discuss.thread?.channel_type) {
-                store.discuss.activeTab = store.discuss.thread.channel_type;
+                store.discuss.activeTab = store.discuss.thread.channel?.channel_type;
             }
         });
         return store;
