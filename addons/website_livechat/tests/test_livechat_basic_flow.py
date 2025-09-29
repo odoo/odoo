@@ -403,7 +403,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_livechat_visitor_to_store(self):
         """Test livechat_visitor_id is sent with livechat channels data even when there is no
         visitor."""
-        self.target_visitor = None
+
+        self.patch(self.registry['website.visitor'], '_get_visitor_from_request', lambda _self, **_: None)
         channel_data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {"channel_id": self.livechat_channel.id},

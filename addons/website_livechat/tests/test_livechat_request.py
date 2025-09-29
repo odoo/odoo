@@ -28,7 +28,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_cancel_chat_request_on_visitor_demand(self):
         self._clean_livechat_sessions()
 
-        self.operator_b = self.env['res.users'].create({
+        operator_b = self.env['res.users'].create({
             'name': 'Operator Marc',
             'login': 'operator_b',
             'email': 'operatormarc@example.com',
@@ -37,11 +37,11 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         })
 
         # Open Chat Request
-        self.visitor.with_user(self.operator_b).sudo().action_send_chat_request()
+        self.visitor.with_user(operator_b).sudo().action_send_chat_request()
         chat_request = self.env["discuss.channel"].search(
             [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)]
         )
-        self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
+        self.assertEqual(chat_request.livechat_operator_id, operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
 
         # Click on livechatbutton at client side
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
