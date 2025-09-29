@@ -81,13 +81,14 @@ export class BuilderNumberInput extends Component {
             if (savedUnit || this.props.saveUnit) {
                 // Convert value from saveUnit to unit
                 value = convertNumericToUnit(
-                    savedValue,
+                    parseFloat(savedValue),
                     savedUnit || this.props.saveUnit,
                     unit,
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
             }
-            return value;
+            // Put *at most* 3 decimal digits
+            return parseFloat(parseFloat(value).toFixed(3)).toString();
         });
     }
 
