@@ -1,4 +1,4 @@
-from odoo import  Command, _, models, fields
+from odoo import Command, fields, models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -50,19 +50,21 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('in', 'account.fiscal.position')
     def _get_in_account_fiscal_position(self):
+        _ = self.env._
         company = self.env.company
         state_ids = [Command.set(company.state_id.ids)] if company.state_id else False
-        intra_state_name = company.state_id and _('Within %s', company.state_id.name) or _('Intra State')
+        intra_state_name = company.state_id and _("Within %s", company.state_id.name) or _("Intra State")
+        country_in_id = self.env.ref('base.in').id
         state_specific = {
             'fiscal_position_in_intra_state': {
                 'name': intra_state_name,
                 'sequence': 1,
                 'auto_apply': True,
                 'state_ids': state_ids,
-                'country_id': self.env.ref('base.in').id,
+                'country_id': country_in_id,
             },
             'fiscal_position_in_inter_state': {
-                'name': _('Inter State'),
+                'name': _("Inter State"),
                 'sequence': 2,
                 'auto_apply': True,
                 'tax_ids': self._get_l10n_in_fiscal_tax_vals(),
@@ -74,21 +76,44 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             **state_specific,
             'fiscal_position_in_export_sez_in': {
-                'name': _('Export/SEZ'),
+                'name': _("Export"),
                 'sequence': 3,
                 'auto_apply': True,
-                'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX.'),
+                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(trailing_id='_sez_exp')
                     + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
                 ),
             },
+            'fiscal_position_in_sez': {
+                'name': _("Special Economic Zone (SEZ)"),
+                'sequence': 4,
+                'auto_apply': True,
+                'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                'country_id': country_in_id,
+                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
+                'tax_ids': (
+                    self._get_l10n_in_fiscal_tax_vals()
+                    + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
+                ),
+            },
             'fiscal_position_in_lut_sez': {
-                'name': _('LUT - Export/SEZ'),
+                'name': _("Export - LUT (WOP)"),
                 'sequence': 4,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True, trailing_id='_sez_exp_lut')
+                    + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
+                )
+            },
+            'fiscal_position_in_lut_sez_1': {
+                'name': _("SEZ - LUT (WOP)"),
+                'sequence': 6,
+                'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                'country_id': country_in_id,
+                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
+                'tax_ids': (
+                    self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True, trailing_id='_sez_lut')
                     + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
                 )
             },
