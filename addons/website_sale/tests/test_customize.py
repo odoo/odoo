@@ -79,7 +79,11 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
                 'compute_price': 'formula'
             })]
         })
-        self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
+        self.start_tour(
+            self.product_product_custo_desk.website_url,
+            'website_sale.custom_attribute_value_advanced',
+            login='admin',
+        )
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
         # Make sure pricelist rule exist
@@ -95,7 +99,11 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             })],
         })
 
-        self.start_tour("/", 'shop_custom_attribute_value', login="admin")
+        self.start_tour(
+            self.product_product_custo_desk.website_url,
+            'website_sale.custom_attribute_value',
+            login='admin',
+        )
 
     def test_03_public_tour_shop_dynamic_variants(self):
         """ The goal of this test is to make sure product variants with dynamic
@@ -135,7 +143,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
                 # 0 to not bother with the pricelist of the public user
                 ptav.price_extra = 0
 
-        self.start_tour("/", 'tour_shop_dynamic_variants')
+        self.start_tour(product_template.website_url, 'website_sale.dynamic_variants')
 
     def test_04_portal_tour_deleted_archived_variants(self):
         """The goal of this test is to make sure deleted and archived variants
@@ -181,7 +189,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         # delete second combination (which is now first variant since cache has been cleared)
         product_template.product_variant_ids[0].unlink()
 
-        self.start_tour("/", 'tour_shop_deleted_archived_variants', login="portal")
+        self.start_tour('/', 'website_sale.deleted_archived_variants', login='portal')
 
     def test_05_demo_tour_no_variant_attribute(self):
         """The goal of this test is to make sure attributes no_variant are
@@ -211,7 +219,11 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         # set a price on the value
         product_template.attribute_line_ids.product_template_value_ids.price_extra = 10
 
-        self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
+        self.start_tour(
+            product_template.website_url,
+            'website_sale.no_variant_attribute',
+            login='demo',
+        )
 
         sol = self.env['sale.order.line'].search([
             ('product_id', '=', product_template.product_variant_id.id)
@@ -230,7 +242,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             {'name': 'Base Pricelist', 'selectable': True},
             {'name': 'Other Pricelist', 'selectable': True}
         ])
-        self.start_tour("/", 'shop_editor', login="website_user")
+        self.start_tour('/', 'website_sale.shop_editor', login='website_user')
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple
@@ -286,7 +298,11 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         variant_to_archive.action_archive()
         self.assertFalse(variant_to_archive.active)
 
-        self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
+        self.start_tour(
+            product_template.website_url,
+            'website_sale.archived_variant_multi',
+            login='portal',
+        )
 
     def test_09_pills_variant(self):
         """The goal of this test is to make sure that you can click anywhere on a pill
@@ -305,7 +321,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        self.env['product.template'].create({
+        test_product = self.env['product.template'].create({
             'name': 'Test Product 2',
             'is_published': True,
             'attribute_line_ids': [
@@ -316,7 +332,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        self.start_tour("/", 'test_09_pills_variant', login="portal")
+        self.start_tour(test_product.website_url, 'website_sale.pills_variant', login='portal')
 
     def test_10_multi_checkbox_attribute(self):
         attribute = self.env['product.attribute'].create([
@@ -378,10 +394,14 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             }),
         ]
 
-        self.start_tour("/", 'tour_shop_multi_checkbox', login="portal")
+        self.start_tour(
+            product_template.website_url,
+            'website_sale.multi_checkbox',
+            login='portal',
+        )
 
     def test_11_shop_editor_set_product_ribbon(self):
-        self.start_tour("/", 'shop_editor_set_product_ribbon', login="admin")
+        self.start_tour('/', 'website_sale.shop_editor_set_product_ribbon', login='admin')
 
     def test_12_multi_checkbox_attribute_single_value(self):
         attribute = self.env['product.attribute'].create([
@@ -392,7 +412,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
                 'value_ids': [(0, 0, {'name': 'cheese'})],
             },
         ])
-        self.env['product.template'].create({
+        product = self.env['product.template'].create({
             'name': 'Burger',
             'is_published': True,
             'list_price': 750,
@@ -404,4 +424,8 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="website_user")
+        self.start_tour(
+            product.website_url,
+            'website_sale.multi_checkbox_single_value',
+            login='website_user',
+        )

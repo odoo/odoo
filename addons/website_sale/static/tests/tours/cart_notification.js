@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add("website_sale_cart_notification", {
+registry.category("web_tour.tours").add("website_sale.cart_notification", {
     url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({
@@ -29,11 +29,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
             trigger: '#product_detail form input[name=add_qty]',
             run: "edit 3",
         },
-        {
-            content: "click on add to cart",
-            trigger: '#product_detail form #add_to_cart',
-            run: "click",
-        },
+        ...tourUtils.addToCartFromProductPage(),
         {
             content: "check that 3 website_sale_cart_notification_product_2 was added",
             trigger: '.toast-body span:contains("website_sale_cart_notification_product_2")',
@@ -68,7 +64,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
 });
 
 
-registry.category("web_tour.tours").add("website_sale_cart_notification_qty_and_total", {
+registry.category("web_tour.tours").add("website_sale.cart_notification_qty_and_total", {
     url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({

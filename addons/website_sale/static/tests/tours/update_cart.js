@@ -1,7 +1,7 @@
 import { registry } from '@web/core/registry';
 import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
-registry.category('web_tour.tours').add('shop_update_cart', {
+registry.category('web_tour.tours').add('website_sale.update_cart', {
     url: '/shop',
     steps: () => [
         ...tourUtils.searchProduct("conference chair", { select: true }),
@@ -24,18 +24,14 @@ registry.category('web_tour.tours').add('shop_update_cart', {
         {
             trigger: "label:contains(Steel) input:checked",
         },
-        {
-            content: "click on add to cart",
-            trigger: '#product_detail form #add_to_cart',
-            run: "click",
-        },
+        ...tourUtils.addToCartFromProductPage(),
         {
             content: "click in modal on 'Proceed to checkout' button",
             trigger: 'button:contains("Checkout")',
             run: "click",
             expectUnloadPage: true,
         },
-        ...tourUtils.assertCartContains({productName: 'Conference Chair', combinationName: 'Steel'}),
+        ...tourUtils.assertCartContains({ productName: 'Conference Chair', combinationName: 'Steel' }),
         {
             content: "add suggested",
             trigger: '.js_cart_lines:has(a:contains("Storage Box")) button:contains("Add to cart")',

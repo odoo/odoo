@@ -132,11 +132,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual('1200.0 USD', self.blue_sofa_item['price'])
         self.start_tour(
             self.red_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_red_sofa_default',
+            'website_sale.gmc_check_advertised_prices_red_sofa_default',
         )
         self.start_tour(
             self.blue_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_blue_sofa_default',
+            'website_sale.gmc_check_advertised_prices_blue_sofa_default',
         )
 
     def test_gmc_items_prices_match_website_prices_christmas(self):
@@ -171,11 +171,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertNotEqual(self.red_sofa_item['link'], self.blue_sofa_item['link'])
         self.start_tour(
             self.red_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_red_sofa_christmas',
+            'website_sale.gmc_check_advertised_prices_red_sofa_christmas',
         )
         self.start_tour(
             self.blue_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_blue_sofa_christmas',
+            'website_sale.gmc_check_advertised_prices_blue_sofa_christmas',
         )
 
     def test_gmc_items_prices_match_website_prices_tax_included(self):
@@ -188,11 +188,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual('1380.0 USD', self.blue_sofa_item['price'])
         self.start_tour(
             self.red_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_red_sofa_tax_included',
+            'website_sale.gmc_check_advertised_prices_red_sofa_tax_included',
         )
         self.start_tour(
             self.blue_sofa_item['link'],
-            'website_sale_gmc_check_advertised_prices_blue_sofa_tax_included',
+            'website_sale.gmc_check_advertised_prices_blue_sofa_tax_included',
         )
 
     def test_gmc_items_additional_images_limit_to_10(self):

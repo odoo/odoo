@@ -19,7 +19,7 @@ class TestWebsiteSaleMail(HttpCase):
         self.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
-        self.env['product.product'].create({
+        test_product = self.env['product.template'].create({
             'name': 'Acoustic Bloc Screens',
             'list_price': 2950.0,
             'sale_ok': True,
@@ -45,7 +45,7 @@ class TestWebsiteSaleMail(HttpCase):
             w.domain = f'domain-not-used-{w.id}.fr'
         with patch.object(MailMail, 'unlink', lambda self: None):
             start_time = fields.Datetime.now()
-            self.start_tour("/", 'shop_mail', login="admin")
+            self.start_tour(test_product.website_url, 'website_sale.so_mail', login='admin')
             new_mail = self.env['mail.mail'].search([('create_date', '>=', start_time),
                                                      ('body_html', 'ilike', 'https://my-test-domain.com')],
                                                     order='create_date DESC', limit=None)

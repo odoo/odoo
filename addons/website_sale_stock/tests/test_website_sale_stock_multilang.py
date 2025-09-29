@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
@@ -27,4 +26,4 @@ class TestWebsiteSaleStockMultilang(HttpCase):
         unavailable_product.update_field_translations('out_of_stock_message', {
             'fr_FR': {'Out of stock': 'Hors-stock'},
         })
-        self.start_tour("/fr/shop?search=unavailable", 'website_sale_stock_multilang')
+        self.start_tour("/fr/shop?search=unavailable", 'website_sale_stock.product_warning_multilang')

@@ -5,10 +5,9 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_product_configurator_zero_priced', {
-        url: '/shop?search=Main product',
+    .add('website_sale.product_configurator_zero_priced', {
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Main product", search: false, expectUnloadPage: true }),
+            ...wsTourUtils.addToCartFromProductPage(),
             // Assert that the "Zero-priced" variant of the optional product can't be sold.
             ...websiteConfiguratorTourUtils.assertOptionalProductZeroPriced(
                 "Optional product (Zero-priced)"

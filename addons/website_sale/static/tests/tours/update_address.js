@@ -1,11 +1,11 @@
 import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add('update_billing_shipping_address', {
+registry.category("web_tour.tours").add('website_sale.update_billing_shipping_address', {
     url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({ productName: "Office Chair Black TEST", expectUnloadPage: true }),
-        tourUtils.goToCart({quantity: 1}),
+        tourUtils.goToCart({ quantity: 1 }),
         tourUtils.goToCheckout(),
         tourUtils.confirmOrder(),
         {

@@ -1,7 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('shop_wishlist', {
+registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates', {
     url: '/shop?search=Customizable Desk',
     steps: () => [
         {

@@ -13,7 +13,7 @@ import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 function editAddToCartSnippet() {
     return [
         ...clickOnEditAndWaitEditMode(),
-        ...clickOnSnippet({id: 's_add_to_cart'})
+        ...clickOnSnippet({ id: 's_add_to_cart' })
     ]
 }
 
@@ -31,15 +31,17 @@ function checkButtonIsDisabled() {
     };
 }
 
-registerWebsitePreviewTour('add_to_cart_snippet_tour', {
+registerWebsitePreviewTour(
+    'website_sale.add_to_cart_snippet',
+    {
         url: '/',
         edition: true,
     },
     () => [
-        ...insertSnippet({name: 'Add to Cart Button'}),
+        ...insertSnippet({ name: 'Add to Cart Button' }),
 
         // Basic product with no variants
-        ...clickOnSnippet({id: 's_add_to_cart'}),
+        ...clickOnSnippet({ id: 's_add_to_cart' }),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
@@ -104,8 +106,8 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             content: "Wait for the redirection to the cart page",
             trigger: ":iframe h4:contains(order summary)",
         },
-        ...assertCartContains({productName: 'Product No Variant', backend: true}),
-        ...assertCartContains({productName: 'Product Yes Variant 1', combinationName: 'Red', backend: true}),
-        ...assertCartContains({productName: 'Product Yes Variant 2', combinationName: 'Pink', backend: true}),
+        ...assertCartContains({ productName: 'Product No Variant', backend: true }),
+        ...assertCartContains({ productName: 'Product Yes Variant 1', combinationName: 'Red', backend: true }),
+        ...assertCartContains({ productName: 'Product Yes Variant 2', combinationName: 'Pink', backend: true }),
     ],
 );

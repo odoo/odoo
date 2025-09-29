@@ -1,14 +1,7 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('back_in_stock_notification_product', {
-        url: '/shop?search=Macbook%20Pro',
+registry.category("web_tour.tours").add('website_sale_stock.subscribe_to_stock_notification', {
     steps: () => [
-        {
-            content: "Open product page",
-            trigger: 'a:contains("Macbook Pro")',
-            run: "click",
-            expectUnloadPage: true,
-        },
         {
             content: "Click on 'Be notified when back in stock'",
             trigger: '#product_stock_notification_message',

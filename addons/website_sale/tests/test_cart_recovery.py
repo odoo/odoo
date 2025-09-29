@@ -19,7 +19,7 @@ class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
             'website_published': True,
         })
 
-        self.start_tour("/", 'shop_cart_recovery', login="portal")
+        self.start_tour('/', 'website_sale.cart_recovery', login='portal')
 
 
 @tagged('post_install', '-at_install')
