@@ -2,6 +2,7 @@
 <odoo>
     <template id="page_mailing_confirm_unsubscribe" name="Confirm Unsubscription">
         <t t-call="mass_mailing.layout">
+            <div id="wrap" class="oe_structure oe_empty"/>
             <div class="container o_unsubscribe_form">
                 <div class="row">
                     <div class="col-lg-6 offset-lg-3 mt-4">
@@ -37,6 +38,7 @@
 
     <template id="page_mailing_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
+            <div id="wrap" class="oe_structure oe_empty"/>
             <t t-call="mass_mailing.unsubscribe_form"/>
         </t>
     </template>
