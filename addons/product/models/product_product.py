@@ -10,6 +10,7 @@ from odoo.osv import expression
 from odoo.tools import float_compare, format_list, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
+from odoo.tools.sql import SQL
 
 
 class ProductProduct(models.Model):
@@ -551,15 +552,18 @@ class ProductProduct(models.Model):
     def _search_display_name(self, operator, value):
         is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
         combine = expression.OR if is_positive else expression.AND
-        domains = [
-            [('name', operator, value)],
-            [('default_code', operator, value)],
+        template_domains = [[('name', operator, value)]]
+        product_domains = [[('default_code', operator, value)]]
+        supplier_domain = []
+        where_clause_data = [
+            ("product.template", "id", combine, template_domains),
+            ("product.product", "product_tmpl_id", combine, product_domains),
         ]
         if operator in ('=', 'in') or (operator.endswith('like') and is_positive):
             barcode_values = [value] if operator != 'in' else value
-            domains.append([('barcode', 'in', barcode_values)])
+            product_domains.append([('barcode', 'in', barcode_values)])
         if operator == '=' and isinstance(value, str) and (m := re.search(r'(\[(.*?)\])', value)):
-            domains.append([('default_code', '=', m.group(2))])
+            product_domains.append([('default_code', '=', m.group(2))])
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),
@@ -567,8 +571,24 @@ class ProductProduct(models.Model):
                 ('product_code', operator, value),
                 ('product_name', operator, value),
             ]
+            where_clause_data.append(('product.supplierinfo', 'product_tmpl_id', lambda x: x, supplier_domain))
+        # AND clauses properly hit indexes so no need for custom sql in this case.
+        if combine == expression.AND:
+            domains = template_domains + product_domains
             domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
-        return combine(domains)
+            return combine(domains)
+        clauses = []
+        for model_name, fname, combine, domains in where_clause_data:
+            clauses.append(
+                SQL(
+                    """(SELECT %s FROM %s WHERE %s)""",
+                    self.env[model_name]._field_to_sql(self.env[model_name]._table, fname),
+                    SQL.identifier(self.env[model_name]._table),
+                    self.env[model_name]._where_calc(combine(domains)).where_clause,
+                )
+            )
+        query = SQL("""(%s)""", SQL("UNION ALL").join(clauses))
+        return [('product_tmpl_id', 'in', query)]
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
