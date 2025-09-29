@@ -27,8 +27,7 @@ patch(TicketScreen.prototype, {
         const orders = super.getFilteredOrderList();
         orders.forEach((order) => {
             if (
-                (order.pos_reference.includes("Self-Order") ||
-                    order.pos_reference.includes("Kiosk")) &&
+                ["kiosk", "mobile"].includes(order.source) &&
                 !order.online_payment_method_id &&
                 !Object.keys(order.last_order_preparation_change.lines).length
             ) {
