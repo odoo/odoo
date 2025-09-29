@@ -21,9 +21,9 @@ class MassMailingListMerge(models.TransientModel):
                 'src_list_ids': [(6, 0, src_list_ids)],
             })
         if not res.get('dest_list_id') and 'dest_list_id' in fields:
-            src_list_ids = res.get('src_list_ids') or self.env.context.get('active_ids')
+            dest_list_id = res.get('dest_list_id') or self.env.context.get('active_ids')
             res.update({
-                'dest_list_id': src_list_ids and src_list_ids[0] or False,
+                'dest_list_id': dest_list_id and dest_list_id[0] or False,
             })
         return res
 
