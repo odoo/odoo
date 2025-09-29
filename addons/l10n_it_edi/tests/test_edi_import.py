@@ -198,6 +198,8 @@ class TestItEdiImport(TestItEdi):
             self.company.l10n_it_edi_purchase_journal_id = preferred_journal
 
         preferred_journal.default_account_id = self.company_data_2['default_journal_purchase'].default_account_id.id
+        # Retry setting the company's default purchase journal: no error since default_account_id is set
+        self.company.l10n_it_edi_purchase_journal_id = preferred_journal
 
         with tools.file_open(f'{self.module}/tests/import_xmls/{filename}', mode='rb') as fd:
             fake_bill_content = fd.read()

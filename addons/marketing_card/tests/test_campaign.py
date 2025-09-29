@@ -421,8 +421,6 @@ class TestMarketingCardSecurity(MarketingCardCommon):
 
         with self.assertRaisesRegex(exceptions.AccessError, 'You are not allowed to modify'):
             campaign.body_html = arbitrary_qweb
-            # Flush to simulate the end of the transaction and trigger all recomputes
-            self.env.cr.flush()
 
         # Ensure that the value is well not written in db, nor on the current campaign, nor on the related.
         self.assertTrue(arbitrary_qweb not in campaign.body_html)

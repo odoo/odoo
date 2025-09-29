@@ -2026,18 +2026,18 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         })
         # Since you dont have any warehouse for your company  you should raise a RedirectWarning
         error_message = "Please create a warehouse for company Company 2."
-        with self.assertRaisesRegex(RedirectWarning, error_message), self.env.cr.savepoint():
+        with self.assertRaisesRegex(RedirectWarning, error_message):
             so.with_company(new_company).action_confirm()
         warehouse.active = True
         # Since you have a warehouse which is not linked to the SO you should raise a UserError
         error_message = "You must set a warehouse on your sale order to proceed."
-        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, error_message):
             so.with_company(new_company).action_confirm()
         # check the flow with 2 available warehouses for that company
         self.env['stock.warehouse'].create({'name': 'Warehouse 2', 'code': 'WH2', 'company_id': new_company.id})
         # Since you have a warehouse which is not linked to the SO you should raise a UserError
         error_message = "You must set a warehouse on your sale order to proceed."
-        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, error_message):
             so.with_company(new_company).action_confirm()
 
     def test_custom_delivery_route_new_sale_line(self):

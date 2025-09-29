@@ -3675,7 +3675,8 @@ class TestX2many(TransactionExpressionCase):
             # 1.4 Command.LINK
             # Case: a public/portal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            # We get a read error since Command.link need to read the corecord first, see One2many.write_real
+            with self.assertRaisesRegex(AccessError, "doesn't have 'read' access to"):
                 my_partner.write({
                     'user_ids': [Command.link(admin_user.id)],
                 })

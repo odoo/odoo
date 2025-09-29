@@ -1105,17 +1105,17 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         honest_move.action_post()
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
+        with self.assertRaisesRegex(UserError, 'not balanced'):
             self.env['account.move'].create({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
+        with self.assertRaisesRegex(UserError, 'not balanced'):
             self.env['account.move'].create({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
         stealer_move = self.env['account.move'].create({})
-        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
+        with self.assertRaisesRegex(UserError, 'not balanced'):
             stealer_move.write({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
+        with self.assertRaisesRegex(UserError, 'not balanced'):
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
     def test_validate_move_wizard_with_auto_post_entry(self):
