@@ -144,4 +144,66 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(target.querySelector(".o_avatar").textContent, "Josephine");
         }
     );
+
+    QUnit.test("hierarchy with a self manager employee", async function(assert) {
+        serverData = {
+            ...serverData,
+            models: {...serverData["models"], "hr.employee":{
+                ...serverData["models"]["hr.employee"],
+                records: [{ id: 1, name: "Albert", parent_id: 1, child_ids: [1] }]
+            }}
+        }
+        await makeView({
+            context:{
+                hierarchy_res_id: 1,
+            },
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node_button.btn-secondary", 1);
+        assert.containsN(target, ".o_hierarchy_node", 2);
+        await click(target, ".o_hierarchy_node_button.btn-secondary");
+        assert.containsN(target, ".o_hierarchy_row", 1);
+        assert.containsN(target, ".o_hierarchy_node", 1);
+    });
+
+    QUnit.test("hierarchy with a cycle", async function(assert) {
+        serverData = {
+            ...serverData,
+            models: {...serverData["models"], "hr.employee":{
+                ...serverData["models"]["hr.employee"],
+                records: [
+                    { id: 1, name: "Albert", parent_id: 4, child_ids: [2, 3] },
+                    { id: 2, name: "Georges", parent_id: 1, child_ids: [] },
+                    { id: 3, name: "Josephine", parent_id: 1, child_ids: [4] },
+                    { id: 4, name: "Louis", parent_id: 3, child_ids: [1] },
+                ],
+            }}
+        }
+        await makeView({
+            context:{
+                hierarchy_res_id: 1,
+            },
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+
+        assert.containsN(target, ".o_hierarchy_row", 4);
+        assert.containsN(target, ".o_hierarchy_node", 5);
+        assert.containsN(target, ".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node", 1);
+        // check that the node in the cycle cannot be expanded
+        assert.containsN(target, ".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_button", 0);
+        assert.strictEqual(target.querySelector(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").textContent, "AlbertLouis");
+        await click(target, ".o_hierarchy_row:nth-of-type(1) .btn-secondary");
+        await click(target, ".o_hierarchy_row:nth-of-type(1) .btn-primary");
+        await click(target, ".o_hierarchy_row:nth-of-type(3) .btn-primary");
+        await click(target, ".o_hierarchy_row:nth-of-type(6) .btn-primary");
+        // check the root of the tree is still Albert
+        assert.strictEqual(target.querySelector(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").textContent, "AlbertLouis");
+        assert.strictEqual(target.querySelector(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_content").textContent, "AlbertLouis");
+    });
 });
