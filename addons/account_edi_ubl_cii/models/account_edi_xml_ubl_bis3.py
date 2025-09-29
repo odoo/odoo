@@ -115,8 +115,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals = super()._get_partner_party_vals(partner, role)
 
         partner = partner.commercial_partner_id
-        vals['endpoint_id'] = partner.vat
-        vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
+        if self.env['ir.module.module']._get('account_peppol').state == 'installed':
+            vals['endpoint_id'] = partner.peppol_endpoint
+            vals['endpoint_id_attrs'] = {'schemeID': partner.peppol_eas}
+        else:
+            vals['endpoint_id'] = partner.vat
+            vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
 
         if partner.country_code == 'NO':
             if 'l10n_no_bronnoysund_number' in partner._fields:
