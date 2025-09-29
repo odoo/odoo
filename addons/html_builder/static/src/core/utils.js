@@ -240,21 +240,23 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 
     function refreshCurrentItem() {
-        let currentItem;
-        let itemPriority = 0;
-        for (const selectableItem of selectableItems) {
-            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
-                currentItem = selectableItem;
-                itemPriority = selectableItem.priority;
+        withoutReactivity(() => {
+            let currentItem;
+            let itemPriority = 0;
+            for (const selectableItem of selectableItems) {
+                if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
+                    currentItem = selectableItem;
+                    itemPriority = selectableItem.priority;
+                }
             }
-        }
-        if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
-            state.currentSelectedItem = currentItem;
-            env.dependencyManager.triggerDependencyUpdated();
-        }
-        if (currentItem) {
-            onItemChange?.(currentItem);
-        }
+            if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
+                state.currentSelectedItem = currentItem;
+                env.dependencyManager.triggerDependencyUpdated();
+            }
+            if (currentItem) {
+                onItemChange?.(currentItem);
+            }
+        });
     }
 
     if (id) {
@@ -264,7 +266,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         });
     }
 
-    onMounted(refreshCurrentItem);
+    onMounted(() => withoutReactivity(refreshCurrentItem));
     useBus(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
     function cleanSelectedItem(...args) {
         if (state.currentSelectedItem) {
