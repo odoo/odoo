@@ -1,6 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, effect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
-import { effect } from "@web/core/utils/reactive";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { pick } from "@web/core/utils/objects";
 import { BuilderComponent } from "./builder_component";
@@ -42,13 +41,10 @@ export class BuilderDateTimePicker extends Component {
         });
         this.domState = state;
         this.state = useState({});
-        effect(
-            ({ value }) => {
-                // State to display in the input.
-                this.state.value = value;
-            },
-            [state]
-        );
+        effect(() => {
+            // State to display in the input.
+            this.state.value = state.value;
+        });
 
         this.commit = (userInputValue) => {
             this.isPreviewing = false;

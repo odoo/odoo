@@ -13,9 +13,10 @@ import {
     useRef,
     useState,
     useSubEnv,
+    withoutReactivity,
+    effect,
 } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
 function isConnectedElement(el) {
@@ -321,14 +322,11 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         state = useState({
             isActive: false,
         });
-        effect(
-            ({ currentSelectedItem }) => {
-                state.isActive =
-                    toRaw(currentSelectedItem) === selectableItem ||
-                    (id && currentSelectedItem?.id === id);
-            },
-            [selectableState]
-        );
+        effect(() => {
+            state.isActive =
+                toRaw(selectableState.currentSelectedItem) === selectableItem ||
+                (id && selectableState.currentSelectedItem?.id === id);
+        });
         env.selectableContext.refreshCurrentItem();
         onMounted(env.selectableContext.update);
         onWillDestroy(() => {
