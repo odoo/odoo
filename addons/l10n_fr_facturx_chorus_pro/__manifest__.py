@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'France - Factur-X integration with Chorus Pro',
+    'name': 'France - Peppol integration with Chorus Pro',
     'countries': ['fr'],
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
