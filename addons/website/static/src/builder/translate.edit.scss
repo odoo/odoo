@@ -2,7 +2,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
 
     &[data-oe-translation-state="translated"],
-    &.o_dirty, &.oe_translated, .oe_translated {
+    &[data-dirty-element], &[data-dirty-translation], &.oe_translated, .oe_translated {
         --text-translate-highlight-color: #{rgba($o-we-translated-content-color, 0.5)};
     }
 

@@ -1,16 +1,12 @@
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
-import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
-/** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
  * @typedef { Object } SaveShared
  * @property { SavePlugin['save'] } save
- * @property { SavePlugin['ignoreDirty'] } ignoreDirty
- * @property { SavePlugin['groupElements'] } groupElements
+ * @property { SavePlugin['prepareElementForSave'] } prepareElementForSave
  */
 
 /**
@@ -18,83 +14,36 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
  * @typedef {((el?: HTMLElement, groupedEls?: Object.<string, HTMLElement[]>) => Promise<void>)[]} on_will_save_handlers
  * Called before the save process.
  *
- * @typedef {((el: HTMLElement) => Promise<void>)[]} on_will_save_element_handlers
- * Called when saving an element (in parallel to saving the view).
- *
  * @typedef {(() => Promise<boolean>)[]} on_ready_to_save_document_handlers
  * Called concurrently as part of the save process.
- *
- * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
- *
- * @typedef {(() => HTMLElement[] | NodeList)[]} dirty_els_providers
  */
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "ignoreDirty", "groupElements"];
-    static dependencies = ["history", "domReferenceMap"];
+    static shared = ["save", "prepareElementForSave"];
+    static dependencies = ["history"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
-        on_editor_started_handlers: this.startObserving.bind(this),
-        // Resource definitions:
-        clean_for_save_processors: [
-            // (root) => {
-            //     clean DOM before save (leaving edit mode)
-            //     root is the clone of a node that was o_dirty
-            // }
-        ],
-        dirty_els_providers: () => this.editable.querySelectorAll(".o_dirty"),
-        // Do not change the sequence of this resource, it must stay the first
-        // one to avoid marking dirty when not needed during the drag and drop.
-        on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
-        on_will_save_handlers: this.removeZWSPFromEmbeddedFields.bind(this),
+        clean_for_save_processors: this.removeZWSPFromEmbeddedFields.bind(this),
     };
 
-    removeZWSPFromEmbeddedFields(editableEl) {
+    removeZWSPFromEmbeddedFields(root) {
         // Remove zero-width spaces left by DeletePlugin.fillEmptyInlines on
         // embedded fields to prevent saving blank model fields.
         const selector = '[data-oe-model]:not([data-oe-model="ir.ui.view"])';
-        for (const el of editableEl.querySelectorAll(selector)) {
+        for (const el of root.querySelectorAll(selector)) {
             if (isZWS(el)) {
                 el.innerHTML = "";
             }
         }
     }
 
-    setup() {
-        this.canObserve = false;
-    }
-
-    groupElements(toGroupEls) {
-        return Object.groupBy(toGroupEls, (toGroupEl) => {
-            const model = toGroupEl.dataset.oeModel;
-            const recordId = toGroupEl.dataset.oeId;
-            const field = toGroupEl.dataset.oeField;
-
-            // There are elements which have no linked model as something
-            // special is to be done "to save them". In that case, do not group
-            // those elements.
-            if (!model) {
-                return uniqueId("special-element-to-save-");
-            }
-
-            // Group elements which are from the same field of the same record.
-            return `${model}::${recordId}::${field}`;
-        });
-    }
-
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
-            // Get elements to save, then group them if possible.
-            const dirtyEls = this.getResource("dirty_els_providers").flatMap((p) => [...p()]);
-            const groupedElements = this.groupElements(dirtyEls);
-            await Promise.all(
-                this.trigger("on_will_save_handlers", this.editable, groupedElements)
-            );
-            await this._save(groupedElements);
+            await Promise.all(this.trigger("on_will_save_handlers"));
+            await this._save();
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } catch (error) {
             if (error.exceptionName === "odoo.exceptions.ValidationError") {
@@ -111,86 +60,20 @@ export class SavePlugin extends Plugin {
             }
         }
     }
-    async _save(groupedElements) {
-        const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
-            const cleanedEls = dirtyEls.map((dirtyEl) => {
-                dirtyEl.classList.remove("o_dirty");
-                return this.processThrough("clean_for_save_processors", dirtyEl.cloneNode(true));
-            });
-            for (const saveElementsOverride of this.getResource("save_elements_overrides")) {
-                if (await saveElementsOverride(cleanedEls)) {
-                    return;
-                }
-            }
-            for (const cleanedEl of cleanedEls) {
-                await Promise.all(this.trigger("on_will_save_element_handlers", cleanedEl));
-            }
-        });
-        // used to track dirty out of the editable scope, like header, footer or wrapwrap
-        const willSaves = this.trigger("on_ready_to_save_document_handlers");
-        await Promise.all(saveProms.concat(willSaves));
+    async _save() {
+        await Promise.all(this.trigger("on_ready_to_save_document_handlers"));
         this.dependencies.history.reset();
     }
 
-    startObserving() {
-        this.canObserve = true;
-    }
     /**
-     * Handles the flag of the closest savable element to the mutation as dirty
-     *
-     * @param {import("@html_editor/core/dom_observer_plugin").SerializedMutation[]} mutations - The observed mutations
+     * Clone `el` and run the handlers needed to get it ready for save
+     * @param {HTMLElement} el
+     * @returns {HTMLElement}
      */
-    handleMutations(mutations) {
-        if (!this.canObserve) {
-            return;
-        }
-        for (const mutation of mutations) {
-            if (
-                mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
-                mutation.attributeName === "contenteditable"
-            ) {
-                continue;
-            }
-            let targetId = mutation.nodeId;
-            // TODO: Wouldn't doing this only for "remove" be enough?
-            if (
-                [EDITOR_MUTATION_TYPES.ADD, EDITOR_MUTATION_TYPES.REMOVE].includes(mutation.type) &&
-                mutation.parentNodeId
-            ) {
-                targetId = mutation.parentNodeId;
-            }
-            let targetEl = this.dependencies.domReferenceMap.getNodeById(targetId);
-            if (!targetEl.isConnected) {
-                continue;
-            }
-            if (targetEl.nodeType !== Node.ELEMENT_NODE) {
-                targetEl = targetEl.parentElement;
-            }
-            if (!targetEl) {
-                continue;
-            }
-            const savableEl = targetEl.closest(".o_savable");
-            if (
-                !savableEl ||
-                savableEl.classList.contains("o_dirty") ||
-                savableEl.hasAttribute("data-oe-readonly")
-            ) {
-                continue;
-            }
-            savableEl.classList.add("o_dirty");
-        }
-    }
-
-    /**
-     * Prevents elements to be marked as dirty until it is reactivated with the
-     * returned callback.
-     *
-     * @returns {Function}
-     */
-    ignoreDirty() {
-        this.canObserve = false;
-        return () => {
-            this.canObserve = true;
-        };
+    prepareElementForSave(el) {
+        const cleanedEl = el.cloneNode(true);
+        this.processThrough("clean_for_save_processors", cleanedEl);
+        escapeTextNodes(cleanedEl);
+        return cleanedEl;
     }
 }
