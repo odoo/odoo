@@ -236,6 +236,7 @@ test("list of table commands in first row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -266,6 +267,7 @@ test("list of table commands in first row if it's table header (TH)", async () =
         "move_down",
         // no insert above
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -293,6 +295,7 @@ test("list of table commands in second row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -320,6 +323,7 @@ test("list of table commands in last row", async () => {
         // no move down
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -1393,6 +1397,70 @@ test("should redistribute excess width from larger columns to current column", a
                         <td style="width: 80px;" class="m">13</td>
                         <td style="width: 120px;" class="n">14</td>
                     </tr>
+                </tbody>
+            </table>`)
+    );
+});
+
+test("applies alternating row colors when 'Insert Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Alternate row colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="o_alternating_rows">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td class="b">2</td></tr>
+                </tbody>
+            </table>`)
+    );
+});
+
+test("removes alternating row colors when 'Clear Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="o_alternating_rows">
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Clear alternate colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td class="b">2</td></tr>
                 </tbody>
             </table>`)
     );
