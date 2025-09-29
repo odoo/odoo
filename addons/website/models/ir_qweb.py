@@ -133,6 +133,23 @@ class IrQweb(models.AbstractModel):
         if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
+        # `src` attributes are translatable, but translatable strings are marked
+        # by wrapping them in a span. This can't work for links that are called
+        # once the DOM is loaded, as they will create wrong requests that will
+        # stall the server. In that case, we make a temporary
+        # `data-oe-translatable-link` attribute to safely translate links.
+        if website and self.env.context.get('edit_translations'):
+            re_translate_span = r'<span.+?>(.+?)</span>'
+            for tag in ('img', 'iframe', 'script'):
+                if tagName == tag and 'src' in atts:
+                    match = re.search(re_translate_span, atts.get('src'))
+                    if match:
+                        # Filter out <script> as their `src` should not be
+                        # translated.
+                        if tagName != 'script':
+                            atts['data-oe-translatable-link'] = atts.get('src')
+                        atts['src'] = match.group(1)
+
         if self.env.context.get('inherit_branding') or self.env.context.get('rendering_bundle') or \
            self.env.context.get('edit_translations') or self.env.context.get('debug') or (request and request.session.debug):
             return atts

@@ -334,12 +334,17 @@ export async function setupWebsiteBuilder(
     return {
         getEditor: () => editor,
         getEditableContent: () => editableContent,
-        openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
+        openBuilderSidebar: async () => {
+            await openBuilderSidebar(editAssetsLoaded);
+            if (translateMode) {
+                iframe.contentDocument.documentElement.dataset.edit_translations = "1";
+            }
+        },
         waitSidebarUpdated,
     };
 }
 
-async function openBuilderSidebar(editAssetsLoaded) {
+async function openBuilderSidebar(editAssetsLoaded, translateMode) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([
         getWebsiteSnippets(),

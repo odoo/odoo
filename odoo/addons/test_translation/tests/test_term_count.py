@@ -419,6 +419,19 @@ class TestTranslationFlow(common.TransactionCase):
         self.assertIn('slot', trans_static)
         self.assertIn('slot 2', trans_static)
 
+    def test_export_manually_translated_attrs(self):
+        trans_view = []
+        po_reader = TranslationModuleReader(self.env.cr, ['test_translation'])
+        for line in po_reader:
+            _module, _ttype, _name, res_id, source, _value, _comments = line
+            if res_id == "test_translation.manually_translated_attrs":
+                trans_view.append(source)
+
+        # src (MANUALLY_TRANSLATED_ATTRS)
+        self.assertNotIn('/web/image/partner/2/avatar_128', trans_view)
+        # alt (plain TRANSLATED_ATTRS)
+        self.assertIn('Image alt', trans_view)
+
     def test_export_spreadsheet(self):
         terms = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation'])

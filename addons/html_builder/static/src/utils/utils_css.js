@@ -317,7 +317,10 @@ export function shouldEditableMediaBeEditable(mediaEl) {
     // This case is complex and the solution to support it is not
     // perfect: we mark those media with a class and check that they
     // are descendant of a savable.
-    return mediaEl.parentElement && mediaEl.parentElement.closest(".o_savable");
+    return (
+        (mediaEl.parentElement && !!mediaEl.parentElement.closest(".o_savable")) ||
+        mediaEl.matches(".o_savable_attribute")
+    );
 }
 /**
  * Returns the label of a link element.

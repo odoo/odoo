@@ -333,6 +333,25 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_select_element', login='admin')
 
+    def test_translate_website_media(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        default_website = self.env.ref('website.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
+        })
+
+        self.env['ir.attachment'].create({
+            'name': 'one_pixel.png',
+            'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
+                     'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
+                     'AElFTkSuQmCC',
+            'public': True,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_website_media', login='admin')
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithWebsiteUser):

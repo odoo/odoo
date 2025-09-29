@@ -34,7 +34,9 @@ export class AttributeTranslateDialog extends Component {
     }
 
     get translationInfos() {
-        return this.props.elToTranslationInfoMap.get(this.props.node);
+        const translationInfos = { ...this.props.elToTranslationInfoMap.get(this.props.node) };
+        delete translationInfos["data-oe-translatable-link"];
+        return translationInfos;
     }
 
     addStepAndClose() {
