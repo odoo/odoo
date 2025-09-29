@@ -222,9 +222,12 @@ class Prefetch:
 
     @staticmethod
     def union(iterables):
-        iterables = OrderedSet(it for it in iterables if it)
-        if not iterables:
+        result = OrderedSet()
+        for it in iterables:
+            if it:
+                result.update(it._iterables) if isinstance(it, ConcatIds) else result.add(it)
+        if not result:
             return ()
-        if len(iterables) == 1:
-            return next(iter(iterables))
-        return ConcatIds(iterables)
+        if len(result) == 1:
+            return next(iter(result))
+        return ConcatIds(result)
