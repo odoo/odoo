@@ -518,20 +518,19 @@ class BaseCase(case.TestCase):
                 raise Exception('Wrong request stack cleanup.')
 
     @contextmanager
-    def _assertRaises(self, exception, *, msg=None):
+    def _raisesContext(self, method, expected_exception, *args, **kwargs):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:
             if self.env:
                 init.enter_context(self.env.cr.savepoint())
-                if issubclass(exception, AccessError):
-                    # The savepoint() above calls flush(), which leaves the
-                    # record cache with lots of data.  This can prevent
-                    # access errors to be detected. In order to avoid this
-                    # issue, we clear the cache before proceeding.
+                if issubclass(expected_exception, AccessError):
+                    # When checking for an `AccessError`, the cache is cleared
+                    # before executing the code. This avoids cache pollution issues and
+                    # ensures that access are re-evaluated correctly.
                     self.env.cr.clear()
 
             with ExitStack() as inner:
-                cm = inner.enter_context(super().assertRaises(exception, msg=msg))
+                cm = inner.enter_context(method(expected_exception, *args, **kwargs))
                 # *moves* the cleanups from init to inner, this ensures the
                 # savepoint gets rolled back when `yield` raises `exception`,
                 # but still allows the initialisation to be protected *and* not
@@ -540,12 +539,19 @@ class BaseCase(case.TestCase):
 
                 yield cm
 
-    def assertRaises(self, exception, func=None, *args, **kwargs):
-        if func:
-            with self._assertRaises(exception):
-                func(*args, **kwargs)
-        else:
-            return self._assertRaises(exception, **kwargs)
+    def assertRaises(self, expected_exception, callable=None, *args, **kwargs):
+        if callable:
+            with self._raisesContext(super().assertRaises, expected_exception):
+                callable(*args, **kwargs)
+            return None
+        return self._raisesContext(super().assertRaises, expected_exception, *args, **kwargs)
+
+    def assertRaisesRegex(self, expected_exception, expected_regex, callable=None, *args, **kwargs):
+        if callable:
+            with self._raisesContext(super().assertRaisesRegex, expected_exception, expected_regex):
+                callable(*args, **kwargs)
+            return None
+        return self._raisesContext(super().assertRaisesRegex, expected_exception, expected_regex, *args, **kwargs)
 
     def _patchExecute(self, actual_queries, flush=True):
         Cursor_execute = Cursor.execute

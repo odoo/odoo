@@ -120,6 +120,13 @@ First differing element 0:
         self.env.cr.execute("SHOW test_testing_utilities.a_flag")
         self.assertEqual(self.env.cr.fetchone(), ('',))
 
+        with self.assertRaisesRegex(CustomError, 'Blabla'):
+            self.env.cr.execute("SET LOCAL test_testing_utilities.a_flag = 'yes'")
+            raise CustomError('Blabla')
+
+        self.env.cr.execute("SHOW test_testing_utilities.a_flag")
+        self.assertEqual(self.env.cr.fetchone(), ('',))
+
     def test_assertRaises_error_at_setup(self):
         """Checks that an exception raised during the *setup* of assertRaises
         bubbles up correctly.
