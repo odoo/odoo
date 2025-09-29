@@ -307,6 +307,10 @@ class TestSaleOrder(SaleCommon):
         with self.assertRaises(UserError):
             self.sale_order.action_confirm()
 
+        order_line = self.sale_order.order_line[0]
+        with self.assertRaises(UserError):
+            order_line.order_id = self._create_sale_order()
+
         self.sale_order.action_unlock()
         self.assertEqual(self.sale_order.state, 'sale')
 

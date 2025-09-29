@@ -1308,7 +1308,7 @@ class SaleOrderLine(models.Model):
         """
         return [
             'product_id', 'name', 'price_unit', 'product_uom_id', 'product_uom_qty',
-            'tax_ids', 'analytic_distribution', 'discount'
+            'tax_ids', 'analytic_distribution', 'discount', 'order_id',
         ]
 
     def _update_line_quantity(self, values):
