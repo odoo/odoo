@@ -911,14 +911,6 @@ async function mail_thread_messages(request) {
     };
 }
 
-registerRoute("/mail/thread/recipients/fields", mail_thread_recipients_fields);
-async function mail_thread_recipients_fields(request) {
-    return {
-        partner_fields: [],
-        primary_email_field: [],
-    };
-}
-
 registerRoute("mail/thread/update_suggested_recipents", mail_thread_update_suggested_recipients);
 async function mail_thread_update_suggested_recipients(request) {
     return [];

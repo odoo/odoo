@@ -89,13 +89,6 @@ class ThreadController(http.Controller):
             for info in suggested if info['partner_id']
         ]
 
-    @http.route("/mail/thread/recipients/fields", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_recipients_fields(self, thread_model):
-        return {
-            'partner_fields': request.env[thread_model]._mail_get_partner_fields(),
-            'primary_email_field': [request.env[thread_model]._mail_get_primary_email_field()]
-        }
-
     @http.route("/mail/thread/recipients/get_suggested_recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients_get_suggested_recipients(self, thread_model, thread_id, partner_ids=None, main_email=False):
         """This method returns the suggested recipients with updates coming from the frontend.
