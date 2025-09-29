@@ -727,3 +727,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_hiding_sidebar_header(self):
         self.start_tour("/", "hide_sidebar_header", login="admin")
+
+    def test_website_edit_megamenu_visibility(self):
+        self.start_tour("/", 'edit_megamenu_visibility', login='admin')
