@@ -28,6 +28,7 @@ import {
     isUnprotecting,
     listElementSelector,
     isEditorTab,
+    isPhrasingContent,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -605,7 +606,11 @@ export class DomPlugin extends Plugin {
         }
         const cursors = this.dependencies.selection.preserveSelection();
         for (const block of this.getBlocksToTag()) {
-            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
+            if (
+                isParagraphRelatedElement(block) ||
+                isListItemElement(block) ||
+                isPhrasingContent(block)
+            ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
