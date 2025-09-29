@@ -156,8 +156,8 @@ def assert_attribute_override(parent_method, child_method, is_private):
 
 @tagged('-at_install', 'post_install')
 class TestLintOverrideSignatures(LintCase):
+    failureException = TypeError
     def test_lint_override_signature(self):
-        self.failureException = TypeError
         registry = Registry(get_db_name())
 
         for model_name, model_cls in registry.items():
