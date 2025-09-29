@@ -63,11 +63,12 @@ class SaleOrder(models.Model):
     # Action
 
     def _action_confirm(self):
+        """Override of `sale` to set/update `customer_product_ref_ids` on product."""
         res = super()._action_confirm()
         for line in self.order_line:
             if not line.edi_customer_product_ref:
                 continue
-            line.product_id._edi_set_customer_product_ref(
+            line.product_id._order_edi_set_customer_product_ref(
                 line.order_id.partner_id,
                 line.edi_customer_product_ref,
             )

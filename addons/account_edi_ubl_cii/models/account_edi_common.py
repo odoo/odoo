@@ -617,7 +617,7 @@ class AccountEdiCommon(models.AbstractModel):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(line_tree, document_type, qty_factor)
+            line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(record, line_tree, document_type, qty_factor)
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
             logs += tax_logs
             if not line_values['product_uom_id']:
@@ -661,7 +661,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         return lines_values, logs
 
-    def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
+    def _retrieve_invoice_line_vals(self, record, tree, document_type=False, qty_factor=1):
         # Start and End date (enterprise fields)
         xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
         deferred_values = {}
@@ -678,11 +678,11 @@ class AccountEdiCommon(models.AbstractModel):
             }
 
         return {
-            **self._retrieve_line_vals(tree, document_type, qty_factor),
+            **self._retrieve_line_vals(record, tree, document_type, qty_factor),
             **deferred_values,
         }
 
-    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+    def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
         to fill an invoice line form: quantity, price_unit, discount, product_uom_id.
