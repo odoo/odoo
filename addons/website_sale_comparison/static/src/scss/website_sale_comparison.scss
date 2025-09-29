@@ -37,6 +37,10 @@
 
         width: var(--o-website-sale-comparison-table-column-width);
         padding: 0 var(--o-website-sale-comparison-table-column-padding-x);
+
+        img {
+            @extend %o-wsale-shop-thumb;
+        }
     }
 
     #o_comparelist_table {
@@ -128,9 +132,7 @@
     .o_wsale_comparison_bottom_bar_image {
         width: 2.5rem;
         height: fit-content;
-        aspect-ratio: var(--wsale-product-thumb-aspect-ratio, 1/1);
-        object-fit: cover;
-        object-position: center;
+        @extend %o-wsale-shop-thumb;
     }
 }
 
