@@ -232,6 +232,7 @@ export class CartPage extends Component {
         const card = event?.target.closest(".product-cart-item");
         if (!card) {
             doRemoveLine();
+            return;
         }
         const onAnimationEnd = () => {
             card.removeEventListener("animationend", onAnimationEnd);
@@ -254,7 +255,7 @@ export class CartPage extends Component {
         increase ? line.qty++ : line.qty--;
 
         if (line.qty <= 0) {
-            this.removeLine(line.uuid);
+            this.removeLine(line);
         }
     }
 
