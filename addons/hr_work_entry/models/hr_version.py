@@ -30,7 +30,7 @@ class HrVersion(models.Model):
         Working Schedule: Work entries will be generated from the working hours below.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="hr.group_hr_manager")
+    ''', groups="base.group_system,hr.group_hr_manager")
     work_entry_source_calendar_invalid = fields.Boolean(
         compute='_compute_work_entry_source_calendar_invalid',
         groups="hr.group_hr_manager",
@@ -311,7 +311,8 @@ class HrVersion(models.Model):
                 leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
                     leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
+                    # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
+                    interval_leaves = [leave for leave in leaves if not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id]
                     interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                     version_vals += [dict([

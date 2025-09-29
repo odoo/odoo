@@ -41,6 +41,7 @@
                 <field name="employee_id" invisible="1"/>
                 <field name="color" invisible="1"/>
                 <field name="display_code" invisible="1"/>
+                <field name="is_manual" invisible="1"/>
             </form>
         </field>
     </record>
@@ -99,7 +100,7 @@
                         <group>
                             <field name="date" readonly="state != 'draft'"/>
                             <label for="duration"/>
-                            <div class="o_row mw-50 mw-sm-25">
+                            <div class="o_row mw-50 mw-sm-25" name="duration">
                                 <field name="duration"
                                     nolabel="1"
                                     widget="float_time"
@@ -107,6 +108,9 @@
                                     readonly="state != 'draft'"/>
                                 <span>Hours</span>
                             </div>
+                            <field name="resource_calendar_id" string="Source" invisible="is_manual or work_entry_source != 'calendar' or is_leave" readonly="1"/>
+                            <span class="text-muted fw-medium" invisible="not is_manual">Source</span>
+                            <span class="o_row mw-50 mw-sm-25" invisible="not is_manual">Manual</span>
                             <field name="company_id" invisible="1"/>
                         </group>
                     </group>
