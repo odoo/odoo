@@ -1,10 +1,12 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
+    top: 0;
+    bottom: 0;
+    left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
     border-width: 0 0 $o-we-border-width $o-we-border-width;
-    height: calc(100% + #{$o-hb-row-spacing * 3});
     pointer-events: none;
-    transform: translate($_level-left - $o-we-border-width, ($o-hb-row-min-height * -0.65) - $o-we-border-width);
+    transform: translate(0, ($o-hb-row-min-height + $o-hb-row-spacing) * -0.5 + $o-we-border-width);
     content: "";
 }
 
@@ -44,7 +46,6 @@
         min-width: 0;
         flex: 0 0 44%;
         z-index: $_z-index;
-        position: relative;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
         align-self: baseline;
@@ -124,7 +125,7 @@
 
             & > .hb-row-label::after {
                 width: $_level-width;
-                left: $_level-left;
+                left: $_level-left - $o-we-border-width;
             }
         }
 
