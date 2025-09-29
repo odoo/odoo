@@ -113,7 +113,7 @@ class AccountMoveLine(models.Model):
             return any(tax.l10n_in_reverse_charge for tax in line.tax_ids | line.tax_line_id)
 
         def is_lut_tax(line):
-            return any(tax.l10n_in_is_lut for tax in line.tax_ids)
+            return any(tax.l10n_in_is_lut for tax in line.tax_ids | line.tax_line_id)
 
         def get_sales_section(line, tax_tags_dict):
             move = line.move_id
