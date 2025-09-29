@@ -109,7 +109,7 @@ class HrEmployee(models.Model):
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user", string='Company Country Code')
-    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False, tracking=True)
+    work_phone = fields.Char('Work Phone', store=True, readonly=False, tracking=True)
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
@@ -383,12 +383,14 @@ class HrEmployee(models.Model):
                 order='date_version desc',
                 limit=1,
             )
+            new_current_version = False
             if version:
-                employee.current_version_id = version
+                new_current_version = version
             elif employee.version_ids:
-                employee.current_version_id = employee.version_ids[0]
-            else:
-                employee.current_version_id = False
+                new_current_version = employee.version_ids[0]
+            # To not trigger computed properties if still the same version
+            if employee.current_version_id != new_current_version:
+                employee.current_version_id = new_current_version
 
     def _cron_update_current_version_id(self):
         self.search([])._compute_current_version_id()
@@ -583,12 +585,6 @@ class HrEmployee(models.Model):
         ])
         return [('id', operator, new_hires.ids)]
 
-    @api.depends('address_id.phone')
-    def _compute_phones(self):
-        for employee in self:
-            if employee.address_id.phone:
-                employee.work_phone = employee.address_id.phone
-
     def _create_work_contacts(self):
         if any(employee.work_contact_id for employee in self):
             raise UserError(_('Some employee already have a work contact'))
@@ -743,15 +739,6 @@ class HrEmployee(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
-
-    @api.depends('distance_home_work', 'distance_home_work_unit')
-    def _compute_km_home_work(self):
-        for employee in self:
-            employee.km_home_work = employee.distance_home_work * 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
-
-    def _inverse_km_home_work(self):
-        for employee in self:
-            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
 
     def _get_partner_count_depends(self):
         return ['user_id']
