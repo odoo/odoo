@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
@@ -1421,7 +1422,8 @@ class TestLoyalty(TestSaleCouponCommon):
 
     @freeze_time("2026-01-10")
     def test_expired_ewallet_is_not_claimable(self):
-        self.ewallet.expiration_date = "2026-01-01"
+        with freeze_time("2026-01-01"):
+            self.ewallet.expiration_date = date.today()
         sale_order = self._create_so(order_line=[Command.create({"product_id": self.product_a.id})])
         sale_order.action_open_reward_wizard()
         sale_order._update_programs_and_rewards()
