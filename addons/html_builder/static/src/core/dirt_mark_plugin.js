@@ -68,6 +68,10 @@ export class DirtMarkPlugin extends Plugin {
                 }
             }
         },
+        has_unsaved_data_predicates: () =>
+            this.getResource("dirt_marks").some(({ id }) =>
+                this.editable.querySelector(`[data-dirty-${id}]`)
+            ) || undefined,
         on_will_reset_history_after_saving_handlers: () =>
             Promise.all(
                 this.getResource("dirt_marks").map(({ id, save, saveAll }) => {

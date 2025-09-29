@@ -86,6 +86,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
+        has_unsaved_data_predicates: () =>
+            this.viewsToEnableOnSave.difference(this.savedViewsEnabled).size > 0 ||
+            this.viewsToDisableOnSave.difference(this.savedViewsDisabled).size > 0 ||
+            undefined,
         on_ready_to_save_document_handlers: this.onSave.bind(this),
     };
 

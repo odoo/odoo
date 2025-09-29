@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * @typedef { Object } SaveShared
  * @property { SavePlugin['save'] } save
+ * @property { SavePlugin['hasUnsaveData'] } hasUnsaveData
  * @property { SavePlugin['prepareElementForSave'] } prepareElementForSave
  */
 
@@ -16,12 +17,13 @@ import { _t } from "@web/core/l10n/translation";
  *
  * @typedef {(() => Promise<boolean>)[]} on_ready_to_save_document_handlers
  * Called concurrently as part of the save process.
+ *
+ * @typedef {(() => boolean)[]} has_unsaved_data_predicates
  */
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "prepareElementForSave"];
-    static dependencies = ["history"];
+    static shared = ["hasUnsaveData", "save", "prepareElementForSave"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -43,7 +45,7 @@ export class SavePlugin extends Plugin {
         let skipAfterSaveHandlers;
         try {
             await Promise.all(this.trigger("on_will_save_handlers"));
-            await this._save();
+            await Promise.all(this.trigger("on_ready_to_save_document_handlers"));
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } catch (error) {
             if (error.exceptionName === "odoo.exceptions.ValidationError") {
@@ -60,9 +62,9 @@ export class SavePlugin extends Plugin {
             }
         }
     }
-    async _save() {
-        await Promise.all(this.trigger("on_ready_to_save_document_handlers"));
-        this.dependencies.history.reset();
+
+    hasUnsaveData() {
+        return this.checkPredicates("has_unsaved_data_predicates") ?? false;
     }
 
     /**
