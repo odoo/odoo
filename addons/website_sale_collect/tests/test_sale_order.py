@@ -16,9 +16,9 @@ class TestSaleOrder(ClickAndCollectCommon):
         cls.product_2 = cls._create_product()
 
     def test_warehouse_is_updated_when_changing_delivery_line(self):
-        self.warehouse_2 = self._create_warehouse()
+        warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse
-        so = self._create_in_store_delivery_order(warehouse_id=self.warehouse_2.id)
+        so = self._create_in_store_delivery_order(warehouse_id=warehouse_2.id)
         so._set_delivery_method(self.free_delivery)
         self.assertEqual(so.warehouse_id, self.warehouse)
 
@@ -79,8 +79,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
     def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
-        self.warehouse_2 = self._create_warehouse()
-        self.website.warehouse_id = self.warehouse_2
+        self.website.warehouse_id = self._create_warehouse()
         so = self._create_in_store_delivery_order()
         so.warehouse_id = self.warehouse
         free_qty = so._get_free_qty(self.storable_product)
@@ -132,7 +131,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertIn(cart.order_line, insufficient_stock_data)
 
     def test_product_in_different_warehouse_is_unavailable(self):
-        self.warehouse_2 = self._create_warehouse()
+        warehouse_2 = self._create_warehouse()
         cart = self._create_in_store_delivery_order(
             order_line=[
                 Command.create({
@@ -141,5 +140,5 @@ class TestSaleOrder(ClickAndCollectCommon):
                 })
             ]
         )
-        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse_2.id)
+        insufficient_stock_data = cart._get_insufficient_stock_data(warehouse_2.id)
         self.assertIn(cart.order_line, insufficient_stock_data)
