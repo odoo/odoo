@@ -116,7 +116,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         View = self.env['ir.ui.view']
         Page = self.env['website.page']
 
-        self.generic_view = View.create({
+        generic_view = View.create({
             'name': 'Generic',
             'type': 'qweb',
             'arch': '''
@@ -125,8 +125,8 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
             'key': 'test.generic_view',
         })
 
-        self.generic_page = Page.create({
-            'view_id': self.generic_view.id,
+        Page.create({
+            'view_id': generic_view.id,
             'url': '/generic',
         })
 

@@ -51,26 +51,26 @@ class TestPage(common.TransactionCase):
         Page = self.env['website.page']
         Menu = self.env['website.menu']
         # Specific page
-        self.specific_view = View.create({
+        specific_view = View.create({
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>Specific View</div>',
             'key': 'test.specific_view',
         })
-        self.page_specific = Page.create({
-            'view_id': self.specific_view.id,
+        page_specific = Page.create({
+            'view_id': specific_view.id,
             'url': '/page_specific',
             'website_id': 1,
         })
-        self.page_specific_menu = Menu.create({
+        Menu.create({
             'name': 'Page Specific menu',
-            'page_id': self.page_specific.id,
+            'page_id': page_specific.id,
             'website_id': 1,
         })
         total_pages = Page.search_count([])
         total_menus = Menu.search_count([])
         # Copying a specific page should create a new page with an unique URL (suffixed by -X)
-        Page.clone_page(self.page_specific.id, clone_menu=True)
+        Page.clone_page(page_specific.id, clone_menu=True)
         cloned_page = Page.search([('url', '=', '/page_specific-1')])
         cloned_menu = Menu.search([('url', '=', '/page_specific-1')])
         self.assertEqual(len(cloned_page), 1, "A page with an URL /page_specific-1 should've been created")
@@ -79,7 +79,7 @@ class TestPage(common.TransactionCase):
         self.assertEqual(len(cloned_menu), 1, "A specific page (with a menu) being cloned should have it's menu also cloned")
         self.assertEqual(cloned_menu.page_id, cloned_page, "The new cloned menu and the new cloned page should be linked (m2o)")
         self.assertEqual(Menu.search_count([]), total_menus + 1, "Should have cloned the page menu")
-        Page.clone_page(self.page_specific.id, page_name="about-us", clone_menu=True)
+        Page.clone_page(page_specific.id, page_name="about-us", clone_menu=True)
         cloned_page_about_us = Page.search([('url', '=', '/about-us')])
         cloned_menu_about_us = Menu.search([('url', '=', '/about-us')])
         self.assertEqual(len(cloned_page_about_us), 1, "A page with an URL /about-us should've been created")

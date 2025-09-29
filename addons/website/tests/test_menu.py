@@ -19,13 +19,13 @@ class TestMenu(common.TransactionCase):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
 
-        self.menu_root = Menu.create({
+        menu_root = Menu.create({
             'name': 'Root',
         })
 
-        self.menu_child = Menu.create({
+        Menu.create({
             'name': 'Child',
-            'parent_id': self.menu_root.id,
+            'parent_id': menu_root.id,
         })
 
         self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
@@ -140,7 +140,7 @@ class TestMenu(common.TransactionCase):
                 # `request.httprequest.url`. This is simulating as if we were
                 # really calling the `_is_active()` method from this endpoint
                 # url.
-                return url_parse(self.request_url_mock)
+                return url_parse(request_url_mock)
             return url_parse(s)
 
         def test_full_case(a_menu):
@@ -161,8 +161,9 @@ class TestMenu(common.TransactionCase):
             - Not same domain: -> Not active
             It should receives a URL with no query string and no anchor.
             """
+            nonlocal request_url_mock
             url = a_menu.url
-            self.request_url_mock = 'http://localhost:8069' + url
+            request_url_mock = 'http://localhost:8069' + url
             with MockRequest(self.env, website=website_1), \
                  patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, no qs, should match")
@@ -170,16 +171,16 @@ class TestMenu(common.TransactionCase):
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, no qs, should match (anchor should be ignored)")
                 a_menu.url = f'{url}?qs=1'
                 self.assertFalse(a_menu._is_active(), "Same path, no domain, qs mismatch, should not match")
-                self.request_url_mock = f'http://localhost:8069{url}?qs=2'
+                request_url_mock = f'http://localhost:8069{url}?qs=2'
                 self.assertFalse(a_menu._is_active(), "Same path, no domain, qs mismatch (not the same val), should not match")
-                self.request_url_mock = f'http://localhost:8069{url}?qs=1'
+                request_url_mock = f'http://localhost:8069{url}?qs=1'
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, qs match, should match")
-                self.request_url_mock = f'http://localhost:8069{url}?qs=1&qs_extra=1'
+                request_url_mock = f'http://localhost:8069{url}?qs=1&qs_extra=1'
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, qs subset match, should match")
                 a_menu.url = f'http://localhost.com:8069{url}'
-                self.request_url_mock = f'http://example.com:8069{url}'
+                request_url_mock = f'http://example.com:8069{url}'
                 self.assertFalse(a_menu._is_active(), "Same path, domain mismatch, should not match")
-                self.request_url_mock = f'http://localhost.com:8069{url}'
+                request_url_mock = f'http://localhost.com:8069{url}'
                 self.assertTrue(a_menu._is_active(), "Same path, same domain, should match")
 
         # First, test the full cases with a normal top menu (no child)
@@ -204,7 +205,7 @@ class TestMenu(common.TransactionCase):
         submenu2 = submenu.copy({'parent_id': menu3.id})
 
         # Second, test a nested menu configuration (simple URL, no qs/anchor)
-        self.request_url_mock = 'http://localhost:8069/'
+        request_url_mock = 'http://localhost:8069/'
         with MockRequest(self.env, website=website_1), \
              patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
             self.assertFalse(menu._is_active(), "Same path but it's a container menu, its URL shouldn't be considered")
@@ -220,7 +221,7 @@ class TestMenu(common.TransactionCase):
             self.assertFalse(submenu._is_active(), "Not same path (2)")
             self.assertFalse(submenu2._is_active(), "Not same path (3)")
 
-            self.request_url_mock = 'http://localhost:8069/contactus'
+            request_url_mock = 'http://localhost:8069/contactus'
             self.assertTrue(menu._is_active(), "A child is active (submenu)")
             self.assertFalse(menu2._is_active(), "Not same path (4)")
             self.assertTrue(menu3._is_active(), "A child is active (submenu2)")
@@ -254,44 +255,44 @@ class TestMenu(common.TransactionCase):
         Menu = self.env['website.menu']
 
         # Validation 1: Parent menu validation
-        self.main_menu = Menu.create({
+        main_menu = Menu.create({
             'name': 'Main',
         })
-        self.child_menu_1 = Menu.create({
+        child_menu_1 = Menu.create({
             'name': 'Child1',
         })
-        self.child_menu_1.parent_id = self.main_menu.id
+        child_menu_1.parent_id = main_menu.id
 
         # Attempt to assign a second child menu as a child of the first child menu,
         # which should raise a UserError due to hierarchy restrictions.
-        self.child_menu_2 = Menu.create({
+        child_menu_2 = Menu.create({
             'name': 'Child2',
         })
         with self.assertRaises(UserError):
-            self.child_menu_2.parent_id = self.child_menu_1.id
+            child_menu_2.parent_id = child_menu_1.id
 
         # Validation 2: Mega menu validation
-        self.mega_menu = Menu.create({
+        mega_menu = Menu.create({
             'name': 'Mega menu',
             'is_mega_menu': True,
         })
-        self.another_menu = Menu.create({
+        another_menu = Menu.create({
             'name': 'Sample_menu',
         })
 
         # Attempt to assign a parent to the mega menu and a child to it,
         # which should both raise UserErrors due to mega menu restrictions.
         with self.assertRaises(UserError):
-            self.mega_menu.parent_id = self.another_menu.id
+            mega_menu.parent_id = another_menu.id
 
         with self.assertRaises(UserError):
-            self.another_menu.parent_id = self.mega_menu.id
+            another_menu.parent_id = mega_menu.id
 
         # Validation 3: Child menu condition validation
         # Attempt to assign another_menu as a parent of main_menu chain having Child1,
         # which should raise a UserError because a main_menu had child.
         with self.assertRaises(UserError):
-            self.main_menu.parent_id = self.another_menu.id
+            main_menu.parent_id = another_menu.id
 
 
 class TestMenuHttp(common.HttpCase):
