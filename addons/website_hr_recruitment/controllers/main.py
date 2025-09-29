@@ -111,7 +111,7 @@ class WebsiteHrRecruitment(WebsiteForm):
 
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
         website = request.website
-        department = env['hr.department'].browse(to_int(department_id)).exists()
+        department = env['hr.department'].browse(to_int(department_id)).exists().sudo()
         country = env['res.country'].browse(to_int(country_id)).exists()
         office = env['res.partner'].browse(to_int(office_id)).exists()
         contract_type = env['hr.contract.type'].browse(to_int(contract_type_id)).exists().sudo()
