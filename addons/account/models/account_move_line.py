@@ -106,6 +106,7 @@ class AccountMoveLine(models.Model):
     account_code = fields.Char(related='account_id.code') # Used for easy configuration of consolidation in the reports
     # TODO: move the search method on the `account_id` field when it's possible to add a search on a stored field
     search_account_id = fields.Many2one('account.account', search='_search_account_id', store=False)
+    search_partner_id = fields.Many2one('res.partner', search='_search_partner_id', store=False)
     name = fields.Char(
         string='Label',
         compute='_compute_name', store=True, readonly=False, precompute=True,
@@ -661,6 +662,26 @@ class AccountMoveLine(models.Model):
                 value = self.env['account.account'].sudo()._search(value).get_result_ids()
 
         return [('account_id', operator, value)]
+
+    @api.model
+    def _search_partner_id(self, operator, value):
+        if (
+            operator in ('in', 'not in', 'any', 'not any')
+            and not isinstance(value, (tuple, list, OrderedSet))
+        ):
+            IN_MAX = 10000
+            if isinstance(value, (Query, SQL)):
+                query_value = value.select('id') if isinstance(value, Query) else value
+                res = [row[0] for row in self.env.execute_query(query_value)]
+            else:  # isinstance(value, Domain) is True
+                res = self.env['res.partner']._search(value, limit=IN_MAX).get_result_ids()
+
+            if len(res) < IN_MAX:  # Only inject ids if the result is under IN_MAX
+                if operator in ('any', 'not any'):
+                    operator = {'any': 'in', 'not any': 'not in'}[operator]
+                value = res
+
+        return [('partner_id', operator, value)]
 
     @api.depends('move_id')
     def _compute_balance(self):
