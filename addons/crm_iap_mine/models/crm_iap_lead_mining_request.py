@@ -236,7 +236,7 @@ class CrmIapLeadMiningRequest(models.Model):
         self.error_type = False
         server_payload = self._prepare_iap_payload()
         reveal_account = self.env['iap.account'].get('reveal')
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         params = {
             'account_token': reveal_account.sudo().account_token,
             'dbuuid': dbuuid,

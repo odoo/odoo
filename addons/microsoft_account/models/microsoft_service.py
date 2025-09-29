@@ -91,10 +91,8 @@ class MicrosoftService(models.AbstractModel):
             'd': self.env.cr.dbname,
             's': service,
             'f': from_url,
-            'u': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'u': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
-
-        get_param = self.env['ir.config_parameter'].sudo().get_param
 
         encoded_params = urls.url_encode({
             'response_type': 'code',

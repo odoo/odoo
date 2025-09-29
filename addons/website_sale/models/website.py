@@ -479,7 +479,7 @@ class Website(models.Model):
                 f"Now, generate the 8 eCommerce categories for the {industry_name_}, adhering to the specified format and constraints."
             )
             IrConfigParameterSudo = self.env['ir.config_parameter'].sudo()
-            database_id = IrConfigParameterSudo.get_param('database.uuid')
+            database_id = IrConfigParameterSudo.get_str('database.uuid')
             try:
                 response = self._OLG_api_rpc('/api/olg/1/chat', {
                     'prompt': prompt,

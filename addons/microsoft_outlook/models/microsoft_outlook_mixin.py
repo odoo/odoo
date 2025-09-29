@@ -91,7 +91,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'mail.server.outlook.iap.endpoint',
                 self._DEFAULT_OUTLOOK_IAP_ENDPOINT,
             )
-            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+            db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
             callback_params = url_encode({
@@ -211,7 +211,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             'mail.server.outlook.iap.endpoint',
             self.env['microsoft.outlook.mixin']._DEFAULT_OUTLOOK_IAP_ENDPOINT,
         )
-        db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
         response = requests.get(
             url_join(outlook_iap_endpoint, '/api/mail_oauth/1/outlook_access_token'),

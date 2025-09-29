@@ -225,7 +225,7 @@ class PosConfig(models.Model):
         help="This ID needs to be set in the printer's configuration to secure server printing.",
         readonly=True,
         store=False,
-        default=lambda self: self.env['ir.config_parameter'].sudo().get_param('database.uuid', "")[:30].strip(),  # 30 is the max size in printer settings
+        default=lambda self: self.env['ir.config_parameter'].sudo().get_str('database.uuid')[:30].strip(),  # 30 is the max size in printer settings
     )
     epson_server_pending_receipt_ids = fields.One2many(
         'pos.printer.pending.receipt',

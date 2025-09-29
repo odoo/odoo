@@ -1522,6 +1522,6 @@ class MailingMailing(models.Model):
         """
         self.ensure_one()
         assert isinstance(email, str)
-        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        secret = self.env["ir.config_parameter"].sudo().get_str("database.secret")
         token = (self.env.cr.dbname, self.id, int(document_id), email)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()

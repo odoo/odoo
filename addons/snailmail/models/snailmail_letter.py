@@ -226,7 +226,7 @@ class SnailmailLetter(models.Model):
         }
         """
         account_token = self.env['iap.account'].get('snailmail').sudo().account_token
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         documents = []
 
         for letter in self:

@@ -89,7 +89,7 @@ class GoogleGmailMixin(models.AbstractModel):
                 'mail.server.gmail.iap.endpoint',
                 self._DEFAULT_GMAIL_IAP_ENDPOINT,
             )
-            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+            db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
             callback_params = url_encode({
@@ -206,7 +206,7 @@ class GoogleGmailMixin(models.AbstractModel):
             'mail.server.gmail.iap.endpoint',
             self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT,
         )
-        db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
         response = requests.get(
             url_join(gmail_iap_endpoint, '/api/mail_oauth/1/gmail_access_token'),

@@ -13,7 +13,7 @@ class IapEnrichApi(models.AbstractModel):
     @api.model
     def _contact_iap(self, local_endpoint, params):
         account = self.env['iap.account'].get('reveal')
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         params['account_token'] = account.sudo().account_token
         params['dbuuid'] = dbuuid
         base_url = self.env['ir.config_parameter'].sudo().get_param('enrich.endpoint', self._DEFAULT_ENDPOINT)

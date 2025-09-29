@@ -1909,7 +1909,7 @@ class Request:
         :returns: ASCII token string
         :rtype: str
         """
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
         if not secret:
             raise ValueError("CSRF protection requires a configured database secret")
 
@@ -1931,7 +1931,7 @@ class Request:
         if not csrf:
             return False
 
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
         if not secret:
             raise ValueError("CSRF protection requires a configured database secret")
 
