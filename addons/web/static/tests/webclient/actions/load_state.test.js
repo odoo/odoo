@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAllAttributes, queryAllTexts, queryFirst, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
@@ -28,7 +29,6 @@ import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t as basic_t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { queryAllAttributes, queryAllTexts, queryFirst, runAllTimers } from "@odoo/hoot-dom";
 
 function _t() {
     odoo.translationContext = "web";
@@ -1761,6 +1761,37 @@ describe(`new urls`, () => {
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "set current_lang-en",
         ]);
+    });
+
+    test(`browser back on invalid form view`, async () => {
+        Partner._fields.foo.required = true;
+        await mountWebClient();
+        await getService("action").doAction({
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            name: "Partners",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        });
+
+        await runAllTimers(); // wait for router pushState
+        expect(`.o_list_view`).toHaveCount(1);
+
+        await contains(".o_data_cell").click();
+        await runAllTimers(); // wait for router pushState
+        expect(`.o_form_view`).toHaveCount(1);
+
+        await contains(".o_field_widget[name=foo] input").edit("");
+        browser.history.back(); // Click on back button
+        await animationFrame();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
+        // In webclient, we listen to the "ROUTE_CHANGE" event to load the new state,
+        // and we set `pointer-events: none` during the loadState. In this case,
+        // we assert that the rule has been correctly removed.
+        expect(document.body.style.pointerEvents).not.toBe("none");
     });
 
     test(`reload without lang change`, async () => {
