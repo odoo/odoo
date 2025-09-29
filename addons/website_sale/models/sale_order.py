@@ -663,6 +663,11 @@ class SaleOrder(models.Model):
 
         return random.sample(all_accessory_products, len(all_accessory_products))
 
+    def _prepare_invoice(self):
+        res = super()._prepare_invoice()
+        res['website_id'] = self.website_id.id
+        return res
+
     def _cart_recovery_email_send(self):
         """Send the cart recovery email on the current recordset,
         making sure that the portal token exists to avoid broken links, and marking the email as sent.
