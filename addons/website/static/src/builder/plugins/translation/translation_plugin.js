@@ -98,6 +98,16 @@ export class TranslationPlugin extends Plugin {
             setDirtyOnMutation: (record) =>
                 closestElement(record.target, ".o_savable[data-oe-translation-source-sha]"),
         },
+        has_unsaved_data_predicates: () =>
+            this.elToTranslationInfoMap
+                .entries()
+                .some(([translateEl, translationInfo]) =>
+                    Object.entries(translationInfo).some(
+                        ([attr, data]) =>
+                            this.originalElToTranslationInfoMap.get(translateEl)[attr]
+                                .translation !== data.translation
+                    )
+                ),
         save_handlers: this.saveHandler.bind(this),
     };
 

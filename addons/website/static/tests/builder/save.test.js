@@ -31,6 +31,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { WebsiteSavePlugin } from "@website/builder/plugins/website_save_plugin";
 
 defineWebsiteModels();
 
@@ -537,12 +538,12 @@ test("attempt to prevent closing window with unsaved changes", async () => {
         }
     }
     const deferSave = Promise.withResolvers();
-    addPlugin(
-        class extends Plugin {
-            static id = "test";
-            resources = { save_handlers: () => deferSave.promise };
-        }
-    );
+    patchWithCleanup(WebsiteSavePlugin.prototype, {
+        async saveElements(...args) {
+            await deferSave.promise;
+            return await super.saveElements(...args);
+        },
+    });
     setupSaveAndReloadIframe();
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
 

@@ -15,6 +15,13 @@ export class CachedModelPlugin extends Plugin {
     static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        has_unsaved_data_predicates: () => {
+            const inventory = {}; // model => { recordId => { field => value } }
+            for (const modelEdit of Object.values(this.modelEditCache.cache)) {
+                modelEdit.collect(inventory);
+            }
+            return Object.keys(inventory).length > 0;
+        },
         save_handlers: this.savePendingRecords.bind(this),
     };
     setup() {
@@ -85,6 +92,5 @@ export class CachedModelPlugin extends Plugin {
             }
         }
         await Promise.all(proms);
-        return !!inventory.length;
     }
 }

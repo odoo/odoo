@@ -4,6 +4,7 @@ import { Plugin } from "@html_editor/plugin";
 /**
  * @typedef { Object } SaveShared
  * @property { SavePlugin['save'] } save
+ * @property { SavePlugin['hasUnsaveData'] } hasUnsaveData
  * @property { SavePlugin['prepareElementForSave'] } prepareElementForSave
  */
 
@@ -14,18 +15,19 @@ import { Plugin } from "@html_editor/plugin";
  * @typedef {((arg: { root: HTMLElement }) => void)[]} clean_for_save_handlers
  * Clean DOM node before save, root is the clone of a dirty node
  * @typedef {(() => Promise<void>)[]} save_handlers
+ *
+ * @typedef {(() => boolean)[]} has_unsaved_data_predicates
  */
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "prepareElementForSave"];
-    static dependencies = ["history"];
+    static shared = ["hasUnsaveData", "save", "prepareElementForSave"];
 
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
             await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
-            await this._save();
+            await Promise.all(this.getResource("save_handlers").map((c) => c()));
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } finally {
             if (!skipAfterSaveHandlers) {
@@ -33,9 +35,9 @@ export class SavePlugin extends Plugin {
             }
         }
     }
-    async _save() {
-        await Promise.all(this.getResource("save_handlers").map((c) => c()));
-        this.dependencies.history.reset();
+
+    hasUnsaveData() {
+        return this.getResource("has_unsaved_data_predicates").some((p) => p());
     }
 
     /**
