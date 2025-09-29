@@ -16,7 +16,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 
 describe.current.tags("desktop");
@@ -920,5 +920,20 @@ describe("sanitized values", () => {
         await contains(".options-container input").edit("1.284778323");
         expect(".options-container input").toHaveValue("1.285");
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "1.285");
+    });
+    test("should save font with full precision in rem and display to correct value in px", async () => {
+        class WebEditorAssets extends models.Model {
+            _name = "web_editor.assets";
+            make_scss_customization() {}
+        }
+        defineModels([WebEditorAssets]);
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" unit="'px'" saveUnit="'rem'"/>`,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">Test</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit("19");
+        expect(".options-container input").toHaveValue("19");
     });
 });
