@@ -13,13 +13,30 @@ class CoverPropertiesOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(COVER_PROPERTIES, CoverPropertiesOption)],
-        builder_actions: {
-            SetCoverBackgroundAction,
-            MarkCoverPropertiesToBeSavedAction,
-        },
-        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
+        builder_actions: { SetCoverBackgroundAction },
         before_save_handlers: this.savePendingBackgroundImage.bind(this),
-        save_element_handlers: this.saveCoverProperties.bind(this),
+        dirt_marks: {
+            id: "cover-props",
+            setDirtyOnMutation: (record) => {
+                // based on what will be read with readCoverPoperties
+                if (
+                    record.target.matches?.(".o_record_cover_image, .o_record_cover_filter") &&
+                    record.attributeName === "style"
+                ) {
+                    return record.target.closest(".o_record_cover_container");
+                }
+                if (
+                    record.target.classList?.contains("o_record_cover_container") &&
+                    (record.attributeName === "style" || record.type === "classList")
+                ) {
+                    return record.target;
+                }
+            },
+            save: (el) =>
+                this.services.orm.write(el.dataset.resModel, [Number(el.dataset.resId)], {
+                    cover_properties: JSON.stringify(this.readCoverPoperties(el)),
+                }),
+        },
     };
 
     async savePendingBackgroundImage(editableEl = this.editable) {
@@ -64,24 +81,6 @@ class CoverPropertiesOptionPlugin extends Plugin {
         }
     }
 
-    saveCoverProperties(el) {
-        if (!el.dataset.coverPropertiesToBeSaved) {
-            return;
-        }
-        delete el.dataset.coverPropertiesToBeSaved;
-
-        const resModel = el.dataset.resModel;
-        const resID = Number(el.dataset.resId);
-
-        if (!resModel || !resID) {
-            throw new Error("There should be a model and id associated to the cover");
-        }
-
-        return this.services.orm.write(resModel, [resID], {
-            cover_properties: JSON.stringify(this.readCoverPoperties(el)),
-        });
-    }
-
     readCoverPoperties(el) {
         const coverProperties = {};
         const bg = el.querySelector(".o_record_cover_image")?.style.backgroundImage || "";
@@ -114,14 +113,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
     }
 }
 
-export class BaseCoverPropertiesAction extends BuilderAction {
-    static id = "baseCoverProperties";
-    markCoverPropertiesToBeSaved({ editingElement }) {
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
-    }
-}
-
-export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
+export class SetCoverBackgroundAction extends BuilderAction {
     static id = "setCoverBackground";
     static dependencies = ["builderActions", "media"];
     setup() {
@@ -171,14 +163,6 @@ export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
             params: { mainParam: "background-image" },
             value: imageSrc ? `url('${imageSrc}')` : "",
         });
-
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
-    }
-}
-export class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {
-    static id = "markCoverPropertiesToBeSaved";
-    apply({ editingElement }) {
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
     }
 }
 

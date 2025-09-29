@@ -158,7 +158,7 @@ test("Translate link of a mega menu", async () => {
         focusOffset: 5,
     });
     pasteText(editor, "x");
-    expect(":iframe a [data-oe-model].o_dirty").toHaveCount(1);
+    expect(":iframe a [data-oe-model][data-dirty-translation]").toHaveCount(1);
 });
 
 test("cascade of [data-oe-model] in translation", async () => {
@@ -549,22 +549,22 @@ describe("replicated translations", () => {
         const editor = getEditor();
         span2.append(" ici");
         editor.shared.history.addStep();
-        expect(span1).not.toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
+        expect(span1).not.toHaveAttribute("data-dirty-translation");
+        expect(span2).toHaveAttribute("data-dirty-translation");
+        expect(span3).not.toHaveAttribute("data-dirty-translation");
         expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
 
         span1.append("!");
         editor.shared.history.addStep();
-        expect(span1).toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
+        expect(span1).toHaveAttribute("data-dirty-translation");
+        expect(span2).toHaveAttribute("data-dirty-translation");
+        expect(span3).not.toHaveAttribute("data-dirty-translation");
         expect([span1, span2, span3]).toHaveText("Contactez-nous ici!");
 
         undo(editor);
-        expect(span1).not.toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
+        expect(span1).not.toHaveAttribute("data-dirty-translation");
+        expect(span2).toHaveAttribute("data-dirty-translation");
+        expect(span3).not.toHaveAttribute("data-dirty-translation");
         expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
     });
 
@@ -591,9 +591,9 @@ describe("replicated translations", () => {
         span1.append("!");
         const editor = getEditor();
         editor.shared.history.addStep();
-        expect(span1).toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
+        expect(span1).toHaveAttribute("data-dirty-translation");
+        expect(span2).toHaveAttribute("data-dirty-translation");
+        expect(span3).not.toHaveAttribute("data-dirty-translation");
         expect([span2, span3]).toHaveText(span1.textContent); // all the same text
     });
 });

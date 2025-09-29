@@ -6,6 +6,8 @@ import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { groupBy } from "@web/core/utils/arrays";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
@@ -49,12 +51,11 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
+    static dependencies = ["history", "savePlugin", "dirtMark"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -91,6 +92,13 @@ export class TranslationPlugin extends Plugin {
                 closestElement(editableSelection.anchorNode, ".o_translation_select") &&
                 DISABLED_NAMESPACE,
         ],
+        save_view_context_processors: (context) => delete context.delay_translations,
+        dirt_marks: {
+            id: "translation",
+            setDirtyOnMutation: (record) =>
+                closestElement(record.target, ".o_savable[data-oe-translation-source-sha]"),
+        },
+        save_handlers: this.saveHandler.bind(this),
     };
 
     setup() {
@@ -324,32 +332,6 @@ export class TranslationPlugin extends Plugin {
             translationEl.innerHTML;
     }
 
-    /**
-     * Gets the modified translations
-     * @returns {HTMLElement[]}
-     */
-    getDirtyTranslations() {
-        const dirtyEls = [];
-        for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
-            for (const [attr, data] of Object.entries(translationInfo)) {
-                if (
-                    this.originalElToTranslationInfoMap.get(translateEl)[attr].translation !==
-                    data.translation
-                ) {
-                    const spanEl = document.createElement("span");
-                    for (const [name, value] of Object.entries(data)) {
-                        spanEl.dataset[name] = value;
-                    }
-                    const translation = spanEl.dataset.translation;
-                    delete spanEl.dataset.translation;
-                    spanEl.innerHTML = translation;
-                    dirtyEls.push(spanEl);
-                }
-            }
-        }
-        return dirtyEls;
-    }
-
     cleanForSave({ root }) {
         root.querySelectorAll(".o_savable_attribute").forEach((el) => {
             el.classList.remove("o_savable_attribute");
@@ -358,6 +340,62 @@ export class TranslationPlugin extends Plugin {
             root.dataset.oeTranslationSourceSha = root.dataset.oeTranslationSaveSha;
             delete root.dataset.oeTranslationSaveSha;
         }
+    }
+
+    async saveHandler() {
+        const delayedTranslation = [...this.editable.querySelectorAll(".o_delay_translation")].map(
+            (el) => ({
+                group: JSON.stringify([el.dataset.oeModel, el.dataset.oeId, el.dataset.oeField]),
+                content: {},
+                afterSave: () => {},
+            })
+        );
+        const dirtys = [...this.dependencies.dirtMark.queryDirtys("translation")];
+        const elTranslation = dirtys.map(({ el, setClean }) => {
+            const cleanedEl = this.dependencies.savePlugin.prepareElementForSave(el);
+            return {
+                group: JSON.stringify([el.dataset.oeModel, el.dataset.oeId, el.dataset.oeField]),
+                content: { [cleanedEl.dataset.oeTranslationSourceSha]: cleanedEl.innerHTML },
+                afterSave: setClean,
+            };
+        });
+
+        const attrTranslation = this.elToTranslationInfoMap
+            .entries()
+            .flatMap(([translateEl, translationInfo]) =>
+                Object.entries(translationInfo)
+                    .filter(
+                        ([attr, data]) =>
+                            this.originalElToTranslationInfoMap.get(translateEl)[attr]
+                                .translation !== data.translation
+                    )
+                    .map(([attr, data]) => ({
+                        group: JSON.stringify([data.oeModel, data.oeId, data.oeField]),
+                        content: { [data.oeTranslationSourceSha]: data.translation },
+                        afterSave: () => {
+                            this.originalElToTranslationInfoMap.get(translateEl)[attr].translation =
+                                data.translation;
+                        },
+                    }))
+            );
+
+        const lang = this.services.website.currentWebsite.metadata.lang;
+        const allTranslations = [...elTranslation, ...attrTranslation, ...delayedTranslation];
+        await Promise.all(
+            Object.entries(groupBy(allTranslations, (e) => e.group)).map(
+                async ([group, toSave]) => {
+                    const [oeModel, oeId, oeField] = JSON.parse(group);
+                    const contents = toSave.map((t) => t.content);
+                    await rpc("/website/field/translation/update", {
+                        model: oeModel,
+                        record_id: [Number(oeId)],
+                        field_name: oeField,
+                        translations: { [lang]: Object.assign({}, ...contents) },
+                    });
+                    toSave.forEach((t) => t.afterSave());
+                }
+            )
+        );
     }
 }
 

@@ -256,7 +256,7 @@ test("reload action: apply, clean save and reload are called in the right order 
             await super.save();
             expect.step("save async");
         },
-        async saveView() {
+        async saveElements() {
             return new Promise((resolve) => setTimeout(resolve, 10));
         },
     });

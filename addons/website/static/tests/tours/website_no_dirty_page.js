@@ -153,7 +153,7 @@ registerWebsitePreviewTour(
             content: "Check that there is no more than one dirty flag",
             trigger: ":iframe body",
             run: function () {
-                const dirtyCount = this.anchor.querySelectorAll(".o_dirty").length;
+                const dirtyCount = this.anchor.querySelectorAll("[data-dirty-element]").length;
                 if (dirtyCount !== 1) {
                     console.error(dirtyCount + " dirty flag(s) found");
                 } else {

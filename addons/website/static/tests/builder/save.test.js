@@ -37,7 +37,7 @@ defineWebsiteModels();
 test("basic save", async () => {
     const resultSave = setupSaveAndReloadIframe();
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
     await modifyText(getEditor(), getEditableContent());
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
@@ -45,7 +45,7 @@ test("basic save", async () => {
     expect(resultSave[0]).toBe(
         '<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
     );
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
     expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
 });
@@ -58,7 +58,7 @@ test("nothing to save", async () => {
     await contains(".o-snippets-menu button.fa-undo").click();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(0);
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
     expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
@@ -95,7 +95,7 @@ test("discard modified elements", async () => {
     await modifyText(getEditor(), getEditableContent());
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
     expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
@@ -108,7 +108,7 @@ test("discard without any modifications", async () => {
     });
     await setupWebsiteBuilder(exampleContent);
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
     expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
@@ -218,7 +218,7 @@ test("reload save with target, then discard and edit again should not reselect t
     expect(".o-website-builder_sidebar button[data-name=blocks]").toHaveClass("active");
 });
 
-test("preview shouldn't let o_dirty", async () => {
+test("preview shouldn't leave dirt marks", async () => {
     addActionOption({
         testAction: class extends BuilderAction {
             static id = "testAction";
@@ -232,7 +232,7 @@ test("preview shouldn't let o_dirty", async () => {
         static id = "TestPlugin";
         resources = {
             normalize_handlers: (root) => {
-                const el = root.querySelector(".test-option");
+                const el = root.matches(".test-option") ? root : root.querySelector(".test-option");
                 if (editorIsStart && el.dataset.applied !== "true") {
                     // apply a mutation when we remove the preview
                     el.classList.add("test");
@@ -256,7 +256,7 @@ test("preview shouldn't let o_dirty", async () => {
     await contains(":iframe body").hover(); // leave preview
     expect(":iframe .test-option").not.toHaveAttribute("data-applied");
     expect(":iframe .test-option").toHaveClass("test");
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
 });
 
 test("Drag and drop from sidebar should only mark the concerned elements as dirty", async () => {
@@ -280,12 +280,12 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     await dragUtils.drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_2 p").toHaveCount(2);
-    expect(":iframe .view.o_savable").toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe .o_dirty").toHaveCount(1);
+    expect(":iframe .view.o_savable").toHaveAttribute("data-dirty-element");
+    expect(":iframe #wrap").not.toHaveAttribute("data-dirty-element");
+    expect(":iframe [data-dirty-element]").toHaveCount(1);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 
     // Dragging in inner view then in outer view should only apply dirty on the
     // outer one.
@@ -296,12 +296,12 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     await dragUtils.drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_1 p").toHaveCount(2);
-    expect(":iframe .view.o_savable").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").toHaveClass("o_dirty");
-    expect(":iframe .o_dirty").toHaveCount(1);
+    expect(":iframe .view.o_savable").not.toHaveAttribute("data-dirty-element");
+    expect(":iframe #wrap").toHaveAttribute("data-dirty-element");
+    expect(":iframe [data-dirty-element]").toHaveCount(1);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 
     // Dragging over the views then dropping in the sidebar to cancel should not
     // apply dirty at all.
@@ -312,7 +312,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     await dragUtils.moveTo(".o_block_tab");
     await dragUtils.drop(getDragHelper());
     expect(":iframe p").toHaveCount(2);
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 });
 
 test("Drag and drop from the page should only mark the concerned elements as dirty", async () => {
@@ -349,7 +349,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await dragUtils.drop(getDragMoveHelper());
     await waitForEndOfOperation();
     expect(".o-website-builder_sidebar .fa-undo").toHaveAttribute("disabled");
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 
     // Dragging across views and dropping in the original one should only apply
     // dirty on that one.
@@ -361,13 +361,13 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await dragUtils.drop(getDragMoveHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_1 .s_alert:nth-child(1)").toHaveCount(1);
-    expect(":iframe #wrap").toHaveClass("o_dirty");
-    expect(":iframe .view_1.o_savable").not.toHaveClass("o_dirty");
-    expect(":iframe .view_2.o_savable").not.toHaveClass("o_dirty");
-    expect(":iframe .o_dirty").toHaveCount(1);
+    expect(":iframe #wrap").toHaveAttribute("data-dirty-element");
+    expect(":iframe .view_1.o_savable").not.toHaveAttribute("data-dirty-element");
+    expect(":iframe .view_2.o_savable").not.toHaveAttribute("data-dirty-element");
+    expect(":iframe [data-dirty-element]").toHaveCount(1);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 
     // Dragging across views and dropping in another one should only apply dirty
     // on the original and the one where we dropped.
@@ -378,13 +378,13 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await dragUtils.drop(getDragMoveHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_3 .s_alert:nth-child(1)").toHaveCount(1);
-    expect(":iframe #wrap").toHaveClass("o_dirty");
-    expect(":iframe .view_1.o_savable").not.toHaveClass("o_dirty");
-    expect(":iframe .view_2.o_savable").toHaveClass("o_dirty");
-    expect(":iframe .o_dirty").toHaveCount(2);
+    expect(":iframe #wrap").toHaveAttribute("data-dirty-element");
+    expect(":iframe .view_1.o_savable").not.toHaveAttribute("data-dirty-element");
+    expect(":iframe .view_2.o_savable").toHaveAttribute("data-dirty-element");
+    expect(":iframe [data-dirty-element]").toHaveCount(2);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();
-    expect(":iframe .o_dirty").toHaveCount(0);
+    expect(":iframe [data-dirty-element]").toHaveCount(0);
 });
 
 test("empty links with o_translate_inline are removed on save", async () => {

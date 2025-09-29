@@ -9,7 +9,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
     }
 
-    &.o_dirty, &.oe_translated, .oe_translated {
+    &[data-dirty-element], &[data-dirty-translation], &.oe_translated, .oe_translated {
         background-color: rgba($o-we-translated-content-color, 0.25) !important;
 
         &[data-oe-field="mega_menu_content"] * {

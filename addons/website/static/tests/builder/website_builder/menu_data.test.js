@@ -14,6 +14,7 @@ import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { browser } from "@web/core/browser/browser";
+import { DirtMarkPlugin } from "@html_builder/core/dirt_mark_plugin";
 
 defineWebsiteModels();
 
@@ -34,7 +35,7 @@ describe("NavbarLinkPopover", () => {
             </ul>
             <p>Outside</p>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
         await expectElementCount(".o-we-linkpopover", 0);
@@ -59,7 +60,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
@@ -93,7 +94,7 @@ describe("NavbarLinkPopover", () => {
                 </div>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
@@ -123,7 +124,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
 
@@ -147,7 +148,7 @@ describe("MenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
         patchWithCleanup(MenuDialog.prototype, {
@@ -228,7 +229,7 @@ describe("EditMenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin, DirtMarkPlugin] },
             }
         );
 

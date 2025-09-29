@@ -63,8 +63,8 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         {
-            content: "The parallax should not add o_dirty when entering edit mode",
-            trigger: ":iframe #wrap:not(.o_dirty)",
+            content: "The parallax should not add dirty marks when entering edit mode",
+            trigger: ":iframe #wrap:not([data-dirty-element])",
         },
     ]
 );

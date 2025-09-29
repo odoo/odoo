@@ -22,10 +22,8 @@ export class ProductsDesignPanel extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.needsDbPersistence = this.props.recordName?.length > 0;
 
         onMounted(() => {
-            this.setupActionConnections();
             this.registerWithPlugin();
         });
 
@@ -40,15 +38,5 @@ export class ProductsDesignPanel extends BaseOptionComponent {
 
     unregisterFromPlugin() {
         this.env.editor.shared.productsDesignPanel?.unregisterPanel(this);
-    }
-
-    setupActionConnections() {
-        // Set panel reference for setGap action
-        const builderActions = this.env.editor.shared.builderActions;
-        const action = builderActions.getAction('setGap');
-
-        if (action && action.setPanel) {
-            action.setPanel(this);
-        }
     }
 }

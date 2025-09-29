@@ -1,9 +1,9 @@
-
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { rpc } from "@web/core/network/rpc";
 
 export class WishlistPageOption extends BaseOptionComponent {
     static template = "website_sale.WishlistPageOption";
@@ -16,6 +16,7 @@ export class WishlistPageOption extends BaseOptionComponent {
 
 class WishlistPageOptionPlugin extends Plugin {
     static id = "wishlistPageOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: WishlistPageOption,
         builder_actions: {
@@ -23,20 +24,19 @@ class WishlistPageOptionPlugin extends Plugin {
             WishlistMobileColumnsAction,
             WishlistSetGapAction,
         },
-        product_design_list_to_save: {
-            selector: ".o_wishlist_table",
-            getData(el) {
-                const productOptClasses = Array.from(el.classList).filter((className) =>
-                    className.startsWith("o_wsale_products_opt_")
-                );
-                return {
+        dirt_marks: {
+            id: "wishlist-table",
+            setDirtyOnMutation: (record) =>
+                record.type === "attributes" && record.target.matches?.(".o_wishlist_table")
+                    ? record.target
+                    : null,
+            save: (el) =>
+                rpc("/shop/config/website", {
                     wishlist_grid_columns: parseInt(el.dataset.wishlistGridColumns) || 5,
                     wishlist_mobile_columns: parseInt(el.dataset.wishlistMobileColumns) || 2,
                     wishlist_gap:
                         el.style.getPropertyValue("--o-wsale-wishlist-grid-gap") || "16px",
-                    wishlist_opt_products_design_classes: productOptClasses.join(" "),
-                };
-            },
+                }),
         },
     };
 }
@@ -85,6 +85,4 @@ export class WishlistSetGapAction extends BuilderAction {
     }
 }
 
-registry
-    .category("website-plugins")
-    .add(WishlistPageOptionPlugin.id, WishlistPageOptionPlugin);
+registry.category("website-plugins").add(WishlistPageOptionPlugin.id, WishlistPageOptionPlugin);

@@ -260,18 +260,17 @@ test("save social medias", async () => {
 
     await contains("div[data-action-param='facebook'] input").edit("https://facebook.com/Odoo");
 
-    let writeCalled = false;
     onRpc("website", "write", ({ args }) => {
         expect(args[0]).toEqual([1]);
         expect(args[1]).toInclude(["social_facebook", "https://facebook.com/Odoo"]);
-        expect(args[1]).toInclude(["social_twitter", "https://x.com/odoo"]);
-        writeCalled = true;
+        expect(args[1]).not.toInclude("social_twitter");
+        expect.step("rpc write socials");
         return true;
     });
     onRpc("ir.ui.view", "save", ({ args }) => true);
 
     await contains(".o-snippets-top-actions button[data-action='save']").click();
-    expect(writeCalled).toBe(true, { message: "did not write social links" });
+    expect.verifySteps(["rpc write socials"]);
 });
 
 test("social media snippet should not be user-selectable", async () => {
