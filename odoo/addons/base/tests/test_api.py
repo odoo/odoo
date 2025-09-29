@@ -389,6 +389,11 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(prefetch_ids, partners.browse().concat(*children)._prefetch_ids)
         self.assertEqual(prefetch_ids, partners.browse().union(*children)._prefetch_ids)
 
+        # incremental concatenation/union should not cause a recursion error
+        partners = self.env['res.partner']
+        for partner in partners.create([{'name': f'Partner {i}'} for i in range(1000)]):
+            partners += partner.with_prefetch()
+
     @mute_logger('odoo.models')
     def test_60_prefetch_read(self):
         """ Check that reading a field computes it on self only. """
