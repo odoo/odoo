@@ -547,6 +547,29 @@ class BaseCase(case.TestCase):
         else:
             return self._assertRaises(exception, **kwargs)
 
+    @contextmanager
+    def assertRaisesRegex(self, expected_exception, *args, **kwargs):
+        """ Context manager that clears the environment upon failure. """
+        with ExitStack() as init:
+            if self.env:
+                init.enter_context(self.env.cr.savepoint())
+                if issubclass(expected_exception, AccessError):
+                    # The savepoint() above calls flush(), which leaves the
+                    # record cache with lots of data.  This can prevent
+                    # access errors to be detected. In order to avoid this
+                    # issue, we clear the cache before proceeding.
+                    self.env.cr.clear()
+
+            with ExitStack() as inner:
+                cm = inner.enter_context(super().assertRaisesRegex(expected_exception, *args, **kwargs))
+                # *moves* the cleanups from init to inner, this ensures the
+                # savepoint gets rolled back when `yield` raises `exception`,
+                # but still allows the initialisation to be protected *and* not
+                # interfered with by `assertRaises`.
+                inner.push(init.pop_all())
+
+                yield cm
+
     def _patchExecute(self, actual_queries, flush=True):
         Cursor_execute = Cursor.execute
 
