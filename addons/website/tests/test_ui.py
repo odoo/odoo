@@ -687,3 +687,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_create_missing_page(self):
         self.start_tour("/", "create_missing_page", login="admin")
+
+    def test_seo_video_description_check(self):
+        self.start_tour("/", "seo_video_description_check", login="admin")
