@@ -128,6 +128,10 @@ export class NewContentSystrayItem extends Component {
     }
 
     async toggleDropdown() {
+        if (!this.website.isRestrictedEditor) {
+            return;
+        }
+
         if (this.dropdownWasAlreadyOpened) {
             this.dropdown.isOpen = !this.dropdown.isOpen;
             return;
@@ -162,10 +166,16 @@ export class NewContentSystrayItem extends Component {
                     elementsToUpdate[element.model] = element;
                 }
             }
-            const accesses = await rpc("/website/check_new_content_access_rights", {
-                models: modelsToCheck,
-            }, { cache: true });
-            for (const [model, access] of Object.entries(accesses)) {
+            if (!modelsToCheck.length) {
+                return;
+            }
+            const accesses = await Promise.all(
+                modelsToCheck.map(async (model) => [
+                    model,
+                    await user.checkAccessRight(model, "create")
+                ])
+            );
+            for (const [model, access] of accesses) {
                 elementsToUpdate[model].isDisplayed = access;
             }
         })());
