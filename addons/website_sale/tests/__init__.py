@@ -1,42 +1,44 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import test_address
-from . import test_common
-from . import test_customize
-from . import test_delivery_controller
-from . import test_delivery_ui
-from . import test_dynamic_snippet_category
-from . import test_ecommerce_access
-from . import test_express_checkout_flows
-from . import test_fuzzy
-from . import test_product_public_category
-from . import test_sale_order
-from . import test_sale_process
-from . import test_sitemap
-from . import test_website_editor
-from . import test_website_sale_add_to_cart_snippet
-from . import test_website_sale_cart
-from . import test_website_sale_checkout_steps
-from . import test_website_sale_cart_abandoned
-from . import test_website_sale_cart_notification
-from . import test_website_sale_cart_payment
-from . import test_website_sale_cart_recovery
-from . import test_website_sale_combo_configurator
-from . import test_website_sale_gmc
-from . import test_website_sale_image
-from . import test_website_sale_mail
-from . import test_website_sale_pricelist
-from . import test_website_sale_product_attribute_value_config
-from . import test_website_sale_product_configurator
-from . import test_website_sale_product_filters
-from . import test_website_sale_product_page
-from . import test_website_sale_product_template
-from . import test_website_sale_reorder_from_portal
-from . import test_website_sale_settings
-from . import test_website_sale_shop_redirects
-from . import test_website_sale_show_compare_list_price
-from . import test_website_sale_snippets
-from . import test_website_sale_visitor
-from . import test_website_sale_technical_page
-from . import test_website_sequence
-from . import test_website_sale_product_ribbon
+from . import (
+    test_abandoned_cart,
+    test_add_to_cart_snippet,
+    test_address,
+    test_cart,
+    test_cart_notification,
+    test_cart_payment,
+    test_cart_recovery,
+    test_combo_configurator,
+    test_common,
+    test_customize,
+    test_delivery_controller,
+    test_delivery_ui,
+    test_dynamic_snippet_category,
+    test_ecommerce_access,
+    test_express_checkout_flows,
+    test_fuzzy,
+    test_google_merchant_center,
+    test_mail,
+    test_pricelist,
+    test_product_attribute_value_config,
+    test_product_configurator,
+    test_product_filters,
+    test_product_image,
+    test_product_page,
+    test_product_public_category,
+    test_product_ribbon,
+    test_product_template,
+    test_reorder_from_portal,
+    test_sale_order,
+    test_sale_process,
+    test_settings,
+    test_shop_redirects,
+    test_show_compare_list_price,
+    test_sitemap,
+    test_snippets,
+    test_technical_page,
+    test_website_editor,
+    test_website_sale_checkout_steps,
+    test_website_sequence,
+    test_website_visitor,
+)

@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.test_website_sale_cart_abandoned import TestWebsiteSaleCartAbandonedCommon
+from odoo.addons.website_sale.tests.test_abandoned_cart import TestWebsiteSaleCartAbandonedCommon
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
