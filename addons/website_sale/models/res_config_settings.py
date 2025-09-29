@@ -99,12 +99,13 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             if not record.website_id:
                 continue
-            record.website_id.account_on_checkout = record.account_on_checkout
             # account_on_checkout implies different values for `auth_signup_uninvited`
-            if record.account_on_checkout in ['optional', 'mandatory']:
-                record.website_id.auth_signup_uninvited = 'b2c'
-            else:
-                record.website_id.auth_signup_uninvited = 'b2b'
+            if record.website_id.account_on_checkout != record.account_on_checkout:
+                if self.account_on_checkout in ['optional', 'mandatory']:
+                    record.website_id.auth_signup_uninvited = 'b2c'
+                else:
+                    record.website_id.auth_signup_uninvited = 'b2b'
+            record.website_id.account_on_checkout = record.account_on_checkout
 
     # === CRUD METHODS === #
 

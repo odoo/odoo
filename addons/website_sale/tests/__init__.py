@@ -33,6 +33,7 @@ from . import test_website_sale_product_filters
 from . import test_website_sale_product_page
 from . import test_website_sale_product_template
 from . import test_website_sale_reorder_from_portal
+from . import test_website_sale_settings
 from . import test_website_sale_shop_redirects
 from . import test_website_sale_show_compare_list_price
 from . import test_website_sale_snippets
