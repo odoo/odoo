@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 
-import { animationFrame, click, dblclick, queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    dblclick,
+    freezeTime,
+    queryAll,
+    queryFirst,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@web/public/colibri";
@@ -2222,6 +2230,7 @@ describe("debounced (2)", () => {
     });
 
     test("debounced is not called if the interaction is destroyed in the meantime", async () => {
+        freezeTime();
         class Test extends Interaction {
             static selector = ".test";
             setup() {
