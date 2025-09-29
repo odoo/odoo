@@ -328,6 +328,7 @@ export class RecordList extends Array {
                                         recordList.data[index]
                                     )
                                 )._raw;
+                                recordListProxy.data[index] = newRecord?.localId;
                                 if (oldRecord && oldRecord.notEq(newRecord)) {
                                     oldRecord._.uses.delete(recordList);
                                 }
@@ -341,7 +342,6 @@ export class RecordList extends Array {
                                 if (inverse) {
                                     oldRecord[inverse].delete(recordList._.owner);
                                 }
-                                recordListProxy.data[index] = newRecord?.localId;
                                 if (newRecord) {
                                     newRecord._.uses.add(recordList);
                                     store._.ADD_QUEUE(
