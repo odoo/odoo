@@ -10,6 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -17,6 +18,7 @@ describe.current.tags("desktop");
 defineCrmLivechatModels();
 
 test("can create a lead from the thread action after the conversation ends", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
     const pyEnv = await startServer();
     const groupId = pyEnv["res.groups"].create({ name: "Sales Team" });
     serverState.groupSalesTeamId = groupId;
@@ -37,5 +39,7 @@ test("can create a lead from the thread action after the conversation ends", asy
     await click(".o-mail-DiscussContent-header button[title='Create Lead']");
     await insertText(".o-livechat-LivechatCommandDialog-form input", "testlead");
     await click(".o-mail-ActionPanel button", { text: "Create Lead" });
-    await contains(".o_mail_notification", { text: "Created a new lead: testlead" });
+    await contains(
+        `.o-mail-NotificationMessage:text('${serverState.partnerName} created a new lead: testlead1:00 PM')`
+    );
 });

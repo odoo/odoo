@@ -38,10 +38,13 @@ class DiscussChannel(models.Model):
                 i_start=Markup("<i>"),
                 i_end=Markup("</i>"),
             )
+            self.env.user._bus_send_transient_message(self, msg)
         else:
             lead = self._convert_visitor_to_lead(self.env.user.partner_id, key)
-            msg = _("Created a new lead: %s", lead._get_html_link())
-        self.env.user._bus_send_transient_message(self, msg)
+            msg = Markup(
+                '<div class="o_mail_notification" data-oe-type="create-lead">%s</div>',
+            ) % self.env._("created a new lead: %s", lead._get_html_link())
+            self.message_post(body=msg, subtype_xmlid="mail.mt_comment")
 
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
