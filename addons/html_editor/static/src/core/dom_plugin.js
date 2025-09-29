@@ -29,6 +29,7 @@ import {
     listElementSelector,
     paragraphRelatedElementsSelector,
     isEditorTab,
+    isPhrasingContent,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -572,6 +573,7 @@ export class DomPlugin extends Plugin {
         for (const block of deepestTargetedBlocks) {
             if (
                 isParagraphRelatedElement(block) ||
+                isPhrasingContent(block) ||
                 block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
                 isListItemElement(block)
             ) {
