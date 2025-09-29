@@ -3,7 +3,7 @@ import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_inter
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
-import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import { registry } from "@web/core/registry";
 
 // Due to consistency issues with the webhook, we also poll
 // the status of the payment periodically as a fallback.
@@ -209,4 +209,4 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 }
 
-register_payment_method("viva_com", PaymentVivaCom);
+registry.category("electronic_payment_interfaces").add("viva_com", PaymentVivaCom);
