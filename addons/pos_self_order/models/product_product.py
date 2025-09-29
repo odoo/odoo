@@ -89,19 +89,6 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    def _filter_applicable_attributes(self, attributes_by_ptal_id: dict) -> list[dict]:
-        """
-        The attributes_by_ptal_id is a dictionary that contains all the attributes that have
-        [('create_variant', '=', 'no_variant')]
-        This method filters out the attributes that are not applicable to the product in self
-        """
-        self.ensure_one()
-        return [
-            attributes_by_ptal_id[id]
-            for id in self.attribute_line_ids.ids
-            if attributes_by_ptal_id.get(id) is not None
-        ]
-
     def write(self, vals):
         res = super().write(vals)
         if 'self_order_available' in vals:
