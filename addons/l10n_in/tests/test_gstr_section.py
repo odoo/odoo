@@ -20,7 +20,7 @@ class TestGstrSection(L10nInTestInvoicingCommon):
 
         ChartTemplate = cls.env['account.chart.template']
         cls.nil_rated_tax = ChartTemplate.ref('nil_rated_sale')
-        cls.igst_lut_sale_28 = ChartTemplate.ref('igst_sale_28_sez_exp_lut')
+        cls.igst_lut_sale_28_sez = ChartTemplate.ref('igst_sale_28_sez_lut')
         cls.igst_rc_sale_18 = ChartTemplate.ref('igst_sale_18_rc')
         cls.igst_exp_sale_18 = ChartTemplate.ref('igst_sale_18_sez_exp')
 
@@ -41,7 +41,7 @@ class TestGstrSection(L10nInTestInvoicingCommon):
         # SEZ without payment with Nil Rated
         sez_invoice = self._init_inv(
             partner=self.sez_partner,
-            taxes=self.igst_lut_sale_28,
+            taxes=self.igst_lut_sale_28_sez,
             line_vals={'price_unit': 1000, 'quantity': 1},
             post=False,
             invoice_date=TEST_DATE,
