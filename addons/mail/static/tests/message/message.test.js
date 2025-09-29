@@ -567,10 +567,9 @@ test("can add new mentions when editing message", async () => {
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
     await click(".o-mail-Message button", { text: "save" });
-    await contains(".o-mail-Message", {
-        text: "Hello @TestPartner (edited)",
-        contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
-    });
+    await contains(".o-mail-Message", { text: "Hello @TestPartner (edited)" });
+    await contains(".o-mail-Message a.o_mail_redirect", { count: 1 });
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@TestPartner" });
 });
 
 test("Other messages are grayed out when replying to another one", async () => {
