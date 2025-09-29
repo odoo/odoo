@@ -1450,7 +1450,7 @@ export function makeActionManager(env, router = _router) {
                         pick(options, "forceLeave")
                     );
                     if (!canProceed) {
-                        return new Promise(() => {});
+                        return;
                     }
                 }
                 return _executeActWindowAction(action, options);
