@@ -19,6 +19,7 @@ import {
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
 import { router } from "@web/core/browser/router";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -47,6 +48,7 @@ export class WebsiteBuilder extends Component {
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
         });
+        useHotkey("alt+s", () => this.save({ close: false }));
         onWillStart(async () => {
             this.translatedElements = this.props.translation
                 ? await rpc("/website/get_translated_elements")
@@ -183,8 +185,10 @@ export class WebsiteBuilder extends Component {
      * @param {boolean} [options.reloadIframe=true] - If `true`, the iframe will
      *   be reloaded after the save operation; if `false`, the iframe remains as
      *   is.
+     * @param {boolean} [options.close=true] - If `false`, the builder is not
+     *   closed after the save completes (and thus ignores `reloadIframe` arg)
      */
-    async save({ reloadIframe = true }) {
+    async save({ reloadIframe = true, close = true } = {}) {
         if (this.editor.shared.operation.hasTimedOut()) {
             const shouldContinue = await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
@@ -202,13 +206,18 @@ export class WebsiteBuilder extends Component {
             if (!shouldContinue) {
                 return;
             }
+            close = true;
         }
 
         // TODO: handle the urgent save and the fail of the save operation
         await this.editor.shared.operation.next(
             async () => {
-                await this.editor.shared.savePlugin.save();
-                this.props.builderProps.closeEditor(reloadIframe);
+                await this.editor.shared.savePlugin.save({
+                    shouldSkipAfterSaveHandlers: () => close,
+                });
+                if (close) {
+                    this.props.builderProps.closeEditor(reloadIframe);
+                }
             },
             { withLoadingEffect: false, canTimeout: false }
         );
