@@ -15,7 +15,7 @@ def format_product_stock_values(product, wh_id=None, free_qty=None):
         if free_qty is None:
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
         return {
-            'in_stock': free_qty > 0,
+            'in_stock': free_qty > 0 or product.allow_out_of_stock_order,
             'show_quantity': product.show_availability and product.available_threshold >= free_qty,
             'quantity': free_qty,
         }

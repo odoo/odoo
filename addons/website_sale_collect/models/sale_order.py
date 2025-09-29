@@ -118,7 +118,7 @@ class SaleOrder(models.Model):
         """
         unavailable_order_lines = self.env['sale.order.line']
         for ol in self.order_line:
-            if ol.is_storable:
+            if ol.is_storable and not ol.product_id.allow_out_of_stock_order:
                 product_free_qty = ol.product_id.with_context(warehouse_id=wh_id).free_qty
                 if ol.product_uom_qty > product_free_qty:
                     ol.shop_warning = _(
