@@ -61,9 +61,9 @@
                                     <a
                                         class="text-decoration-none"
                                         t-att-href="product.website_url"
-                                        t-att-content="product.display_name"
-                                        t-att-title="product.display_name"
-                                        t-field="product.display_name"
+                                        t-att-content="data.get('display_name')"
+                                        t-att-title="data.get('display_name')"
+                                        t-out="data.get('display_name')"
                                     />
                                 </h2>
                                 <!-- Description -->
