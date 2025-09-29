@@ -204,7 +204,7 @@ class TestUsers(UsersCommonCase):
 
         # The deletion will fail for "portal_user_2",
         # because of the absence of "ondelete=cascade"
-        self.cron = self.env['ir.cron'].create({
+        self.env['ir.cron'].create({
             'name': 'Test Cron',
             'user_id': portal_user_2.id,
             'model_id': self.env.ref('base.model_res_partner').id,
