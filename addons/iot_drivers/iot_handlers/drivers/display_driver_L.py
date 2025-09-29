@@ -28,15 +28,12 @@ class DisplayDriver(Driver):
         self.device_name = device['name']
         self.owner = False
         self.customer_display_data = {}
-        self.url, self.orientation = helpers.load_browser_state()
 
+        saved_url, self.orientation = helpers.load_browser_state()
         self._x_screen = device.get('x_screen', '0')
-        self.browser = Browser(
-            self.url or 'http://localhost:8069/status/',
-            self._x_screen,
-            os.environ.copy(),
-        )
-        self.update_url(self.get_url_from_db())
+        self.url = saved_url or self.get_url_from_db() or 'http://localhost:8069/status/'
+        self.browser = Browser(self.url, self._x_screen, os.environ.copy())
+        self.set_orientation(self.orientation)
 
         self._actions.update({
             'update_url': self._action_update_url,
@@ -47,8 +44,6 @@ class DisplayDriver(Driver):
             'close': self._action_close_customer_display,
             'set': self._action_set_customer_display,
         })
-
-        self.set_orientation(self.orientation)
 
     @classmethod
     def supported(cls, device):
@@ -94,6 +89,7 @@ class DisplayDriver(Driver):
             return response.content.decode('utf8')
 
     def _action_update_url(self, data):
+        helpers.save_browser_state(url=data.get('url'))
         self.update_url(data.get('url'))
 
     def _action_display_refresh(self, data):
