@@ -1085,6 +1085,7 @@ class ProjectTask(models.Model):
         # (portal) users that don't have write access can still create a task
         # in the project that will be checked using record rules
         new_context["default_create_in_project_id"] = default_project_id
+        is_portal = self.env.user._is_portal() and not self.env.su
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
@@ -1092,6 +1093,7 @@ class ProjectTask(models.Model):
 
         self.browse().check_access('create')
         default_stage = dict()
+        child_ids_list = []
         for vals, additional_vals in zip(vals_list, additional_vals_list):
             project_id = vals.get('project_id') or default_project_id
 
@@ -1106,8 +1108,11 @@ class ProjectTask(models.Model):
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
 
-            if self.env.user._is_portal() and not self.env.su:
+            if is_portal:
                 self._ensure_fields_write(vals, defaults=True)
+                child_ids_list.append(vals.pop('child_ids', None))
+            else:
+                child_ids_list.append(None)
 
             if project_id and not "company_id" in vals:
                 additional_vals["company_id"] = self.env["project.project"].browse(
@@ -1181,6 +1186,10 @@ class ProjectTask(models.Model):
                     continue
                 task._send_email_notify_to_cc(partners_with_internal_user)
                 task.message_subscribe(partners_with_internal_user.ids)
+        if is_portal:
+            for task, child_ids in zip(tasks, child_ids_list):
+                if child_ids:
+                    task.write({'child_ids': child_ids})
         return tasks
 
     def write(self, vals):
