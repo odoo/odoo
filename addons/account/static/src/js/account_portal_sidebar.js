@@ -17,6 +17,14 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
         var def = this._super.apply(this, arguments);
 
         var $invoiceHtml = this.$el.find('iframe#invoice_html');
+        var setLinksToBlank = function () {
+            try{
+                $invoiceHtml.contents().find('a').attr('target', '_blank');
+            } catch (e) {
+                console.warn("Could not modify links in the iframe due to a cross-origin restriction.", e);
+            }
+        };
+
         var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
 
         $(window).on('resize', updateIframeSize);
@@ -24,6 +32,7 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
         var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
         if (iframeDoc.readyState === 'complete') {
             updateIframeSize();
+            setLinksToBlank();
         } else {
             $invoiceHtml.on('load', updateIframeSize);
         }
