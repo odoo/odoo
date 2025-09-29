@@ -145,18 +145,19 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
     def test_event_crm_flow_per_attendee_single_wo_partner(self):
         """ Single registration, attendee based, no partner involved, check
         contact info propagation """
-        for name, email, phone in [
-            ('My Name', 'super.email@test.example.com', '0456442211'),
-            (False, 'super.email@test.example.com', False),
-            ('"My Name"', '"My Name" <my.name@test.example.com>', False),
+        for name, email, phone, company_name in [
+            ('My Name', 'super.email@test.example.com', '0456442211', 'My Super Company'),
+            (False, 'super.email@test.example.com', False, False),
+            ('"My Name"', '"My Name" <my.name@test.example.com>', False, 'My Company'),
         ]:
-            with self.subTest(name=name, email=email, phone=phone):
+            with self.subTest(name=name, email=email, phone=phone, company_name=company_name):
                 registration = self.env['event.registration'].create({
                     'name': name,
                     'partner_id': False,
                     'email': email,
                     'phone': phone,
                     'event_id': self.event_0.id,
+                    'company_name': company_name,
                 })
                 self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
 
@@ -166,6 +167,7 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
             'email': 'other.email@test.example.com',
             'phone': '0456112233',
             'event_id': self.event_0.id,
+            'company_name': 'Other Company',
         })
         self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
 
@@ -173,6 +175,7 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
     def test_event_crm_flow_per_attendee_single_wpartner(self):
         """ Single registration, attendee based, with partner involved, check
         contact information, check synchronization and update """
+        self.event_customer.write({'company_name': 'Event Company'})
         self.event_customer2.write({
             'email': False,
             'phone': False,
@@ -180,20 +183,21 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
         self.test_rule_attendee.write({
             'event_registration_filter': '[]',  # try various email combinations
         })
-        for email, phone, base_partner, expected_partner in [
-            (False, False, self.event_customer, self.event_customer),  # should take partner info
-            ('"Other Name" <constantin@test.example.com>', False, self.event_customer, self.event_customer),  # same email normalized
-            ('other.email@test.example.com', False, self.event_customer, self.env['res.partner']),  # not same email -> no partner on lead
-            (False, '+32485112233', self.event_customer, self.event_customer),  # same phone but differently formatted
-            (False, '0485112244', self.event_customer, self.env['res.partner']),  # other phone -> no partner on lead
-            ('other.email@test.example.com', '0485112244', self.event_customer2, self.event_customer2),  # mail / phone update from registration as void on partner
+        for email, phone, company_name, base_partner, expected_partner in [
+            (False, False, False, self.event_customer, self.event_customer),  # should take partner info
+            ('"Other Name" <constantin@test.example.com>', False, False, self.event_customer, self.event_customer),  # same email normalized
+            ('other.email@test.example.com', False, 'Other Company', self.event_customer, self.env['res.partner']),  # not same email -> no partner on lead
+            (False, '+32485112233', False, self.event_customer, self.event_customer),  # same phone but differently formatted
+            (False, '0485112244', False, self.event_customer, self.env['res.partner']),  # other phone -> no partner on lead
+            ('other.email@test.example.com', '0485112244', 'Other Company', self.event_customer2, self.event_customer2),  # mail / phone / company_name update from registration as void on partner
         ]:
-            with self.subTest(email=email, phone=phone, base_partner=base_partner):
+            with self.subTest(email=email, phone=phone, base_partner=base_partner, company_name=company_name):
                 registration = self.env['event.registration'].create({
                     'partner_id': base_partner.id,
                     'email': email,
                     'phone': phone,
                     'event_id': self.event_0.id,
+                    'company_name': company_name,
                 })
                 self.assertLeadConvertion(self.test_rule_attendee, registration, partner=expected_partner)
 
