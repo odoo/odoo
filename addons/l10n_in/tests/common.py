@@ -30,10 +30,10 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'zip': "365220",
         })
 
-        cls.outside_in_company = cls._create_company(
-            name='Outside India Company',
-            country_id=cls.country_us.id,
-        )
+        cls.outside_in_company = cls.env['res.company'].create({
+            'name': 'Outside India Company',
+            'country_id': cls.country_us.id,
+        })
 
         cls.user.write({
             'company_ids': [cls.default_company.id, cls.outside_in_company.id],
