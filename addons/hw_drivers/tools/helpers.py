@@ -697,10 +697,12 @@ def save_browser_state(url=None, orientation=None):
     :param url: The URL the browser is on (if None, the URL is not saved)
     :param orientation: The orientation of the screen (if None, the orientation is not saved)
     """
-    update_conf({
-        'browser_url': url,
-        'screen_orientation': orientation.name.lower() if orientation else None,
-    })
+    to_update = {
+        "browser_url": url,
+        "screen_orientation": orientation.name.lower() if orientation else None,
+    }
+    # Only update the values that are not None
+    update_conf({k: v for k, v in to_update.items() if v is not None})
 
 
 def load_browser_state():
