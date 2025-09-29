@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderFontFamilyPicker">
-    <BuilderSelect>
+    <BuilderSelect className="'o-hidden-font-family-picker'">
         <t t-foreach="fonts" t-as="font" t-key="font_index">
             <BuilderSelectItem t-props="forwardProps(font)">
                 <div class="d-flex justify-content-between">

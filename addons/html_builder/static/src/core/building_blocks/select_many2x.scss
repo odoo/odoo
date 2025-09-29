@@ -20,6 +20,7 @@
     .o_select_menu_toggler {
         &, &.btn-light.bg-light {
             --border-color: #{$o-we-bg-light};
+            --btn-padding-x: #{map-get($spacers , 2)};
 
             @include button-variant(
                 $background: $o-we-item-clickable-bg,
