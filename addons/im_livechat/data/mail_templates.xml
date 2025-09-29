@@ -2,8 +2,8 @@
 <odoo>
     <data noupdate="1">
         <template id="livechat_email_template">
-<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate; border-radius: 8px;">
+<table border="0" cellpadding="0" cellspacing="0" class="table-borderless" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" class="table-borderless" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate; border-radius: 8px;">
 <tbody>
     <!-- HEADER -->
      <!-- sudo: visitor can access header background color -->
@@ -12,7 +12,7 @@
     <t t-set="title_color" t-value="channel.livechat_channel_id.sudo().title_color or '#FFFFFF'" />
     <tr>
         <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" t-attf-style="background-color:{{header_background_color}}; padding:0; border-collapse:separate; border-radius: 8px 8px 0 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="table-borderless" t-attf-style="background-color:{{header_background_color}}; padding:0; border-collapse:separate; border-radius: 8px 8px 0 0;">
                 <tr>
                     <td valign="middle" style="padding: 10px 20px 10px 20px;">
                         <span t-attf-style="color:{{title_color}}; font-size:14px;">
@@ -22,7 +22,7 @@
                             <t t-out="company.name"/>
                         </span>
                     </td>
-                    <td valign="middle" align="right" style="padding-right: 20px;" t-if="not company.uses_default_logo">
+                    <td valign="middle" align="right" style="vertical-align: middle; padding-right: 20px;" t-if="not company.uses_default_logo">
                         <img t-att-src="'/logo.png?company=%s' % company.id" 
                              style="border-radius:0.5rem; max-height: 48px; max-width: 48px; width: auto; height: auto; display: block; object-fit: contain;" 
                              t-att-alt="'%s' % company.name"/>
@@ -45,13 +45,13 @@
                 <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
                 <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
             </div>
-            <table cellspacing="0" cellpadding="0" style="width:100%; margin: 16px 0;">
+            <table cellspacing="0" cellpadding="0" class="table-borderless" style="width:100%; margin: 16px 0;">
                 <t t-foreach="channel.message_ids.sorted(lambda m: (m.date, m.id))" t-as="message">
                     <t t-if="message.message_type != 'notification'">
                         <t t-set="author_name"><t t-if="message.author_id" t-out="message.author_id.sudo().user_livechat_username or message.author_id.sudo().name"/><t t-else="">You</t></t>
                         <tr>
-                            <td style="padding: 6px 0;">
-                                <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                            <td style="padding: 4px 0;">
+                                <table cellspacing="0" cellpadding="0" class="table-borderless" style="width: 100%;">
                                     <tr>
                                         <td style="width: 50px; vertical-align: top; padding-right: 12px;">
                                             <t t-if="message.author_avatar">
@@ -66,10 +66,8 @@
                                                 <strong t-attf-style="color:{{header_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
                                                 <span style="font-size:10px; color:#666666;" t-out="message.date.astimezone(tz).strftime('%I:%M %p')"/>
                                             </div>
-                                            <div style="display: flex;">
-                                                <div style="background-color:#E2F3F6; padding: 0px 12px; border-radius: 0 0.46875rem 0.46875rem 0.46875rem;max-width:100%;">
-                                                    <span style="font-size:13px; word-break:break-word;"  t-out="message.body"/>
-                                                </div>
+                                            <div style="background-color: #E2F3F6; padding: 16px 12px 0; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
+                                                <span style="font-size: 13px; word-break: break-word;" t-out="message.body"/>
                                             </div>
                                         </td>
                                     </tr>
