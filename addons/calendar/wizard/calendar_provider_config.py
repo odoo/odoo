@@ -17,13 +17,13 @@ class CalendarProviderConfig(models.TransientModel):
     # Using same field names and strings as their respective res.config.settings
     cal_client_id = fields.Char(
         "Google Client_id",
-        default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_client_id'))
+        default=lambda self: self.env['ir.config_parameter'].get_str('google_calendar_client_id'))
     cal_client_secret = fields.Char(
         "Google Client_key",
-        default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_client_secret'))
+        default=lambda self: self.env['ir.config_parameter'].get_str('google_calendar_client_secret'))
     cal_sync_paused = fields.Boolean(
         "Google Synchronization Paused",
-        default=lambda self: str2bool(self.env['ir.config_parameter'].get_param('google_calendar_sync_paused'), default=False))
+        default=lambda self: self.env['ir.config_parameter'].get_bool('google_calendar_sync_paused'))
     microsoft_outlook_client_identifier = fields.Char(
         "Outlook Client Id",
         default=lambda self: self.env['ir.config_parameter'].get_param('microsoft_calendar_client_id'))
@@ -49,9 +49,9 @@ class CalendarProviderConfig(models.TransientModel):
             calendar_module.button_immediate_install()
 
         if self.external_calendar_provider == 'google':
-            self.env['ir.config_parameter'].set_param('google_calendar_client_id', self.cal_client_id)
-            self.env['ir.config_parameter'].set_param('google_calendar_client_secret', self.cal_client_secret)
-            self.env['ir.config_parameter'].set_param('google_calendar_sync_paused', self.cal_sync_paused)
+            self.env['ir.config_parameter'].set_str('google_calendar_client_id', self.cal_client_id)
+            self.env['ir.config_parameter'].set_str('google_calendar_client_secret', self.cal_client_secret)
+            self.env['ir.config_parameter'].set_bool('google_calendar_sync_paused', self.cal_sync_paused)
         elif self.external_calendar_provider == 'microsoft':
             self.env['ir.config_parameter'].set_param('microsoft_calendar_client_id', self.microsoft_outlook_client_identifier)
             self.env['ir.config_parameter'].set_param('microsoft_calendar_client_secret', self.microsoft_outlook_client_secret)

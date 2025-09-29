@@ -11,8 +11,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_use_google_maps_static_api(self):
-        api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps.signed_static_api_key')
-        api_secret = self.env['ir.config_parameter'].sudo().get_param('google_maps.signed_static_api_secret')
+        api_key = self.env['ir.config_parameter'].sudo().get_str('google_maps.signed_static_api_key')
+        api_secret = self.env['ir.config_parameter'].sudo().get_str('google_maps.signed_static_api_secret')
         return bool(api_key and api_secret)
 
     google_maps_static_api_key = fields.Char("Google Maps API key", compute="_compute_maps_static_api_key",
