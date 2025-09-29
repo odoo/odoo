@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
+    <t t-name="web.SelectMenuTagsList">
+        <t t-foreach="this.props.tags" t-as="tag" t-key="tag.id">
+            <BadgeTag onDelete="tag.onDelete" text="tag.text"/>
+        </t>
+    </t>
+
     <t t-name="web.SelectMenu.search">
         <input
             type="text"

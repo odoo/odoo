@@ -2,7 +2,9 @@
 <templates>
     <t t-name="spreadsheet.SelectionFilterValue">
         <div class="o_input o-global-filter-selection-value d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <BadgeTag text="tag.text" onDelete="tag.onDelete"/>
+            </t>
             <AutoComplete input="inputRef" sources="sources"/>
         </div>
     </t>

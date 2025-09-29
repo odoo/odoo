@@ -1,9 +1,9 @@
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 export class Orderline extends Component {
-    static components = { TagsList };
+    static components = { BadgeTag };
     static template = "point_of_sale.Orderline";
     static props = {
         line: Object,

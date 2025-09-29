@@ -2,7 +2,7 @@ import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -14,11 +14,19 @@ let selectMenuId = 0;
 
 export const DEBOUNCED_DELAY = 250;
 
+class SelectMenuTagsList extends Component {
+    static template = "web.SelectMenuTagsList";
+    static components = { BadgeTag };
+    static props = {
+        tags: { type: Array },
+    };
+}
+
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
     static choiceItemTemplate = "web.SelectMenu.ChoiceItem";
 
-    static components = { Dropdown, DropdownItem, TagsList };
+    static components = { Dropdown, DropdownItem, TagsList: SelectMenuTagsList };
 
     static defaultProps = {
         value: undefined,

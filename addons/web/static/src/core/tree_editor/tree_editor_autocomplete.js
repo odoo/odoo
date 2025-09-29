@@ -39,8 +39,9 @@ export class DomainSelectorAutocomplete extends MultiRecordSelector {
         return props.resIds.map((val, index) => {
             const { text, colorIndex } = getFormat(val, displayNames);
             return {
+                id: val,
                 text,
-                colorIndex,
+                color: colorIndex,
                 onDelete: () => {
                     this.props.update([
                         ...this.props.resIds.slice(0, index),

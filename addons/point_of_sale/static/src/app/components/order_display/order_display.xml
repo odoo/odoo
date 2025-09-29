@@ -21,10 +21,12 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="order.internal_note and props.mode !== 'receipt'" 
-                        class="internal-note-container d-flex flex-wrap gap-2" 
+                    <div t-if="order.internal_note and props.mode !== 'receipt'"
+                        class="internal-note-container d-flex flex-wrap gap-2"
                         t-attf-class="{{this.props.mode === 'receipt' ? 'py-2' : 'p-2'}}">
-                        <TagsList tags="getInternalNotes()"/>
+                        <t t-foreach="getInternalNotes()" t-as="note" t-key="note.id or note_index">
+                            <BadgeTag color="note.colorIndex" text="note.text"/>
+                        </t>
                     </div>
                 </div>
                 <t t-set="taxTotals" t-value="order.taxTotals" />

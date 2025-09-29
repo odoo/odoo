@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
 
 export class Input extends Component {
@@ -61,7 +61,7 @@ export class InRange extends Component {
 }
 
 export class List extends Component {
-    static components = { TagsList };
+    static components = { BadgeTag };
     static props = ["value", "update", "editorInfo"];
     static template = "web.TreeEditor.List";
 
@@ -69,7 +69,7 @@ export class List extends Component {
         const { isSupported, stringify } = this.props.editorInfo;
         return this.props.value.map((val, index) => ({
             text: stringify(val),
-            colorIndex: isSupported(val) ? 0 : 2,
+            color: isSupported(val) ? 0 : 2,
             onDelete: () => {
                 this.props.update([
                     ...this.props.value.slice(0, index),

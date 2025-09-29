@@ -5,12 +5,12 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 import { mountComponent } from "@web/env";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { CustomerFacingQR } from "./customer_facing_qr";
 
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
-    static components = { OdooLogo, MainComponentsContainer, TagsList };
+    static components = { OdooLogo, MainComponentsContainer, BadgeTag };
     static props = [];
 
     setup() {

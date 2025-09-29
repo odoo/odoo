@@ -1,7 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 
@@ -9,7 +9,7 @@ import { Component } from "@odoo/owl";
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
-    static components = { Dialog, Field, TagsList };
+    static components = { BadgeTag, Dialog, Field };
     static props = {
         close: Function,
         title: {
@@ -75,9 +75,8 @@ export class ListConfirmationDialog extends Component {
         const colorField = field.fieldNode.options?.color_field;
         return records.map((record) => ({
             id: record.id,
-            resId: record.resId,
             text: record.data.display_name,
-            colorIndex: colorField ? record.data[colorField] : undefined,
+            color: colorField ? record.data[colorField] : undefined,
         }));
     }
 

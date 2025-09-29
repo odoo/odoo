@@ -30,7 +30,9 @@
                     <button class="btn btn-link text-dark opacity-75 opacity-100-hover p-0 ms-1" t-on-click="onClickEditTags"><i class="oi oi-plus"/></button>
                 </h6>
                 <div t-if="conversationTags.length" class="d-flex flex-wrap flex-grow-1 gap-1">
-                    <TagsList displayText="true" tags="conversationTags"/>
+                    <t t-foreach="conversationTags" t-as="tag" t-key="tag.id">
+                        <BadgeTag cssClass="'me-1 mb-1'" color="tag.color" text="tag.text"/>
+                    </t>
                     <button t-if="this.store.has_access_livechat" class="btn btn-sm btn-link text-dark opacity-75 opacity-100 lh-1" t-on-click="onClickEditTags"><i class="fa fa-pencil"/></button>
                 </div>
             </div>
@@ -46,7 +48,9 @@
             <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
                 <div class="d-flex flex-wrap gap-1">
-                    <TagsList displayText="true" tags="expertiseTags"/>
+                    <t t-foreach="expertiseTags" t-as="tag" t-key="tag.id">
+                        <BadgeTag cssClass="'me-1 mb-1'" text="tag.text"/>
+                    </t>
                 </div>
             </div>
             <t t-name="extra_infos"/>

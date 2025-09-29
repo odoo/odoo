@@ -55,7 +55,9 @@
                         <t t-esc="line.customer_note" />
                     </li>
                     <div t-if="this.props.mode === 'display' and line.note" class="internal-note-container d-flex gap-2 flex-wrap">
-                        <TagsList tags="getInternalNotes()" />
+                        <t t-foreach="getInternalNotes()" t-as="note" t-key="note.id or note_index">
+                            <BadgeTag color="note.colorIndex" text="note.text"/>
+                        </t>
                     </div>
                     <li t-if="line.product_id.tracking !== 'none'" class="row flex-wrap w-100 m-0">
                         <div class="col-auto" t-attf-class="{{ props.mode == 'receipt' ? 'p-0' : 'px-1' }}">

@@ -53,7 +53,9 @@
 
     <t t-name="web.TreeEditor.List">
         <div class="o_input d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
+            <t t-foreach="tags" t-as="tag" t-key="tag_index">
+                <BadgeTag t-props="tag"/>
+            </t>
             <div class="flex-grow-1">
                 <t t-call="web.TreeEditor.Editor">
                     <t t-set="info" t-value="props.editorInfo" />

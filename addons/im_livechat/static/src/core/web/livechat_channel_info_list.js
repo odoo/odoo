@@ -10,11 +10,11 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { startUrl } from "@web/core/browser/router";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, TagsList, TranscriptSender };
+    static components = { ActionPanel, BadgeTag, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
@@ -47,8 +47,7 @@ export class LivechatChannelInfoList extends Component {
         return this.props.thread.livechat_conversation_tag_ids.map((tag) => ({
             id: tag.id,
             text: tag.name,
-            colorIndex: tag.color,
-            className: "me-1 mb-1",
+            color: tag.color,
         }));
     }
 
@@ -62,8 +61,6 @@ export class LivechatChannelInfoList extends Component {
         return this.props.thread.livechat_expertise_ids.map((expertise) => ({
             id: expertise.id,
             text: expertise.name,
-            colorIndex: 0,
-            className: "me-1 mb-1",
         }));
     }
 

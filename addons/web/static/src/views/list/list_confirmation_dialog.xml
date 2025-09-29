@@ -25,14 +25,19 @@
                                         <td><span>Add</span>: </td>
                                         <td>
                                             <div class="o_field_many2many_tags">
-                                            <TagsList tags="getTagProps(props.changes[field.name].add, field)"/>                                            </div>
+                                                <t t-foreach="getTagProps(props.changes[field.name].add, field)" t-as="tag" t-key="tag.id">
+                                                    <BadgeTag color="tag.color" text="tag.text"/>
+                                                </t>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr t-if="props.changes[field.name].remove.length">
                                         <td><span>Remove</span>: </td>
                                         <td>
                                             <div class="o_field_many2many_tags">
-                                                <TagsList tags="getTagProps(props.changes[field.name].remove, field)"/>
+                                                <t t-foreach="getTagProps(props.changes[field.name].remove, field)" t-as="tag" t-key="tag.id">
+                                                    <BadgeTag color="tag.color" text="tag.text"/>
+                                                </t>
                                             </div>
                                         </td>
                                     </tr>

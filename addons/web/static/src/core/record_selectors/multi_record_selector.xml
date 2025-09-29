@@ -3,7 +3,14 @@
 
     <t t-name="web.MultiRecordSelector" >
         <div class="o_input d-flex flex-wrap gap-1 o_multi_record_selector" t-ref="multiRecordSelector">
-            <TagsList tags="tags"/>
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <t t-if="tag.img">
+                    <AvatarTag imageUrl="tag.img" onDelete="tag.onDelete" text="tag.text"/>
+                </t>
+                <t t-else="">
+                    <BadgeTag onDelete="tag.onDelete" text="tag.text"/>
+                </t>
+            </t>
             <RecordAutocomplete
                 resModel="props.resModel"
                 value="''"
