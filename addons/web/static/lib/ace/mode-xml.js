@@ -345,7 +345,7 @@ var Tag = function () {
     this.end = { row: 0, column: 0 };
 };
 function is(token, type) {
-    return token.type.lastIndexOf(type + ".xml") > -1;
+    return token && token.type && token.type.lastIndexOf(type + ".xml") > -1;
 }
 (function () {
     this.getFoldWidget = function (session, foldStyle, row) {
