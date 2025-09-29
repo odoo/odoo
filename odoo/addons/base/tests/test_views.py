@@ -4431,7 +4431,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'appointment',
             'approvals',
             'approvals_purchase_stock',
-            'auth_signup',
             'auth_totp',
             'barcodes_gs1_nomenclature',
             'base_address_extended',
@@ -4471,7 +4470,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'documents_l10n_hk_hr_payroll',
             'documents_l10n_ke_hr_payroll',
             'documents_project',
-            'documents_project_sale',
             'documents_spreadsheet',
             'event',
             'event_booth',
@@ -4525,7 +4523,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_work_entry',
             'hr_work_entry_contract',
             'hr_work_entry_holidays_enterprise',
-            'iap',
             'im_livechat',
             'industry_fsm',
             'industry_fsm_report',
@@ -4758,7 +4755,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sign',
             'sms',
             'snailmail',
-            'snailmail_account',
             'social',
             'social_crm',
             'social_facebook',
@@ -4825,7 +4821,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'worksheet',
         )
 
-        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
+        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(lambda: defaultdict(list)) 
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
