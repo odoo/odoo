@@ -280,7 +280,7 @@ class ResourceCalendar(models.Model):
     # Computation API
     # --------------------------------------------------
 
-    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
+    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False, booking_apt=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         if not resources:
@@ -416,10 +416,15 @@ class ResourceCalendar(models.Model):
                                 allocate_hours = min(max_hours_per_day, remaining_hours)
                                 remaining_hours -= allocate_hours
 
-                                # Create interval centered at 12:00 PM
-                                midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
-                                start_time = midpoint - timedelta(hours=allocate_hours / 2)
-                                end_time = midpoint + timedelta(hours=allocate_hours / 2)
+                                if booking_apt:
+                                    # If an appoinment is being booked, create interval starting start_dt
+                                    start_time = start_datetime
+                                    end_time = start_time + timedelta(hours=allocate_hours)
+                                else:
+                                    # If an appointment isn't being booked, create interval centered at 12:00 PM
+                                    midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
+                                    start_time = midpoint - timedelta(hours=allocate_hours / 2)
+                                    end_time = midpoint + timedelta(hours=allocate_hours / 2)
 
                                 dummy_attendance = self.env['resource.calendar.attendance'].new({
                                     'duration_hours': allocate_hours,
@@ -510,7 +515,7 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, booking_apt=False, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
@@ -518,7 +523,7 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
 
-        attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
+        attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, booking_apt=booking_apt, tz=tz or self.env.context.get("employee_timezone"))
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
             return {
