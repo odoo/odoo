@@ -54,8 +54,8 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
             'action_id': cls.action_2.id,
         })
 
-    def get_embedded_actions_ids(self, parent_action):
-        return parent_action.with_context(self.context).read()[0]['embedded_action_ids']
+    def get_embedded_actions_ids(self, parent_action, **context):
+        return parent_action.with_context(context or self.context).read()[0]['embedded_action_ids']
 
     def test_parent_has_embedded_actions(self):
         res = self.get_embedded_actions_ids(self.parent_action)
@@ -85,10 +85,6 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
             'name': 'CustomPartner',
             'employee': False,
         })
-        self.context = {
-            'active_model': 'res.partner',
-            'active_id': test_partner_custo.id,
-        }
         embedded_action_custo = self.env['ir.embedded.actions'].create({
             'name': 'EmbeddedActionCusto',
             'parent_res_model': 'res.partner',
@@ -96,7 +92,7 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
             'action_id': self.action_2.id,
             'domain': [('employee', '=', True)]
         })
-        res = self.get_embedded_actions_ids(self.parent_action)
+        res = self.get_embedded_actions_ids(self.parent_action, active_model='res.partner', active_id=test_partner_custo.id)
         self.assertTrue(embedded_action_custo.id not in res, "The embedded action not respecting the domain should\
                          not be returned in the read method")
 

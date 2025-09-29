@@ -264,9 +264,10 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(res.text, 'db1')
 
     def test_ensure_db4_unicode(self):
-        self.db_list = ["basededonnée1", "basededonnée2"]  # é matters
-
-        res = self.multidb_url_open('/test_http/ensure_db?db=basededonnée1')
+        res = self.multidb_url_open(
+            '/test_http/ensure_db?db=basededonnée1',
+            dblist=("basededonnée1", "basededonnée2"),  # é matters
+        )
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
         self.assertURLEqual(

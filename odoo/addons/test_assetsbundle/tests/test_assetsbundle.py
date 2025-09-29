@@ -156,37 +156,37 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
         for the first time and this ir.attachment is different depending on `is_minified` param.
         """
-        self.bundle = self._get_asset(self.jsbundle_name, debug_assets=False)
+        bundle = self._get_asset(self.jsbundle_name, debug_assets=False)
 
         # there shouldn't be any minified attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
                          "there shouldn't be any minified attachment associated to this bundle")
-        self.assertEqual(len(self.bundle.get_attachments('min.js')), 0,
+        self.assertEqual(len(bundle.get_attachments('min.js')), 0,
                          "there shouldn't be any minified attachment associated to this bundle")
 
         # trigger the first generation and, thus, the first save in database
-        self.bundle.js()
+        bundle.js()
 
         # there should be one minified attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
                          "there should be one minified attachment associated to this bundle")
-        self.assertEqual(len(self.bundle.get_attachments('min.js')), 1,
+        self.assertEqual(len(bundle.get_attachments('min.js')), 1,
                          "there should be one minified attachment associated to this bundle")
 
         # there shouldn't be any non-minified attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
                          "there shouldn't be any non-minified attachment associated to this bundle")
-        self.assertEqual(len(self.bundle.get_attachments('js')), 0,
+        self.assertEqual(len(bundle.get_attachments('js')), 0,
                          "there shouldn't be any non-minified attachment associated to this bundle")
 
         # trigger the first generation and, thus, the first save in database for the non-minified version.
-        self.bundle_debug = self._get_asset(self.jsbundle_name, debug_assets=True)
-        self.bundle_debug.js()
+        bundle_debug = self._get_asset(self.jsbundle_name, debug_assets=True)
+        bundle_debug.js()
 
         # there should be one non-minified attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('js')), 1,
                          "there should be one non-minified attachment associated to this bundle")
-        self.assertEqual(len(self.bundle.get_attachments('js')), 1,
+        self.assertEqual(len(bundle.get_attachments('js')), 1,
                          "there should be one non-minified attachment associated to this bundle")
 
     def test_02_access(self):
@@ -341,10 +341,10 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
     def test_08_css_generation3(self):
         # self.cssbundle_xlmid contains 3 rules (not checked below)
-        self.bundle = self._get_asset(self.cssbundle_name)
-        self.bundle.css()
+        bundle = self._get_asset(self.cssbundle_name)
+        bundle.css()
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
-        self.assertEqual(len(self.bundle.get_attachments('min.css')), 1)
+        self.assertEqual(len(bundle.get_attachments('min.css')), 1)
 
     def test_09_css_access(self):
         """ Checks that the bundle's cache is working, i.e. that a bundle creates only enough
@@ -436,29 +436,29 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that a bundle creates an ir.attachment record when its `css` method is called
         for the first time for language with different direction and separate bundle is created for rtl direction.
         """
-        self.bundle = self._get_asset(self.cssbundle_name, rtl=True)
+        bundle = self._get_asset(self.cssbundle_name, rtl=True)
 
         # there shouldn't be any attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 0)
-        self.assertEqual(len(self.bundle.get_attachments('min.css')), 0)
+        self.assertEqual(len(bundle.get_attachments('min.css')), 0)
 
         # trigger the first generation and, thus, the first save in database
-        self.bundle.css()
+        bundle.css()
 
         # there should be no compilation errors
-        self.assertEqual(len(self.bundle.css_errors), 0)
+        self.assertEqual(len(bundle.css_errors), 0)
 
         # there should be one attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 1)
-        self.assertEqual(len(self.bundle.get_attachments('min.css')), 1)
+        self.assertEqual(len(bundle.get_attachments('min.css')), 1)
 
     def test_15_rtl_invalid_css_generation(self):
         """ Checks that erroneous css cannot be compiled by rtlcss and that errors are registered """
-        self.bundle = self._get_asset('test_assetsbundle.broken_css', rtl=True)
+        bundle = self._get_asset('test_assetsbundle.broken_css', rtl=True)
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle.css()
-        self.assertEqual(len(self.bundle.css_errors), 1)
-        self.assertIn('rtlcss: error processing payload', self.bundle.css_errors[0])
+            bundle.css()
+        self.assertEqual(len(bundle.css_errors), 1)
+        self.assertIn('rtlcss: error processing payload', bundle.css_errors[0])
 
     def test_16_ltr_and_rtl_css_access(self):
         """ Checks that the bundle's cache is working, i.e. that the bundle creates only one
@@ -678,45 +678,45 @@ class TestXMLAssetsBundle(FileTouchable):
         error message.
         """
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle = self._get_asset('test_assetsbundle.broken_xml')
+            bundle = self._get_asset('test_assetsbundle.broken_xml')
 
             # there shouldn't be any test_assetsbundle.invalid_xml template.
             # there should be an parsing_error template with the parsing error message.
             with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
-                self.bundle.xml()
+                bundle.xml()
 
     def test_02_multiple_broken_xml(self):
         """ Checks that a bundle with multiple broken xml returns a comprehensive error message.
         """
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
+            bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
 
             # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
             # there should be one parsing_error templates with the parsing error message for the first file.
             with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
-                self.bundle.xml()
+                bundle.xml()
 
     def test_04_template_wo_name(self):
         """ Checks that a bundle with template without name returns a comprehensive error message.
         """
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle = self._get_asset('test_assetsbundle.wo_name')
+            bundle = self._get_asset('test_assetsbundle.wo_name')
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
             with self.assertRaisesRegex(XMLAssetError, "'Template name is missing.' in file \'/test_assetsbundle/static/invalid_src/xml/template_wo_name.xml\'"):
-                self.bundle.xml()
+                bundle.xml()
 
     def test_05_file_not_found(self):
         """ Checks that a bundle with a file in error (file not found, encoding error, or other) returns a comprehensive error message.
         """
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle = self._get_asset('test_assetsbundle.file_not_found')
+            bundle = self._get_asset('test_assetsbundle.file_not_found')
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
             with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."):
-                self.bundle.xml()
+                bundle.xml()
 
 @tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):

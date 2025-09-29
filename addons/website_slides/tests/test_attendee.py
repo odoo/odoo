@@ -77,12 +77,12 @@ class TestAttendee(common.SlidesCase):
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
 
         # Enroll partner to course
-        self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
+        slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
             'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
             'enroll_mode': True,
         })
-        self.slide_channel_invite_wizard.action_invite()
+        slide_channel_invite_wizard.action_invite()
 
         # The partner should be in the attendees as 'joined'
         user_portal_channel_partner = self.channel.channel_partner_all_ids.filtered(lambda p: p.partner_id.id == user_portal_partner.id)
@@ -101,12 +101,12 @@ class TestAttendee(common.SlidesCase):
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
 
         # Invite partner to course
-        self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
+        slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
             'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
             'send_email': True,
         })
-        self.slide_channel_invite_wizard.action_invite()
+        slide_channel_invite_wizard.action_invite()
 
         # The partner should be in the attendees as 'invited'
         user_portal_channel_partner = self.channel.channel_partner_all_ids.filtered(lambda p: p.partner_id.id == user_portal_partner.id)
@@ -132,12 +132,12 @@ class TestAttendee(common.SlidesCase):
         self.assertEqual(user_portal_channel_partner.member_status, 'ongoing')
 
         # Invite archived ongoing partner to course
-        self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
+        slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
             'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
             'send_email': True,
         })
-        self.slide_channel_invite_wizard.action_invite()
+        slide_channel_invite_wizard.action_invite()
 
         # The partner should be reactivated in the attendees as 'invited'
         self.assertTrue(user_portal_channel_partner.active)
@@ -146,9 +146,9 @@ class TestAttendee(common.SlidesCase):
 
         # Archive then enroll the attendee
         user_portal_channel_partner.action_archive()
-        self.slide_channel_invite_wizard.enroll_mode = True
-        self.slide_channel_invite_wizard.flush_recordset()
-        self.slide_channel_invite_wizard.action_invite()
+        slide_channel_invite_wizard.enroll_mode = True
+        slide_channel_invite_wizard.flush_recordset()
+        slide_channel_invite_wizard.action_invite()
 
         # The partner should be reactivated in the attendees as 'ongoing'
         self.assertTrue(user_portal_channel_partner.active)

@@ -298,6 +298,24 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
 
 class BlockedRequest(requests.exceptions.ConnectionError):
     pass
+
+def checked_setattr(self: 'BaseCase', attr: str, value: object) -> None:
+    for cls in type(self).mro():
+        if attr in cls.__dict__.get('setattr_whitelist', ()):
+            break
+    else:
+        _logger.warning(
+            "Setting %r on test case %r",
+            attr,
+            self.id,
+            stack_info=True,
+            stacklevel=2,
+        )
+
+    super(BaseCase, self).__setattr__(attr, value)
+    # raise TypeError("Test objects are readonly during tests")
+
+
 _super_send = requests.Session.send
 class BaseCase(case.TestCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
@@ -306,6 +324,15 @@ class BaseCase(case.TestCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
+    setattr_whitelist = (
+        'maxDiff',  # assertXMLEqual
+        'uid', 'env',  # with_user()
+        '_subtest',  # subTest()
+        'warm',  # warmup()
+        '_users',  # users()
+        'http_request_key',  # allow_pdf_render
+        '_test_params',  # tag_selector
+    )
     def __init_subclass__(cls):
         """Assigns default test tags ``standard`` and ``at_install`` to test
         cases not having them. Also sets a completely unnecessary
@@ -352,6 +379,10 @@ class BaseCase(case.TestCase):
         _logger.getChild('requests').info(
             "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
         raise BlockedRequest(f"External requests verboten (was {r.method} {r.url})")
+
+    def _callTestMethod(self, method):
+        with patch.object(type(self), '__setattr__', checked_setattr):
+            super()._callTestMethod(method)
 
     def run(self, result: OdooTestResult) -> None:
         testMethod = getattr(self, self._testMethodName)
@@ -786,12 +817,12 @@ class BaseCase(case.TestCase):
             when normalizing both archs. Takes either "xml" or "html"
         :type parser: str
         """
-        self.maxDiff = 10000
-        if original:
-            original = _normalize_arch_for_assert(original, parser)
-        if expected:
-            expected = _normalize_arch_for_assert(expected, parser)
-        self.assertEqual(original, expected)
+        with patch.object(self, 'maxDiff', 10000):
+            if original:
+                original = _normalize_arch_for_assert(original, parser)
+            if expected:
+                expected = _normalize_arch_for_assert(expected, parser)
+            self.assertEqual(original, expected)
 
     def assertXMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected)
@@ -1286,8 +1317,6 @@ class ChromeBrowser:
         else:
             self.sigxcpu_handler = None
 
-        test_case.browser_size = test_case.browser_size.replace('x', ',')
-
         self.chrome, self.devtools_port = self._chrome_start(
             user_data_dir=self.user_data_dir,
             touch_enabled=test_case.touch_enabled,
@@ -1332,7 +1361,7 @@ class ChromeBrowser:
             'height': None,
             'deviceScaleFactor': 1,
         }
-        emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
+        emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.replace('x', ',').split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
 
     def signal_handler(self, sig, frame):
@@ -2111,6 +2140,11 @@ class HttpCase(TransactionCase):
     session: odoo.http.Session = None
 
     _logger: logging.Logger = None
+
+    setattr_whitelist = (
+        'http_request_allow_all',  # allow_requests()
+        'session', 'opener',  # authenticate()
+    )
 
     @classmethod
     def setUpClass(cls):

@@ -114,27 +114,27 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertEqual(channel_publisher.completion, 33)
 
         # Should update completion when a new published slide is created
-        self.slide_4 = self.slide_3.copy({'is_published': True})
+        slide_4 = self.slide_3.copy({'is_published': True})
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 25)
         self.assertEqual(channel_publisher.completion, 25)
 
         # Should update completion when slide is (un)published
-        self.slide_4.is_published = False
+        slide_4.is_published = False
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 33)
         self.assertEqual(channel_publisher.completion, 33)
 
-        self.slide_4.is_published = True
+        slide_4.is_published = True
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 25)
         self.assertEqual(channel_publisher.completion, 25)
 
         # Should update completion when a slide is unlinked
-        self.slide_4.with_user(self.user_manager).unlink()
+        slide_4.with_user(self.user_manager).unlink()
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 33)

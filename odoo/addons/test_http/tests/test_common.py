@@ -46,7 +46,6 @@ class TestHttpBase(HttpCaseWithUserDemo):
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
 
     def multidb_url_open(self, url, *args, allow_redirects=False, dblist=(), **kwargs):
-        dblist = dblist or self.db_list
         assert len(dblist) >= 2, "There should be at least 2 databases"
         with patch('odoo.http.db_list') as db_list, \
              patch('odoo.http.db_filter') as db_filter, \

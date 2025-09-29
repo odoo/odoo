@@ -3457,7 +3457,7 @@ class TestViews(ViewCase):
         self.assertWarning('<form><input type="email" class="btn" role="button"/></form>')
 
     def test_partial_validation(self):
-        self.View = self.View.with_context(load_all_views=True)
+        View = self.View.with_context(load_all_views=True)
 
         # base view
         view0 = self.assertValid("""
@@ -3499,17 +3499,17 @@ class TestViews(ViewCase):
         )
 
         # replacing an element should validate the whole view
-        view_arch = self.View.get_views([(view0.id, 'form')])['views']['form']['arch']
+        view_arch = View.get_views([(view0.id, 'form')])['views']['form']['arch']
         self.assertFalse(etree.fromstring(view_arch).xpath('//field[@name="model"][@invisible][@readonly]'))
         view0bis = None
         view0bis = self.assertValid(
             """<field name="model" position="replace"/>""",
             inherit_id=view0.id,
         )
-        view_arch = self.View.get_views([(view0.id, 'form')])['views']['form']['arch']
+        view_arch = View.get_views([(view0.id, 'form')])['views']['form']['arch']
         self.assertTrue(etree.fromstring(view_arch).xpath('//field[@name="model"][@invisible][@readonly]'))
         view0bis.active = False
-        view_arch = self.View.get_views([(view0.id, 'form')])['views']['form']['arch']
+        view_arch = View.get_views([(view0.id, 'form')])['views']['form']['arch']
         self.assertFalse(etree.fromstring(view_arch).xpath('//field[@name="model"][@invisible][@readonly]'))
 
         # moving an element should have no impact; this test checks that the
@@ -3527,7 +3527,7 @@ class TestViews(ViewCase):
         view1.arch = """<form position="inside">
             <field name="type"/>
         </form>"""
-        view_arch = self.View.get_views([(view0.id, 'form')])['views']['form']['arch']
+        view_arch = View.get_views([(view0.id, 'form')])['views']['form']['arch']
         self.assertTrue(etree.fromstring(view_arch).xpath('//field[@name="name"][@invisible][@readonly]'))
 
     def test_graph_fields(self):

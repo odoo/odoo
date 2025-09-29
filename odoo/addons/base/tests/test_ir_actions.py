@@ -479,7 +479,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
 
         group0 = self.env['res.groups'].create({'name': 'country group'})
 
-        self.context = {
+        context = {
             'active_model': 'res.country',
             'active_id': self.test_country.id,
         }
@@ -497,7 +497,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertFalse(bindings)
 
         with self.assertRaises(AccessError):
-            self.action.with_context(self.context).run()
+            self.action.with_context(context).run()
         self.assertFalse(self.test_country.vat_label)
 
         # add group to the user, and test again
@@ -506,24 +506,22 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         bindings = Actions.get_bindings('res.country')
         self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
 
-        self.action.with_context(self.context).run()
+        self.action.with_context(context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
 
     def test_60_sort(self):
         """ check the actions sorted by sequence """
-        Actions = self.env['ir.actions.actions']
-
         # Do: update model
         self.action.write({
             'model_id': self.res_country_model.id,
             'binding_model_id': self.res_country_model.id,
         })
-        self.action2 = self.action.copy({'name': 'TestAction2', 'sequence': 1})
+        self.action.copy({'name': 'TestAction2', 'sequence': 1})
 
         # Test: action returned by sequence
-        bindings = Actions.get_bindings('res.country')
-        self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
-        self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
+        bindings = self.env['ir.actions.actions'].get_bindings('res.country')
+        self.assertEqual([vals['name'] for vals in bindings['action']], ['TestAction2', 'TestAction'])
+        self.assertEqual([vals['sequence'] for vals in bindings['action']], [1, 5])
 
     def test_70_copy_action(self):
         # first check that the base case (reset state) works normally

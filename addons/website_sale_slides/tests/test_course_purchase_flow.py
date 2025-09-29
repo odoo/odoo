@@ -32,7 +32,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'product_id': self.course_product.id
         })
 
-        self.channel_2 = self.env['slide.channel'].with_user(self.user_officer).create({
+        channel_2 = self.env['slide.channel'].with_user(self.user_officer).create({
             'name': 'Test Channel',
             'enroll': 'payment',
             'product_id': self.course_product.id,
@@ -56,7 +56,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
 
         # Step 3: check that the customer is now a member of both channel
         self.assertIn(self.customer, self.channel.partner_ids)
-        self.assertIn(self.customer, self.channel_2.partner_ids)
+        self.assertIn(self.customer, channel_2.partner_ids)
 
         # Step 4: Same test as salesman
         salesman_sale_order = self.env['sale.order'].with_user(self.user_salesman).create({
@@ -74,7 +74,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
         salesman_sale_order.action_confirm()
 
         self.assertIn(self.user_portal.partner_id, self.channel.partner_ids)
-        self.assertIn(self.user_portal.partner_id, self.channel_2.partner_ids)
+        self.assertIn(self.user_portal.partner_id, channel_2.partner_ids)
 
     @users('user_officer')
     def test_course_product_published_synch(self):
