@@ -14,7 +14,8 @@
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="contract_date_start" groups="hr.group_hr_manager"/>
-                    <field name="job_id"/>
+                    <field name="job_title" groups="!hr.group_show_job_id"/>
+                    <field name="job_id" groups="hr.group_show_job_id"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
@@ -57,7 +58,8 @@
                     <group>
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_job_title" groups="!hr.group_show_job_id" domain="[]" context="{'group_by': 'job_title'}"/>
+                        <filter name="group_job" groups="hr.group_show_job_id" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
@@ -167,7 +169,7 @@
                                         <group string="work">
                                             <field name="company_id" groups="base.group_multi_company" domain="[('id', 'in', allowed_company_ids)]"/>
                                             <field name="department_id"/>
-                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager" groups="hr.group_show_job_id"/>
                                             <field name="job_title"/>
                                             <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>
@@ -554,7 +556,8 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <pivot string="New Employees Over Time" sample="1">
-                    <field name="job_id" type="row"/>
+                    <field name="job_title" groups="!hr.group_show_job_id" type="row"/>
+                    <field name="job_id" groups="hr.group_show_job_id" type="row"/>
                     <field name="contract_date_start" interval="year" type="col"/>
                     <field name="id"/>
                     <field name="color" type="measure" invisible="1"/>
@@ -588,7 +591,8 @@
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>
-                    <field name="job_title" string="Job" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
+                    <field name="job_title" groups="!hr.group_show_job_id" optional="show"/>
+                    <field name="job_id" groups="hr.group_show_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="show"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
@@ -609,7 +613,8 @@
                     <field name="name" string="Name" readonly="1"/>
                     <field name="company_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>
-                    <field name="job_title" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
+                    <field name="job_title" groups="!hr.group_show_job_id" optional="hide"/>
+                    <field name="job_id" groups="hr.group_show_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="resource_calendar_id" optional="show"/>
@@ -638,7 +643,8 @@
                     <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>
-                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
+                    <field name="job_title" groups="!hr.group_show_job_id" optional="show"/>
+                    <field name="job_id" groups="hr.group_show_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
@@ -733,7 +739,8 @@
             <field name="arch" type="xml">
                 <hierarchy child_field="child_ids" js_class="hr_employee_hierarchy" icon="fa-users" draggable="1">
                     <field name="name" />
-                    <field name="job_title" />
+                    <field name="job_title" groups="!hr.group_show_job_id" />
+                    <field name="job_id" groups="hr.group_show_job_id" />
                     <field name="department_color" />
                     <field name="hr_icon_display" />
                     <field name="department_id" />
@@ -749,7 +756,8 @@
                                     <field class="fw-bold w-100" name="name" />
                                     <field name="hr_icon_display" class="flex-shrink-0" widget="hr_presence_status" />
                                 </div>
-                                <field name="job_title"/>
+                                <field name="job_title" groups="!hr.group_show_job_id" />
+                                <field name="job_id" groups="hr.group_show_job_id" />
                             </div>
                         </t>
                     </templates>
@@ -792,7 +800,8 @@
                             <img class="rounded" t-att-src="activity_image('hr.employee', 'avatar_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div class="ms-2">
                                 <field name="name" display="full" class="o_text_block"/>
-                                <field name="job_id" muted="1" display="full" class="o_text_block"/>
+                                <field name="job_title" groups="!hr.group_show_job_id" muted="1" display="full" class="o_text_block"/>
+                                <field name="job_id" groups="hr.group_show_job_id" muted="1" display="full" class="o_text_block"/>
                             </div>
                         </div>
                     </templates>

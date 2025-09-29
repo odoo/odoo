@@ -48,6 +48,7 @@
     'demo': [
         'data/hr_recruitment_demo.xml',
     ],
+    'uninstall_hook': 'uninstall_hook',
     'application': True,
     'assets': {
         'web.assets_backend': [

@@ -13,14 +13,15 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="job_title"/>
-                    <field name="job_id" invisible="1"/>
+                    <field name="job_title" groups="!hr.group_show_job_id"/>
+                    <field name="job_id" groups="hr.group_show_job_id"/>
                     <separator/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                     <group>
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter name="group_job" string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter name="group_job_title" domain="[]" context="{'group_by':'job_title'}" groups="!hr.group_show_job_id"/>
+                        <filter name="group_job" domain="[]" context="{'group_by':'job_id'}" groups="hr.group_show_job_id"/>
                         <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
@@ -90,8 +91,8 @@
                                         <group string="work">
                                             <field name="company_id" groups="base.group_multi_company"/>
                                             <field name="department_id"/>
-                                            <field name="job_title" string="Job Title"/>
-                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager" invisible="1"/>
+                                            <field name="job_title"/>
+                                            <field name="job_id" groups="hr.group_show_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                                             <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>
                                         <group string="Location" name="location">
@@ -148,7 +149,8 @@
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
-                    <field name="job_id" options="{'no_open': True}"/>
+                    <field name="job_title" groups="!hr.group_show_job_id" options="{'no_open': True}"/>
+                    <field name="job_id" groups="hr.group_show_job_id" options="{'no_open': True}"/>
                     <field name="parent_id" widget="many2one_avatar_employee"/>
                     <field name="coach_id" widget="many2one_avatar_employee" optional="show"/>
                 </list>
@@ -212,7 +214,8 @@
             <field name="arch" type="xml">
                 <hierarchy child_field="child_ids" js_class="hr_employee_hierarchy" icon="fa-users" draggable="0">
                     <field name="name" />
-                    <field name="job_id" />
+                    <field name="job_title" groups="!hr.group_show_job_id"/>
+                    <field name="job_id" groups="hr.group_show_job_id"/>
                     <field name="department_color" />
                     <field name="hr_icon_display" />
                     <field name="department_id" />
@@ -228,7 +231,8 @@
                                     <field class="fw-bold w-100" name="name" />
                                     <field name="hr_icon_display" class="flex-shrink-0" widget="hr_presence_status" />
                                 </div>
-                                <field name="job_id"/>
+                                <field name="job_title" groups="!hr.group_show_job_id"/>
+                                <field name="job_id" groups="hr.group_show_job_id"/>
                             </div>
                         </t>
                     </templates>

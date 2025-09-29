@@ -114,4 +114,11 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record model="res.groups" id="hr_recruitment.group_show_job_id">
+        <field name="name">Show Job Position - hr_recruitment</field>
+        <field name="comment">The user will be able to see the job_id (Job Position) field of employees.</field>
+        <field name="implied_ids" eval="[Command.link(ref('hr.group_show_job_id'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
 </odoo>
