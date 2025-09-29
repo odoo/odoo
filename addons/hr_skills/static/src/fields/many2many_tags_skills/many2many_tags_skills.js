@@ -3,12 +3,17 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { Component } from "@odoo/owl";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
-import { SkillsTagList } from "../hr_skills_tags_list/hr_skills_tags_list";
-
+class SkillsTag extends Component {
+    static template = "hr_skills.SkillsTag";
+    static components = { BadgeTag };
+    static props = ["color?", "defaultLevel", "onDelete?", "text", "tooltip"];
+}
 
 class SkillsMany2ManyTags extends Many2ManyTagsField {
-    static components = { ...Many2ManyTagsField.components, TagsList: SkillsTagList };
+    static components = { ...Many2ManyTagsField.components, Tag: SkillsTag };
     getTagProps(record) {
         return { ...super.getTagProps(record), defaultLevel: record.data.default_level };
     }

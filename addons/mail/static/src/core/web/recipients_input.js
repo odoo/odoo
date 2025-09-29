@@ -6,28 +6,30 @@ import { useService } from "@web/core/utils/hooks";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
 
 import { rpc } from "@web/core/network/rpc";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 import { uniqueId } from "@web/core/utils/functions";
-import { RecipientsPopover } from "./recipients_popover";
-import { RecipientsInputTagsList } from "./recipients_input_tags_list";
+import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component } from "@odoo/owl";
+import { Component, onWillRender } from "@odoo/owl";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
-    static components = { AutoComplete, RecipientsInputTagsList };
+    static components = { AutoComplete, RecipientTag };
     static props = {
         thread: { type: Object },
     };
 
     setup() {
         this.orm = useService("orm");
-        this.action = useService("action");
         this.store = useService("mail.store");
-        this.popover = usePopover(RecipientsPopover, { position: "bottom-middle" });
+        this.recipientCheckerBus = useRecipientChecker(() => this.tags);
         useTagNavigation("recipientsInputRef", {
             delete: this.deleteTagByIndex.bind(this),
+        });
+
+        this.tags = [];
+        onWillRender(() => {
+            this.tags = this.getTagsFromMailThread();
         });
 
         this.openListViewToSelectResPartner = useSelectCreate({
@@ -55,9 +57,8 @@ export class RecipientsInput extends Component {
     }
 
     deleteTagByIndex(index) {
-        const tags = this.getTagsFromMailThread();
-        if (tags[index]) {
-            tags[index].onDelete();
+        if (this.tags[index]) {
+            this.tags[index].onDelete();
         }
     }
 
@@ -170,36 +171,17 @@ export class RecipientsInput extends Component {
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const title = `${recipient.name || _t("Unnamed")} ${
+            const tooltip = `${recipient.name || _t("Unnamed")} ${
                 recipient.email ? "<" + recipient.email + ">" : ""
             }`;
-            title.trim();
+            tooltip.trim();
             tags.push({
                 id: uniqueId("tag_"),
                 resId: recipient.partner_id,
-                canEdit: true,
                 text: recipient.name || recipient.email || _t("Unnamed"),
                 name: recipient.name || _t("Unnamed"),
-                email: recipient.email,
-                title,
-                onClick: (ev) => {
-                    if (recipient.partner_id && recipient.email) {
-                        const viewProfileBtnOverride = () => {
-                            const action = {
-                                type: "ir.actions.act_window",
-                                res_model: "res.partner",
-                                res_id: recipient.partner_id,
-                                views: [[false, "form"]],
-                                target: "current",
-                            };
-                            this.action.doAction(action);
-                        };
-                        this.popover.open(ev.target, {
-                            viewProfileBtnOverride,
-                            id: recipient.partner_id,
-                        });
-                    }
-                },
+                email: recipient.email || "",
+                tooltip,
                 onDelete: () => {
                     this.props.thread[recipientField] = this.props.thread[recipientField].filter(
                         (additionalOrSuggestedRecipient) =>
@@ -207,6 +189,8 @@ export class RecipientsInput extends Component {
                             additionalOrSuggestedRecipient.email !== recipient.email
                     );
                 },
+                updateRecipient: this.updateRecipient.bind(this),
+                bus: this.recipientCheckerBus,
             });
         };
         for (const recipient of this.props.thread.suggestedRecipients) {

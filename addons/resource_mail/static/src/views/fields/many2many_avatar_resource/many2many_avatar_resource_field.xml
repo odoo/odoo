@@ -10,24 +10,22 @@
         </xpath>
     </t>
 
-    <t t-name="resource_mail.Many2ManyAvatarResourceTagsList" t-inherit="mail.Many2ManyAvatarUserTagsList">
-        <i position="attributes">
-            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
-            <attribute name="class">o_avatar o_m2m_avatar position-relative rounded</attribute>
-            <attribute name="t-attf-class" separator=" " add="o_colorlist_item_color_{{ tag.colorIndex }}"/>
-        </i>
-        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
-            <attribute name="t-attf-class"/>
-            <attribute name="t-att-class"/>
-            <attribute name="class" separator=" " add="o_avatar opacity-trigger-hover"/>
-        </xpath>
-        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="attributes">
-            <attribute name="t-attf-class"/>
-            <attribute name="class" separator=" " add="position-relative ms-1"/>
-        </xpath>
-        <a position="attributes">
-            <attribute name="t-attf-class"/>
-            <attribute name="class" separator=" " add="btn btn-link position-relative py-0 px-1 text-danger opacity-0"/>
-        </a>
+    <t t-name="resource_mail.ResourceTag">
+        <t t-if="this.props.type === 'user'">
+            <AvatarTag imageUrl="this.props.imageUrl" onAvatarClick="this.props.onAvatarClick" onDelete="this.props.onDelete" text="this.props.text" tooltip="this.props.tooltip"/>
+        </t>
+        <t t-else="">
+            <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 opacity-trigger-hover" tabindex="-1" t-att-data-tooltip="this.props.tooltip" t-att-aria-label="this.props.tooltip" t-on-click="(ev) => this.props.onAvatarClick(ev.target)">
+                <i class="fa fa-wrench o_avatar o_m2m_avatar position-relative rounded p-1" t-attf-class="o_colorlist_item_color_{{ this.props.color }}"/>
+                <t t-if="this.props.text">
+                    <div class="o_tag_badge_text position-relative ms-1" t-out="this.props.text"/>
+                </t>
+                <t t-if="this.props.onDelete">
+                    <a class="o_delete d-flex align-items-center btn btn-link position-relative py-0 px-1 text-danger opacity-75 opacity-100-hover" href="#" tabindex="0" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
+                        <i class="oi oi-close align-text-top"/>
+                    </a>
+                </t>
+            </span>
+        </t>
     </t>
 </templates>

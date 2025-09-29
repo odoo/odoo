@@ -3,20 +3,9 @@ import {
     Many2ManyTagsFieldColorEditable,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
 
-export class FieldMany2ManyTagsSalaryBankTagsList extends TagsList {
-    static template = "web.TagsList";
-}
-
 export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsFieldColorEditable {
-    static template = "web.Many2ManyTagsField";
-    static components = {
-        ...Many2ManyTagsFieldColorEditable.components,
-        TagsList: FieldMany2ManyTagsSalaryBankTagsList,
-    };
-
     setup() {
         super.setup();
         this.actionService = useService("action");
@@ -33,7 +22,7 @@ export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsFieldColorEditabl
     }
 
     getTagProps(record) {
-        var text = record.data?.display_name;
+        var text = record.data?.display_name || "";
         const amount = record.data?.employee_salary_amount;
         const has_multiple_bank_accounts = this.props.record.data["has_multiple_bank_accounts"];
         if (has_multiple_bank_accounts && amount) {

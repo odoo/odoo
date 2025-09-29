@@ -3,13 +3,10 @@
 
     <t t-name="calendar.Many2ManyAttendeeExpandable" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('many2many_tags_avatar_field_container')]" position="attributes">
-            <attribute name="class" remove="mw-100" add="w-100" separator=" "/>
-        </xpath>
-        <xpath expr="//TagsList" position="attributes">
-            <attribute name="visibleItemsLimit">state.expanded ? tags.length : 5</attribute>
+            <attribute name="class" remove="mw-100" add="w-100 align-items-start" separator=" "/>
         </xpath>
         <xpath expr="//TagsList" position="before">
-            <t t-if="tags.length > 5">
+            <t t-if="tags.length gt 5">
                 <div class="d-flex w-100">
                     <div class="flex-grow-1">
                         <strong><t t-out="attendeesCount"/> attendees</strong>
@@ -22,7 +19,7 @@
             </t>
         </xpath>
         <xpath expr="//TagsList" position="replace">
-            <t t-if="!state.expanded &amp;&amp; tags.length > 10"> </t>
+            <t t-if="!state.expanded and tags.length > 10"> </t>
             <t t-else="">$0</t>
         </xpath>
     </t>
