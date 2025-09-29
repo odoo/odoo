@@ -22,7 +22,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         super().setUpClass()
 
         # don't be annoyed by enrich cron for query counters (unmodular but hey)
-        cls.env['ir.config_parameter'].sudo().set_param('crm.iap.lead.enrich.setting', 'no')
+        cls.env['ir.config_parameter'].sudo().set_str('crm.iap.lead.enrich.setting', 'no')
 
         # give default values for all email aliases and domain
         cls._init_mail_gateway()

@@ -41,7 +41,7 @@ class CrmLead(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         leads = super().create(vals_list)
-        enrich_mode = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'auto')
+        enrich_mode = self.env['ir.config_parameter'].sudo().get_str('crm.iap.lead.enrich.setting') or 'auto'
         if enrich_mode == 'auto':
             cron = self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
             if cron:

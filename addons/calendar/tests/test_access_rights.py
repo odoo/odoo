@@ -322,7 +322,7 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(self.admin_system_user.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
 
             # Update the Default 'calendar.default_privacy' as an administrator.
-            self.env['ir.config_parameter'].sudo().set_param("calendar.default_privacy", privacy)
+            self.env['ir.config_parameter'].sudo().set_str("calendar.default_privacy", privacy)
 
             # All calendar default privacy updates must be blocked during write.
             with self.assertRaises(AccessError):

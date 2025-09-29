@@ -32,7 +32,7 @@ class IrAttachment(models.Model):
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)
         if kwargs.get('cloud_storage'):
-            if not self.env['ir.config_parameter'].sudo().get_param('cloud_storage_provider'):
+            if not self.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider'):
                 raise UserError(_('Cloud Storage is not enabled'))
             for record in self:
                 record.write({
