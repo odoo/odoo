@@ -333,7 +333,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         chair = self.env['product.product'].create({
             'name': 'Super Chair', 'list_price': 1000, 'website_published': True
         })
-        self.discount_code_program_multi_rewards = self.env['loyalty.program'].create({
+        self.env['loyalty.program'].create({
             'name': 'Discount code program',
             'program_type': 'promo_code',
             'applies_on': 'current',
