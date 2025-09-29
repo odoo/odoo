@@ -8,8 +8,9 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
-from pprint import pformat
 import unittest.mock
+from odoo.http import UserError
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -1449,3 +1450,18 @@ class TestPoSBasicConfig(TestPoSCommon):
         })
 
         self.assertEqual(refund_order.refunded_order_id, orders[0])
+
+    def test_archive_delete_special_product(self):
+        self.env.user.group_ids -= self.env.ref('point_of_sale.group_pos_manager')
+        special_product = self.env.ref('point_of_sale.product_product_tip')
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.action_archive()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.product_variant_ids[0].action_archive()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.unlink()
+        with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
+            special_product.product_variant_ids[0].unlink()
+        # Now test that archiving/deleting works with classic products
+        self.product1.product_tmpl_id.action_archive()
+        self.product2.action_archive()
