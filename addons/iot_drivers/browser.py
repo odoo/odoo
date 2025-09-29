@@ -43,6 +43,7 @@ class Browser:
         self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
+        self.open_browser()
 
     def _set_environment(self, env):
         """
@@ -55,7 +56,7 @@ class Browser:
         for key in ['HOME', 'XDG_RUNTIME_DIR', 'XDG_CACHE_HOME']:
             self.env[key] = '/tmp/' + self._x_screen
 
-    def open_browser(self, url=None, state=BrowserState.NORMAL):
+    def open_browser(self, url=None, state=BrowserState.FULLSCREEN):
         """
         open the browser with the given URL, or reopen it if it is already open
         :param url: URL to open in the browser
