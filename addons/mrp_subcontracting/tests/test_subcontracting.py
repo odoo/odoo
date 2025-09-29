@@ -1156,6 +1156,36 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_qty': 16, 'qty_producing': 16, 'state': 'cancel'},
         ])
 
+    def test_subcontracting_component_line_deletion(self):
+        '''
+        Ensure lines manually deleted are correctly unlinked.
+        '''
+        self.bom.consumption = 'flexible'
+        # Subcontractor has the components in stock
+        self.env['stock.quant']._update_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, 1)
+        self.env['stock.quant']._update_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, 1)
+        # Create the picking
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 1,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        receipt.action_confirm()
+        # Change consumption by removing the second line
+        action = receipt.move_ids.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        line_to_remove = mo.move_line_raw_ids[1]
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.move_line_raw_ids.remove(1)
+        mo.subcontracting_record_component()
+        self.assertFalse(line_to_remove.exists())
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
