@@ -3,6 +3,7 @@
 
 import contextlib
 import difflib
+import itertools
 import logging
 import re
 from contextlib import contextmanager
@@ -40,7 +41,7 @@ class TestRunnerLoggingCommon(TransactionCase):
     """
 
     def setUp(self):
-        self.expected_logs = None
+        self.expected_logs = []
         self.expected_first_frame_methods = None
         return super().setUp()
 
@@ -110,11 +111,13 @@ class TestRunnerLoggingCommon(TransactionCase):
             self._assert_log_equal(log_record, 'fn', __file__)
             self._assert_log_equal(log_record, 'func', self._testMethodName)
 
-        if self.expected_logs is not None:
-            for log_record in log_records:
-                level, msg = self.expected_logs.pop(0)
-                self._assert_log_equal(log_record, 'level', level)
-                self._assert_log_equal(log_record, 'msg', msg)
+        for log_record, expected in itertools.zip_longest(
+            log_records,
+            self.expected_logs,
+        ):
+            level, msg = expected or (None, None)
+            self._assert_log_equal(log_record, 'level', level)
+            self._assert_log_equal(log_record, 'msg', msg)
 
     def _assert_log_equal(self, log_record, key, expected):
         """ Check the content of a log record. """
@@ -171,7 +174,7 @@ Traceback (most recent call last):
     raise Exception('{message}')
 Exception: {message}
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, make_message('This is an error')),
         ]
@@ -180,7 +183,7 @@ Exception: {message}
 
         self.assertFalse(self.expected_logs, "Error should have been logged immediatly")
 
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, make_message('This is an error2')),
         ]
@@ -204,7 +207,7 @@ Traceback (most recent call last):
     raise Exception('This is an error')
 Exception: This is an error
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -240,7 +243,7 @@ Traceback (most recent call last):
     raise Exception('This is an error')
 Exception: This is an error
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -270,7 +273,7 @@ Traceback (most recent call last):
     raise Exception('This is an error')
 Exception: This is an error
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -302,7 +305,7 @@ Traceback (most recent call last):
     raise Exception('This is an error')
 Exception: This is an error
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -331,7 +334,7 @@ Traceback (most recent call last):
     self.fail(msg % (login, count, expected, funcname, filename, linenum))
 AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at base/tests/test_test_suite.py:$line
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -356,7 +359,7 @@ Traceback (most recent call last):
     raise Exception('This is an error')
 Exception: This is an error
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
@@ -392,7 +395,7 @@ Traceback (most recent call last):
     raise Exception('This is an error2')
 Exception: This is an error2
 ''')
-        self.expected_logs = [
+        self.expected_logs[:] = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
         ]
