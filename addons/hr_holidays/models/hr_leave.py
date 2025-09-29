@@ -321,13 +321,13 @@ class HrLeave(models.Model):
     @api.depends('holiday_status_id', 'request_unit_hours')
     def _compute_request_unit_half(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_hours:
+            if (holiday.holiday_status_id and holiday.leave_type_request_unit not in ['half_day', 'hour']) or holiday.request_unit_hours:
                 holiday.request_unit_half = False
 
     @api.depends('holiday_status_id', 'request_unit_half')
     def _compute_request_unit_hours(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_half:
+            if (holiday.holiday_status_id and holiday.leave_type_request_unit != 'hour') or holiday.request_unit_half:
                 holiday.request_unit_hours = False
 
     def _get_employee_domain(self):
