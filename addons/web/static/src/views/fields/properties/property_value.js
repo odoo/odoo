@@ -13,7 +13,8 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
 import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
@@ -24,6 +25,18 @@ import { PropertyText } from "./property_text";
 import { imageUrl } from "@web/core/utils/urls";
 import { getCurrency } from "@web/core/currency";
 import { nbsp } from "@web/core/utils/strings";
+
+class PropertyValueTag extends Component {
+    static template = "web.PropertyValueTag";
+    static components = { BadgeTag, AvatarTag };
+    static props = {
+        imageUrl: { type: String, optional: true },
+        onClick: { type: Function, optional: true },
+        onAvatarClick: { type: Function, optional: true },
+        onDelete: { type: Function, optional: true },
+        text: { type: String },
+    };
+}
 
 function extractData(record) {
     let name;
@@ -57,9 +70,9 @@ export class PropertyValue extends Component {
         CheckBox,
         DateTimeInput,
         Many2XAutocomplete,
-        TagsList,
         PropertyTags,
         PropertyText,
+        PropertyValueTag,
     };
 
     static props = {
@@ -154,26 +167,22 @@ export class PropertyValue extends Component {
                 return [];
             }
 
-            // Convert to TagsList component format
+            // Convert to Tag component format
             return value.map((many2manyValue) => {
                 const hasAccess = many2manyValue[1] !== null;
+                const props = {
+                    imageUrl: this.showAvatar && hasAccess ? imageUrl(this.props.comodel, many2manyValue[0], "avatar_128") : undefined,
+                    onClick: hasAccess && this.clickableRelational
+                        ? (async () => await this._openRecord(this.props.comodel, many2manyValue[0]))
+                        : undefined,
+                    onDelete: !this.props.readonly && hasAccess
+                        ? (() => this.onMany2manyDelete(many2manyValue[0]))
+                        : undefined,
+                    text: hasAccess ? many2manyValue[1] : _t("No Access"),
+                };
                 return {
                     id: many2manyValue[0],
-                    comodel: this.props.comodel,
-                    text: hasAccess ? many2manyValue[1] : _t("No Access"),
-                    onClick:
-                        hasAccess &&
-                        this.clickableRelational &&
-                        (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
-                    onDelete:
-                        !this.props.readonly &&
-                        hasAccess &&
-                        (() => this.onMany2manyDelete(many2manyValue[0])),
-                    colorIndex: 0,
-                    img:
-                        this.showAvatar && hasAccess
-                            ? imageUrl(this.props.comodel, many2manyValue[0], "avatar_128")
-                            : null,
+                    props,
                 };
             });
         } else if (this.props.type === "tags") {

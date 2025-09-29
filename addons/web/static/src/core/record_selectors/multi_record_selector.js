@@ -1,6 +1,7 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { isId } from "@web/core/tree_editor/utils";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
@@ -17,7 +18,7 @@ export class MultiRecordSelector extends Component {
         fieldString: { type: String, optional: true },
         placeholder: { type: String, optional: true },
     };
-    static components = { RecordAutocomplete, TagsList };
+    static components = { AvatarTag, BadgeTag, RecordAutocomplete };
     static template = "web.MultiRecordSelector";
 
     setup() {
@@ -66,6 +67,7 @@ export class MultiRecordSelector extends Component {
                     ? displayNames[id]
                     : _t("Inaccessible/missing record ID: %s", id);
             return {
+                id,
                 text,
                 onDelete: () => {
                     this.deleteTag(index);

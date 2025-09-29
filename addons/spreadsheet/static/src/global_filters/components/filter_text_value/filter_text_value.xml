@@ -2,7 +2,9 @@
 <templates>
     <t t-name="spreadsheet.TextFilterValue">
         <div class="o_input o-global-filter-text-value d-flex flex-wrap gap-1">
-            <TagsList tags="tags"/>
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <BadgeTag text="tag.text" onDelete="tag.onDelete"/>
+            </t>
             <AutoComplete
                 sources="sources"
                 input="inputRef"

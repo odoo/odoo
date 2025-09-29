@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { formatPercentage } from "@web/views/fields/formatters";
 
@@ -29,7 +29,7 @@ import {
 export class AnalyticDistribution extends Component {
     static template = "analytic.AnalyticDistribution";
     static components = {
-        TagsList,
+        BadgeTag,
         Record,
         Field,
     }
@@ -217,7 +217,7 @@ export class AnalyticDistribution extends Component {
             return {
                 id: accs[0].planId,
                 text: accs.reduce((p, n) => p + (p.length ? " | " : "") + (this.planIsComplete(n.total) ? n.accName : `${formatPercentage(n.total)} ${n.accName}`) , ""),
-                colorIndex: accs[0].planColor,
+                color: accs[0].planColor,
                 onClick: (ev) => this.tagClicked(ev),
             };
         });

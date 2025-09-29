@@ -3,13 +3,13 @@
 import { Component, onWillStart, onWillUpdateProps, useEffect } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 export class SelectionFilterValue extends Component {
     static template = "spreadsheet.SelectionFilterValue";
     static components = {
-        TagsList,
+        BadgeTag,
         AutoComplete,
     };
     static props = {

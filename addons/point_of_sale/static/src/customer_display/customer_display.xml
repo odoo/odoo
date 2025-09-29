@@ -41,7 +41,9 @@
                                         <t t-esc="line.customerNote" />
                                     </li>
                                     <div class="internal-note-container d-flex gap-2 p-2">
-                                        <TagsList tags="getInternalNotes()"/>
+                                        <t t-foreach="getInternalNotes()" t-as="note" t-key="note.id or note_index">
+                                            <BadgeTag color="note.colorIndex" text="note.text"/>
+                                        </t>
                                     </div>
                                     <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
                                     <t t-slot="default" />
