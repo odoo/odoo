@@ -17,6 +17,7 @@
 
     .o-hb-selectMany2X-toggle {
         &, &.btn-light.bg-light {
+            --btn-padding-x: #{map-get($spacers , 2)};
 
             @include button-variant(
                 $background: $o-we-item-clickable-bg,
