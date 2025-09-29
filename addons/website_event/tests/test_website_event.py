@@ -56,7 +56,7 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
-        self.upcoming_event = self.env['event.event'].create({
+        self.env['event.event'].create({
             'name': 'Upcoming Event',
             'date_begin': fields.Datetime.now() + relativedelta(days=10),
             'date_end': fields.Datetime.now() + relativedelta(days=13),
@@ -83,7 +83,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         """ Will execute the tour that fills up two tickets with a few questions answers
         and then assert that the answers are correctly saved for each attendee. """
 
-        self.design_fair_event = self.env['event.event'].create({
+        self.env['event.event'].create({
             'name': 'Design Fair New York',
             'date_begin': fields.Datetime.now() - relativedelta(days=15),
             'date_end': fields.Datetime.now() + relativedelta(days=15),
