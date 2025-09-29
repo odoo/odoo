@@ -22,10 +22,10 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
 
     def test_same_company_for_delivery_method_and_warehouse(self):
         self.in_store_dm.company_id = self.company_id
-        self.companyA = self.env['res.company'].create({'name': 'Company A'})
-        self.warehouse_2 = self._create_warehouse(company_id=self.companyA.id)
+        companyA = self.env['res.company'].create({'name': 'Company A'})
+        warehouse_2 = self._create_warehouse(company_id=companyA.id)
         with self.assertRaises(ValidationError):
-            self.in_store_dm.warehouse_ids = [Command.set([self.warehouse_2.id])]
+            self.in_store_dm.warehouse_ids = [Command.set([warehouse_2.id])]
 
     def test_creating_in_store_delivery_method_sets_integration_level_to_rate(self):
         new_in_store_carrier = self.env['delivery.carrier'].create({
