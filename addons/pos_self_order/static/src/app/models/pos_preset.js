@@ -3,6 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosPreset.prototype, {
     get needsEmail() {
-        return this.mail_template_id !== undefined;
+        return Boolean(this.mail_template_id);
     },
 });

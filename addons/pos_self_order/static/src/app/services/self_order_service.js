@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
-import { printerService } from "@point_of_sale/app/services/printer_service";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
@@ -917,7 +916,6 @@ export const selfOrderService = {
     },
 };
 
-registry.category("services").add("printer", printerService);
 registry.category("services").add("self_order", selfOrderService);
 
 /**

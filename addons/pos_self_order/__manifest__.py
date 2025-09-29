@@ -28,8 +28,25 @@
     ],
     "assets": {
         # Assets
+        'web.assets_unit_tests_setup': [
+            ('include', 'pos_self_order.assets'),
+            ('remove', 'pos_self_order/static/src/app/root.js'),
+
+            # Remove the conflicting "printer" service to avoid duplicate registration during tests
+            ('remove', 'pos_self_order/static/src/app/services/printer_service.js'),
+
+            # Remove CSS files since we're not testing the UI with hoot in PoS self order
+            # CSS files make html_editor tests fail
+            ('remove', 'pos_self_order/static/src/**/*.scss'),
+            ('remove', 'point_of_sale/static/src/css/pos_receipts.css'),
+
+            # Re-include debug and router files that were removed in point_of_sale.base_app
+            # but are required for running unit tests
+            'web/static/src/core/debug/**/*',
+            'web/static/src/core/browser/router.js',
+        ],
         'web.assets_unit_tests': [
-            'pos_self_order/static/tests/unit/data/**/*'
+            'pos_self_order/static/tests/unit/**/*'
         ],
         'point_of_sale._assets_pos': [
             'pos_self_order/static/src/backend/qr_order_button/*',
