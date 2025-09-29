@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
@@ -33,7 +32,7 @@ class TestStockNotificationProduct(HttpCase):
         cls.currency = cls.env.ref("base.USD")
 
     def test_back_in_stock_notification_product(self):
-        self.start_tour("/", 'back_in_stock_notification_product')
+        self.start_tour(self.product.website_url, 'website_sale_stock.subscribe_to_stock_notification')
 
         partner = self.env['mail.thread']._partner_find_from_emails_single(['test@test.test'], no_create=True)
         ProductProduct = self.env['product.product']

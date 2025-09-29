@@ -1,45 +1,19 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import * as tourUtils from '@website_sale/js/tours/tour_utils';
+import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
+import { submitCouponCode } from "@website_sale_loyalty/../tests/tours/tour_utils";
 
-registry.category("web_tour.tours").add('shop_sale_loyalty', {
-    url: '/shop?search=Small%20Cabinet',
+registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
     steps: () => [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
-        {
-            trigger: ".oe_search_found:not(:visible)",
-        },
-        {
-            content: "select Small Cabinet",
-            trigger: '.oe_product_cart a:contains("Small Cabinet")',
-            run: "click",
-            expectUnloadPage: true,
-        },
         {
             content: "add 2 Small Cabinet into cart",
             trigger: '#product_details input[name="add_qty"]',
             run: "edit 2",
         },
-        {
-            content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to cart)",
-            run: "click",
-        },
-            tourUtils.goToCart({quantity: 2}),
-        {
-            trigger: 'form[name="coupon_code"]',
-        },
-        {
-            content: "insert promo code 'testcode'",
-            trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: "edit testcode",
-        },
-        {
-            content: "validate the coupon",
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...wsTourUtils.addToCartFromProductPage(),
+        wsTourUtils.goToCart({ quantity: 2 }),
+        ...submitCouponCode('testcode'),
         {
             content: "check reward product",
             trigger: 'div>h6:contains("10.0% discount on total amount")',
@@ -57,8 +31,8 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                     model: 'account.tax',
                     method: 'create',
                     args: [{
-                      'name':'15% tax incl ' + new Date().getTime(),
-                      'amount': 15,
+                        'name': '15% tax incl ' + new Date().getTime(),
+                        'amount': 15,
                     }],
                     kwargs: {},
                 }).then(function (tax_id) {
@@ -66,10 +40,10 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                         model: 'product.template',
                         method: 'create',
                         args: [{
-                          'name': 'Taxed Product',
-                          'taxes_id': [([6, false, [tax_id]])],
-                          'list_price': 100,
-                          'website_published': true,
+                            'name': 'Taxed Product',
+                            'taxes_id': [([6, false, [tax_id]])],
+                            'list_price': 100,
+                            'website_published': true,
                         }],
                         kwargs: {},
                     }).then(function (data) {
@@ -79,8 +53,8 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             },
             expectUnloadPage: true,
         },
-        ...tourUtils.addToCart({ productName: "Taxed Product", expectUnloadPage: true }),
-            tourUtils.goToCart({quantity: 3}),
+        ...wsTourUtils.addToCart({ productName: "Taxed Product", expectUnloadPage: true }),
+        wsTourUtils.goToCart({ quantity: 3 }),
         {
             trigger: ".oe_currency_value:contains(/74.00/):not(div[name='o_cart_total'])",
         },
@@ -123,7 +97,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             run: "click",
             expectUnloadPage: true,
         },
-        ...tourUtils.assertCartAmounts({
+        ...wsTourUtils.assertCartAmounts({
             total: '967.50',
         }),
     ]

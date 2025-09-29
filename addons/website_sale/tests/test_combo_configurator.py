@@ -41,7 +41,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({'product_id': self._create_product(name="Product B2").id}),
             ],
         })
-        self._create_product(
+        combo_product = self._create_product(
             name="Combo product",
             list_price=25,
             type='combo',
@@ -51,7 +51,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         )
         self.website.show_line_subtotals_tax_selection = 'tax_included'
-        self.start_tour('/', 'website_sale_combo_configurator')
+        self.start_tour(combo_product.website_url, 'website_sale.combo_configurator')
 
     def test_website_sale_combo_configurator_single_configuration(self):
         """ Test that the combo configurator isn't shown if there's a single configuration. """
@@ -74,12 +74,15 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             'name': "Test combo",
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
-        self._create_product(
+        combo_product = self._create_product(
             name="Combo product",
             type='combo',
             combo_ids=[Command.link(combo.id)],
         )
-        self.start_tour('/', 'website_sale_combo_configurator_single_configuration')
+        self.start_tour(
+            combo_product.website_url,
+            'website_sale.combo_configurator_single_configuration',
+        )
 
     def test_website_sale_combo_configurator_single_configurable_item(self):
         """ Test that the combo configurator is shown if there's a single combo item, but that combo
@@ -103,9 +106,12 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             'name': "Test combo",
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
-        self._create_product(
+        combo_product = self._create_product(
             name="Combo product",
             type='combo',
             combo_ids=[Command.link(combo.id)],
         )
-        self.start_tour('/', 'website_sale_combo_configurator_single_configurable_item')
+        self.start_tour(
+            combo_product.website_url,
+            'website_sale.combo_configurator_single_configurable_item',
+        )

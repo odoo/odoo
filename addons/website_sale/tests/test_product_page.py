@@ -28,7 +28,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         red_sofa, blue_sofa = self.product_template_sofa.product_variant_ids[:2]
         blue_sofa.product_template_attribute_value_ids.price_extra = 20
 
-        self.start_tour(red_sofa.website_url, 'website_sale_contact_us_button')
+        self.start_tour(red_sofa.website_url, 'website_sale.contact_us_button')
 
     def test_product_reviews_reactions_public(self):
         """ Check that public users can not react to reviews """
@@ -40,14 +40,14 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             ("key", "=", "website_sale.product_comment")
         ]).write({"active": True})
 
-        self.product_product_7 = self.env["product.product"].create({
+        product_product_7 = self.env["product.product"].create({
             "name": "Storage Box Test",
             "standard_price": 70.0,
             "list_price": 79.0,
             "website_published": True,
             "invoice_policy": "delivery",
         })
-        message = self.product_product_7.product_tmpl_id.message_post(
+        message = product_product_7.product_tmpl_id.message_post(
             body="Bad box!",
             message_type="comment",
             rating_value="1",
@@ -63,7 +63,11 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             },
         )
 
-        self.start_tour("/", 'website_sale_product_reviews_reactions_public', login=None)
+        self.start_tour(
+            product_product_7.website_url,
+            'website_sale.product_reviews_reactions_public',
+            login=None,
+        )
 
     def test_product_pricelist_qty_change(self):
         """Check that pricelist discounts based on product quantity display when applicable."""
@@ -77,4 +81,4 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
                 'percent_price': 50.0,
             }),
         ]
-        self.start_tour(self.product.website_url, 'website_sale_product_pricelist_qty_change')
+        self.start_tour(self.product.website_url, 'website_sale.product_pricelist_qty_change')

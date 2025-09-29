@@ -6,8 +6,7 @@ from collections import OrderedDict
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, TransactionCase, loaded_demo_data, tagged
-
+from odoo.tests import HttpCase, TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +15,7 @@ _logger = logging.getLogger(__name__)
 class TestWebsiteSaleComparison(TransactionCase):
 
     def test_01_website_sale_comparison_remove(self):
-        """ This tour makes sure the product page still works after the module
+        """This tour makes sure the product page still works after the module
         `website_sale_comparison` has been removed.
 
         Technically it tests the removal of copied views by the base method
@@ -173,7 +172,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
                 })
             ]
         }])
-        self.start_tour("/", 'product_comparison', login='admin')
+        self.start_tour("/", 'website_sale.product_comparison', login='admin')
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
@@ -223,7 +222,8 @@ class TestWebsiteSaleComparisonUi(HttpCase):
 
     def test_03_category_order(self):
         """Test that categories are shown in the correct order when the
-        attributes are in a different order."""
+        attributes are in a different order.
+        """
         category_vintage = self.env['product.attribute.category'].create({
             'name': 'Vintage',
             'sequence': 2,

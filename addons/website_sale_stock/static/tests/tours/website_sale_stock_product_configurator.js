@@ -5,10 +5,9 @@ import stockConfiguratorTourUtils from '@website_sale_stock/js/tours/product_con
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_stock_product_configurator', {
-        url: '/shop?search=Main product',
+    .add('website_sale_stock.product_configurator', {
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Main product", search: false, expectUnloadPage: true }),
+            ...wsTourUtils.addToCartFromProductPage(),
             configuratorTourUtils.assertProductQuantity("Main product", 1),
             // Assert that it's impossible to add less than 1 product (only for the main product).
             configuratorTourUtils.setProductQuantity("Main product", 0),
@@ -49,4 +48,4 @@ registry
                 trigger: 'div.o_cart_product input.quantity[value="10"]',
             },
         ],
-   });
+    });

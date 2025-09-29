@@ -844,4 +844,4 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             'code': 'User_pricelist',
         })
         test_user.partner_id.property_product_pricelist = user_pricelist
-        self.start_tour("/shop", 'website_sale.website_sale_shop_pricelist_tour', login="")
+        self.start_tour('/shop', 'website_sale.pricelist_on_login', login='')

@@ -119,7 +119,10 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         product_short.optional_product_ids = [(4, optional_product.id)]
 
         old_sale_order = self.env['sale.order'].search([])
-        self.start_tour("/", 'tour_variants_modal_window')
+        self.start_tour(
+            product_short.website_url,
+            'website_sale.optional_products_modal',
+        )
 
         # Check the name of the created sale order line
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
@@ -371,12 +374,15 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 }),
             ],
         })
-        self.env['product.template'].create({
+        main_product = self.env['product.template'].create({
             'name': "Main product",
             'website_published': True,
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
-        self.start_tour('/', 'website_sale_product_configurator_zero_priced')
+        self.start_tour(
+            main_product.website_url,
+            'website_sale.product_configurator_zero_priced',
+        )
 
     def test_product_configurator_strikethrough_price(self):
         """ Test that the product configurator displays the strikethrough price correctly. """
@@ -409,4 +415,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 'product_tmpl_id': main_product.id,
             }),
         ]
-        self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')
+        self.start_tour(
+            main_product.website_url,
+            'website_sale.product_configurator_strikethrough_price',
+        )

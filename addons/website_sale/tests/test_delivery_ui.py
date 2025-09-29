@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 from odoo.fields import Command
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+@tagged('post_install', '-at_install')
+class TestUi(HttpCase):
+
     def test_01_free_delivery_when_exceed_threshold(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
@@ -28,7 +29,7 @@ class TestUi(odoo.tests.HttpCase):
             'email': 'admin@yourcompany.example.com',
         })
 
-        self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'name': 'Office Chair Black TEST',
             'list_price': 12.50,
         })
@@ -72,4 +73,4 @@ class TestUi(odoo.tests.HttpCase):
             ]
         })
 
-        self.start_tour("/", 'check_free_delivery', login="admin")
+        self.start_tour(product.website_url, 'website_sale.check_free_delivery', login='admin')

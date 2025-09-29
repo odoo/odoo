@@ -1,6 +1,6 @@
 import { registry } from '@web/core/registry';
 
-registry.category('web_tour.tours').add('website_sale_product_pricelist_qty_change', {
+registry.category('web_tour.tours').add('website_sale.product_pricelist_qty_change', {
     steps: () => [
         {
             content: "Price should be $20",

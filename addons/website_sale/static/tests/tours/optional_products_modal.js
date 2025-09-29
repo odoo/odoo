@@ -1,15 +1,9 @@
-    import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-    // This tour relies on a data created from the python test.
-    registry.category("web_tour.tours").add('tour_variants_modal_window', {
-        url: '/shop?search=Short (TEST)',
-        steps: () => [
-        {
-            content: "Select the Short (TEST) product",
-            trigger: `.oe_product_cart a:contains(/^Short \\(TEST\\)$/)`,
-            run: "click",
-            expectUnloadPage: true,
-        },
+// This tour relies on a data created from the python test.
+registry.category("web_tour.tours").add('website_sale.optional_products_modal', {
+    steps: () => [
         {
             content: "Click on the always variant",
             trigger: 'input[data-attribute-name="Always attribute size"][data-value-name="M always"]',
@@ -34,11 +28,7 @@
             trigger: 'input.variant_custom_value',
             run: "edit TEST",
         },
-        {
-            content: "Click add to cart",
-            trigger: '#add_to_cart',
-            run: "click",
-        },
+        ...tourUtils.addToCartFromProductPage(),
         {
             trigger:
                 '.modal:has(table.o_sale_product_configurator_table)',
@@ -69,4 +59,5 @@
             content: "Check never custom variant",
             trigger: 'div.text-muted>span:contains(Never attribute size custom: Yes never custom: TEST)',
         }
-    ]});
+    ]
+});

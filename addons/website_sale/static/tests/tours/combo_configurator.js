@@ -5,10 +5,9 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_combo_configurator', {
-        url: '/shop?search=Combo product',
+    .add('website_sale.combo_configurator', {
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Combo product", search: false , expectUnloadPage: true}),
+            ...wsTourUtils.addToCartFromProductPage(),
             // Assert that the combo configurator behaves as expected.
             comboConfiguratorTourUtils.assertFooterButtonsDisabled(),
             comboConfiguratorTourUtils.setQuantity(3),
@@ -62,4 +61,4 @@ registry
                 trigger: 'h6[name=website_sale_cart_line_price]:contains(71.31)',
             },
         ],
-   });
+    });

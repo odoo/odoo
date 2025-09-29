@@ -1,9 +1,11 @@
 import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-registerWebsitePreviewTour('website_sale_tour_backend', {
-    url: '/shop/cart',
-    edition: true,
-}, () => [
+registerWebsitePreviewTour('website_sale.enable_extra_info',
+    {
+        url: '/shop/cart',
+        edition: true,
+    },
+    () => [
         {
             content: "open customize tab",
             trigger: "[data-name='customize']",

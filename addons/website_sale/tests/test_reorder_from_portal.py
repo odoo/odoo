@@ -83,7 +83,7 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
         order.action_confirm()
         order.message_subscribe(user_admin.partner_id.ids)
 
-        self.start_tour("/", 'website_sale_reorder_from_portal', login='admin')
+        self.start_tour("/", 'website_sale.reorder_from_portal', login='admin')
 
         reorder_cart = self.env['sale.order'].search([('website_id', '!=', False)], limit=1)
         previous_lines = order.order_line

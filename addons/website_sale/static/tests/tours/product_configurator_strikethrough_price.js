@@ -5,10 +5,9 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_product_configurator_strikethrough_price', {
-        url: '/shop?search=Main product',
+    .add('website_sale.product_configurator_strikethrough_price', {
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Main product", search: false, expectUnloadPage: true }),
+            ...wsTourUtils.addToCartFromProductPage(),
             configuratorTourUtils.assertProductPrice("Main product", '55.00'),
             websiteConfiguratorTourUtils.assertProductStrikethroughPrice("Main product", '110.00'),
             configuratorTourUtils.assertOptionalProductPrice("Optional product", '5.50'),
@@ -16,4 +15,4 @@ registry
                 "Optional product", '10.00'
             ),
         ],
-   });
+    });

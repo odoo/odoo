@@ -1,41 +1,15 @@
 import { registry } from "@web/core/registry";
-import * as tourUtils from '@website_sale/js/tours/tour_utils';
+import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
+import { submitCouponCode } from "@website_sale_loyalty/../tests/tours/tour_utils";
 
-registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewards', {
-    url: '/shop?search=Super%20Chair',
+registry.category("web_tour.tours").add('website_sale_loyalty.apply_discount_code_multi_rewards', {
     steps: () => [
-        {
-            trigger: ".oe_search_found:not(:visible)",
-        },
-        {
-            content: 'select Super Chair',
-            trigger: '.oe_product_cart a:contains("Super Chair")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            content: 'Add Super Chair into cart',
-            trigger: 'a:contains(Add to cart)',
-            run: "click",
-        },
-        tourUtils.goToCart(),
+        ...wsTourUtils.addToCartFromProductPage(),
+        wsTourUtils.goToCart(),
         {
             trigger: "h4:contains(order summary)",
         },
-        {
-            trigger: 'form[name="coupon_code"]',
-        },
-        {
-            content: 'insert discount code',
-            trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: "edit 12345",
-        },
-        {
-            content: 'validate the promo code',
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...submitCouponCode('12345'),
         {
             content: 'check reward',
             trigger: '.alert:contains("10% on Super Chair")',
@@ -52,20 +26,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
                 "#cart_products.js_cart_lines .o_cart_product h6:contains(10% on Super Chair)",
         },
         // Try to reapply the same promo code
-        {
-            trigger: 'form[name="coupon_code"]',
-        },
-        {
-            content: 'insert discount code',
-            trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: "edit 12345",
-        },
-        {
-            content: 'validate the promo code',
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...submitCouponCode('12345'),
         {
             content: 'check refused message',
             trigger: '.alert-danger:contains("This promo code is already applied")',
