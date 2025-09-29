@@ -200,18 +200,18 @@ class TestFiscal(L10nInTestInvoicingCommon):
             })
             self.assertEqual(
                 vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_export_sez_in')
+                template.ref('fiscal_position_in_sez')
             )
 
         # Sub-test: Manual Partner Fiscal Check
         with self.subTest(scenario="Manual Partner Fiscal Check"):
-            # Here fpos should Inter-State. But due to `property_account_position_id` it will be Export/SEZ
+            # Here fpos should Inter-State. But due to `property_account_position_id` it will be SEZ
             self.partner_a.write({
                 'state_id': company_state.id,  # Intra-State Partner
-                'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
+                'property_account_position_id': template.ref('fiscal_position_in_lut_sez_1').id
             })
             vendor_bill_4 = self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_export_sez_in',
+                fiscal_position_ref='fiscal_position_in_lut_sez_1',
                 partner=self.partner_a,
                 move_type='in_invoice',
             )
