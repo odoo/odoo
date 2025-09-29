@@ -62,7 +62,8 @@ export class SplitBillScreen extends Component {
                 this.qtyTracker[line.uuid] = line.getQuantity();
             }
             this.priceTracker[line.uuid] =
-                (line.getPriceWithTax() / line.qty) * this.qtyTracker[line.uuid];
+                (line.getTaxDetails().tax_details.total_included / line.qty) *
+                this.qtyTracker[line.uuid];
             this.setLineQtyStr(line);
         }
     }

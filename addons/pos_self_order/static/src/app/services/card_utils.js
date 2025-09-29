@@ -13,7 +13,10 @@ export function computeProductPrice(selfOrder, productTemplate, selectedAttribut
         attribute_value_ids: lineValues.attribute_value_ids?.map((a) => a.id),
     });
 
-    return selfOrder.isTaxesIncludedInPrice() ? line.getPriceWithTax() : line.getPriceWithoutTax();
+    const taxDetails = line.getTaxDetails();
+    return selfOrder.isTaxesIncludedInPrice()
+        ? taxDetails.tax_details.total_included
+        : taxDetails.tax_details.total_excluded;
 }
 
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {

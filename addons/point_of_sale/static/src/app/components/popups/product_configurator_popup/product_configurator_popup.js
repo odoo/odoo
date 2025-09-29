@@ -241,12 +241,15 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get title() {
-        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const order = this.pos.getOrder();
+        const fiscalPosition = order.fiscal_position_id || this.pos.config.fiscal_position_id;
+        const pricelist = order.pricelist_id || this.pos.config.pricelist_id;
+        const info = this.props.productTemplate.getTaxDetails({ pricelist, fiscalPosition });
         const name = this.props.productTemplate.display_name;
-        const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
-        const taxName = info?.taxes_data[0]?.name || "";
+        const total = this.env.utils.formatCurrency(info.tax_details.total_included);
+        const taxName = info.tax_details.taxes_data[0]?.tax?.name || "";
         const taxAmount = this.env.utils.formatCurrency(
-            info?.taxes_data[0]?.raw_tax_amount_currency || 0.0
+            info.tax_details.taxes_data[0]?.tax_amount || 0.0
         );
         return `${name} | ${total} | VAT: ${taxName} (= ${taxAmount})`;
     }

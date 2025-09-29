@@ -14,10 +14,6 @@ import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeo
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
-import {
-    getTaxesAfterFiscalPosition,
-    getTaxesValues,
-} from "@point_of_sale/app/models/utils/tax_utils";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -820,33 +816,26 @@ export class SelfOrder extends Reactive {
     }
 
     getProductPriceInfo(productTemplate, product) {
+        const order = this.currentOrder;
         const pricelist = this.config.use_presets
             ? this.currentOrder.preset_id?.pricelist_id
             : this.config.pricelist_id;
+
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-        let taxes = productTemplate.taxes_id;
-
-        if (!product) {
-            product = productTemplate;
-        }
-
-        // Fiscal position.
-        const order = this.currentOrder;
-        if (order && order.fiscal_position_id) {
-            taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
-        }
-
-        // Taxes computation.
-        const taxesData = getTaxesValues(taxes, price, 1, product, {}, this.company, this.currency);
+        const taxesData = productTemplate.getTaxDetails({
+            price,
+            pricelist,
+            fiscalPosition: order.fiscal_position_id,
+        });
 
         return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {
         const taxesData = this.getProductPriceInfo(productTemplate, product);
         if (this.isTaxesIncludedInPrice()) {
-            return taxesData.total_included;
+            return taxesData.tax_details.total_included;
         } else {
-            return taxesData.total_excluded;
+            return taxesData.tax_details.total_excluded;
         }
     }
 

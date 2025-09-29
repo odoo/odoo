@@ -69,10 +69,10 @@ export class CustomerDisplayPosAdapter {
             customerNote: line.getCustomerNote() || "",
             internalNote: line.getNote() || "[]",
             productName: line.getFullProductName(),
-            price: line.getPriceString(),
+            price: line.formattedPrice,
             qty: line.getQuantityStr().qtyStr,
             unit: line.product_id.uom_id ? line.product_id.uom_id.name : "",
-            unitPrice: formatCurrency(line.unitDisplayPrice, line.currency),
+            unitPrice: line.unitPrice,
             packLotLines: line.packLotLines,
             comboParent: line.combo_parent_id?.getFullProductName?.() || "",
             price_without_discount: formatCurrency(

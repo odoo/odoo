@@ -232,24 +232,6 @@ export class PosStore extends WithLazyGetterTrap {
         this._storeConnectedCashier(user);
     }
 
-    getProductPrice(product, price = false, formatted = false) {
-        const order = this.getOrder();
-        const fiscalPosition = order.fiscal_position_id || this.config.fiscal_position_id;
-        const pricelist = order.pricelist_id || this.config.pricelist_id;
-        const pPrice = product.getProductPrice(price, pricelist, fiscalPosition);
-
-        if (formatted) {
-            const formattedPrice = this.env.utils.formatCurrency(pPrice);
-            if (product.to_weight) {
-                return `${formattedPrice}/${product.uom_id.name}`;
-            } else {
-                return formattedPrice;
-            }
-        }
-
-        return pPrice;
-    }
-
     _getConnectedCashier() {
         const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
         if (cashier_id && this.models["res.users"].get(cashier_id)) {
@@ -659,17 +641,6 @@ export class PosStore extends WithLazyGetterTrap {
         const info = await this.getProductInfo(productTemplate, 1);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
-    getProductPriceFormatted(productTemplate) {
-        const formattedUnitPrice = this.env.utils.formatCurrency(
-            this.getProductPrice({ productTemplate })
-        );
-
-        if (productTemplate.to_weight) {
-            return `${formattedUnitPrice}/${productTemplate.uom_id.name}`;
-        } else {
-            return formattedUnitPrice;
-        }
-    }
     async openConfigurator(pTemplate, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
         const attributeLines = pTemplate.attribute_line_ids.filter(
@@ -868,11 +839,15 @@ export class PosStore extends WithLazyGetterTrap {
                 const decimalAccuracy = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
                 ).digits;
-                this.scale.setProduct(
-                    values.product_id,
-                    decimalAccuracy,
-                    this.getProductPrice(values.product_id)
-                );
+                const fiscalPosition = order.fiscal_position_id || this.config.fiscal_position_id;
+                const pricelist = order.pricelist_id || this.config.pricelist_id;
+                const taxDetails = values.product_id.getTaxDetails({
+                    pricelist,
+                    fiscalPosition,
+                });
+                const priceIncl = taxDetails.tax_details.total_included;
+
+                this.scale.setProduct(values.product_id, decimalAccuracy, priceIncl);
                 const weight = await this.weighProduct();
                 if (weight) {
                     values.qty = weight;

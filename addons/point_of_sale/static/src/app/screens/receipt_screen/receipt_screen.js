@@ -48,7 +48,7 @@ export class ReceiptScreen extends Component {
         const tipLine = order
             .getOrderlines()
             .find((line) => tip_product_id && line.product_id.id === tip_product_id);
-        const tipAmount = tipLine ? tipLine.allPrices.priceWithTax : 0;
+        const tipAmount = tipLine ? tipLine.getTaxDetails().tax_details.total_included : 0;
         const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {
             return orderAmountStr;

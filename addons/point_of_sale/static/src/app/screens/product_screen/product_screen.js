@@ -312,10 +312,6 @@ export class ProductScreen extends Component {
         this.pos.switchPane();
     }
 
-    getProductPrice(product) {
-        return this.pos.getProductPrice(product, false, true);
-    }
-
     getProductImage(product) {
         return product.getImageUrl();
     }

@@ -156,7 +156,7 @@ export class OrderSummary extends Component {
             } else if (this.pos.numpadMode === "discount") {
                 buffer = selectedLine.getDiscount() * -1;
             } else if (this.pos.numpadMode === "price") {
-                buffer = selectedLine.getUnitPrice() * -1;
+                buffer = selectedLine.unitPrice * -1;
             }
             this.numberBuffer.state.buffer = buffer.toString();
         }
@@ -209,7 +209,7 @@ export class OrderSummary extends Component {
         ) {
             this.numberBuffer.reset();
             const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-                startingValue: selectedLine.getUnitPrice(),
+                startingValue: selectedLine.unitPrice,
                 title: _t("Set the new price"),
             });
             if (inputNumber) {
@@ -300,7 +300,7 @@ export class OrderSummary extends Component {
                 current_saved_quantity += line.uiState.savedQuantity;
             } else if (
                 line.product_id.id === selectedLine.product_id.id &&
-                line.getUnitPrice() === selectedLine.getUnitPrice()
+                line.unitPrice === selectedLine.unitPrice
             ) {
                 current_saved_quantity += line.qty;
             }
@@ -323,7 +323,7 @@ export class OrderSummary extends Component {
             for (const line of selectedLine.order_id.lines) {
                 if (
                     line.product_id.id === selectedLine.product_id.id &&
-                    line.getUnitPrice() === selectedLine.getUnitPrice() &&
+                    line.unitPrice === selectedLine.unitPrice &&
                     line.getQuantity() * sign < 0 &&
                     line !== selectedLine
                 ) {

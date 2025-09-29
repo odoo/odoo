@@ -39,12 +39,12 @@ patch(PosOrderline.prototype, {
         return false;
     },
     getDisplayPriceWithQty(qty) {
-        const prices = this.getAllPrices(qty);
+        const prices = this.getTaxDetails({ qty });
 
         if (this.config.iface_tax_included === "total") {
-            return prices.priceWithTax;
+            return prices.tax_details.total_included;
         } else {
-            return prices.priceWithoutTax;
+            return prices.tax_details.total_excluded;
         }
     },
 });

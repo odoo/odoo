@@ -403,7 +403,7 @@ export class PosOrder extends Base {
         } else {
             for (const line of lines) {
                 if (line.getProduct() === tip_product) {
-                    return line.getUnitPrice();
+                    return line.unitPrice;
                 }
             }
             return 0;
@@ -648,8 +648,8 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
-                        orderLine.getAllPrices().priceWithTax;
+                        orderLine.getTaxDetails({ beforeDiscount: true }).tax_details
+                            .total_included - orderLine.getTaxDetails().tax_details.total_included;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
                         !(orderLine.price_type === "manual") &&
@@ -697,7 +697,8 @@ export class PosOrder extends Base {
     getTaxDetailsOfLines(lines) {
         const taxDetails = {};
         for (const line of lines) {
-            for (const taxData of line.allPrices.taxesData) {
+            const taxDetails = line.getTaxDetails().baseLine;
+            for (const taxData of taxDetails.tax_details.taxes_data) {
                 const taxId = taxData.tax.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {
@@ -731,7 +732,7 @@ export class PosOrder extends Base {
             var taxes_ids = this.tax_ids || line.getProduct().taxes_id;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
-                    total += line.getPriceWithTax();
+                    total += line.getTaxDetails().tax_details.total_included;
                     return;
                 }
             }
