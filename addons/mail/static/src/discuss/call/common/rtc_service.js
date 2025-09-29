@@ -1230,7 +1230,7 @@ export class Rtc extends Record {
                 const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                     Number(id)
                 );
-                if (session?.eq(this.localSession) || !this.channel) {
+                if (!session || session.eq(this.localSession) || !this.channel) {
                     return;
                 }
                 if (
