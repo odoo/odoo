@@ -8,6 +8,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
+import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -236,10 +237,10 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            {
-                content: "Loyalty Points is visible on the receipt",
-                trigger: ".pos-receipt .loyalty",
-            },
+            PosLoyalty.isLoyaltyPointsAvailable(),
+            Utils.refresh(),
+            ReceiptScreen.isShown(),
+            PosLoyalty.isLoyaltyPointsAvailable(),
         ].flat(),
 });
 
