@@ -74,8 +74,6 @@ class TestHttpSession(TestHttpBase):
         self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_session04_web_authenticate_multidb(self):
-        self.db_list = [get_db_name(), 'another_database']
-
         payload = json.dumps({
             'jsonrpc': '2.0',
             'id': None,
@@ -90,7 +88,8 @@ class TestHttpSession(TestHttpBase):
         res = self.multidb_url_open(
             '/web/session/authenticate', data=payload, headers={
                 'Content-Type': 'application/json',
-            }
+            },
+            dblist=(get_db_name(), 'another_database'),
         )
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
