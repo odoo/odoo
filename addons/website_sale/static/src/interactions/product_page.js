@@ -258,11 +258,14 @@ export class ProductPage extends Interaction {
         if (this.el.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
             const images = this.el.querySelectorAll('.product_detail_img');
-            for (const image of images ) {
+            const { imageRatio, imageRatioMobile } = this.el.dataset;
+            for (const [idx, image] of images.entries()) {
                 const handler = () =>
                     this.services.dialog.add(ProductImageViewer, {
-                        selectedImageIdx: [...images].indexOf(image),
+                        selectedImageIdx: idx,
                         images,
+                        imageRatio,
+                        imageRatioMobile,
                     });
                 image.addEventListener("click", handler);
                 this.zoomCleanup.push(() => image.removeEventListener("click", handler));

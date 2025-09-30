@@ -1008,12 +1008,14 @@ $-product-ratios-map: (
 );
 
 @each $-ratio-name, $-ratio-value in $-product-ratios-map {
+    .o_wsale_image_viewer_ratio_#{$-ratio-name},
     .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
         --o-wsale-product-image-ratio: #{$-ratio-value};
     }
 }
 @each $-ratio-name, $-ratio-value in $-product-ratios-map {
     @if($-ratio-name != 'auto') {
+        .o_wsale_image_viewer_ratio_mobile_#{$-ratio-name},
         .o_wsale_product_page_opt_image_ratio_mobile_#{$-ratio-name} {
             @include media-breakpoint-down(md) {
                 --o-wsale-product-image-ratio: #{$-ratio-value};

@@ -11,8 +11,15 @@ export class ProductImageViewer extends Dialog {
         ...Dialog.props,
         images: { type: NodeList, required: true },
         selectedImageIdx: { type: Number, optional: true },
+        imageRatio: { type: String, optional: true },
+        imageRatioMobile: { type: String, optional: true },
         close: Function,
     };
+    static defaultProps = {
+        ...Dialog.defaultProps,
+        imageRatio: 'auto',
+        imageRatioMobile: 'auto',
+    }
 
     setup() {
         super.setup();

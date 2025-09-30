@@ -27,14 +27,18 @@
                     </div>
                     <t t-if="images.length > 1">
                         <!-- Footer -->
-                        <div class="o_wsale_image_viewer_carousel position-absolute bottom-0 d-flex" role="toolbar">
+                        <div
+                            class="o_wsale_image_viewer_carousel position-absolute bottom-0 d-flex"
+                            t-attf-class="o_wsale_image_viewer_ratio_#{props.imageRatio} o_wsale_image_viewer_ratio_mobile_#{props.imageRatioMobile}"
+                            role="toolbar"
+                        >
                             <ol class="d-flex justify-content-start ps-0 pt-2 pt-lg-0 mx-auto my-0 text-start">
                                 <t t-foreach="images" t-as="image" t-key="image.thumbnailSrc">
                                     <li t-attf-class="align-top position-relative px-1 pb-1 {{image === selectedImage ? 'active' : ''}}" t-on-click="() => this.selectedImage = image">
-                                        <div>
+                                        <div class="bg-body">
                                             <img
                                                 t-att-src="image.thumbnailSrc"
-                                                class="img o_wsale_image_viewer_thumbnail bg-body object-fit-contain"
+                                                class="img o_wsale_image_viewer_thumbnail object-fit-cover"
                                                 t-att-class="{'active': image === selectedImage}"
                                                 t-att-alt="props.title"
                                                 loading="lazy"
