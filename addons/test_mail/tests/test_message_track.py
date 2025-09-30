@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from unittest.mock import patch
 
 from odoo import fields
@@ -424,6 +425,38 @@ class TestTracking(MailCommon):
             'description': 'Zizizatestmaildescription',
         })
         test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
+
+
+@tagged('mail_track', 'tdewip')
+class TestTrackingAPI(MailCommon):
+    """ Test main API and methods of tracking, to be called in py code. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.dt_ref = datetime(2025, 9, 30, 9, 28, 15)
+        cls.parent_for_properties = cls.env['mail.test.track.all.properties.parent'].with_user(cls.user_admin).create({
+            'definition_properties': [
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one', 'comodel': 'mail.test.ticket'},
+            ],
+            'name': 'PropDefinition',
+        })
+        cls.test_records = cls.env['mail.test.track.all'].with_user(cls.user_employee).create([
+            {
+                'datetime_field': cls.dt_ref,
+                'name': f'Test Tracking {idx}',
+                'properties_parent_id': cls.parent_for_properties.id,
+            } for idx in range(5)
+        ])
+
+    @users('employee')
+    def test_tracking_create(self):
+        records = self.test_records.with_env(self.env)
+        for record in records:
+            record_su = record.sudo()  # to check for tracking values directly
+            self.assertEqual(len(record_su.message_ids), 1, 'Should have creation message only')
+            self.assertFalse(record_su.message_ids.tracking_value_ids)
 
 
 @tagged('mail_track')
