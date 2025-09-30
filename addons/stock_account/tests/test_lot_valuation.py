@@ -197,7 +197,7 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_enable_lot_valuation_variant(self):
         """ test enabling the lot valuation for template with multiple variant"""
-        self.size_attribute = self.env['product.attribute'].create({
+        size_attribute = self.env['product.attribute'].create({
             'name': 'Size',
             'value_ids': [
                 Command.create({'name': 'S'}),
@@ -213,10 +213,10 @@ class TestLotValuation(TestStockValuationCommon):
             'categ_id': self.env.ref('product.product_category_goods').id,
             'attribute_line_ids': [
                 Command.create({
-                    'attribute_id': self.size_attribute.id,
+                    'attribute_id': size_attribute.id,
                     'value_ids': [
-                        Command.link(self.size_attribute.value_ids[0].id),
-                        Command.link(self.size_attribute.value_ids[1].id),
+                        Command.link(size_attribute.value_ids[0].id),
+                        Command.link(size_attribute.value_ids[1].id),
                 ]}),
             ],
         })
