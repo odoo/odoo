@@ -801,3 +801,25 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         mo.button_mark_done()
         self.workcenter.costs_hour = 333
         self.assertEqual(mo.workorder_ids._cal_cost(), 33.0)
+
+    def test_mo_without_finished_moves(self):
+        """Test that a MO without finished moves can post inventory and be completed."""
+        self.workcenter.costs_hour = 20
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_A.id,
+            'bom_id': self.bom.id,
+            'workorder_ids': [
+                Command.create({'name': 'work', 'workcenter_id': self.workcenter.id}),
+            ]
+        })
+        mo.action_confirm()
+        workorder = mo.workorder_ids
+        workorder.button_start()
+        workorder.duration = 60
+        self.assertEqual(workorder._cal_cost(), 20)
+        # Simulate missing finished moves
+        mo.move_finished_ids.unlink()
+        # Post inventory and complete MO
+        mo._post_inventory()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
