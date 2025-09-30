@@ -715,45 +715,44 @@ class StockRule(models.Model):
         _logger.info("Stock reservation assignment completed: %d moves processed", task_done)
 
     @api.model
-    def _run_scheduler_clean_quants(self, use_new_cursor=False):
-        self.env['stock.quant']._quant_tasks()
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+    def _run_scheduler_clean_quants(self, from_cron=False):
+        self.env['stock.quant']._quant_tasks(from_cron)
+        self.env['ir.cron']._commit_progress(1)
 
     # The following run_scheduler methods are part of the stock scheduler system and are intended to be run
     # as SUPERUSER to avoid access rights and multi-company issues. They perform automated warehouse operations,
     # including orderpoint replenishment, stock reservation assignment, and periodic quant cleanup.
     @api.model
-    def run_scheduler_orderpoints(self, use_new_cursor=False, company_id=False):
+    def run_scheduler_orderpoints(self, company_id=False):
         """It computes the quantity to order, calculates the deadline date, and creates procurements as needed."""
         try:
-            self._run_scheduler_orderpoints(use_new_cursor=use_new_cursor, company_id=company_id)
+            self._run_scheduler_orderpoints(company_id=company_id)
         except Exception:
             _logger.exception("An error occurred while processing orderpoint replenishment.")
             raise
         return {}
 
     @api.model
-    def run_scheduler_reservations(self, use_new_cursor=False, company_id=False):
+    def run_scheduler_reservations(self, company_id=False):
         """Assign stock reservations to confirmed or partially available moves,
         processing them in order of reservation date and priority.
         """
         try:
-            self._run_scheduler_reservations(use_new_cursor=use_new_cursor, company_id=company_id)
+            self._run_scheduler_reservations(company_id=company_id)
         except Exception:
             _logger.exception("An error occurred while processing stock reservation assignments.")
             raise
         return {}
 
     @api.model
-    def run_scheduler_clean_quants(self, use_new_cursor=False, company_id=False):
+    def run_scheduler_clean_quants(self, from_cron=False, company_id=False):
         """ Perform periodic cleanup of stock quants by
             - Merging duplicate quants created under concurrent transactions.
             - Synchronize reserved quantities on quants with actual reservations from move lines.
             - Remove quants with zero quantity and zero reserved quantity.
         """
         try:
-            self._run_scheduler_clean_quants(use_new_cursor=use_new_cursor)
+            self._run_scheduler_clean_quants(from_cron=from_cron)
         except Exception:
             _logger.exception("An error occurred while periodic stock quant cleanup.")
             raise
