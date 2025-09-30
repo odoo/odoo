@@ -910,6 +910,27 @@ test("should be able to remove color of an icon", async () => {
     });
 });
 
+test("doesn't change the color of the whole section when there's an icon next to the selection", async () => {
+    await testEditor({
+        contentBefore: `
+        <section style="color: rgb(255, 0, 0);">
+            <p>a[bc]d</p>
+            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+        </section>`,
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfterEdit: `
+        <section style="color: rgb(255, 0, 0);">
+            <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
+            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+        </section>`,
+        contentAfter: `
+        <section style="color: rgb(255, 0, 0);">
+            <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
+            <span class="fa fa-glass"></span>
+        </section>`,
+    });
+});
+
 test("should remove remove color from `td`", async () => {
     await testEditor({
         contentBefore: unformat(`
