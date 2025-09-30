@@ -521,6 +521,9 @@ class CustomerPortal(Controller):
                 create_context
             ).create(address_values)
         elif not self._are_same_addresses(address_values, partner_sudo):
+            # If name is not changed then pop it from the address_values, as it affects the bank account holder name
+            if address_values['name'].strip() == partner_sudo.name.strip():
+                address_values.pop('name')
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
 
         self._handle_extra_form_data(extra_form_data, address_values)
