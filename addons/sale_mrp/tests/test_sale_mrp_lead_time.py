@@ -61,10 +61,8 @@ class TestSaleMrpLeadTime(TestStockCommon):
             and Customer Lead Time and also set company's Manufacturing Lead Time
             and Sales Safety Days."""
 
-        company = self.env.ref('base.main_company')
-
         # Update company with Manufacturing Lead Time and Sales Safety Days
-        company.security_lead = 3
+        self.company.security_lead = 3
 
         # Create sale order of product_1
         order_form = Form(self.env['sale.order'])
@@ -82,7 +80,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of picking
         deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay)
-        out_date = deadline_picking - timedelta(days=company.security_lead)
+        out_date = deadline_picking - timedelta(days=self.company.security_lead)
         self.assertAlmostEqual(
             order.picking_ids[0].scheduled_date, out_date,
             delta=timedelta(seconds=1),

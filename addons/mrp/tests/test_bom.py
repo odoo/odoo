@@ -828,8 +828,6 @@ class TestBoM(TestMrpCommon):
         """
         # Workcenter is working 24/7
         self.full_availability()
-
-        location = self.env.ref('stock.stock_location_stock')
         pickaxe = self.env['product.product'].create({
             'name': 'Iron Pickaxe',
             'is_storable': True,
@@ -911,8 +909,8 @@ class TestBoM(TestMrpCommon):
             self.assertEqual(report_values['lines']['producible_qty'], 0)
 
         # Add quantities on hand to increase the 'producible_qty'
-        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
-        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        self.env['stock.quant']._update_available_quantity(stick, self.stock_location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, self.stock_location, 3.0)
         (stick | iron).invalidate_recordset(['free_qty'])
         self.assertEqual(stick.free_qty, 2)
         self.assertEqual(iron.free_qty, 3)
@@ -923,8 +921,8 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(report_values['lines']['producible_qty'], 1)
 
         # Add a second procucible quantity
-        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
-        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        self.env['stock.quant']._update_available_quantity(stick, self.stock_location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, self.stock_location, 3.0)
         (stick | iron).invalidate_recordset(['free_qty'])
         self.assertEqual(stick.free_qty, 4)
         self.assertEqual(iron.free_qty, 6)
@@ -2320,10 +2318,8 @@ class TestBoM(TestMrpCommon):
         This test checks the behaviour of updating the BoM associated with a routing workcenter,
         It verifies that the link between the BOM lines and the operation is correctly deleted.
         """
-        resource_calendar_std_id = self.env.ref('resource.resource_calendar_std').id
         mrp_workcenter_1 = self.env['mrp.workcenter'].create({
             'name': 'Drill Station 1',
-            'resource_calendar_id': resource_calendar_std_id,
         })
         p1, c1, c2, byproduct = self.make_prods(4)
         bom = self.env['mrp.bom'].create({

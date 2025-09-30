@@ -12,8 +12,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
-        cls.warehouse = cls.env.ref('stock.warehouse0')
-        cls.cust_location = cls.env.ref('stock.stock_location_customers')
         product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,

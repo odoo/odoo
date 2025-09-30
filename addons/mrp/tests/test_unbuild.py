@@ -711,8 +711,7 @@ class TestUnbuild(TestMrpCommon):
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.user.id)])
+        prod_location = self.warehouse_1._get_production_location()
         subloc01, subloc02, = self.stock_location.child_ids[:2]
 
         mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
@@ -728,7 +727,7 @@ class TestUnbuild(TestMrpCommon):
 
         # Transfer the finished product from WH/Stock to `subloc01`
         internal_form = Form(self.env['stock.picking'])
-        internal_form.picking_type_id = warehouse.int_type_id
+        internal_form.picking_type_id = self.picking_type_int
         internal_form.location_id = self.stock_location
         internal_form.location_dest_id = subloc01
         with internal_form.move_ids.new() as move:

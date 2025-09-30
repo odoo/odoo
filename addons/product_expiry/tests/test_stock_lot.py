@@ -293,7 +293,7 @@ class TestStockLot(TestStockCommon):
         date will be correctly set. """
         partner = self.env['res.partner'].create({
             'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
+            'company_id': self.company.id,
         })
         expiration_date = datetime.today() + timedelta(days=30)
         time_gap = timedelta(seconds=10)
@@ -337,7 +337,7 @@ class TestStockLot(TestStockCommon):
         date related fields aren't set on product. """
         partner = self.env['res.partner'].create({
             'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
+            'company_id': self.company.id,
         })
         # Unset some fields.
         self.apple_product.expiration_time = False
@@ -386,7 +386,7 @@ class TestStockLot(TestStockCommon):
         confirmation wizard. """
         partner = self.env['res.partner'].create({
             'name': 'Cider & Son',
-            'company_id': self.env.ref('base.main_company').id,
+            'company_id': self.company.id,
         })
         # Creates 3 lots (1 non-expired lot, 2 expired lots)
         lot_form = Form(self.LotObj)  # Creates the lot.
@@ -656,7 +656,7 @@ class TestStockLot(TestStockCommon):
     def test_compute_expiration_date_from_scheduled_date(self):
         partner = self.env['res.partner'].create({
             'name': 'Apple\'s Joe',
-            'company_id': self.env.ref('base.main_company').id,
+            'company_id': self.company.id,
         })
 
         delta = timedelta(seconds=10)
@@ -698,6 +698,9 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Datetime.to_string(apple_lot3.expiration_date) + "--")
 
     def test_proceed_except_expired_delivery_without_move_removal_date(self):
+        # Making sure that the lot will be assigned at confirm
+        self.picking_type_out.reservation_method = 'at_confirm'
+
         lot = self.LotObj.create({
             'name': 'LOT-001',
             'product_id': self.apple_product.id,

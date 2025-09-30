@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          */
         { trigger: ".o_purchase_order" },
         ...purchaseForm.createNewPO(),
+        ...purchaseForm.selectWarehouse("Other Warehouse: Receipts"),
         ...purchaseForm.selectVendor("Julia Agrolait"),
         ...purchaseForm.openCatalog(),
         {

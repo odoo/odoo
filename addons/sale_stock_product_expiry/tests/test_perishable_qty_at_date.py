@@ -46,4 +46,4 @@ class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
         self.assertEqual(sale_order.order_line[0].virtual_available_at_date, 200)
         self.assertEqual(sale_order.order_line[1].virtual_available_at_date, 100)
         url = f"odoo/sales/{sale_order.id}"
-        self.start_tour(url, 'test_forecast_widget_perishable_qty_at_date', login='admin')
+        self.start_tour(url, 'test_forecast_widget_perishable_qty_at_date', login='admin', cookies={"cids": f"{self.company.id}"})

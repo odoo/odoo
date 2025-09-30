@@ -36,9 +36,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         ])
 
         # Additional Values required by the replenish wizard
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_pack_6 = cls.env.ref('uom.product_uom_pack_6')
-        cls.wh = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.user.id)], limit=1)
 
     def _get_purchase_order_from_replenishment(self, replenish_wizard):
         notification = replenish_wizard.launch_replenishment()
@@ -55,7 +53,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         """
         self.product_uom_qty = 42
         # Even though product1 doesn't have the 'Buy' route enabled, as it is enable through the wh it should pick it up regardless.
-        self.wh.buy_to_resupply = True
+        self.warehouse_1.buy_to_resupply = True
         self.product1.route_ids = [Command.clear()]
 
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
@@ -63,7 +61,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
@@ -109,7 +107,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
         self.assertEqual(po.partner_id, self.vendor1)
@@ -158,7 +156,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
         self.assertEqual(po.partner_id, self.vendor2)
@@ -198,7 +196,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
         self.assertEqual(po.partner_id, self.vendor2)
@@ -243,7 +241,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
@@ -274,7 +272,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
@@ -309,7 +307,7 @@ class TestReplenishWizard(PurchaseTestCommon):
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
                 'uom_id': self.uom_unit.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse_1.id,
                 'route_id': self.route_buy.id,
             })
             wizard.partner_id = supplier_no_delay.partner_id
@@ -348,7 +346,7 @@ class TestReplenishWizard(PurchaseTestCommon):
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
                 'uom_id': self.uom_unit.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse_1.id,
                 'route_id': self.route_buy.id,
             })
             wizard.partner_id = supplier1.partner_id
@@ -379,7 +377,7 @@ class TestReplenishWizard(PurchaseTestCommon):
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
                 'uom_id': self.uom_unit.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse_1.id,
                 'route_id': self.route_buy.id,
             })
             wizard.partner_id = supplier.partner_id
@@ -402,7 +400,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.route_buy.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
@@ -411,7 +409,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         self.assertEqual(po.order_line.price_unit, 0)
 
     def test_correct_supplier(self):
-        self.env['stock.warehouse'].search([], limit=1).reception_steps = 'two_steps'
+        self.warehouse_1.reception_steps = 'two_steps'
         product = self.env['product.product'].create({
             'name': 'Product',
             'route_ids': [Command.set([self.route_buy.id])],
@@ -436,7 +434,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': product.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.route_buy.id,
             'partner_id': self.vendor2.id,  # vendor2 price 100$
         })
@@ -458,7 +456,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         """ Test that the replenish order has the correct supplier in a replenish between
         warehouses of the same company.
         """
-        main_warehouse = self.wh
+        main_warehouse = self.warehouse_1
         second_warehouse = self.env['stock.warehouse'].create({
             'name': 'Second Warehouse',
             'code': 'WH02',
@@ -488,7 +486,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
             'partner_id': self.fuzzy_drink.seller_ids[1].partner_id.id,  # pricelist with uom "Pack of 6"
         })
@@ -504,7 +502,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'quantity': 15,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
             'partner_id': self.fuzzy_drink.seller_ids[1].partner_id.id,  # pricelist with uom "Pack of 6"
         })
@@ -520,7 +518,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
             'uom_id': self.uom_pack_6.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
             'partner_id': self.fuzzy_drink.seller_ids[1].partner_id.id,  # pricelist with uom "Pack of 6"
         })
@@ -536,7 +534,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
             'uom_id': self.uom_pack_6.id,
             'quantity': 2,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse_1.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
             'partner_id': self.fuzzy_drink.seller_ids[0].partner_id.id,  # pricelist with uom "Unit"
         })

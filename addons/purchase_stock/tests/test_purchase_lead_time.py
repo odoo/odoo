@@ -276,8 +276,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + "Receive with care", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
-        company = self.env.ref('base.main_company')
-        company.horizon_days = 0
+        self.company.horizon_days = 0
         company2 = self.env['res.company'].create({
             'name': 'Second Company',
         })
@@ -291,24 +290,23 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Delhaize'
         })
 
-        company.days_to_purchase = 2.0
+        self.company.days_to_purchase = 2.0
 
         # Test if the orderpoint is created when opening the replenishment view
         prod = self.env['product.product'].create({
             'name': 'Carrot',
             'is_storable': True,
             'seller_ids': [
-                Command.create({'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                Command.create({'partner_id': vendor.id, 'delay': 1.0})
             ]
         })
 
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
         self.env['stock.move'].create({
             'date': datetime.today() + timedelta(days=3),
             'product_id': prod.id,
             'uom_id': prod.uom_id.id,
             'product_uom_qty': 5.0,
-            'location_id': warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })._action_confirm()
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
@@ -323,13 +321,13 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'is_storable': True,
             'seller_ids': [
                 Command.create({'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
-                Command.create({'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                Command.create({'partner_id': vendor.id, 'delay': 1.0})
             ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
-        company.horizon_days = 1
+        self.company.horizon_days = 1
         orderpoint_form.save()
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
@@ -344,7 +342,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
                 'product_id': product.id,
                 'uom_id': product.uom_id.id,
                 'product_uom_qty': 5.0,
-                'location_id': warehouse.lot_stock_id.id,
+                'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
             })
         delivery_moves._action_confirm()

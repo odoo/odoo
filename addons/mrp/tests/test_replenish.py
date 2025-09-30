@@ -253,26 +253,22 @@ class TestMrpReplenish(TestMrpCommon):
         5.) Add a reordering rule (manufacture) for product_4
         6.) trigger replenishment for product_4
         """
-        self.warehouse = self.env.ref('stock.warehouse0')
-        self.warehouse.write({'manufacture_steps': 'pbm_sam'})
-        self.warehouse.mto_pull_id.route_id.active = True
-
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.warehouse_1.write({'manufacture_steps': 'pbm_sam'})
+        self.warehouse_1.mto_pull_id.route_id.active = True
 
         self.product_1.write({
-            'route_ids': [(6, 0, [route_mto, route_manufacture])]
+            'route_ids': [Command.set([self.route_mto.id, self.route_manufacture.id])]
         })  # Component
         self.product_4.write({
-            'route_ids': [(6, 0, [route_manufacture])],
-            'bom_ids': [(6, 0, [self.bom_1.id])]
+            'route_ids': [Command.set([self.route_manufacture.id])],
+            'bom_ids': [Command.set([self.bom_1.id])]
         })  # Finished Product
 
         # Create reordering rule
         self.env['stock.warehouse.orderpoint'].create({
-            'location_id': self.warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'product_id': self.product_4.id,
-            'route_id': route_manufacture,
+            'route_id': self.route_manufacture.id,
             'product_min_qty': 1,
             'product_max_qty': 1,
         })
