@@ -1,9 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
-import { waitForNone } from "@odoo/hoot-dom";
+import { animationFrame, click, select, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
@@ -28,6 +29,64 @@ describe("button style", () => {
         );
         const button = el.querySelector(".o_embedded_toolbar button");
         expect(button).toHaveStyle({ cursor: "pointer" });
+    });
+
+    test("Button styling should not override inner font size", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <div>
+                    <span class="display-1-fs">a[b]c</span>
+                </div>
+            `)
+        );
+        await waitFor(".o-we-toolbar");
+        await click("button[name='link']");
+        await animationFrame();
+        await click('select[name="link_type"]');
+        await animationFrame();
+        await select("primary");
+        await animationFrame();
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+
+        // Ensure `.display-1-fs` overrides the `.btn`'s default font size.
+        const link = el.querySelector("a.btn");
+        const span = el.querySelector("span.display-1-fs");
+        expect(getComputedStyle(link).fontSize).toBe(getComputedStyle(span).fontSize);
+
+        expect(el).toHaveInnerHTML(
+            unformat(`
+                <div class="o-paragraph">
+                    <span class="display-1-fs">a\ufeff<a href="#" class="btn btn-fill-primary">\ufeffb\ufeff</a>\ufeffc</span>
+                </div>
+            `)
+        );
+    });
+
+    test("Should be able to change button style", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <div class="o-paragraph">
+                    <span class="display-1-fs">a<a class="btn btn-fill-primary" href="#">[b]</a>c</span>
+                </div>
+            `),
+            stepFunction: (editor) => {
+                editor.shared.format.formatSelection("setFontSizeClassName", {
+                    formatProps: { className: "h1-fs" },
+                    applyStyle: true,
+                });
+            },
+            contentAfter: unformat(`
+                <div>
+                    <span class="display-1-fs">
+                        a
+                        <a class="btn btn-fill-primary" href="#">
+                            <span class="h1-fs">[b]</span>
+                        </a>
+                        c
+                    </span>
+                </div>
+            `),
+        });
     });
 });
 

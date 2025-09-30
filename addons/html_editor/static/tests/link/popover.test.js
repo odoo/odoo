@@ -15,7 +15,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
-import { cleanLinkArtifacts, unformat } from "../_helpers/format";
+import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
@@ -660,63 +660,6 @@ describe("Link creation", () => {
                 `<p>[<a href="https://www.test.com">Hello</a> my friend]</p>`
             );
         });
-        test("should wrap selected text with link and preserve styles", async () => {
-            const { el } = await setupEditor(
-                `<p><span style="font-size: 48px;"><strong>s[trong</strong><u>underlin]e</u></span></p>`
-            );
-            await waitFor(".o-we-toolbar");
-            await click(".o-we-toolbar .fa-link");
-            await expectElementCount(".o-we-linkpopover", 1);
-            expect(".o_we_href_input_link").toBeFocused();
-            await fill("http://test.com");
-            await click('select[name="link_type"');
-            await select("primary");
-            await click(".o_we_apply_link");
-            await animationFrame();
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                unformat(`
-                    <p>
-                        <span style="font-size: 48px;"><strong>s</strong></span>
-                        <a href="http://test.com" class="btn btn-fill-primary">
-                            <span style="font-size: 48px;"><strong>trong</strong><u>underlin[]</u></span>
-                        </a>
-                        <span style="font-size: 48px;"><u>e</u></span>
-                    </p>
-                `)
-            );
-        });
-        test("should apply link over split text nodes while preserving styles", async () => {
-            const { el } = await setupEditor(`<p><span class="display-1-fs"></span></p>`);
-
-            const fontSizeSpan = queryOne("span.display-1-fs");
-            fontSizeSpan.appendChild(document.createTextNode("te"));
-            fontSizeSpan.appendChild(document.createTextNode("st"));
-            setSelection({
-                anchorNode: fontSizeSpan.firstChild,
-                anchorOffset: 1,
-                focusNode: fontSizeSpan.lastChild,
-                focusOffset: 1,
-            });
-
-            await waitFor(".o-we-toolbar");
-            await click(".o-we-toolbar .fa-link");
-            await expectElementCount(".o-we-linkpopover", 1);
-            expect(".o_we_href_input_link").toBeFocused();
-            await fill("http://test.com");
-            await click(".o_we_apply_link");
-            await animationFrame();
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                unformat(`
-                    <p>
-                        <span class="display-1-fs">t</span>
-                        <a href="http://test.com">
-                            <span class="display-1-fs">es[]</span>
-                        </a>
-                        <span class="display-1-fs">t</span>
-                    </p>
-                `)
-            );
-        });
     });
 });
 
@@ -1013,7 +956,8 @@ describe("link preview", () => {
     });
     test("test external metadata cached correctly", async () => {
         const title = "Open Source ERP and CRM | Odoo";
-        const description = "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
+        const description =
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
         onRpc("/html_editor/link_preview_external", () => {
             expect.step("/html_editor/link_preview_external");
             return {
