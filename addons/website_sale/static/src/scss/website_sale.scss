@@ -1008,6 +1008,7 @@ $-product-ratios-map: (
 );
 
 @each $-ratio-name, $-ratio-value in $-product-ratios-map {
+    .o_wsale_image_viewer_ratio_#{$-ratio-name},
     .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
         --o-wsale-product-image-ratio: #{$-ratio-value};
     }
