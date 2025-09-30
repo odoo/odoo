@@ -92,7 +92,15 @@ describe("findAdjacentPosition method", () => {
                 const previous = '<div><p>a[]</p><span contenteditable="false">b</span></div>';
                 const next = '<div><p>a</p>[]<span contenteditable="false">b</span></div>';
                 const { editor } = await setupEditor(previous);
-                assertAdjacentPositions(editor, previous, next);
+                assertAdjacentPositions(
+                    editor,
+                    '<p data-selection-placeholder=""><br></p>' +
+                        previous +
+                        '<p data-selection-placeholder=""><br></p>',
+                    '<p data-selection-placeholder=""><br></p>' +
+                        next +
+                        '<p data-selection-placeholder=""><br></p>'
+                );
             });
             test("Should find position before filebox", async () => {
                 const content = `<div>\ufeff<span contenteditable="false" class="o_file_box"></span>\ufeff[]</div>`;

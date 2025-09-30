@@ -347,9 +347,7 @@ export class DomPlugin extends Plugin {
                             fillShrunkPhrasingParent(otherNode);
                         }
                         // After the content insertion, the right-part of a
-                        // split is evaluated for removal, if it is unnecessary
-                        // (to guarantee a paragraph-related element
-                        // after the last unsplittable inserted element).
+                        // split is evaluated for removal.
                         candidatesForRemoval.push(right);
                     } else {
                         if (isBlock(currentNode)) {
@@ -410,41 +408,16 @@ export class DomPlugin extends Plugin {
                 !(isProtected(parent) && !isUnprotecting(parent)) &&
                 parent.isContentEditable
             ) {
-                cleanTrailingBR(parent, [
-                    (node) => {
-                        // Don't remove the last BR in cases where the
-                        // previous sibling is an unsplittable block
-                        // (i.e. a table, a non-editable div, ...)
-                        // to allow placing the cursor after that unsplittable
-                        // element. This can be removed when the cursor
-                        // is properly handled around these elements.
-                        const previousSibling = node.previousSibling;
-                        return (
-                            previousSibling &&
-                            isBlock(previousSibling) &&
-                            this.dependencies.split.isUnsplittable(previousSibling)
-                        );
-                    },
-                ]);
+                cleanTrailingBR(parent);
             }
         }
         for (const candidateForRemoval of candidatesForRemoval) {
-            // Ensure that a paragraph related element is present after the last
-            // unsplittable inserted element
             if (
                 candidateForRemoval.isConnected &&
                 (isParagraphRelatedElement(candidateForRemoval) ||
                     isListItemElement(candidateForRemoval)) &&
                 candidateForRemoval.parentElement.isContentEditable &&
-                isEmptyBlock(candidateForRemoval) &&
-                ((candidateForRemoval.previousElementSibling &&
-                    !this.dependencies.split.isUnsplittable(
-                        candidateForRemoval.previousElementSibling
-                    )) ||
-                    (candidateForRemoval.nextElementSibling &&
-                        !this.dependencies.split.isUnsplittable(
-                            candidateForRemoval.nextElementSibling
-                        )))
+                isEmptyBlock(candidateForRemoval)
             ) {
                 candidateForRemoval.remove();
             }
@@ -467,6 +440,7 @@ export class DomPlugin extends Plugin {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
+        // TODO: check if position is editable?
         this.dependencies.selection.setSelection(
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
             { normalize: false }
