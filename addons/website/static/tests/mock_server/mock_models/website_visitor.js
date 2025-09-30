@@ -4,7 +4,7 @@ import { fields, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class WebsiteTrack extends models.ServerModel {
     _name = "website.track";
-    _description = "Visited Pages";
+    _description = "Visited Page";
     _order = "visit_datetime desc";
 
     visitor_id = fields.Many2one({ relation: "website.visitor" });

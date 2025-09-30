@@ -9,7 +9,7 @@ class MailMessageSubtype(models.Model):
         the follower subscription, allowing only some subtypes to be pushed
         on the Wall. """
     _name = 'mail.message.subtype'
-    _description = 'Message subtypes'
+    _description = 'Message Subtype'
     _order = 'sequence, id'
 
     name = fields.Char(

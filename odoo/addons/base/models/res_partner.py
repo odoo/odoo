@@ -138,7 +138,7 @@ class FormatAddressMixin(models.AbstractModel):
 
 class ResPartnerCategory(models.Model):
     _name = 'res.partner.category'
-    _description = 'Partner Tags'
+    _description = 'Partner Tag'
     _order = 'name, id'
     _parent_store = True
 

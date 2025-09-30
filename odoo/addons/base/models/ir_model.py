@@ -206,7 +206,7 @@ class Unknown(models.AbstractModel):
 
 class IrModel(models.Model):
     _name = 'ir.model'
-    _description = "Models"
+    _description = "Model"
     _order = 'model'
     _rec_names_search = ['name', 'model']
     _allow_sudo_commands = False
@@ -502,7 +502,7 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field._by_type__)]
 
 class IrModelFields(models.Model):
     _name = 'ir.model.fields'
-    _description = "Fields"
+    _description = "Field"
     _order = "name, id"
     _rec_name = 'field_description'
     _allow_sudo_commands = False

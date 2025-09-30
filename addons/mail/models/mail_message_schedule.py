@@ -20,7 +20,7 @@ class MailMessageSchedule(models.Model):
     of the <bus.bus> notifications.
     """
     _name = 'mail.message.schedule'
-    _description = 'Scheduled Messages'
+    _description = 'Scheduled Message'
     _order = 'scheduled_datetime DESC, id DESC'
     _rec_name = 'mail_message_id'
 

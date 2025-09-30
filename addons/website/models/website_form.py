@@ -17,9 +17,7 @@ class Website(models.Model):
 
 
 class IrModel(models.Model):
-    _name = 'ir.model'
-    _description = 'Models'
-    _inherit = ['ir.model']
+    _inherit = 'ir.model'
 
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
     website_form_default_field_id = fields.Many2one('ir.model.fields', 'Field for custom form data', domain="[('model', '=', model), ('ttype', '=', 'text')]", help="Specify the field which will contain meta and custom form fields datas.")
@@ -130,7 +128,6 @@ class IrModel(models.Model):
 
 class IrModelFields(models.Model):
     """ fields configuration for form builder """
-    _description = 'Fields'
     _inherit = 'ir.model.fields'
 
     def init(self):

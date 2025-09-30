@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class IrProfile(models.Model):
     _name = 'ir.profile'
-    _description = 'Profiling results'
+    _description = 'Profiling Result'
     _log_access = False  # avoid useless foreign key on res_user
     _order = 'session desc, id desc'
     _allow_sudo_commands = False

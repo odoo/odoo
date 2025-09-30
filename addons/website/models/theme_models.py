@@ -110,7 +110,7 @@ class ThemeIrUiView(models.Model):
 
 class ThemeIrAttachment(models.Model):
     _name = 'theme.ir.attachment'
-    _description = 'Theme Attachments'
+    _description = 'Theme Attachment'
 
     name = fields.Char(required=True)
     key = fields.Char(required=True)

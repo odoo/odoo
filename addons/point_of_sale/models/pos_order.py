@@ -25,7 +25,7 @@ _logger = logging.getLogger(__name__)
 class PosOrder(models.Model):
     _name = 'pos.order'
     _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
-    _description = "Point of Sale Orders"
+    _description = "Point of Sale Order"
     _order = "date_order desc, name desc, id desc"
     _mailing_enabled = True
 
@@ -1416,7 +1416,7 @@ class PosOrder(models.Model):
 
 class PosOrderLine(models.Model):
     _name = 'pos.order.line'
-    _description = "Point of Sale Order Lines"
+    _description = "Point of Sale Order Line"
     _rec_name = "product_id"
     _inherit = ['pos.load.mixin']
 

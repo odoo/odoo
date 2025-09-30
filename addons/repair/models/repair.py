@@ -772,7 +772,7 @@ class RepairOrder(models.Model):
 class RepairTags(models.Model):
     """ Tags of Repair's tasks """
     _name = 'repair.tags'
-    _description = "Repair Tags"
+    _description = "Repair Tag"
 
     def _get_default_color(self):
         return randint(1, 11)

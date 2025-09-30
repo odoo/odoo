@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class LunchLocation(models.Model):
     _name = 'lunch.location'
-    _description = 'Lunch Locations'
+    _description = 'Lunch Location'
 
     name = fields.Char('Location Name', required=True)
     address = fields.Text('Address')

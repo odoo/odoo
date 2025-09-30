@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class StockAddToWave(models.TransientModel):
     _name = 'stock.add.to.wave'
-    _description = 'Wave Transfer Lines'
+    _description = 'Wave Transfer Line'
 
     @api.model
     def default_get(self, fields):

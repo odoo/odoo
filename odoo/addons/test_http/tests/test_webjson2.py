@@ -177,7 +177,7 @@ class TestHttpWebJson_2(TestHttpBase):
                 headers=CT_JSON | self.bearer_header,
             )
         m = dedent("""\
-            You are not allowed to access 'Scheduled Actions' (ir.cron) records.
+            You are not allowed to access 'Scheduled Action' (ir.cron) records.
 
             This operation is allowed for the following groups:
             \t- Role / Administrator

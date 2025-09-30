@@ -15,7 +15,7 @@ from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknum
 
 class ResourceResource(models.Model):
     _name = 'resource.resource'
-    _description = "Resources"
+    _description = "Resource"
     _order = "name"
 
     @api.model

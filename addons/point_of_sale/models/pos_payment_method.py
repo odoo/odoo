@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class PosPaymentMethod(models.Model):
     _name = 'pos.payment.method'
-    _description = "Point of Sale Payment Methods"
+    _description = "Point of Sale Payment Method"
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
 

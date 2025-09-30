@@ -6,7 +6,6 @@ from odoo.tools import SQL
 
 class UtmCampaign(models.Model):
     _inherit = 'utm.campaign'
-    _description = 'UTM Campaign'
 
     quotation_count = fields.Integer('Quotation Count',
         compute="_compute_quotation_count", compute_sudo=True, groups='sales_team.group_sale_salesman')

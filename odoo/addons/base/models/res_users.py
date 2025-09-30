@@ -1522,7 +1522,7 @@ KEY_CRYPT_CONTEXT = CryptContext(
 
 class ResUsersApikeys(models.Model):
     _name = 'res.users.apikeys'
-    _description = 'Users API Keys'
+    _description = 'User API Key'
     _auto = False # so we can have a secret column
     _allow_sudo_commands = False
 

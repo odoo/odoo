@@ -130,7 +130,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
 
 class WebsitePageProperties(models.TransientModel):
     _name = 'website.page.properties'
-    _description = "Page Properties"
+    _description = "Page Property"
     _inherit = [
         'website.page.properties.base',
     ]

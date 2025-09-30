@@ -72,7 +72,7 @@ class ResBank(models.Model):
 class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
-    _description = 'Bank Accounts'
+    _description = 'Bank Account'
     _order = 'sequence, id'
 
     @api.model

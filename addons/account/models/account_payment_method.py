@@ -6,7 +6,7 @@ from odoo.fields import Domain
 
 class AccountPaymentMethod(models.Model):
     _name = 'account.payment.method'
-    _description = "Payment Methods"
+    _description = "Payment Method"
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
@@ -94,7 +94,7 @@ class AccountPaymentMethod(models.Model):
 
 class AccountPaymentMethodLine(models.Model):
     _name = 'account.payment.method.line'
-    _description = "Payment Methods"
+    _description = "Payment Method Line"
     _order = 'sequence, id'
 
     # == Business fields ==

@@ -48,7 +48,7 @@ class LangDataDict(ReadonlyDict):
 
 class ResLang(models.Model):
     _name = 'res.lang'
-    _description = "Languages"
+    _description = "Language"
     _order = "active desc,name"
     _allow_sudo_commands = False
 
