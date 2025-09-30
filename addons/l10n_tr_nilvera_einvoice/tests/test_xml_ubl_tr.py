@@ -79,7 +79,7 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'company_id': self.company_data['company'].id,
             'partner_id': partner_id.id,
-            'name': 'EIN/998833/0',
+            'name': 'EIN/2025/1',
             'invoice_date': '2025-03-03',
             'narration': '3 products',
             'invoice_line_ids': [

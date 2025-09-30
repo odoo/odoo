@@ -1,5 +1,6 @@
 from io import BytesIO
 import logging
+import re
 
 from odoo import _, api, models
 
@@ -25,6 +26,16 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _get_alerts(self, moves, moves_data):
+        def _is_valid_nilvera_name(move):
+            _, parts = move._get_sequence_format_param(move.name)
+
+            return (
+                parts['year'] != 0
+                and parts['year_length'] == 4
+                and parts['seq'] != 0
+                and re.match(r'^[A-Za-z0-9]{3}[^A-Za-z0-9]?$', parts['prefix1'])
+            )
+
         alerts = super()._get_alerts(moves, moves_data)
 
         # Filter for moves that have 'tr_nilvera' in their EDI data
@@ -154,6 +165,17 @@ class AccountMoveSend(models.AbstractModel):
                 "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
                 "action_text": _("View Invoice(s)"),
                 "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+            }
+
+        if moves_with_invalid_name := tr_nilvera_moves.filtered(lambda move: not _is_valid_nilvera_name(move)):
+            alerts['tr_moves_with_invalid_name'] = {
+                'level': 'danger',
+                'message': _(
+                    "The invoice name must follow the format when sending to Nilvera: 3 alphanumeric characters, "
+                    "followed by the year, and then a sequential number. Example: INV/2025/000001",
+                ),
+                'action_text': _("View Invoice(s)"),
+                'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
             }
 
         return alerts
