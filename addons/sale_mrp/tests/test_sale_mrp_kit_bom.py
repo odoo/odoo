@@ -101,51 +101,47 @@ class TestSaleMrpKitBom(BaseCommon):
                 # * 1 x Component B (Cost: $ 10, QTY: 2, UOM: Unit)
             # cost of Kit A = (6 * 1 * 12) + (10 * 2) = $ 92
         """
-        self.customer = self.env['res.partner'].create({
-            'name': 'customer'
-        })
-
-        self.kit_product = self._create_product('Kit Product', True, 1.00)
+        kit_product = self._create_product('Kit Product', True, 1.00)
         # Creating components
-        self.component_a = self._create_product('Component A', True, 1.00)
-        self.component_a.product_tmpl_id.standard_price = 6
-        self.component_b = self._create_product('Component B', True, 1.00)
-        self.component_b.product_tmpl_id.standard_price = 10
+        component_a = self._create_product('Component A', True, 1.00)
+        component_a.product_tmpl_id.standard_price = 6
+        component_b = self._create_product('Component B', True, 1.00)
+        component_b.product_tmpl_id.standard_price = 10
 
         cat = self.env['product.category'].create({
             'name': 'fifo',
             'property_cost_method': 'fifo'
         })
-        self.kit_product.product_tmpl_id.categ_id = cat
-        self.component_a.product_tmpl_id.categ_id = cat
-        self.component_b.product_tmpl_id.categ_id = cat
+        kit_product.product_tmpl_id.categ_id = cat
+        component_a.product_tmpl_id.categ_id = cat
+        component_b.product_tmpl_id.categ_id = cat
 
-        self.bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_product.product_tmpl_id.id,
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'
         })
 
         self.env['mrp.bom.line'].create({
-                'product_id': self.component_a.id,
+                'product_id': component_a.id,
                 'product_qty': 1.0,
-                'bom_id': self.bom.id,
+                'bom_id': bom.id,
                 'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
         })
         self.env['mrp.bom.line'].create({
-                'product_id': self.component_b.id,
+                'product_id': component_b.id,
                 'product_qty': 2.0,
-                'bom_id': self.bom.id,
+                'bom_id': bom.id,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
         })
 
         # Create a SO with one unit of the kit product
         so = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
+            'partner_id': self.env['res.partner'].create({'name': 'customer'}).id,
             'order_line': [
                 (0, 0, {
-                    'name': self.kit_product.name,
-                    'product_id': self.kit_product.id,
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
                     'product_uom_qty': 1.0,
                 })],
         })

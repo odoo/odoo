@@ -90,81 +90,78 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
-        self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
-        self.warehouse = self.env['stock.warehouse'].create({
+        self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
+        warehouse = self.env['stock.warehouse'].create({
             'name': 'Test Warehouse',
             'code': 'TWH'
         })
 
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
         product_form.is_storable = True
-        product_form.uom_id = self.uom_unit
-        self.raw_product = product_form.save()
+
+        product_form.uom_id = uom_unit
+        raw_product = product_form.save()
 
         # Create manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Stick'
-        product_form.uom_id = self.uom_unit
+        product_form.uom_id = uom_unit
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
-        self.finished_product = product_form.save()
+        product_form.route_ids.add(warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(warehouse.mto_pull_id.route_id)
+        finished_product = product_form.save()
 
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
-        self.complex_product = product_form.save()
+        product_form.route_ids.add(warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(warehouse.mto_pull_id.route_id)
+        complex_product = product_form.save()
 
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
         product_form.is_storable = True
-        product_form.uom_id = self.uom_unit
-        self.raw_product_2 = product_form.save()
+        product_form.uom_id = uom_unit
+        raw_product_2 = product_form.save()
 
         # Create bom for manufactured product
-        bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
-        bom_product_form.product_qty = 1.0
-        bom_product_form.type = 'normal'
-        with bom_product_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.raw_product
-            bom_line.product_qty = 2.0
-
-        self.bom = bom_product_form.save()
+        with Form(self.env['mrp.bom']) as bom_product_form:
+            bom_product_form.product_tmpl_id = finished_product.product_tmpl_id
+            bom_product_form.product_qty = 1.0
+            bom_product_form.type = 'normal'
+            with bom_product_form.bom_line_ids.new() as bom_line:
+                bom_line.product_id = raw_product
+                bom_line.product_qty = 2.0
 
         ## Create bom for manufactured product
-        bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
-        with bom_product_form.bom_line_ids.new() as line:
-            line.product_id = self.finished_product
-            line.product_qty = 1.0
-        with bom_product_form.bom_line_ids.new() as line:
-            line.product_id = self.raw_product_2
-            line.product_qty = 1.0
+        with Form(self.env['mrp.bom']) as bom_product_form:
+            bom_product_form.product_tmpl_id = complex_product.product_tmpl_id
+            with bom_product_form.bom_line_ids.new() as line:
+                line.product_id = finished_product
+                line.product_qty = 1.0
+            with bom_product_form.bom_line_ids.new() as line:
+                line.product_id = raw_product_2
+                line.product_qty = 1.0
 
-        self.complex_bom = bom_product_form.save()
-
-        with Form(self.warehouse) as warehouse:
+        with Form(warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
 
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env['res.partner'].create({'name': 'Another Test Partner'})
         with so_form.order_line.new() as line:
-            line.product_id = self.complex_product
+            line.product_id = complex_product
             line.price_unit = 1
             line.product_uom_qty = 1
         with so_form.order_line.new() as line:
-            line.product_id = self.finished_product
+            line.product_id = finished_product
             line.price_unit = 1
             line.product_uom_qty = 1
         sale_order_so0 = so_form.save()
