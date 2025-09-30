@@ -1673,6 +1673,58 @@ class TestSubcontractingTracking(TransactionCase):
         mo.procurement_group_id.mrp_production_ids.button_mark_done()
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done', 'done' , 'done'])
 
+    def test_subcontracting_tracked_product_extra_quants(self):
+        """Ensure that for a tracked product with a subcontracting route, creating and
+            confirming a purchase order, opening the location report or running the
+            scheduler, and then validating the receipt correctly update the on-hand
+            quantities in all relevant locations and verifies that no extra quants are
+            created at the subcontractor location."""
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.comp1_sn.tracking = 'lot'
+        self.comp1_sn.route_ids = [Command.link(resupply_sub_on_order_route.id)]
+        self.comp2.route_ids = [Command.link(resupply_sub_on_order_route.id)]
+
+        finished_lot, comp1_sn_lot = self.env['stock.lot'].create([{
+            'name': 'lot_%s' % product.name,
+            'product_id': product.id,
+        } for product in [self.finished_product, self.comp1_sn]])
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        self.env['stock.quant']._update_available_quantity(self.comp1_sn, warehouse.lot_stock_id, 10, lot_id=comp1_sn_lot)
+        self.env['stock.quant']._update_available_quantity(self.comp2, warehouse.lot_stock_id, 10)
+
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished_product
+            move.product_uom_qty = 10
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        self.env['stock.quant']._quant_tasks()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
+        # Process the delivery of the components
+        compo_picking = mo.picking_ids
+        compo_picking.action_assign()
+        compo_picking.button_validate()
+
+        mo_form = Form.from_action(self.env, picking_receipt.action_record_components())
+        mo_form.qty_producing = 10
+        mo_form.lot_producing_id = finished_lot
+        with mo_form.move_line_raw_ids.edit(0) as ml:
+            ml.lot_id = comp1_sn_lot
+        mo = mo_form.save()
+        mo.subcontracting_record_component()
+
+        picking_receipt.button_validate()
+
+        self.assertEqual(picking_receipt.state, 'done')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished_product, self.env.ref('stock.stock_location_stock')), 10)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished_product, self.subcontractor_partner1.property_stock_subcontractor), 0)
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingPortal(TransactionCase):
