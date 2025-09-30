@@ -3,13 +3,14 @@
 # * hr_holidays
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-09-17 07:44+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-09-29 22:33+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/hr_holidays/es_419/>\n"
 "Language: es_419\n"
@@ -496,6 +497,16 @@ msgid ""
 "Contracts:\n"
 "%(contracts)s"
 msgstr ""
+"No puedes asignar un permiso que abarque varios contratos con distintos "
+"horarios de trabajo.\n"
+" \n"
+"Crea un permiso por cada contrato.\n"
+"\n"
+"Permiso:\n"
+"%(time_off)s\n"
+" \n"
+"Contratos:\n"
+"%(contracts)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1513,7 +1524,7 @@ msgstr "Contacto"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "Contrato %(contract)s con vigencia del %(start_date)s al %(end_date)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
