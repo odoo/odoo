@@ -43,8 +43,9 @@ export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {})
 }
 export function isCashMoveButtonHidden() {
     return [
+        clickMenuButton(),
         {
-            trigger: ".pos-topheader:not(:contains(Cash In/Out))",
+            trigger: "span.dropdown-item:not(:contains(Cash In/Out))",
         },
     ];
 }
