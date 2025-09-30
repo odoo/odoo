@@ -1373,6 +1373,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_with_custom_attribute', login="pos_user")
 
+    def test_draft_order_deletion_with_printer(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_draft_order_deletion_with_printer', login="pos_user")
+
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

@@ -552,7 +552,7 @@ export class PosStore extends Reactive {
                 delete this.toRefundLines[line.refunded_orderline_id];
             }
         }
-        if (this.isOpenOrderShareable() && removeFromServer) {
+        if ((this.isOpenOrderShareable() || order.server_id) && removeFromServer) {
             if (this.ordersToUpdateSet.has(order)) {
                 this.ordersToUpdateSet.delete(order);
             }
