@@ -1,6 +1,7 @@
 from collections import Counter
 
 from odoo import _, api, Command, fields, models
+from odoo.exceptions import RedirectWarning, UserError
 
 
 class AccountMoveSendBatchWizard(models.TransientModel):
@@ -85,11 +86,27 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             self.env['account.move.send']._generate_and_send_invoices(self.move_ids, allow_fallback_pdf=allow_fallback_pdf)
             return
 
+        account_move_send_cron = self.env.ref('account.ir_cron_account_move_send')
+        if not account_move_send_cron.sudo().active:
+            if self.env.user.has_group('base.group_system'):
+                raise RedirectWarning(
+                    _("Batch invoice sending is unavailable. Please, activate the cron to enable batch sending of invoices."),
+                    {
+                        'views': [(False, 'form')],
+                        'res_model': 'ir.cron',
+                        'type': 'ir.actions.act_window',
+                        'res_id': account_move_send_cron.id,
+                        'target': 'current',
+                    },
+                    _("Go to cron configuration"),
+                )
+            raise UserError(_("Batch invoice sending is unavailable. Please, contact your system administrator to activate the cron to enable batch sending of invoices."))
+
         self.move_ids.sending_data = {
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,
         }
-        self.env.ref('account.ir_cron_account_move_send')._trigger()
+        account_move_send_cron._trigger()
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
