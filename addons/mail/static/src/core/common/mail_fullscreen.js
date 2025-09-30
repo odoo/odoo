@@ -16,13 +16,14 @@ export class MailFullscreen extends Component {
 
 export const fullscreenService = {
     start(env) {
-        const state = reactive({ enter, exit, id: undefined });
+        const state = reactive({ enter, exit, id: undefined, closeOverlay: undefined });
         async function exit(id = state.id) {
-            if (id !== state.id) {
+            if (!id || id !== state.id) {
                 return;
             }
-            this.closeOverlay?.();
+            state.closeOverlay?.();
             state.id = undefined;
+            state.closeOverlay = undefined;
             const fullscreenElement =
                 document.webkitFullscreenElement || document.fullscreenElement;
             if (fullscreenElement) {
@@ -49,9 +50,9 @@ export const fullscreenService = {
             component,
             { keepBrowserHeader = false, props, rootId, id = DEFAULT_ID } = {}
         ) {
-            this.closeOverlay?.();
+            state.closeOverlay?.();
             state.id = id;
-            this.closeOverlay = env.services.overlay.add(
+            state.closeOverlay = env.services.overlay.add(
                 MailFullscreen,
                 { component, props },
                 { rootId }
@@ -77,7 +78,7 @@ export const fullscreenService = {
                 document.webkitFullscreenElement || document.fullscreenElement
             );
             if (!isFullscreen) {
-                exit();
+                state.exit();
             }
         });
         return state;
