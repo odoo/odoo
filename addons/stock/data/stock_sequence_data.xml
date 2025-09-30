@@ -67,7 +67,27 @@
             <field name="name">Scheduler: Merge Quants</field>
             <field name="model_id" ref="model_stock_quant"/>
             <field name="state">code</field>
-            <field name="code">model._quant_tasks()</field>
+            <field name="code">model._merge_quants()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_clean_reservations_action" model="ir.cron">
+            <field name="name">Scheduler: Clean Reservations</field>
+            <field name="model_id" ref="model_stock_quant"/>
+            <field name="state">code</field>
+            <field name="code">model._clean_reservations()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_unlink_zero_quants_action" model="ir.cron">
+            <field name="name">Scheduler: Clean Quants </field>
+            <field name="model_id" ref="model_stock_quant"/>
+            <field name="state">code</field>
+            <field name="code">model._unlink_zero_quants()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>

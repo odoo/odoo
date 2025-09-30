@@ -322,7 +322,8 @@ class StockPackage(models.Model):
             self.quant_ids.move_quants(message=self.env._("Quantities unpacked"), unpack=True)
             # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
             # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-            quants._quant_tasks()
+            self.quant_ids._merge_quants()
+            self.quant_ids._unlink_zero_quants()
 
     def action_add_to_picking(self):
         picking = self.env['stock.picking'].browse(self.env.context.get('picking_id'))
