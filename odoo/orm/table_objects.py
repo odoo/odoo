@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+import warnings
 
 from odoo.tools import sql
 
@@ -105,6 +106,16 @@ class Constraint(TableObject):
 
     def get_definition(self, registry: Registry):
         return self._definition
+
+    def __set_name__(self, owner, name):
+        if name.endswith('_not_null'):
+            warnings.warn(
+                f'The Constraint "{name}" ends with _not_null. In PostgreSQL 18, '
+                'this suffix is used automatically for NOT NULL column (required).'
+                'To avoid any name clashing, please change the Constraint name.',
+                stacklevel=1,
+            )
+        return super().__set_name__(owner, name)
 
     def apply_to_database(self, model: BaseModel):
         cr = model.env.cr
