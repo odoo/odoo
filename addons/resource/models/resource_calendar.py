@@ -515,7 +515,7 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, booking_apt=False, domain=None, tz=None, compute_leaves=True):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True, booking_apt=False):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
