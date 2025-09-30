@@ -1756,7 +1756,7 @@ export const accountTaxHelpers = {
      */
     reduce_base_lines_with_grouping_function(
         base_lines,
-        { grouping_function = null, computation_key = null } = {}
+        { grouping_function = null, aggregate_function = null, computation_key = null } = {}
     ) {
         const base_line_map = {};
         for (const base_line of base_lines) {
@@ -1798,6 +1798,9 @@ export const accountTaxHelpers = {
                     target_base_line.tax_details,
                     base_line.tax_details
                 );
+                if (aggregate_function) {
+                    aggregate_function(target_base_line, base_line);
+                }
             } else {
                 base_line_map[grouping_key_json] = this.prepare_base_line_for_taxes_computation(
                     new_base_line,
@@ -1947,7 +1950,7 @@ export const accountTaxHelpers = {
         company,
         amount_type,
         amount,
-        { computation_key = null, grouping_function = null } = {}
+        { computation_key = null, grouping_function = null, aggregate_function = null } = {}
     ) {
         if (!base_lines.length) {
             return [];
@@ -2061,6 +2064,7 @@ export const accountTaxHelpers = {
         // Reduce the base lines to minimize the number of lines.
         const reduced_base_lines = this.reduce_base_lines_with_grouping_function(base_lines, {
             grouping_function: grouping_function,
+            aggregate_function: aggregate_function,
             computation_key: computation_key,
         });
 
