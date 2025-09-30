@@ -3242,7 +3242,6 @@ class AccountTax(models.Model):
                 'extra_tax_data': None,
                 'price_unit': (
                     sub_tax_details['raw_total_excluded_currency']
-                    + sub_tax_details['delta_total_excluded_currency']
                     + sum(
                         sub_tax_data['raw_tax_amount_currency']
                         for sub_tax_data in sub_tax_details['taxes_data']
