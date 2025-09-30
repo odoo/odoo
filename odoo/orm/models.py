@@ -445,6 +445,7 @@ class BaseModel(metaclass=MetaModel):
     """field to use for active records, automatically set to either ``"active"``
     or ``"x_active"``.
     """
+    _clear_cache_name: str = ''      # cache to clear on create/write/update
     _fold_name: str = 'fold'         #: field to determine folded groups in kanban views
 
     _translate: bool = True           # False disables translations export for this model (Old API) TODO deprecate/remove
@@ -3675,6 +3676,8 @@ class BaseModel(metaclass=MetaModel):
             ir_model_data_unlink.unlink()
         if ir_attachment_unlink:
             ir_attachment_unlink.unlink()
+        if cache_name := self._clear_cache_name:
+            self.env.registry.clear_cache(cache_name)
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
@@ -3859,6 +3862,17 @@ class BaseModel(metaclass=MetaModel):
                             document_model=self._name,
                         ))
                     raise
+
+            # invalidate the cache
+            if (
+                (cache_name := self._clear_cache_name)
+                and any(self._ids)
+                and (
+                    not hasattr(self, '_clear_cache_on_fields')
+                    or not self._clear_cache_on_fields.isdisjoint(vals)
+                )
+            ):
+                self.env.registry.clear_cache(cache_name)
 
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
@@ -4083,6 +4097,10 @@ class BaseModel(metaclass=MetaModel):
                 # commands, the cache may therefore hold NewId records. We must now invalidate those values.
                 inv_relational_fnames = [field.name for field in fields if field.type in ('one2many', 'many2many') and not field.store]
                 inv_records.invalidate_recordset(fnames=inv_relational_fnames)
+
+        # invalidate the cache
+        if cache_name := self._clear_cache_name:
+            self.env.registry.clear_cache(cache_name)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:

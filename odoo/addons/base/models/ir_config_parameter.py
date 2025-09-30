@@ -32,6 +32,7 @@ class IrConfig_Parameter(models.Model):
     _rec_name = 'key'
     _order = 'key'
     _allow_sudo_commands = False
+    _clear_cache_name = 'stable'
 
     key = fields.Char(required=True)
     value = fields.Text(required=True)
@@ -102,22 +103,12 @@ class IrConfig_Parameter(models.Model):
                 self.create({'key': key, 'value': value})
             return False
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache('stable')
-        return super().create(vals_list)
-
     def write(self, vals):
         if 'key' in vals:
             illegal = _default_parameters.keys() & self.mapped('key')
             if illegal:
                 raise ValidationError(self.env._("You cannot rename config parameters with keys %s", ', '.join(illegal)))
-        self.env.registry.clear_cache('stable')
         return super().write(vals)
-
-    def unlink(self):
-        self.env.registry.clear_cache('stable')
-        return super().unlink()
 
     @api.ondelete(at_uninstall=False)
     def unlink_default_parameters(self):
