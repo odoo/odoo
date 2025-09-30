@@ -24,6 +24,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS 'account_edi_ubl_cii'
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_address_vals(partner)
 
         if partner.state_id:
@@ -37,6 +39,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
         # EXTENDS 'account_edi_ubl_cii'
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
 
         if invoice.currency_id.name != 'RON':
@@ -51,6 +55,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
         # EXTENDS 'account_edi_ubl_cii'
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
         if not _has_vat(partner.vat):
@@ -70,6 +76,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS 'account_edi_ubl_cii'
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
@@ -88,6 +96,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
 
     def _get_document_type_code_vals(self, invoice, invoice_data):
         # EXTENDS 'account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_document_type_code_vals(invoice, invoice_data)
         # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
         vals['value'] = '50' if invoice.move_type == 'out_refund' else False

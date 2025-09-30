@@ -28,6 +28,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
         vals.setdefault('party_tax_scheme_vals', [])
 
@@ -38,6 +40,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
         company_currency = invoice.company_id.currency_id
         if invoice.currency_id != company_currency:
@@ -53,6 +57,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for vals in vals_list:
             vals['tax_scheme_vals'] = {'id': 'GST'}
@@ -60,6 +66,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
     def _get_additional_document_reference_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_20
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         additional_document_reference_list = super()._get_additional_document_reference_list(invoice)
         if invoice.currency_id != invoice.company_id.currency_id:
             amounts_in_accounting_currency = (
@@ -77,6 +85,8 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({

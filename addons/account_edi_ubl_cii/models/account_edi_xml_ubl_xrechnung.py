@@ -22,6 +22,8 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
         vals['vals']['customization_id'] = self._get_customization_ids()['xrechnung']
         if not vals['vals'].get('buyer_reference'):
@@ -30,6 +32,8 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
 
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         constraints = super()._export_invoice_constraints(invoice, vals)
 
         constraints.update({
@@ -41,6 +45,8 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
 
         if not vals.get('endpoint_id') and partner.email:
