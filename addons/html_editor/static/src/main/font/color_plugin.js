@@ -284,7 +284,9 @@ export class ColorPlugin extends Plugin {
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
                     closestElement(node, "span");
-                if (font && font.querySelector(".fa")) {
+
+                const faNodes = font?.querySelectorAll(".fa");
+                if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
                     return font;
                 }
                 const children = font && descendants(font);
