@@ -1,9 +1,12 @@
 from io import BytesIO
 import logging
+import re
 
 from odoo import _, api, models
 
 _logger = logging.getLogger(__name__)
+
+NILVERA_NAME_PATTERN_REGEX = re.compile(r'^[A-Z0-9]{3}\/[0-9]{4}\/[0-9]+$', re.IGNORECASE)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -160,6 +163,19 @@ class AccountMoveSend(models.AbstractModel):
                 "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
                 "action_text": _("View Invoice(s)"),
                 "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+            }
+
+        if moves_with_invalid_name := tr_nilvera_moves.filtered(
+            lambda move: not NILVERA_NAME_PATTERN_REGEX.match(move.name)
+        ):
+            alerts['tr_moves_with_invalid_name'] = {
+                'level': 'danger',
+                'message': _(
+                    "The invoice number must follow the format when sending to Nilvera: 3 alphanumeric characters, "
+                    "followed by the year, and then a sequential number. Example: INV/2025/000001",
+                ),
+                'action_text': _("View Invoice(s)"),
+                'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
             }
 
         return alerts
