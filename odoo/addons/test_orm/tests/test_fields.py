@@ -603,7 +603,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
-        self.env['ir.config_parameter'].set_param('test_orm.full_name', 'name1,name2')
+        self.env['ir.config_parameter'].set_str('test_orm.full_name', 'name1,name2')
 
         # this must re-evaluate the field's dependencies
         self.env.flush_all()
