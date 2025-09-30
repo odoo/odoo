@@ -39,91 +39,91 @@ class TestActivityMixin(TestActivityCommon):
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
         with self.with_user('employee'):
-            self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
-            self.assertEqual(len(self.test_record.message_ids), 1)
-            self.assertEqual(self.test_record.env.user, self.user_employee)
+            test_record = self.env['mail.test.activity'].browse(self.test_record.id)
+            self.assertEqual(len(test_record.message_ids), 1)
+            self.assertEqual(test_record.env.user, self.user_employee)
 
             now_utc = datetime.now(pytz.UTC)
             now_user = now_utc.astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
             today_user = now_user.date()
 
             # Test various scheduling of activities
-            act1 = self.test_record.activity_schedule(
+            act1 = test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 today_user + relativedelta(days=1),
                 user_id=self.user_admin.id)
             self.assertEqual(act1.automated, True)
 
             act_type = self.env.ref('test_mail.mail_act_test_todo')
-            self.assertEqual(self.test_record.activity_summary, act_type.summary)
-            self.assertEqual(self.test_record.activity_state, 'planned')
-            self.assertEqual(self.test_record.activity_user_id, self.user_admin)
+            self.assertEqual(test_record.activity_summary, act_type.summary)
+            self.assertEqual(test_record.activity_state, 'planned')
+            self.assertEqual(test_record.activity_user_id, self.user_admin)
 
-            act2 = self.test_record.activity_schedule(
+            act2 = test_record.activity_schedule(
                 'test_mail.mail_act_test_meeting',
                 today_user + relativedelta(days=-1),
                 user_id=self.user_employee.id,
             )
-            self.assertEqual(self.test_record.activity_state, 'overdue')
+            self.assertEqual(test_record.activity_state, 'overdue')
             # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_recordset(['activity_ids'])
-            self.assertEqual(self.test_record.activity_user_id, self.user_employee)
+            test_record.invalidate_recordset(['activity_ids'])
+            self.assertEqual(test_record.activity_user_id, self.user_employee)
 
-            act3 = self.test_record.activity_schedule(
+            act3 = test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 today_user + relativedelta(days=3),
                 user_id=self.user_employee.id,
             )
-            self.assertEqual(self.test_record.activity_state, 'overdue')
+            self.assertEqual(test_record.activity_state, 'overdue')
             # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_recordset(['activity_ids'])
-            self.assertEqual(self.test_record.activity_user_id, self.user_employee)
+            test_record.invalidate_recordset(['activity_ids'])
+            self.assertEqual(test_record.activity_user_id, self.user_employee)
 
-            self.test_record.invalidate_recordset()
-            self.assertEqual(self.test_record.activity_ids, act1 | act2 | act3)
+            test_record.invalidate_recordset()
+            self.assertEqual(test_record.activity_ids, act1 | act2 | act3)
 
             # Perform todo activities for admin
-            self.test_record.activity_feedback(
+            test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 user_id=self.user_admin.id,
                 feedback='Test feedback',
             )
-            self.assertEqual(self.test_record.activity_ids, act2 | act3)
+            self.assertEqual(test_record.activity_ids, act2 | act3)
             self.assertFalse(act1.active)
 
             # Reschedule all activities, should update the record state
-            self.assertEqual(self.test_record.activity_state, 'overdue')
-            self.test_record.activity_reschedule(
+            self.assertEqual(test_record.activity_state, 'overdue')
+            test_record.activity_reschedule(
                 ['test_mail.mail_act_test_meeting', 'test_mail.mail_act_test_todo'],
                 date_deadline=today_user + relativedelta(days=3)
             )
-            self.assertEqual(self.test_record.activity_state, 'planned')
+            self.assertEqual(test_record.activity_state, 'planned')
 
             # Perform todo activities for remaining people
-            self.test_record.activity_feedback(
+            test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
             self.assertFalse(act3.active)
 
             # Setting activities as done should delete them and post messages
-            self.assertEqual(self.test_record.activity_ids, act2)
-            self.assertEqual(len(self.test_record.message_ids), 3)
-            act_messages = self.test_record.message_ids[:2]
+            self.assertEqual(test_record.activity_ids, act2)
+            self.assertEqual(len(test_record.message_ids), 3)
+            act_messages = test_record.message_ids[:2]
             self.assertEqual(act_messages.subtype_id, self.env.ref('mail.mt_activities'))
 
             # Unlink meeting activities
-            self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
+            test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
 
             # Canceling activities should simply remove them
-            self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
-            self.assertEqual(len(self.test_record.message_ids), 3)
-            self.assertFalse(self.test_record.activity_state)
+            self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
+            self.assertEqual(len(test_record.message_ids), 3)
+            self.assertFalse(test_record.activity_state)
             self.assertFalse(act2.exists())
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

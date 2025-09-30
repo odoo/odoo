@@ -1123,7 +1123,7 @@ class TestMailMailRace(MailCommon):
         cr = self.registry.cursor()
         env = api.Environment(cr, SUPERUSER_ID, {})
 
-        self.partner = env['res.partner'].create({
+        partner = env['res.partner'].create({
             'name': 'Ernest Partner',
         })
         # we need to simulate a mail sent by the cron task, first create mail, message and notification by hand
@@ -1131,7 +1131,7 @@ class TestMailMailRace(MailCommon):
             'body_html': '<p>Test</p>',
             'is_notification': True,
             'state': 'outgoing',
-            'recipient_ids': [(4, self.partner.id)]
+            'recipient_ids': [(4, partner.id)]
         })
         mail_message = mail.mail_message_id
 
@@ -1140,24 +1140,23 @@ class TestMailMailRace(MailCommon):
             'body': 'B',
             'subtype_id': self.ref('mail.mt_comment'),
             'notification_ids': [(0, 0, {
-                'res_partner_id': self.partner.id,
+                'res_partner_id': partner.id,
                 'mail_mail_id': mail.id,
                 'notification_type': 'email',
                 'is_read': True,
                 'notification_status': 'ready',
             })],
         })
-        notif = env['mail.notification'].search([('res_partner_id', '=', self.partner.id)])
+        notif = env['mail.notification'].search([('res_partner_id', '=', partner.id)])
         notif.ensure_one()  # for patched method
         # we need to commit transaction or cr will keep the lock on notif
         cr.commit()
 
         # patch send_email in order to create a concurent update and check the notif is already locked by _send()
-        this = self  # coding in javascript ruinned my life
         bounce_deferred = []
         @api.model
-        def send_email(self, message, *args, **kwargs):
-            with this.registry.cursor() as cr, mute_logger('odoo.sql_db'):
+        def send_email(_self, message, *args, **kwargs):
+            with self.registry.cursor() as cr, mute_logger('odoo.sql_db'):
                 try:
                     # try ro aquire lock (no wait) on notification (should fail)
                     notif.with_env(notif.env(cr=cr)).lock_for_update()
@@ -1184,6 +1183,6 @@ class TestMailMailRace(MailCommon):
         notif.unlink()
         mail.unlink()
         (mail_message | message).unlink()
-        self.partner.unlink()
+        partner.unlink()
         cr.commit()
         cr.close()

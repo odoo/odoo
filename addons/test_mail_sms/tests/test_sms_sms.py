@@ -27,17 +27,18 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
             })
 
     def test_sms_send_batch_size(self):
-        self.count = 0
+        count = 0
 
         def _send(sms_self, unlink_failed=False, unlink_sent=True, raise_exception=False):
-            self.count += 1
+            nonlocal count
+            count += 1
             return DEFAULT
 
         self.env['ir.config_parameter'].set_param('sms.session.batch.size', '3')
         with patch.object(SmsModel, '_send', autospec=True, side_effect=_send) as _send_mock:
             self.env['sms.sms'].browse(self.sms_all.ids).send()
 
-        self.assertEqual(self.count, 4)
+        self.assertEqual(count, 4)
 
     def test_sms_send_crash_employee(self):
         with self.assertRaises(exceptions.AccessError):

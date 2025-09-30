@@ -403,18 +403,18 @@ class TestAliasCompany(TestMailAliasCommon):
         archived company"""
 
         # add archived company to multi company setup
-        self.company_archived = self.env['res.company'].create({
+        company_archived = self.env['res.company'].create({
                 'country_id': self.env.ref('base.be').id,
                 'currency_id': self.env.ref('base.EUR').id,
                 'email': 'company_archived@test.example.com',
                 'name': 'Company Archived Test',
             })
-        self.company_archived.action_archive()
+        company_archived.action_archive()
 
         # create record inheriting from mail.thread to be used as owner/target thread
         test_record_archived_company = self.env['mail.test.simple.unfollow'].create({
                 'name': 'Test record (mail.thread) specific to archived company',
-                'company_id': self.company_archived.id,
+                'company_id': company_archived.id,
             })
 
         unfollow_model_id = self.env['ir.model']._get_id('mail.test.simple.unfollow')
@@ -454,7 +454,7 @@ class TestAliasCompany(TestMailAliasCommon):
                          'Parent thread has the wrong alias domain')
         self.assertEqual(mc_archived_target.alias_domain_id.id, mc_alias_domain.id,
                          'Target thread has the wrong alias domain')
-        self.assertEqual(self.company_archived.alias_domain_id.id, mc_alias_domain.id,
+        self.assertEqual(company_archived.alias_domain_id.id, mc_alias_domain.id,
                          'Archived company was attributed wrong alias domain')
 
     @mute_logger('odoo.models.unlink')
