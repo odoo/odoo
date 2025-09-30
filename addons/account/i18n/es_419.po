@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 14:42+0000\n"
-"PO-Revision-Date: 2025-09-27 02:30+0000\n"
+"PO-Revision-Date: 2025-09-29 22:33+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/account/es_419/>\n"
@@ -1987,7 +1987,7 @@ msgstr "<strong>Subtotal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>Suministro gravable</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2615,7 +2615,7 @@ msgstr "Asiento contable"
 #: model:ir.model.fields,field_description:account.field_account_move__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_group_codes
 msgid "Account Fiscal Country Group Codes"
-msgstr ""
+msgstr "Códigos de grupo fiscal por país de la cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -3066,7 +3066,7 @@ msgstr "Mapeo de cuentas de posición fiscal"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payable
 msgid "Accounts Payable"
-msgstr ""
+msgstr "Cuentas por pagar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -3082,12 +3082,12 @@ msgstr "Prefijos de las cuentas"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_receivable
 msgid "Accounts Receivable"
-msgstr ""
+msgstr "Cuentas por cobrar"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pos_receivable
 msgid "Accounts Receivable (PoS)"
-msgstr ""
+msgstr "Cuentas por cobrar (PdV)"
 
 #. module: account
 #. odoo-python
@@ -3141,7 +3141,7 @@ msgstr "Total devengado"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
 msgid "Accumulated Depreciation"
-msgstr ""
+msgstr "Depreciación acumulada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -3339,7 +3339,7 @@ msgstr "Agregar sección"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Add a subsection"
-msgstr ""
+msgstr "Agregar una subsección"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3426,7 +3426,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.2_account_account_us_administration_fees
 msgid "Administration Fees"
-msgstr ""
+msgstr "Gastos administrativos"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -3446,7 +3446,7 @@ msgstr "Ajustes avanzados"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_marketing
 msgid "Advertising & Marketing"
-msgstr ""
+msgstr "Anuncios y marketing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
@@ -3473,7 +3473,7 @@ msgstr "Atajo de fórmula de agregación"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_airfare
 msgid "Airfare"
-msgstr ""
+msgstr "Tarifa aérea"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__alerts
@@ -3525,26 +3525,32 @@ msgstr "Todos los diarios de banco y efectivo"
 msgid ""
 "All expenses made for your office or workplace that are not material goods"
 msgstr ""
+"Todos los gastos hechos para tu oficina o lugar de trabajo que no son bienes "
+"materiales"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
 msgid "All fees related to insurance taken in the context of your business"
 msgstr ""
+"Todos los gastos relacionados a seguro que se hacen dentro del contexto de "
+"tu empresa"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_social_security
 msgid "All fees related to social security contributions"
-msgstr ""
+msgstr "Todos los gastos relacionados a contribuciones al seguro social"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_fuel
 msgid "All fuel and gas expenses for a car/auto"
-msgstr ""
+msgstr "Todos los gastos de combustible para un vehículo"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_raw_materials
 msgid "All goods purchased as raw materials used by your activity"
 msgstr ""
+"Todos los bienes comprados como materias primas que se usan para tus "
+"actividades"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -3554,7 +3560,7 @@ msgstr "Todos los movimientos que tendrán un hash"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense
 msgid "All other uncategorized expenses"
-msgstr ""
+msgstr "Todos los otros gastos sin categorizar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -4204,7 +4210,7 @@ msgstr "Agosto"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_auto_insurance
 msgid "Auto Insurance"
-msgstr ""
+msgstr "Seguro de auto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4215,7 +4221,7 @@ msgstr "Autocompletar"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "Auto completar a partir de una factura o reembolso previo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4406,7 +4412,7 @@ msgstr "Balance"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__balance_negate
 msgid "Balance Negate"
-msgstr ""
+msgstr "Negar balance"
 
 #. module: account
 #. odoo-javascript
@@ -4504,7 +4510,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__l10n_us_bank_account_type
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Tipo de cuenta bancaria"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -4817,12 +4823,12 @@ msgstr "Facturas atrasadas"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_legal
 msgid "Bills from lawyers, fees paid to the justice system"
-msgstr ""
+msgstr "Facturas de abogados, cuotas pagadas al sistema judicial"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_accounting
 msgid "Bills from your bookkeeper or accounting firm"
-msgstr ""
+msgstr "Facturas de tu contador o firma contable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4900,7 +4906,7 @@ msgstr "Presupuestos"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_buildings
 msgid "Buildings"
-msgstr ""
+msgstr "Edificios"
 
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
@@ -4911,11 +4917,15 @@ msgstr "Mixin para importación de documentos comerciales"
 #: model:account.account,description:account.2_account_account_us_licenses
 msgid "Business licenses and permits that your company must pay to operate"
 msgstr ""
+"Licencias de empresas y permisos que tu empresa debe pagar para seguir "
+"funcionando"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_local_tax
 msgid "Business or income taxes owed to local or municipal governments"
 msgstr ""
+"Impuestos empresariales o sobre la renta que se pagan a gobiernos locales o "
+"municipales"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -5626,7 +5636,7 @@ msgstr "País del contacto comercial"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_common_stock
 msgid "Common Stock"
-msgstr ""
+msgstr "Acciones comunes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -5769,16 +5779,20 @@ msgstr "Empresa relacionada con este diario"
 msgid ""
 "Company's personnel costs excluding compensations, contributions and vouchers"
 msgstr ""
+"Costos personales de la empresa, no incluyendo compensaciones, "
+"contribuciones y vales"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_salaries
 msgid "Compensation paid to employees and workers employed by the company"
 msgstr ""
+"Compensación que se le paga a los empleados y trabajadores que contrata la "
+"empresa"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_general_subcontracting
 msgid "Compensation to external workers and consultants for services"
-msgstr ""
+msgstr "Compensación a trabajadores externos y consultores por sus servicios"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5798,7 +5812,7 @@ msgstr "Balance calculado"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_computers
 msgid "Computers"
-msgstr ""
+msgstr "Computadoras"
 
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
@@ -5856,7 +5870,7 @@ msgstr "Confirmarlos ahora"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/form_controller.js:0
 msgid "Confirmation Warning"
-msgstr ""
+msgstr "Confirmación de advertencia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5878,7 +5892,7 @@ msgstr "Considera pagar el %(btn_start)simporte completo%(btn_end)s."
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
-msgstr ""
+msgstr "Construcción de edificios y costos asociados a edificios"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -5913,7 +5927,7 @@ msgstr "Contenidos"
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_control_menu
 msgid "Control"
-msgstr ""
+msgstr "Control"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
@@ -5930,7 +5944,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Cost and Revenue"
-msgstr ""
+msgstr "Costos y ganancias"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5953,13 +5967,14 @@ msgstr "Costo de ingresos"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_equipment
 msgid "Cost of office furniture, fixtures, and business equipment"
-msgstr ""
+msgstr "Costo de muebles, arreglos y equipo empresarial para la oficina"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
 msgstr ""
+"Costos por enviar productos o materiales a clientes o recibir inventario."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_disposal_fees
@@ -5967,11 +5982,14 @@ msgid ""
 "Costs incurred for removal, disposal, or recycling of waste and obsolete "
 "materials"
 msgstr ""
+"Gastos incurridos para la remoción, desecho o reciclado de desperdicio o "
+"materiales obsoletos"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_marketing
 msgid "Costs related to promoting the business, such as ads, campaigns, etc"
 msgstr ""
+"Costos relacionados a la promoción del negocio, como anuncios, campañas, etc."
 
 #. module: account
 #. odoo-python
@@ -6760,6 +6778,8 @@ msgstr "Personaliza el diseño de tus documentos."
 #: model:account.account,description:account.2_account_account_us_import_fees
 msgid "Customs fees incurred while importing goods from outside of the US"
 msgstr ""
+"Tarifas de aduana en las que se incurren al importar bienes desde afuera de "
+"los EE. UU."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7039,7 +7059,7 @@ msgstr "Cuenta por cobrar predeterminada del PdV"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_fiscal_position_id
 msgid "Default Purchase Receipt Fiscal Position"
-msgstr ""
+msgstr "Posición fiscal predeterminada del recibo de compra"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -7134,7 +7154,7 @@ msgstr "Ingresos diferidos"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Define a default in the settings"
-msgstr ""
+msgstr "Define un valor predeterminado en los ajustes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7194,7 +7214,7 @@ msgstr "Tipo de atraso"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_shipping_id
@@ -7325,7 +7345,7 @@ msgstr "Firma de dirección"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disability_insurance
 msgid "Disability Insurance"
-msgstr ""
+msgstr "Seguro de incapacidad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__disable_merge_button
@@ -7437,7 +7457,7 @@ msgstr "Mostrar prefijo de la cuenta"
 #: model:ir.model.fields,field_description:account.field_res_company__display_account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_account_storno
 msgid "Display Account Storno"
-msgstr ""
+msgstr "Mostrar contabilidad Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
@@ -7461,8 +7481,9 @@ msgstr "Mostrar días en el próximo mes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_hash
+#, fuzzy
 msgid "Display Force Hash"
-msgstr ""
+msgstr "Mostrar forzar hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -7646,7 +7667,7 @@ msgstr "Mostrar el importe total de una factura con letra"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disposal_fees
 msgid "Disposal Fees"
-msgstr ""
+msgstr "Tarifas por desecho"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
@@ -7688,7 +7709,7 @@ msgstr "Distribución cuando el impuesto se utiliza en una factura"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_distributions
 msgid "Distributions"
-msgstr ""
+msgstr "Distribuciones"
 
 #. module: account
 #: model:account.account,name:account.1_dividends
@@ -7923,13 +7944,13 @@ msgstr "Términos a deber"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_subscriptions
 msgid "Dues & Subscriptions"
-msgstr ""
+msgstr "Cuotas y suscripciones"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
@@ -7968,6 +7989,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Durante la valuación perpetua esta cuenta retendrá la diferencia de precio "
+"entre el precio estándar y el precio de la factura de proveedor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -18281,7 +18304,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "The selected"
-msgstr ""
+msgstr "Lo seleccionado"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date

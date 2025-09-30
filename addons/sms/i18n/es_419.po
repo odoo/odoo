@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-27 02:30+0000\n"
+"PO-Revision-Date: 2025-09-29 19:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sms/es_419/>\n"
@@ -471,7 +471,7 @@ msgstr "Duplicar"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "Editar contactos"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -554,7 +554,7 @@ msgstr "Los siguientes números no están codificados correctamente: %s"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
 msgid "Has Insufficient Credit"
-msgstr ""
+msgstr "Tiene crédito insuficiente"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
@@ -896,12 +896,12 @@ msgstr "Número de errores"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Número de mensajes que requieren una acción"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Número de mensajes con error de envío"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -994,12 +994,12 @@ msgstr "Poner en la cola"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Calificaciones"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Reason"
-msgstr ""
+msgstr "Motivo"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1010,7 +1010,7 @@ msgstr "Destinatario"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 msgid "Recipient Name"
-msgstr ""
+msgstr "Nombre del destinatario"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
@@ -1020,7 +1020,7 @@ msgstr "Número del destinatario"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Destinatarios"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
@@ -1091,7 +1091,7 @@ msgstr "Reenviar"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
 msgid "Resend Notification"
-msgstr ""
+msgstr "Reenviar notificación"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
@@ -1217,7 +1217,7 @@ msgstr "Precio SMS"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
 msgid "SMS Resend"
-msgstr ""
+msgstr "Reenviar SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
@@ -1304,7 +1304,7 @@ msgstr "Buscar plantillas SMS"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "Enviar y cerrar"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1380,7 +1380,7 @@ msgstr "Nombre del remitente"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
-msgstr ""
+msgstr "Errores de envío"
 
 #. module: sms
 #. odoo-python
@@ -1444,7 +1444,7 @@ msgstr "Omitir por ahora"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
-msgstr ""
+msgstr "Reenviar SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
@@ -1576,7 +1576,7 @@ msgstr "Este número de teléfono o cuenta tiene prohibido usar nuestro servicio
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Vuelve a intentarlo"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1600,6 +1600,20 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Tipo de acción del servidor. Los valores disponibles son:\n"
+"- \"Actualizar un registro\": actualiza los valores de un registro \n"
+"- \"Crear actividad\": crea una actividad (Conversaciones) \n"
+"- \"Enviar correo electrónico\"': registra un mensaje, una nota o envía un "
+"correo electrónico (Conversaciones) \n"
+"- \"Enviar SMS\": envía SMS y los registra en los documentos (SMS) - "
+"\"Agregar o eliminar seguidores\": agrega o elimina seguidores de un "
+"registro (Conversaciones) \n"
+"- \"Crear registro\": crea un nuevo registro con nuevos valores \n"
+"- \"Ejecutar código\": ejecuta un bloque de código Python \n"
+"- \"Enviar notificación webhook\": envía una solicitud POST a un sistema "
+"externo, también conocido como webhook \n"
+"- \"Ejecutar acciones existentes\": define una acción que activa otras "
+"acciones del servidor\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

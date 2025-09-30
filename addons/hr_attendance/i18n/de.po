@@ -7,13 +7,14 @@
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2022
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-16 04:39+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "hr_attendance/de/>\n"
 "Language: de\n"
@@ -33,7 +34,7 @@ msgstr "Die „Abmelden“-Zeit kann nicht vor der „Anmelden“-Zeit liegen."
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
 msgid "%(nb_hours)d h / %(period)s"
-msgstr ""
+msgstr "%(nb_hours)d St. / %(period)s"
 
 #. module: hr_attendance
 #. odoo-python
@@ -45,13 +46,13 @@ msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Buy an RFID Device'"
-msgstr ""
+msgstr "„Ein RFID-Geräte kaufen“"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Read the Documentation'"
-msgstr ""
+msgstr "„Mehr Informationen in der Dokumentation“"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -93,6 +94,9 @@ msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
 "in ['work_days', 'non_work_days']\">Beetween</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible="
+"\"base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']\""
+">Zwischen</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -132,6 +136,9 @@ msgid ""
 "                                Monthly Hours\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Monatliche Stunden\n"
+"                            </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -140,6 +147,9 @@ msgid ""
 "                            Monthly Hours\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Monatliche Stunden\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -147,6 +157,8 @@ msgid ""
 "<span colspan=\"2\" class=\"mb-3 fw-bold\">The hours will be considered "
 "extra and submitted to approval.</span>"
 msgstr ""
+"<span colspan=\"2\" class=\"mb-3 fw-bold\">Die Stunden werden als "
+"Überstunden betrachtet und zur Genehmigung eingereicht.</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -174,7 +186,7 @@ msgstr "Abwesend"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "Action"
-msgstr ""
+msgstr "Aktion"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
@@ -184,7 +196,7 @@ msgstr "Aktion notwendig"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__active
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -250,11 +262,14 @@ msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
 msgstr ""
+"Ermöglichen Sie die Erfassung von GPS-Standortdaten, IP-Adressen und "
+"Browser-/Gerätedaten, die zur Nachverfolgung des Zugriffs und der "
+"Anwesenheit von Mitarbeitern verwendet werden."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
 msgid "Applied Rules"
-msgstr ""
+msgstr "Angewendete Regeln"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -271,6 +286,7 @@ msgstr "Überstunden genehmigen"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Approve all overtimes for the same employee and date"
 msgstr ""
+"Alle Überstunden für denselben Mitarbeiter und dasselbe Datum genehmigen"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
@@ -287,7 +303,7 @@ msgstr "Durch Manager genehmigt"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archiviert"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -303,7 +319,7 @@ msgstr "Auf der Arbeit"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 msgid "At least one rule"
-msgstr ""
+msgstr "Mindestens eine Regel"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -458,13 +474,13 @@ msgstr "Rückkamera"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Badge assigned successfully!"
-msgstr ""
+msgstr "Ausweis erfolgreich zugewiesen!"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
 msgid "Badge updated: "
-msgstr ""
+msgstr "Ausweis aktualisiert: "
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -916,7 +932,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Employee name is required."
-msgstr ""
+msgstr "Name des Mitarbeiters ist erforderlich."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban

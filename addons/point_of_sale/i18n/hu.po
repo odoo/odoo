@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
+# * point_of_sale
 #
 # Translators:
 # A . <tiboreu@protonmail.com>, 2022
@@ -17,20 +17,22 @@
 # gezza <geza.nagy@oregional.hu>, 2023
 # Martin Trigaux, 2023
 # Szabolcs Rádi, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Szabolcs Rádi, 2023\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"point_of_sale/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -42,6 +44,11 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Ez a probléma azért jelentkezik, mert a konverzió során a mennyiség "
+"kerekítés után nullává válik. A probléma megoldásához módosítsa a konverziós "
+"tényezőket vagy a kerekítési módszert úgy, hogy az eredeti egységben "
+"szereplő legkisebb mennyiség sem kerekítődjön nullára a célegységben."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -53,25 +60,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - \"%(uom_from)s\"-től \"%(uom_to)s\"-ig"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
-msgstr ""
+msgstr "% Kedv"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s POS kiválasztása"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(name)s REFUND"
-msgstr ""
+msgstr "%(name)s VISSZATÉRÍTÉS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -79,36 +86,38 @@ msgstr ""
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
+"%(old_pm)s megváltozott %(new_pm)s-re, és %(old_amount)s-ről "
+"%(new_amount)s-re"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
-msgstr ""
+msgstr "%(old_pm)s megváltozott %(new_pm)s-re %(old_amount)s összeghez"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr ""
+msgstr "%(payment_method)s POS fizetés %(partner)s részéről %(session)s-ben"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: Törölt sor (mennyiség: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Ordered quantity: %(old_qty)s"
-msgstr ""
+msgstr "%(product_name)s: Megrendelt mennyiség: %(old_qty)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
-msgstr ""
+msgstr "%(refunded_order)s VISSZATÉRÍTÉSE"
 
 #. module: point_of_sale
 #. odoo-python
@@ -120,7 +129,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.js:0
 msgid "%(vatLabel)s: %(vatId)s"
-msgstr ""
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -195,7 +204,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -366,7 +375,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kassza</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -388,7 +397,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>Egyenleg</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -453,7 +462,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Opening of session note:</strong>"
-msgstr ""
+msgstr "<strong>Munkamenet nyitás megjegyzés:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
@@ -463,7 +472,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Összesen</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -582,12 +591,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Access Denied"
-msgstr ""
+msgstr "Hozzáférés megtagadva"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "Hozzáférési token"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -596,18 +605,19 @@ msgstr "Hozzáférés figyelmeztetés"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
+#, fuzzy
 msgid "Account"
-msgstr "Számla"
+msgstr "Főkönyvi számla"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Számla Készpénz Kerekítés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
 msgid "Account Move"
-msgstr "Főkönyvi mozgás"
+msgstr "Főkönyvi tétel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
@@ -624,6 +634,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
+#, fuzzy
 msgid "Accounting"
 msgstr "Könyvelés"
 
@@ -658,7 +669,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Actions"
-msgstr ""
+msgstr "Műveletek"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -693,7 +704,7 @@ msgstr "Tevékenység kivétel dekoráció"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
 msgid "Activity State"
-msgstr "Tevékenység állapota"
+msgstr "Tevékenység állapot"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
@@ -722,7 +733,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Add Tip"
-msgstr "Borravaló hozzáadás"
+msgstr "Borravaló hozzáadása"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
@@ -736,7 +747,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Add a closing note..."
-msgstr ""
+msgstr "Záró megjegyzés hozzáadása..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -768,7 +779,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Add an opening note..."
-msgstr ""
+msgstr "Nyitási megjegyzés hozzáadása"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -936,7 +947,7 @@ msgstr "Összeg"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid "Amount Authorized Difference"
-msgstr "Mennyiség jogos eltérése"
+msgstr "Jóváhagyott eltérés összege"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -965,7 +976,7 @@ msgstr "Végösszeg"
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "Amount:"
-msgstr ""
+msgstr "Összeg:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1013,7 +1024,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
-msgstr ""
+msgstr "A nyomtató belső azonosítója"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
@@ -1053,7 +1064,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Alkalmazás"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1139,6 +1150,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
+#, fuzzy
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
 "Automatikusan generált szakasz árva megrendeléseknek, elutasítva a "
@@ -1147,7 +1159,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__automatic
 msgid "Automatic"
-msgstr ""
+msgstr "Automatikus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__fiscal_position_id
@@ -1159,7 +1171,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr "Automatikus bizonylat nyugta nyomtatás"
+msgstr "Automatikus nyugta nyomtatás"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
@@ -1232,7 +1244,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__available_in_pos
 msgid "Available in POS"
-msgstr "Elérhető az Értékesítési pontban"
+msgstr "Elérhető a POS-ban"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
@@ -1250,7 +1262,7 @@ msgstr "Vissza"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
-msgstr ""
+msgstr "Kezelőfelület"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1262,7 +1274,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img
 msgid "Background Image"
-msgstr ""
+msgstr "Háttér kép"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img_name
@@ -1273,7 +1285,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Badge ID"
-msgstr ""
+msgstr "Névkártya ID"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_bagel_product_template
@@ -1310,7 +1322,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankkivonat tételsor"
+msgstr "Bankkivonat sor"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1365,8 +1377,9 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
+#, fuzzy
 msgid "Bills"
-msgstr "Számlák"
+msgstr "Bankjegy"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1395,12 +1408,17 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift "
 "Card, Loyalty. Specific conditions can be set (products, customers, minimum "
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Értékesítés növelés különféle programokkal: kuponok, promóciók, "
+"ajándékkártyák, hűségkártyák. Egyedi feltételeket lehet beállítani ("
+"termékek, vevők, minimális vásárlási összeg, időszak). A jutalom lehet "
+"kedvezmény (%or összeg), illetve ingyenes termék is."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -1467,20 +1485,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_make_invoice
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.actions.server,name:point_of_sale.pos_order_set_cancel
 msgid "Cancel Order"
-msgstr ""
+msgstr "Rendelés törlése"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Cancel Orders"
-msgstr ""
+msgstr "Rendelések törlése"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1499,7 +1517,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__cancel
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Cancelled"
-msgstr "Törölve"
+msgstr "Visszavont"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1511,7 +1529,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Cannot return change without a cash payment method"
-msgstr "Nem tud visszaadni készpénz fizetési mód nélkül"
+msgstr "Nem tud visszajárót adni készpénzes fizetési mód nélkül"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1534,7 +1552,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
-msgstr ""
+msgstr "Kártya"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_no
@@ -1604,7 +1622,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
-msgstr ""
+msgstr "Készpénz jegyzék"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1629,7 +1647,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
-msgstr ""
+msgstr "KP be/ki"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
@@ -1650,7 +1668,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 msgid "Cash Opening"
-msgstr ""
+msgstr "Készpénz nyitás"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1662,7 +1680,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
-msgstr ""
+msgstr "Készpénzes kerekítés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
@@ -1672,7 +1690,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr ""
+msgstr "Készpénz kerekítések"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1684,7 +1702,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 msgid "Cash control - opening"
-msgstr ""
+msgstr "Kp ellenőrzés - nyitás"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1714,7 +1732,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
 msgid "Cash in/out of %s is ignored."
-msgstr ""
+msgstr "A %s-be történő kp be/kifizetés figyelmen kívül marad."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1732,7 +1750,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash register"
-msgstr ""
+msgstr "Kassza"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
@@ -1746,7 +1764,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cashdrawer"
-msgstr "Készpénz fiók"
+msgstr "Pénztár fiók"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -1787,11 +1805,12 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
+#, fuzzy
 msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
-"Kategóriákat a termékei képernyőn interfészen keresztüli böngészésére  \n"
+"Kategóriákat a termékek képernyőn interfészen keresztüli böngészésére  \n"
 "                használja."
 
 #. module: point_of_sale
@@ -1805,7 +1824,7 @@ msgstr "Kategória"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__name
 msgid "Category Name"
-msgstr "Kategórianév"
+msgstr "Kategória neve"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_categ_ids
@@ -1824,11 +1843,12 @@ msgstr "Székek"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Change"
-msgstr "Megváltoztatni"
+msgstr "Visszajáró"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#, fuzzy
 msgid "Change Tip"
 msgstr "Borravaló aprópénz"
 
@@ -1855,7 +1875,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr "Ellenőrizze a készpénzkazetta összegét a nyitásnál és zárásnál."
+msgstr "Ellenőrizze a pénztárfiók összegét a nyitásnál és zárásnál."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1976,7 +1996,7 @@ msgstr "Bezárás"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
-msgstr ""
+msgstr "Kassza zárás"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -2008,7 +2028,7 @@ msgstr "Lezárt & könyvelésre feladott"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "Lezárt kassza"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
@@ -2037,13 +2057,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_notes
 msgid "Closing Notes"
-msgstr ""
+msgstr "Záró megjegyzés"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
-msgstr ""
+msgstr "Kassza zárása folyamatban"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2061,7 +2081,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing note"
-msgstr ""
+msgstr "Záró megjegyzés"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2073,7 +2093,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Clothes"
-msgstr ""
+msgstr "Ruhák"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2094,13 +2114,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_bill_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
 msgid "Coins/Bills"
-msgstr ""
+msgstr "Érmék/Bankjegyek"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 msgid "Coins/Notes"
-msgstr ""
+msgstr "Érmék/Bankjegyek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__color
@@ -2109,13 +2129,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "Color"
-msgstr ""
+msgstr "Szín"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__color
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__color
 msgid "Color Index"
-msgstr ""
+msgstr "Szín index"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2126,17 +2146,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
 msgid "Combo"
-msgstr ""
+msgstr "Kombó"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_product_combo
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombó választások"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Kombó tétel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
@@ -2174,7 +2194,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -2351,7 +2371,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Count"
-msgstr ""
+msgstr "Darab"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
@@ -2378,12 +2398,12 @@ msgstr "Ország"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Országkód"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country_state
 msgid "Country state"
-msgstr ""
+msgstr "Állam/megye"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.cozy_sweater_product_template
@@ -2555,7 +2575,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Egyéni értékek"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2577,7 +2597,7 @@ msgstr "Ügyfél"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__pay_later
 msgid "Customer Account"
-msgstr "Ügyfélfiók"
+msgstr "Vevő fiók"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2607,7 +2627,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Customer Note"
-msgstr ""
+msgstr "Ügyfélnek megjegyzés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
@@ -2649,18 +2669,18 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
 msgid "Customers"
-msgstr "Ügyfelek"
+msgstr "Vevők"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Daily Sale"
-msgstr ""
+msgstr "Napi értékesítés"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Daily Sales Report"
-msgstr ""
+msgstr "Napi értékesítési riport"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
@@ -2696,7 +2716,7 @@ msgstr "nap"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_decimal_precision
 msgid "Decimal Precision"
-msgstr ""
+msgstr "Tizedes pontosság"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2797,7 +2817,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr ""
+msgstr "Határozza meg a készpénzes fizetéshez használt valuta legkisebb érméjét"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -2884,7 +2904,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Details"
-msgstr ""
+msgstr "Részletek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_sequence
@@ -2991,7 +3011,7 @@ msgstr "Kedvezmény megjegyzések"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 msgid "Discount:"
-msgstr "Árengedmény:"
+msgstr "Kedvezmény:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__discount
@@ -3108,7 +3128,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Nincs hozzáférés, adat kihagyása a felhasználó kivonat e-mailjéből"
+msgstr "Nincs hozzáférés, adat kihagyása a felhasználó kivonat emailjéből"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3181,7 +3201,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_edited
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__is_edited
 msgid "Edited"
-msgstr ""
+msgstr "Szerkesztve"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3200,13 +3220,13 @@ msgstr "Elektronikus mérleg"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__email
 msgid "Email"
-msgstr "E-mail"
+msgstr "Email"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__user_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__user_id
 msgid "Employee"
-msgstr ""
+msgstr "Munkavállaló"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
@@ -3249,7 +3269,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
 msgid "End Date"
-msgstr "Záródátum"
+msgstr "Befejező dátum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
@@ -3412,7 +3432,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fiscal Positions"
-msgstr "Költségvetési pozíciók"
+msgstr "Pénzügyi pozíciók"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__fiscal_position_id
@@ -3533,7 +3553,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid "Free"
-msgstr ""
+msgstr "Szabad"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3578,7 +3598,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Furniture"
-msgstr ""
+msgstr "Bútor"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3624,7 +3644,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/back_button/back_button.xml:0
 msgid "Go Back"
-msgstr ""
+msgstr "Visszatérés"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3658,7 +3678,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP irányítás"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3830,7 +3850,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3884,6 +3904,8 @@ msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
 "this field."
 msgstr ""
+"Ha ez a rendelési sor visszatérítés, akkor a visszatérített rendelési sor "
+"ebben a mezőben kerül megadásra."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4024,7 +4046,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__internal_note
 msgid "Internal Note"
-msgstr ""
+msgstr "Belső jegyzet"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4053,7 +4075,7 @@ msgstr "Készlet"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Inventory Management"
-msgstr "Raktárkészlet szervezés"
+msgstr "Készletkezelés"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4259,13 +4281,13 @@ msgstr "Könyvelési tétel"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Könyvelési tételsor"
+msgstr "Könyvelési tétel"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Journal Items"
-msgstr "Könyvelési tételsorok"
+msgstr "Könyvelési tételek"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4292,7 +4314,7 @@ msgstr "Felirat"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_lang
 msgid "Languages"
-msgstr ""
+msgstr "Nyelvek"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -4362,7 +4384,7 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_data_change
@@ -4622,12 +4644,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
 msgid "Manual"
-msgstr ""
+msgstr "Manuális"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin
@@ -4640,7 +4662,7 @@ msgstr "Árrés"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin_percent
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin_percent
 msgid "Margin (%)"
-msgstr ""
+msgstr "Árrés (%)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4716,7 +4738,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
-msgstr ""
+msgstr "Egyebek"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4732,7 +4754,7 @@ msgstr "Mobil"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_module_module
 msgid "Module"
-msgstr ""
+msgstr "Modul"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -4786,7 +4808,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "N/A"
-msgstr ""
+msgstr "Nem elérhető"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4865,7 +4887,7 @@ msgstr "Új megrendelés"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_add_pos
 msgid "New Product"
-msgstr ""
+msgstr "Új termék"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4891,7 +4913,7 @@ msgstr "Következő tevékenység határideje"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_summary
 msgid "Next Activity Summary"
-msgstr "Következő tevékenység összegzés"
+msgstr "Következő tevékenység összegzése"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_id
@@ -4970,7 +4992,7 @@ msgstr ""
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
-"Nem található pénz kivonat ebben a  értékesítési folyamatban. Nem lehet "
+"Nem található pénz kivonat ebben az értékesítési folyamatban. Nem lehet "
 "rögzíteni a pénzvisszatérítést."
 
 #. module: point_of_sale
@@ -5075,7 +5097,7 @@ msgstr "Nómenklatúra"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Cancelled"
-msgstr ""
+msgstr "Nem visszavont"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5130,7 +5152,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction_counter
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Műveletek száma"
+msgstr "Akciók száma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
@@ -5140,7 +5162,7 @@ msgstr "Nyomtatás száma"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of Refund Orders"
-msgstr ""
+msgstr "Visszatérítési megrendelések száma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
@@ -5161,13 +5183,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr ""
+msgstr "A megrendelés sorában visszatérített tételek száma."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction_counter
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_has_error_counter
@@ -5179,6 +5201,8 @@ msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of orders where items from this order were refunded"
 msgstr ""
+"Azok a megrendelések száma, amelyekben a megrendelés tételei visszatérítésre "
+"kerültek"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -5256,6 +5280,8 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
+"Ezen a visszatérítési soron csak negatív mennyiség megadható. Kattintson a "
+"+/- gombra a visszatérítendő mennyiség módosításához."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5319,7 +5345,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Open Register"
-msgstr ""
+msgstr "Kassza nyitás"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5348,13 +5374,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Opening"
-msgstr ""
+msgstr "Nyitás"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening Balance Eg: 123"
-msgstr ""
+msgstr "Nyitó egyenleg pl: 43.000"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5373,31 +5399,31 @@ msgstr "Nyitó dátum"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_notes
 msgid "Opening Notes"
-msgstr ""
+msgstr "Nyitó megjegyzés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Opening balance summed to all cash transactions."
-msgstr ""
+msgstr "A nyitóegyenleg az összes készpénzes tranzakció összegével együtt."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
-msgstr ""
+msgstr "Nyitó készpénz"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr ""
+msgstr "Nyitó ellenőrző üzenet: "
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening note"
-msgstr ""
+msgstr "Nyitó megjegyzés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -5457,14 +5483,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
 msgid "Order Count"
-msgstr "Rendelés száma"
+msgstr "Rendelések száma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__date
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Date"
-msgstr "Rendelés dátuma"
+msgstr "Megrendelés dátuma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_line_seq_id
@@ -5484,7 +5510,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tracking_number
 msgid "Order Number"
-msgstr ""
+msgstr "Rendelés száma"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5501,7 +5527,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__printer_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_printer_ids
 msgid "Order Printers"
-msgstr ""
+msgstr "Rendelés nyomtatók"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -5520,6 +5546,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refunded_order_id
 msgid "Order from which items were refunded in this order"
 msgstr ""
+"A megrendelés, amelyből az áruk visszatérítésre kerültek ebben a rendelésben"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5535,6 +5562,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
+"Az ebben a mezőben szereplő sorok azok a sorok, amelyek ezt a megrendelést "
+"visszatérítették."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5608,7 +5637,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr ""
+msgstr "Kiemelkedő számla"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
@@ -5657,7 +5686,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
 msgid "POS Printer"
-msgstr ""
+msgstr "POS kassza nyomtató"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
@@ -5820,7 +5849,7 @@ msgstr "Fizetési hivatkozás"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_status
 msgid "Payment Status"
-msgstr ""
+msgstr "Fizetés állapota"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5891,7 +5920,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Payments"
-msgstr "Vevői befizetések"
+msgstr "Fizetések"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6205,7 +6234,7 @@ msgstr "Értékesítési pont beállítás"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr "Értékesítési pont beállítása"
+msgstr "Értékesítési pont konfiguráció"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_daily_sales_reports_wizard
@@ -6292,7 +6321,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "Értékesítési Pont Értékesítési folyamat"
+msgstr "Értékesítési pont munkamenet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -6373,7 +6402,7 @@ msgstr "Értékesítési pont termék kategóriák"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr ""
+msgstr "Pos Visszatérített számla"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
@@ -6423,14 +6452,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__done
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Posted"
-msgstr "Beküldött"
+msgstr "Könyvelt"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Powered by"
-msgstr ""
+msgstr "Működteti"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6506,7 +6535,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_type
 msgid "Price Type"
-msgstr ""
+msgstr "Ár típus"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6555,7 +6584,7 @@ msgstr "Árlista"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Árlista szabály"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_pricelist
@@ -6610,7 +6639,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Print Receipt"
-msgstr "Átvétel nyomtatása"
+msgstr "Nyugta (újra) nyomtatása"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6659,7 +6688,7 @@ msgstr "Nyomtatás proxy-n keresztül"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__product_categories_ids
 msgid "Printed Product Categories"
-msgstr ""
+msgstr "Kinyomtatott termék kategóriák"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6670,12 +6699,12 @@ msgstr "Nyomtató"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__name
 msgid "Printer Name"
-msgstr ""
+msgstr "Nyomtatónév"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "Nyomtató típusa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6686,7 +6715,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Printers"
-msgstr ""
+msgstr "Nyomtatók"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6725,12 +6754,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "Terméktulajdonság"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Egyéni terméktulajdonság érték"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_category
@@ -6742,7 +6771,7 @@ msgstr "Termék kategória"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Termék kombó"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_combo_item
@@ -6795,7 +6824,7 @@ msgstr "Termékmennyiség"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_tag
 msgid "Product Tag"
-msgstr ""
+msgstr "Termék címke"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_tag_action
@@ -6815,7 +6844,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Terméksablon tulajdonság sor"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_value
@@ -6890,7 +6919,7 @@ msgstr "Proxy leválasztva"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
 msgid "Proxy IP Address"
-msgstr ""
+msgstr "Proxy IP cím"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6913,7 +6942,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "QR kód"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__qr_code_method
@@ -6951,7 +6980,7 @@ msgstr "Mennyiség"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Quantity:"
-msgstr ""
+msgstr "Mennyiség:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6969,13 +6998,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 msgid "REFUNDED:"
-msgstr ""
+msgstr "VISSZATÉRÍTETT:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Értékelések"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7003,7 +7032,7 @@ msgstr "Ok"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Receipt"
-msgstr "Számla"
+msgstr "Beszállítás"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7108,13 +7137,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Refund Order Lines"
-msgstr ""
+msgstr "Visszatérítési sorok"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Refund Orders"
-msgstr ""
+msgstr "Visszatérítési rendelések"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7132,35 +7161,35 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refunded"
-msgstr ""
+msgstr "Visszatérített"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_id
 msgid "Refunded Order"
-msgstr ""
+msgstr "Visszatérített rendelés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr ""
+msgstr "Visszatérített rendelés sorok"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Refunded Orders"
-msgstr ""
+msgstr "Visszatérített rendelések"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Refunded Quantity"
-msgstr ""
+msgstr "Visszatérített mennyiség"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refunding"
-msgstr ""
+msgstr "Visszatérítés"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -7178,7 +7207,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Related Session: %(link)s"
-msgstr ""
+msgstr "Kapcsolódó munkamenet: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7190,7 +7219,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
-msgstr ""
+msgstr "POS menü újratöltése"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7231,7 +7260,7 @@ msgstr "Kimutatás"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Reprint Invoice"
-msgstr ""
+msgstr "Számla újranyomtatás"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -7264,7 +7293,7 @@ msgstr "Felelős felhasználó"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Restaurant"
-msgstr ""
+msgstr "Étterem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
@@ -7331,7 +7360,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Reversal of: %s"
-msgstr ""
+msgstr "Visszafordítása ennek: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7437,7 +7466,7 @@ msgstr "Értékesítési sor"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
-msgstr ""
+msgstr "Értékesítés"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -7457,7 +7486,7 @@ msgstr "Kimenő számla napló"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sample Closing Note"
-msgstr ""
+msgstr "Záró megjegyzés minta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -7467,7 +7496,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sample Opening Note"
-msgstr ""
+msgstr "Nyitó megjegyzés minta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -7478,7 +7507,7 @@ msgstr "Mentés"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
+msgstr "Mentse el ezt az oldalt, és térjen vissza ide a funkció beállításához"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7496,7 +7525,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Scan"
-msgstr "Leolvas"
+msgstr "Szkennelés"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7515,7 +7544,7 @@ msgstr "Leolvasás proxyn keresztül"
 #: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Scanner"
-msgstr "Leolvasó"
+msgstr "Szkennelő"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -7531,13 +7560,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Search Customers..."
-msgstr ""
+msgstr "Ügyfél kereső…"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Search Orders..."
-msgstr ""
+msgstr "Rendelés kereső…"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7548,19 +7577,19 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
-msgstr "Értékesítési rendelés keresése"
+msgstr "Vevői rendelés keresése"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Search more"
-msgstr ""
+msgstr "További keresés"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Search products..."
-msgstr ""
+msgstr "Termék keresés…"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -7659,7 +7688,7 @@ msgstr "Küldés"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: model:ir.actions.server,name:point_of_sale.model_pos_order_send_mail
 msgid "Send Email"
-msgstr ""
+msgstr "E-mail küldés"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7682,7 +7711,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "Elküldés"
 
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
@@ -8049,7 +8078,7 @@ msgstr "Kezdődátum"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.js:0
 msgid "Start adding products"
-msgstr ""
+msgstr "Kezdje el hozzáadni a termékeket"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -8063,7 +8092,7 @@ msgstr "Nyitó egyenleg"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Status"
-msgstr "Állapot"
+msgstr "Státusz"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_state
@@ -8103,7 +8132,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop"
-msgstr ""
+msgstr "Leállítás"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8232,12 +8261,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Tax Excl."
-msgstr ""
+msgstr "Adó nélkül"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_tax_group
 msgid "Tax Group"
-msgstr ""
+msgstr "Adó csoport"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8248,12 +8277,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
-msgstr ""
+msgstr "Adóval"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Tax Name"
-msgstr ""
+msgstr "Adó megnevezése"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
@@ -8355,7 +8384,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr ""
+msgstr "Az IP cím vagy a nyomtató hardver proxy kiszolgáló neve"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__country_code
@@ -8363,6 +8392,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"Kétbetűs ISO országkód.\n"
+"Ezt a mezőt a gyors kereséshez használhatja."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8418,7 +8449,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "A hitelkártya márkája (pl. Visa, AMEX, ...)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8551,7 +8582,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_bill.py:0
 msgid "The name of the Coins/Bills must be a number."
-msgstr ""
+msgstr "Érmék/Bankjegyek neve egy szám kell hogy legyen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
@@ -8691,20 +8722,22 @@ msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
 msgstr ""
+"A visszatérítés mennyisége meghaladja a megrendelt mennyiséget. %s "
+"visszatérítést kértek, míg csak %s téríthető vissza."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity."
-msgstr ""
+msgstr "A visszatérítés mennyisége meghaladja a visszatéríthető mennyiséget."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "A kiválasztott ügyfélnek szükséges, hogy címe legyen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8713,6 +8746,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"A kiválasztott árlisták nem lehet semmilyen vállalaté, sem az értékesítési "
+"hely vállalatáé."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8728,6 +8763,9 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"A munkamenetet egy másik felhasználó már lezárta. Az időközben befejezett "
+"összes értékesítés egy mentési munkamenetben lett elmentve, amely bármikor "
+"megtekinthető és a POS-panelről könyvelésre továbbítható."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8735,12 +8773,14 @@ msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
 msgstr ""
+"A munkamenet szokatlanul hosszú ideig nyitva van. Kérjük, fontolja meg a "
+"bezárását."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "The session is being closed by another user. The page will be reloaded."
-msgstr ""
+msgstr "A munkamenetet egy másik felhasználó zárja le. Az oldal újratöltődik."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8763,6 +8803,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"A tranzakciókat az Adyen dolgozza fel. Állítsa be Adyen hitelesítő adatait a "
+"vonatkozó fizetési módnál."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8825,7 +8867,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
 msgid "The type of the payment card (e.g. CREDIT CARD OR DEBIT CARD)"
-msgstr ""
+msgstr "A fizetési kártya típusa (pl. HITELKÁRTYA VAGY BETÉTI KÁRTYA)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -8836,7 +8878,7 @@ msgstr "Elméleti záró egyenleg"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "There are no products in this category."
-msgstr ""
+msgstr "Nincs termék ebben a kategóriában."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8846,6 +8888,9 @@ msgid ""
 "following orders to validate the session:\n"
 "%s"
 msgstr ""
+"A munkamenetben még vannak tervezet állapotú megrendelések. A munkamenet "
+"érvényesítéséhez fizesse ki vagy törölje a következő megrendeléseket:\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8854,12 +8899,14 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
+"A könyvelendő összegek és a megrendelések összegei között eltérés van, ami "
+"valószínűleg adók vagy számviteli beállítások változásai miatt alakult ki."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "Már folyamatban van egy elektronikus fizetés."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -8868,6 +8915,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"A vállalatnál nincs beállítva számlatükör. Kérjük, lépjen a számlázási "
+"beállításokhoz, hogy telepítsen egy számlatükröt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8889,13 +8938,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash payment method for this PoS Session"
-msgstr ""
+msgstr "Ehhez a PoS munkamenethez nincs készpénzes fizetési mód."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash register in this session."
-msgstr ""
+msgstr "Ebben a munkamenetben nincs pénztárgép."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8904,6 +8953,8 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
+"A kiválasztott terméknek nincs sorozatszáma/tételszáma, és ezek létrehozása "
+"a Point of Sale alkalmazásból nem engedélyezett."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8912,6 +8963,8 @@ msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
 msgstr ""
+"A megrendelés érvényesítéséhez és számlázásához legalább egy terméknek "
+"szerepelnie kell a megrendelésben."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
@@ -8934,6 +8987,9 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
+"Ez a készpénzes fizetési mód már használatban van egy másik értékesítési "
+"ponton.\n"
+"Ehhez az értékesítési ponthoz új készpénzes fizetési módot kell létrehozni."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -8956,6 +9012,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"Ez a mező arra szolgál, hogy a POS-kezelő csoport azonosítóját továbbítsa az "
+"értékesítési pont kliensének."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -8976,6 +9034,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
 "specific tax rates."
 msgstr ""
+"Ez hasznos azoknak az éttermeknek, amelyek helyszíni és elvitelre szóló "
+"szolgáltatásokat nyújtanak, amelyekre külön adókulcsok vonatkoznak."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8983,6 +9043,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
+"Ez a napló egy fizetési módhoz van társítva. A típusát nem lehet módosítani."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8991,6 +9052,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
+"Ez a napló a %(payment_method)s fizetési módhoz kapcsolódik, amelyet a "
+"%(pos_order)s megrendelés használ az aktív %(pos_session)s POS-munkamenetben."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9011,6 +9074,9 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
+"Ez a megrendelés már tartalmaz visszatérítési sorokat a %s számára. Nem "
+"módosíthatjuk a hozzá tartozó ügyfelet. Készítsen új megrendelést az új "
+"ügyfél számára."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9018,6 +9084,8 @@ msgstr ""
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
 msgstr ""
+"Ez a megrendelés már kifizetésre került. Nem állíthatja vissza tervezeti "
+"állapotba, és nem szerkesztheti."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9026,34 +9094,36 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Ez a megrendelés még nem szinkronizálódott a szerverrel. Győződjön meg róla, "
+"hogy szinkronizálva van, majd próbálja meg újra."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "Ez a fizetési mód nem alkalmas QR-kódok generálására."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This product is used as reference on customer receipts."
-msgstr ""
+msgstr "Ez a termék hivatkozásként szerepel az ügyfelek nyugtáin."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "This session is already closed."
-msgstr ""
+msgstr "Ez a munkamenet már lezárult."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
-msgstr ""
+msgstr "Ez az adó minden új, a katalógusban szereplő termékre vonatkozik."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Those settings are common to all PoS."
-msgstr ""
+msgstr "Ezek a beállítások minden PoS-ra érvényesek."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9127,7 +9197,7 @@ msgstr "Fizetendő"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "To Refund:"
-msgstr ""
+msgstr "Visszatérítés:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
@@ -9220,7 +9290,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Teljes kifizetések összege"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -9272,7 +9342,7 @@ msgstr "Összesen:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "Összesen: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_edit_tracking
@@ -9302,7 +9372,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
 msgid "Transfer"
-msgstr "Szállítás"
+msgstr "Átmozgatás"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9345,7 +9415,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__url
 msgid "URL"
-msgstr ""
+msgstr "Webcím"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9407,7 +9477,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Unit"
-msgstr ""
+msgstr "Egység"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -9639,7 +9709,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
-msgstr ""
+msgstr "Figyelmeztetés"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9652,13 +9722,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
-msgstr "Honlap üzenetek"
+msgstr "Weboldal üzenetek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr "Weboldali kommunikációs előzmények"
+msgstr "Weboldal kommunikációs előzmények"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9779,7 +9849,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You can only refund products from the same order."
-msgstr ""
+msgstr "Csak ugyanazon megrendelésből származó termékeket lehet visszatéríteni."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10040,7 +10110,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "by Email"
-msgstr ""
+msgstr "Emailben"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10161,7 +10231,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "in"
-msgstr ""
+msgstr "hüvelyk"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10202,7 +10272,7 @@ msgstr "megjegyzés"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "on"
-msgstr ""
+msgstr "adóalap"
 
 #. module: point_of_sale
 #. odoo-javascript

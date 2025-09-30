@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-27 02:30+0000\n"
+"PO-Revision-Date: 2025-09-29 22:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/pos_self_order/es_419/>\n"
@@ -324,7 +324,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Customize Header"
-msgstr ""
+msgstr "Personalizar encabezado"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -424,7 +424,7 @@ msgstr "Comer en el local"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -443,7 +443,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Modelo de ayuda para la transmisión de archivos para controladores"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_account_fiscal_position
@@ -784,7 +784,7 @@ msgstr "Pagar después de"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Pay at the cashier"
-msgstr ""
+msgstr "Pagar en caja"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -886,7 +886,7 @@ msgstr "Producto"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Product Information"
-msgstr ""
+msgstr "Información del producto"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_product
@@ -902,7 +902,7 @@ msgstr "Variante del producto"
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Product image"
-msgstr ""
+msgstr "Imagen del producto"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1046,13 +1046,13 @@ msgstr "URL para hacer el autopedido"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Self Takeaway"
-msgstr ""
+msgstr "Para llevar en autopedido"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Self-Order"
-msgstr ""
+msgstr "Autopedido"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1080,7 +1080,7 @@ msgstr "Servicio a la mesa"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Service at table"
-msgstr ""
+msgstr "Servicio a la mesa"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1127,7 +1127,7 @@ msgstr "Rastreador de mesas:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Table detective time!"
-msgstr ""
+msgstr "Es hora de inspeccionar las mesas"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1138,7 +1138,7 @@ msgstr "Mesa:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Take Out"
-msgstr ""
+msgstr "Para llevar"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1162,19 +1162,21 @@ msgstr "¡Muchas gracias!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "El valor \"Disponible después de\" debe estar entre 00:00 y 24:00"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
+"El valor \"Disponible hasta\" debe ser mayor que el valor "
+"\"Disponible después de\"."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "El valor \"Disponible hasta\" debe estar entre 00:00 y 24:00"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1187,12 +1189,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
 msgid "The product will be available after this hour."
-msgstr ""
+msgstr "El producto estará disponible después de esta hora."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
 msgid "The product will be available until this hour."
-msgstr ""
+msgstr "El producto estará disponible hasta esta hora."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1233,7 +1235,7 @@ msgstr "No disponible"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Unavailable at this time of the day"
-msgstr ""
+msgstr "Sin disponibilidad en este momento"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1280,7 +1282,7 @@ msgstr "No puede agregar métodos de pago en efectivo al modo de quiosco."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "You cannot edit a posted orderline !"
-msgstr ""
+msgstr "No puedes editar la línea de una orden publicada."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1299,7 +1301,7 @@ msgstr "Tu orden"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Your Selection"
-msgstr ""
+msgstr "Tu selección"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1339,7 +1341,7 @@ msgstr "vacío = todos los puntos de venta"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "floor"
-msgstr ""
+msgstr "piso"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

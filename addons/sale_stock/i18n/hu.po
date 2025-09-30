@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_stock
+# * sale_stock
 #
 # Translators:
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
@@ -12,20 +12,22 @@
 # gezza <geza.nagy@oregional.hu>, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Szabolcs Rádi, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Szabolcs Rádi, 2023\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"sale_stock/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -85,7 +87,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
@@ -104,6 +106,14 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"A termék konfigurációjától függően a szállított mennyiség az alábbi módokon "
+"számítható:\n"
+"  - Manuális: a mennyiség kézi megadása a soron\n"
+"  - Analitikus kiadás: a mennyiség a könyvelésre küldött kiadások "
+"összesítéséből számítódik\n"
+"  - Időnyilvántartás: a mennyiség az értékesítési rendelés soraihoz kapcsolt "
+"feladatokra rögzített órák összege\n"
+"  - Készletmozgások: a mennyiség a jóváhagyott kiszedések mennyisége\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -165,7 +175,7 @@ msgstr "Az első szállítási rendelés elvégzésének dátuma"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -210,6 +220,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"A vevőnek megígérhető szállítási dátum. Szolgáltatás termékek esetén a "
+"rendelési sorok legkisebb átfutási ideje. Kiszállítás esetén a rendelésen "
+"megadott szállítási szabálynak megfelelően a rendelési sorok legkisebb vagy "
+"legnagyobb átfutási ideje."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -368,7 +382,7 @@ msgstr "Nemzetközi Kereskedelmi Feltétel"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Incoterm helyszín"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -412,7 +426,7 @@ msgstr "Könyvelési tétel"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Könyvelési tételsor"
+msgstr "Könyvelési tétel"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -468,7 +482,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr "Kiszállított mennyiség frissítésének módszere"
+msgstr "Szállított mennyiség frissítésének módszere"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -537,7 +551,7 @@ msgstr "Termék"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Termékmozgások (Készletmozgás sor)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
@@ -553,7 +567,7 @@ msgstr "Szállítandó mennyiség"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "Quotations"
-msgstr "Árajánlatok"
+msgstr "Ajánlatok"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -599,12 +613,12 @@ msgstr "Lefoglalt"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Visszáru kigyűjtés"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Returns"
-msgstr ""
+msgstr "Visszatérések"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_ids
@@ -621,7 +635,7 @@ msgstr "Értékesítés sor"
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
-msgstr "Értékesítési rendelések"
+msgstr "Vevői rendelések"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
@@ -636,29 +650,29 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Értékesítési elemzés riport"
+msgstr "Értékesítés elemzés riport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Vevői rendelések"
+msgstr "Vevői rendelés"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Értékesítési megrendelés sor"
+msgstr "Vevői rendelés sor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "Értékesítési rendelés sorok"
+msgstr "Vevői rendelés sorok"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "Sales Orders"
-msgstr "Vevői megrendelések"
+msgstr "Vevői rendelések"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
@@ -799,12 +813,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Szállítás"
+msgstr "Átmozgatás"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Transzferek"
+msgstr "Átmozgatások"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 14:55+0000\n"
-"PO-Revision-Date: 2025-09-24 19:22+0000\n"
+"PO-Revision-Date: 2025-09-29 19:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/web/ja/>"
 "\n"
@@ -303,8 +303,9 @@ msgstr "3.30"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, fuzzy
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -485,6 +486,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">分離 "
+"(タブごとに1つ)</option>\n"
+"                                        <option value=\"temporal\">時系列 "
+"(実験的)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" class="
+"\"alert alert-warning\" style=\"display:none\"><b>警告:</b> "
+"時系列モードでは、すべてのサンプルが統合されます。<br/"
+">複数のプロファイルが同時に存在する場合、結果が部分的に不正確になる可能性があ"
+"ります。<br/>使用には注意が必要です</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -900,7 +913,7 @@ msgstr "写真を追加"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "プロパティを追加する"
 
 #. module: web
 #. odoo-javascript
@@ -1171,13 +1184,13 @@ msgstr "本当にこの埋め込みアクションを削除しますか？"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
-msgstr ""
+msgstr "本当に選択した%(nbSelected)sレコードを削除しますか?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "本当に選択したレコードを削除しますか?"
 
 #. module: web
 #. odoo-javascript
@@ -1195,7 +1208,7 @@ msgstr "本当にこのカラムを削除しますか？"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "このプロパティフィールドを削除してもよろしいですか?"
 
 #. module: web
 #. odoo-javascript
@@ -2174,7 +2187,7 @@ msgstr "通貨"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
-msgstr ""
+msgstr "通貨フィールド"
 
 #. module: web
 #. odoo-javascript
@@ -2229,7 +2242,7 @@ msgstr "カスタムグループ"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Custom range"
-msgstr ""
+msgstr "カスタム幅"
 
 #. module: web
 #. odoo-python
@@ -2295,7 +2308,7 @@ msgstr "日時"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "日付書式"
 
 #. module: web
 #. odoo-javascript
@@ -2541,7 +2554,7 @@ msgstr "破棄"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Discard all changes"
-msgstr "全ての変更を破棄する"
+msgstr "すべての変更を破棄"
 
 #. module: web
 #. odoo-javascript
@@ -2610,7 +2623,8 @@ msgstr "未来の日付が入力された場合は警告アイコンを表示し
 msgid ""
 "Displays or hides the seconds in the datetime value. Affect only the "
 "readable datetime format."
-msgstr ""
+msgstr "日時値における秒の表示/非表示を切り替えます。これは、可読形式での日時表示にの"
+"み影響します。"
 
 #. module: web
 #. odoo-javascript
@@ -2622,7 +2636,7 @@ msgstr "datetime値の時刻を表示または非表示にします。"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
-msgstr ""
+msgstr "日付を 31/01/%(year)s または%(year)s 年1月31日の形式で表示します。"
 
 #. module: web
 #. odoo-javascript
@@ -2846,7 +2860,7 @@ msgstr "メール"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_res_users_settings__embedded_actions_config_ids
 msgid "Embedded Actions Config"
-msgstr ""
+msgstr "埋め込みアクション設定"
 
 #. module: web
 #. odoo-javascript
@@ -3242,7 +3256,7 @@ msgstr ""
 msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
-msgstr ""
+msgstr "たとえば、値が「1」のときに「+=2」と入力すると、「3」に更新されます。"
 
 #. module: web
 #. odoo-javascript
@@ -3422,6 +3436,9 @@ msgid ""
 "click the %(upload_icon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
+"注意: "
+"最近の変更内容が大きすぎるため、自動保存ができません。作業内容を失わないよう"
+"、タブを閉じる前に %(upload_icon)s ボタンをクリックして保存してください。"
 
 #. module: web
 #. odoo-javascript
@@ -3490,7 +3507,7 @@ msgstr "ホームメニュー"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
-msgstr ""
+msgstr "時間"
 
 #. module: web
 #. odoo-python
@@ -3899,19 +3916,20 @@ msgstr "ID%sを持つレコードが見つからないようです。削除さ�
 msgid ""
 "It will be removed for everyone using the \"%(parentName)s\" %"
 "(parentFieldLabel)s."
-msgstr ""
+msgstr "「%(parentName)s」%(parentFieldLabel)s "
+"を使用しているすべてのユーザに対して削除されます。"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "It will be removed for everyone!"
-msgstr ""
+msgstr "全員に対して削除されます!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Jan 31, %s"
-msgstr ""
+msgstr "1月31日、%s"
 
 #. module: web
 #. odoo-javascript
@@ -4160,19 +4178,19 @@ msgstr "L"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "直近12か月"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "過去30日間"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "過去7日間"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
@@ -4190,7 +4208,7 @@ msgstr "最終更新日"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last month"
-msgstr ""
+msgstr "先月"
 
 #. module: web
 #. odoo-javascript
@@ -4339,7 +4357,7 @@ msgstr "ログアウト"
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
 msgid "Login"
-msgstr ""
+msgstr "ログイン"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -4495,12 +4513,12 @@ msgstr "ミーティング議題"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory limit (in bytes)"
-msgstr ""
+msgstr "メモリ上限 (バイト単位)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory profile"
-msgstr ""
+msgstr "メモリプロファイル"
 
 #. module: web
 #. odoo-javascript
@@ -4655,7 +4673,7 @@ msgstr "月"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Month to date"
-msgstr ""
+msgstr "月初から本日まで"
 
 #. module: web
 #. odoo-javascript
@@ -4779,7 +4797,7 @@ msgstr "Odoo.comアカウント"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "My Preferences"
-msgstr ""
+msgstr "個人設定"
 
 #. module: web
 #. odoo-javascript
@@ -5019,7 +5037,7 @@ msgstr "結果が見つかりません"
 #. odoo-javascript
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 msgid "No results"
-msgstr ""
+msgstr "結果なし"
 
 #. module: web
 #. odoo-javascript
@@ -5074,7 +5092,8 @@ msgstr "無効な %s"
 msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
-msgstr ""
+msgstr "現在のモデルに通貨フィールドが存在しないため、金額フィールドを作成できません"
+"。"
 
 #. module: web
 #. odoo-javascript
@@ -5762,7 +5781,7 @@ msgstr "属性"
 #. module: web
 #: model:ir.model,name:web.model_properties_base_definition
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "プロパティベース定義"
 
 #. module: web
 #. odoo-javascript
@@ -5899,7 +5918,7 @@ msgstr "レコード規則"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
-msgstr ""
+msgstr "レコードメモリ"
 
 #. module: web
 #. odoo-javascript
@@ -6535,7 +6554,7 @@ msgstr "ユーザーにタイムゾーンを設定する"
 #: code:addons/web/static/src/views/fields/badge/badge_field.js:0
 #: code:addons/web/static/src/views/fields/badge_selection/list_badge_selection_field.js:0
 msgid "Set an integer field to use colors with the badge."
-msgstr ""
+msgstr "バッジに色を付けるための整数フィールドを設定してください。"
 
 #. module: web
 #. odoo-javascript
@@ -6700,7 +6719,7 @@ msgstr "特別："
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
@@ -6805,7 +6824,7 @@ msgstr "スタイルエラー"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Suffix"
-msgstr ""
+msgstr "サフィックス"
 
 #. module: web
 #. odoo-javascript
@@ -7023,7 +7042,7 @@ msgstr "ドメインに非リテラルを含めてはいけません"
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
-msgstr ""
+msgstr "%(field_name)s 内の ID は重複してはいけません: “%(action_ids)s”"
 
 #. module: web
 #. odoo-python
@@ -7032,6 +7051,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
+"%(field_name)s フィールドには、整数または \"false\" "
+"の値のみを含めることができます: “%(action_ids)s”"
 
 #. module: web
 #. odoo-javascript
@@ -7074,7 +7095,8 @@ msgstr ""
 msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
-msgstr ""
+msgstr "ユーザごとの設定・アクション・レコード ID "
+"の組み合わせにつき、埋め込みアクション設定は一意でなければなりません。"
 
 #. module: web
 #. odoo-javascript
@@ -7277,7 +7299,7 @@ msgstr "検索パネル切替"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Toggle date range mode"
-msgstr ""
+msgstr "日付範囲モードの切り替え"
 
 #. module: web
 #. odoo-javascript
@@ -7651,7 +7673,8 @@ msgstr "書式をカスタマイズするには、'ユーザフレンドリー�
 msgid ""
 "Use the operators \"+=\", \"-=\", \"*=\" and \"/=\" to update the current "
 "value."
-msgstr ""
+msgstr "現在の値を更新するには \"+=\", \"-=\", \"*=\", \"/=\" "
+"の演算子を使用してください。"
 
 #. module: web
 #. odoo-javascript
@@ -7696,12 +7719,12 @@ msgstr "ユーザインタフェース"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "ユーザ管理設定"
 
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
 msgid "User Settings for Embedded Actions"
-msgstr ""
+msgstr "埋め込みアクションのユーザ管理設定"
 
 #. module: web
 #. odoo-javascript
@@ -7995,7 +8018,7 @@ msgstr "年"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Year to date"
-msgstr ""
+msgstr "年初からの累計"
 
 #. module: web
 #. odoo-javascript
@@ -8044,7 +8067,7 @@ msgstr "ブラウザメニューからアプリをインストールできます
 #. odoo-python
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
-msgstr ""
+msgstr "そのフィールド定義を読み取ることはできません。"
 
 #. module: web
 #. odoo-javascript
@@ -8262,7 +8285,7 @@ msgstr "アスクレピオスの杖"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "after"
-msgstr ""
+msgstr "後"
 
 #. module: web
 #. odoo-javascript
@@ -9239,7 +9262,7 @@ msgstr "カブトムシ"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "before"
-msgstr ""
+msgstr "前"
 
 #. module: web
 #. odoo-javascript
@@ -12868,7 +12891,7 @@ msgstr "エンパナーダ"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/blank_component.xml:0
 msgid "empty"
-msgstr ""
+msgstr "空"
 
 #. module: web
 #. odoo-javascript
@@ -14698,7 +14721,7 @@ msgstr "バッタ"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "greater or equal to"
-msgstr ""
+msgstr "次の数以上："
 
 #. module: web
 #. odoo-javascript
@@ -17164,13 +17187,13 @@ msgstr "低い"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "lower or equal to"
-msgstr ""
+msgstr "次の数以下："
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "lower than"
-msgstr ""
+msgstr "次の数より小さい："
 
 #. module: web
 #. odoo-javascript
