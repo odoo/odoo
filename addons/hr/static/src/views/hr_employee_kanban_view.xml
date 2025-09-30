@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="t-if">!showOnboarding</attribute>
+        </xpath>
+        <xpath expr="." position="inside">
+            <EmployeeOnboarding t-if="showOnboarding" showLoadSample="showLoadSample"/>
+        </xpath>
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <ActionHelper noContentHelp="props.noContentHelp" showRibbon="false"/>
+            </t>
+        </ActionHelper>
+    </t>
+</odoo>

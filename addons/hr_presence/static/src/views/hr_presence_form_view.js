@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { EmployeeFormController } from "@hr/views/form_view";
+import { EmployeeFormController } from "@hr/views/hr_employee_form_view";
 import { HrPresenceCogMenu } from "../search/hr_presence_cog_menu/hr_presence_cog_menu";
 
 patch(EmployeeFormController, {
