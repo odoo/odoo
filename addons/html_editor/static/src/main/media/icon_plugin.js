@@ -50,6 +50,7 @@ export class IconPlugin extends Plugin {
             {
                 id: "icon",
                 isApplied: (targetedNodes) =>
+                    targetedNodes.length &&
                     targetedNodes.every(
                         (node) =>
                             // All nodes should be icons, its ZWS child or its ancestors
