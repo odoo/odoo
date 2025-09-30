@@ -1,6 +1,11 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { getCurrentTextHighlight, makeHighlightSvgs } from "@website/js/highlight_utils";
+import {
+    getCurrentTextHighlight,
+    makeHighlightSvgs,
+    closestToObserve,
+    getObservedEls,
+} from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
     static selector = "#wrapwrap";
@@ -61,25 +66,21 @@ export class TextHighlight extends Interaction {
         }
     }
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @param {HTMLElement} el
      */
     closestToObserve(el) {
-        el = el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement;
-        if (!el || el === this.el) {
-            return null;
-        }
-        if (window.getComputedStyle(el).display !== "inline") {
-            return el;
-        }
-        return this.closestToObserve(el.parentElement);
+        return closestToObserve(el, this.el);
     }
 
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @param {HTMLElement} el
      */
     getObservedEls(el) {
-        const closestToObserve = this.closestToObserve(el);
-        return closestToObserve ? [closestToObserve, el] : [el];
+        return getObservedEls(el);
     }
 
     /**
