@@ -2,7 +2,6 @@
 
 import json
 import logging
-import pytz
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -1380,22 +1379,6 @@ class SaleOrder(models.Model):
 
     # INVOICING #
 
-    def _get_effective_company_tz(self):
-        """Return the company partner tz, else a tz from its country,
-        else the tz in context, else 'UTC'."""
-        self.ensure_one()
-        if tz := self.company_id.partner_id.tz:
-            return tz
-
-        if self.country_code:
-            tz_list = pytz.country_timezones.get(self.country_code)
-            if tz_list:
-                return tz_list[0]
-
-        if tz := self.env.context.get('tz'):
-            return tz
-        return 'UTC'
-
     def _prepare_invoice(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
@@ -1410,8 +1393,6 @@ class SaleOrder(models.Model):
                 or (tx.state == 'done' and not tx.payment_id.is_reconciled)
             )
         )
-        tz = self._get_effective_company_tz()
-        local_date = self.date_order.astimezone(pytz.timezone(tz)).date()
 
         values = {
             'ref': self.client_order_ref or self.name,
@@ -1434,8 +1415,6 @@ class SaleOrder(models.Model):
             'company_id': self.company_id.id,
             'invoice_line_ids': [],
             'user_id': self.user_id.id,
-            'date': local_date,
-            'invoice_date': local_date,
         }
         if self.journal_id:
             values['journal_id'] = self.journal_id.id

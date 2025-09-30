@@ -12,6 +12,7 @@ import logging
 from markupsafe import Markup
 import re
 import os
+import pytz
 from textwrap import shorten
 
 from odoo import api, fields, models, _, modules
@@ -826,9 +827,10 @@ class AccountMove(models.Model):
     def _compute_date(self):
         for move in self:
             accounting_date = move._get_accounting_date_source()
+            tz = move._get_effective_company_tz()
             if not accounting_date or not move.is_invoice(include_receipts=True):
                 if not move.date:
-                    move.date = fields.Date.context_today(self)
+                    move.date = fields.Date.context_today(self.with_context(tz=tz))
                 continue
             if not move.is_sale_document(include_receipts=True):
                 accounting_date = move._get_accounting_date(accounting_date, move._affect_tax_report())
@@ -848,9 +850,10 @@ class AccountMove(models.Model):
     @api.depends('date', 'auto_post')
     def _compute_hide_post_button(self):
         for record in self:
+            tz = record._get_effective_company_tz()
             record.hide_post_button = record.state != 'draft' \
                 or record.auto_post != 'no' and \
-                record.date and record.date > fields.Date.context_today(record)
+                record.date and record.date > fields.Date.context_today(record.with_context(tz=tz))
 
     @api.depends('journal_id')
     def _compute_company_id(self):
@@ -1072,7 +1075,8 @@ class AccountMove(models.Model):
 
     @api.depends('needed_terms')
     def _compute_invoice_date_due(self):
-        today = fields.Date.context_today(self)
+        tz = self and self[0]._get_effective_company_tz() or self.env.context.get('tz')
+        today = fields.Date.context_today(self.with_context(tz=tz))
         for move in self:
             move.invoice_date_due = move.needed_terms and max(
                 (k['date_maturity'] for k in move.needed_terms.keys() if k),
@@ -1111,7 +1115,8 @@ class AccountMove(models.Model):
 
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
-        return self.invoice_date or fields.Date.context_today(self)
+        tz = self._get_effective_company_tz()
+        return self.invoice_date or fields.Date.context_today(self.with_context(tz=tz))
 
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
     def _compute_expected_currency_rate(self):
@@ -1376,8 +1381,9 @@ class AccountMove(models.Model):
                         tax_amount = invoice.amount_tax_signed
                         untaxed_amount_currency = invoice.amount_untaxed * sign
                         untaxed_amount = invoice.amount_untaxed_signed
+                    tz = invoice._get_effective_company_tz()
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
-                        date_ref=invoice.invoice_date or invoice.date or fields.Date.context_today(invoice),
+                        date_ref=invoice.invoice_date or invoice.date or fields.Date.context_today(invoice.with_context(tz=tz)),
                         currency=invoice.currency_id,
                         tax_amount_currency=tax_amount_currency,
                         tax_amount=tax_amount,
@@ -4330,7 +4336,8 @@ class AccountMove(models.Model):
         """Suggest the Customer Invoice/Vendor Bill date based on previous invoice and lock dates"""
         for record in self:
             if record.quick_edit_mode and not record.invoice_date:
-                invoice_date = fields.Date.context_today(self)
+                tz = record._get_effective_company_tz()
+                invoice_date = fields.Date.context_today(self.with_context(tz=tz))
                 prev_move = self.search([('state', '=', 'posted'),
                                          ('journal_id', '=', record.journal_id.id),
                                          ('company_id', '=', record.company_id.id),
@@ -5377,13 +5384,14 @@ class AccountMove(models.Model):
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly (if the user didnt' change the rate manually)
+            tz = invoice._get_effective_company_tz()
             if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
                 if invoice.invoice_currency_rate != invoice.expected_currency_rate:
                     # keep the rate set by the user
                     with self.env.protecting([self._fields['invoice_currency_rate']], invoice):
-                        invoice.invoice_date = fields.Date.context_today(self)
+                        invoice.invoice_date = fields.Date.context_today(self.with_context(tz=tz))
                 else:
-                    invoice.invoice_date = fields.Date.context_today(self)
+                    invoice.invoice_date = fields.Date.context_today(self.with_context(tz=tz))
 
         for move in self:
             if move.state in ['posted', 'cancel']:
@@ -6295,6 +6303,22 @@ class AccountMove(models.Model):
             **self._get_invoice_next_payment_values(custom_amount=custom_amount),
         }
 
+    def _get_effective_company_tz(self):
+        """Return the company partner tz, else a tz from its country,
+        else the tz in context, else 'UTC'."""
+        self.ensure_one()
+        if tz := self.company_id.partner_id.tz:
+            return tz
+
+        if self.country_code:
+            tz_list = pytz.country_timezones.get(self.country_code)
+            if tz_list:
+                return tz_list[0]
+
+        if tz := self.env.context.get('tz'):
+            return tz
+        return 'UTC'
+
     def _get_accounting_date(self, invoice_date, has_tax, lock_dates=None):
         """Get correct accounting date for previous periods, taking tax lock date and affected journal into account.
         When registering an invoice in the past, we still want the sequence to be increasing.
@@ -6310,7 +6334,9 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         lock_dates = lock_dates or self._get_violated_lock_dates(invoice_date, has_tax)
-        today = fields.Date.context_today(self)
+        tz = self._get_effective_company_tz()
+        today = fields.Date.context_today(self.with_context(tz=tz))
+
         highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
         number_reset = self._deduce_sequence_number_reset(highest_name)
         if lock_dates:
