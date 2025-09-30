@@ -409,7 +409,8 @@ class HrVersion(models.Model):
     def get_values_from_contract_template(self, contract_template_id):
         if not contract_template_id:
             return {}
-        whitelist = self._get_whitelist_fields_from_template()
+        company = contract_template_id.company_id or self.env.company
+        whitelist = self.with_company(company)._get_whitelist_fields_from_template()
         contract_template_vals = contract_template_id.copy_data()[0]
         return {
             field: value
