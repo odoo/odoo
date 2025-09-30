@@ -3188,6 +3188,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
+<<<<<<< 4b1705241cd33a11e85cd5b5ccfe89459b2dd4e3
     def test_preset_customer_selection(self):
         self.preset_delivery = self.env['pos.preset'].create({
             'name': 'Delivery',
@@ -3468,6 +3469,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('test_combo_price_unchanged_with_lot_tracked_product', login="pos_admin")
 
+||||||| e2d5891fe1a9609c0c742c20d2fd0aa1d0cd7650
+=======
+    def test_free_text_custom_attribute_on_receipt(self):
+        """ Test that free text (custom) attribute values are correctly shown on the PoS receipt screen. """
+        configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
+        configurable_product.attribute_line_ids[:2].unlink()
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_free_text_custom_attribute_on_receipt', login="pos_admin")
+
+>>>>>>> ad7758864622b42999593592efc5ddc473af001d
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
