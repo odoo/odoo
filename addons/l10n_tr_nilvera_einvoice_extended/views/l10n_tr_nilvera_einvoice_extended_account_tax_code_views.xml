@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_nilvera_einvoice_extended_account_tax_code_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice_extended.account.tax.code.list</field>
+        <field name="model">l10n_tr_nilvera_einvoice_extended.account.tax.code</field>
+        <field name="arch" type="xml">
+            <list string="Tax Codes" multi_edit="1">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="code_type"/>
+                <field name="percentage" widget="percentage" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_tr_nilvera_einvoice_extended_account_tax_code_view_form" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice_extended.account.tax.code.form</field>
+        <field name="model">l10n_tr_nilvera_einvoice_extended.account.tax.code</field>
+        <field name="arch" type="xml">
+            <form string="Tax Code">
+                <div class="alert alert-info text-center" role="alert">
+                        For a full list of codes and descriptions, check
+                        <a href="https://developer.nilvera.com/kod-listeleri">
+                        Nilvera's documentation</a>.
+                </div>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="code_type"/>
+                            <field name="percentage" widget="percentage"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_tr_nilvera_einvoice_extended_account_tax_code_list" model="ir.actions.act_window">
+        <field name="name">GIB Codes</field>
+        <field name="res_model">l10n_tr_nilvera_einvoice_extended.account.tax.code</field>
+        <field name="view_id" ref="l10n_tr_nilvera_einvoice_extended_account_tax_code_view_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a GIB Reason
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="l10n_tr_menu_account_tax_code"
+        action="action_l10n_tr_nilvera_einvoice_extended_account_tax_code_list"
+        parent="account.account_account_menu"
+        sequence="9"
+        groups="base.group_no_one"/>
+</odoo>
