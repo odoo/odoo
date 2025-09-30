@@ -2,9 +2,8 @@ import { Component, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import {debounce} from "@web/core/utils/timing";
+import { debounce } from "@web/core/utils/timing";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-
 
 export class JsonCheckboxes extends Component {
     static template = "account.JsonCheckboxes";
@@ -14,7 +13,6 @@ export class JsonCheckboxes extends Component {
     };
 
     setup() {
-        super.setup();
         this.checkboxes = useState(this.props.record.data[this.props.name]);
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 100);
 
@@ -28,15 +26,15 @@ export class JsonCheckboxes extends Component {
     }
 
     onChange(key, checked) {
-        this.checkboxes[key]['checked'] = checked;
+        this.checkboxes[key].checked = checked;
         this.debouncedCommitChanges();
     }
-
 }
 
 export const jsonCheckboxes = {
     component: JsonCheckboxes,
     supportedTypes: ["json"],
-}
+};
 
-registry.category("fields").add("account_json_checkboxes", jsonCheckboxes);
+registry.category("fields").add("json_checkboxes", jsonCheckboxes);
+registry.category("fields").add("account_json_checkboxes", jsonCheckboxes); // TODO: remove in saas~19.1
