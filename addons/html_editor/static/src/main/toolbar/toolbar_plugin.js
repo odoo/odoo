@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -237,7 +237,7 @@ export class ToolbarPlugin extends Plugin {
             this.addDomListener(this.editable, "keydown", (ev) => {
                 // reason for "key?":
                 // On Chrome, if there is a password saved for a login page,
-                // a mouse click trigger a keydown event without any key 
+                // a mouse click trigger a keydown event without any key
                 if (ev.key?.startsWith("Arrow")) {
                     this.closeToolbar();
                     this.onSelectionChangeActive = false;
@@ -403,7 +403,18 @@ export class ToolbarPlugin extends Plugin {
         if (!selection) {
             return;
         }
-        const nodes = this.getFilteredTargetedNodes();
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter(
+                (node) =>
+                    this.dependencies.selection.isNodeEditable(node) &&
+                    (!isTextNode(node) || node.textContent.trim().length)
+            )
+            .filter((node) => {
+                const element = closestElement(node);
+                const style = this.document.defaultView.getComputedStyle(element);
+                return style.display !== "none" && style.visibility !== "hidden";
+            });
         for (const buttonGroup of this.buttonGroups) {
             for (const button of buttonGroup.buttons) {
                 if (!button.namespaces.includes(this.state.namespace)) {
