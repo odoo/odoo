@@ -4528,13 +4528,13 @@ class TestStockMove(TestStockCommon):
         internal_transfer.button_validate()
         self.assertEqual(internal_transfer.state, 'done')
 
-    def test_validate_picking_wihtout_picked_reservations(self):
+    def test_validate_picking_without_picked_reservations(self):
         """
         Check that validating a picking where every picked move is unreserved
         raises a user error for validating an an empty transfer
         """
         picking = self.env['stock.picking'].create({
-            'picking_type_id': self.ref('stock.picking_type_out'),
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_type': 'one',
@@ -6586,7 +6586,7 @@ class TestStockMove(TestStockCommon):
     def test_move_state_after_split(self):
         """Test that move states are correctly recomputed after splitting a picking."""
         picking = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'move_ids': [Command.create({

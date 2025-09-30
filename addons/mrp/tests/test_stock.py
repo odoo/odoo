@@ -36,10 +36,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
             "location_in_id": cls.stock_location.id,
             "location_out_id": cls.depot_location.id,
         })
-        cls.env['mrp.workcenter'].create({
-            'name': 'Assembly Line 1',
-            'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
-        })
         cls.env['stock.quant'].create({
             'location_id': cls.shelf_1.id,
             'product_id': cls.graphics_card.id,
@@ -641,7 +637,7 @@ class TestKitPicking(common.TestMrpCommon):
         packaging = self.env['uom.uom'].create({
             'name': 'Pack of 2',
             'relative_factor': 2,
-            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'relative_uom_id': self.uom_unit.id,
         })
         # component is in Kg but bom_line in gram
         component = bom.bom_line_ids.product_id

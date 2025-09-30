@@ -54,12 +54,12 @@ class PurchaseTestCommon(TestStockCommon):
         })
 
         cls.res_users_purchase_user = cls.env['res.users'].create({
-            'company_id': cls.env.ref('base.main_company').id,
+            'company_ids': [cls.company.id],
             'name': "Purchase User",
             'login': "pu",
             'email': "purchaseuser@yourcompany.com",
             'group_ids': [Command.set([cls.env.ref('purchase.group_purchase_user').id])],
-            })
+        })
 
         cls.fuzzy_drink = cls.env['product.product'].create({
             'name': 'Fuzzy Drink',

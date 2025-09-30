@@ -3008,7 +3008,6 @@ class TestRoutes(TestStockCommon):
         - SM for A is 'make_to_stock'
         - SM for B is 'make_to_stock'
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         final_location = self.partner.property_stock_customer
         product_A = self.env['product.product'].create({
             'name': 'Product A',
@@ -3020,18 +3019,18 @@ class TestRoutes(TestStockCommon):
         })
 
         # We alter one rule and we set it to 'mts_else_mto'
-        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': self.warehouse_1})
         rule.procure_method = 'mts_else_mto'
 
-        self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)
-        self.env['stock.quant']._update_available_quantity(product_B, warehouse.lot_stock_id, 3.0)
+        self.env['stock.quant']._update_available_quantity(product_A, self.stock_location, 5.0)
+        self.env['stock.quant']._update_available_quantity(product_B, self.stock_location, 3.0)
 
         move_tmpl = {
             'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
-            'location_id': warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'location_dest_id': self.partner.property_stock_customer.id,
-            'warehouse_id': warehouse.id,
+            'warehouse_id': self.warehouse_1.id,
         }
         move_A_vals = dict(move_tmpl)
         move_A_vals.update({
@@ -3469,9 +3468,6 @@ class TestPickShipBackorder(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.picking_type_out = cls.env["stock.picking.type"].search(
-            [("code", "=", "outgoing")], limit=1
-        )
         cls.picking_type_out.use_create_lots = True
         cls.picking_type_out.write({"sequence_code": "WH/OUT"})
 
@@ -3481,7 +3477,7 @@ class TestPickShipBackorder(TestStockCommon):
                 "type": "consu",
                 "is_storable": True,
                 "tracking": "lot",
-                "uom_id": cls.env.ref("uom.product_uom_unit").id,
+                "uom_id": cls.uom_unit.id,
             }
         )
 
@@ -3498,9 +3494,6 @@ class TestPickShipBackorder(TestStockCommon):
             }
         )
 
-        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
-        cls.stock_location = cls.warehouse.out_type_id.default_location_src_id or cls.warehouse.lot_stock_id
-
         cls.env["stock.quant"]._update_available_quantity(
             cls.product_lot, cls.stock_location, 5.0, lot_id=cls.lot1
         )
@@ -3509,20 +3502,19 @@ class TestPickShipBackorder(TestStockCommon):
         )
 
     def test_pick_assign_and_backorder(self):
-        cust = self.env.ref("stock.stock_location_customers")
         ref = self.env["stock.reference"].create({"name": "sale order"})
-        self.warehouse.delivery_steps = "pick_ship"
+        self.warehouse_1.delivery_steps = "pick_ship"
         self.env["stock.rule"].run(
             [
                 self.env["stock.rule"].Procurement(
                     self.product_lot,
                     10.0,
                     self.product_lot.uom_id,
-                    cust,
+                    self.customer_location,
                     "sale_order",
                     ref.name,
-                    self.warehouse.company_id,
-                    {"warehouse_id": self.warehouse, "reference_ids": ref},
+                    self.warehouse_1.company_id,
+                    {"warehouse_id": self.warehouse_1, "group_id": ref},
                 )
             ]
         )

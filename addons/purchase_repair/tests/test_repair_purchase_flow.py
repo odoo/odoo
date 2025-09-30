@@ -8,10 +8,6 @@ from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 @tagged('post_install', '-at_install')
 class TestRepairPurchaseFlow(PurchaseTestCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
     def test_repair_with_purchase_mto_link(self):
         """
         Test the integration between a repair order and a purchase order (MTO)

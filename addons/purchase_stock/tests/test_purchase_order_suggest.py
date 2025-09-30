@@ -446,7 +446,10 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
     def test_purchase_order_suggest_quantities_multiwarehouse(self):
         """ Ensure the product's qty demand is correctly computed for the right warehouse."""
-        main_warehouse = self.env.ref('stock.warehouse0')
+        main_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Main Warehouse',
+            'code': 'MWH',
+        })
 
         date = fields.Datetime.now() - relativedelta(days=15)
         self.env['stock.quant']._update_available_quantity(self.product_1, main_warehouse.lot_stock_id, 5)
@@ -630,9 +633,16 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             [(test_product, 50)], date=today + relativedelta(days=20), to_validate=False
         )
         # Create a move yesterday on another warehouse
-        other_warehouse = self.env.ref('stock.warehouse0')
+        other_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Other Warehouse',
+            'code': 'OWH',
+        })
+
         self.env['stock.quant']._update_available_quantity(test_product, other_warehouse.lot_stock_id, 1)
         self._create_and_process_delivery_at_date(
             [(test_product, 1)], date=today - relativedelta(days=1), warehouse=other_warehouse
         )
-        self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
+        self.start_tour(
+            '/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin',
+            cookies={"cids": f"{self.company.id}"},
+        )

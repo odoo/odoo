@@ -48,6 +48,12 @@ class TestStockCommon(ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.company = cls.env['res.company'].create({
+            'name': 'Stock Tests Company',
+        })
+        # Some models use env.company in various methods, so we make sure they will find the stock company
+        cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=[cls.company.id]))
+        cls.env.ref('base.user_admin').company_ids |= cls.company
 
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [
@@ -94,13 +100,20 @@ class TestStockCommon(ProductVariantsCommon):
         cls.StockLocationObj = cls.env['stock.location']
 
         # Warehouses
-        cls.warehouse_1 = cls.env['stock.warehouse'].create({
+        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
+        cls.warehouse_1.write({
             'name': 'Base Warehouse',
             'reception_steps': 'one_step',
             'delivery_steps': 'ship_only',
             'code': 'BWH',
             'sequence': 5,
         })
+        # Some tests depend on additional warehouse setup
+        cls.warehouse_1.write(cls.warehouse_1._create_or_update_sequences_and_picking_types())
+        cls.env['res.config.settings'].create({
+            'group_stock_multi_locations': True,
+        }).execute()
+
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id
         cls.route_mto.rule_ids.procure_method = "make_to_order"
 

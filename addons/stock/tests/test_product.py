@@ -109,8 +109,7 @@ class TestVirtualAvailable(TestStockCommon):
     def test_change_product_company(self):
         """ Checks we can't change the product's company if this product has
         quant in another company. """
-        company1 = self.env.ref('base.main_company')
-        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        another_company = self.env['res.company'].create({'name': 'Second Company'})
         product = self.env['product.product'].create({
             'name': 'Product [TEST - Change Company]',
             'is_storable': True,
@@ -123,21 +122,20 @@ class TestVirtualAvailable(TestStockCommon):
             'quantity': 7,
             'reserved_quantity': 0,
         })
-        # Assigns a company: should be OK for company1 but should raise an error for company2.
-        product.company_id = company1.id
+        # Assigns a company: should be OK for self.company but should raise an error for another_company.
+        product.company_id = self.company.id
         with self.assertRaises(UserError):
-            product.company_id = company2.id
-        # Checks we can assing company2 for the product once there is no more quant for it.
+            product.company_id = another_company.id
+        # Checks we can assing another_company for the product once there is no more quant for it.
         quant = self.env['stock.quant'].search([('product_id', '=', product.id)])
         quant.quantity = 0
         self.env['stock.quant']._unlink_zero_quants()
-        product.company_id = company2.id  # Should work this time.
+        product.company_id = another_company.id  # Should work this time.
 
     def test_change_product_company_02(self):
         """ Checks we can't change the product's company if this product has
         stock move line in another company. """
-        company1 = self.env.ref('base.main_company')
-        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        another_company = self.env['res.company'].create({'name': 'Second Company'})
         product = self.env['product.product'].create({
             'name': 'Product [TEST - Change Company]',
             'type': 'consu',
@@ -159,14 +157,13 @@ class TestVirtualAvailable(TestStockCommon):
         picking.action_confirm()
         picking.button_validate()
 
-        product.company_id = company1.id
+        product.company_id = self.company.id
         with self.assertRaises(UserError):
-            product.company_id = company2.id
+            product.company_id = another_company.id
 
     def test_change_product_company_exclude_vendor_and_customer_location(self):
         """ Checks we can change product company where only exist single company
         and exist quant in vendor/customer location"""
-        company1 = self.env.ref('base.main_company')
         product = self.env['product.product'].create({
             'name': 'Product Single Company',
             'is_storable': True,
@@ -193,7 +190,7 @@ class TestVirtualAvailable(TestStockCommon):
             'quantity': 10,
         })
         # Assigns a company: should be ok because only exist one company (exclude vendor and customer location)
-        product.company_id = company1.id
+        product.company_id = self.company
 
         # Reset product company to empty
         product.company_id = False
@@ -275,11 +272,13 @@ class TestVirtualAvailable(TestStockCommon):
 
     def test_product_qty_field_and_context(self):
         main_warehouse = self.warehouse_1
-        other_warehouse = self.env['stock.warehouse'].search([('id', '!=', main_warehouse.id)], limit=1)
+        other_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Other Warehouse',
+            'code': 'OWH',
+        })
         warehouses = main_warehouse | other_warehouse
         main_loc = main_warehouse.lot_stock_id
         other_loc = other_warehouse.lot_stock_id
-        self.assertTrue(other_warehouse, 'The test needs another warehouse')
 
         (main_loc | other_loc).name = 'Stock'
         sub_loc01, sub_loc02, sub_loc03 = self.env['stock.location'].create([{
