@@ -485,7 +485,7 @@ class BaseCase(case.TestCase):
         old_uid = self.uid
         old_env = self.env
         try:
-            user = self.env['res.users'].sudo().search([('login', '=', login)])
+            user = self.env['res.users'].sudo().search([('login', '=', login)], order='login')
             assert user, "Login %s not found" % login
             # switch user
             self.uid = user.id
@@ -2543,7 +2543,10 @@ def users(*logins):
                 Users = self.env['res.users'].with_context(active_test=False)
                 user_id = {
                     user.login: user.id
-                    for user in Users.search([('login', 'in', list(logins))])
+                    for user in Users.search_fetch(
+                        [('login', 'in', list(logins))],
+                        ['login'], order='login',
+                    )
                 }
                 for login in logins:
                     with self.subTest(login=login):
