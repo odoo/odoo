@@ -1204,10 +1204,11 @@ class StockQuant(models.Model):
             _logger.info('an error occurred while merging quants: %s', e.pgerror)
 
     @api.model
-    def _quant_tasks(self):
+    def _quant_tasks(self, from_cron=False):
         self._merge_quants()
-        self._clean_reservations()
         self._unlink_zero_quants()
+        if from_cron:  # Not required when opening menu
+            self._clean_reservations()
 
     @api.model
     def _is_inventory_mode(self):
