@@ -190,6 +190,7 @@ class SaleOrder(models.Model):
                 'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
                 'default_name': "%s - %s" % (self.name, self.partner_id.commercial_company_name),
                 'default_allow_milestones': 'delivered_milestones' in self.order_line.product_id.mapped('service_policy'),
+                'sale_company_id': self.company_id.id,
             },
         }
 
