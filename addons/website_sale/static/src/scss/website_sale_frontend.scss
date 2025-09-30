@@ -28,19 +28,16 @@
             list-style: none;
             transition: transform 250ms ease-out;
 
-            .o_wsale_image_viewer_thumbnail {
-                aspect-ratio: 1/1;
-                width: 128px;
-            }
-
             li > div {
                 background: $body-bg;
 
-                img {
+                img.o_wsale_image_viewer_thumbnail {
+                    aspect-ratio: var(--o-wsale-product-image-ratio, 1/1);
                     border: 4px solid transparent;
+                    height: 128px;
 
                     &:not(.active, :hover) {
-                        opacity: 0.5;
+                        opacity: 0.75;
                     }
 
                     &.active {
