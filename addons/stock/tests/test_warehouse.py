@@ -216,7 +216,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(move.location_id.id, location_loss.id)
 
         # There should be no quant in the stock location
-        self.env['stock.quant']._quant_tasks()
+        self.env['stock.quant']._deduplicate_quants()
         quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)])
         self.assertEqual(sum(quants.mapped('quantity')), 0)
 

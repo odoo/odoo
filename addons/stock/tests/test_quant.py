@@ -791,7 +791,7 @@ class TestStockQuant(TestStockCommon):
 
         quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('on_hand', '=', True)])
         self.assertEqual(len(quant), 1)
-        # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
+        # The quants merging is processed thanks to a SQL query (see StockQuant._deduplicate_quants).
         # At that point, the ORM is not aware of the new value. So we need to invalidate the
         # cache to ensure that the value will be the newest
         quant.invalidate_recordset(['quantity'])

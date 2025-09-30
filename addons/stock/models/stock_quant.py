@@ -12,6 +12,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
+from odoo.tools.misc import split_every
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -403,7 +405,8 @@ class StockQuant(models.Model):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
         if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
-            self._quant_tasks()
+            self._deduplicate_quants()
+            self._unlink_zero_quants()
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
@@ -1157,57 +1160,57 @@ class StockQuant(models.Model):
                 self.env['stock.quant']._update_reserved_quantity(product, location, reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
 
     @api.model
-    def _merge_quants(self):
-        """ In a situation where one transaction is updating a quant via
-        `_update_available_quantity` and another concurrent one calls this function with the same
-        argument, we’ll create a new quant in order for these transactions to not rollback. This
-        method will find and deduplicate these quants.
-        """
-        params = []
-        query = """WITH
-                        dupes AS (
-                            SELECT min(id) as to_update_quant_id,
-                                (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
-                                GREATEST(0, SUM(reserved_quantity)) as reserved_quantity,
-                                SUM(inventory_quantity) as inventory_quantity,
-                                SUM(quantity) as quantity,
-                                MIN(in_date) as in_date
-                            FROM stock_quant
-        """
-        if self._ids:
-            query += """
-                            WHERE
-                                location_id in %s
-                                AND product_id in %s
-            """
-            params = [tuple(self.location_id.ids), tuple(self.product_id.ids)]
-        query += """
-                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
-                            HAVING count(id) > 1
-                        ),
-                        _up AS (
-                            UPDATE stock_quant q
-                                SET quantity = d.quantity,
-                                    reserved_quantity = d.reserved_quantity,
-                                    inventory_quantity = d.inventory_quantity,
-                                    in_date = d.in_date
-                            FROM dupes d
-                            WHERE d.to_update_quant_id = q.id
-                        )
-                   DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
-        """
-        try:
-            with self.env.cr.savepoint():
-                self.env.cr.execute(query, params)
-                self.env.invalidate_all()
-        except Error as e:
-            _logger.info('an error occurred while merging quants: %s', e.pgerror)
+    def _deduplicate_quants(self, from_cron=False):
+        """ Merges quant lines for the same product & location & lot into one (which can
+            happen when one transaction is updating a quant via `_update_available_quantity`
+            and another concurrent one calls this function with the same argument).
+            --> We create a new quant in order for these transactions to not rollback.
 
-    @api.model
-    def _quant_tasks(self):
-        self._merge_quants()
-        self._clean_reservations()
-        self._unlink_zero_quants()
+            :param from_cron (Bool): If triggered from a cron
+        """
+
+        duplicates = self.env['stock.quant']._read_group(
+            domain=[],
+            groupby=['product_id', 'company_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+            aggregates=['id:count', 'in_date:min', 'quantity:sum', 'reserved_quantity:sum', 'inventory_quantity:sum', 'id:array_agg'],
+            having=[('id:count', '>', 1)]  # More then 1 record on groupby
+        )
+
+        if not from_cron:
+            self._deduplicate_sql(duplicates)
+        else:
+            self.env['ir.cron']._commit_progress(remaining=len(duplicates))
+            for dups_chunk in split_every(1000, duplicates):
+                self._deduplicate_sql(dups_chunk)
+                self.env['ir.cron']._commit_progress(processed=len(dups_chunk))
+
+    def _deduplicate_sql(self, dups_chunk):
+        rows = []
+        for duplicated_quant in dups_chunk:
+            rows.append((
+                sorted(duplicated_quant[-1])[0],        # to_update_id
+                duplicated_quant[-4],                   # quantity
+                max(duplicated_quant[-3], 0),           # reserved_quantity
+                duplicated_quant[-2] or 0.0,  # TODO Check 0.0 vs False (for execute_values) # inventory_quantity
+                duplicated_quant[-5],                   # in_date
+                sorted(duplicated_quant[-1])[1:]        # to_unlink_ids
+            ))
+
+        self.env.cr.execute_values("""
+            WITH dupes(to_update_id, quantity, reserved_quantity, inventory_quantity, in_date, to_unlink_ids) AS (
+                VALUES %s
+            ),
+            _up AS (
+                UPDATE stock_quant q
+                SET quantity = d.quantity,
+                    reserved_quantity = d.reserved_quantity,
+                    inventory_quantity = d.inventory_quantity,
+                    in_date = d.in_date
+                FROM dupes d
+                WHERE q.id = d.to_update_id
+            )
+            DELETE FROM stock_quant sq USING dupes d WHERE sq.id = ANY(d.to_unlink_ids);
+        """, rows)
 
     @api.model
     def _is_inventory_mode(self):
@@ -1295,7 +1298,8 @@ class StockQuant(models.Model):
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
         if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
-            self._quant_tasks()
+            self._deduplicate_quants()
+            self._unlink_zero_quants()
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)

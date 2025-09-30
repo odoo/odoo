@@ -128,7 +128,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         order.action_confirm()
 
         # Run scheduler
-        self.env['stock.rule'].run_scheduler_orderpoints()
+        self.env['stock.rule'].run_stock_scheduler("orderpoints")
 
         # Check manufacturing order created or not
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
