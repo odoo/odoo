@@ -3,9 +3,9 @@
     <data noupdate="1">
         <record forcecreate="True" id="ir_cron_pos_alert_old_sessions" model="ir.cron">
             <field name="name">POS: Alert Old Sessions</field>
-            <field name="model_id" ref="model_stock_rule"/>
+            <field name="model_id" ref="model_pos_session"/>
             <field name="state">code</field>
-            <field name="code">model.run_scheduler_alert_old_sessions(True)</field>
+            <field name="code">model.run_scheduler_alert_old_sessions()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>

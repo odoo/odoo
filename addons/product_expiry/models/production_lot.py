@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import logging
 from odoo import api, fields, models, SUPERUSER_ID, _
+
+_logger = logging.getLogger(__name__)
 
 
 class StockLot(models.Model):
@@ -105,3 +108,15 @@ class StockLot(models.Model):
         alert_lots.write({
             'product_expiry_reminded': True
         })
+
+    @api.model
+    def run_scheduler_alert_date_exceeded(self):
+        """This scheduler checks for product lots whose alert date has been reached
+        and schedules a reminder activity to notify responsible users.
+        """
+        try:
+            self._alert_date_exceeded()
+            self.env.cr.commit()
+        except Exception:
+            _logger.exception("An error occurred while the product lot expiry alert scheduler.")
+            raise
