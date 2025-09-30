@@ -139,7 +139,7 @@ class TestUi(TestUICommon):
     @users("portal")
     def test_course_certification_employee(self):
         # use proper environment to test user dependent computes
-        self.furniture_course = self.env['slide.channel'].browse(self.furniture_course.id)
+        furniture_course = self.env['slide.channel'].browse(self.furniture_course.id)
 
         user_portal = self.env.user
         sale_order_data = {
@@ -158,17 +158,17 @@ class TestUi(TestUICommon):
         # =================
         self.env['sale.order'].sudo().create(sale_order_data).action_confirm()
         # Member should have access to the course
-        self.assertTrue(self.furniture_course.is_member)
+        self.assertTrue(furniture_course.is_member)
         self.start_tour('/slides', 'certification_member_failure', login=user_portal.login)
         # Member should no longer have access to the course
-        self.assertFalse(self.furniture_course.is_member)
+        self.assertFalse(furniture_course.is_member)
 
         # ===================
         # SUCCESSFUL ATTEMPT
         # ===================
         self.env['sale.order'].sudo().create(sale_order_data).action_confirm()
         # Member regains access to the course
-        self.assertTrue(self.furniture_course.is_member)
+        self.assertTrue(furniture_course.is_member)
 
         self.start_tour('/slides', 'certification_member_success', login=user_portal.login)
 
@@ -176,7 +176,7 @@ class TestUi(TestUICommon):
         # EXTRA TESTS
         # ============
         member = self.env['slide.channel.partner'].sudo().search([
-            ('channel_id', '=', self.furniture_course.id),
+            ('channel_id', '=', furniture_course.id),
             ('partner_id', '=', user_portal.partner_id.id),
         ])
         self.assertTrue(member)
