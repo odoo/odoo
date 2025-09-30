@@ -49,6 +49,7 @@ class ForumPost(models.Model):
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
     write_date = fields.Datetime('Updated on', index=True, readonly=True)
+    write_date_content = fields.Datetime('Content Updated on')
     last_activity_date = fields.Datetime(
         'Last activity on', readonly=True, required=True, default=fields.Datetime.now,
         help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
@@ -408,6 +409,9 @@ class ForumPost(models.Model):
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
 
+        if 'content' in vals or 'name' in vals:
+            vals['write_date_content'] = self.env.cr.now()
+
         tag_ids = False
         if 'tag_ids' in vals:
             tag_ids = set(self.new({'tag_ids': vals['tag_ids']}).tag_ids.ids)
@@ -453,11 +457,10 @@ class ForumPost(models.Model):
                     body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     partner_ids_sudo = post.sudo().follower_ids
 
-                self.env['mail.thread'].with_context(
-                    email_notification_force_header=True,
-                    # create the mail message for Activity view on website
-                    mail_notify_force_create=True,
-                ).message_notify(
+                if not partner_ids_sudo:
+                    continue
+
+                self.env['mail.thread'].with_context(email_notification_force_header=True).message_notify(
                     body=body,
                     model=post._name,
                     res_id=post.id,
@@ -541,16 +544,15 @@ class ForumPost(models.Model):
                 subject = post.name
                 subtype_xmlid = 'website_forum.mt_ask_validation'
 
+            if not partners:
+                continue
+
             body_html = self.env['mail.render.mixin']._render_template_qweb_view(
                 template,
                 post._name,
                 post.ids,
             )[post.id]
-            self.env['mail.thread'].with_context(
-                email_notification_force_header=True,
-                # create the mail message for Activity view on website
-                mail_notify_force_create=True,
-            ).message_notify(
+            self.env['mail.thread'].with_context(email_notification_force_header=True).message_notify(
                 body=body_html,
                 subject=subject,
                 model=post._name,

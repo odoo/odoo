@@ -14,7 +14,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, format_datetime
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -712,7 +712,6 @@ class WebsiteForum(WebsiteProfile):
     def _prepare_open_forum_user(self, user, forums, **kwargs):
         Post = request.env['forum.post']
         Vote = request.env['forum.post.vote']
-        Activity = request.env['mail.message']
         Data = request.env["ir.model.data"]
         search_values = {}
 
@@ -778,19 +777,29 @@ class WebsiteForum(WebsiteProfile):
         # Votes which given by users on others questions and answers.
         vote_ids = Vote.search([('user_id', '=', user.id), ('forum_id', 'in', forums.ids)])
 
-        # activity by user.
-        comment = Data._xmlid_lookup('mail.mt_comment')[1]
-        activities = Activity.search(
-            [('res_id', 'in', Post._search(Domain.OR([question_base_domain, answer_base_domain]))),
-             ('model', '=', 'forum.post'),
-             ('subtype_id', '!=', comment)],
-            order='date DESC', limit=100)
+        # activity by user, show when the user's posts have been created
+        # and when they have been edited
+        activities = []
+        posts = Post.search(
+            Domain.OR([question_base_domain, answer_base_domain]),
+            order='create_date DESC',
+            limit=100,
+        )
+        for post in posts:
+            activities.append((
+                post.create_date,
+                _('New Question') if not post.parent_id else _('New Answer'),
+                post,
+            ))
+            if post.write_date_content:
+                activities.append((
+                    post.write_date_content,
+                    _('Question Edited') if not post.parent_id else _('Answer Edited'),
+                    post,
+                ))
 
-        posts = {}
-        for act in activities:
-            posts[act.res_id] = True
-        posts_ids = Post.search([('id', 'in', list(posts))])
-        posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
+        activities = sorted(activities, reverse=True, key=lambda a: (a[0], a[2].id))
+        activities = [(format_datetime(request.env, post.create_date, dt_format='short'), label, post) for (date, label, post) in activities]
 
         if user != request.env.user:
             kwargs['users'] = True
@@ -819,7 +828,6 @@ class WebsiteForum(WebsiteProfile):
             'down_votes': down_votes,
             'activities': activities,
             'activities_active_tab': activities_active_tab,
-            'posts': posts,
             'vote_post': vote_ids,
             'is_profile_page': True,
             'badge_category': 'forum',

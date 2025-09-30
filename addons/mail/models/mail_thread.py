@@ -2755,7 +2755,7 @@ class MailThread(models.AbstractModel):
         """
         if self:
             self.ensure_one()
-        if not partner_ids and not self.env.context.get('mail_notify_force_create'):
+        if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
             return self.env['mail.message']
 

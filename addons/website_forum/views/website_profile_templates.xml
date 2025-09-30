@@ -209,18 +209,21 @@
     <template id="display_activities" name="Forum Profile Activities">
         <t t-if="activities">
             <div t-foreach="activities" t-as="activity" class="card mb-2">
+                <t t-set="date" t-value="activity[0]"/>
+                <t t-set="label" t-value="activity[1]"/>
+                <t t-set="post" t-value="activity[2]"/>
+
                 <div class="card-body">
-                    <span t-out="activity.subtype_id.name" class="badge text-bg-info me-2 mt-1"/>
-                    <span t-field="activity.date" t-options='{"format": "short"}' class="me-2"/>
-                    <t t-set="post" t-value="posts[activity.res_id]"/>
-                    <span t-if="post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
-                            <span t-out="post[0].name"/>
+                    <span t-out="label" class="badge text-bg-info me-2 mt-1"/>
+                    <span t-out="date" class="me-2"/>
+                    <span t-if="post.parent_id">
+                        <a t-attf-href="/forum/#{ slug(post.forum_id) }/#{ slug(post.parent_id) }#answer-#{post.id}">
+                            <span t-out="post.parent_id.name"/>
                         </a>
                     </span>
-                    <span t-if="not post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }">
-                            <span t-out="post[0].name"/>
+                    <span t-else="">
+                        <a t-attf-href="/forum/#{ slug(post.forum_id) }/#{ slug(post) }">
+                            <span t-out="post.name"/>
                         </a>
                     </span>
                 </div>
