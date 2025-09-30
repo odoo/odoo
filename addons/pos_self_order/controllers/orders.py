@@ -163,8 +163,8 @@ class PosSelfOrderController(http.Controller):
             Domain([
                 ('access_token', '=', data['access_token']),
                 '|',
-                ('write_date', '>', data['write_date']),
-                ('state', '!=', data['state']),
+                ('write_date', '>', data.get('write_date')),
+                ('state', '!=', data.get('state')),
             ]) for data in order_access_tokens
         ]
 

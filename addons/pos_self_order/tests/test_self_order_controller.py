@@ -113,3 +113,66 @@ class TestSelfOrderController(SelfOrderCommonTest):
         }]
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertEqual(data, {})
+
+        # Only write date is provided
+        params['order_access_tokens'] = [{
+            'access_token': order2.access_token,
+            'write_date': '1970-01-01 00:00:00'
+        }]
+
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+        self.assertEqual(len(data['pos.order']), 1)
+        self.assertEqual(data['pos.order'][0]['id'], order2.id)
+
+        # Only state is provided
+        params['order_access_tokens'] = [{
+            'access_token': order2.access_token,
+            'state': 'paid'
+        }]
+
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+        self.assertEqual(len(data['pos.order']), 1)
+        self.assertEqual(data['pos.order'][0]['id'], order2.id)
+
+    def test_access_right_with_message_follower(self):
+        """ Test to ensure that user data is still displayed when a message follower is set on the order """
+        self.pos_config.self_ordering_mode = 'mobile'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'table_identifier': self.pos_table_1.identifier,
+            'order': {
+                'company_id': self.env.company.id,
+                'uuid': '61f8181c-18e1-4b83-8a7b-21224750fe2f',
+                'state': 'draft',
+                'preset_id': self.in_preset.id,
+                'session_id': self.pos_config.current_session_id.id,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'lines': [[0, 0, {'product_id': self.cola.id, 'qty': 1,
+                                  'price_unit': self.cola.lst_price,
+                                  'price_subtotal': self.cola.lst_price,
+                                  'tax_ids': [(6, 0, self.cola.taxes_id.ids)],
+                                  'price_subtotal_incl': 0,
+                                  }]]
+            },
+        }
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', params)
+        pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        self.assertEqual(len(pos_order.message_follower_ids), 1)
+
+        params = {
+            'access_token': pos_order.config_id.access_token,
+            'order_access_tokens': [{
+                'access_token': pos_order.access_token,
+                'write_date': '1970-01-01 00:00:00'
+            }],
+        }
+
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+        self.assertEqual(len(data['pos.order']), 1)
+        self.assertEqual(data['pos.order'][0]['id'], pos_order.id)
