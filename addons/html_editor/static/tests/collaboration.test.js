@@ -261,10 +261,14 @@ test("wrapInlinesInBlocks should not create impossible mutations in a collaborat
     e1.shared.history.addStep();
     mergePeersSteps(peerInfos);
     expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            '<div class="oe_unbreakable"><p>myNode[]</p></div>' +
+            '<p data-selection-placeholder=""><br></p>'
     );
     expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            '<div class="oe_unbreakable"><p>myNode[]</p></div>' +
+            '<p data-selection-placeholder=""><br></p>'
     );
 });
 test("should reset from snapshot", async () => {
@@ -730,14 +734,17 @@ describe("serialize/unserialize", () => {
                 const divA = editor.document.createElement("div");
                 divA.textContent = "a";
                 editor.editable.append(divA);
-                const p = editor.editable.querySelector("p");
+                const p = editor.editable.querySelector("p:not([data-selection-placeholder])");
                 divA.append(p);
                 editor.shared.history.addStep();
             },
         });
         mergePeersSteps(peerInfos);
         validateSameHistory(peerInfos);
-        validateContent(peerInfos, "<div>a<p>x</p></div>");
+        validateContent(
+            peerInfos,
+            '<p data-selection-placeholder=""><br></p><div>a<p>x</p></div><p data-selection-placeholder=""><br></p>'
+        );
     });
     test("Should add a new node that contain another node created in the same mutation stack", async () => {
         const peerInfos = await setupMultiEditor({
@@ -758,7 +765,10 @@ describe("serialize/unserialize", () => {
         });
         mergePeersSteps(peerInfos);
         validateSameHistory(peerInfos);
-        validateContent(peerInfos, `<p>x</p><div>b<div class="o-paragraph">a</div></div>`);
+        validateContent(
+            peerInfos,
+            `<p>x</p><div>b<div class="o-paragraph">a</div></div><p data-selection-placeholder=""><br></p>`
+        );
     });
 });
 

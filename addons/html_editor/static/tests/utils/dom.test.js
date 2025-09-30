@@ -301,13 +301,15 @@ describe("wrapInlinesInBlocks", () => {
         // element).
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -335,12 +337,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });

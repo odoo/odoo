@@ -264,7 +264,8 @@ describe("deleteRange method", () => {
             await testEditor({
                 contentBefore: `[<div class="container o_text_columns"><div class="row"><div class="col-4"><p>a</p></div><div class="col-4"><p>b</p></div><div class="col-4"><p>c</p></div></div></div>]`,
                 stepFunction: deleteRange,
-                contentAfter: `[]<p><br></p>`,
+                // TODO: should an empty editable be allowed without allowInlineAtRoot?
+                contentAfter: `[]`,
             });
         });
         test("should delete columns when all selected along with text from an outer node", async () => {

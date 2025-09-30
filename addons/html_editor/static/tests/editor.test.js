@@ -154,7 +154,9 @@ test("Convert self closing t elements to opening/closing tags", async () => {
         </div>
     `);
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>` +
+            '<p data-selection-placeholder=""><br></p>'
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'

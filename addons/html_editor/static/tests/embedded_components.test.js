@@ -387,7 +387,7 @@ describe("Mount and Destroy embedded components", () => {
             unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
-                    <div>
+                    []<div>
                         <div class="click count-2">Count:2</div>
                         <div class="innerEditable-2">
                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
@@ -418,7 +418,7 @@ describe("Mount and Destroy embedded components", () => {
                         </div>
                     </div>
                 </div>
-                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
         for (const index of indexOrder) {
@@ -444,8 +444,8 @@ describe("Mount and Destroy embedded components", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
-                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
+                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">[]</div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
         // Verify that there is no potential host outside of the editable,
@@ -586,8 +586,8 @@ describe("Selection after embedded component insertion", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
-                <p>[]<br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
+                <p data-selection-placeholder=""><br></p>`)
         );
     });
     test("block at the end of paragraph", async () => {
@@ -601,8 +601,8 @@ describe("Selection after embedded component insertion", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
-                <p>[]<br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
+                <p data-selection-placeholder=""><br></p>`)
         );
     });
     test("block at the start of paragraph", async () => {
@@ -846,7 +846,9 @@ describe("Mount processing", () => {
         // "unknown" data-embedded should be considered once during the first
         // mounting wave.
         expect.verifySteps(["unknown handled"]);
-        expect(getContent(el)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+        expect(getContent(el)).toBe(
+            `<p data-selection-placeholder=""><br></p><div data-embedded="unknown"><p>UNKNOWN</p></div><p data-selection-placeholder=""><br></p>`
+        );
     });
     test("Mount a component with a plugin that modifies the Component's env", async () => {
         let setSelection;
@@ -904,7 +906,7 @@ describe("In-editor manipulations", () => {
         await animationFrame();
         await expectElementCount(".o-we-toolbar", 1);
         expect(getContent(el)).toBe(
-            `<div><p>[a]</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span></div>`
+            `<p data-selection-placeholder=""><br></p><div><p>[a]</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span></div><p data-selection-placeholder=""><br></p>`
         );
 
         const node = queryFirst(".counter", {}).firstChild;
@@ -912,7 +914,7 @@ describe("In-editor manipulations", () => {
         await tick();
         await animationFrame();
         expect(getContent(el)).toBe(
-            `<div><p>a</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">C[ou]nter:0</span></span></div>`
+            `<p data-selection-placeholder=""><br></p><div><p>a</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">C[ou]nter:0</span></span></div><p data-selection-placeholder=""><br></p>`
         );
         await expectElementCount(".o-we-toolbar", 0);
     });
@@ -938,7 +940,7 @@ describe("In-editor manipulations", () => {
         );
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div><p data-selection-placeholder=""><br></p>`
+            `<p data-selection-placeholder=""><br></p><div><p>a</p></div><p data-selection-placeholder=""><br></p><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div><p data-selection-placeholder=""><br></p>`
         );
     });
 
@@ -952,7 +954,7 @@ describe("In-editor manipulations", () => {
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
-            `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p data-selection-placeholder=""><br></p>`
+            `<p data-selection-placeholder=""><br></p><div><p>a</p></div><p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p data-selection-placeholder=""><br></p>`
         );
     });
 
@@ -972,7 +974,9 @@ describe("In-editor manipulations", () => {
         );
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
-        expect(getContent(node)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+        expect(getContent(node)).toBe(
+            `<p data-selection-placeholder=""><br></p><div data-embedded="unknown"><p>UNKNOWN</p></div><p data-selection-placeholder=""><br></p>`
+        );
     });
 
     test("Don't remove empty inline-block data-embedded elements during initElementForEdition, but wrap them in div instead", async () => {
@@ -981,7 +985,7 @@ describe("In-editor manipulations", () => {
             { config: getConfig([embedding("counter", Counter)]) }
         );
         expect(getContent(el, { sortAttrs: true })).toBe(
-            `<div><div contenteditable="false" data-embedded="counter" data-oe-protected="true" style="display:inline-block;"><span class="counter">Counter:0</span></div></div>`
+            `<p data-selection-placeholder=""><br></p><div><div contenteditable="false" data-embedded="counter" data-oe-protected="true" style="display:inline-block;"><span class="counter">Counter:0</span></div></div><p data-selection-placeholder=""><br></p>`
         );
     });
 });
