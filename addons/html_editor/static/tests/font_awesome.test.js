@@ -161,7 +161,9 @@ describe("parse/render", () => {
         await testEditor({
             contentBefore: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
             contentBeforeEdit:
-                '<div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><div><p>abc</p></div></div>',
+                '<p data-selection-placeholder=""><br></p>' +
+                '<div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><div><p>abc</p></div></div>' +
+                '<p data-selection-placeholder=""><br></p>',
             contentAfter: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
         });
     });
