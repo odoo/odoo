@@ -1,5 +1,6 @@
 import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
+import { isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "@html_builder/plugins/add_product_option";
@@ -35,6 +36,13 @@ class PriceListBoxedOptionPlugin extends Plugin {
             dropNear: ".s_pricelist_boxed_item",
         },
         is_movable_selector: { selector: ".s_pricelist_boxed_item", direction: "vertical" },
+        // Protect pricelist item, price, and description blocks from being
+        // split/merged by the delete plugin.
+        unsplittable_node_predicates: (node) =>
+            isElement(node) &&
+            node.matches(
+                ".s_pricelist_boxed_item, .s_pricelist_boxed_item_price, .s_pricelist_boxed_item_description"
+            ),
     };
 }
 
