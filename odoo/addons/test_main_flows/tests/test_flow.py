@@ -88,6 +88,20 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
             'default_account_id': bnk.id,
         })
 
+        self.vendor_partner = self.env['res.partner'].create({'name': 'the_flow.vendor'})
+        self.customer_partner = self.env['res.partner'].create({'name': 'the_flow.customer'})
+
+        self.vendor_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': 'BE15001559627230',
+            'partner_id': self.vendor_partner.id,
+            'allow_out_payment': True,
+        })
+        self.customer_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': 'BE15001559627230',
+            'partner_id': self.customer_partner.id,
+            'allow_out_payment': True,
+        })
+
         self.start_tour("/odoo", 'main_flow_tour', login="admin", timeout=180)
 
 

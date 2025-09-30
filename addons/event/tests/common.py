@@ -93,6 +93,12 @@ class EventCase(common.TransactionCase):
             'phone': '0485112233',
             'mobile': False,
         })
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.event_customer.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
         cls.event_customer2 = cls.env['res.partner'].create({
             'name': 'Constantin Customer 2',
             'email': 'constantin2@test.example.com',

@@ -12,6 +12,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         super().setUpClass()
 
         cls.env.user.groups_id += cls.env.ref('hr.group_hr_user')
+        cls.env.user.groups_id |= cls.env.ref('hr_payroll.group_hr_payroll_user')
 
         cls.main_pos_config.write({"module_pos_hr": True})
 

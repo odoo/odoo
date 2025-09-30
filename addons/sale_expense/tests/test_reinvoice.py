@@ -25,6 +25,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.groups_id |= cls.env.ref('base.group_partner_manager')
         new_sale_tax, new_purchase_tax = cls.env['account.tax'].create([{
             'name': 'Tax 12.499%',
             'amount': 12.499,

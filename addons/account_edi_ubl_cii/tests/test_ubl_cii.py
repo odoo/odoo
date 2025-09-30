@@ -444,6 +444,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'partner_id': self.partner_a.id,
                 'bank_id': bank_ing.id,
                 'company_id': self.env.company.id,
+                'allow_out_payment': True,
             })
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,

@@ -30,3 +30,10 @@ class TestMembershipCommon(AccountTestInvoicingCommon):
             'name': 'Martine Poulichette',
             'free_member': True,
         })
+
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.partner_1.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })

@@ -62,21 +62,25 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             'acc_number': "0123456789",
             'partner_id': cls.partner_a.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
         cls.partner_bank_account2 = cls.env['res.partner.bank'].create({
             'acc_number': "9876543210",
             'partner_id': cls.partner_a.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
         cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
             'acc_number': "985632147",
             'partner_id': cls.env.company.partner_id.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
         cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
             'acc_number': "741258963",
             'partner_id': cls.env.company.partner_id.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
 
         # Customer invoices sharing the same batch.
@@ -752,7 +756,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 'journal_id': self.bank_journal_1.id,
                 'memo': 'BILL/2017/01/0003',
                 'payment_method_line_id': self.outbound_payment_method_line.id,
-                'partner_bank_id': False,
+                'partner_bank_id': self.partner_b_bank_account.id,
             },
         ])
         self.assertRecordValues(payments[0].move_id.line_ids.sorted('balance') + payments[1].move_id.line_ids.sorted('balance') + payments[2].move_id.line_ids.sorted('balance'), [
@@ -1380,6 +1384,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         """ Test payment methods when paying a bill and a refund with separated payments (1000 + -2000)."""
         invoice_1 = self.in_invoice_1
         invoice_2 = invoice_1.copy({'invoice_date': invoice_1.invoice_date, 'partner_id': self.partner_b.id})
+        partner_c = self.partner_b.copy({'property_account_position_id': False})
+        self.env['res.partner.bank'].create({
+             'acc_number': "985632147",
+             'partner_id': partner_c.id,
+             'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
         refund_1, refund_2 = self.env['account.move'].create([
             {
                 'move_type': 'in_refund',
@@ -1392,7 +1403,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 'move_type': 'in_refund',
                 'date': '2017-01-01',
                 'invoice_date': '2017-01-01',
-                'partner_id': self.partner_b.copy({'property_account_position_id': False}).id,
+                'partner_id': partner_c.id,
                 'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1600.0, 'tax_ids': False})],
             },
         ])

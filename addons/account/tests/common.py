@@ -53,6 +53,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.groups_id |= cls.env.ref('account.group_validate_bank_account')
 
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
@@ -146,6 +147,21 @@ class AccountTestInvoicingCommon(ProductCommon):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
             'company_id': False,
+        })
+
+        # ==== Bank accounts ====
+        cls.partner_a_bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.partner_a.id,
+            'acc_type': 'bank',
+            'sequence': 20,
+            'allow_out_payment': True,
+        })
+        cls.partner_b_bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': 'IT97J60308851416191405Q1799',
+            'partner_id': cls.partner_b.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
         })
 
         # ==== Cash rounding ====

@@ -20,6 +20,12 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'is_company': True,
             'country_id': cls.env.ref('base.us').id,
         })
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE15001559627230',
+            'partner_id': cls.partner_agrolait.id,
+            'allow_out_payment': True,
+        })
+
         cls.company = cls.company_data['company']
         cls.company.write({'country_id': be_country_id})
         cls.tag_names = {
