@@ -538,7 +538,7 @@ def load_modules(
                 registry = Registry.new(
                     cr.dbname, update_module=update_module
                 )
-                cr.reset()
+                cr.transaction.reset()
                 registry.check_tables_exist(cr)
                 cr.commit()
                 return
