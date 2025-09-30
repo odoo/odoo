@@ -674,6 +674,7 @@ export function makeActionManager(env, router = _router) {
                     name: v.display_name,
                     type: v.type,
                     multiRecord: v.multiRecord,
+                    offlineAvailable: env.services.offline.views.includes(v.type),
                 };
                 if (view.type === v.type) {
                     viewSwitcherEntry.active = true;
@@ -1229,6 +1230,10 @@ export function makeActionManager(env, router = _router) {
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
+        }
+        const offlineViews = env.services.offline.views;
+        if (env.services.offline.offline && !offlineViews.includes(view.type)) {
+            view = views.find((v) => offlineViews.includes(v.type));
         }
 
         const controller = _makeController({

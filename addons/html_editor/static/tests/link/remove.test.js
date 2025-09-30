@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { testEditor, setupEditor } from "../_helpers/editor";
 import { unlinkFromPopover, unlinkByCommand, unlinkFromToolbar } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe("range collapsed, remove by popover unlink button", () => {
     test("should remove the link if collapsed range at the end of a link", async () => {
@@ -356,6 +357,15 @@ describe("range not collapsed", () => {
         expect(getContent(el)).toBe("<p>[test]</p>");
     });
     test("should be able to remove link if selection has FEFF character (2)", async () => {
+        onRpc("/html_editor/link_preview_external", () => ({
+            og_description:
+                "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+            og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+            og_title: "Open Source ERP and CRM | Odoo",
+            og_type: "website",
+            og_site_name: "Odoo",
+            source_url: "http://odoo.com/",
+        }));
         const { el } = await setupEditor(
             '<p><a href="http://test.test/" class="btn btn-primary">[]test</a></p>'
         );

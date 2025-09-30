@@ -206,3 +206,14 @@ export class Pager extends Component {
         }
     }
 }
+
+export class OfflinePager extends Pager {
+    static template = "web.OfflinePager";
+    setup() {
+        super.setup();
+        this.state.isDisabled = true;
+        this.state.isEditing = false;
+    }
+    onValueClick() {}
+    updateTotal() {}
+}

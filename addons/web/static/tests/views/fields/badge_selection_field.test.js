@@ -89,9 +89,9 @@ test("[Offline] BadgeSelectionField widget on a many2one", async () => {
     expect(`div.o_field_selection_badge`).toHaveCount(1, {
         message: "should have rendered outer div",
     });
-    expect(`span.o_selection_badge`).toHaveCount(1);
-    expect(queryAllTexts(`span.o_selection_badge`)).toEqual(["xphone"]);
-    expect(`span.active`).toHaveCount(1);
+
+    expect(`div.o_field_selection_badge span`).toHaveCount(1);
+    expect(queryAllTexts(`div.o_field_selection_badge span`)).toEqual(["xphone"]);
 
     expect.verifyErrors([
         `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,

@@ -102,7 +102,7 @@ test("[Offline] Many2ManyCheckBoxesField", async () => {
 
     expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
 
-    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(1);
     expect.verifyErrors([
         `Error: Connection to "/web/dataset/call_kw/partner.type/name_search" couldn't be established or was interrupted`,
         `Error: Connection to "/web/dataset/call_kw/partner.type/name_search" couldn't be established or was interrupted`,

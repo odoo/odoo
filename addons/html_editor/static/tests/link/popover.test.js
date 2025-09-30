@@ -25,6 +25,15 @@ import { MAIN_PLUGINS, NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS } from "@html_edi
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
+onRpc("/html_editor/link_preview_external", () => ({
+    og_description:
+        "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+    og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+    og_title: "Open Source ERP and CRM | Odoo",
+    og_type: "website",
+    og_site_name: "Odoo",
+    source_url: "http://odoo.com/",
+}));
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
         const { el } = await setupEditor("<p>this is a <a>link</a></p>");
@@ -243,7 +252,7 @@ describe("popover should switch UI depending on editing state", () => {
         await click(".o_advance_option_panel .fa-angle-left");
         await waitFor(".o-we-linkpopover");
         await contains(".o_we_apply_link").click();
-        expect (cleanLinkArtifacts(getContent(el))).toBe(
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/" rel="noopener" target="_blank">li[]nk</a></p>'
         );
     });

@@ -39,6 +39,15 @@ test("Can replace an image", async () => {
 });
 
 test("Replace an image with link by a document should remove the link", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
         {
             id: 1,

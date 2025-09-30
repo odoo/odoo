@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.offlineSystray">
+        <div t-if="offlineService.offline" title="offline">
+            <t t-if="env.isSmall">
+                <i class="fa fa-chain-broken" role="img" aria-label="Working offline" data-tooltip="Working Offline"/>
+            </t>
+            <t t-else="">
+                <button aria-expanded="false" class="border-0 fw-bold o_tag opacity-75 rounded-pill text-bg-warning" data-tooltip="Working Offline"><i class="fa fa-unlink"></i>
+                    Working offline
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>
+
