@@ -617,12 +617,6 @@
             <field name="bom_id" ref="mrp_bom_drawer"/>
         </record>
 
-        <!-- Run Scheduler -->
-        <function model="stock.rule" name="run_scheduler_orderpoints"/>
-        <function model="stock.rule" name="run_scheduler_reservations"/>
-        <function model="stock.rule" name="run_scheduler_clean_quants"/>
-
-
         <!-- OEE -->
 
         <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">

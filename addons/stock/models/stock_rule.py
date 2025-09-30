@@ -684,41 +684,36 @@ class StockRule(models.Model):
         ])
 
     @api.model
-    def _run_scheduler_orderpoints(self, use_new_cursor=False, company_id=False):
+    def _run_scheduler_orderpoints(self, company_id=False):
         domain = self._get_orderpoint_domain(company_id=company_id)
-        orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
+        all_orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
 
-        if orderpoints:
+        self.env['ir.cron']._commit_progress(remaining=len(all_orderpoints))
+        for orderpoints in split_every(1000, all_orderpoints.ids, self.env['stock.warehouse.orderpoint'].browse):
             orderpoints.sudo()._compute_qty_to_order_computed()
             orderpoints.sudo()._compute_deadline_date()
-            orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+            orderpoints.sudo()._procure_orderpoint_confirm(company_id=company_id, raise_user_error=False)
 
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+            self.env['ir.cron']._commit_progress(processed=len(orderpoints))
+            _logger.info("Updated %d orderpoints out of %d orderpoints", len(orderpoints), len(all_orderpoints))
 
     @api.model
-    def _run_scheduler_reservations(self, use_new_cursor=False, company_id=False):
+    def _run_scheduler_reservations(self, company_id=False):
         domain = self._get_moves_to_assign_domain(company_id)
-        moves_to_assign = self.env['stock.move'].search(domain, limit=None,
+        all_moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='reservation_date, priority desc, date asc, id asc')
-        total_task = len(moves_to_assign)
 
-        task_done = 0
-        for moves_chunk in split_every(1000, moves_to_assign.ids):
+        self.env['ir.cron']._commit_progress(remaining=len(all_moves_to_assign))
+        for moves_chunk in split_every(1000, all_moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
-            task_done += len(moves_chunk)
 
-            if use_new_cursor:
-                self.env['ir.cron']._commit_progress(processed=task_done, remaining=total_task - task_done)
-                _logger.info("Assigned and committed %d out of %d moves", task_done, total_task)
-
-        _logger.info("Stock reservation assignment completed: %d moves processed", task_done)
+            self.env['ir.cron']._commit_progress(processed=len(moves_chunk))
+            _logger.info("Assigned and committed %d out of %d moves", len(moves_chunk), len(all_moves_to_assign))
 
     @api.model
-    def _run_scheduler_clean_quants(self, use_new_cursor=False):
-        self.env['stock.quant']._quant_tasks()
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+    def _run_scheduler_clean_quants(self, from_cron=False):
+        self.env['stock.quant']._quant_tasks(from_cron)
+        self.env['ir.cron']._commit_progress(1)
 
     # The following run_scheduler methods are part of the stock scheduler system and are intended to be run
     # as SUPERUSER to avoid access rights and multi-company issues. They perform automated warehouse operations,
