@@ -359,6 +359,19 @@ class IrQwebFieldMany2many(models.AbstractModel):
         return nl2br(text)
 
 
+class IrQwebFieldOne2many(models.AbstractModel):
+    _name = 'ir.qweb.field.one2many'
+    _description = 'Qweb field one2many'
+    _inherit = ['ir.qweb.field']
+
+    @api.model
+    def value_to_html(self, value, options):
+        if not value:
+            return False
+        text = ', '.join(value.sudo().mapped('display_name'))
+        return nl2br(text)
+
+
 class IrQwebFieldHtml(models.AbstractModel):
     _name = 'ir.qweb.field.html'
     _description = 'Qweb Field HTML'
