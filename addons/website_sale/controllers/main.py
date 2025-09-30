@@ -285,7 +285,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
@@ -521,7 +521,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def product(self, product, category=None, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         if pricelist is not None:
             try:
