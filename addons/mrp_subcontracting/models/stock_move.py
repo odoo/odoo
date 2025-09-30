@@ -282,7 +282,7 @@ class StockMove(models.Model):
                     production_to_keep.lot_producing_ids = False
                     orphan_productions = orphan_productions[:-1]
                 if orphan_productions:
-                    orphan_productions.with_context(skip_activity=True).unlink()
+                    orphan_productions.sudo().with_context(skip_activity=True).unlink()
                     productions -= orphan_productions
 
                 mos_to_assign.sudo().action_assign()
