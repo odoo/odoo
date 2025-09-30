@@ -115,7 +115,7 @@ test("creating list directly inside table column (td)", async () => {
                     </tr>
                 </tbody>
             </table>
-            <p><br></p>`)
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 

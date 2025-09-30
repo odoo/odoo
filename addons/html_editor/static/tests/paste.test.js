@@ -101,11 +101,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -3896,9 +3895,9 @@ ${"            "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT
-                </td>
+                []</td>
             </tr>
-        </tbody></table><p>[]<br></p>`,
+        </tbody></table>`,
         });
     });
 
@@ -4006,10 +4005,10 @@ ${"        "}
                     text on color background</td>
             </tr>
             <tr>
-                <td>14pt MONO TEXT</td>
+                <td>14pt MONO TEXT[]</td>
             </tr>
         </tbody>
-    </table><p>[]<br></p>`,
+    </table>`,
         });
     });
 
@@ -4135,10 +4134,10 @@ ${"        "}
         </tr>
         <tr>
             <td>
-                14pt MONO TEXT
+                14pt MONO TEXT[]
             </td>
         </tr>
-    </tbody></table><p>[]<br></p>`,
+    </tbody></table>`,
         });
     });
     test("should apply default table classes (table, table-bordered, o_table) on paste", async () => {
@@ -4164,11 +4163,10 @@ ${"        "}
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -4213,11 +4211,10 @@ ${"        "}
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2</td>
+                                    <td>2[]</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });
@@ -4244,11 +4241,10 @@ ${"        "}
                             <tbody>
                                 <tr>
                                     <th>1</th>
-                                    <th>2</th>
+                                    <th>2[]</th>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });
