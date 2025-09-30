@@ -18,6 +18,7 @@ import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
+    getService,
     onRpc,
     serverState,
     waitForSteps,
@@ -241,4 +242,23 @@ test("Create channel must have a name", async () => {
     await click("input[placeholder='Channel name']");
     await triggerHotkey("Enter");
     await contains(".invalid-feedback", { text: "Channel must have a name." });
+});
+
+test("Can join accessible channel via thread action", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Very cool channel",
+        channel_member_ids: [],
+    });
+    await start();
+    await openDiscuss();
+    await getService("action").doAction({
+        context: { active_id: channelId },
+        tag: "mail.action_discuss",
+        type: "ir.actions.client",
+    });
+    await contains(".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members'))");
+    await contains(".o-discuss-ChannelMember", { count: 0 });
+    await click("[title='Join Channel']");
+    await contains(".o-discuss-ChannelMember", { count: 1, text: "Mitchell Admin" });
 });
