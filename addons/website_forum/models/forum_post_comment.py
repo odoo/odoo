@@ -87,11 +87,7 @@ class ForumPostMessage(models.Model):
         followers = self.post_id.sudo().follower_ids
 
         if followers:
-            self.env['mail.thread'].with_context(
-                email_notification_force_header=True,
-                # create the mail message for Activity view on website
-                mail_notify_force_create=True,
-            ).message_notify(
+            self.env['mail.thread'].with_context(email_notification_force_header=True).message_notify(
                 body=self.body,
                 subject=_("New comment in %s", question.name),
                 model=question._name,
