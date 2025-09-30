@@ -2,6 +2,8 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_info_list";
+import { patch } from "@web/core/utils/patch";
+import { joinChannelAction } from "@mail/discuss/core/web/thread_actions";
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
@@ -41,26 +43,23 @@ registerThreadAction("livechat-status", {
     sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
     toggle: true,
 });
-registerThreadAction("join-livechat-needing-help", {
-    condition: ({ owner, thread }) =>
-        thread?.livechat_status === "need_help" &&
-        !thread?.self_member_id &&
-        !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-sign-in",
-    name: _t("Join Chat"),
-    nameClass: "text-success",
-    open: async ({ store, thread }) => {
-        const hasJoined = await store.env.services.orm.call(
-            "discuss.channel",
-            "livechat_join_channel_needing_help",
-            [[thread.id]]
-        );
-        if (!hasJoined && thread.isDisplayed) {
-            store.env.services.notification.add(
-                _t("Someone has already joined this conversation"),
-                { type: "warning" }
+
+patch(joinChannelAction, {
+    async open({ store, thread }) {
+        if (thread.livechat_status === "need_help") {
+            const hasJoined = await store.env.services.orm.call(
+                "discuss.channel",
+                "livechat_join_channel_needing_help",
+                [[thread.id]]
             );
+            if (!hasJoined && thread.isDisplayed) {
+                store.env.services.notification.add(
+                    _t("Someone has already joined this conversation"),
+                    { type: "warning" }
+                );
+            }
+        } else {
+            super.open(...arguments);
         }
     },
-    sequence: 5,
 });

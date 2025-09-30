@@ -25,13 +25,13 @@ test("Show join button when help is required and self is not a member", async ()
     await start();
     await openDiscuss(channel);
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
-    await click("button[name='join-livechat-needing-help']");
+    await click("button[name='join-channel']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "In progress" });
-    await contains("button[name='join-livechat-needing-help']", { count: 0 });
+    await contains("button[name='join-channel']", { count: 0 });
     await click("button", { text: "Looking for help" });
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     // Now that we are members, the button is not shown, even if help is required.
-    await contains("button[name='join-livechat-needing-help']", { count: 0 });
+    await contains("button[name='join-channel']", { count: 0 });
 });
 
 test("Show notification when joining a channel that already received help", async () => {
@@ -54,7 +54,7 @@ test("Show notification when joining a channel that already received help", asyn
     });
     await openDiscuss(channel);
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
-    await click("button[name='join-livechat-needing-help']");
+    await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
 });
 
@@ -83,10 +83,10 @@ test("Hide 'help already received' notification when channel is not visible", as
     });
     await openDiscuss(channel);
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
-    await click("button[name='join-livechat-needing-help']");
+    await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
     canRespondDeferred = new Deferred();
-    await click("button[name='join-livechat-needing-help']");
+    await click("button[name='join-channel']");
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
     canRespondDeferred.resolve();
