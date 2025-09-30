@@ -3318,7 +3318,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, computation_key=None):
+    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, aggregate_function=None, computation_key=None):
         """ Create the new base lines that will get the discount.
         Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
         the grouping_function passed as parameter.
@@ -3330,6 +3330,7 @@ class AccountTax(models.Model):
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
+        :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
         :param computation_key:     The computation_key to be set on the aggregated base_lines.
         :return:                    The base lines aggregated.
         """
@@ -3359,6 +3360,8 @@ class AccountTax(models.Model):
                     tax_details_1=target_base_line['tax_details'],
                     tax_details_2=base_line['tax_details'],
                 )
+                if aggregate_function:
+                    aggregate_function(target_base_line, base_line)
             else:
                 base_line_map[grouping_key] = self._prepare_base_line_for_taxes_computation(
                     new_base_line,
@@ -3514,6 +3517,7 @@ class AccountTax(models.Model):
         amount,
         computation_key=None,
         grouping_function=None,
+        aggregate_function=None,
     ):
         """
 
@@ -3525,6 +3529,7 @@ class AccountTax(models.Model):
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
+        :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
         :return:                    A new list of base lines having total amounts exactly matching the expected 'amount'/'amount_type'.
         """
         if not base_lines:
@@ -3601,6 +3606,7 @@ class AccountTax(models.Model):
         reduced_base_lines = self._reduce_base_lines_with_grouping_function(
             base_lines=base_lines,
             grouping_function=grouping_function,
+            aggregate_function=aggregate_function,
             computation_key=computation_key,
         )
 
