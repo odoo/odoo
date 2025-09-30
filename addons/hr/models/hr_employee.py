@@ -1563,18 +1563,19 @@ class HrEmployee(models.Model):
         # the result is expected from this table, so we should link tables
         return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
-    def _load_demo_data(self):
-        dep_rd = self.env.ref('hr.dep_rd', raise_if_not_found=False)
-        action_reload = {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
-        if dep_rd:
-            return action_reload
+    @api.model
+    def is_onboarding(self, company_ids):
+        main_company = self.env.ref("base.main_company").id
+        return (
+            main_company in company_ids
+            and not self.env['hr.employee'].search_count([('company_id', 'in', company_ids)], limit=1)
+        )
+
+    @api.model
+    def load_demo_data(self):
+        if not self.has_access('create'):
+            raise UserError(self.env._("You do not have the rights to load the Employees sample data."))
         convert.convert_file(env=self.sudo().env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init')
-        if 'resume_line_ids' in self:
-            convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init')
-        return action_reload
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
