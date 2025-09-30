@@ -13,97 +13,40 @@ Localization Module for Denmark
 ===============================
 
 This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S
-
-**Modulet opsætter:**
-
-- **Dansk kontoplan**
-
-- Dansk moms
-        - 25% moms
-        - Resturationsmoms 6,25%
-        - Omvendt betalingspligt
-
-- Konteringsgrupper
-        - EU (Virksomhed)
-        - EU (Privat)
-        - 3.lande
-
-- Finans raporter
-        - Resulttopgørelse
-        - Balance
-        - Momsafregning
-            - Afregning
-            - Rubrik A, B og C
-
-- **Anglo-Saxon regnskabsmetode**
-
-.
-
-Produkt setup:
-==============
-
-**Vare**
-
-**Salgsmoms:**      Salgmoms 25%
-
-**Salgskonto:**     1010 Salg af vare, m/moms
-
-**Købsmoms:**       Købsmoms 25%
-
-**Købskonto:**      2010 Direkte omkostninger vare, m/moms
-
-.
-
-**Ydelse**
-
-**Salgsmoms:**      Salgmoms 25%, ydelser
-
-**Salgskonto:**     1011 Salg af ydelser, m/moms
-
-**Købsmoms:**       Købsmoms 25%, ydelser
-
-**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms
-
-.
-
-**Vare med omvendt betalingspligt**
-
-**Salgsmoms:**      Salg omvendt betalingspligt
-
-**Salgskonto:**     1012 Salg af vare, u/moms
-
-**Købsmoms:**       Køb omvendt betalingspligt
-
-**Købskonto:**      2012 Direkte omkostninger vare, u/moms
-
-
-.
-
-**Restauration**
-
-**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms
-
-**Købskonto:**      4010 Restaurationsbesøg
-
-.
+Also provides Nemhandel registration and invoice sending throught the Odoo Access Point
 
     """,
     'depends': [
         'base_iban',
         'base_vat',
         'account',
+        'account_edi_proxy_client',
         'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],
     'data': [
+        'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
         'data/account.account.tag.csv',
+        'data/cron.xml',
+        'data/nemhandel_onboarding_tour.xml',
         'views/account_journal_views.xml',
-        'views/res_partner_views.xml',
+        'views/account_move_views.xml',
         'views/res_company_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'wizard/nemhandel_registration_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/nemhandel_mode_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_dk/static/src/components/**/*',
+            'l10n_dk/static/src/tours/nemhandel_onboarding.js',
+        ],
+    },
     'license': 'LGPL-3',
+    'pre_init_hook': '_pre_init_nemhandel',
 }
