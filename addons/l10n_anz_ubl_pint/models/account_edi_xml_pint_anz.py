@@ -26,6 +26,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
         vals.setdefault('party_tax_scheme_vals', [])
 
@@ -35,6 +37,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         return vals
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
         company_currency = invoice.company_id.currency_id
         if invoice.currency_id != company_currency:
@@ -53,6 +57,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code
         """
         # OVERRIDE account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         if not supplier.vat:
             return {
                 'tax_category_code': 'O',
@@ -63,6 +69,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for vals in vals_list:
             vals['tax_scheme_vals'] = {'id': 'GST'}
@@ -75,6 +83,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
 
         for vals in vals_list:
@@ -85,6 +95,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
 
         for val in line_item_vals['classified_tax_category_vals']:
@@ -97,6 +109,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({

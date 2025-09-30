@@ -26,6 +26,8 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
 
         for party_tax_scheme in vals['party_tax_scheme_vals']:
@@ -36,6 +38,8 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
     def _get_invoice_payment_means_vals_list(self, invoice):
         """ https://www.peppolguide.sg/billing/bis/#_payment_means_information
         """
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_payment_means_vals_list(invoice)
         for vals in vals_list:
             vals.update({
@@ -48,6 +52,8 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
     def _get_tax_sg_codes(self, tax):
         """ https://www.peppolguide.sg/billing/bis/#_gst_category_codes
         """
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         tax_category_code = 'SR'
         if tax.amount == 0:
             tax_category_code = 'ZR'
@@ -55,6 +61,8 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # OVERRIDE
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         res = []
         for tax in taxes:
             res.append({
@@ -66,6 +74,8 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
