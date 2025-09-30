@@ -402,7 +402,7 @@ class StockQuant(models.Model):
     def action_view_inventory(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+        if not self.env['ir.config_parameter'].sudo().get_bool('stock.skip_quant_tasks'):
             self._quant_tasks()
 
         ctx = dict(self.env.context or {})
@@ -1294,7 +1294,7 @@ class StockQuant(models.Model):
 
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+        if not self.env['ir.config_parameter'].sudo().get_bool('stock.skip_quant_tasks'):
             self._quant_tasks()
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
@@ -1379,8 +1379,8 @@ class StockQuant(models.Model):
 
         :return: list
         """
-        agg_barcode_max_length = int(self.env['ir.config_parameter'].sudo().get_param('stock.agg_barcode_max_length', 400))
-        barcode_separator = self.env['ir.config_parameter'].sudo().get_param('stock.barcode_separator')
+        agg_barcode_max_length = self.env['ir.config_parameter'].sudo().get_int('stock.agg_barcode_max_length') or 400
+        barcode_separator = self.env['ir.config_parameter'].sudo().get_str('stock.barcode_separator')
         if not barcode_separator:
             return []  # A barcode separator is mandatory to be able to aggregate barcodes.
 

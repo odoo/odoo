@@ -104,7 +104,7 @@ class CrmTeamMember(models.Model):
 
     @api.depends('crm_team_id')
     def _compute_is_membership_multi(self):
-        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_bool('sales_team.membership_multi')
         self.is_membership_multi = multi_enabled
 
     @api.depends('is_membership_multi', 'active', 'user_id', 'crm_team_id')
@@ -153,7 +153,7 @@ class CrmTeamMember(models.Model):
         when creating them as chatter is mainly used for information purpose
         (tracked fields).
         """
-        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        is_membership_multi = self.env['ir.config_parameter'].sudo().get_bool('sales_team.membership_multi')
         if not is_membership_multi:
             self._synchronize_memberships(vals_list)
         return super(CrmTeamMember, self.with_context(
@@ -170,7 +170,7 @@ class CrmTeamMember(models.Model):
         maybe archive / activate them. Updating manually memberships by
         modifying user_id or team_id is advanced and does not benefit from our
         support. """
-        is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        is_membership_multi = self.env['ir.config_parameter'].sudo().get_bool('sales_team.membership_multi')
         if not is_membership_multi and vals.get('active'):
             self._synchronize_memberships([
                 dict(user_id=membership.user_id.id, crm_team_id=membership.crm_team_id.id)

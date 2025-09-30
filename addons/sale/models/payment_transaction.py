@@ -5,7 +5,6 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
-from odoo.tools import str2bool
 
 
 class PaymentTransaction(models.Model):
@@ -89,9 +88,7 @@ class PaymentTransaction(models.Model):
                 continue
             (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
-            auto_invoice = str2bool(
-                self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
-            )
+            auto_invoice = self.env['ir.config_parameter'].sudo().get_bool('sale.automatic_invoice')
             if auto_invoice:
                 # Invoice the sales orders of confirmed transactions instead of only confirmed
                 # orders to create the invoice even if only a partial payment was made.
@@ -99,7 +96,7 @@ class PaymentTransaction(models.Model):
             super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
             if auto_invoice and not self.env.context.get('skip_sale_auto_invoice_send'):
                 if (
-                    str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                    self.env['ir.config_parameter'].sudo().get_bool('sale.async_emails')
                     and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
                 ):
                     send_invoice_cron._trigger()
@@ -157,10 +154,10 @@ class PaymentTransaction(models.Model):
             default_template_param = (
                 self.env['ir.config_parameter']
                 .sudo()
-                .get_param('sale.default_invoice_email_template', False)
+                .get_int('sale.default_invoice_email_template')
             )
             if default_template_param:
-                mail_template = self.env['mail.template'].sudo().browse(int(default_template_param))
+                mail_template = self.env['mail.template'].sudo().browse(default_template_param)
                 if mail_template.exists():
                     send_context['mail_template'] = mail_template
 
@@ -173,7 +170,7 @@ class PaymentTransaction(models.Model):
         """
             Cron to send invoice that where not ready to be send directly after posting
         """
-        if not self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+        if not self.env['ir.config_parameter'].sudo().get_bool('sale.automatic_invoice'):
             return
 
         # No need to retrieve old transactions

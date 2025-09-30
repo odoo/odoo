@@ -445,12 +445,7 @@ def get_session_max_inactivity(env):
         return SESSION_LIFETIME
 
     ICP = env['ir.config_parameter'].sudo()
-
-    try:
-        return int(ICP.get_param('sessions.max_inactivity_seconds', SESSION_LIFETIME))
-    except ValueError:
-        _logger.warning("Invalid value for 'sessions.max_inactivity_seconds', using default value.")
-        return SESSION_LIFETIME
+    return ICP.get_int('sessions.max_inactivity_seconds') or SESSION_LIFETIME
 
 
 def is_cors_preflight(request, endpoint):

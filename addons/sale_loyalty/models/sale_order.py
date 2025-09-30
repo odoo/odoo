@@ -1504,7 +1504,7 @@ class SaleOrder(models.Model):
         super()._validate_order()
         if self.amount_total or not self.reward_amount:
             return
-        auto_invoice = self.env['ir.config_parameter'].get_param('sale.automatic_invoice')
+        auto_invoice = self.env['ir.config_parameter'].get_bool('sale.automatic_invoice')
         if str2bool(auto_invoice):
             # create an invoice for order with zero total amount and automatic invoice enabled
             self._force_lines_to_invoice_policy_order()

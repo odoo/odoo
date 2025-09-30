@@ -17,7 +17,7 @@ class TestMembership(TestSalesCommon):
             'name': 'Test Specific',
             'sequence': 10,
         })
-        cls.env['ir.config_parameter'].set_param('sales_team.membership_multi', True)
+        cls.env['ir.config_parameter'].set_bool('sales_team.membership_multi', True)
 
     def test_archive_user_archives_team_member(self):
         """Test that archiving a user also archives their linked team member."""
@@ -30,7 +30,7 @@ class TestMembership(TestSalesCommon):
         self.assertTrue(self.sales_team_1.with_user(self.env.user).is_membership_multi)
         self.assertTrue(self.new_team.with_user(self.env.user).is_membership_multi)
 
-        self.env['ir.config_parameter'].sudo().set_param('sales_team.membership_multi', False)
+        self.env['ir.config_parameter'].sudo().set_bool('sales_team.membership_multi', False)
         self.env.invalidate_all()  # invalidate all to trigger the recomputation of the is_membership_multi field
         self.assertFalse(self.sales_team_1.with_user(self.env.user).is_membership_multi)
         self.assertFalse(self.new_team.with_user(self.env.user).is_membership_multi)
@@ -38,7 +38,7 @@ class TestMembership(TestSalesCommon):
     @users('user_sales_manager')
     def test_members_mono(self):
         """ Test mono mode using the user m2m relationship """
-        self.env['ir.config_parameter'].sudo().set_param('sales_team.membership_multi', False)
+        self.env['ir.config_parameter'].sudo().set_bool('sales_team.membership_multi', False)
         # ensure initial data
         sales_team_1 = self.sales_team_1.with_user(self.env.user)
         new_team = self.new_team.with_user(self.env.user)
@@ -120,7 +120,7 @@ class TestMembership(TestSalesCommon):
     @users('user_sales_manager')
     def test_memberships_mono(self):
         """ Test mono mode: updating crm_team_member_ids field """
-        self.env['ir.config_parameter'].sudo().set_param('sales_team.membership_multi', False)
+        self.env['ir.config_parameter'].sudo().set_bool('sales_team.membership_multi', False)
         # ensure initial data
         sales_team_1 = self.env['crm.team'].browse(self.sales_team_1.ids)
         new_team = self.env['crm.team'].browse(self.new_team.ids)
