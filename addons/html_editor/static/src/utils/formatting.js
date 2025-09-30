@@ -104,10 +104,13 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, "font-size"),
     },
     setFontSizeClassName: {
-        isFormatted: (node) =>
+        isFormatted: (node, props) =>
             !!findNode(
                 closestPath(node),
-                (el) => FONT_SIZE_CLASSES.find((cls) => el.classList?.contains(cls)),
+                (el) =>
+                    props?.className
+                        ? el.classList?.contains(props.className)
+                        : FONT_SIZE_CLASSES.some((className) => el.classList?.contains(className)),
                 isBlock
             ),
         hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
@@ -115,10 +118,13 @@ export const formatsSpecs = {
             node.style.removeProperty("font-size");
             node.classList.add(props.className);
         },
-        removeStyle: (node) => removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES),
+        removeStyle: (node) => {
+            removeStyle(node, "font-size");
+            removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
+        },
     },
     switchDirection: {
-        isFormatted: isDirectionSwitched,
+        isFormatted: (node, props) => isDirectionSwitched(node, props.editable),
     },
 };
 
