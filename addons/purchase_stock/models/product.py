@@ -13,19 +13,22 @@ from odoo.exceptions import UserError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.constrains('route_ids', 'purchase_ok')
-    def _check_buy_route(self):
-        non_purchasable_products = self.filtered(lambda product: not product.purchase_ok)
-        if not non_purchasable_products:
+    @api.onchange('route_ids', 'purchase_ok')
+    def _onchange_buy_route(self):
+        if self.purchase_ok:
             return
-
         buy_routes = self.env['stock.rule'].search([
             ('action', '=', 'buy'),
             ('picking_type_id.code', '=', 'incoming'),
             ('active', '=', True),
         ]).route_id
-        if buy_routes and any(buy_routes & product.route_ids for product in non_purchasable_products):
-            raise UserError(self.env._("The 'Buy' route cannot be assigned to a product that is not purchasable. Enable 'Can be Purchased' boolean to use this route."))
+        if any(route in self.route_ids._origin for route in buy_routes):
+            return {'warning': {
+                'title': self.env._('Warning!'),
+                'message': self.env._(
+                    'This product has the "Buy" route checked but is not purchasable.'
+                )
+            }}
 
 
 class ProductProduct(models.Model):
