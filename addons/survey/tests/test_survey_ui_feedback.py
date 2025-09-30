@@ -172,14 +172,14 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         # Setup survey translation
         self.assertEqual([lang[0] for lang in self.env['res.lang'].get_installed()], ['en_US'])
         self.env['res.lang']._activate_lang('fr_BE')
-        self.survey_feedback_fr = self.survey_feedback.with_context(lang='fr_BE')
-        self.survey_feedback_fr.title = "Enquête de satisfaction"
-        for survey_item in self.survey_feedback_fr.question_and_page_ids:
+        survey_feedback_fr = self.survey_feedback.with_context(lang='fr_BE')
+        survey_feedback_fr.title = "Enquête de satisfaction"
+        for survey_item in survey_feedback_fr.question_and_page_ids:
             survey_item.title = f"FR: {survey_item.with_context(lang='en_US').title}"
         self.survey_feedback.lang_ids = self.env['res.lang'].search([('code', 'in', ['fr_BE', 'en_US'])])
 
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_multilang')
+        self.start_tour(f"/survey/start/{access_token}", 'test_survey_multilang')
 
     def test_04_public_survey_with_triggers(self):
         """ Check that chained conditional questions are correctly

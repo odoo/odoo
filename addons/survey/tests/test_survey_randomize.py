@@ -16,8 +16,7 @@ class TestSurveyRandomize(TransactionCase):
             'sequence': 1,
             'random_questions_count': 3
         })
-        question_and_pages |= page_1
-        question_and_pages = self._add_questions(question_and_pages, page_1, 5)
+        question_and_pages |= self._with_questions(page_1, 5)
 
         page_2 = Question.create({
             'title': 'Page 2',
@@ -26,8 +25,7 @@ class TestSurveyRandomize(TransactionCase):
             'sequence': 100,
             'random_questions_count': 5
         })
-        question_and_pages |= page_2
-        question_and_pages = self._add_questions(question_and_pages, page_2, 10)
+        question_and_pages |= self._with_questions(page_2, 10)
 
         page_3 = Question.create({
             'title': 'Page 2',
@@ -36,27 +34,23 @@ class TestSurveyRandomize(TransactionCase):
             'sequence': 1000,
             'random_questions_count': 4
         })
-        question_and_pages |= page_3
-        question_and_pages = self._add_questions(question_and_pages, page_3, 2)
+        question_and_pages |= self._with_questions(page_3, 2)
 
-        self.survey1 = self.env['survey.survey'].sudo().create({
+        survey1 = self.env['survey.survey'].sudo().create({
             'title': "S0",
             'question_and_page_ids': [(6, 0, question_and_pages.ids)],
             'questions_selection': 'random'
         })
 
-        generated_questions = self.survey1._prepare_user_input_predefined_questions()
+        generated_questions = survey1._prepare_user_input_predefined_questions()
 
         self.assertEqual(len(generated_questions.ids), 10, msg="Expected 10 unique questions")
         self.assertEqual(len(generated_questions.filtered(lambda question: question.page_id == page_1)), 3, msg="Expected 3 questions in page 1")
         self.assertEqual(len(generated_questions.filtered(lambda question: question.page_id == page_2)), 5, msg="Expected 5 questions in page 2")
         self.assertEqual(len(generated_questions.filtered(lambda question: question.page_id == page_3)), 2, msg="Expected 2 questions in page 3")
 
-    def _add_questions(self, question_and_pages, page, count):
-        for i in range(count):
-            question_and_pages |= self.env['survey.question'].sudo().create({
-                'title': f'{page.title} Q{i + 1}',
-                'sequence': page.sequence + (i + 1)
-            })
-
-        return question_and_pages
+    def _with_questions(self, page, count):
+        return page | self.env['survey.question'].sudo().create([{
+            'title': f'{page.title} Q{i}',
+            'sequence': page.sequence + i
+        } for i in range(1, count+1)])
