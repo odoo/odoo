@@ -1,0 +1,9 @@
+body.editor_enable {
+    &::part(ChatHub){
+        visibility: hidden;
+    }
+}
+
+body:has(.o_website_preview):not(.o_builder_open) .o-mail-ChatHub {
+    visibility: hidden;
+}

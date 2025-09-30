@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WhatsappOption">
+    <BuilderRow label.translate="Name">
+        <BuilderTextInput action="'agentName'" default="'Jane Doe'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description">
+        <BuilderTextInput action="'agentDescription'" default="'Online'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Contact Number">
+        <BuilderTextInput action="'whatsappNumber'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Avatar">
+        <BuilderButton
+            action="'replaceMedia'"
+            title.translate="Replace Media"
+            className="'flex-grow-1'"
+            type="'success'"
+            preview="false"
+            applyTo="'.agent-img'"
+            label.translate="Replace"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Default Message">
+        <BuilderTextInput action="'defaultMessage'" default="'Hi there, how can I help you?'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Show Notification">
+        <BuilderCheckbox applyTo="'.notification-badge'" classAction="'d-none'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Show CTA">
+        <BuilderCheckbox applyTo="'.s_whatsapp_container'" classAction="'o_cta_mode'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect applyTo="'#wa-fab'">
+            <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-stack'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Size">
+        <BuilderSelect applyTo="'#wa-fab'">
+            <BuilderSelectItem classAction="''">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Color">
+        <BuilderCheckbox applyTo="'.s_whatsapp_container'" classAction="'no_icon_color'" inverseAction="true"/>
+    </BuilderRow>
+</t>
+
+</templates>

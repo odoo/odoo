@@ -79,6 +79,7 @@
         'views/snippets/s_hr.xml',
         'views/snippets/s_closer_look.xml',
         'views/snippets/s_facebook_page.xml',
+        'views/snippets/s_whatsapp.xml',
         'views/snippets/s_image_gallery.xml',
         'views/snippets/s_countdown.xml',
         'views/snippets/s_product_catalog.xml',
@@ -227,6 +228,18 @@
         "mail.assets_public": [
             "website/static/src/**/common/**/*",
         ],
+        'website.assets_embed_core': [
+            ("include", "html_editor.assets_editor"),
+            'mail/static/src/model/**/*',
+            'web/static/src/views/fields/file_handler.*',
+            'mail/static/src/core/common/**/*',
+            'mail/static/src/discuss/core/common/*',
+            'mail/static/src/discuss/call/common/**',
+            'mail/static/src/discuss/typing/**/*',
+            'mail/static/src/utils/common/**/*',
+            ('remove', 'mail/static/src/**/*.dark.scss'),
+            'website/static/src/common/chat_hub_patch.js',
+        ],
         'web.assets_frontend': [
             'html_builder/static/src/utils/scrolling.js',
             'website/static/src/interactions/**/*',
@@ -264,6 +277,7 @@
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.js',
+            ('include', 'website.assets_embed_core'),
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',

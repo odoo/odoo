@@ -1,0 +1,89 @@
+.s_whatsapp_container {
+    z-index: 1000;
+    right: 25px;
+
+    #wa-fab {
+        cursor: pointer;
+        font-size: x-large;
+        width: 50px;
+        height: 50px;
+        &.fa-2x {
+            font-size: xx-large;
+            width: 70px;
+            height: 70px;
+        }
+        &.fa-3x {
+            font-size: xxx-large;
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    &:not(.no_icon_color) {
+        i {
+            color: white;
+            background: #25D366 !important;
+        }
+    }
+
+    .notification-badge {
+        inset: -8% 12% auto auto;
+        transform: translate(50%, 50%);
+        width: 25%;
+        height: 25%;
+        background: red;
+        border: 2px solid white;
+    }
+
+    .chatbox {
+        width: 300px;
+        bottom: 100%;
+        .header {
+            background: #075E54;
+            img {
+                height: 40px;
+                width: 40px;
+            }
+        }
+        .messages {
+            background: #ECE5DD;
+            .agent-msg {
+                max-width: 80%;
+            }
+        }
+        .input-box {
+            display: flex;
+            border-color:#ccc;
+            .wa-send {
+                background: #25D366;
+                &:hover {
+                    background: #1ebe5c;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+                }
+            }
+        }
+        .cta-box {
+            display: none;
+            border-color:#ccc;
+            .cta-btn {
+                background: #25D366;
+                font-size: 17px;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                    background: #1ebe5c;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+                }
+            }
+        }
+    }
+    // Toggle between input box and CTA button
+    &.o_cta_mode {
+        .input-box {
+            display: none;
+        }
+        .cta-box {
+            display: flex;
+        }
+    }
+}
