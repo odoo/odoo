@@ -901,6 +901,7 @@ class ResPartner(models.Model):
             return partners
 
         for partner, vals in zip(partners, vals_list):
+            vals = self._add_missing_default_values(vals)
             partner._fields_sync(vals)
         return partners
 
