@@ -3,6 +3,7 @@ import gzip
 import json
 import re
 from datetime import datetime
+from stdnum import get_cc_module
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
@@ -283,7 +284,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     'con': 'LROE',
                     'apa': '2.1' if freelancer and not is_sale else '1.1' if is_sale else '2',
                     'inte': {
-                        'nif': company.vat[2:] if company.vat.startswith('ES') else company.vat,
+                        'nif': get_cc_module('ES', 'vat').compact(company.vat),
                         'nrs': company.name,
                     },
                     'drs': {
@@ -301,7 +302,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_values = {
             'is_emission': not self.is_cancel,
             'sender': sender,
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': get_cc_module('ES', 'vat').compact(sender.vat),
             'fiscal_year': str(self.date.year),
             'freelancer': freelancer,
             'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe')
@@ -391,7 +392,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _get_sender_values(self):
         sender = self.company_id
         return {
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': get_cc_module('ES', 'vat').compact(sender.vat),
             'sender': sender,
         }
 
@@ -407,7 +408,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         }
 
         if not partner._l10n_es_is_foreign() and partner.vat:
-            recipient_values['nif'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            recipient_values['nif'] = get_cc_module('ES', 'vat').compact(partner.vat)
 
         elif partner.country_id and 'EU' in partner.country_id.country_group_codes:
             recipient_values['alt_id_type'] = '02'
@@ -745,7 +746,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_values = {
             'is_emission': not self.is_cancel,
             'sender': sender,
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': get_cc_module('ES', 'vat').compact(sender.vat),
             'fiscal_year': str(self.date.year),
             'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe'),
             'batuz_correction': self.env.context.get('batuz_correction'),
@@ -826,7 +827,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         company = self.company_id
         tbai_id_no_crc = '-'.join([
             'TBAI',
-            str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
+            str(get_cc_module('ES', 'vat').compact(company.vat)),
             datetime.strftime(registration_date, '%d%m%y'),
             signature[:13],
             ''  # CRC

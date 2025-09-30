@@ -810,6 +810,19 @@ class ResPartner(models.Model):
             vat_required_valid = vat_required_valid and self.vies_valid
         return vat_required_valid
 
+    @api.model
+    def _get_clean_vat_number(self, vat):
+        '''
+        Extracts the numeric part of a VAT number by removing its country prefix.
+
+        :param vat: the VAT number to process
+        :returns: the VAT number without the country prefix, or the original VAT if no valid prefix is found
+        :rtype: string
+        '''
+        if vat and vat[:2].isalpha():
+            return vat[2:]
+        return vat
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)

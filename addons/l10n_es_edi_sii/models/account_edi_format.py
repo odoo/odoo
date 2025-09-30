@@ -3,6 +3,7 @@ import math
 from collections import defaultdict
 
 import requests
+from stdnum import get_cc_module
 
 from odoo import _, fields, models
 from odoo.tools import html_escape, zeep
@@ -236,7 +237,7 @@ class AccountEdiFormat(models.Model):
             invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             reagyp = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'sujeto_agricultura')
             if invoice.is_sale_document():
-                nif = invoice.company_id.vat[2:] if invoice.company_id.vat.startswith('ES') else invoice.company_id.vat
+                nif = get_cc_module('ES', 'vat').compact(invoice.company_id.vat)
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.name[:60]
                 if not is_simplified:
@@ -433,7 +434,7 @@ class AccountEdiFormat(models.Model):
             'IDVersionSii': '1.1',
             'Titular': {
                 'NombreRazon': company.name[:120],
-                'NIF': company.vat[2:] if company.vat.startswith('ES') else company.vat,
+                'NIF': get_cc_module('ES', 'vat').compact(company.vat),
             },
             'TipoComunicacion': 'A1' if csv_number else 'A0',
         }
