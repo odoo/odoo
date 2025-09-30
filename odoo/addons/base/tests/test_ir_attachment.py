@@ -48,7 +48,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
 
     def test_01_store_in_db(self):
         # force storing in database
-        self.env['ir.config_parameter'].set_param('ir_attachment.location', 'db')
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
 
         # 'ir_attachment.location' is undefined test database storage
         a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1})

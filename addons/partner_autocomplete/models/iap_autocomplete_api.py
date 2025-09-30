@@ -30,7 +30,7 @@ class IapAutocompleteApi(models.AbstractModel):
             'country_code': self.env.company.country_id.code,
             'zip': self.env.company.zip,
         })
-        base_url = self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', self._DEFAULT_ENDPOINT)
+        base_url = self.env['ir.config_parameter'].sudo().get_str('iap.partner_autocomplete.endpoint') or self._DEFAULT_ENDPOINT
         return iap_tools.iap_jsonrpc(base_url + local_endpoint + '/' + action, params=params, timeout=timeout)
 
     @api.model
