@@ -8,7 +8,9 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
     if ($pricePerUom) {
         if (combination.is_combination_possible !== false && combination.base_unit_price != 0) {
             $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
-            $pricePerUom.text(this._priceToStr(combination.base_unit_price));
+            $pricePerUom.text(
+                this._priceToStr(combination.base_unit_price, combination.currency_precision)
+            );
             $parent.find(".oe_custom_base_unit:first").text(combination.base_unit_name);
         } else {
             $pricePerUom.parents(".o_base_unit_price_wrapper").addClass("d-none");
