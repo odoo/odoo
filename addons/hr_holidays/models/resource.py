@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -8,6 +9,8 @@ from odoo.tools.date_utils import weeknumber
 import pytz
 from datetime import datetime, time
 
+from odoo.tools.intervals import Intervals
+
 
 class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
@@ -15,6 +18,8 @@ class ResourceCalendarLeaves(models.Model):
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', default=False,
         help="If checked, this time off type will be taken into account for accruals computation.")
+    public_holiday_id = fields.Many2one('hr.public.holiday.leave', string='Public Holiday Leave', default=False)
+    is_public = fields.Boolean(string='Is related to Public Holiday', default=False)
 
     @api.constrains('date_from', 'date_to', 'calendar_id')
     def _check_compare_dates(self):
@@ -178,6 +183,88 @@ class ResourceCalendar(models.Model):
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
+
+    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+        leave_intervals = super()._leave_intervals_batch(start_dt, end_dt, resources, domain, tz)
+        public_holidays_intervals = self._public_holidays_intervals_batch(start_dt, end_dt, resources, domain, tz)
+        for resource_id in public_holidays_intervals:
+            if resource_id not in leave_intervals:
+                leave_intervals[resource_id] = Intervals()
+            leave_intervals[resource_id] |= public_holidays_intervals[resource_id]
+        return leave_intervals
+
+    def _public_holidays_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+        if not domain:
+            domain = []
+        resources_list, resources = self._get_resources_list(resources)
+
+        public_holidays = self._public_holidays_batch(start_dt, end_dt, domain=domain)
+        tz_dates = {}
+        public_holidays_intervals = list()
+
+        for leave in public_holidays:
+            leave_date_from = leave.date_start
+            leave_date_to = leave.date_end
+            tz = tz or pytz.timezone(self.tz)
+            if (tz, start_dt) in tz_dates:
+                start = tz_dates[tz, start_dt]
+            else:
+                start = start_dt.astimezone(tz)
+                tz_dates[tz, start_dt] = start
+            if (tz, end_dt) in tz_dates:
+                end = tz_dates[tz, end_dt]
+            else:
+                end = end_dt.astimezone(tz)
+                tz_dates[tz, end_dt] = end
+            dt0 = leave_date_from.astimezone(tz)
+            dt1 = leave_date_to.astimezone(tz)
+            public_holidays_intervals.append((max(start, dt0), min(end, dt1), leave))
+        resource_calendar_leaves = self.env['resource.calendar.leaves'].search(
+            [('is_public', '=', True), ('public_holiday_id', 'in', public_holidays.ids)])
+
+        leaves_by_holiday = defaultdict(list)
+        for leave in resource_calendar_leaves:
+            leaves_by_holiday[leave.public_holiday_id.id].append(leave)
+
+        result = {}
+        for resource in resources_list:
+            resource_public_holidays = []
+            for start, end, holiday in public_holidays_intervals:
+                for resource_calendar_leave in leaves_by_holiday.get(holiday.id, []):
+                    if resource_calendar_leave.resource_id.id == resource.id:
+                        resource_public_holidays.append((start, end, resource_calendar_leave))
+            result[resource.id] = Intervals(resource_public_holidays)
+
+        return result
+
+    def _get_resources_list(self, resources=None):
+        if not resources:
+            if self.env.user.employee:
+                return [self.env.user.employee_id.resource_id, self.env['resource.resource']], self.env.user.employee_id.resource_id
+            return [self.env['resource.resource']], self.env['resource.resource']
+        return list(resources) + [self.env['resource.resource']], resources
+
+    def _get_work_intervals(self, start_dt, end_dt, resources=None, domain=None):
+        resource = False
+        if self.env.user.employee:
+            resource = self.env.user.employee_id.resource_id.id
+
+        return self._work_intervals_batch(start_dt, end_dt, resources, domain)[resource]
+
+    def _public_holidays_batch(self, start_dt, end_dt, domain=None):
+        base_domain = [
+            ('date_to', '>=', start_dt.astimezone(pytz.utc).replace(tzinfo=None)),
+            ('date_from', '<=', end_dt.astimezone(pytz.utc).replace(tzinfo=None)),
+            ('is_public', '=', True)]
+        domain = base_domain if not domain else Domain.AND([domain, base_domain])
+        return self.env['resource.calendar.leaves'].search(domain).mapped('public_holiday_id')
+
+    def _get_leave_intervals(self, start_dt, end_dt, resources=None, domain=None):
+        resource = False
+        if self.env.user.employee:
+            resource = self.env.user.employee_id.resource_id.id
+
+        return self._leave_intervals_batch(start_dt, end_dt, resources, domain)[resource]
 
 
 class ResourceResource(models.Model):

@@ -322,11 +322,7 @@ class ResourceCalendar(models.Model):
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
+        resources_list, resources = self._get_resources_list(resources)
         domain = Domain.AND([
             Domain(domain or Domain.TRUE),
             Domain('calendar_id', '=', self.id),
@@ -536,11 +532,7 @@ class ResourceCalendar(models.Model):
 
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
+        resources_list, _ = self._get_resources_list(resources)
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
         if compute_leaves:
@@ -551,6 +543,12 @@ class ResourceCalendar(models.Model):
         return {
             r.id: attendance_intervals[r.id] for r in resources_list
         }
+
+    def _get_resources_list(self, resources=None):
+        if not resources:
+            resources = self.env['resource.resource']
+            return [resources], resources
+        return list(resources) + [self.env['resource.resource']], resources
 
     def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -704,13 +702,19 @@ class ResourceCalendar(models.Model):
         if company_id:
             domain = [('company_id', 'in', (company_id.id, False))]
         if self.flexible_hours:
-            leave_intervals = self._leave_intervals_batch(start_dt, end_dt, domain=domain)[False]
+            leave_intervals = self._get_leave_intervals(start_dt, end_dt, domain=domain)
             works = set()
             for start_int, end_int, _ in leave_intervals:
                 works.update(start_int.date() + timedelta(days=i) for i in range((end_int.date() - start_int.date()).days + 1))
             return {fields.Date.to_string(day.date()): (day.date() in works) for day in rrule(DAILY, start_dt, until=end_dt)}
-        works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}
+        works = {d[0].date() for d in self._get_work_intervals(start_dt, end_dt, domain=domain)}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
+
+    def _get_leave_intervals(self, start_dt, end_dt, resources=None, domain=None):
+        return self._leave_intervals_batch(start_dt, end_dt, resources, domain)[False]
+
+    def _get_work_intervals(self, start_dt, end_dt, resources=None, domain=None):
+        return self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]
 
     def _get_default_attendance_ids(self, company_id=None):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
