@@ -25,6 +25,10 @@ class Employee extends models.Model {
         return false;
     }
 
+    is_onboarding() {
+        return false;
+    }
+
     _views = {
         hierarchy: `
             <hierarchy js_class="hr_employee_hierarchy" label="people" avatar_field="image_128">
