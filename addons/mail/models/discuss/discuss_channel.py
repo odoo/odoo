@@ -117,11 +117,6 @@ class DiscussChannel(models.Model):
         compute="_compute_channel_name_member_ids",
         help="Members from which the channel name is computed when the name field is empty.",
     )
-
-    _channel_type_not_null = models.Constraint(
-        'CHECK(channel_type IS NOT NULL)',
-        'The channel type cannot be empty',
-    )
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
