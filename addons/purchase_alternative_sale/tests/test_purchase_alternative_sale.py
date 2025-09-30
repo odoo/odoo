@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
@@ -7,16 +6,14 @@ from odoo import Command
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestPurchaseRequisitionSale(TransactionCase):
+class TestPurchaseAlternativeSale(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.client = cls.env['res.partner'].create({'name': 'Client'})
         cls.vendor_1 = cls.env['res.partner'].create({'name': 'Vendor 1'})
         cls.vendor_2 = cls.env['res.partner'].create({'name': 'Vendor 2'})
-
         cls.sub_service = cls.env['product.product'].create({
             'name': 'Subcontracted service',
             'type': 'service',
@@ -49,13 +46,12 @@ class TestPurchaseRequisitionSale(TransactionCase):
 
         # Create an alternative RFQ for another vendor
         action = purchase_order.action_create_alternative()
-        alt_po_wizard = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard = Form(self.env['purchase.alternative.create'].with_context(**action['context']))
         alt_po_wizard.partner_ids = self.vendor_2
         alt_po_wizard.copy_products = True
         alt_po_wizard = alt_po_wizard.save()
         alt_po_wizard.action_create_alternative()
         self.assertEqual(len(purchase_order.alternative_po_ids), 2, "Base PO should be linked with the alternative PO")
-
         # Check if newly created PO is correctly linked to the base Sale Order
         alt_po = purchase_order.alternative_po_ids.filtered(lambda po: po.id != purchase_order.id)
         linked_so = alt_po._get_sale_orders()
