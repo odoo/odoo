@@ -79,7 +79,6 @@ class Channel(models.Model):
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
 
     _sql_constraints = [
-        ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
         ('group_public_id_check',
          "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
