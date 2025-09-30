@@ -195,7 +195,7 @@ class TestIrMailServer(MailCommon):
                     )
 
         # for from_filter in ICP, overwrite the one from odoo-bin
-        self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', 'icp.example.com')
+        self.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', 'icp.example.com')
 
         # Use an email in the domain of the config parameter "mail.default.from_filter"
         with self.mock_smtplib_connection():
@@ -488,7 +488,7 @@ class TestPersonalServer(MailCommon):
     def test_personal_mail_server_limit(self):
         # Test the limit per personal mail servers
         TEST_LIMIT = 5
-        self.env['ir.config_parameter'].set_param('mail.server.personal.limit.minutes', str(TEST_LIMIT))
+        self.env['ir.config_parameter'].set_int('mail.server.personal.limit.minutes', TEST_LIMIT)
         user_1, user_2 = self.user_1, self.user_2
         mail_server_1, mail_server_2 = self.mail_server_1, self.mail_server_2
 
@@ -622,7 +622,7 @@ class TestPersonalServer(MailCommon):
     def test_personal_mail_server_limit_many_recipient(self):
         # Test with many recipients (should split the mail)
         TEST_LIMIT = 5
-        self.env['ir.config_parameter'].set_param('mail.server.personal.limit.minutes', str(TEST_LIMIT))
+        self.env['ir.config_parameter'].set_int('mail.server.personal.limit.minutes', TEST_LIMIT)
 
         partners = self.env['res.partner'].create([
             {'name': f'Partner {i}', 'email': f'partner_{i}@test.com'}

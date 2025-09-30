@@ -43,7 +43,7 @@ class CardCard(models.Model):
     @api.autovacuum
     def _gc_card(self):
         """Remove cards. Social networks are expected to cache the images on their side."""
-        timedelta_days = self.env['ir.config_parameter'].get_param('marketing_card.card_image_cleanup_interval_days', 60)
+        timedelta_days = self.env['ir.config_parameter'].get_int('marketing_card.card_image_cleanup_interval_days', 60)
         if not timedelta_days:
             return
         self.with_context({"active_test": False}).search([('write_date', '<=', datetime.now() - timedelta(days=timedelta_days))]).unlink()

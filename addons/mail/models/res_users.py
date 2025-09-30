@@ -454,7 +454,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_activity_groups(self):
-        search_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.systray.limit', 1000))
+        search_limit = self.env['ir.config_parameter'].sudo().get_int('mail.activity.systray.limit') or 1000
         activities = self.env["mail.activity"].search(
             [("user_id", "=", self.env.uid)],
             order='id desc', limit=search_limit,

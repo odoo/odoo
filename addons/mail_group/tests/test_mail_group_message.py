@@ -28,7 +28,7 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(len(self.test_group.member_ids), 42)
 
         # force a batch split with a low limit
-        self.env['ir.config_parameter'].sudo().set_param('mail.session.batch.size', 10)
+        self.env['ir.config_parameter'].sudo().set_int('mail.session.batch.size', 10)
 
         with self.mock_mail_gateway():
             self.format_and_process(

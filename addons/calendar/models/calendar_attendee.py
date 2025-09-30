@@ -129,7 +129,7 @@ class CalendarAttendee(models.Model):
         """
         # TDE FIXME: check this
         if force_send:
-            force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
+            force_send_limit = self.env['ir.config_parameter'].sudo().get_int('mail.mail_force_send_limit', 100)
         notified_attendees_ids = set(self.ids)
         for event, attendees in self.grouped('event_id').items():
             if event._skip_send_mail_status_update():

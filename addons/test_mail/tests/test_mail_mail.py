@@ -388,7 +388,7 @@ class TestMailMail(MailCommon):
         ]:
             with self.subTest(queue_batch_size=queue_batch_size), \
                  self.mock_mail_gateway():
-                self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', queue_batch_size)
+                self.env['ir.config_parameter'].sudo().set_int('mail.mail.queue.batch.size', queue_batch_size)
                 mails = self.env['mail.mail'].create([
                     {
                         'auto_delete': False,
@@ -405,7 +405,7 @@ class TestMailMail(MailCommon):
                 mails.write({'state': 'sent'})  # avoid conflicts between batch
 
         # test 'mail.session.batch.size': batch send size
-        self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', False)
+        self.env['ir.config_parameter'].sudo().set_int('mail.mail.queue.batch.size', False)
         for session_batch_size, exp_call_count in [
             (3, 4),  # 10 mails -> 4 iterations of 3
             (0, 1),
@@ -413,7 +413,7 @@ class TestMailMail(MailCommon):
         ]:
             with self.subTest(session_batch_size=session_batch_size), \
                  self.mock_mail_gateway():
-                self.env['ir.config_parameter'].sudo().set_param('mail.session.batch.size', session_batch_size)
+                self.env['ir.config_parameter'].sudo().set_int('mail.session.batch.size', session_batch_size)
                 mails = self.env['mail.mail'].create([
                     {
                         'auto_delete': False,

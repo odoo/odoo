@@ -346,7 +346,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
             (30, 4),  # 100 / 30 -> 4 iterations
         ]:
             with self.subTest(batch_size=batch_size):
-                self.env['ir.config_parameter'].sudo().set_param(
+                self.env['ir.config_parameter'].sudo().set_int(
                     "mail.batch_size", batch_size
                 )
                 with self.with_user(self.user_employee.login), \

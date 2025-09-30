@@ -87,6 +87,5 @@ class IrMail_Server(models.Model):
         """
         if self.smtp_authentication == 'outlook':
             # Outlook flag way faster email as spam, so we set a lower limit
-            return int(self.env['ir.config_parameter'].sudo()
-                .get_param('mail.server.personal.limit.minutes_outlook')) or 10
+            return self.env['ir.config_parameter'].sudo().get_int('mail.server.personal.limit.minutes_outlook') or 10
         return super()._get_personal_mail_servers_limit()

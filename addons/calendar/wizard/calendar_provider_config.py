@@ -2,7 +2,6 @@
 
 from odoo import fields, models
 from odoo.addons.base.models.ir_module import assert_log_admin_access
-from odoo.tools import str2bool
 
 
 class CalendarProviderConfig(models.TransientModel):
@@ -26,13 +25,13 @@ class CalendarProviderConfig(models.TransientModel):
         default=lambda self: self.env['ir.config_parameter'].get_bool('google_calendar_sync_paused'))
     microsoft_outlook_client_identifier = fields.Char(
         "Outlook Client Id",
-        default=lambda self: self.env['ir.config_parameter'].get_param('microsoft_calendar_client_id'))
+        default=lambda self: self.env['ir.config_parameter'].get_str('microsoft_calendar_client_id'))
     microsoft_outlook_client_secret = fields.Char(
         "Outlook Client Secret",
-        default=lambda self: self.env['ir.config_parameter'].get_param('microsoft_calendar_client_secret'))
+        default=lambda self: self.env['ir.config_parameter'].get_str('microsoft_calendar_client_secret'))
     microsoft_outlook_sync_paused = fields.Boolean(
         "Outlook Synchronization Paused",
-        default=lambda self: str2bool(self.env['ir.config_parameter'].get_param('microsoft_calendar_sync_paused'), default=False))
+        default=lambda self: self.env['ir.config_parameter'].get_bool('microsoft_calendar_sync_paused'))
 
     @assert_log_admin_access
     def action_calendar_prepare_external_provider_sync(self):
@@ -53,6 +52,6 @@ class CalendarProviderConfig(models.TransientModel):
             self.env['ir.config_parameter'].set_str('google_calendar_client_secret', self.cal_client_secret)
             self.env['ir.config_parameter'].set_bool('google_calendar_sync_paused', self.cal_sync_paused)
         elif self.external_calendar_provider == 'microsoft':
-            self.env['ir.config_parameter'].set_param('microsoft_calendar_client_id', self.microsoft_outlook_client_identifier)
-            self.env['ir.config_parameter'].set_param('microsoft_calendar_client_secret', self.microsoft_outlook_client_secret)
-            self.env['ir.config_parameter'].set_param('microsoft_calendar_sync_paused', self.microsoft_outlook_sync_paused)
+            self.env['ir.config_parameter'].set_str('microsoft_calendar_client_id', self.microsoft_outlook_client_identifier)
+            self.env['ir.config_parameter'].set_str('microsoft_calendar_client_secret', self.microsoft_outlook_client_secret)
+            self.env['ir.config_parameter'].set_bool('microsoft_calendar_sync_paused', self.microsoft_outlook_sync_paused)

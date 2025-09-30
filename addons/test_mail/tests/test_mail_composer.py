@@ -1801,7 +1801,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 default_from = mail_config.get('default_from', self.default_from)
                 from_filter = mail_config.get('from_filter', self.default_from_filter)
                 self.mail_alias_domain.default_from = default_from
-                self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', from_filter)
+                self.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', from_filter)
 
                 for email_from, exp_smtp_from, exp_msg_from in zip(emails_from, exp_smtp_from_lst, exp_msg_from_lst):
                     self.env.user.email = email_from
@@ -2655,7 +2655,7 @@ class TestComposerResultsMass(TestMailComposer):
         # add access to Mail Template Editor
         self.user_employee.group_ids += self.env.ref('mail.group_mail_template_editor')
         # Access can also be made available to all users.
-        # self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', False)
+        # self.env['ir.config_parameter'].sudo().set_bool('mail.restrict.template.rendering', False)
 
         self.template.write({
             'auto_delete': False,
@@ -2833,9 +2833,9 @@ class TestComposerResultsMass(TestMailComposer):
         )
         for (batch_size, send_limit), (exp_mail_create_count, exp_force_send, exp_state) in zip(
             [
-                (False, False),  # unset
+                (False, 100),  # unset
                 (8, 0),  # 0 = always use queue
-                (8, False),  # send limit defaults to 100, so force_send is set
+                (8, 100),  # send limit defaults to 100, so force_send is set
                 (0, 8),  # render: defaults to 500 hence 1 iteration in test
             ],
             [
@@ -2846,10 +2846,10 @@ class TestComposerResultsMass(TestMailComposer):
             ]
         ):
             with self.subTest(batch_size=batch_size, send_limit=send_limit):
-                self.env['ir.config_parameter'].sudo().set_param(
+                self.env['ir.config_parameter'].sudo().set_int(
                     "mail.batch_size", batch_size
                 )
-                self.env['ir.config_parameter'].sudo().set_param(
+                self.env['ir.config_parameter'].sudo().set_int(
                     "mail.mail.force.send.limit", send_limit
                 )
                 composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -3304,7 +3304,7 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
 
         # 5: mail.batch_size config parameter support, for sending only
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 1)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 1)
         with patch.object(MailComposeMessage, '_batch_size', new=50):
             composer_form = Form(self.env['mail.compose.message'].with_context(
                 active_ids=self.test_records.ids,

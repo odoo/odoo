@@ -643,9 +643,8 @@ class IrMail_Server(models.Model):
           ``--from-filter`` CLI/config parameter.
         :rtype: str | None
         """
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'mail.default.from_filter', tools.config.get('from_filter')
-        )
+        return self.env['ir.config_parameter'].sudo().get_str(
+            'mail.default.from_filter') or tools.config.get('from_filter')
 
     def _prepare_email_message__(self, message, smtp_session):  # noqa: PLW3201
         """Prepare the SMTP information (from, to, message) before sending.

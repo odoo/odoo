@@ -58,10 +58,9 @@ class ResUsers(models.Model):
         # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
         # return whether the features are enabled
         get_str = self.env["ir.config_parameter"].sudo().get_str
-        get_param = self.env["ir.config_parameter"].sudo().get_param
         store.add_global_values(
             hasGifPickerFeature=bool(get_str("discuss.tenor_api_key")),
-            hasMessageTranslationFeature=bool(get_param("mail.google_translate_api_key")),
+            hasMessageTranslationFeature=bool(get_str("mail.google_translate_api_key")),
             hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
                 "|",
                 ("create_uid", "=", self.env.user.id),

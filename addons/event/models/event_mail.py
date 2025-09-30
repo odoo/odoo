@@ -136,12 +136,8 @@ class EventMail(models.Model):
           slot (last registration, scheduled datetime, ...)
         """
         auto_commit = not modules.module.current_test
-        batch_size = int(
-            self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
-        ) or 50  # be sure to not have 0, as otherwise no iteration is done
-        cron_limit = int(
-            self.env['ir.config_parameter'].sudo().get_param('mail.render.cron.limit')
-        ) or 1000  # be sure to not have 0, as otherwise we will loop
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
+        cron_limit = self.env['ir.config_parameter'].sudo().get_int('mail.render.cron.limit') or 1000  # be sure to not have 0, as otherwise we will loop
         scheduler_record = mail_slot or self
 
         # fetch registrations to contact
@@ -226,12 +222,8 @@ class EventMail(models.Model):
         context_registrations = self.env.context.get('event_mail_registration_ids')
 
         auto_commit = not modules.module.current_test
-        batch_size = int(
-            self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
-        ) or 50  # be sure to not have 0, as otherwise no iteration is done
-        cron_limit = int(
-            self.env['ir.config_parameter'].sudo().get_param('mail.render.cron.limit')
-        ) or 1000  # be sure to not have 0, as otherwise we will loop
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
+        cron_limit = self.env['ir.config_parameter'].sudo().get_int('mail.render.cron.limit') or 1000  # be sure to not have 0, as otherwise we will loop
 
         # fillup on subscription lines (generate more than to render creating
         # mail.registration is less costly than rendering emails)

@@ -1787,7 +1787,7 @@ class BaseMailPostPerformance(BaseMailPerformance):
         )
 
         # be sure not to be annoyed by ocn / mobile
-        cls.env['ir.config_parameter'].sudo().set_param('mail_mobile.enable_ocn', False)
+        cls.env['ir.config_parameter'].sudo().set_bool('mail_mobile.enable_ocn', False)
 
 
 @tagged('mail_performance', 'post_install', '-at_install')

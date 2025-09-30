@@ -125,7 +125,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         """ Test deactivation of mailing report sending. It requires usage of
         a hash token. """
         test_mailing = self.test_mailing_on_lists.with_env(self.env)
-        self.env['ir.config_parameter'].sudo().set_param(
+        self.env['ir.config_parameter'].sudo().set_bool(
             'mass_mailing.mass_mailing_reports', True
         )
         hash_token = test_mailing._generate_mailing_report_token(self.user_marketing.id)
@@ -145,7 +145,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                     )
                 )
                 self.assertEqual(res.status_code, error_code)
-                self.assertTrue(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
+                self.assertTrue(self.env['ir.config_parameter'].sudo().get_bool('mass_mailing.mass_mailing_reports'))
 
         # TEST: not mailing user
         self.user_marketing.write({
@@ -158,7 +158,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             )
         )
         self.assertEqual(res.status_code, 401)
-        self.assertTrue(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
+        self.assertTrue(self.env['ir.config_parameter'].sudo().get_bool('mass_mailing.mass_mailing_reports'))
 
         # TEST: finally valid call
         self.user_marketing.write({
@@ -171,7 +171,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             )
         )
         self.assertEqual(res.status_code, 200)
-        self.assertFalse(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
+        self.assertFalse(self.env['ir.config_parameter'].sudo().get_bool('mass_mailing.mass_mailing_reports'))
 
     def test_mailing_unsubscribe_from_document_tour(self):
         """ Test portal unsubscribe on mailings performed on documents (not

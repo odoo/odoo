@@ -199,7 +199,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
     def test_survey_invite_email_from(self):
         # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
         # by default avoid rendering restriction complexity
-        self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', False)
+        self.env['ir.config_parameter'].sudo().set_bool('mail.restrict.template.rendering', False)
 
         action = self.survey.action_send_survey()
         action['context']['default_send_email'] = True

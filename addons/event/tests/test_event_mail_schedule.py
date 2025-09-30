@@ -162,8 +162,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 10
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # create some registrations
         EventMailRegistration = type(self.env['event.mail.registration'])
@@ -282,8 +282,8 @@ class TestMailSchedule(EventMailCommon):
         # --------------------------------------------------
 
         # check default behavior, batch of 50 to run up to 1000 attendees
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', False)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', False)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 0)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', False)
 
         # execute event reminder scheduler explicitly, before scheduled date -> should not do anything
         with self.mock_datetime_and_now(now), self.mock_mail_gateway():
@@ -626,8 +626,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 4
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # find slot-based schedulers, remove other to avoid noise
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])

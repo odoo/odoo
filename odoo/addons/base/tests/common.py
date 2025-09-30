@@ -529,7 +529,7 @@ class MockSmtplibCase:
     @classmethod
     def _init_mail_gateway(cls):
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', cls.default_from_filter)
 
     @classmethod
     def _init_mail_servers(cls):

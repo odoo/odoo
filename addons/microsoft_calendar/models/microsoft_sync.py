@@ -308,7 +308,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
         # Get sync lower bound days range for checking if old events must be updated in Odoo.
         ICP = self.env['ir.config_parameter'].sudo()
-        lower_bound_day_range = ICP.get_param('microsoft_calendar.sync.lower_bound_range')
+        lower_bound_day_range = ICP.get_int('microsoft_calendar.sync.lower_bound_range')
 
         # update other events
         for mevent in (existing - cancelled).filter(lambda e: e.lastModifiedDateTime):
@@ -327,7 +327,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 old_event_update_condition = True
                 if lower_bound_day_range:
                     update_time_diff = ms_event_updated_time - odoo_event_updated_time
-                    old_event_update_condition = odoo_event._check_old_event_update_required(int(lower_bound_day_range), update_time_diff)
+                    old_event_update_condition = odoo_event._check_old_event_update_required(lower_bound_day_range, update_time_diff)
 
                 if ms_event_updated_time >= odoo_event_updated_time and old_event_update_condition:
                     vals = dict(odoo_event._microsoft_to_odoo_values(mevent), need_sync_m=False)

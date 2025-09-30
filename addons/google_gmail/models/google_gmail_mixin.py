@@ -85,10 +85,8 @@ class GoogleGmailMixin(models.AbstractModel):
         is_configured = google_gmail_client_id and google_gmail_client_secret
 
         if not is_configured:  # use IAP (see '/google_gmail/iap_confirm')
-            gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
-                'mail.server.gmail.iap.endpoint',
-                self._DEFAULT_GMAIL_IAP_ENDPOINT,
-            )
+            gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
+                'mail.server.gmail.iap.endpoint') or self._DEFAULT_GMAIL_IAP_ENDPOINT
             db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
@@ -202,10 +200,8 @@ class GoogleGmailMixin(models.AbstractModel):
         :return:
             access_token, access_token_expiration
         """
-        gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
-            'mail.server.gmail.iap.endpoint',
-            self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT,
-        )
+        gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
+            'mail.server.gmail.iap.endpoint') or self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT
         db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
         response = requests.get(
