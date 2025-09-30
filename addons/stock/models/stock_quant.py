@@ -800,11 +800,13 @@ class StockQuant(models.Model):
                 domain = expression.AND([[('package_id', '=', package_id.id)], domain])
             if owner_id:
                 domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
+            domain = expression.AND([['|', ('company_id', 'child_of', self.env.companies.ids), ('company_id', '=', False)], domain])
             domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
         else:
             domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)] if lot_id else [('lot_id', '=', False)], domain])
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
+            domain = expression.AND([['|', ('company_id', 'in', self.env.companies.ids), ('company_id', '=', False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
         if self.env.context.get('with_expiration'):
             domain = expression.AND([['|', ('expiration_date', '>=', self.env.context['with_expiration']), ('expiration_date', '=', False)], domain])
