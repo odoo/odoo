@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeActionHelper" t-inherit="web.ActionHelper" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='showDefaultHelper']" position="replace">
+            <t t-if="showHelper">
+                <t t-if="showRegularHelper">
+                    <HrEmployeeRegularHelper showCreate="regularHelperShowCreate" />
+                </t>
+                <t t-elif="showOnboardingHelper">
+                    <t t-if="showOnboardingLoadSample">
+                        <HrEmployeeAdminOnboardingHelper />
+                    </t>
+                    <t t-else="">
+                        <HrEmployeeOnboardingHelper
+                            regularHelperShowCreate="regularHelperShowCreate" />
+                    </t>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</odoo>

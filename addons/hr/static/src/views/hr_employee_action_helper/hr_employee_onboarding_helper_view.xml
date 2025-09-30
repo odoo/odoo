@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeOnboardingHelper">
+        <!-- "desktop" -->
+        <div class="d-none d-md-flex h-100 w-100 flex-column align-items-center">
+            <p class="text-center fs-1 mt-auto mb-0">
+                Ready to start your experience?
+            </p>
+            <div class="flex-column align-self-center justify-content-center mb-auto">
+                <div class="my-3 pt-2 pb-3">
+                    <hr class="o_hr_employee_helper_separator" />
+                </div>
+                <OnboardingHelperBlocks />
+            </div>
+        </div>
+
+        <!-- "mobile" -->
+        <div class="d-flex h-100 w-100 d-md-none">
+            <HrEmployeeRegularHelper showCreate="regularHelperShowCreate" />
+        </div>
+    </t>
+</odoo>

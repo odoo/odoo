@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeRegularHelper">
+        <p class="o_view_nocontent_smiling_face mb-2">
+            No employees to display
+        </p><p>
+            Find all information on employees
+        </p>
+        <t t-if="showCreate">
+            <a class="col-auto btn btn-primary text-nowrap text-overflow-ellipsis px-3"
+                t-on-click="loadNewEmployeeForm">New Employee</a>
+        </t>
+    </t>
+</odoo>

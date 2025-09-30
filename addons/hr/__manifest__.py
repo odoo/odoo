@@ -15,6 +15,7 @@
         'digest',
         'phone_validation',
         'resource_mail',
+        'web',
         'web_hierarchy',
     ],
     'data': [
@@ -61,10 +62,14 @@
         ],
         'web.assets_backend': [
             'hr/static/src/**/*',
+            ('remove', 'hr/static/src/views/hr_employee_pivot_view.*'),
+            ('remove', 'hr/static/src/views/hr_employee_graph_view.*'),
             ('remove', 'hr/static/src/views/hr_employee_hierarchy/*'),
         ],
         'web.assets_backend_lazy': [
             'hr/static/src/views/hr_employee_hierarchy/*',
+            'hr/static/src/views/hr_employee_pivot_view.*',
+            'hr/static/src/views/hr_employee_graph_view.*',
         ],
         'im_livechat.assets_embed_core': [
             'hr/static/src/core/common/**/*',
