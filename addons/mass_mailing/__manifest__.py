@@ -108,7 +108,6 @@
 
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
-            # TODO DUAU: change when file is back in html_builder
             'html_editor/static/src/scss/bootstrap_overridden.scss',
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
