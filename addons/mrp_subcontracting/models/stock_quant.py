@@ -15,3 +15,6 @@ class StockQuant(models.Model):
             raise UserError(_('Operation not supported'))
 
         return [('location_id.is_subcontracting_location', operator, value)]
+
+    def should_bypass_reservation(self, location):
+        return super().should_bypass_reservation(location) or location.is_subcontracting_location

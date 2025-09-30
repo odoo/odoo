@@ -1135,6 +1135,9 @@ class StockQuant(models.Model):
         quants = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
         quants.sudo().unlink()
 
+    def should_bypass_reservation(self, location):
+        return location.should_bypass_reservation()
+
     @api.model
     def _clean_reservations(self):
         reserved_quants = self.env['stock.quant']._read_group(
@@ -1165,7 +1168,7 @@ class StockQuant(models.Model):
                 del reserved_move_lines[(product, location, lot, package, owner)]
 
         for (product, location, lot, package, owner), reserved_quantity in reserved_move_lines.items():
-            if location.should_bypass_reservation() or\
+            if self.should_bypass_reservation(location) or\
                 self.env['stock.quant']._should_bypass_product(product, location, reserved_quantity, lot, package, owner):
                 continue
             else:
