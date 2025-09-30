@@ -812,7 +812,7 @@ class SaleOrder(models.Model):
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
-                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+                warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
             for line in order.order_line:
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
