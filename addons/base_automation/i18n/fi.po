@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-# 
+#
 # Translators:
 # Pekka Ikonen, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
@@ -15,19 +15,19 @@
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
@@ -76,8 +76,8 @@ msgstr "<code>env</code>: ympäristö, jossa toiminto käynnistetään"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: sen tietueen malli, johon toiminto kohdistuu; on tyhjä "
 "tietuekokonaisuus"
@@ -103,7 +103,8 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Toimenpiteet\"/>"
+msgstr ""
+"<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Toimenpiteet\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -134,21 +135,27 @@ msgstr "<span class=\"text-muted\"> Käytettävissä olevat muuttujat: </span>"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value'\">osoitteeseen</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">kuten</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">kuten</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
 "<span invisible=\"trigger != 'on_time_created'\">luomisen jälkeen</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">viimeisimmän päivityksen jälkeen</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">jälkeen</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">viimeisimmän päivityksen jälkeen</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">jälkeen</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -172,10 +179,10 @@ msgstr "<span>asettamalla sen arvoksi</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-lock\"/> Pidä se salassa, pidä se "
-"turvassa.</strong>"
+"<strong><i class=\"fa fa-lock\"/> Pidä se salassa, pidä se turvassa.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -233,7 +240,6 @@ msgstr "Aseta"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arkistoitu"
 
@@ -291,8 +297,8 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
-"Muuta URL-osoitteen salaisuus, jos URL-osoite ei ole enää turvallinen. Sinun"
-" on päivitettävä kaikkien tätä webhookia kutsuvien järjestelmien URL-"
+"Muuta URL-osoitteen salaisuus, jos URL-osoite ei ole enää turvallinen. Sinun "
+"on päivitettävä kaikkien tätä webhookia kutsuvien järjestelmien URL-"
 "osoitteet."
 
 #. module: base_automation
@@ -365,8 +371,8 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
-"Viive käynnistyspäivän jälkeen. Voit antaa negatiivisen luvun, jos tarvitset"
-" viivettä ennen käynnistyspäivää. Esimerkiksi, jos haluat lähettää "
+"Viive käynnistyspäivän jälkeen. Voit antaa negatiivisen luvun, jos tarvitset "
+"viivettä ennen käynnistyspäivää. Esimerkiksi, jos haluat lähettää "
 "muistutuksen 15 minuuttia ennen kokousta."
 
 #. module: base_automation
@@ -406,13 +412,18 @@ msgstr "Poista automaatiosääntö käytöstä"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
-"Tämän automaatiosäännön poistaminen käytöstä mahdollistaa työnkulun jatkamisen\n"
-"                mutta kaikki tämän jälkeen luodut tiedot voivat mahdollisesti vahingoittua,\n"
-"                koska poistat käytännössä käytöstä mukautuksen, joka voi asettaa\n"
+"Tämän automaatiosäännön poistaminen käytöstä mahdollistaa työnkulun "
+"jatkamisen\n"
+"                mutta kaikki tämän jälkeen luodut tiedot voivat "
+"mahdollisesti vahingoittua,\n"
+"                koska poistat käytännössä käytöstä mukautuksen, joka voi "
+"asettaa\n"
 "                tärkeitä ja/tai pakollisia kenttiä."
 
 #. module: base_automation
@@ -501,8 +512,8 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Jos ehto on olemassa, sen on täytyttävä ennen automaatiosäännön "
 "suorittamista."
@@ -515,6 +526,11 @@ msgid ""
 msgstr ""
 "Jos tämä ehto on olemassa, sen on täytyttävä ennen tietueen päivittämistä. "
 "Ei tarkisteta tietuetta luotaessa."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -580,11 +596,11 @@ msgstr "Mallin nimi"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
-"Toiminnon %(action_name)s mallin on vastattava automaattisen säännön "
-"%(rule_name)s mallia."
+"Toiminnon %(action_name)s mallin on vastattava automaattisen säännön %"
+"(rule_name)s mallia."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -750,24 +766,26 @@ msgstr "Lähetä Webhook-ilmoitus"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Lähetä sähköpostia, kun objekti muuttaa tilaa, arkistoi tietueet\n"
-"                kuukauden käyttämättömyyden jälkeen tai muistuta itseäsi seurannasta\n"
+"                kuukauden käyttämättömyyden jälkeen tai muistuta itseäsi "
+"seurannasta\n"
 "                tehtävistä, kun tietty tunniste on lisätty."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Lähetä sähköpostia, kun kohteen tila muuttuu, arkistoi tietueet kuukauden "
 "käyttämättömyyden jälkeen tai muistuta itseäsi tehtävien seurannasta, kun "
-"tietty tunniste on lisätty.<br>Automaatiosääntöjen avulla voit automatisoida"
-" minkä tahansa työnkulun."
+"tietty tunniste on lisätty.<br>Automaatiosääntöjen avulla voit automatisoida "
+"minkä tahansa työnkulun."
 
 #. module: base_automation
 #. odoo-javascript
@@ -798,8 +816,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Jotkin laukaisimet tarvitsevat viittauksen toiseen kenttään. Tätä kenttää "
 "käytetään sen tallentamiseen."
@@ -839,19 +857,18 @@ msgstr "Kohdetietue"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr "Toimien kohdemalli %(action_names)s eroaa sääntömallista."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"Laukaisinta \"%(trigger_value)s\" %(trigger_label)s voidaan käyttää vain "
-"\"%(state_value)s\" toimintatyypissä"
+"Laukaisinta \"%(trigger_value)s\" %(trigger_label)s voidaan käyttää vain \"%"
+"(state_value)s\" toimintatyypissä"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -1019,10 +1036,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Milloin ehto pitäisi laukaista.\n"
-"                 Jos asetettu, Odoon eräajo-ohjelma (cron) käsittelee tämän. Jos tyhjä, tarkistetaan luonnin ja päivityksen yhteydessä."
+"                 Jos asetettu, Odoon eräajo-ohjelma (cron) käsittelee tämän. "
+"Jos tyhjä, tarkistetaan luonnin ja päivityksen yhteydessä."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1049,8 +1068,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
-"Voit pyytää järjestelmänvalvojaa poistamaan tämän automaatiosäännön käytöstä"
-" tai korjaamaan sen."
+"Voit pyytää järjestelmänvalvojaa poistamaan tämän automaatiosäännön käytöstä "
+"tai korjaamaan sen."
 
 #. module: base_automation
 #. odoo-javascript

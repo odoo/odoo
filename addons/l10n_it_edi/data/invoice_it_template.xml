@@ -157,19 +157,19 @@
             <t t-if="reconciled_moves">
                 <DatiFattureCollegate t-foreach="reconciled_moves" t-as="reconciled_move">
                     <IdDocumento t-out="format_alphanumeric(reconciled_move.name, -20)"/>
-                    <DataDocumento t-out="format_date(reconciled_move.date if reconciled_move.l10n_it_edi_is_self_invoice else reconciled_move.invoice_date)"/>
+                    <Data t-out="format_date(reconciled_move.date if reconciled_move.l10n_it_edi_is_self_invoice else reconciled_move.invoice_date)"/>
                 </DatiFattureCollegate>
             </t>
             <t t-elif="record.reversed_entry_id">
                 <DatiFattureCollegate>
                     <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
-                    <DataDocumento t-out="format_date(record.reversed_entry_id.date if record.reversed_entry_id.l10n_it_edi_is_self_invoice else record.reversed_entry_id.invoice_date)"/>
+                    <Data t-out="format_date(record.reversed_entry_id.date if record.reversed_entry_id.l10n_it_edi_is_self_invoice else record.reversed_entry_id.invoice_date)"/>
                 </DatiFattureCollegate>
             </t>
             <t t-elif="record.ref">
                 <DatiFattureCollegate>
                     <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
-                    <DataDocumento t-out="format_date(record.invoice_date)"/>
+                    <Data t-out="format_date(record.invoice_date)"/>
                 </DatiFattureCollegate>
             </t>
             <DatiFattureCollegate t-foreach="downpayment_moves" t-as="downpayment_move">

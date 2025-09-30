@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-26 22:21+0000\n"
+"POT-Creation-Date: 2025-09-27 01:49+0000\n"
+"PO-Revision-Date: 2025-09-29 22:20+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/pos_self_order/es_419/>\n"
@@ -434,7 +434,7 @@ msgstr "Editar"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
@@ -472,6 +472,11 @@ msgid "Follow instructions on the terminal"
 msgstr "Siga las instrucciones de la terminal"
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Free Metal / Wood Stands"
+msgstr "Soportes de metal y madera gratis"
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
@@ -479,13 +484,14 @@ msgstr "Genérico"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
 msgstr "Obtén códigos QR"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
 msgstr "Obtén códigos QR"
 
@@ -1166,7 +1172,7 @@ msgstr "Rastreador de mesas:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Table detective time!"
-msgstr "¡Hora de ser detective!"
+msgstr "Es hora de inspeccionar las mesas"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1177,7 +1183,7 @@ msgstr "Mesa:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Take Out"
-msgstr "Comida para llevar"
+msgstr "Para llevar"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1201,20 +1207,21 @@ msgstr "¡Muchas gracias!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr "El valor en Disponible después de debe ser entre 00:00 y 24:00"
+msgstr "El valor \"Disponible después de\" debe estar entre 00:00 y 24:00"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"El valor Disponible hasta debe ser mayor que el valor Disponible después de."
+"El valor \"Disponible hasta\" debe ser mayor que el valor "
+"\"Disponible después de\"."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr "El valor Disponible hasta debe ser entre 00:00 24:00"
+msgstr "El valor \"Disponible hasta\" debe estar entre 00:00 y 24:00"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1326,7 +1333,7 @@ msgstr "No puede agregar métodos de pago en efectivo al modo de quiosco."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "You cannot edit a posted orderline !"
-msgstr "No puede editar una línea de orden publicada."
+msgstr "No puedes editar la línea de una orden publicada."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1345,7 +1352,7 @@ msgstr "Tu orden"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Your Selection"
-msgstr "Su selección"
+msgstr "Tu selección"
 
 #. module: pos_self_order
 #. odoo-python

@@ -1,49 +1,60 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr " '*' は有効な正規表現バーコードパターンではありません。意図されているのは、以下ですか:'.*'?"
+msgstr ""
+" '*' は有効な正規表現バーコードパターンではありません。意図されているのは、以"
+"下ですか:'.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>バーコード表現規則</i> はバーコードがどのように認識され、分類されるかを定義します。\n"
-"バーコードスキャン時に、パターンが合致する規則のうち <i>一番始めのもの</i> を採用します。\n"
-"パターンシンタックスは正規表現です。正規表現がバーコードのプレフィクスに一致することをもち、バーコードが規則に合致すると判断します。"
+"<i>バーコード表現規則</i> はバーコードがどのように認識され、分類されるかを定"
+"義します。\n"
+"バーコードスキャン時に、パターンが合致する規則のうち <i>一番始めのもの</i> を"
+"採用します。\n"
+"パターンシンタックスは正規表現です。正規表現がバーコードのプレフィクスに一致"
+"することをもち、バーコードが規則に合致すると判断します。"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
-msgstr "バーコード表現規則は、販売時点管理がどのようにバーコードを識別し解釈するかを定義します"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
+msgstr ""
+"バーコード表現規則は、販売時点管理がどのようにバーコードを識別し解釈するかを"
+"定義します"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -184,7 +195,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
-"barcodes.barcode_events_mixinを使用するにはon_barcode_scanned メソッドを実装する必要があります。 "
+"barcodes.barcode_events_mixinを使用するにはon_barcode_scanned メソッドを実装"
+"する必要があります。 "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -211,18 +223,27 @@ msgstr "体系"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
 "パターンは重量や価格などの数値がバーコードにどのようにエンコードされるかも\n"
-"                                定義することができます。それらパターンは <code>{NNN}</code>のように表現され、\n"
-"　　　　　　　　N は数字の桁をエンコードする場所を定義します。小数点が D で示される\n"
-"                               例えば <code>{NNNDD}</code>浮動小数点もサポートされています。これらの場合、\n"
-"                                関連するレコードのバーコードフィールドはこれらの数値をゼロとして示す<i>必要があります</i>。"
+"                                定義することができます。それらパターンは "
+"<code>{NNN}</code>のように表現され、\n"
+"　　　　　　　　N は数字の桁をエンコードする場所を定義します。小数点が D で示"
+"される\n"
+"                               例えば <code>{NNNDD}</code>浮動小数点もサポー"
+"トされています。これらの場合、\n"
+"                                関連するレコードのバーコードフィールドはこれ"
+"らの数値をゼロとして示す<i>必要があります</i>。"
 
 #. module: barcodes
 #. odoo-javascript
@@ -284,7 +305,9 @@ msgstr "一致したパターンはこのバーコードにエイリアスしま
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
-msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つの規則には中括弧を 1 組しか含めることができません。"
+msgstr ""
+"バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つの規則には中"
+"括弧を 1 組しか含めることができません。"
 
 #. module: barcodes
 #. odoo-python
@@ -292,21 +315,26 @@ msgstr "バーコードパターン%(pattern)sにシンタックスエラーが�
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
-msgstr "バーコードパターン %(pattern)sにシンタックスエラーがあります: 中括弧には後にD'sが続くN'sのみ含むことができます。"
+msgstr ""
+"バーコードパターン %(pattern)sにシンタックスエラーがあります: 中括弧には後に"
+"D'sが続くN'sのみ含むことができます。"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 中括弧が空です。"
+msgstr ""
+"バーコードパターン%(pattern)sにシンタックスエラーがあります: 中括弧が空です。"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr "この規則は、バーコードが指定されたエンコーディングでエンコードされている場合にのみ適用されます"
+msgstr ""
+"この規則は、バーコードが指定されたエンコーディングでエンコードされている場合"
+"にのみ適用されます"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -317,11 +345,12 @@ msgstr "タイプ"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、ある規則と他のエンコーディングを一致させるときにUPC "
-"/EANバーコードを自動的に変換するかどうかを決定します。"
+"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定"
+"では、ある規則と他のエンコーディングを一致させるときにUPC /EANバーコードを自"
+"動的に変換するかどうかを決定します。"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -351,11 +380,18 @@ msgstr "不明なバーコードコマンド"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
-msgstr "より小さな付番規則が最初に一致するように規則を順序付けするために使用されます"
+msgid "Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"より小さな付番規則が最初に一致するように規則を順序付けするために使用されます"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "最後にスキャンされたバーコードの値。"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""

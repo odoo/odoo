@@ -515,10 +515,10 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         })
 
-        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'nlcius'
+        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'ubl_bis3'
         invoice.action_post()
         invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
-        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('nlcius')
+        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('ubl_bis3')
         xml_content = builder._export_invoice(invoice)[0]
         xml_tree = etree.fromstring(xml_content)
         scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', {
