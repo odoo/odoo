@@ -402,7 +402,6 @@ class PosSession(models.Model):
 
             return session.action_pos_session_validate(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
-
     def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         return self.action_pos_session_close(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -1716,6 +1715,18 @@ class PosSession(models.Model):
                     )
                 )
 
+    @api.model
+    def run_scheduler_alert_old_sessions(self):
+        """This scheduler checks for POS sessions older than 7 days that are still open
+        and schedules a reminder to close them.
+        """
+        try:
+            self._alert_old_session()
+            self.env.cr.commit()
+        except Exception:
+            _logger.exception("An error occurred while the POS old session alert scheduler.")
+            raise
+
     def _check_if_no_draft_orders(self):
         draft_orders = self.get_session_orders().filtered(lambda order: order.state == 'draft')
         if draft_orders:
@@ -1847,24 +1858,3 @@ class PosSession(models.Model):
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
-
-
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
-
-    @api.model
-    def _run_scheduler_alert_old_sessions(self, use_new_cursor=False):
-        self.env['pos.session']._alert_old_session()
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
-
-    @api.model
-    def run_scheduler_alert_old_sessions(self, use_new_cursor=False):
-        """This scheduler checks for POS sessions older than 7 days that are still open
-        and schedules a reminder to close them.
-        """
-        try:
-            self._run_scheduler_alert_old_sessions(use_new_cursor=use_new_cursor)
-        except Exception:
-            _logger.exception("An error occurred while the POS old session alert scheduler.")
-            raise

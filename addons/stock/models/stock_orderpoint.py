@@ -741,7 +741,7 @@ class StockWarehouseOrderpoint(models.Model):
                     _logger.error('Unable to process orderpoints')
                     break
                 orderpoints_to_process -= failed_orderpoints
-                _logger.warning(f'Exceptions raised when procuring orderpoints: {failed_orderpoints}')
+                _logger.warning('Exceptions raised when procuring orderpoints: %r', failed_orderpoints)
             else:
                 self._post_process_scheduler()
                 break
