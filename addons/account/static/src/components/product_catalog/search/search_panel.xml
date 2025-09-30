@@ -7,10 +7,10 @@
         t-inherit-mode="primary"
     >
         <section position="before">
-            <section t-if="showSections" class="o_search_panel_sections mt-5">
-                <header class="d-flex align-items-center cursor-default gap-2 mb-3">
-                    <i class="fa fa-filter"/>
-                    <span class="text-uppercase fw-bold">Sections</span>
+            <section t-if="showSections" class="o_search_panel_sections mt-4 pb-4 border-bottom">
+                <header class="d-flex align-items-center cursor-default gap-2 mb-3 ps-2">
+                    <i class="fa fa-filter text-primary"/>
+                    <b class="text-uppercase">Sections</b>
                     <div class="d-flex align-items-center ms-auto">
                         <span class="me-2">Filter</span>
                         <div class="form-check form-switch mb-0">
@@ -32,7 +32,7 @@
                         t-foreach="this.state.sections.keys()"
                         t-as="sectionId"
                         t-key="sectionId"
-                        t-att-class="'list-group-item p-0 mb-1 border-0 cursor-pointer ' + (
+                        t-att-class="'list-group-item px-2 mb-1 border-0 cursor-pointer ' + (
                             selectedSection.sectionId == sectionId ? 'o_selected_section' : ''
                         )"
                         t-on-dragstart="(e) => onDragStart(sectionId, e)"
@@ -83,7 +83,7 @@
                 />
                 <button
                     t-else=""
-                    class="btn btn-link px-0 py-1"
+                    class="btn btn-link"
                     type="button"
                     t-on-click="() => this.enableSectionInput('bottom')"
                 >

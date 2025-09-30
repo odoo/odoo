@@ -1,4 +1,7 @@
 .o_search_panel.account_root {
+    --treeEntry-padding-h: #{map-get($spacers, 3)};
+    --treeEntry-padding-v: #{map-get($spacers, 2)};
+
     padding: 6px !important; // need to override bootstrap ps-4 rule
     scrollbar-width: thin;
     min-width: 55px;
@@ -15,13 +18,14 @@
     .o_search_panel_category_value {
         padding-right: 0 !important;
         header {
+            --list-group-item-padding-y: 0;
+
             margin-left: 0;
         }
         .o_toggle_fold:empty{
             width: 0;
         }
         .o_search_panel_category_value {
-            padding-left: 1.2rem !important; // need to override bootstrap ps-4 rule
             .o_toggle_fold {
                 width: 0.3rem;
             }
