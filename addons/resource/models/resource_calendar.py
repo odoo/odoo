@@ -417,11 +417,11 @@ class ResourceCalendar(models.Model):
                                 remaining_hours -= allocate_hours
 
                                 if booking_apt:
-                                    # If an appoinment is being booked, create interval starting start_dt
+                                    # If an appoinment is being booked, create an interval starting start_dt
                                     start_time = start_datetime
                                     end_time = start_time + timedelta(hours=allocate_hours)
                                 else:
-                                    # If an appointment isn't being booked, create interval centered at 12:00 PM
+                                    # If an appointment isn't being booked, create an interval centered at 12:00 PM
                                     midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
                                     start_time = midpoint - timedelta(hours=allocate_hours / 2)
                                     end_time = midpoint + timedelta(hours=allocate_hours / 2)
