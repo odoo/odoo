@@ -23,11 +23,10 @@ class TestResourceCommon(TransactionCase):
         return fields.Datetime.to_string(dt)
 
     @classmethod
-    def _define_calendar(cls, name, attendances, tz):
+    def _define_calendar(cls, name, attendances):
         return cls.env["resource.calendar"].create(
             {
                 "name": name,
-                "tz": tz,
                 "attendance_ids": [
                     (
                         0,
@@ -46,11 +45,10 @@ class TestResourceCommon(TransactionCase):
         )
 
     @classmethod
-    def _define_calendar_2_weeks(cls, name, attendances, tz):
+    def _define_calendar_2_weeks(cls, name, attendances):
         return cls.env["resource.calendar"].create(
             {
                 "name": name,
-                "tz": tz,
                 "two_weeks_calendar": True,
                 "attendance_ids": [
                     (
@@ -72,23 +70,21 @@ class TestResourceCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
+        cls.env.company.tz = "Europe/Brussels"
 
         # UTC+1 winter, UTC+2 summer
         cls.calendar_jean = cls._define_calendar(
-            "40 Hours", [(8, 16, i, 1) for i in range(5)], "Europe/Brussels",
+            "40 Hours", [(8, 16, i, 1) for i in range(5)],
         )
         # UTC+6
         cls.calendar_patel = cls._define_calendar(
             "38 Hours",
             sum((((9, 12, i, 3 / 7), (13, 17, i, 4 / 7)) for i in range(5)), ()),
-            "Etc/GMT-6",
         )
         # UTC-8 winter, UTC-7 summer
         cls.calendar_john = cls._define_calendar(
             "8+12 Hours",
             [(8, 16, 1, 1), (8, 13, 4, 5 / 12), (16, 23, 4, 7 / 12)],
-            "America/Los_Angeles",
         )
         # UTC+1 winter, UTC+2 summer
         cls.calendar_jules = cls._define_calendar_2_weeks(
@@ -101,19 +97,16 @@ class TestResourceCommon(TransactionCase):
                 (8, 16, 3, "1"),
                 (10, 16, 4, "1"),
             ],
-            "Europe/Brussels",
         )
 
         cls.calendar_paul = cls._define_calendar(
             "Morning and evening shifts",
             sum((((2, 7, i, 0.5), (10, 16, i, 0.5)) for i in range(5)), ()),
-            "America/Noronha",
         )
 
         cls.calendar_bob = cls._define_calendar(
             "Calendar with adjacent attendances",
             sum((((8, 12, i, 0.5), (12, 16, i, 0.5)) for i in range(5)), ()),
-            "Europe/Brussels",
         )
 
         # Employee is linked to a resource.resource via resource.mixin
@@ -121,24 +114,28 @@ class TestResourceCommon(TransactionCase):
             {
                 "name": "Jean",
                 "resource_calendar_id": cls.calendar_jean.id,
+                "tz": "Europe/Brussels",
             },
         )
         cls.patel = cls.env["resource.test"].create(
             {
                 "name": "Patel",
                 "resource_calendar_id": cls.calendar_patel.id,
+                "tz": "Etc/GMT-6",
             },
         )
         cls.john = cls.env["resource.test"].create(
             {
                 "name": "John",
                 "resource_calendar_id": cls.calendar_john.id,
+                "tz": "America/Los_Angeles",
             },
         )
         cls.jules = cls.env["resource.test"].create(
             {
                 "name": "Jules",
                 "resource_calendar_id": cls.calendar_jules.id,
+                "tz": "Europe/Brussels",
             },
         )
 
@@ -146,6 +143,7 @@ class TestResourceCommon(TransactionCase):
             {
                 "name": "Paul",
                 "resource_calendar_id": cls.calendar_paul.id,
+                "tz": "America/Noronha",
             },
         )
 
@@ -153,6 +151,7 @@ class TestResourceCommon(TransactionCase):
             {
                 "name": "Bob",
                 "resource_calendar_id": cls.calendar_bob.id,
+                "tz": "Europe/Brussels",
             },
         )
 
@@ -170,5 +169,4 @@ class TestResourceCommon(TransactionCase):
                 (8, 16, 3, "1"),
                 (8, 16, 4, "1"),
             ],
-            "Europe/Brussels",
         )

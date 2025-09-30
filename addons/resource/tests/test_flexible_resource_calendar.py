@@ -12,7 +12,6 @@ class TestFlexibleResourceCalendar(TransactionCase):
     def test_flexible_resource_work_intervals(self):
         flex_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 40h/week',
-            'tz': 'UTC',
             'hours_per_day': 8.0,
             'flexible_hours': True,
         })
