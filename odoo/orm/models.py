@@ -2323,11 +2323,6 @@ class BaseModel(metaclass=MetaModel):
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
-        if field.related and not field.store:
-            model, field, alias = field.traverse_related_sql(self, alias, query)
-            related_expr = field.name if not property_name else f"{field.name}.{property_name}"
-            return model._field_to_sql(alias, related_expr, query)
-
         self._check_field_access(field, 'read')
 
         sql = field.to_sql(self, alias, query)

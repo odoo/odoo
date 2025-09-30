@@ -1230,6 +1230,9 @@ class Field(typing.Generic[T]):
         The query object is necessary for fields that need to add tables to the query.
         """
         if not self.store or not self.column_type:
+            if self.related and not self.store:
+                model, field, alias = self.traverse_related_sql(model, alias, query)
+                return model._field_to_sql(alias, field.name, query)
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
         sql_field = SQL.identifier(alias, self.name, to_flush=self)
         if self.company_dependent:
