@@ -316,7 +316,7 @@ class AccountEdiProxyClientUser(models.Model):
         self.ensure_one()
         return {
             'nemhandel_company_name': self.company_id.display_name,
-            'nemhandel_company_cvr': self.company_id.vat[2:] if self.company_id.vat[:2].isalpha() else self.company_id.vat,
+            'nemhandel_company_cvr': self.company_id.partner_id._get_clean_vat_number(self.company_id.vat),
             'nemhandel_country_code': self.company_id.country_id.code,
             'nemhandel_phone_number': self.company_id.nemhandel_phone_number,
             'nemhandel_contact_email': self.company_id.nemhandel_contact_email,
@@ -334,7 +334,7 @@ class AccountEdiProxyClientUser(models.Model):
             nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state'].selection)[company.l10n_dk_nemhandel_proxy_state]
             raise UserError(_('Cannot register a user with a %s application', nemhandel_state_translated))
 
-        company_vat = company.vat[2:] if company.vat and company.vat[:2].isalpha() else company.vat
+        company_vat = company.partner_id._get_clean_vat_number(company.vat)
         if company.nemhandel_identifier_type == '0184' and company_vat != company.nemhandel_identifier_value:
             raise ValidationError(_("If you try to register with your CVR, please make sure your company has the same VAT"))
 
