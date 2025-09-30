@@ -21,6 +21,6 @@ class IapAccount(models.Model):
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
         else:
             default_endpoint = DEFAULT_IAP_ENDPOINT if is_production else DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param(config_parameter, default_endpoint)
+        endpoint = self.env["ir.config_parameter"].sudo().get_str(config_parameter) or default_endpoint
         url = "%s%s" % (endpoint, url_path)
         return jsonrpc(url, params=params, timeout=timeout)

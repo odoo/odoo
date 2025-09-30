@@ -101,7 +101,7 @@ class LinkTracker(models.Model):
         `link_tracker.no_external_tracking` is set, we add the UTM values in the URL
         *only* for URLs that redirect to the local website (base URL).
         """
-        no_external_tracking = self.env['ir.config_parameter'].sudo().get_param('link_tracker.no_external_tracking')
+        no_external_tracking = self.env['ir.config_parameter'].sudo().get_bool('link_tracker.no_external_tracking')
 
         for tracker in self:
             base_domain = urls.url_parse(tracker.get_base_url()).netloc
