@@ -19,7 +19,7 @@ class MailFollowers(models.Model):
     """
     _name = 'mail.followers'
     _log_access = False
-    _description = 'Document Followers'
+    _description = 'Document Follower'
 
     # Note. There is no integrity check on model names for performance reasons.
     # However, followers of unlinked models are deleted by models themselves

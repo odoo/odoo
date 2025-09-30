@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class PosBill(models.Model):
     _name = 'pos.bill'
     _order = "value"
-    _description = "Coins/Bills"
+    _description = "Coin/Bill"
     _inherit = ["pos.load.mixin"]
 
     name = fields.Char("Name")

@@ -12,7 +12,7 @@ class MailingFilter(models.Model):
     (quite similar to 'ir.filters' but dedicated to mailing apps). Frequently
     used domains can be reused easily. """
     _name = 'mailing.filter'
-    _description = 'Mailing Favorite Filters'
+    _description = 'Mailing Favorite Filter'
     _order = 'create_date DESC'
 
     # override create_uid field to display default value while creating filter from 'Configuration' menus

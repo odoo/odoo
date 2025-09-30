@@ -10,7 +10,7 @@ from odoo.tools import SQL
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
     _name = 'project.tags'
-    _description = "Project Tags"
+    _description = "Project Tag"
     _order = "name"
 
     def _get_default_color(self):

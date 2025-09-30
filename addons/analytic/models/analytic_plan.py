@@ -13,7 +13,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 class AccountAnalyticPlan(models.Model):
     _name = 'account.analytic.plan'
-    _description = 'Analytic Plans'
+    _description = 'Analytic Plan'
     _parent_store = True
     _rec_name = 'complete_name'
     _order = 'sequence asc, id'
@@ -392,7 +392,7 @@ class AccountAnalyticPlan(models.Model):
 
 class AccountAnalyticApplicability(models.Model):
     _name = 'account.analytic.applicability'
-    _description = "Analytic Plan's Applicabilities"
+    _description = "Analytic Plan's Applicability"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 

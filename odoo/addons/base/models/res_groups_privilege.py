@@ -3,7 +3,7 @@ from odoo import fields, models
 
 class ResGroupsPrivilege(models.Model):
     _name = 'res.groups.privilege'
-    _description = "Privileges"
+    _description = "Privilege"
     _order = 'sequence, name, id'
 
     name = fields.Char(string='Name', required=True, translate=True)

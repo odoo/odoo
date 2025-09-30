@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _description = "Sales Order Line"
 
     # Section-related fields
     is_optional = fields.Boolean(

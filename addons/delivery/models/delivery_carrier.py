@@ -12,7 +12,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Shipping Methods"
+    _description = "Shipping Method"
     _order = 'sequence, id'
 
     ''' A Shipping Provider

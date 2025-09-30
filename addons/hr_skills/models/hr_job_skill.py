@@ -6,7 +6,7 @@ from odoo import fields, models
 class HrJobSkill(models.Model):
     _name = "hr.job.skill"
     _inherit = "hr.individual.skill.mixin"
-    _description = "Skills for job positions"
+    _description = "Skill for job position"
     _order = "skill_type_id, skill_level_id desc"
     _rec_name = "skill_id"
 

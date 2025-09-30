@@ -29,7 +29,7 @@ class SlideSlide(models.Model):
         'website.published.mixin',
         'website.searchable.mixin',
     ]
-    _description = 'Slides'
+    _description = 'Slide'
     _mail_post_access = 'read'
     _order_by_strategy = {
         'sequence': 'sequence asc, id asc',

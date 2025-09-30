@@ -596,7 +596,7 @@ class Im_LivechatChannelRule(models.Model):
     """
 
     _name = 'im_livechat.channel.rule'
-    _description = 'Livechat Channel Rules'
+    _description = 'Livechat Channel Rule'
     _order = 'sequence asc'
 
     regex_url = fields.Char('URL Regex',

@@ -6,7 +6,7 @@ from odoo.tools import SQL
 class AccountPayment(models.Model):
     _name = 'account.payment'
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
-    _description = "Payments"
+    _description = "Payment"
     _order = "date desc, name desc"
     _check_company_auto = True
 

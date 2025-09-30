@@ -53,7 +53,7 @@ class LoggerProxy:
 
 class IrActionsActions(models.Model):
     _name = 'ir.actions.actions'
-    _description = 'Actions'
+    _description = 'Action'
     _table = 'ir_actions'
     _order = 'name, id'
     _allow_sudo_commands = False
@@ -583,7 +583,7 @@ class IrActionsServer(models.Model):
       server actions
     """
     _name = 'ir.actions.server'
-    _description = 'Server Actions'
+    _description = 'Server Action'
     _table = 'ir_act_server'
     _inherit = ['ir.actions.actions']
     _order = 'sequence,name,id'
@@ -1346,7 +1346,7 @@ class IrActionsTodo(models.Model):
     Configuration Wizards
     """
     _name = 'ir.actions.todo'
-    _description = "Configuration Wizards"
+    _description = "Configuration Wizard"
     _rec_name = 'action_id'
     _order = "sequence, id"
     _allow_sudo_commands = False

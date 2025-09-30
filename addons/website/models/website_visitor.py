@@ -16,7 +16,7 @@ from odoo.http import request
 
 class WebsiteTrack(models.Model):
     _name = 'website.track'
-    _description = 'Visited Pages'
+    _description = 'Visited Page'
     _order = 'visit_datetime DESC'
     _log_access = False
 

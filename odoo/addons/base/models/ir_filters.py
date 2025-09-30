@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class IrFilters(models.Model):
     _name = 'ir.filters'
-    _description = 'Filters'
+    _description = 'Filter'
     _order = 'model_id, name, id desc'
 
     name = fields.Char(string='Filter Name', required=True)

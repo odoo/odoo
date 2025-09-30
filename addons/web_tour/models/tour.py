@@ -5,7 +5,7 @@ import base64
 
 class Web_TourTour(models.Model):
     _name = 'web_tour.tour'
-    _description = "Tours"
+    _description = "Tour"
     _order = "sequence, name, id"
 
     name = fields.Char(required=True)

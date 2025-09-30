@@ -69,7 +69,7 @@ class IrCron(models.Model):
     # See also odoo.cron
     _name = 'ir.cron'
     _order = 'cron_name, id'
-    _description = 'Scheduled Actions'
+    _description = 'Scheduled Action'
     _allow_sudo_commands = False
 
     _inherits = {'ir.actions.server': 'ir_actions_server_id'}
@@ -827,7 +827,7 @@ class IrCron(models.Model):
 
 class IrCronTrigger(models.Model):
     _name = 'ir.cron.trigger'
-    _description = 'Triggered actions'
+    _description = 'Triggered Action'
     _rec_name = 'cron_id'
     _allow_sudo_commands = False
 
@@ -848,7 +848,7 @@ class IrCronTrigger(models.Model):
 
 class IrCronProgress(models.Model):
     _name = 'ir.cron.progress'
-    _description = 'Progress of Scheduled Actions'
+    _description = 'Progress of Scheduled Action'
     _rec_name = 'cron_id'
 
     cron_id = fields.Many2one("ir.cron", required=True, index=True, ondelete='cascade')

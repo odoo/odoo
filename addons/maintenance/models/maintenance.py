@@ -406,7 +406,7 @@ class MaintenanceRequest(models.Model):
 class MaintenanceTeam(models.Model):
     _name = 'maintenance.team'
     _inherit = ['mail.alias.mixin', 'mail.thread']
-    _description = 'Maintenance Teams'
+    _description = 'Maintenance Team'
 
     name = fields.Char('Team Name', required=True, translate=True)
     active = fields.Boolean(default=True)

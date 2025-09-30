@@ -6,7 +6,7 @@ from odoo.tools import email_normalize
 
 class HrJobPlatform(models.Model):
     _name = 'hr.job.platform'
-    _description = 'Job Platforms'
+    _description = 'Job Platform'
 
     name = fields.Char(required=True)
     email = fields.Char(required=True, help="Applications received from this Email won't be linked to a contact."

@@ -13,7 +13,7 @@ class PosPayment(models.Model):
     """
 
     _name = 'pos.payment'
-    _description = "Point of Sale Payments"
+    _description = "Point of Sale Payment"
     _order = "id desc"
     _inherit = ['pos.load.mixin']
 

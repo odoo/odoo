@@ -434,7 +434,7 @@ class MrpWorkcenterTag(models.Model):
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = 'mrp.workcenter.productivity.loss.type'
-    _description = 'MRP Workorder productivity losses'
+    _description = 'Workorder Productivity Loss Type'
     _rec_name = 'loss_type'
 
     def _compute_display_name(self):
@@ -454,7 +454,7 @@ class MrpWorkcenterProductivityLossType(models.Model):
 
 class MrpWorkcenterProductivityLoss(models.Model):
     _name = 'mrp.workcenter.productivity.loss'
-    _description = "Workcenter Productivity Losses"
+    _description = "Workcenter Productivity Loss"
     _order = "sequence, id"
 
     name = fields.Char('Blocking Reason', required=True, translate=True)

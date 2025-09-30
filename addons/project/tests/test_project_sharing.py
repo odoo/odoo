@@ -354,15 +354,15 @@ class TestProjectSharing(TestProjectSharingCommon):
             self.assertFalse(task.child_ids)
 
         # Create/update a tag through tag_ids
-        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
             Task.create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
-        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
             Task.create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
-        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
             Task.create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
 
         # Same thing but using context defaults
-        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
             Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
         with Task.env.cr.savepoint() as sp:
             task = Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
@@ -470,11 +470,11 @@ class TestProjectSharing(TestProjectSharingCommon):
             task.write({'child_ids': [Command.set([self.task_no_collabo.id])]})
 
         # Create/update a tag through tag_ids
-        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
             task.write({'tag_ids': [Command.create({'name': 'Bar'})]})
-        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
             task.write({'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
-        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
             task.write({'tag_ids': [Command.delete(self.task_tag.id)]})
 
         task.write({'tag_ids': [Command.link(self.task_tag.id)]})

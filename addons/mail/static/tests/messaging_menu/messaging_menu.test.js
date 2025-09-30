@@ -433,9 +433,7 @@ test("multiple grouped notifications by document model, sorted by the most recen
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-NotificationItem)", {
-        text: "Email Failure: Companies",
-    });
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Email Failure: Company" });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Email Failure: Contact" });
 });
 

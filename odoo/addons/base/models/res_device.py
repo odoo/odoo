@@ -160,7 +160,7 @@ class ResDeviceLog(models.Model):
 class ResDevice(models.Model):
     _name = 'res.device'
     _inherit = ["res.device.log"]
-    _description = "Devices"
+    _description = "Device"
     _auto = False
     _order = 'last_activity desc'
 

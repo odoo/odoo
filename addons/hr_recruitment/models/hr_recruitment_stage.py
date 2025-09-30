@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 class HrRecruitmentStage(models.Model):
     _name = 'hr.recruitment.stage'
-    _description = "Recruitment Stages"
+    _description = "Recruitment Stage"
     _order = 'sequence'
 
     name = fields.Char("Stage Name", required=True, translate=True)

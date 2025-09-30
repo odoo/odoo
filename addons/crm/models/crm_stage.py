@@ -18,7 +18,7 @@ class CrmStage(models.Model):
         Stages are for example used to display the kanban view of records.
     """
     _name = 'crm.stage'
-    _description = "CRM Stages"
+    _description = "CRM Stage"
     _rec_name = 'name'
     _order = "sequence, name, id"
 

@@ -303,7 +303,7 @@ class StockLandedCostLines(models.Model):
 
 class StockValuationAdjustmentLines(models.Model):
     _name = 'stock.valuation.adjustment.lines'
-    _description = 'Valuation Adjustment Lines'
+    _description = 'Valuation Adjustment Line'
 
     name = fields.Char(
         'Description', compute='_compute_name', store=True)

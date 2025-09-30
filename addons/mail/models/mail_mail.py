@@ -27,7 +27,7 @@ class MailMail(models.Model):
     """ Model holding RFC2822 email messages to send. This model also provides
         facilities to queue and send new email messages.  """
     _name = 'mail.mail'
-    _description = 'Outgoing Mails'
+    _description = 'Outgoing Mail'
     _inherits = {'mail.message': 'mail_message_id'}
     _order = 'id desc'
     _rec_name = 'subject'

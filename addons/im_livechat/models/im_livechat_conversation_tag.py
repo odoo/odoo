@@ -9,7 +9,7 @@ class Im_LivechatConversationTag(models.Model):
     """Tags for Live Chat conversations."""
 
     _name = "im_livechat.conversation.tag"
-    _description = "Live Chat Conversation Tags"
+    _description = "Live Chat Conversation Tag"
     _order = "name"
 
     @api.model
