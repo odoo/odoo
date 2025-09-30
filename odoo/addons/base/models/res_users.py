@@ -801,8 +801,8 @@ class ResUsers(models.Model):
                 try:
                     base = user_agent_env['base_location']
                     ICP = env['ir.config_parameter']
-                    if not ICP.get_param('web.base.url.freeze'):
-                        ICP.set_param('web.base.url', base)
+                    if not ICP.get_bool('web.base.url.freeze'):
+                        ICP.set_str('web.base.url', base)
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info

@@ -40,7 +40,7 @@ class Publisher_WarrantyContract(AbstractModel):
 
         enterprise_code = IrParamSudo.get_str('database.enterprise_code')
 
-        web_base_url = IrParamSudo.get_param('web.base.url')
+        web_base_url = IrParamSudo.get_str('web.base.url')
         msg = {
             "dbuuid": dbuuid,
             "nbr_users": nbr_users,

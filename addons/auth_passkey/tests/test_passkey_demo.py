@@ -183,7 +183,7 @@ class PasskeyTest(HttpCaseWithUserDemo):
         passkey = self.passkeys['test-yubikey']
         registration = passkey['registration']
         webauthn_challenge, webauthn_response = registration['challenge'], registration['response']
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', passkey['host'])
         with self.patch_start_registration(webauthn_challenge):
             # Remove existing user passkeys so the check identity ask for a password authentication by default.
             # To mimic the behavior when a user has no passkeys set yet.
@@ -218,7 +218,7 @@ class PasskeyTest(HttpCaseWithUserDemo):
             passkey = self.passkeys[key]
             auth = passkey['auth']
             webauthn_challenge, webauthn_response = auth['challenge'], auth['response']
-            self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
+            self.env['ir.config_parameter'].sudo().set_str('web.base.url', passkey['host'])
             sign_count = passkey['passkey'].sign_count
 
             with self.patch_start_auth(webauthn_challenge):
@@ -270,7 +270,7 @@ class PasskeyTest(HttpCaseWithUserDemo):
             passkey = self.passkeys[key]
             user, auth = passkey['user'], passkey['auth']
             webauthn_challenge, webauthn_response = auth['challenge'], auth['response']
-            self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
+            self.env['ir.config_parameter'].sudo().set_str('web.base.url', passkey['host'])
             sign_count = passkey['passkey'].sign_count
 
             with self.patch_start_auth(webauthn_challenge):
@@ -378,7 +378,7 @@ class PasskeyTest(HttpCaseWithUserDemo):
         """
         passkey = self.passkeys['test-user-verification']
         webauthn_challenge, webauthn_response = passkey['auth']['challenge'], passkey['auth']['response']
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', passkey['host'])
 
         with self.patch_start_auth(webauthn_challenge):
             csrf_token = etree.fromstring(
@@ -446,13 +446,13 @@ class PasskeyTest(HttpCaseWithUserDemo):
 @tagged('post_install', '-at_install')
 class PasskeyTestTours(PasskeyTest):
     def test_passkey_login(self):
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self.passkeys['test-keepassxc']['host'])
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', self.passkeys['test-keepassxc']['host'])
         with self.patch_start_auth(self.passkeys['test-keepassxc']['auth']['challenge']):
             self.start_tour("/web/login?debug=tests", 'passkeys_tour_login')
 
     def test_passkey_backend(self):
         # All these tests rely on each other but had to be split up to patch different methods.
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self.passkeys['test-yubikey']['host'])
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', self.passkeys['test-yubikey']['host'])
         self.admin_user.tz = 'UTC'  # workaround to fix timezone not being set so you are unable to click any buttons on the profile page
         self.admin_user.auth_passkey_key_ids.unlink()
         with self.patch_start_registration(self.passkeys['test-yubikey']['registration']['challenge']):

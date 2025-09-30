@@ -19,7 +19,7 @@ class PasskeyTestPortal(PasskeyTest):
         })
 
     def test_passkey_portal_create(self):
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self.passkeys['test-yubikey']['host'])
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', self.passkeys['test-yubikey']['host'])
         self.admin_user.auth_passkey_key_ids.unlink()
         with self.patch_start_registration(self.passkeys['test-yubikey']['registration']['challenge']):
             self.start_tour("/my/security?debug=tests", 'passkeys_portal_create', login="passkey_portal")

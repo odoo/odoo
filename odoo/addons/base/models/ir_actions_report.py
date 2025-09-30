@@ -780,7 +780,7 @@ class IrActionsReport(models.Model):
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
             user=user,
             res_company=self.env.company,
-            web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+            web_base_url=self.env['ir.config_parameter'].sudo().get_str('web.base.url'),
         )
         return view_obj._render_template(template, values).encode()
 

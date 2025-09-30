@@ -12,7 +12,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
     def setUp(self):
         super(TestLinkTracker, self).setUp()
         self._web_base_url = 'https://test.odoo.com'
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', self._web_base_url)
 
     def test_absolute_url(self):
         """

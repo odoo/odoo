@@ -140,7 +140,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
         WebsiteVisitor = self.env['website.visitor']
 
-        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
+        self.env['ir.config_parameter'].sudo().set_int('website.visitor.live.days', 7)
 
         # ensure we keep a single query by correct usage of "not in"
         # (+1 query to fetch the 'ir.config_parameter')

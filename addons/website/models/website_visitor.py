@@ -355,7 +355,7 @@ class WebsiteVisitor(models.Model):
         This method is meant to be overridden by sub-modules to further refine
         inactivity conditions. """
 
-        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 60))
+        delay_days = self.env['ir.config_parameter'].sudo().get_int('website.visitor.live.days') or 60
         deadline = datetime.now() - timedelta(days=delay_days)
         return Domain('last_connection_datetime', '<', deadline) & Domain('partner_id', '=', False)
 
