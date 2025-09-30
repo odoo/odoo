@@ -365,11 +365,11 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         # --- Create Dropship 2 --- #
         self.sale_order1.order_line.product_uom_qty = 2  # Should create a new PO
-        self.purchase_order2 = self.env['purchase.order'].search(
+        purchase_order2 = self.env['purchase.order'].search(
             [('reference_ids', '=', self.sale_order1.reference_ids.id), ('state', '=', 'draft')]
         )
-        self.purchase_order2.order_line.price_unit = 16
-        self.purchase_order2.button_confirm()
+        purchase_order2.order_line.price_unit = 16
+        purchase_order2.button_confirm()
 
         # Validate dropship transfer
         dropship2 = self.sale_order1.picking_ids.filtered(lambda pck: pck.state != "done")
@@ -391,11 +391,11 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         # --- Create Dropship 3 --- #
         self.sale_order1.order_line.product_uom_qty = 3  # Should create a new PO
-        self.purchase_order3 = self.env['purchase.order'].search(
+        purchase_order3 = self.env['purchase.order'].search(
             [('reference_ids', '=', self.sale_order1.reference_ids.id), ('state', '=', 'draft')]
         )
-        self.purchase_order3.order_line.price_unit = 24
-        self.purchase_order3.button_confirm()
+        purchase_order3.order_line.price_unit = 24
+        purchase_order3.button_confirm()
 
         # Validate dropship transfer
         dropship3 = self.sale_order1.picking_ids.filtered(lambda pck: pck.state != "done")

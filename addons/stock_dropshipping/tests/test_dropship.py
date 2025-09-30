@@ -258,9 +258,9 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(purchase_order.order_line.qty_received, 0)
 
     def test_correct_vendor_dropship(self):
-        self.supplier_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
+        supplier_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
         # dropship route to be added in test
-        self.dropship_product = self.env['product.product'].create({
+        dropship_product = self.env['product.product'].create({
             'name': "Pen drive",
             'is_storable': "True",
             'lst_price': 100.0,
@@ -275,7 +275,7 @@ class TestDropship(common.TransactionCase):
                 }),
                 (0, 0, {
                     'delay': 5,
-                    'partner_id': self.supplier_2.id,
+                    'partner_id': supplier_2.id,
                     'min_qty': 1.0,
                     'price': 10
                 })
@@ -287,13 +287,13 @@ class TestDropship(common.TransactionCase):
         so_form.partner_id = self.customer
         with mute_logger('odoo.tests.common.onchange'):
             with so_form.order_line.new() as line:
-                line.product_id = self.dropship_product
+                line.product_id = dropship_product
                 line.product_uom_qty = 1
                 line.route_ids = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
         sale_order_drp_shpng.action_confirm()
 
-        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier_2.id)])
+        purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_2.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertTrue((purchase.date_planned - purchase.date_order).days == 5, "The second supplier has a delay of 5 days")
         self.assertTrue(purchase.amount_untaxed == 10, "the suppliers sells the item for 10$")
@@ -302,7 +302,7 @@ class TestDropship(common.TransactionCase):
         so_form.partner_id = self.customer
         with mute_logger('odoo.tests.common.onchange'):
             with so_form.order_line.new() as line:
-                line.product_id = self.dropship_product
+                line.product_id = dropship_product
                 line.product_uom_qty = 2
                 line.route_ids = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
