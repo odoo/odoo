@@ -66,7 +66,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             4) Change the SOL in the task and check if the SOL in the timesheet has also changed.
         """
         # 1) Define a SO and SOL in the project
-        self.project_project_rate = self.project_task_rate.copy({
+        project_project_rate = self.project_task_rate.copy({
             'name': 'Project with pricing_type="project_rate"',
             'sale_line_id': self.so.order_line[0].id,
         })
@@ -74,7 +74,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
         # 2) Create task and check if the SOL is the one defined in the project
         task = self.env['project.task'].create({
             'name': 'Task',
-            'project_id': self.project_project_rate.id,
+            'project_id': project_project_rate.id,
         })
         self.assertEqual(task.sale_line_id, self.so.order_line[0], "The SOL in the task should be the one containing the prepaid service product.")
         self.assertTrue(all(sol.qty_delivered == 0 for sol in self.so.order_line), "The quantity delivered should be equal to 0 because we have no timesheet for each SOL containing in the SO.")
@@ -84,7 +84,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             'name': 'Test Line',
             'unit_amount': 1,
             'employee_id': self.employee_manager.id,
-            'project_id': self.project_project_rate.id,
+            'project_id': project_project_rate.id,
             'task_id': task.id,
         })
         self.assertTrue(timesheet.so_line == task.sale_line_id == self.so.order_line[0], "The SOL in the timesheet should be the same than the one in the task.")
@@ -107,7 +107,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             6) Change the SOL in the mapping and check if the timesheet conserne by the mapping has its SOL has been changed too.
         """
         # 1) Define a SO, SOL and mapping for an employee in the project,
-        self.project_employee_rate = self.project_task_rate.copy({
+        project_employee_rate = self.project_task_rate.copy({
             'name': 'Project with pricing_type="employee_rate"',
             'sale_line_id': self.so.order_line[0].id,
             'sale_line_employee_ids': [(0, 0, {
@@ -115,12 +115,12 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
                 'sale_line_id': self.so.order_line[1].id,
             })]
         })
-        mapping = self.project_employee_rate.sale_line_employee_ids
+        mapping = project_employee_rate.sale_line_employee_ids
 
         # 2) Create task and check if the SOL is the one defined in the project,
         task = self.env['project.task'].create({
             'name': 'Task',
-            'project_id': self.project_employee_rate.id,
+            'project_id': project_employee_rate.id,
         })
         self.assertEqual(task.sale_line_id, self.so.order_line[0], "The SOL in the task should be the one containing the prepaid service product.")
         self.assertTrue(all(sol.qty_delivered == 0 for sol in self.so.order_line), "The quantity delivered should be equal to 0 because we have no timesheet for each SOL containing in the SO.")
@@ -131,7 +131,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 1,
             'auto_account_id': self.analytic_account_sale.id,
             'employee_id': self.employee_manager.id,
-            'project_id': self.project_employee_rate.id,
+            'project_id': project_employee_rate.id,
             'task_id': task.id,
         })
         self.assertTrue(timesheet.so_line == task.sale_line_id == self.so.order_line[0], "The SOL in the timesheet should be the same than the one in the task.")
@@ -144,7 +144,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 2,
         })
         employee_user_timesheet._compute_so_line()
-        self.assertTrue(employee_user_timesheet.so_line == self.project_employee_rate.sale_line_employee_ids[0].sale_line_id == self.so.order_line[1], "The SOL in the timesheet should be the one defined in the mapping for the employee user.")
+        self.assertTrue(employee_user_timesheet.so_line == project_employee_rate.sale_line_employee_ids[0].sale_line_id == self.so.order_line[1], "The SOL in the timesheet should be the one defined in the mapping for the employee user.")
         self.assertEqual(self.so.order_line[1].qty_delivered, 2, "The quantity delivered for this SOL should be equal to 2 hours.")
 
         # 5) Change the SOL in the task and check if only the SOL in the timesheet which does not concerne about the mapping changes,

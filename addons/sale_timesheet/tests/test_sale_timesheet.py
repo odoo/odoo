@@ -483,7 +483,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(sale_order.invoice_status, 'to invoice')
 
         # Context for sale.advance.payment.inv wizard
-        self.context = {
+        context = {
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
@@ -491,7 +491,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         }
 
         # invoice SO
-        wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'delivered',
             'date_start_invoice_timesheet': today - timedelta(days=16),
             'date_end_invoice_timesheet': today - timedelta(days=10)
