@@ -233,7 +233,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
         try:
             min_price = float(min_price)
         except ValueError:
@@ -465,7 +465,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
@@ -762,7 +762,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect('/web/login?redirect=/shop/cart')
 
         order = request.website.sale_get_order()
         if order and order.state != 'draft':
