@@ -38,10 +38,10 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.http')
     def test_01_reset_specific_page_view(self):
-        self.test_page_view = self.Website.viewref('test_website.test_page_view')
+        test_page_view = self.Website.viewref('test_website.test_page_view')
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(test_page_view.with_context(website_id=1))
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_page_view')
 
@@ -56,22 +56,22 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.http')
     def test_03_reset_specific_view_controller_t_called(self):
-        self.test_view_to_be_t_called = self.Website.viewref('test_website.test_view_to_be_t_called')
+        test_view_to_be_t_called = self.Website.viewref('test_website.test_view_to_be_t_called')
 
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_view_to_be_t_called.with_context(website_id=1))
+        break_view(test_view_to_be_t_called.with_context(website_id=1))
         break_view(self.test_view, to='<t t-call="test_website.test_view_to_be_t_called"/>')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_view')
 
     @mute_logger('odoo.http')
     def test_04_reset_specific_view_controller_inherit(self):
-        self.test_view_child_broken = self.Website.viewref('test_website.test_view_child_broken')
+        test_view_child_broken = self.Website.viewref('test_website.test_view_child_broken')
 
         # Activate and break the inherited view
-        self.test_view_child_broken.active = True
-        break_view(self.test_view_child_broken.with_context(website_id=1, load_all_views=True))
+        test_view_child_broken.active = True
+        break_view(test_view_child_broken.with_context(website_id=1, load_all_views=True))
 
         self.fix_it('/test_view')
 
@@ -102,12 +102,12 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.http')
     def test_08_reset_specific_page_view_hard_mode(self):
-        self.test_page_view = self.Website.viewref('test_website.test_page_view')
+        test_page_view = self.Website.viewref('test_website.test_page_view')
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(test_page_view.with_context(website_id=1))
         # Break it again to have a previous arch different than file arch
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(test_page_view.with_context(website_id=1))
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
 
         with self.assertRaises(AssertionError):
@@ -116,4 +116,4 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
             self.fix_it('/test_page_view')
         self.fix_it('/test_page_view', 'hard')
         # hard reset should set arch_updated to false
-        self.assertFalse(self.test_page_view.arch_updated)
+        self.assertFalse(test_page_view.arch_updated)
