@@ -106,6 +106,8 @@ class SaleOrder(models.Model):
             points_per_coupon[line.coupon_id]['cost'] += line.points_cost
 
         create_values = []
+        compensation_records = []
+        reward_redemptions = []
         base_values = {
             'order_id': self.id,
             'order_model': self._name,
@@ -119,9 +121,28 @@ class SaleOrder(models.Model):
                 'card_id': coupon.id,
                 'used': cost,
                 'issued': issued,
+                'available_issued_points': issued,
             })
+            if cost:
+                # for redemption of loyalty points used as reward
+                reward_redemptions.append({
+                    'card_id': coupon.id,
+                    'points_to_redeem': cost,
+                })
+            if issued and coupon.points < 0:
+                # for compensating the negative card balance to cover debt
+                compensation_records.append({
+                    'card_id': coupon.id,
+                    'points_to_redeem': abs(coupon.points),
+                })
 
-        self.env['loyalty.history'].create(create_values)
+        loyalty_history = self.env['loyalty.history']
+        loyalty_history.create(create_values)
+
+        # Merge reward and compensation records to process redemptions for current order
+        redemption_records = reward_redemptions + compensation_records
+        if redemption_records:
+            loyalty_history.redeem_loyalty_points(redemption_records)
 
     def _get_no_effect_on_threshold_lines(self):
         """Return the lines that have no effect on the minimum amount to reach."""
@@ -162,7 +183,8 @@ class SaleOrder(models.Model):
             lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons
         ).coupon_id.sudo().unlink()
         # Add/remove the points to our coupons
-        for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
+        for coupon, points in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
+            change = points['issued'] - points['used']
             coupon.points += change
         res = super().action_confirm()
         # Prioritize any action from super()
@@ -183,19 +205,52 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         previously_confirmed = self.filtered(lambda s: s.state == 'sale')
         res = super()._action_cancel()
-
-        order_history_lines = self.env['loyalty.history'].search([
-            ('order_model', '=', self._name),
-            ('order_id', 'in', previously_confirmed.ids),
-        ])
-        if order_history_lines:
-            order_history_lines.sudo().unlink()
+        redemption_records = []
+        loyalty_history = self.env['loyalty.history']
 
         # Add/remove the points to our coupons
-        for coupon, changes in previously_confirmed.filtered(
-            lambda s: s.state != 'sale'
+        for coupon, points in previously_confirmed.filtered(
+            lambda s: s.state != 'sale',
         )._get_point_changes().items():
-            coupon.points -= changes
+
+            # points issued on order getting cancelled
+            issued_points = points['issued']
+            # Refers to the 'used' field on the order being cancelled.
+            # These points are not necessarily drawn from this order's issued points.
+            used_points = points['used']
+            net_changes = issued_points - used_points
+
+            # Adjust coupon total points
+            coupon.points -= net_changes
+
+            order_history_line = loyalty_history.with_context(active_test=False).search([
+                ('card_id', '=', coupon.id),
+                ('order_model', '=', self._name),
+                ('order_id', 'in', previously_confirmed.ids),
+            ])
+
+            # Represents the number of points utilized either within this order or by other orders.
+            consumed = order_history_line.issued - order_history_line.available_issued_points
+
+            if order_history_line:
+                order_history_line.sudo().unlink()
+
+            # If order getting cancelled had its issued points already spent elsewhere,
+            # we try to redeem from other available issuer lines to cover the debt.
+            if net_changes > 0 and consumed > 0:
+                redemption_records.append({
+                    'card_id': coupon.id,
+                    'points_to_redeem': consumed,
+                })
+                loyalty_history.redeem_loyalty_points(redemption_records)
+
+            # If order getting cancelled used points from another (possibly archived) order,
+            # we refund those points to the issuer line and restore it.
+            if used_points > 0:
+                available_to_refund = min(used_points, coupon.points)
+                if available_to_refund > 0:
+                    loyalty_history.refund_points_to_used_lines(coupon.id, available_to_refund)
+
         # Remove any rewards
         self.order_line.filtered(lambda l: l.is_reward_line).unlink()
         self.coupon_point_ids.coupon_id.sudo().filtered(
@@ -732,17 +787,17 @@ class SaleOrder(models.Model):
 
     def _get_point_changes(self):
         """
-        Returns the changes in points per coupon as a dict.
+        Returns the issued and used points per coupon as a dict.
 
         Used when validating/cancelling an order
         """
-        points_per_coupon = defaultdict(lambda: 0)
+        points_per_coupon = defaultdict(lambda: {'issued': 0, 'used': 0})
         for coupon_point in self.coupon_point_ids:
-            points_per_coupon[coupon_point.coupon_id] += coupon_point.points
+            points_per_coupon[coupon_point.coupon_id]['issued'] += coupon_point.points
         for line in self.order_line:
             if not line.reward_id or not line.coupon_id:
                 continue
-            points_per_coupon[line.coupon_id] -= line.points_cost
+            points_per_coupon[line.coupon_id]['used'] += line.points_cost
         return points_per_coupon
 
     def _get_real_points_for_coupon(self, coupon, post_confirm=False):
@@ -783,7 +838,7 @@ class SaleOrder(models.Model):
 
     def _update_loyalty_history(self, coupon_id, points):
         self.ensure_one()
-        order_coupon_history = self.env['loyalty.history'].search([
+        order_coupon_history = self.env['loyalty.history'].with_context(active_test=False).search([
             ('card_id', '=', coupon_id.id),
             ('order_model', '=', self._name),
             ('order_id', '=', self.id),
@@ -791,6 +846,10 @@ class SaleOrder(models.Model):
         order_coupon_history.update({
             'used': order_coupon_history.used + points,
         })
+        order_coupon_history.redeem_loyalty_points([{
+            'card_id': coupon_id.id,
+            'points_to_redeem': points,
+        }])
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()
