@@ -799,15 +799,15 @@ class TestSaleProject(TestSaleProjectCommon):
             is confirmed.
         """
         # Create archived Project template with one task
-        self.archived_project_template = self.env['project.project'].create({
+        archived_project_template = self.env['project.project'].create({
             'name': 'Archived project template',
             'allow_billable': True,
         })
-        self.archived_project_template_task = self.env['project.task'].create({
+        self.env['project.task'].create({
             'name': 'Task 1',
             'project_id': self.archived_project_template.id,
         })
-        self.archived_project_template.active = False
+        archived_project_template.active = False
 
         # Create service product using the project template
         service_with_project_template = self.env['product.product'].create({
@@ -815,7 +815,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'service_tracking': 'task_in_project',
-            'project_template_id': self.archived_project_template.id,
+            'project_template_id': archived_project_template.id,
         })
 
         # Create SO with the service product

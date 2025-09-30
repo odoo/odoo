@@ -82,20 +82,19 @@ class TestSoLineMilestones(TestSaleCommon):
         })
 
     def test_reached_milestones_delivered_quantity(self):
-        self.milestone2 = self.env['project.milestone'].create({
+        milestone2, milestone3 = self.env['project.milestone'].create([{
             'name': 'Milestone 2',
             'project_id': self.project.id,
             'is_reached': False,
             'sale_line_id': self.sol2.id,
             'quantity_percentage': 0.2,
-        })
-        self.milestone3 = self.env['project.milestone'].create({
+        }, {
             'name': 'Milestone 3',
             'project_id': self.project.id,
             'is_reached': False,
             'sale_line_id': self.sol2.id,
             'quantity_percentage': 0.4,
-        })
+        }])
 
         self.assertEqual(self.sol1.qty_delivered, 0.0, "Delivered quantity should start at 0")
         self.assertEqual(self.sol2.qty_delivered, 0.0, "Delivered quantity should start at 0")
@@ -103,10 +102,10 @@ class TestSoLineMilestones(TestSaleCommon):
         self.milestone1.is_reached = True
         self.assertEqual(self.sol1.qty_delivered, 10.0, "Delivered quantity should update after a milestone is reached")
 
-        self.milestone2.is_reached = True
+        milestone2.is_reached = True
         self.assertEqual(self.sol2.qty_delivered, 6.0, "Delivered quantity should update after a milestone is reached")
 
-        self.milestone3.is_reached = True
+        milestone3.is_reached = True
         self.assertEqual(self.sol2.qty_delivered, 18.0, "Delivered quantity should update after a milestone is reached")
 
     def test_update_reached_milestone_quantity(self):
