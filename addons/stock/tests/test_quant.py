@@ -168,8 +168,8 @@ class TestStockQuant(TestStockCommon):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        self.env = self.env(user=self.demo_user)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 1.0)
+        env = self.env(user=self.demo_user)
+        self.assertEqual(env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 1.0)
 
     def test_increase_available_quantity_1(self):
         """ Increase the available quantity when no quants are already in a location.
@@ -219,8 +219,8 @@ class TestStockQuant(TestStockCommon):
     def test_increase_available_quantity_4(self):
         """ Increase the available quantity when no quants are already in a location with a user without access right.
         """
-        self.env = self.env(user=self.demo_user)
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0)
+        env = self.env(user=self.demo_user)
+        env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0)
 
     def test_increase_available_quantity_5(self):
         """ Increase the available quantity when no quants are already in stock.
@@ -317,8 +317,8 @@ class TestStockQuant(TestStockCommon):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        self.env = self.env(user=self.demo_user)
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, -1.0)
+        env = self.env(user=self.demo_user)
+        env['stock.quant']._update_available_quantity(self.productA, self.stock_location, -1.0)
         self.assertEqual(len(self.gather_relevant(self.productA, self.stock_location)), 0)
 
     def test_increase_reserved_quantity_1(self):
@@ -500,9 +500,9 @@ class TestStockQuant(TestStockCommon):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        self.env = self.env(user=self.demo_user)
+        env = self.env(user=self.demo_user)
         with self.assertRaises(AccessError):
-            self.env['stock.quant'].create({
+            env['stock.quant'].create({
                 'product_id': self.productA.id,
                 'location_id': self.stock_location.id,
                 'quantity': 1.0,
@@ -512,8 +512,8 @@ class TestStockQuant(TestStockCommon):
         with self.assertRaises(UserError):
             quant.with_user(self.demo_user).unlink()
 
-        self.env = self.env(user=self.user_stock_user)
-        self.env['stock.quant'].create({
+        env = env(user=self.user_stock_user)
+        env['stock.quant'].create({
             'product_id': self.productA.id,
             'location_id': self.stock_location.id,
             'quantity': 1.0,

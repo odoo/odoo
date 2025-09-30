@@ -263,26 +263,26 @@ class TestProcRule(TransactionCase):
         # Required for `location_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
 
-        self.productA = self.env['product.product'].create({
+        productA = self.env['product.product'].create({
             'name': 'Desk Combination',
             'is_storable': True,
         })
 
-        self.productB = self.env['product.product'].create({
+        productB = self.env['product.product'].create({
             'name': 'Desk Decoration',
             'is_storable': True,
         })
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.product_id = self.productA
+        orderpoint_form.product_id = productA
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
-        orderpoint = orderpoint_form.save()
+        orderpoint_form.save()
 
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'ProductB RR',
-            'product_id': self.productB.id,
+            'product_id': productB.id,
             'product_min_qty': 0,
             'product_max_qty': 5,
         })
@@ -324,7 +324,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
         delivery_picking.write({'move_ids': [(0, 0, {
-            'product_id': self.productB.id,
+            'product_id': productB.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'location_id': warehouse.lot_stock_id.id,
@@ -334,7 +334,7 @@ class TestProcRule(TransactionCase):
         })]})
 
         receipt_move2 = self.env['stock.move'].search([
-            ('product_id', '=', self.productB.id),
+            ('product_id', '=', productB.id),
             ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
         ])
 
@@ -345,7 +345,7 @@ class TestProcRule(TransactionCase):
     def test_reordering_rule_3(self):
         """Test how replenishment_uom_id affects qty_to_order"""
         stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.productA = self.env['product.product'].create({
+        productA = self.env['product.product'].create({
             'name': 'Desk Combination',
             'is_storable': True,
         })
@@ -355,14 +355,14 @@ class TestProcRule(TransactionCase):
             'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.productA.id,
+            'product_id': productA.id,
             'location_id': stock_location.id,
             'inventory_quantity': 14.5,
         }).action_apply_inventory()
 
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'name': 'ProductA RR',
-            'product_id': self.productA.id,
+            'product_id': productA.id,
             'product_min_qty': 15.0,
             'product_max_qty': 30.0,
             'replenishment_uom_id': pack_of_10.id,
@@ -371,7 +371,7 @@ class TestProcRule(TransactionCase):
         # Test search on computed field
         rr = self.env['stock.warehouse.orderpoint'].search([
             ('qty_to_order', '>', 0),
-            ('product_id', '=', self.productA.id),
+            ('product_id', '=', productA.id),
         ])
         self.assertTrue(rr)
         orderpoint.write({

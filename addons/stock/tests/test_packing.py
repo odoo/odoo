@@ -1718,17 +1718,17 @@ class TestPackagePropagation(TestPackingCommon):
             'name': 'disposable Package',
             'package_type_id': disposable_type.id,
         })
-        self.productA = self.env['product.product'].create({
+        productA = self.env['product.product'].create({
             'name': 'productA',
             'is_storable': True,
             'tracking': 'none',
         })
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
+        self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 2)
         self.env['stock.rule'].run([
             self.env['stock.rule'].Procurement(
-                self.productA,
+                productA,
                 2.0,
-                self.productA.uom_id,
+                productA.uom_id,
                 self.customer_location,
                 'propagation_test',
                 'propagation_test',

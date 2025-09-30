@@ -68,7 +68,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         wh2 = self.env['stock.warehouse'].create({'name': 'WH2', 'code': 'WH2'})
         transit_loc = self.wh.company_id.internal_transit_location_id
 
-        self.move_transit_out = self.env['stock.move'].create({
+        self.env['stock.move'].create([{
             'location_id': self.wh.lot_stock_id.id,
             'location_dest_id': transit_loc.id,
             'product_id': self.product1.id,
@@ -77,8 +77,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'state': 'assigned',
             'date': fields.Datetime.now(),
             'date_deadline': fields.Datetime.now(),
-        })
-        self.move_transit_in = self.env['stock.move'].create({
+        }, {
             'location_id': transit_loc.id,
             'location_dest_id': wh2.lot_stock_id.id,
             'product_id': self.product1.id,
@@ -87,7 +86,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'state': 'waiting',
             'date': fields.Datetime.now(),
             'date_deadline': fields.Datetime.now(),
-        })
+        }])
 
         self.env.flush_all()
         report = self.env['report.stock.quantity']._read_group(
@@ -111,7 +110,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.assertEqual(forecast_report, [-20, -20])
 
     def test_replenishment_report_1(self):
-        self.product_replenished = self.env['product.product'].create({
+        product_replenished = self.env['product.product'].create({
             'name': 'Security razor',
             'is_storable': True,
         })
@@ -133,7 +132,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
         })
         self.env['stock.move'].create({
-            'product_id': self.product_replenished.id,
+            'product_id': product_replenished.id,
             'product_uom_qty': 500.0,
             'product_uom': self.uom_unit.id,
             'location_id': self.wh.lot_stock_id.id,
@@ -147,7 +146,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
         orderpoint = self.env['stock.warehouse.orderpoint'].search([
-            ('product_id', '=', self.product_replenished.id)
+            ('product_id', '=', product_replenished.id)
         ])
         self.assertTrue(orderpoint)
         self.assertEqual(orderpoint.location_id, self.wh.lot_stock_id)
@@ -156,18 +155,18 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
         move = self.env['stock.move'].search([
-            ('product_id', '=', self.product_replenished.id),
+            ('product_id', '=', product_replenished.id),
             ('location_dest_id', '=', self.wh.lot_stock_id.id)
         ])
         # Simulate a supplier delay
         move.date = fields.Datetime.now() + timedelta(days=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].search([
-            ('product_id', '=', self.product_replenished.id)
+            ('product_id', '=', product_replenished.id)
         ])
         self.assertFalse(orderpoint)
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.product_id = self.product_replenished
+        orderpoint_form.product_id = product_replenished
         orderpoint_form.location_id = self.wh.lot_stock_id
         orderpoint = orderpoint_form.save()
 

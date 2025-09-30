@@ -353,15 +353,15 @@ class TestOldRules(TestStockCommon):
         """
 
         warehouse = self.warehouse_3_steps
-        self.product = self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'name': 'Test product',
             'is_storable': True,
         })
 
         ship_move = self.env['stock.move'].create({
-            'product_id': self.product.id,
+            'product_id': product.id,
             'product_uom_qty': 5.0,
-            'product_uom': self.product.uom_id.id,
+            'product_uom': product.uom_id.id,
             'location_id': warehouse.wh_output_stock_loc_id.id,
             'location_dest_id': self.customer_location.id,
             'warehouse_id': warehouse.id,

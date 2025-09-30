@@ -2743,7 +2743,7 @@ class TestRoutes(TestStockCommon):
         """ Creates 2 warehouses and make a replenish using one warehouse
         to ressuply the other one, Then check if the quantity and the product are matching
         """
-        self.product_uom_qty = 42
+        product_uom_qty = 42
 
         warehouse_1 = self.warehouse_1
         warehouse_2 = self.env['stock.warehouse'].create({
@@ -2759,7 +2759,7 @@ class TestRoutes(TestStockCommon):
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
-            'quantity': self.product_uom_qty,
+            'quantity': product_uom_qty,
             'warehouse_id': self.warehouse_1.id,
         })
 
@@ -2774,8 +2774,8 @@ class TestRoutes(TestStockCommon):
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
         self.assertTrue(move_line,'The product is not in the picking')
-        self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
-        self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
+        self.assertEqual(move_line[0].product_uom_qty, product_uom_qty, 'Quantities does not match')
+        self.assertEqual(move_line[1].product_uom_qty, product_uom_qty, 'Quantities does not match')
 
     def test_pick_ship_from_subloc(self):
         """ Checks that if a picking is sent to a sublocation of its original destination during the pick->ship route,
@@ -3236,7 +3236,7 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(customer_picking5.move_ids.quantity, 10, "Reservation Method: 'at_confirm' should auto-assign at confirmation")
 
     def test_serial_lot_ids(self):
-        self.product_serial = self.env['product.product'].create({
+        product_serial = self.env['product.product'].create({
             'name': 'PSerial',
             'is_storable': True,
             'tracking': 'serial',
@@ -3245,22 +3245,22 @@ class TestAutoAssign(TestStockCommon):
         move = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
-            'product_id': self.product_serial.id,
+            'product_id': product_serial.id,
             'product_uom': self.uom_unit.id,
             'picking_type_id': self.picking_type_in.id,
         })
         self.assertEqual(move.state, 'draft')
         lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
-            'product_id': self.product_serial.id,
+            'product_id': product_serial.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'serial2',
-            'product_id': self.product_serial.id,
+            'product_id': product_serial.id,
         })
         lot3 = self.env['stock.lot'].create({
             'name': 'serial3',
-            'product_id': self.product_serial.id,
+            'product_id': product_serial.id,
         })
         move.lot_ids = [Command.link(lot1.id)]
         move.lot_ids = [Command.link(lot2.id)]
@@ -3272,7 +3272,7 @@ class TestAutoAssign(TestStockCommon):
         move = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
-            'product_id': self.product_serial.id,
+            'product_id': product_serial.id,
             'product_uom': self.uom_dozen.id,
             'picking_type_id': self.picking_type_in.id,
         })

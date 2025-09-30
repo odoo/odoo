@@ -199,7 +199,7 @@ class TestEditableQuant(TransactionCase):
         """ Try to edit a record without the inventory mode.
         Must raise an error.
         """
-        self.demo_user = mail_new_test_user(
+        demo_user = mail_new_test_user(
             self.env,
             name='Pauline Poivraisselle',
             login='pauline',
@@ -215,7 +215,7 @@ class TestEditableQuant(TransactionCase):
         self.assertEqual(quant.quantity, 12)
         # Try to write on quant without permission
         with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).write({'inventory_quantity': 8})
+            quant.with_user(demo_user).write({'inventory_quantity': 8})
         self.assertEqual(quant.quantity, 12)
 
         # Try to write on quant with permission
