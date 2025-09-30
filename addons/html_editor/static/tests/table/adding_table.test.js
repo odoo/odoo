@@ -58,7 +58,7 @@ test("can add a table using the powerbox and keyboard", async () => {
                 </tr>
             </tbody>
         </table>
-        <p><br></p>`
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
 });
 
@@ -195,7 +195,6 @@ test("add table inside empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );
@@ -248,7 +247,6 @@ test("add table inside non-empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );

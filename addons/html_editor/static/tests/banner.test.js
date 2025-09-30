@@ -245,7 +245,7 @@ test("add banner inside empty list", async () => {
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
-                </div><br></li></ul>`
+                </div></li></ul>`
         )
     );
 });
@@ -262,7 +262,7 @@ test("add banner inside non-empty list", async () => {
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>Test[]</p>
                     </div>
-                </div><br></li></ul>`
+                </div></li></ul>`
         )
     );
 });
