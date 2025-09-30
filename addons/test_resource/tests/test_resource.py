@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from itertools import cycle
 
 from pytz import utc
 
@@ -44,17 +45,16 @@ class TestResource(TestResourceCommon):
         self.assertFalse(interval - false_entry[false_calendar], "Calendar validity should cover all interval")
 
     def test_performance(self):
-        calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
-        calendars_len = len(calendars)
-        self.resources_test = self.env['resource.test'].create([{
-            'name': 'resource ' + str(i),
-            'resource_calendar_id': calendars[i % calendars_len].id,
-        } for i in range(0, 50)])
+        calendars = cycle([self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel])
+        resources_test = self.env['resource.test'].create([{
+            'name': f'resource {i}',
+            'resource_calendar_id': next(calendars).id,
+        } for i in range(50)])
 
         start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
         end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
         with self.assertQueryCount(13):
-            work_intervals, _ = self.resources_test.resource_id._get_valid_work_intervals(start, end)
+            work_intervals, _ = resources_test.resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 50)
 

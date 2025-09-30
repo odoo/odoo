@@ -213,7 +213,7 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(res, 5.0)
 
     def test_calendar_working_hours_24(self):
-        self.att_4 = self.env['resource.calendar.attendance'].create({
+        self.env['resource.calendar.attendance'].create({
             'name': 'Att4',
             'calendar_id': self.calendar_jean.id,
             'dayofweek': '2',
