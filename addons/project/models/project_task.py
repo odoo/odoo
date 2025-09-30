@@ -1383,7 +1383,7 @@ class Task(models.Model):
                     op = "ilike" if op == "child_of" else op
                     if isinstance(value, list) and all(isinstance(val, int) for val in value):
                         new_domain.append(("id", op, value))
-                    if isinstance(value, str) or (isinstance(value, list) and not all(isinstance(val, str) for val in value)):
+                    elif isinstance(value, str) or (isinstance(value, list) and not all(isinstance(val, str) for val in value)):
                         new_domain.append(("name", op, value))
                     if isinstance(value, int):
                         if op == "=":
