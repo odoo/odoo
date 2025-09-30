@@ -60,6 +60,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image",
                 isApplied: (targetedNodes) =>
+                    targetedNodes.length &&
                     targetedNodes.every(
                         // All nodes should be images or its ancestors
                         (node) => node.nodeName === "IMG" || node.querySelector?.("img")
