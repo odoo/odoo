@@ -401,6 +401,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.
         """
+        self._enable_pricelists()
         eu_group = self.env.ref('base.europe')
         not_eu_group = self.env['res.country.group'].create({
             'name': "Not EU",
