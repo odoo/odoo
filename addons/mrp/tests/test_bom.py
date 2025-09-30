@@ -2146,12 +2146,13 @@ class TestBoM(TestMrpCommon):
         # simulate resequence from UI (reverse C->D and C->E)
         # (see odoo/addons/web/controllers/main.py:1352)
         boms.invalidate_recordset()
-        for i, record in enumerate(boms[0] | boms[1] | boms[3] | boms[2] | boms[4] | boms[5]):
+        # hack warning: the sequence check depends on the prefetching order!
+        for i, record in enumerate(boms.browse(boms.ids[i] for i in [0, 1, 3, 2, 4, 5])):
             record.write({'sequence': i})
 
         # simulate a second resequencing (set C->A before C->D)
         with self.assertRaises(exceptions.ValidationError):
-            for i, record in enumerate(boms[0] | boms[1] | boms[5] | boms[3] | boms[2] | boms[4]):
+            for i, record in enumerate(boms.browse(boms.ids[i] for i in [0, 1, 5, 3, 2, 4])):
                 record.write({'sequence': i})
 
     def test_cycle_on_legit_apply_variants(self):
