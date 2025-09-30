@@ -1,18 +1,19 @@
-import logging
 import datetime
+import logging
 import re
 import requests
 import secrets
-import uuid
-
 import stdnum
+import uuid
 from stdnum import luhn
 from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from stdnum.util import clean
 
-from odoo import api, models, fields, _, tools, modules
-from odoo.tools import LazyTranslate, hash_sign
+from odoo import _, api, models, fields, tools, modules
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import LazyTranslate, hash_sign
+from odoo.tools.business_data import split_vat
+
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
 
 
@@ -113,7 +114,7 @@ class ResPartner(models.Model):
                 return '', False
             if validation == 'error':
                 raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "))
-        vat_prefix, vat_number = self._split_vat(vat)
+        vat_prefix, vat_number = split_vat(vat)
 
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
@@ -201,12 +202,6 @@ class ResPartner(models.Model):
                 continue
             status = partner._check_vies_validity_iap()
             partner._update_vies_status(status)
-
-    def _split_vat(self, vat):
-        vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
-        if not vat_prefix.isalpha():
-            return '', vat
-        return vat_prefix, vat_number
 
     @api.model
     def _get_iap_vies_credentials(self):
@@ -377,7 +372,7 @@ class ResPartner(models.Model):
 
     def check_vat_al(self, vat):
         """Check Albania VAT number"""
-        number = stdnum.util.get_cc_module('al', 'vat').compact(vat)
+        number = split_vat(vat, default_country_code='al')[1]
         return len(number) == 10 and self._check_vat_al_re.match(number)
 
     def check_vat_jp(self, vat):
@@ -653,20 +648,13 @@ class ResPartner(models.Model):
         origin https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/uy/rut.py
         FIXME Can be removed when python-stdnum does a new release. """
 
-        def compact(number):
-            """Convert the number to its minimal representation."""
-            number = clean(number, ' -').upper().strip()
-            if number.startswith('UY'):
-                return number[2:]
-            return number
-
         def calc_check_digit(number):
             """Calculate the check digit."""
             weights = (4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
             total = sum(int(n) * w for w, n in zip(weights, number))
             return str(-total % 11)
 
-        vat = compact(vat)
+        vat = split_vat(vat, default_country_code='UY')[1]
 
         return (
             vat.isdigit()  # InvalidFormat
@@ -799,7 +787,7 @@ class ResPartner(models.Model):
         return bool(self.__check_vat_vn_re.match(vat))
 
     def format_vat_al(self, vat):
-        vat_prefix, vat_number = self._split_vat(vat)
+        vat_prefix, vat_number = split_vat(vat)
         stdnum_vat_format = stdnum.util.get_cc_module('al', 'nipt').compact
         vat_number = stdnum_vat_format(vat_number)
         return f'{vat_prefix}{vat_number}'
@@ -838,14 +826,13 @@ class ResPartner(models.Model):
 
     def format_vat_hu(self, vat):
         """ We put the - back as we require it for the EDI and the different parts will make it clear to the user"""
-        stdnum_vat_fix_func = stdnum.util.get_cc_module('hu', 'vat').compact
-        vat = stdnum_vat_fix_func(vat)
+        vat = split_vat(vat, default_country_code='hu')[1]
         if self._check_tin_hu_companies_re.match(vat):
             vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
         return vat
 
     def format_vat_is(self, vat):
-        vat_prefix, vat_number = self._split_vat(vat)
+        vat_prefix, vat_number = split_vat(vat)
         stdnum_vat_format = stdnum.util.get_cc_module('is_', 'vsk').compact
         vat_number = stdnum_vat_format(vat_number)
         return f'{vat_prefix}{vat_number}'

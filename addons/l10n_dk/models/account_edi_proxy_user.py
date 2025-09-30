@@ -4,6 +4,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.business_data import split_vat
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
@@ -484,7 +485,7 @@ class AccountEdiProxyClientUser(models.Model):
         self.ensure_one()
         return {
             'nemhandel_company_name': self.company_id.display_name,
-            'nemhandel_company_cvr': self.company_id.vat[2:] if self.company_id.vat[:2].isalpha() else self.company_id.vat,
+            'nemhandel_company_cvr': split_vat(self.company_id.vat)[1],
             'nemhandel_country_code': self.company_id.country_id.code,
             'nemhandel_phone_number': self.company_id.nemhandel_phone_number,
             'nemhandel_contact_email': self.company_id.nemhandel_contact_email,
@@ -502,7 +503,7 @@ class AccountEdiProxyClientUser(models.Model):
             nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state'].selection)[company.l10n_dk_nemhandel_proxy_state]
             raise UserError(_('Cannot register a user with a %s application', nemhandel_state_translated))
 
-        company_vat = company.vat[2:] if company.vat and company.vat[:2].isalpha() else company.vat
+        company_vat = split_vat(company.vat)[1]
         if company.nemhandel_identifier_type == '0184' and company_vat != company.nemhandel_identifier_value:
             raise ValidationError(_("If you try to register with your CVR, please make sure your company has the same VAT"))
 

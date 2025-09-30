@@ -2,15 +2,20 @@ import base64
 import gzip
 import json
 import re
+import requests
 from datetime import datetime
+from lxml import etree
+from requests.exceptions import RequestException
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
-import requests
-from lxml import etree
-from requests.exceptions import RequestException
-
 from odoo import _, api, fields, models, release
+from odoo.exceptions import UserError
+from odoo.tools import get_lang
+from odoo.tools.business_data import split_vat
+from odoo.tools.float_utils import float_repr, float_round
+from odoo.tools.xml_utils import cleanup_xml_node
+
 from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_key
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
@@ -19,10 +24,6 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     canonicalize_node,
     cleanup_xml_signature,
 )
-from odoo.exceptions import UserError
-from odoo.tools import get_lang
-from odoo.tools.float_utils import float_repr, float_round
-from odoo.tools.xml_utils import cleanup_xml_node
 
 CRC8_TABLE = [
     0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31, 0x24, 0x23, 0x2A, 0x2D,
@@ -290,7 +291,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     'con': 'LROE',
                     'apa': '2.1' if freelancer and not is_sale else '1.1' if is_sale else '2',
                     'inte': {
-                        'nif': company.vat[2:] if company.vat.startswith('ES') else company.vat,
+                        'nif': split_vat(company.vat, default_country_code='ES')[1],
                         'nrs': company.name,
                     },
                     'drs': {
@@ -308,7 +309,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_values = {
             'is_emission': not self.is_cancel,
             'sender': sender,
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': split_vat(sender.vat, default_country_code='ES')[1],
             'fiscal_year': str(self.date.year),
             'freelancer': freelancer,
             'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe')
@@ -398,7 +399,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _get_sender_values(self):
         sender = self.company_id
         return {
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': split_vat(sender.vat, default_country_code='ES')[1],
             'sender': sender,
         }
 
@@ -414,7 +415,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         }
 
         if not partner._l10n_es_is_foreign() and partner.vat:
-            recipient_values['nif'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            recipient_values['nif'] = split_vat(partner.vat, default_country_code='ES')[1]
 
         elif partner.country_id and 'EU' in partner.country_id.country_group_codes:
             recipient_values['alt_id_type'] = '02'
@@ -752,7 +753,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         lroe_values = {
             'is_emission': not self.is_cancel,
             'sender': sender,
-            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender_vat': split_vat(sender.vat, default_country_code='ES')[1],
             'fiscal_year': str(self.date.year),
             'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe'),
             'batuz_correction': self.env.context.get('batuz_correction'),
@@ -833,7 +834,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         company = self.company_id
         tbai_id_no_crc = '-'.join([
             'TBAI',
-            str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
+            str(split_vat(company.vat, default_country_code='ES')[1]),
             datetime.strftime(registration_date, '%d%m%y'),
             signature[:13],
             ''  # CRC

@@ -5,6 +5,7 @@ from urllib import parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.business_data import split_vat
 
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
 
@@ -77,7 +78,7 @@ class ResPartner(models.Model):
             country_code = partner._deduce_country_code()
             cvr = partner._get_additional_identifier('DK_CVR')
             if country_code == 'DK' and partner.nemhandel_identifier_type == '0184':
-                vat_country, vat_number = partner._split_vat(cvr or '')
+                vat_country, vat_number = split_vat(cvr or '')
                 partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else cvr
             elif country_code == 'DK':
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
