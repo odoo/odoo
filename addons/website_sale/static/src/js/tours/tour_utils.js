@@ -272,3 +272,13 @@ export function selectPriceList(pricelist) {
         },
     ];
 }
+
+/**
+ * Used for resolving indeterministic behavior of tours
+ */
+export function waitForInteractionToLoad() {
+    return {
+        content: "Wait for interaction to be ready",
+        trigger: `body[is-ready=true]`,
+    };
+}
