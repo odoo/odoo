@@ -1223,7 +1223,7 @@ class Field(typing.Generic[T]):
     # SQL generation methods
     #
 
-    def to_sql(self, model: BaseModel, alias: str) -> SQL:
+    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias.
 

@@ -387,8 +387,8 @@ class BaseString(Field[str | typing.Literal[False]]):
         for record, new_translation in zip(records.with_context(prefetch_langs=True), new_translations_list, strict=True):
             self._update_cache(record, new_translation, dirty=True)
 
-    def to_sql(self, model: BaseModel, alias: str) -> SQL:
-        sql_field = super().to_sql(model, alias)
+    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+        sql_field = super().to_sql(model, alias, query)
         if self.translate and not model.env.context.get('prefetch_langs'):
             langs = self.get_translation_fallback_langs(model.env)
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
@@ -443,7 +443,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             if value == '%':
                 return base_condition
 
-            raw_sql_field = self.to_sql(model.with_context(prefetch_langs=True), alias)
+            raw_sql_field = self.to_sql(model.with_context(prefetch_langs=True), alias, query)
             sql_left = SQL("jsonb_path_query_array(%s, '$.*')::text", raw_sql_field)
             sql_operator = SQL_OPERATORS['like' if operator == 'in' else operator]
             sql_right = SQL("%s", self.convert_to_column(value, model, validate=False))
