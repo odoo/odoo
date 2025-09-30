@@ -92,10 +92,7 @@ class DiscussChannel(models.Model):
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
-    _channel_type_not_null = models.Constraint(
-        'CHECK(channel_type IS NOT NULL)',
-        'The channel type cannot be empty',
-    )
+
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
