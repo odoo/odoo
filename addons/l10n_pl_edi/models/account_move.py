@@ -4,12 +4,12 @@ from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
 from lxml import etree
-from stdnum.pl.nip import compact
 from decimal import Decimal
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero, float_repr, OrderedSet
+from odoo.tools.business_data import split_vat
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -138,10 +138,7 @@ class AccountMove(models.Model):
             return vat[:2].upper()
 
         def get_vat_number(vat):
-            vat_country, vat_number = self.env['res.partner']._split_vat(vat)
-            if vat_country == 'PL':
-                return compact(vat)
-            return vat_number
+            return split_vat(vat)[1]
 
         def get_address(partner):
             return re.sub(r'\n+', r' ', partner._display_address(True))

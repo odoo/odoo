@@ -1,6 +1,7 @@
 import stdnum
 
 from odoo import fields, models
+from odoo.tools.business_data import split_vat
 
 
 class ResPartner(models.Model):
@@ -33,7 +34,7 @@ class ResPartner(models.Model):
         l10n_ro_partners = self.filtered(lambda p: p.vat and p.country_code == 'RO')
         for partner in l10n_ro_partners:
             partner.is_company = False
-            _, vat_number = self._split_vat(partner.vat)
+            vat_number = split_vat(partner.vat, default_country_code='RO')[1]
             if not self._check_tin1_ro_natural_persons.match(vat_number)\
                 and not self._check_tin2_ro_natural_persons.match(vat_number)\
                 and stdnum.util.get_cc_module('ro', 'vat').is_valid(vat_number):

@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.tools.business_data import split_vat
 
 
 class ResPartner(models.Model):
@@ -43,10 +44,10 @@ class ResPartner(models.Model):
         """
         super()._compute_is_company()
         for partner in self:
-            country_code, vat_number = self._split_vat(partner.vat or '')
+            country_code, vat_number = split_vat(partner.vat)
             if partner.commercial_partner_id == partner\
                 and country_code in ('ES', '') and len(vat_number) == 9\
-                and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
+                and vat_number[0] in 'ABCDEFGHJNPQRSUVW'\
                 and vat_number[1:-1].isdigit():
                 partner.is_company = True
 

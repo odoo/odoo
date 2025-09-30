@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.tools.business_data import split_vat
 
 
 class AccountEdiXmlUBL21RS(models.AbstractModel):
@@ -37,10 +38,7 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
         party_node = super()._get_party_node(vals)
         partner = vals['partner']
 
-        vat_country, vat_number = partner._split_vat(partner.vat)
-        if vat_country.isnumeric():
-            vat_country = 'RS'
-            vat_number = partner.vat
+        vat_country, vat_number = split_vat(partner.vat, default_country_code='RS')
 
         party_node['cbc:EndpointID'] = {
             '_text': vat_number,
