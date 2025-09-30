@@ -46,10 +46,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if invoice._l10n_tr_nilvera_einvoice_check_negative_lines():
             raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
 
-        # For now, we assume that the sequence is going to be in the format {prefix}/{year}/{invoice_number}.
-        # To send an invoice to Nlvera, the format needs to follow ABC2009123456789.
-        parts = invoice.name.split('/')
-        prefix, year, number = parts[0], parts[1], parts[2].zfill(9)
+        # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
+        # To send an invoice to Nilvera, the format needs to follow ABC2009123456789.
+        _, parts = invoice._get_sequence_format_param(invoice.name)
+        prefix, year, number = parts['prefix1'][:3], parts['year'], str(parts['seq']).zfill(9)
         invoice_id = f"{prefix.upper()}{year}{number}"
 
         document_node.update({
