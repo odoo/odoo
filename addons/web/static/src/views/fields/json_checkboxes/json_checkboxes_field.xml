@@ -4,7 +4,7 @@
     <t t-name="account.JsonCheckboxes">
         <div aria-atomic="true">
             <t t-foreach="checkboxes" t-as="checkbox" t-key="checkbox">
-                <div class="d-inline-block me-3">
+                <div t-att-class="props.stacked ? 'd-block' : 'd-inline-block me-3'">
                     <CheckBox
                         id="checkbox"
                         value="checkbox_value.checked"

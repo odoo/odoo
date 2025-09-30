@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
@@ -10,6 +11,7 @@ export class JsonCheckboxes extends Component {
     static components = { CheckBox };
     static props = {
         ...standardFieldProps,
+        stacked: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -33,7 +35,23 @@ export class JsonCheckboxes extends Component {
 
 export const jsonCheckboxes = {
     component: JsonCheckboxes,
+    supportedOptions: [
+        {
+            label: _t("Stacked"),
+            name: "stacked",
+            type: "boolean",
+            help: _t(
+                "If checked, the checkboxes will be displayed in a column. Otherwise, they will be inlined."
+            ),
+        },
+    ],
     supportedTypes: ["json"],
+    extractProps({ options }) {
+        const stacked = Boolean(options.stacked);
+        return {
+            stacked,
+        };
+    },
 };
 
 registry.category("fields").add("json_checkboxes", jsonCheckboxes);

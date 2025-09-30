@@ -162,3 +162,57 @@ test("JsonCheckBoxesField (question circle)", async () => {
         message: "second checkbox should have a question circle",
     });
 });
+
+test("JsonCheckBoxesField (implicit inline mode)", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="json_checkboxes_field" widget="json_checkboxes" />
+                </group>
+            </form>`,
+    });
+
+    expect("div.o_field_widget .d-inline-block div.form-check").toHaveCount(2, {
+        message: "should show the checkboxes in inlined mode",
+    });
+});
+
+test("JsonCheckBoxesField (explicit inline mode)", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="json_checkboxes_field" widget="json_checkboxes" options="{'stacked': 0}" />
+                </group>
+            </form>`,
+    });
+
+    expect("div.o_field_widget .d-inline-block div.form-check").toHaveCount(2, {
+        message: "should show the checkboxes in inlined mode",
+    });
+});
+
+test("JsonCheckBoxesField (stacked mode)", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="json_checkboxes_field" widget="json_checkboxes" options="{'stacked': 1}" />
+                </group>
+            </form>`,
+    });
+
+    expect("div.o_field_widget .d-block div.form-check").toHaveCount(2, {
+        message: "should show the checkboxes in stacked mode",
+    });
+});
