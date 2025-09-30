@@ -618,7 +618,7 @@ export const accountTaxHelpers = {
             id: load("id", 0),
             product_id: load("product_id", {}),
             product_uom_id: load("product_uom_id", {}),
-            tax_ids: load("tax_ids", {}),
+            tax_ids: load("tax_ids", []),
             price_unit: load("price_unit", 0.0),
             quantity: load("quantity", 0.0),
             discount: load("discount", 0.0),
