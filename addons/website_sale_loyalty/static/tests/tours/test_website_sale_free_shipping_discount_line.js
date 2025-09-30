@@ -6,6 +6,7 @@ import {
     goToCart,
     goToCheckout,
     pay,
+    waitForInteractionToLoad,
 } from "@website_sale/js/tours/tour_utils";
 
 function assertRewardAmounts(rewards) {
@@ -52,10 +53,7 @@ webTours.add("check_shipping_discount", {
         },
         goToCart({ quantity: 3 }),
         goToCheckout(),
-        {
-            content: "Wait for interaction to be ready",
-            trigger: `body[is-ready=true]`,
-        },
+        waitForInteractionToLoad(),
         selectDelivery("delivery2"),
         ...assertCartAmounts({
             delivery: "10.00", // delivery2 is $10, ignoring shipping discount
@@ -69,10 +67,7 @@ webTours.add("check_shipping_discount", {
             expectUnloadPage: true,
         },
         ...assertRewardAmounts({ discount: "- 304.00" }),
-        {
-            content: "Wait for interaction to be ready",
-            trigger: `body[is-ready=true]`,
-        },
+        waitForInteractionToLoad(),
         selectDelivery("delivery1"),
         ...assertCartAmounts({ delivery: "5.00" }),
         ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),

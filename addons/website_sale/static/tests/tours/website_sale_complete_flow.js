@@ -74,6 +74,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         run: "click",
         expectUnloadPage: true,
     },
+    tourUtils.waitForInteractionToLoad(),
     {
         content: "Billing address is not same as delivery address",
         trigger: '#use_delivery_as_billing',
