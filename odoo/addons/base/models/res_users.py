@@ -1205,7 +1205,7 @@ class ResUsers(models.Model):
             # ``needs_update`` will indicate that the stored hash should be
             # replaced by a more recent algorithm.
             deprecated=['auto'],
-            pbkdf2_sha512__rounds=max(MIN_ROUNDS, int(cfg.get_param('password.hashing.rounds', 0))),
+            pbkdf2_sha512__rounds=max(MIN_ROUNDS, cfg.get_int('password.hashing.rounds')),
         )
 
     @contextlib.contextmanager

@@ -350,7 +350,7 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
         and "1" as value.
         """
-        product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs')
+        product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_str('product.weight_in_lbs') or '0'
         if product_weight_in_lbs_param == '1':
             return self.env.ref('uom.product_uom_lb')
         else:
@@ -363,7 +363,7 @@ class ProductTemplate(models.Model):
         to express them in feet by adding an ir.config_parameter record with "product.volume_in_cubic_feet"
         as key and "1" as value.
         """
-        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
+        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_str('product.volume_in_cubic_feet') or '0'
         if product_length_in_feet_param == '1':
             return self.env.ref('uom.product_uom_foot')
         else:
@@ -376,7 +376,7 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
         and "1" as value.
         """
-        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
+        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_str('product.volume_in_cubic_feet') or '0'
         if product_length_in_feet_param == '1':
             return self.env.ref('uom.product_uom_cubic_foot')
         else:
@@ -755,8 +755,8 @@ class ProductTemplate(models.Model):
                         current_variants_to_activate += existing_variants[combination]
                     else:
                         current_variants_to_create.append(tmpl_id._prepare_variant_values(combination))
-                        variant_limit = self.env['ir.config_parameter'].sudo().get_param('product.dynamic_variant_limit', 1000)
-                        if len(current_variants_to_create) > int(variant_limit):
+                        variant_limit = self.env['ir.config_parameter'].sudo().get_int('product.dynamic_variant_limit') or 1000
+                        if len(current_variants_to_create) > variant_limit:
                             raise UserError(_(
                                 'The number of variants to generate is above allowed limit. '
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
