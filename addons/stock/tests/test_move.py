@@ -2037,6 +2037,38 @@ class TestStockMove(TestStockCommon):
         self.assertAlmostEqual(self.productA.qty_available, 2.0)  # 14 - a dozen
         self.assertAlmostEqual(product_in_past.qty_available, 0)
 
+    def test_past_availability_in_strict_mode(self):
+        """
+        Test the quantity is correct when looking in the past in strict mode.
+        """
+        today = fields.Date.today()
+        self.product.is_storable = True
+        self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 10.0)
+        moves = self.env['stock.move'].create([
+            {
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom_qty': 3.0,
+            },
+            {
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.product.id,
+                'product_uom_qty': 2.0,
+            },
+        ])
+        moves._action_confirm()
+        moves._action_assign()
+        moves.picked = True
+        moves._action_done()
+        moves[0].date = fields.Date.add(today, days=-7)
+        moves[1].date = fields.Date.add(today, days=-5)
+        product = self.product.with_context(strict=True, location=self.stock_location.id)
+        self.assertAlmostEqual(product.with_context(to_date=fields.Date.add(today, days=-8)).qty_available, 10.0)
+        self.assertAlmostEqual(product.with_context(to_date=fields.Date.add(today, days=-6)).qty_available, 13.0)
+        self.assertAlmostEqual(product.with_context(to_date=fields.Date.add(today, days=-4)).qty_available, 11.0)
+
     def test_product_tree_views(self):
         """Test to make sure that there are no ACLs errors in users with basic permissions."""
         self.env["stock.quant"]._update_available_quantity(self.productA, self.stock_location, 3.0)
