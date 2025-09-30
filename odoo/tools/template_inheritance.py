@@ -224,12 +224,12 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 for child in spec.getiterator('attribute'):
                     # The element should only have attributes:
                     # - name (mandatory),
-                    # - add, remove, separator
+                    # - add, remove, separator, merge
                     # - any attribute that starts with data-oe-*
                     unknown = [
                         key
                         for key in child.attrib
-                        if key not in ('name', 'add', 'remove', 'separator')
+                        if key not in ('name', 'add', 'remove', 'separator', 'merge')
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
@@ -290,6 +290,24 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                                 (v for v in values if v and v not in to_remove),
                                 to_add
                             ))
+                    elif child.get('merge'):
+                        merge_from: str = node.attrib.get(attribute)
+                        merge_to: str = child.get('merge', '')
+
+                        if merge_from:  # check if merge_from exists first
+                            if attribute == "domain" or attribute == "options":
+                                # example
+                                # merge_from=[('is_vender','=',1)] merge_to =[('is_customer','=',1)] results = [('is_vender','=',1),('is_customer','=',1)]
+                                # removing the last merge_from '] or }' and first merge_to '[ or {' and combine them with ','
+                                value = f"{merge_from[:-1]},{merge_to[1:]}"
+
+                                # in case merge_to set to "[] or {}" nothing will happen, it will be valid expression
+
+                            else:  # other type must be of type string (class,readonly,invisible,required,...ect)
+                                value = f"{merge_from} {merge_to}"
+
+                        else:  # if merge_from do not exist then just assign it to value
+                            value = merge_to
                     else:
                         value = child.text or ''
 
