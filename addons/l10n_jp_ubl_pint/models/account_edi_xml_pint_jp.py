@@ -22,12 +22,16 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_address_vals(partner)
         vals.pop('country_subentity_code', None)
         return vals
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
         for vals in vals_list:
             vals.pop('company_id')  # optional, if set: scheme_id should be taken from ISO/IEC 6523 list
@@ -35,6 +39,8 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
 
     def _get_invoice_period_vals_list(self, invoice):
         # EXTENDS
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_period_vals_list(invoice)
         # [aligned-ibrp-052] An Invoice MUST have an invoice period (ibg-14) or an Invoice line period (ibg-26).
         vals_list.append({
@@ -44,6 +50,9 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         return vals_list
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
+
         # [aligned-ibr-jp-06]-Tax category tax amount (ibt-117) with currency code JPY and tax category tax amount
         # in accounting currency (ibt-190) shall not have decimal.
         # see also: https://docs.peppol.eu/poac/jp/pint-jp/bis/#_rounding
@@ -77,6 +86,8 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
         vals['vals'].update({
             # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#profiles

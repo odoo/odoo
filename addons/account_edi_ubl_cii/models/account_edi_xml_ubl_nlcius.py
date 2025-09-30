@@ -40,6 +40,8 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for tax in vals_list:
             # [BR-NL-35] The use of a tax exemption reason code (cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory
@@ -49,6 +51,8 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_address_vals(partner)
         # [BR-NL-28] The use of a country subdivision (cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
         # /cbc:CountrySubentity) is not recommended
@@ -57,6 +61,8 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list=tax_values_list)
         # [BR-NL-32] Use of Discount reason code ( AllowanceChargeReasonCode ) is not recommended.
         # [BR-EN-34] Use of Charge reason code ( AllowanceChargeReasonCode ) is not recommended.
@@ -71,6 +77,8 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
     def _get_invoice_payment_means_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_payment_means_vals_list(invoice)
         # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
         for vals in vals_list:
@@ -79,6 +87,8 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals']['customization_id'] = self._get_customization_ids()['nlcius']

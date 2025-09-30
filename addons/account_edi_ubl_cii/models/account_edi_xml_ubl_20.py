@@ -74,6 +74,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_country_vals(self, country):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'country': country,
 
@@ -82,11 +84,15 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_partner_party_identification_vals_list(self, partner):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         if partner.ref:
             return [{'id': partner.ref}]
         return []
 
     def _get_partner_address_vals(self, partner):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'street_name': partner.street,
             'additional_street_name': partner.street2,
@@ -98,6 +104,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
         # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
         # valid (RO, HU, non-EU countries).
@@ -117,6 +125,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }]
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return [{
             'commercial_partner': partner,
             'registration_name': partner.name,
@@ -125,6 +135,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }]
 
     def _get_partner_contact_vals(self, partner):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'id': partner.id,
             'name': partner.name,
@@ -133,6 +145,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_partner_person_vals(self, partner):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         This is optional and meant to be overridden when required under the form:
         {
@@ -144,6 +158,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return {}
 
     def _get_partner_party_vals(self, partner, role):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'partner': partner,
             'party_identification_vals': self.with_context(ubl_partner_role=role)._get_partner_party_identification_vals_list(partner.commercial_partner_id),
@@ -156,6 +172,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_invoice_period_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         For now, we cannot fill this data from an invoice
         This corresponds to the 'delivery or invoice period'. For UBL Bis 3, in the case of intra-community supply,
@@ -168,6 +186,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return []
 
     def _get_additional_document_reference_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         This is optional and meant to be overridden when required under the form:
         {
@@ -182,6 +202,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return []
 
     def _get_delivery_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
             'actual_delivery_date': invoice.delivery_date,
@@ -192,6 +214,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }]
 
     def _get_bank_address_vals(self, bank):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'street_name': bank.street,
             'additional_street_name': bank.street2,
@@ -203,6 +227,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_financial_institution_vals(self, bank):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'bank': bank,
             'id': bank.bic,
@@ -212,6 +238,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_financial_institution_branch_vals(self, bank):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return {
             'bank': bank,
             'id': bank.bic,
@@ -220,6 +248,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_financial_account_vals(self, partner_bank):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         vals = {
             'bank_account': partner_bank,
             'id': partner_bank.acc_number.replace(' ', ''),
@@ -231,6 +261,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         if invoice.move_type == 'out_invoice':
             if invoice.partner_bank_id:
                 payment_means_code, payment_means_name = (30, 'credit transfer')
@@ -258,6 +290,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return [vals]
 
     def _get_invoice_payment_terms_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         payment_term = invoice.invoice_payment_term_id
         if payment_term:
             # The payment term's note is automatically embedded in a <p> tag in Odoo
@@ -266,6 +300,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             return []
 
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         tax_totals_vals = {
             'currency': invoice.currency_id,
             'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
@@ -328,6 +364,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:InvoiceLine/cac:Item node.
         It provides information about what the product you are selling.
 
@@ -355,6 +393,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         https://docs.peppol.eu/poacc/billing/3.0/bis/#_document_level_allowance_or_charge
         Usage for early payment discounts:
@@ -398,6 +438,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return vals_list
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ To be overridden if needed to fill the PricingExchangeRate node.
 
         This is used when the currency of the 'Exchange' (e.g.: an invoice) is not the same as the Document currency.
@@ -412,6 +454,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return []
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line>cac:AllowanceCharge node.
 
         Allowances are distinguished from charges using the ChargeIndicator node with 'false' as value.
@@ -465,6 +509,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return [allowance_vals] + fixed_tax_charge_vals_list
 
     def _get_invoice_line_price_vals(self, line):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:InvoiceLine/cac:Price node.
         It provides information about the price applied for the goods and services invoiced.
 
@@ -498,12 +544,16 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_invoice_line_tax_totals_vals_list(self, line, taxes_vals):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:TaxTotal node on a line level.
         Uses the same method as the invoice TaxTotal, but can be overridden in other formats.
         """
         return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line node.
         It provides information about the document line.
 
@@ -538,6 +588,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """ Method used to fill the cac:{Legal,Requested}MonetaryTotal node"""
         # We only handle rounding amounts that do not belong to any tax ('add_invoice_line' cash rounding strategy).
         # Rounding amounts belonging to a tax ('biggest_tax' strategy) are included already in the tax amounts.
@@ -557,18 +609,24 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         }
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
             To be overridden to apply a specific tax filter
         """
         return True
 
     def _apply_invoice_line_filter(self, invoice_line):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
             To be overridden to apply a specific invoice line filter
         """
         return True
 
     def _get_early_payment_discount_grouped_by_tax_rate(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         Get the early payment discounts grouped by the tax rate of the product it is linked to
         :returns {float: float}: mapping tax amounts to early payment discount amounts
@@ -582,6 +640,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return tax_to_discount
 
     def _get_tax_grouping_key(self, base_line, tax_data):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         tax = tax_data['tax']
         customer = base_line['record'].move_id.commercial_partner_id
         supplier = base_line['record'].move_id.company_id.partner_id.commercial_partner_id
@@ -599,6 +659,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return grouping_key
 
     def _export_invoice_vals(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         # Validate the structure of the taxes
         self._validate_taxes(invoice.invoice_line_ids.tax_ids)
 
@@ -737,6 +799,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return vals
 
     def _get_note_vals_list(self, invoice):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         return [{'note': html2plaintext(invoice.narration)}] if invoice.narration else []
 
     def _export_invoice_constraints(self, invoice, vals):
@@ -761,6 +825,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
 
     def _get_document_type_code_vals(self, invoice, invoice_data):
+        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
+        # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """Returns the values used for the `DocumentTypeCode` node"""
         # To be overriden by custom format if required
         return {'attrs': {}, 'value': None}
