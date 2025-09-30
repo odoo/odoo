@@ -453,7 +453,6 @@ class account_journal(models.Model):
                AND st_line.company_id IN %s
                AND NOT st_line.is_reconciled
                AND st_line_move.checked IS TRUE
-               AND st_line_move.state = 'posted'
           GROUP BY st_line.journal_id
         """, [tuple(bank_cash_journals.ids), tuple(self.env.companies.ids)])
         number_to_reconcile = {
