@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
-import { Component } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -72,7 +71,7 @@ export class WebsiteEventTrackReminder extends Interaction {
                 this.reminderOn = reminderOnValue;
                 if (this.reminderOn) {
                     this.favoriteAddedConfirmation = _t("Track successfully added to your favorites.");
-                    Component.env.bus.trigger("open_notification_request", [
+                    this.env.bus.trigger("NOTIFICATION:REQUEST-OPEN", [
                         "add_track_to_favorite",
                         {
                             title: _t("Allow push notifications?"),
