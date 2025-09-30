@@ -44,14 +44,10 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         return record.data.display_type === "line_note";
     }
 
-    updateLabel(value) {
-        this.props.record.update({
-            name: String(
-                (this.productName && value && this.productName.concat("\n", value))
-                || (this.productName && !value && this.productName)
-                || (value || '')
-            ),
-        });
+    parseLabel(value) {
+        return (this.productName && value && this.productName.concat("\n", value))
+            || (this.productName && !value && this.productName)
+            || (value || "");
     }
 
     shouldShowWarning() {
