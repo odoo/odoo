@@ -493,65 +493,6 @@ a.o_underline {
     }
 }
 
-@include media-breakpoint-down(md) {
-    odoo-wysiwyg-container {
-        .btn-group {
-            position: static;
-        }
-    }
-    // modal select media
-    .o_technical_modal.o_web_editor_dialog {
-        // see template 'web_editor.FieldTextHtml.fullscreen'
-        z-index: $o-we-technical-modal-zindex;
-
-        > .o_select_media_dialog {
-            max-width: inherit !important;
-            z-index: $o-we-technical-modal-zindex;
-
-            .modal-dialog, .model-content {
-                height: 100%;
-            }
-
-            .modal-body {
-                .nav .nav-item.search {
-                    width: 100%;
-
-                    .btn-group {
-                        display: flex;
-                        justify-content: space-around;
-                        padding: 5px;
-                    }
-                }
-
-                // center pictogram
-                .font-icons-icons {
-                    text-align: center;
-                }
-
-                // fix search image
-                .form-control.o_we_search {
-                    height: inherit;
-                }
-
-                // attachment cells
-                .o_we_existing_attachments > .row {
-                    flex-direction: column;
-
-                    > .o_existing_attachment_cell {
-                        flex: initial;
-                        max-width: 100%;
-
-                        > .o_existing_attachment_remove {
-                            opacity: inherit;
-                            top: 10px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 // BS4 blockquote has no style anymore, except bloquote <footer>
 blockquote {
     padding: $spacer/2 $spacer;
@@ -838,64 +779,6 @@ pre {
         @extend %o-text-gradient-decoration;
         background-position: 0 95%;
     }
-}
-
-/* QWEB */
-
-.odoo-editor-editable.odoo-editor-qweb, .o_readonly {
-    t,
-    [t-if],
-    [t-elif],
-    [t-else],
-    [t-foreach] {
-        background-color: rgba(0, 0, 102, 0.1) !important;
-    }
-    t,
-    [t-esc],
-    [t-out],
-    [t-raw] {
-        border-radius: 2px;
-    }
-    [t-esc],
-    [t-out],
-    [t-raw] {
-        background-color: rgba(36, 154, 255, 0.16) !important;
-    }
-    [t-esc]:empty::before {
-        content: attr(t-esc);
-    }
-    [t-raw]:empty::before {
-        content: attr(t-raw);
-    }
-    [t-out]:empty::before {
-        content: attr(t-out);
-    }
-    t[t-set] {
-        display: none;
-    }
-    t[data-oe-t-inline] {
-        display: inline;
-    }
-    t:not([data-oe-t-inline]) {
-        display: block;
-    }
-    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
-        display: unset;
-    }
-    [data-oe-t-group]:not([data-oe-t-group-active]) {
-        display: none !important;
-    }
-    [data-oe-t-group][data-oe-t-selectable] {
-        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
-    }
-}
-
-.oe-qweb-select {
-    position: absolute;
-    // Bootstrap sets .modal z-index at 1055.
-    // Ensure qweb-select is visible in modals.
-    z-index: 1056;
-    background-color: white;
 }
 
 // Autocomplete dropdowns
