@@ -3,6 +3,7 @@
 
 import re
 from contextlib import suppress
+from urllib.parse import urlencode
 
 import odoo.tests
 from odoo.tools.misc import file_open
@@ -101,7 +102,7 @@ class HOOTCommon(odoo.tests.HttpCase):
 
     def setUp(self):
         super().setUp()
-        self.hoot_filters = self.get_hoot_filters()
+        self.hoot_filters = self.get_hoot_filters(self._test_params)
 
     def _generate_hash(self, test_string):
         hash = 0
@@ -110,16 +111,16 @@ class HOOTCommon(odoo.tests.HttpCase):
             hash = hash & 0xFFFFFFFF
         return f'{hash:08x}'
 
-    def get_hoot_filters(self):
-        filters = _get_filters(self._test_params)
-        filter = ''
+    def get_hoot_filters(self, params):
+        filters = _get_filters(params)
+        query = []
         for sign, f in filters:
             h = self._generate_hash(f)
             if sign == '-':
                 h = f'-{h}'
             # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
-            filter += f'&id={h}'
-        return filter
+            query.append(('id', h))
+        return '&' + urlencode(query)
 
     def test_generate_hoot_hash(self):
         self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
@@ -127,17 +128,17 @@ class HOOTCommon(odoo.tests.HttpCase):
         self.assertEqual(self._generate_hash('@web/core/autocomplete/open dropdown on input'), 'ee565d54') # test
 
     def test_get_hoot_filter(self):
-        self._test_params = []
-        self.assertEqual(self.get_hoot_filters(), '')
+        params = []
+        self.assertEqual(self.get_hoot_filters(params), '')
         expected = '&id=e39ce9ba&id=-69a6561d'
-        self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
-        self.assertEqual(self.get_hoot_filters(), expected)
-        self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
-        self.assertEqual(self.get_hoot_filters(), expected)
-        self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
-        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+        params = [('+', '@web/core,-@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(params), expected)
+        params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(params), expected)
+        params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(params), '&id=-69a6561d&id=-cb246db5')
+        params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(params), '&id=69a6561d&id=cb246db5')
 
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
