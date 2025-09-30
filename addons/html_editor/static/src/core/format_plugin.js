@@ -178,7 +178,7 @@ export class FormatPlugin extends Plugin {
     hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
         const targetedTextNodes = targetedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return targetedTextNodes.some((n) => isFormatted(n, this.editable));
+        return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
     /**
      * Return true if the current selection on the editable appears as the given
@@ -199,7 +199,8 @@ export class FormatPlugin extends Plugin {
         );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
-            targetedTextNodes.length && targetedTextNodes.every((node) => isFormatted(node, this.editable))
+            targetedTextNodes.length &&
+            targetedTextNodes.every((node) => isFormatted(node, { editable: this.editable }))
         );
     }
 
