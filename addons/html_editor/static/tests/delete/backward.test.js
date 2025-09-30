@@ -109,15 +109,17 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<div><p>ab</p><br><i>c[]</i></div>",
                 stepFunction: deleteBackward,
-                contentAfterEdit:
-                    '<div><p>ab</p><br><i data-oe-zws-empty-inline="">[]\u200B</i></div>',
+                contentAfterEdit: wrapInPlaceholders(
+                    '<div><p>ab</p><br><i data-oe-zws-empty-inline="">[]\u200B</i></div>'
+                ),
                 contentAfter: "<div><p>ab</p><br><br>[]</div>",
             });
             await testEditor({
                 contentBefore: '<div><p>uv</p><br><span class="style">w[]</span></div>',
                 stepFunction: deleteBackward,
-                contentAfterEdit:
-                    '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>',
+                contentAfterEdit: wrapInPlaceholders(
+                    '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>'
+                ),
                 contentAfter: '<div><p>uv</p><br><span class="style">[]\u200B</span></div>',
             });
             await testEditor({
@@ -126,7 +128,9 @@ describe("Selection collapsed", () => {
                     deleteBackward(editor);
                     await insertText(editor, "x");
                 },
-                contentAfterEdit: '<div><p>cd</p><br><span class="a">x[]</span></div>',
+                contentAfterEdit: wrapInPlaceholders(
+                    '<div><p>cd</p><br><span class="a">x[]</span></div>'
+                ),
                 contentAfter: '<div><p>cd</p><br><span class="a">x[]</span></div>',
             });
         });
@@ -1538,8 +1542,9 @@ describe("Selection not collapsed", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit:
-                '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
+            contentAfterEdit: wrapInPlaceholders(
+                '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>'
+            ),
             contentAfter: '<div><p>ab <span class="style">[]\u200B</span> d</p></div>',
         });
         await testEditor({
@@ -1548,7 +1553,9 @@ describe("Selection not collapsed", () => {
                 deleteBackward(editor);
                 await insertText(editor, "x");
             },
-            contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
+            contentAfterEdit: wrapInPlaceholders(
+                '<div><p>ab <span class="style">x[]</span> d</p></div>'
+            ),
             contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
         });
         await testEditor({
@@ -1556,8 +1563,9 @@ describe("Selection not collapsed", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit:
-                '<div><p>ab <span data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
+            contentAfterEdit: wrapInPlaceholders(
+                '<div><p>ab <span data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>'
+            ),
             contentAfter: "<div><p>ab []&nbsp;d</p></div>",
         });
         await testEditor({
@@ -1566,7 +1574,9 @@ describe("Selection not collapsed", () => {
                 deleteBackward(editor);
                 await insertText(editor, "x");
             },
-            contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
+            contentAfterEdit: wrapInPlaceholders(
+                '<div><p>ab<span class="style">x[]</span>d</p></div>'
+            ),
             contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
         });
         await testEditor({
@@ -1575,7 +1585,9 @@ describe("Selection not collapsed", () => {
                 deleteBackward(editor);
                 await insertText(editor, "x");
             },
-            contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
+            contentAfterEdit: wrapInPlaceholders(
+                '<div><p>ab <span class="style">x[]</span> f</p></div>'
+            ),
             contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
         });
     });

@@ -25,11 +25,12 @@ test("should ignore protected elements children mutations (true)", async () => {
             editor.shared.history.addStep();
             execCommand(editor, "historyUndo");
         },
-        contentAfterEdit: unformat(`
-                <div><p>ab[]</p></div>
-                <div data-oe-protected="true" contenteditable="false"><p>ab</p></div>
-                ${PLACEHOLDER()}
-                `),
+        contentAfterEdit: wrapInPlaceholders(
+            `<div><p>ab[]</p></div>
+            ${PLACEHOLDER()}
+            <div data-oe-protected="true" contenteditable="false"><p>ab</p></div>`,
+            { doUnformat: true }
+        ),
     });
 });
 
@@ -48,11 +49,12 @@ test("should not ignore unprotected elements children mutations (false)", async 
             await insertText(editor, "bc");
             execCommand(editor, "historyUndo");
         },
-        contentAfterEdit: unformat(`
-                <div><p>abc</p></div>
-                <div data-oe-protected="true" contenteditable="false"><div data-oe-protected="false" contenteditable="true"><p>ab[]</p></div></div>
-                ${PLACEHOLDER()}
-                `),
+        contentAfterEdit: wrapInPlaceholders(
+            `<div><p>abc</p></div>
+            ${PLACEHOLDER()}
+            <div data-oe-protected="true" contenteditable="false"><div data-oe-protected="false" contenteditable="true"><p>ab[]</p></div></div>`,
+            { doUnformat: true }
+        ),
     });
 });
 
@@ -86,17 +88,18 @@ test("should not normalize protected elements children (true)", async () => {
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
-        contentAfterEdit: unformat(`
-                <div>
-                    <p>\ufeff<i class="fa" contenteditable="false">\u200B</i>\ufeff</p>
-                    <ul><li><p>abc</p><p><br></p></li></ul>
-                </div>
-                <div data-oe-protected="true" contenteditable="false">
-                    <p><i class="fa"></i></p>
-                    <ul><li>abc<p><br></p></li></ul>
-                </div>
-                ${PLACEHOLDER()}
-                `),
+        contentAfterEdit: wrapInPlaceholders(
+            `<div>
+                <p>\ufeff<i class="fa" contenteditable="false">\u200B</i>\ufeff</p>
+                <ul><li><p>abc</p><p><br></p></li></ul>
+            </div>
+            ${PLACEHOLDER()}
+            <div data-oe-protected="true" contenteditable="false">
+                <p><i class="fa"></i></p>
+                <ul><li>abc<p><br></p></li></ul>
+            </div>`,
+            { doUnformat: true }
+        ),
     });
 });
 

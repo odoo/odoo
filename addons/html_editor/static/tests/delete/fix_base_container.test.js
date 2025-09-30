@@ -29,11 +29,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
             config: { cleanEmptyStructuralContainers: false },
         });
     });
@@ -79,9 +80,9 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div><div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div></div>
-            `),
+            contentAfterEdit: wrapInPlaceholders(
+                `<div><div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div></div>`
+            ),
         });
     });
 
@@ -108,9 +109,7 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div class="oe_unremovable">[]<br></div>
-            `),
+            contentAfterEdit: wrapInPlaceholders(`<div class="oe_unremovable">[]<br></div>`),
         });
     });
 
@@ -123,11 +122,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div class="oe_unremovable">
+            contentAfterEdit: wrapInPlaceholders(
+                `<div class="oe_unremovable">
                     <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -185,11 +185,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]</div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -203,11 +204,14 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
+            contentAfterEdit: wrapInPlaceholders(
+                `
                 <div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                 </div>
-            `),
+            `,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -220,11 +224,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph">[]text</div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 

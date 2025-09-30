@@ -103,7 +103,7 @@ describe("insert separator", () => {
         el.append(div);
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(
-            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>${PLACEHOLDER()}`
         );
     });
 

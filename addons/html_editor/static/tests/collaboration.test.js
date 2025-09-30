@@ -34,7 +34,7 @@ import { getContent } from "./_helpers/selection";
 import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
-import { PLACEHOLDER } from "./_helpers/selection_placeholder";
+import { PLACEHOLDER, TRUE_PARAGRAPH, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 /**
  * @param {Editor} editor
@@ -262,10 +262,10 @@ test("wrapInlinesInBlocks should not create impossible mutations in a collaborat
     e1.shared.history.addStep();
     mergePeersSteps(peerInfos);
     expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
+        wrapInPlaceholders(`<div class="oe_unbreakable"><p>myNode[]</p></div>`)
     );
     expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
+        wrapInPlaceholders(`<div class="oe_unbreakable"><p>myNode[]</p></div>`)
     );
 });
 test("should reset from snapshot", async () => {
@@ -731,14 +731,14 @@ describe("serialize/unserialize", () => {
                 const divA = editor.document.createElement("div");
                 divA.textContent = "a";
                 editor.editable.append(divA);
-                const p = editor.editable.querySelector("p");
+                const p = editor.editable.querySelector(TRUE_PARAGRAPH);
                 divA.append(p);
                 editor.shared.history.addStep();
             },
         });
         mergePeersSteps(peerInfos);
         validateSameHistory(peerInfos);
-        validateContent(peerInfos, "<div>a<p>x</p></div>");
+        validateContent(peerInfos, wrapInPlaceholders("<div>a<p>x</p></div>"));
     });
     test("Should add a new node that contain another node created in the same mutation stack", async () => {
         const peerInfos = await setupMultiEditor({
@@ -759,7 +759,10 @@ describe("serialize/unserialize", () => {
         });
         mergePeersSteps(peerInfos);
         validateSameHistory(peerInfos);
-        validateContent(peerInfos, `<p>x</p><div>b<div class="o-paragraph">a</div></div>`);
+        validateContent(
+            peerInfos,
+            `<p>x</p><div>b<div class="o-paragraph">a</div></div>` + PLACEHOLDER()
+        );
     });
 });
 

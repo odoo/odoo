@@ -4,7 +4,7 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
-import { PLACEHOLDER } from "../_helpers/selection_placeholder";
+import { PLACEHOLDER, wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 function findAdjacentPosition(editor, direction) {
     const deletePlugin = editor.plugins.find((p) => p.constructor.id === "delete");
@@ -93,7 +93,11 @@ describe("findAdjacentPosition method", () => {
                 const previous = '<div><p>a[]</p><span contenteditable="false">b</span></div>';
                 const next = '<div><p>a</p>[]<span contenteditable="false">b</span></div>';
                 const { editor } = await setupEditor(previous);
-                assertAdjacentPositions(editor, previous, next);
+                assertAdjacentPositions(
+                    editor,
+                    wrapInPlaceholders(previous),
+                    wrapInPlaceholders(next)
+                );
             });
             test("Should find position before filebox", async () => {
                 const content = `<div>\ufeff<span contenteditable="false" class="o_file_box"></span>\ufeff[]</div>`;

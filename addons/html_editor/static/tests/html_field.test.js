@@ -469,7 +469,8 @@ test("edit and save a html field containing JSON as some attribute values should
     pasteOdooEditorHtml(htmlEditor, `<div data-value=${value}><p>content</p></div>`);
     const txtField = queryOne('.o_field_html[name="txt"] .odoo-editor-editable');
     expect(txtField).toHaveInnerHTML(
-        `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
+        PLACEHOLDER({ tag: "div" }) +
+            `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
     );
     expect.verifySteps(["Setup Wysiwyg"]);
 
@@ -925,9 +926,7 @@ test("Embed video by pasting video URL", async () => {
     await press("Enter");
     await animationFrame();
     const videoIframe = queryOne("div.media_iframe_video");
-    expect(videoIframe.nextElementSibling).toHaveOuterHTML(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
-    );
+    expect(videoIframe.nextElementSibling).toHaveOuterHTML(PLACEHOLDER({ tag: "div" }));
     expect(
         `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
     ).toHaveCount(1);

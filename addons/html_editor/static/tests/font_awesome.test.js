@@ -4,6 +4,7 @@ import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user
 import { getContent } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
 import { dispatchNormalize } from "./_helpers/dispatch";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 function insertFontAwesome(faClass) {
     return (editor) => {
@@ -160,8 +161,9 @@ describe("parse/render", () => {
     test("should not add U+FEFF characters around icons not within a paragraph related element or a base container", async () => {
         await testEditor({
             contentBefore: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
-            contentBeforeEdit:
-                '<div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><div><p>abc</p></div></div>',
+            contentBeforeEdit: wrapInPlaceholders(
+                '<div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><div><p>abc</p></div></div>'
+            ),
             contentAfter: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
         });
     });

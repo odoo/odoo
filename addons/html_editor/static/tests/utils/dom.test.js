@@ -10,7 +10,7 @@ import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
 import { queryOne } from "@odoo/hoot-dom";
-import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
+import { PLACEHOLDER, wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -301,15 +301,18 @@ describe("wrapInlinesInBlocks", () => {
         // (which would be wrapped inside a div, not in the paragraph-related
         // element).
         expect(getContent(el)).toBe(
-            unformat(`
+            wrapInPlaceholders(
+                `
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                ${PLACEHOLDER()}
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
-            `)
+            `,
+                { doUnformat: true }
+            )
         );
     });
     test("wrap a mix of inline elements in div", async () => {
@@ -336,12 +339,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                ${PLACEHOLDER()}
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                ${PLACEHOLDER()}
             `)
         );
     });

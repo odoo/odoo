@@ -70,7 +70,9 @@ test("should make qweb tag bold and create a step even with partial selection in
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        wrapInPlaceholders(
+            `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        )
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
     const historySteps = editor.shared.history.getHistorySteps();

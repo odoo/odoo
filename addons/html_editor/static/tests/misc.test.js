@@ -7,7 +7,7 @@ import { getContent, setContent } from "./_helpers/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
-import { PLACEHOLDER } from "./_helpers/selection_placeholder";
+import { PLACEHOLDER, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("can instantiate a Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});
@@ -60,14 +60,22 @@ test("with an empty selector", async () => {
 
 test("with a part of the selector in an empty HTMLElement", async () => {
     const { el } = await setupEditor("<div>a[bc<div>]</div></div>", {});
-    expect(el.innerHTML).toBe(`<div>abc<div class="o-paragraph"><br></div></div>`);
-    expect(getContent(el)).toBe(`<div>a[bc<div class="o-paragraph">]<br></div></div>`);
+    expect(el.innerHTML).toBe(
+        wrapInPlaceholders(`<div>abc<div class="o-paragraph"><br></div></div>`)
+    );
+    expect(getContent(el)).toBe(
+        wrapInPlaceholders(`<div>a[bc<div class="o-paragraph">]<br></div></div>`)
+    );
 });
 
 test("inverse selection", async () => {
     const { el } = await setupEditor("<div>a]bc<div>[</div></div>", {});
-    expect(el.innerHTML).toBe(`<div>abc<div class="o-paragraph"><br></div></div>`);
-    expect(getContent(el)).toBe(`<div>a]bc<div class="o-paragraph">[<br></div></div>`);
+    expect(el.innerHTML).toBe(
+        wrapInPlaceholders(`<div>abc<div class="o-paragraph"><br></div></div>`)
+    );
+    expect(getContent(el)).toBe(
+        wrapInPlaceholders(`<div>a]bc<div class="o-paragraph">[<br></div></div>`)
+    );
 });
 
 test("with an empty selector and a <br>", async () => {
