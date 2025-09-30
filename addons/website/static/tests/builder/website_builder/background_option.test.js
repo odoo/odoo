@@ -3,7 +3,11 @@ import { BackgroundPositionOverlay } from "@html_builder/plugins/background_opti
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 

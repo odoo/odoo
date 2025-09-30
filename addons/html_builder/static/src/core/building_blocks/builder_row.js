@@ -64,7 +64,9 @@ export class BuilderRow extends Component {
                 const isFirstMount = !isMounted;
                 isMounted = true;
                 const contentEl = this.collapseContentRef.el;
-                if (!contentEl) return;
+                if (!contentEl) {
+                    return;
+                }
 
                 const setHeightAuto = () => {
                     contentEl.style.height = "auto";
@@ -79,7 +81,7 @@ export class BuilderRow extends Component {
                 switch (stage) {
                     case "enter-active": {
                         contentEl.style.height = contentEl.scrollHeight + "px";
-                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true});
+                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true });
                         break;
                     }
                     case "leave": {

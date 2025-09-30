@@ -10,9 +10,7 @@ export async function switchToEditMode(core) {
     core.stopInteractions();
     const activeInteractions = setupInteractionWhiteList.getWhiteList();
     const unmatchedInteractions = activeInteractions ? new Set(activeInteractions) : new Set();
-    const builders = registry
-        .category("public.interactions.edit")
-        .getEntries();
+    const builders = registry.category("public.interactions.edit").getEntries();
     for (const [key, builder] of builders) {
         if (activeInteractions && !activeInteractions.includes(key)) {
             builder.isAbstract = true;
@@ -20,9 +18,7 @@ export async function switchToEditMode(core) {
         unmatchedInteractions.delete(key);
     }
     if (unmatchedInteractions.size) {
-        throw new Error(
-            `White-listed Interaction does not exist: ${[...unmatchedInteractions]}.`
-        );
+        throw new Error(`White-listed Interaction does not exist: ${[...unmatchedInteractions]}.`);
     }
     const Interactions = builders.map((builder) => builder[1]);
     const editableInteractions = buildEditableInteractions(Interactions);

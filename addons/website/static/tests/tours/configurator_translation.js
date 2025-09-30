@@ -76,34 +76,36 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
     ];
 }
 
-registry.category("web_tour.tours").add('configurator_translation', {
-    url: '/website/configurator',
+registry.category("web_tour.tours").add("configurator_translation", {
+    url: "/website/configurator",
     steps: () => [
-    ...runConfiguratorFlow("in fr", "Parseltongue_privacy"),
-    {
-        content: "Check if the current interface language is active and monkey patch terms",
-        trigger: "body",
-        run() {
-            if (localization.code !== "pa_GB") {
-                throw new Error("The user language is not the correct one");
-            } else {
-                translatedTermsGlobal["Save"] = "Save_Parseltongue";
-            }
-        }
-    },
-    ...clickOnEditAndWaitEditMode(),
-    {
-        // Check the content of the save button to make sure the website is in
-        // Parseltongue. (The editor should be in the website's default language,
-        // which should be parseltongue in this test.)
-        content: "exit edit mode",
-        trigger: ".o-snippets-top-actions button.btn-success:contains('Save_Parseltongue')",
-        run: "click",
-    }, {
-         content: "wait for editor to be closed",
-         trigger: ':iframe #wrapwrap:not(.odoo-editor-editable)',
-    }
-]});
+        ...runConfiguratorFlow("in fr", "Parseltongue_privacy"),
+        {
+            content: "Check if the current interface language is active and monkey patch terms",
+            trigger: "body",
+            run() {
+                if (localization.code !== "pa_GB") {
+                    throw new Error("The user language is not the correct one");
+                } else {
+                    translatedTermsGlobal["Save"] = "Save_Parseltongue";
+                }
+            },
+        },
+        ...clickOnEditAndWaitEditMode(),
+        {
+            // Check the content of the save button to make sure the website is
+            // in Parseltongue. (The editor should be in the website's default
+            // language, which should be parseltongue in this test.)
+            content: "exit edit mode",
+            trigger: ".o-snippets-top-actions button.btn-success:contains('Save_Parseltongue')",
+            run: "click",
+        },
+        {
+            content: "wait for editor to be closed",
+            trigger: ":iframe #wrapwrap:not(.odoo-editor-editable)",
+        },
+    ],
+});
 
 registry.category("web_tour.tours").add("configurator_page_creation", {
     url: "/website/configurator",
@@ -131,7 +133,8 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
         },
         {
             content: "Configurator pages should appear at the start of the landing category",
-            trigger: "[data-id='landing'] .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
+            trigger:
+                "[data-id='landing'] .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
         },
         {
             content: "Exit dialog",

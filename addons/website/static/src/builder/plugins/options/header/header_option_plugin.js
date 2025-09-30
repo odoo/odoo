@@ -40,7 +40,7 @@ export const basicHeaderOptionSettings = {
     editableOnly: false,
     selector: "#wrapwrap > header",
     groups: ["website.group_website_designer"],
-}
+};
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
@@ -76,6 +76,6 @@ class HeaderOptionPlugin extends Plugin {
             }),
         ],
     };
-};
+}
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);

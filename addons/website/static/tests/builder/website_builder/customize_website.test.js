@@ -8,7 +8,11 @@ import {
     defineModels,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { CustomizeBodyBgTypeAction } from "@website/builder/plugins/customize_website_plugin";
 import { renderToString } from "@web/core/utils/render";

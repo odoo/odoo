@@ -1,6 +1,9 @@
 import { describe, expect, test, beforeEach } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
@@ -153,12 +156,10 @@ describe("MenuDialog", () => {
                 this.website.pageDocument = el.ownerDocument;
             },
         });
-        onRpc("/website/get_suggested_links", () => {
-            return {
-                matching_pages: [],
-                others: [],
-            };
-        });
+        onRpc("/website/get_suggested_links", () => ({
+            matching_pages: [],
+            others: [],
+        }));
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // open navbar link popover
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
@@ -238,12 +239,10 @@ describe("EditMenuDialog", () => {
             return sampleMenuData;
         });
 
-        onRpc("/website/get_suggested_links", () => {
-            return {
-                matching_pages: [],
-                others: [],
-            };
-        });
+        onRpc("/website/get_suggested_links", () => ({
+            matching_pages: [],
+            others: [],
+        }));
 
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // open navbar link popover
@@ -285,12 +284,10 @@ describe("EditMenuDialog", () => {
             return sampleMenuData;
         });
 
-        onRpc("/website/get_suggested_links", () => {
-            return {
-                matching_pages: [],
-                others: [],
-            };
-        });
+        onRpc("/website/get_suggested_links", () => ({
+            matching_pages: [],
+            others: [],
+        }));
 
         const editor = getEditor();
 
