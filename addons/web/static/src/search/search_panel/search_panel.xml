@@ -16,8 +16,8 @@
         <t t-set="categories" t-value="getCategorySelection()" />
         <t t-set="filters" t-value="getFilterSelection()" />
         <div class="d-flex">
-            <button class="btn btn-light btn-sm m-2 p-1 py-2">
-                <i class="oi oi-panel-right fa-flip-horizontal"/>
+            <button title="Open sidebar" aria-label="Open sidebar" class="btn btn-light btn-sm m-2 p-1 py-2">
+                <i class="oi oi-panel-right fa-flip-horizontal align-middle"/>
             </button>
             <div class="o_search_panel_current_selection text-truncate mx-auto">
                 <t t-if="!categories.length and !filters.length">
@@ -49,12 +49,11 @@
 </t>
 
 <t t-name="web.SearchPanelContent">
-    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto position-relative"
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 pt-4 px-2 bg-view overflow-auto position-relative"
          t-att-class="env.searchModel.searchPanelInfo.className"
-         t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
          t-ref="root">
         <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
-            <i class="oi oi-panel-right fa-flip-horizontal"/>
+            <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
         </button>
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn mt-2 w-100 overflow-visible">
@@ -64,7 +63,7 @@
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
-            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+            <header class="o_search_panel_section_header pt-4 pb-2 ps-2 text-uppercase cursor-default">
                 <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
@@ -184,7 +183,7 @@
             t-att-class="isChildList ? env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
             >
             <header
-                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0"
+                class="list-group-item list-group-item-action d-flex align-items-center border-0"
                 t-att-class="{'active text-black fw-bold': state.active[section.id] === valueId}"
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
