@@ -201,6 +201,9 @@ class CustomerPortal(Controller):
                     except:
                         values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
+                # If name is not changed then pop it from the values, as it affects the bank account holder name
+                if values['name'].strip() == partner.name.strip():
+                    values.pop('name')
                 self.on_account_update(values, partner)
                 partner.sudo().write(values)
                 if redirect:
