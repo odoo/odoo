@@ -355,7 +355,7 @@ class IrModuleModule(models.Model):
             install_package = None
             if platform.system() == 'Linux':
                 distro = platform.freedesktop_os_release()
-                id_likes = {distro['ID'], *distro.get('ID_LIKE').split()}
+                id_likes = {distro['ID'], *distro.get('ID_LIKE', '').split()}
                 if 'debian' in id_likes or 'ubuntu' in id_likes:
                     if package := manifest['external_dependencies'].get('apt', {}).get(e.dependency):
                         install_package = f'apt install {package}'
