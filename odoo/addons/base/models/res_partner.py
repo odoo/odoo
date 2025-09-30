@@ -740,7 +740,7 @@ class ResPartner(models.Model):
         :param dict values: updated values, triggering sync
         """
         # 1. From UPSTREAM: sync from parent
-        if values.get('parent_id') or values.get('type') == 'contact':
+        if values.get('parent_id') or values.get('type') == 'contact' or self.default_get(['parent_id']).get('parent_id'):
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self.sudo()._commercial_sync_from_company()
