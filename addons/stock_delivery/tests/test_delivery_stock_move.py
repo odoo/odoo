@@ -44,7 +44,7 @@ class TestStockMoveInvoice(TestSaleCommon):
 
     def test_01_delivery_stock_move(self):
         # Test if the stored fields of stock moves are computed with invoice before delivery flow
-        self.sale_prepaid = self.SaleOrder.create({
+        sale_prepaid = self.SaleOrder.create({
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
@@ -58,45 +58,45 @@ class TestStockMoveInvoice(TestSaleCommon):
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': self.sale_prepaid.id,
+            'default_order_id': sale_prepaid.id,
             'default_carrier_id': self.normal_delivery.id,
         }))
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
 
         # I confirm the SO.
-        self.sale_prepaid.action_confirm()
-        self.sale_prepaid._create_invoices()
+        sale_prepaid.action_confirm()
+        sale_prepaid._create_invoices()
 
         # I check that the invoice was created
-        self.assertEqual(len(self.sale_prepaid.invoice_ids), 1, "Invoice not created.")
+        self.assertEqual(len(sale_prepaid.invoice_ids), 1, "Invoice not created.")
 
         # I confirm the invoice
 
-        self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.action_post()
+        invoice = sale_prepaid.invoice_ids
+        invoice.action_post()
 
         # I pay the invoice.
-        self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
+        journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', sale_prepaid.company_id.id)], limit=1)
 
-        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({
-            'journal_id': self.journal.id,
+        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'journal_id': journal.id,
         })
         register_payments._create_payments()
 
         # Check the SO after paying the invoice
-        self.assertNotEqual(self.sale_prepaid.invoice_count, 0, 'order not invoiced')
-        self.assertTrue(self.sale_prepaid.invoice_status == 'invoiced', 'order is not invoiced')
-        self.assertEqual(len(self.sale_prepaid.picking_ids), 1, 'pickings not generated')
+        self.assertNotEqual(sale_prepaid.invoice_count, 0, 'order not invoiced')
+        self.assertTrue(sale_prepaid.invoice_status == 'invoiced', 'order is not invoiced')
+        self.assertEqual(len(sale_prepaid.picking_ids), 1, 'pickings not generated')
 
         # Check the stock moves
-        moves = self.sale_prepaid.picking_ids.move_ids
+        moves = sale_prepaid.picking_ids.move_ids
         self.assertEqual(moves[0].product_qty, 2, 'wrong product_qty')
         self.assertEqual(moves[0].weight, 2.0, 'wrong move weight')
 
         # Ship
         moves.move_line_ids.write({'quantity': 2})
-        self.picking = self.sale_prepaid.picking_ids._action_done()
+        sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids.sale_price, 1725.0, 'wrong shipping value')
 
     def test_02_delivery_stock_move(self):
@@ -110,7 +110,7 @@ class TestStockMoveInvoice(TestSaleCommon):
             'product_id': self.product_cable_management_box.id,
         } for x in range(5)])
 
-        self.sale_prepaid = self.SaleOrder.create({
+        sale_prepaid = self.SaleOrder.create({
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
@@ -124,19 +124,19 @@ class TestStockMoveInvoice(TestSaleCommon):
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': self.sale_prepaid.id,
+            'default_order_id': sale_prepaid.id,
             'default_carrier_id': self.normal_delivery.id,
         }))
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
 
         # I confirm the SO.
-        self.sale_prepaid.action_confirm()
-        moves = self.sale_prepaid.picking_ids.move_ids
+        sale_prepaid.action_confirm()
+        moves = sale_prepaid.picking_ids.move_ids
         # Ship
         for ml, lot in zip(moves.move_line_ids, serial_numbers):
             ml.write({'quantity': 1, 'lot_id': lot.id})
-        self.picking = self.sale_prepaid.picking_ids._action_done()
+        sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids[0].sale_price, 862.5, 'wrong shipping value')
 
     def test_03_invoiced_status(self):

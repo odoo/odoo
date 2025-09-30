@@ -8,8 +8,8 @@ class TestDeliveryCost(common.TransactionCase):
     def test_delivery_real_cost(self):
         """Ensure that the price is correctly set on the delivery line in the case of a Back Order
         """
-        self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
-        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
+        partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
+        product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
 
         product_delivery = self.env['product.product'].create({
             'name': 'Delivery Charges',
@@ -27,12 +27,12 @@ class TestDeliveryCost(common.TransactionCase):
             'free_over': False,
         })
         so = self.env['sale.order'].create({
-            'partner_id': self.partner_18.id,
-            'partner_invoice_id': self.partner_18.id,
-            'partner_shipping_id': self.partner_18.id,
+            'partner_id': partner_18.id,
+            'partner_invoice_id': partner_18.id,
+            'partner_shipping_id': partner_18.id,
             'order_line': [(0, 0, {
                 'name': 'PC Assamble + 2GB RAM',
-                'product_id': self.product_4.id,
+                'product_id': product_4.id,
                 'product_uom_qty': 2,
                 'price_unit': 120.00,
             })],
