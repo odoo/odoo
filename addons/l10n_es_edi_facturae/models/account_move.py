@@ -275,7 +275,7 @@ class AccountMove(models.Model):
         :return: A tuple containing the Face items, the taxes and the invoice totals data.
         """
         self.ensure_one()
-        extended_dp = 6 if self.company_id.tax_calculation_rounding_method == 'round_globally' else 2
+        extended_dp = self.env['decimal.precision'].precision_get('Product Price')
         invoice_ref = self.ref and self.ref[:20]
         line = base_line['record']
         tax_details = base_line['tax_details']
@@ -455,6 +455,7 @@ class AccountMove(models.Model):
             - invoice_values['TotalGeneralDiscounts']
             + invoice_values['TotalGeneralSurcharges']
         )
+        refund_multiplier = -1 if self.move_type in ('out_refund', 'in_refund') else 1
 
         template_values = {
             'self_party': company.partner_id,
@@ -469,9 +470,10 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
+            'unit_price_decimals': self.env['decimal.precision'].precision_get('Product Price'),
             'eur': eur_curr,
             'conversion_needed': conversion_needed,
-            'refund_multiplier': -1 if self.move_type in ('out_refund', 'in_refund') else 1,
+            'refund_multiplier': refund_multiplier,
 
             'Modality': 'I',
             'BatchIdentifier': self.name,
@@ -490,6 +492,7 @@ class AccountMove(models.Model):
             },
             'InvoiceCurrencyCode': inv_curr.name,
             'Invoices': [invoice_values],
+            'TotalTaxOutputs': float_repr(refund_multiplier * abs(self.amount_tax), inv_curr.decimal_places),
         }
         if self.l10n_es_invoicing_period_start_date and self.l10n_es_invoicing_period_end_date:
             template_values['Invoices'][0]['InvoiceIssueData']['InvoicingPeriod'] = {

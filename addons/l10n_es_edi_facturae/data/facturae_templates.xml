@@ -134,7 +134,7 @@
                 <ItemDescription t-out="line['ItemDescription']"/>
                 <Quantity t-out="line['Quantity']"/>
                 <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
-                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], file_currency.decimal_places)"/>
+                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], unit_price_decimals)"/>
                 <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], file_currency.decimal_places)"/>
                 <DiscountsAndRebates t-if="line.get('DiscountsAndRebates')">
                     <t t-foreach="line['DiscountsAndRebates']" t-as="discount">
@@ -239,7 +239,7 @@
                     <TotalGeneralDiscounts t-if="invoice.get('TotalGeneralDiscounts')" t-out="float_repr(refund_multiplier*invoice['TotalGeneralDiscounts'], file_currency.decimal_places)"/>
                     <TotalGeneralSurcharges t-if="invoice.get('TotalGeneralSurcharges')" t-out="float_repr(refund_multiplier*invoice['TotalGeneralSurcharges'], file_currency.decimal_places)"/>
                     <TotalGrossAmountBeforeTaxes t-out="float_repr(refund_multiplier*invoice['TotalGrossAmountBeforeTaxes'], file_currency.decimal_places)"/>
-                    <TotalTaxOutputs t-out="float_repr(refund_multiplier*invoice['TotalTaxOutputs'], file_currency.decimal_places)"/>
+                    <TotalTaxOutputs t-out="TotalTaxOutputs"/>
                     <TotalTaxesWithheld t-out="float_repr(refund_multiplier*invoice['TotalTaxesWithheld'], file_currency.decimal_places)"/>
                     <InvoiceTotal t-out="float_repr(refund_multiplier*invoice['InvoiceTotal'], file_currency.decimal_places)"/>
                     <PaymentsOnAccount t-if="invoice.get('PaymentsOnAccount')">
