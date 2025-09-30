@@ -5,7 +5,9 @@
         <div class="d-flex align-items-baseline"
             t-attf-class="{{ tags.length &amp;&amp; 'gap-1'}}">
             <div class=" d-inline-flex flex-wrap gap-1 mw-100">
-                <TagsList tags="tags" />
+                <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                    <BadgeTag color="tag.color" text="tag.text" onClick="tag.onClick" onDelete="tag.onDelete"/>
+                </t>
             </div>
             <button t-on-click="onAdd"
                 class="btn btn-link text-action"

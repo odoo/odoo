@@ -2,12 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { useX2ManyCrud, useOpenX2ManyRecord } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 export class One2ManyTagsSkillsField extends X2ManyField {
     static components = {
         ...X2ManyField.components,
-        TagsList,
+        BadgeTag,
     };
     static template = "hr_recruitment_skills.One2ManyTagsSkillsField";
 
@@ -34,10 +34,8 @@ export class One2ManyTagsSkillsField extends X2ManyField {
     getTagProps(record) {
         const tagProps = {
             id: record.id,
-            resId: record.resId,
             text: record.data.display_name,
-            colorIndex: record.data.color,
-            canEdit: true,
+            color: record.data.color,
             onClick: (ev) => this.onTagClick(ev, record),
             onDelete: !this.props.readonly ? () => this.activeActions.onDelete(record) : undefined,
         };
