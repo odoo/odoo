@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_public_holiday_leave_view_search" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.search</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="country_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="filter_date" date="date_start" default_period="year" string="Period"/>
+                <separator/>
+                <filter string="Date" name="leave_month" domain="[]" context="{'group_by':'date_start'}" help="Starting Date of Time Off"/>
+                <filter string="Country" name="country" domain="[]" context="{'group_by':'country_id'}"/>
+                <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_public_holiday_leave_view_list" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.view.list</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="arch" type="xml">
+            <list string="Public Holidays" editable="bottom" open_form_view="True">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="country_id" optional="hide"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_public_holiday_leave_view_form" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.view.form</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="arch" type="xml">
+            <form string="Public Holiday">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="country_id"/>
+                        <field name="company_id"/>
+                        <field name="condition_domain" widget="domain" options="{'foldable': True,'model': 'hr.employee'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_public_holiday_leave_action" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="res_model">hr.public.holiday.leave</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_date': True}</field>
+        <field name="search_view_id" ref="hr_public_holiday_leave_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Public Holidays yet!
+            </p>
+        </field>
+    </record>
+</odoo>
