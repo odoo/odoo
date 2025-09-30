@@ -360,3 +360,28 @@ class StockMove(models.Model):
                 and self.origin_returned_move_id.is_subcontract
                 and self.location_dest_id.id == subcontracting_location.id
         )
+
+    def _prepare_tracked_move_lines(self, qty):
+        """create move lines for lot/serial tracked products based on available lots in the related pickings."""
+        res = []
+        production = self.raw_material_production_id
+        picking_moves_lots = production.picking_ids.move_ids.\
+            filtered(lambda m: m.state == 'done' and m.product_id == self.product_id).mapped('lot_ids')
+        for lot in picking_moves_lots:
+            existing_line = self.move_line_ids.filtered(lambda l: l.lot_id == lot and l.product_id == self.product_id)
+            available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, location_id=production.location_src_id, lot_id=lot, strict=True)
+            if qty <= 0:
+                break
+            if available_qty > 0:
+                assign_qty = 1 if self.product_id.tracking == 'serial' else min(available_qty, qty)
+                if existing_line:
+                    quantity = self.product_id.uom_id._compute_quantity(assign_qty, self.product_uom)
+                    res.append((1, existing_line.id, {'quantity': existing_line._origin.quantity + quantity}))
+                else:
+                    vals = super()._prepare_tracked_move_lines(assign_qty)
+                    vals[0][2]['lot_id'] = lot.id
+                    res += vals
+                qty -= assign_qty
+        if qty > 0:
+            res += super()._prepare_tracked_move_lines(qty)
+        return res

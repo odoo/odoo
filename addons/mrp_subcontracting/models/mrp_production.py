@@ -94,6 +94,8 @@ class MrpProduction(models.Model):
             backorder.move_raw_ids.filtered(lambda m: m.additional).product_uom_qty = 0.0
 
             backorder.qty_producing = backorder.product_qty
+            # sudo needed for portal users
+            self.env['stock.quant'].sudo()._clean_reservations()
             backorder._set_qty_producing()
 
             self.product_qty = self.qty_producing

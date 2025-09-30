@@ -2272,17 +2272,28 @@ Please change the quantity done or the rounding precision of your unit of measur
             qty -= taken_qty
 
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
-            if self.product_id.tracking != 'serial':
+            if self.product_id.tracking != 'none':
+                uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
+                res += self._prepare_tracked_move_lines(uom_qty)
+            else:
                 vals = self._prepare_move_line_vals(quantity=0)
                 vals['quantity'] = qty
                 res.append((0, 0, vals))
-            else:
-                uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
-                for i in range(0, int(uom_qty)):
-                    vals = self._prepare_move_line_vals(quantity=0)
-                    vals['quantity'] = 1
-                    vals['product_uom_id'] = self.product_id.uom_id.id
-                    res.append((0, 0, vals))
+        return res
+
+    def _prepare_tracked_move_lines(self, qty):
+        res = []
+        if self.product_id.tracking == 'serial':
+            for i in range(0, int(qty)):
+                vals = self._prepare_move_line_vals(quantity=0)
+                vals['quantity'] = 1
+                vals['product_uom_id'] = self.product_id.uom_id.id
+                res.append((0, 0, vals))
+        else:
+            quantity = self.product_id.uom_id._compute_quantity(qty, self.product_uom)
+            vals = self._prepare_move_line_vals(quantity=0)
+            vals['quantity'] = quantity
+            res.append((0, 0, vals))
         return res
 
     def _set_quantity_done(self, qty):
