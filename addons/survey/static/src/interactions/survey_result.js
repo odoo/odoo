@@ -136,7 +136,7 @@ export class SurveyResult extends Interaction {
      * `modelX,rowX,ansX|modelY,rowY,ansY...` - row is used for matrix-type questions row id, 0 for others
      * "model" specifying the model to query depending on the question type we filter on.
        - 'A': 'survey.question.answer' ids: simple_choice, multiple_choice, matrix
-       - 'L': 'survey.user_input.line' ids: char_box, text_box, numerical_box, date, datetime
+       - 'L': 'survey.user_input.line' ids: char_box, text_box, numerical_box, date, time
      * @param {"add" | "remove"} operation Whether to add or remove the filter.
      * @param {Event} ev Event defining the filter.
      * @returns {String} Updated filters.
