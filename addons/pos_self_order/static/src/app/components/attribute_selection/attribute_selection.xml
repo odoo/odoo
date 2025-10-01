@@ -2,7 +2,10 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.AttributeSelection">
          <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
-             <h2 class="text-start py-3 m-0" t-out="attribute.attribute_id.name" t-att-id="attribute.attribute_id.id"/>
+             <h2 class="text-start py-3 m-0 d-flex align-items-center" t-att-id="attribute.attribute_id.id">
+                 <t t-out="attribute.attribute_id.name"/>
+                 <span t-if="attribute.attribute_id.display_type !== 'multi'" class="badge smaller rounded-pill bg-danger text-white ms-2">Required</span>
+             </h2>
              <div class="self_order_attribute_selection row pb-3">
                 <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
                     <t t-set="valueSelected" t-value="isValueSelected(attribute,value)"/>
