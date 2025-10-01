@@ -1,0 +1,8 @@
+/* Hide scrollbar but allow scrolling */
+.o_highlight_picker_grid {
+    scrollbar-width: none;  /* Firefox */
+    overflow: auto;
+}
+.o_highlight_picker_grid::-webkit-scrollbar {
+    display: none;          /* Chrome, Safari */
+}
