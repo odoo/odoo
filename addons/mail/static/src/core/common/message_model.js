@@ -567,14 +567,25 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
-    enterEditMode(thread) {
+    async enterEditMode(thread) {
+        const doc = createDocumentFragmentFromContent(this.body);
+        const validChannels = (
+            await Promise.all(
+                Array.from(
+                    doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
+                ).map(async (el) =>
+                    this.store.Thread.getOrFetch({ id: el.dataset.oeId, model: "discuss.channel" })
+                )
+            )
+        ).filter((channel) => channel?.exists());
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
-            mentionedPartners: this.partner_ids,
             composerHtml: getNonEditableMentions(this.body),
+            mentionedChannels: validChannels,
+            mentionedPartners: this.partner_ids,
             selection: {
                 start: text.length,
                 end: text.length,
