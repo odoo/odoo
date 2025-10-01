@@ -53,20 +53,20 @@
         </record>
 
         <record id="email_template_proforma" model="mail.template">
-            <field name="name">Sales: Send Proforma</field>
+            <field name="name">Sales: Send Pro Forma</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="description">Used by salespeople when they send proforma to prospects</field>
+            <field name="description">Used by salespeople when they send pro forma to prospects</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
         Hello,
         <br/><br/>
-        Your Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+        Your Pro Forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''"></t> )
         </t>
