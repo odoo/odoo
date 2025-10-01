@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import uuid
 import base64
+import uuid
 import zipfile
+from io import BytesIO
+from typing import Dict, List, Optional
+from urllib.parse import unquote
+
 import qrcode
 import qrcode.image.svg
-from io import BytesIO
-from typing import Optional, List, Dict
-from urllib.parse import unquote
-from odoo.exceptions import UserError, ValidationError, AccessError
 
-from odoo import api, fields, models, _, service
-from odoo.tools import file_open, split_every
+from odoo import _, api, fields, models, release
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools import split_every
 
 
 class PosConfig(models.Model):
@@ -178,8 +179,7 @@ class PosConfig(models.Model):
 
     def _compute_selection_pay_after(self):
         selection_each_label = _("Each Order")
-        version_info = service.common.exp_version()['server_version_info']
-        if version_info[-1] == '':
+        if release.version_info[-1] == '':
             selection_each_label = f"{selection_each_label} {_('(require Odoo Enterprise)')}"
         return [("meal", _("Meal")), ("each", selection_each_label)]
 

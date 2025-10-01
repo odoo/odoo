@@ -12,8 +12,7 @@ from werkzeug.exceptions import (
 
 from odoo import http
 from odoo.http import request
-from odoo.models import BaseModel
-from odoo.service.model import get_public_method
+from odoo.models import BaseModel, get_public_method
 from odoo.tools import frozendict
 
 _logger = logging.getLogger(__name__)

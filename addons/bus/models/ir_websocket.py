@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.http import request, SessionExpiredException
+from odoo.http import request
 from odoo.tools.misc import OrderedSet
-from odoo.service import security
 from ..models.bus import dispatch
 from ..websocket import wsrequest
 
@@ -75,9 +74,7 @@ class IrWebsocket(models.AbstractModel):
     @classmethod
     def _authenticate(cls):
         if wsrequest.session.uid is not None:
-            if not security.check_session(wsrequest.session, wsrequest.env, wsrequest):
-                wsrequest.session.logout(keep_db=True)
-                raise SessionExpiredException()
+            wsrequest.session._check(wsrequest)
         else:
             public_user = wsrequest.env.ref('base.public_user')
             wsrequest.update_env(user=public_user.id)
