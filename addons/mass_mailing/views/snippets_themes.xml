@@ -32,7 +32,7 @@
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" groups="base.group_user">
     <snippets id="snippet_custom" string="Custom"/>
-    <t id="default_snippets">
+    <t name="default_snippets">
         <t t-set="company_id" t-value="res_company"/>
         <snippets id="snippet_groups" string="Categories">
             <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>

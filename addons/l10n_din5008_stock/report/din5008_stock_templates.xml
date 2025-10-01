@@ -19,7 +19,7 @@
                                 <span class="fw-bold">Beneficiary:</span>
                                 <address class="mb-0" t-out="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                 <div t-if="o.partner_id.vat">
-                                    <t t-if="o.partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-if="o.partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" name="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
                             </t>

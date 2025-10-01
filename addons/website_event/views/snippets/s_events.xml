@@ -132,7 +132,7 @@
 <!-- Single record templates -->
 <!-- Offset Layout -->
 <template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -173,7 +173,7 @@
 </template>
 <!-- Entry Layout -->
 <template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -206,7 +206,7 @@
 </template>
 <!-- Card Layout -->
 <template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -242,7 +242,7 @@
 </template>
 <!-- CTA Badge Layout -->
 <template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12 text-center">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -268,7 +268,7 @@
 </template>
 <!-- Aside Layout -->
 <template id="dynamic_filter_template_event_event_single_aside" name="Solo Aside">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>

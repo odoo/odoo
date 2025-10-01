@@ -37,7 +37,7 @@
         </xpath>
 
         <!-- Show PE fields preview info, and show warning is a required field need to be completed -->
-        <xpath expr="//t[@id='partner_vat']" position="before">
+        <xpath expr="//t[@name='partner_vat']" position="before">
             <t t-if="pos_order.company_id.country_code == 'PE'">
                 <t t-if="partner.l10n_latam_identification_type_id">
                     <t t-out="partner.l10n_latam_identification_type_id.name" /> -
@@ -47,7 +47,7 @@
                 </t>
             </t>
         </xpath>
-        <xpath expr="//t[@id='partner_vat']" position="after">
+        <xpath expr="//t[@name='partner_vat']" position="after">
             <t t-else="">
                 <span class="text-danger">* Please configure your Identification Number</span><br />
             </t>

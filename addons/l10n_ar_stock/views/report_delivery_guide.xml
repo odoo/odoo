@@ -36,7 +36,7 @@
                         <strong>
                             <t t-out="o.partner_id.l10n_latam_identification_type_id.name or
                                       o.company_id.account_fiscal_country_id.vat_label"
-                               id="inv_tax_id_label"/>:
+                               name="inv_tax_id_label"/>:
                         </strong>
                         <span t-if="o.partner_id.l10n_ar_vat" t-out="o.partner_id.l10n_ar_formatted_vat"/>
                         <span t-else="" t-out="o.partner_id.vat"/>

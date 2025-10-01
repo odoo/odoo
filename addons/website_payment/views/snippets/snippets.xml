@@ -6,13 +6,13 @@
 </template>
 
 <template id="snippets" inherit_id="website.snippets" name="Snippet Donation">
-    <xpath expr="//t[@id='snippet_donation_hook']" position="replace">
+    <xpath expr="//t[@name='snippet_donation_hook']" position="replace">
         <t t-snippet="website_payment.s_donation" string="Donation" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
-    <xpath expr="//t[@id='snippet_donation_button_hook']" position="replace">
+    <xpath expr="//t[@name='snippet_donation_button_hook']" position="replace">
         <t t-snippet="website_payment.s_donation_button" string="Donation Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation_button.svg" t-forbid-sanitize="form" t-grid-column-span="3"/>
     </xpath>
-    <xpath expr="//t[@id='snippet_supported_payment_methods_hook']" position="replace">
+    <xpath expr="//t[@name='snippet_supported_payment_methods_hook']" position="replace">
         <t
             t-snippet="website_payment.s_supported_payment_methods"
             string="Supported Payment Methods"

@@ -58,7 +58,7 @@
                                         <t t-if="partner.company_name">
                                             , <t t-out="partner.company_name"/>
                                         </t><br />
-                                        <t id="partner_vat" t-if="partner.vat">
+                                        <t name="partner_vat" t-if="partner.vat">
                                             <t t-out="partner.vat" /><br />
                                         </t>
                                         <t t-out="partner_address"/> <a role="button" t-att-href="address_url" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a>
