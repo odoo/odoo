@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.RadioProductAttribute">
         <div class="configurator_radio" t-ref="root">
-            <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex flex-wrap gap-3 align-items-center">
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell form-check">
                         <input 
@@ -24,7 +24,7 @@
                         </label>
                     </div>
                     <div t-if="value.id == props.selected.id and value.is_custom" class="custom-value-cell">
-                        <input type="text" t-att-value="props.customValue" t-on-change="(e) => props.setCustomValue(e.target.value)" class="custom_value form-control form-control-lg mt-2" />
+                        <input type="text" t-att-value="props.customValue" t-on-change="(e) => props.setCustomValue(e.target.value)" class="custom_value form-control form-control-lg" />
                     </div>
                 </t>
             </div>
