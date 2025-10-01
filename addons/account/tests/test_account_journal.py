@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from ast import literal_eval
-from unittest.mock import patch
-
 from odoo import http
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged, HttpCase, new_test_user
 from odoo.addons.test_mail.data.test_mail_data import MAIL_EML_ATTACHMENT
@@ -78,57 +75,6 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         with self.assertRaisesRegex(UserError, "entries linked to it"):
             self.company_data['default_journal_sale'].company_id = self.company_data_2['company']
 
-    def test_account_journal_add_new_payment_method_multi(self):
-        """
-        Test the automatic creation of payment method lines with the mode set to multi
-        """
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['multi'] = {'mode': 'multi', 'type': ('bank',)}
-            return res
-
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            self.env['account.payment.method'].sudo().create({
-                'name': 'Multi method',
-                'code': 'multi',
-                'payment_type': 'inbound'
-            })
-
-        bank_journals_count = self.env['account.journal'].search_count([('type', '=', 'bank')])
-        edited_journals_count = self.env['account.journal'].search_count([('inbound_payment_method_line_ids.code', '=', 'multi')])
-
-        # The bank journals have been set
-        self.assertEqual(bank_journals_count, edited_journals_count)
-
-    def test_remove_payment_method_lines(self):
-        """
-        Payment method lines are a bit special in the way their removal is handled.
-        If they are linked to a payment at the moment of the deletion, they won't be deleted but the journal_id will be
-        set to False.
-        If they are not linked to any payment, they will be deleted as expected.
-        """
-
-        # Linked to a payment. It will not be deleted, but its journal_id will be set to False.
-        first_method = self.inbound_payment_method_line
-        self.env['account.payment'].create({
-            'amount': 100.0,
-            'payment_type': 'inbound',
-            'partner_type': 'customer',
-            'payment_method_line_id': first_method.id,
-        })
-
-        first_method.unlink()
-
-        self.assertFalse(first_method.journal_id)
-
-        # Not linked to anything. It will be deleted.
-        second_method = self.outbound_payment_method_line
-        second_method.unlink()
-
-        self.assertFalse(second_method.exists())
-
     def test_account_journal_duplicates(self):
         new_journals = self.env["account.journal"].with_context(import_file=True).create([
             {"name": "OD_BLABLA"},
@@ -136,25 +82,6 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         ])
 
         self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BL"], "The journals should be set correctly")
-
-    def test_archive_used_journal(self):
-        journal = self.env['account.journal'].create({
-            'name': 'Test Journal',
-            'type': 'sale',
-            'code': 'A',
-        })
-        check_method = self.env['account.payment.method'].sudo().create({
-                'name': 'Test',
-                'code': 'check_printing_expense_test',
-                'payment_type': 'outbound',
-        })
-        self.env['account.payment.method.line'].create({
-            'name': 'Check',
-            'payment_method_id': check_method.id,
-            'journal_id': journal.id
-            })
-        journal.action_archive()
-        self.assertFalse(journal.active)
 
     def test_archive_multiple_journals(self):
         journals = self.env['account.journal'].create([{

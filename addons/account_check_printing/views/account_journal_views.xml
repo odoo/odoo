@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
         <record id="account_journal_dashboard_kanban_view_inherited" model="ir.ui.view">
             <field name="name">account.journal.dashboard.kanban.inherited</field>
             <field name="model">account.journal</field>
@@ -19,23 +20,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="view_account_journal_form_inherited" model="ir.ui.view">
-            <field name="name">account.journal.form.inherited</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']" position="inside">
-                    <group string="Check Printing"
-                           invisible="',check_printing,'.lower() not in (selected_payment_method_codes or '').lower() or type != 'bank'">
-                        <field name="check_sequence_id" invisible="1"/>
-                        <field name="check_manual_sequencing"
-                        />
-                        <field name="check_next_number"
-                               invisible="not check_manual_sequencing"/>
-                        <field name="bank_check_printing_layout" placeholder="Default"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
+    </data>
 </odoo>

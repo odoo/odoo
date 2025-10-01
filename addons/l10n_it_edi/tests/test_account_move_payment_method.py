@@ -12,14 +12,8 @@ class TestItAccountMovePaymentMethod(TestItEdi):
 
         payment_method = self.env['account.payment.method'].sudo().create({
             'name': 'Test Payment Method',
-            'code': 'test_payment_method',
+            'code': 'manual',
             'payment_type': 'inbound',
-        })
-
-        new_payment_method_line = self.env['account.payment.method.line'].create({
-            'name': 'new payment method line',
-            'payment_method_id': payment_method.id,
-            'journal_id': self.company_data['default_journal_bank'].id,
             'l10n_it_payment_method': 'MP07',
         })
 
@@ -28,7 +22,7 @@ class TestItAccountMovePaymentMethod(TestItEdi):
             active_model='account.move',
             active_ids=move.ids,
         ).create({
-            'payment_method_line_id': new_payment_method_line.id,
+            'payment_method_id': payment_method.id,
         })._create_payments()
 
         self.assertEqual(move.l10n_it_payment_method, 'MP07')

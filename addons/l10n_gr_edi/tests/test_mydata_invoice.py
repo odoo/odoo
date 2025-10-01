@@ -63,8 +63,10 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         if paid:
             self.env['account.payment.register'] \
                 .with_context(active_ids=invoice.ids, active_model='account.move') \
-                .create({'payment_date': invoice.date}) \
-                ._create_payments()
+                .create({
+                    'payment_date': invoice.date,
+                    'journal_id': self.bank_journal_for_payment.id,
+                })._create_payments()
 
         return invoice
 

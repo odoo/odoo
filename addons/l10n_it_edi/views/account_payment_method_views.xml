@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_payment_method_form_inherit_l10n_it_edi" model="ir.ui.view">
+            <field name="name">account.payment.method.form.inherit.l10n_it_edi</field>
+            <field name="model">account.payment.method</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_account_payment_method_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_type']" position="after">
+                    <field name="l10n_it_payment_method" invisible="not is_italian_company"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_method_tree_inherit_l10n_it_edi" model="ir.ui.view">
+            <field name="name">account.payment.method.tree.inherit.l10n_it_edi</field>
+            <field name="model">account.payment.method</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_account_payment_method_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_type']" position="after">
+                    <field name="l10n_it_payment_method" optional="1"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

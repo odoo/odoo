@@ -61,7 +61,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
             self.skipTest('accountant is not installed')
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'amount': 100,
             'journal_id': self.company_data['default_journal_bank'].id,

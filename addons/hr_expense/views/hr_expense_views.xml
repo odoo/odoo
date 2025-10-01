@@ -11,7 +11,7 @@
                     <field name="nb_attachment" column_invisible="True"/>
                     <field name="is_multiple_currency" column_invisible="True"/>
                     <field name="product_has_cost" column_invisible="True"/>
-                    <field name="selectable_payment_method_line_ids" column_invisible="True"/>
+                    <field name="selectable_payment_method_ids" column_invisible="True"/>
 
                     <!--  Always Shown start -->
                     <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
@@ -30,9 +30,7 @@
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
                     <field name="account_id" optional="hide" groups="account.group_account_readonly"
                            readonly="not is_editable"/>
-                    <field name="journal_id" optional="hide" groups="account.group_account_readonly"
-                           readonly="True"/>
-                    <field name="payment_method_line_id" optional="hide" groups="account.group_account_readonly"
+                    <field name="payment_method_id" optional="hide" groups="account.group_account_readonly"
                            readonly="not is_editable"/>
                     <field name="manager_id" optional="hide" readonly="not is_editable"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="True"/>
@@ -188,7 +186,7 @@
                             <field name="total_amount" invisible="1"/>
                             <field name="duplicate_expense_ids" invisible="1"/>
                             <field name="currency_rate" invisible="1"/>
-                            <field name="selectable_payment_method_line_ids" invisible="1"/>
+                            <field name="selectable_payment_method_ids" invisible="1"/>
 
                             <label for="product_id"/>
                             <div>
@@ -272,7 +270,7 @@
                                    domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_ids', 'parent_of', company_id)]"
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="payment_method_line_id"
+                            <field name="payment_method_id"
                                    options="{'no_open': True, 'no_create': True}"
                                    invisible="payment_mode != 'company_account'"
                                    readonly="not is_editable"

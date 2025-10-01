@@ -9,6 +9,7 @@
     'auto_install': ['account'],
     'data': [
         'data/ir_config_parameter.xml',
+        'data/account_payment_method.xml',
 
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
@@ -16,13 +17,11 @@
         'views/account_payment_menus.xml',
         'views/account_portal_templates.xml',
         'views/account_move_views.xml',
-        'views/account_journal_views.xml',
         'views/account_payment_views.xml',
         'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
 
-        'wizards/account_payment_register_views.xml',
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_refund_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
@@ -37,7 +36,6 @@
             'account_payment/static/src/interactions/**/*',
         ],
     },
-    'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

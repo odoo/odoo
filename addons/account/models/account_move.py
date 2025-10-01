@@ -495,10 +495,10 @@ class AccountMove(models.Model):
         exportable=False,
     )
 
-    preferred_payment_method_line_id = fields.Many2one(
-        string="Preferred Payment Method Line",
-        comodel_name='account.payment.method.line',
-        compute='_compute_preferred_payment_method_line_id',
+    preferred_payment_method_id = fields.Many2one(
+        string="Preferred Payment Method",
+        comodel_name='account.payment.method',
+        compute='_compute_preferred_payment_method_id',
         store=True,
         readonly=False,
     )
@@ -776,8 +776,8 @@ class AccountMove(models.Model):
 
     def _auto_init(self):
         super()._auto_init()
-        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
-            create_column(self.env.cr, "account_move", "preferred_payment_method_line_id", "int4")
+        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_id"):
+            create_column(self.env.cr, "account_move", "preferred_payment_method_id", "int4")
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -1024,7 +1024,7 @@ class AccountMove(models.Model):
             move.fiscal_position_id = self.env['account.fiscal.position'].with_company(move.company_id)._get_fiscal_position(
                 move.partner_id, delivery=delivery_partner)
 
-    @api.depends('bank_partner_id', 'currency_id', 'preferred_payment_method_line_id')
+    @api.depends('bank_partner_id', 'currency_id', 'preferred_payment_method_id')
     def _compute_partner_bank_id(self):
         def _bank_selection_key(bank):
             """Sorting priority:
@@ -1044,15 +1044,15 @@ class AccountMove(models.Model):
         for move in self:
             if (
                 payment_method := (
-                    move.preferred_payment_method_line_id
+                    move.preferred_payment_method_id
                     or (
-                        move.bank_partner_id.property_inbound_payment_method_line_id
+                        move.bank_partner_id.property_inbound_payment_method_id
                         if move.is_inbound()
-                        else move.bank_partner_id.property_outbound_payment_method_line_id
+                        else move.bank_partner_id.property_outbound_payment_method_id
                     )
                 )
-            ) and payment_method.journal_id:
-                move.partner_bank_id = payment_method.journal_id.bank_account_id
+            ) and payment_method.default_journal_id:
+                move.partner_bank_id = payment_method.default_journal_id.bank_account_id
                 continue
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
@@ -1487,13 +1487,13 @@ class AccountMove(models.Model):
             move.invoice_has_outstanding = bool(move.invoice_outstanding_credits_debits_widget)
 
     @api.depends('partner_id', 'company_id')
-    def _compute_preferred_payment_method_line_id(self):
+    def _compute_preferred_payment_method_id(self):
         for move in self:
             partner = move.partner_id.with_company(move.company_id)
             if move.is_sale_document():
-                move.preferred_payment_method_line_id = partner.property_inbound_payment_method_line_id
+                move.preferred_payment_method_id = partner.property_inbound_payment_method_id
             else:
-                move.preferred_payment_method_line_id = partner.property_outbound_payment_method_line_id
+                move.preferred_payment_method_id = partner.property_outbound_payment_method_id
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
@@ -1523,7 +1523,7 @@ class AccountMove(models.Model):
                         'date': counterpart_line.date,
                         'partial_id': reconciled_partial['partial_id'],
                         'account_payment_id': counterpart_line.payment_id.id,
-                        'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+                        'payment_method_name': counterpart_line.payment_id.payment_method_id.name,
                         'move_id': counterpart_line.move_id.id,
                         'is_refund': counterpart_line.move_id.move_type in ['in_refund', 'out_refund'],
                         'ref': reconciliation_ref,

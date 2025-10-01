@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_payment_method_form_inherit_l10n_latam_check" model="ir.ui.view">
+            <field name="name">account.payment.method.form.inherit.l10n_latam_check</field>
+            <field name="model">account.payment.method</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_account_payment_method_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_type']" position="after">
+                    <field name="outstanding_payment_account_id" invisible="code != 'own_checks'"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

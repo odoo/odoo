@@ -13,7 +13,7 @@ from odoo.tools.sql import column_exists, create_column
 
 from odoo import _, api, Command, fields, models, modules
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
+from odoo.addons.l10n_it_edi.models.account_payment_method import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
@@ -154,16 +154,16 @@ class AccountMove(models.Model):
                 # We use matching_numbers[0] directly, assuming there's a valid key in the dictionary.
                 matching_lines = move_lines_per_matching_number.get(matching_numbers[0])
                 if matching_lines and matching_lines.payment_id:
-                    payment_method_line = matching_lines.payment_id.payment_method_line_id[0]
-                    if payment_method_line:
-                        move.l10n_it_payment_method = payment_method_line.l10n_it_payment_method
+                    payment_method = matching_lines.payment_id.payment_method_id[0]
+                    if payment_method:
+                        move.l10n_it_payment_method = payment_method.l10n_it_payment_method
                         continue  # Skip to the next move
             if linked_payment := move.matched_payment_ids.filtered(lambda p: p.state != 'draft')[:1]:
-                move.l10n_it_payment_method = linked_payment.payment_method_line_id.l10n_it_payment_method
+                move.l10n_it_payment_method = linked_payment.payment_method_id.l10n_it_payment_method
                 continue
 
             # Default handling if no valid matching lines found or if conditions don't match
-            move.l10n_it_payment_method = move.origin_payment_id.payment_method_line_id.l10n_it_payment_method or move.l10n_it_payment_method or 'MP05'
+            move.l10n_it_payment_method = move.origin_payment_id.payment_method_id.l10n_it_payment_method or move.l10n_it_payment_method or 'MP05'
 
     @api.depends('state')
     def _compute_l10n_it_document_type(self):
@@ -1497,9 +1497,9 @@ class AccountMove(models.Model):
                 message_to_log.append(_("Total amount from the XML File: %s", amount_total))
 
             # l10n_it_payment_method
-            if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
-                if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
-                    self.l10n_it_payment_method = payment_method
+            if payment_method_code := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+                if payment_method_code in self.env['account.payment.method']._get_l10n_it_payment_method_selection_code():
+                    self.l10n_it_payment_method = payment_method_code
 
             # Bank account. <2.4.2.13>
             if self.move_type not in ('out_invoice', 'in_refund'):

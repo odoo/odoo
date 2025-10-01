@@ -894,14 +894,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _create_outstanding_accounts(self, company, bank_prefix, code_digits):
         accounts_data_no_fields = {
-            'account_journal_payment_debit_account_id': {
-                'name': _("Outstanding Receipts"),
-                'prefix': bank_prefix,
-                'code_digits': code_digits,
-                'account_type': 'asset_current',
-                'reconcile': True,
-            },
-            'account_journal_payment_credit_account_id': {
+            'account_journal_outstanding_payment_account_id': {
                 'name': _("Outstanding Payments"),
                 'prefix': bank_prefix,
                 'code_digits': code_digits,
@@ -1185,6 +1178,23 @@ class AccountChartTemplate(models.AbstractModel):
                     }),
                 ],
             }
+        }
+
+    @template(model='account.payment.method')
+    def _get_manual_payment_methods(self, template_code):
+        return {
+            "manual_out": {
+                'name': 'Manual Payment',
+                'code': 'manual',
+                'payment_type': 'outbound',
+                'sequence': 1,
+            },
+            "manual_in": {
+                'name': 'Manual Payment',
+                'code': 'manual',
+                'payment_type': 'inbound',
+                'sequence': 1,
+            },
         }
 
     # --------------------------------------------------------------------------------

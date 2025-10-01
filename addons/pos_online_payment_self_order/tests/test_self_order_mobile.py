@@ -26,7 +26,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         # Needed to test online payments through the portal
         cls.env['account.payment.method'].sudo().create({
             'name': 'Dummy method',
-            'code': 'none',
+            'code': 'manual',
             'payment_type': 'inbound'
         })
 

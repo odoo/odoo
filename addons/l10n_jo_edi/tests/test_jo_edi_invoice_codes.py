@@ -10,32 +10,12 @@ class TestJoEdiInvoiceCodes(JoEdiCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cash_journal = cls.company_data['default_journal_cash']
-        bank_journal = cls.company_data['default_journal_bank']
-        cash_method = cls.env['account.payment.method'].sudo().create({
-            'name': 'Cash JO',
-            'code': 'l10n_jo_edi_cash',
-            'payment_type': 'inbound',
-        })
-        bank_method = cls.env['account.payment.method'].sudo().create({
-            'name': 'Bank JO',
-            'code': 'l10n_jo_edi_bank',
-            'payment_type': 'inbound',
-        })
-        cls.env['account.payment.method.line'].create({
-            'name': 'Cash',
-            'payment_method_id': cash_method.id,
-            'journal_id': cash_journal.id
-        })
-        cls.env['account.payment.method.line'].create({
-            'name': 'Bank',
-            'payment_method_id': bank_method.id,
-            'journal_id': bank_journal.id
-        })
+        cls.cash_journal = cls.company_data['default_journal_cash']
+        cls.bank_journal = cls.company_data['default_journal_bank']
 
     def _get_next_invoice_details(self):
         scope_types = ["local", "export", "development"]
-        payment_methods = ["l10n_jo_edi_cash", "l10n_jo_edi_receivable"]
+        payment_methods = ["cash", "receivable"]
         company_types = ["income", "sales", "special"]
 
         for t_idx, p_idx, c_idx in product(range(3), range(2), range(3)):
@@ -61,6 +41,6 @@ class TestJoEdiInvoiceCodes(JoEdiCommon):
         for scope_type, payment_method, company_type, expected_code in self._get_next_invoice_details():
             with self.subTest(subtest_name=f"Invoice ({scope_type} - {payment_method} - {company_type}) should have code {expected_code}"):
                 invoice.l10n_jo_edi_invoice_type = scope_type
-                invoice.preferred_payment_method_line_id = self.env['account.payment.method.line'].search([('code', '=', payment_method)], limit=1)
+                invoice.l10n_jo_payment_method = payment_method
                 self.company.l10n_jo_edi_taxpayer_type = company_type
                 self.assertEqual(self._get_xml_invoice_type(invoice), expected_code)

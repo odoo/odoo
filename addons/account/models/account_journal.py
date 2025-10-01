@@ -49,12 +49,6 @@ class AccountJournal(models.Model):
         """ Show PDF template selection if there are more than 1 template available for invoices. """
         return len(self.available_invoice_template_pdf_report_ids) > 1
 
-    def _default_inbound_payment_methods(self):
-        return self.env.ref('account.account_payment_method_manual_in')
-
-    def _default_outbound_payment_methods(self):
-        return self.env.ref('account.account_payment_method_manual_out')
-
     def _get_bank_statements_available_sources(self):
         return [('undefined', _('Undefined Yet'))]
 
@@ -192,35 +186,6 @@ class AccountJournal(models.Model):
 
                                           r"e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
-    inbound_payment_method_line_ids = fields.One2many(
-        comodel_name='account.payment.method.line',
-        domain=[('payment_type', '=', 'inbound')],
-        compute='_compute_inbound_payment_method_line_ids',
-        store=True,
-        readonly=False,
-        string='Inbound Payment Methods',
-        inverse_name='journal_id',
-        copy=False,
-        check_company=True,
-        help="Manual: Get paid by any method outside of Odoo.\n"
-        "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
-        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-        "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
-    )
-    outbound_payment_method_line_ids = fields.One2many(
-        comodel_name='account.payment.method.line',
-        domain=[('payment_type', '=', 'outbound')],
-        compute='_compute_outbound_payment_method_line_ids',
-        store=True,
-        readonly=False,
-        string='Outbound Payment Methods',
-        inverse_name='journal_id',
-        copy=False,
-        check_company=True,
-        help="Manual: Pay by any method outside of Odoo.\n"
-        "Check: Pay bills by check and print it from Odoo.\n"
-        "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-    )
     profit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
@@ -253,15 +218,6 @@ class AccountJournal(models.Model):
         check_company=True,
         string="Ledger Group")
 
-    available_payment_method_ids = fields.Many2many(
-        comodel_name='account.payment.method',
-        compute='_compute_available_payment_method_ids'
-    )
-
-    # used to hide or show payment method options if needed
-    selected_payment_method_codes = fields.Char(
-        compute='_compute_selected_payment_method_codes',
-    )
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
 
@@ -280,6 +236,14 @@ class AccountJournal(models.Model):
         compute='_compute_incoming_einvoice_notification_email',
         store=True,
         readonly=False,
+    )
+
+    outstanding_payment_account_id = fields.Many2one(
+        comodel_name='account.account',
+        check_company=True,
+        string='Outstanding Account',
+        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]",
+        help="Set an outstanding payment account to generate journal entries when a payment is created with this journal",
     )
 
     _code_company_uniq = models.Constraint(
@@ -302,132 +266,6 @@ class AccountJournal(models.Model):
                 )
                 cache[record.company_id].append(record.code)
 
-    def _get_journals_payment_method_information(self):
-        method_information = self.env['account.payment.method']._get_payment_method_information()
-        unique_electronic_ids = set()
-        electronic_names = set()
-        pay_methods = self.env['account.payment.method'].sudo().search([('code', 'in', list(method_information.keys()))])
-        manage_providers = 'payment_provider_id' in self.env['account.payment.method.line']._fields
-
-        # Split the payment method information per id.
-        method_information_mapping = {}
-        for pay_method in pay_methods:
-            code = pay_method.code
-            values = method_information_mapping[pay_method.id] = {
-                **method_information[code],
-                'payment_method': pay_method,
-                'company_journals': {},
-            }
-            if values['mode'] == 'unique':
-                unique_electronic_ids.add(pay_method.id)
-            elif manage_providers and values['mode'] == 'electronic':
-                unique_electronic_ids.add(pay_method.id)
-                electronic_names.add(pay_method.code)
-
-        # Load the provider to manage 'electronic' payment methods.
-        providers_per_code = {}
-        if manage_providers:
-            providers = self.env['payment.provider'].sudo().search([
-                *self.env['payment.provider']._check_company_domain(self.company_id),
-                ('code', 'in', tuple(electronic_names)),
-            ])
-            for provider in providers:
-                providers_per_code.setdefault(provider.company_id.id, {}).setdefault(provider._get_code(), set()).add(provider.id)
-
-        # Collect the existing unique/electronic payment method lines.
-        if unique_electronic_ids:
-            fnames = ['payment_method_id', 'journal_id']
-            if manage_providers:
-                fnames.append('payment_provider_id')
-            self.env['account.payment.method.line'].flush_model(fnames=fnames)
-
-            self.env.cr.execute(
-                f'''
-                    SELECT
-                        apm.id,
-                        journal.company_id,
-                        journal.id,
-                        {'apml.payment_provider_id' if manage_providers else 'NULL'}
-                    FROM account_payment_method_line apml
-                    JOIN account_journal journal ON journal.id = apml.journal_id
-                    JOIN account_payment_method apm ON apm.id = apml.payment_method_id
-                    WHERE apm.id IN %s
-                ''',
-                [tuple(unique_electronic_ids)],
-            )
-            for pay_method_id, company_id, journal_id, provider_id in self.env.cr.fetchall():
-                values = method_information_mapping[pay_method_id]
-                is_electronic = manage_providers and values['mode'] == 'electronic'
-                if is_electronic:
-                    journal_ids = values['company_journals'].setdefault(company_id, {}).setdefault(provider_id, [])
-                else:
-                    journal_ids = values['company_journals'].setdefault(company_id, [])
-                journal_ids.append(journal_id)
-        return {
-            'pay_methods': pay_methods,
-            'manage_providers': manage_providers,
-            'method_information_mapping': method_information_mapping,
-            'providers_per_code': providers_per_code,
-        }
-
-    @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
-    def _compute_available_payment_method_ids(self):
-        """
-        Compute the available payment methods id by respecting the following rules:
-            Methods of mode 'unique' cannot be used twice on the same company.
-            Methods of mode 'electronic' cannot be used twice on the same company for the same 'payment_provider_id'.
-            Methods of mode 'multi' can be duplicated on the same journal.
-        """
-        results = self._get_journals_payment_method_information()
-        pay_methods = results['pay_methods']
-        manage_providers = results['manage_providers']
-        method_information_mapping = results['method_information_mapping']
-        providers_per_code = results['providers_per_code']
-
-        journal_bank_cash = self.filtered(lambda j: j.type in ('bank', 'cash', 'credit'))
-        journal_other = self - journal_bank_cash
-        journal_other.available_payment_method_ids = False
-
-        # Compute the candidates for each bank/cash journal.
-        for journal in journal_bank_cash:
-            commands = [Command.clear()]
-            company = journal.company_id
-
-            # Exclude the 'unique' / 'electronic' values that are already set on the journal.
-            protected_provider_ids = set()
-            protected_payment_method_ids = set()
-            for payment_type in ('inbound', 'outbound'):
-                lines = journal[f'{payment_type}_payment_method_line_ids']
-                for line in lines:
-                    if line.payment_method_id.id in method_information_mapping:
-                        protected_payment_method_ids.add(line.payment_method_id.id)
-                        if manage_providers and method_information_mapping.get(line.payment_method_id.id, {}).get('mode') == 'electronic':
-                            protected_provider_ids.add(line.payment_provider_id.id)
-
-            for pay_method in pay_methods:
-                # Check the partial domain of the payment method to make sure the type matches the current journal
-                if not journal._is_payment_method_available(pay_method.code, complete_domain=False):
-                    continue
-
-                values = method_information_mapping[pay_method.id]
-
-                if values['mode'] == 'unique':
-                    # 'unique' are linked to a single journal per company.
-                    already_linked_journal_ids = set(values['company_journals'].get(company.id, [])) - {journal._origin.id}
-                    if not already_linked_journal_ids and pay_method.id not in protected_payment_method_ids:
-                        commands.append(Command.link(pay_method.id))
-                elif manage_providers and values['mode'] == 'electronic':
-                    # 'electronic' are linked to a single journal per company per provider.
-                    for provider_id in providers_per_code.get(company.id, {}).get(pay_method.code, set()):
-                        already_linked_journal_ids = set(values['company_journals'].get(company.id, {}).get(provider_id, [])) - {journal._origin.id}
-                        if not already_linked_journal_ids and provider_id not in protected_provider_ids:
-                            commands.append(Command.link(pay_method.id))
-                elif values['mode'] == 'multi':
-                    # 'multi' are unlimited.
-                    commands.append(Command.link(pay_method.id))
-
-            journal.available_payment_method_ids = commands
-
     @api.depends('type')
     def _compute_default_account_type(self):
         default_account_id_types = {
@@ -440,40 +278,6 @@ class AccountJournal(models.Model):
 
         for journal in self:
             journal.default_account_type = default_account_id_types.get(journal.type, '%')
-
-    @api.depends('type', 'currency_id')
-    def _compute_inbound_payment_method_line_ids(self):
-        for journal in self:
-            pay_method_line_ids_commands = [Command.clear()]
-            if journal.type in ('bank', 'cash', 'credit'):
-                default_methods = journal._default_inbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
-            journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
-
-    @api.depends('type', 'currency_id')
-    def _compute_outbound_payment_method_line_ids(self):
-        for journal in self:
-            pay_method_line_ids_commands = [Command.clear()]
-            if journal.type in ('bank', 'cash', 'credit'):
-                default_methods = journal._default_outbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
-            journal.outbound_payment_method_line_ids = pay_method_line_ids_commands
-
-    @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
-    def _compute_selected_payment_method_codes(self):
-        """
-        Set the selected payment method as a list of comma separated codes like: ,manual,check_printing,...
-        These will be then used to display or not payment method specific fields in the view.
-        """
-        for journal in self:
-            codes = [line.code for line in journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids if line.code]
-            journal.selected_payment_method_codes = ',' + ','.join(codes) + ','
 
     @api.depends('company_id', 'type')
     def _compute_suspense_account_id(self):
@@ -584,71 +388,6 @@ class AccountJournal(models.Model):
             if journal.type in ('sale', 'purchase') and journal.default_account_id.account_type in ('asset_receivable', 'liability_payable'):
                 raise ValidationError(_("The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."))
 
-    @api.constrains('inbound_payment_method_line_ids', 'outbound_payment_method_line_ids')
-    def _check_payment_method_line_ids_multiplicity(self):
-        """
-        Check and ensure that the payment method lines multiplicity is respected.
-        """
-        results = self._get_journals_payment_method_information()
-        pay_methods = results['pay_methods']
-        manage_providers = results['manage_providers']
-        method_information_mapping = results['method_information_mapping']
-        providers_per_code = results['providers_per_code']
-
-        failing_unicity_payment_methods = self.env['account.payment.method']
-        for journal in self:
-            company = journal.company_id
-
-            # Exclude the 'unique' / 'electronic' values that are already set on the journal.
-            protected_provider_ids = set()
-            protected_payment_method_ids = set()
-            for payment_type in ('inbound', 'outbound'):
-                lines = journal[f'{payment_type}_payment_method_line_ids']
-
-                # Ensure you don't have the same payment_method/name combination twice on the same journal.
-                counter = {}
-                for line in lines:
-                    if method_information_mapping.get(line.payment_method_id.id, {}).get('mode') not in ('electronic', 'unique'):
-                        continue
-
-                    key = line.payment_method_id.id, line.name
-                    counter.setdefault(key, 0)
-                    counter[key] += 1
-                    if counter[key] > 1:
-                        raise ValidationError(_(
-                            "You can't have two payment method lines of the same payment type (%(payment_type)s) "
-                            "and with the same name (%(name)s) on a single journal.",
-                            payment_type=payment_type,
-                            name=line.name,
-                        ))
-
-                for line in lines:
-                    if line.payment_method_id.id in method_information_mapping:
-                        protected_payment_method_ids.add(line.payment_method_id.id)
-                        if manage_providers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
-                            protected_provider_ids.add(line.payment_provider_id.id)
-
-            for pay_method in pay_methods:
-                values = method_information_mapping[pay_method.id]
-
-                if values['mode'] == 'unique':
-                    # 'unique' are linked to a single journal per company.
-                    already_linked_journal_ids = values['company_journals'].get(company.id, [])
-                    if len(already_linked_journal_ids) > 1:
-                        failing_unicity_payment_methods |= pay_method
-                elif manage_providers and values['mode'] == 'electronic':
-                    # 'electronic' are linked to a single journal per company per provider.
-                    for provider_id in providers_per_code.get(company.id, {}).get(pay_method.code, set()):
-                        already_linked_journal_ids = values['company_journals'].get(company.id, {}).get(provider_id, [])
-                        if len(already_linked_journal_ids) > 1:
-                            failing_unicity_payment_methods |= pay_method
-
-        if failing_unicity_payment_methods:
-            raise ValidationError(_(
-                "Some payment methods supposed to be unique already exists somewhere else.\n(%s)",
-                ', '.join(failing_unicity_payment_methods.mapped('display_name')),
-            ))
-
     @api.constrains('active')
     def _check_auto_post_draft_entries(self):
         # constraint should be tested just after archiving a journal, but shouldn't be raised when unarchiving a journal containing draft entries
@@ -691,7 +430,6 @@ class AccountJournal(models.Model):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
-        self.env['account.payment.method.line'].search([('journal_id', 'in', self.ids)]).unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
@@ -736,6 +474,8 @@ class AccountJournal(models.Model):
                 not self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])):
                 vals['alias_name'] = self._alias_prepare_alias_name(
                     False, vals.get('name', self.name), vals.get('code', self.code), self[0].type, self[0].company_id)
+        if vals.get('outstanding_payment_account_id'):
+            self._auto_toggle_account_to_reconcile(vals['outstanding_payment_account_id'])
 
         for journal in self:
             company = journal.company_id
@@ -979,12 +719,24 @@ class AccountJournal(models.Model):
         if not vals.get('name') and vals.get('name_placeholder'):
             vals['name'] = vals['name_placeholder']
 
+    @api.model
+    def _auto_toggle_account_to_reconcile(self, account_id):
+        """ Automatically toggle the account to reconcile if allowed.
+
+        :param account_id: The id of an account.account.
+        """
+        account = self.env['account.account'].browse(account_id)
+        if not account.reconcile and account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):
+            account.reconcile = True
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             # have to keep track of new journal codes when importing
             codes = [vals['code'] for vals in vals_list if 'code' in vals] if 'import_file' in self.env.context else False
             self._fill_missing_values(vals, protected_codes=codes)
+            if vals.get('outstanding_payment_account_id'):
+                self._auto_toggle_account_to_reconcile(vals['outstanding_payment_account_id'])
 
         journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals_list)
 
@@ -1118,37 +870,6 @@ class AccountJournal(models.Model):
         company_currency = self.company_id.currency_id
         journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
         return amount_currency if journal_currency else balance, nb_lines
-
-    def _get_journal_inbound_outstanding_payment_accounts(self):
-        """
-        :return: A recordset with all the account.account used by this journal for inbound transactions.
-        """
-        self.ensure_one()
-        return self.inbound_payment_method_line_ids.payment_account_id
-
-    def _get_journal_outbound_outstanding_payment_accounts(self):
-        """
-        :return: A recordset with all the account.account used by this journal for outbound transactions.
-        """
-        self.ensure_one()
-        return self.outbound_payment_method_line_ids.payment_account_id
-
-    def _get_available_payment_method_lines(self, payment_type):
-        """
-        This getter is here to allow filtering the payment method lines if needed in other modules.
-        It does NOT serve as a general getter to get the lines.
-
-        For example, it'll be extended to filter out lines from inactive payment providers in the payment module.
-        :param payment_type: either inbound or outbound, used to know which lines to return
-        :return: Either the inbound or outbound payment method lines
-        """
-        if not self:
-            return self.env['account.payment.method.line']
-        self.ensure_one()
-        if payment_type == 'inbound':
-            return self.inbound_payment_method_line_ids
-        else:
-            return self.outbound_payment_method_line_ids
 
     def _is_payment_method_available(self, payment_method_code, complete_domain=True):
         """ Check if the payment method is available on this journal. """

@@ -17,6 +17,7 @@ from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -170,14 +171,24 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
         # ==== Payment methods ====
-        bank_journal = cls.company_data['default_journal_bank']
-        in_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_debit_account_id', raise_if_not_found=False)
-        out_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_credit_account_id', raise_if_not_found=False)
-        if bank_journal:
-            cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
-            cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
-            cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
-            cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
+        cls.inbound_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test Inbound Manual Payment',
+            'code': 'manual',
+            'payment_type': 'inbound',
+        })
+        cls.outbound_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test Inbound Manual Payment',
+            'code': 'manual',
+            'payment_type': 'outbound',
+        })
+        cls.bank_journal_for_payment = cls.company_data['default_journal_bank']
+        cls.outstanding_payment_account = cls.env['account.account'].create({
+            'name': "Outstanding Payments",
+            'code': 'OSTP00',
+            'reconcile': True,
+            'account_type': 'asset_current'
+        })
+        cls.bank_journal_for_payment.outstanding_payment_account_id = cls.outstanding_payment_account
 
         # user with restricted groups
         cls.simple_accountman = cls.env['res.users'].create({
@@ -576,6 +587,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             'partner_type': 'customer' if amount >= 0 else 'supplier',
             'partner_id': (partner or cls.partner_a).id,
             'currency_id': (currency or cls.company_data['currency']).id,
+            'journal_id': cls.company_data['default_journal_bank'].id,
         })
         if post:
             payment.action_post()
@@ -734,6 +746,29 @@ class AccountTestInvoicingCommon(ProductCommon):
                 current_tax_group = {k: v for k, v in tax_group.items() if k not in excluded_fields}
                 fix_monetary_value(current_tax_group, expected_tax_group, monetary_fields)
                 self.assertDictEqual(current_tax_group, expected_tax_group)
+
+    @classmethod
+    def get_payment_methods(self, codes, company):
+        return self.env['account.payment.method'].search([
+                ('code', 'in', codes),
+                ('company_id', '=', company.id),
+            ])
+
+    @contextmanager
+    def mocked_get_payment_method_information(self):
+        ''' Used to test behaviour in account payment and account payment register when payment method chosen
+        has specific journal '''
+        def _get_payment_method_information(*args, **kwargs):
+            res = self.env['account.payment.method']._get_payment_method_information
+            res['manual'] = {
+                "type": ("cash",),
+                "currency_ids": self.env.ref("base.CAD"),
+                "country_id": self.env.ref("base.ca").id,
+            }
+            return res
+
+        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
+            yield
 
     ####################################################
     # Xml Comparison

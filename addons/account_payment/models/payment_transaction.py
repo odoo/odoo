@@ -145,8 +145,10 @@ class PaymentTransaction(models.Model):
 
         reference = f'{self.reference} - {self.provider_reference or ""}'
 
-        payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.payment_provider_id == self.provider_id)
+        payment_method = self.env['account.payment.method'].search([
+            ('code', '=', 'online_payment_provider'),
+            ('payment_type', '=', 'inbound'),
+        ], limit=1)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -155,8 +157,7 @@ class PaymentTransaction(models.Model):
             'partner_type': 'customer',
             'journal_id': self.provider_id.journal_id.id,
             'company_id': self.provider_id.company_id.id,
-            'payment_method_line_id': payment_method_line.id,
-            'payment_token_id': self.token_id.id,
+            'payment_method_id': payment_method.id,
             'payment_transaction_id': self.id,
             'memo': reference,
             'write_off_line_vals': [],

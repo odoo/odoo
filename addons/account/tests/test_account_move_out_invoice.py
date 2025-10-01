@@ -3473,6 +3473,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
@@ -3607,6 +3608,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
@@ -4031,6 +4033,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
                     'payment_date': '2017-01-20',
+                    'journal_id': self.bank_journal_for_payment.id,
                 })._create_payments()
 
                 line_receivable = invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
