@@ -2,8 +2,6 @@
 
 import json
 import logging
-import operator
-
 from contextlib import ExitStack
 
 from werkzeug.urls import url_encode
@@ -11,11 +9,8 @@ from werkzeug.urls import url_encode
 import odoo
 import odoo.modules.registry
 from odoo import http
-from odoo.modules import module
-from odoo.exceptions import AccessError, UserError, AccessDenied
+from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools.translate import _
-
 
 _logger = logging.getLogger(__name__)
 
@@ -53,13 +48,6 @@ class Session(http.Controller):
             request._save_session(env)
 
             return env['ir.http'].with_user(request.session.uid).session_info()
-
-    @http.route('/web/session/get_lang_list', type='jsonrpc', auth="none")
-    def get_lang_list(self):
-        try:
-            return http.dispatch_rpc('db', 'list_lang', []) or []
-        except Exception as e:
-            return {"error": e, "title": _("Languages")}
 
     @http.route('/web/session/modules', type='jsonrpc', auth='user', readonly=True)
     def modules(self):
