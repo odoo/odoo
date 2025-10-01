@@ -1746,11 +1746,13 @@ class HrExpense(models.Model):
             account = journal.default_account_id
 
         if not account:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
                 "Give Odoo a hand to find an account by setting up an expense account.\n"
-                "%(expense)s %(expense_name)s.\n"
-            ), {'expense': self, 'expense_name': self.name})
+                "%(expense)s %(expense_name)s.\n",
+                expense=self,
+                expense_name=self.name,
+            ))
         return account
 
     def _get_expense_account_destination(self):
