@@ -109,6 +109,12 @@ function computePosition(popper, target, { container, flip, margin, position }) 
         container = container();
     }
 
+    if (variant === "fit") {
+        // make sure the popper has the desired dimensions during the computation of the position
+        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
+        popper.style[styleProperty] = getComputedStyle(target)[styleProperty];
+    }
+
     // Account for popper actual margins
     const popperStyle = getComputedStyle(popper);
     const { marginTop, marginLeft, marginRight, marginBottom } = popperStyle;
@@ -254,13 +260,9 @@ export function reposition(popper, target, options) {
     const solution = computePosition(popper, target, { ...DEFAULTS, ...options });
 
     // Apply it
-    const { top, left, direction, variant } = solution;
+    const { top, left } = solution;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
-    if (variant === "fit") {
-        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
-        popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
-    }
 
     return solution;
 }
