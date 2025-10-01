@@ -4,6 +4,7 @@
         <field name="name">DIOT</field>
         <field name="name@es_419">DIOT</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="groupby">partner_id, id</field>
         <field name="filter_show_draft" eval="True"/>
         <field name="filter_period_comparison" eval="False"/>
         <field name="load_more_limit" eval="80"/>
@@ -154,7 +155,6 @@
             <record id="diot_report_line" model="account.report.line">
                 <field name="name">DIOT</field>
                 <field name="name@es_419">DIOT</field>
-                <field name="groupby">partner_id, id</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_mx_diot_paid_8_tag" model="account.report.expression">
