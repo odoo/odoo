@@ -30,7 +30,7 @@ test("emoji picker correctly handles translations with special characters", asyn
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search emoji']", "ici");
     await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
-    await insertText("input[placeholder='Search emoji']", "dollar");
+    await insertText("input[placeholder='Search emoji']", "dollar", { replace: true });
     await contains(`.o-Emoji[title*='Symbole du dollar']`);
 });
 
@@ -224,7 +224,7 @@ test("Emoji picker shows failure to load emojis", async () => {
     patchWithCleanup(odoo.loader.modules.get("@web/core/emoji_picker/emoji_data"), {
         getEmojis() {
             return [];
-        }
+        },
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
