@@ -30,6 +30,7 @@ function ClickOnMenus() {
             content: "Click on cell to open chart",
             trigger: "tr td.o_data_cell.o_field_cell",
             run: "click",
+            expectUnloadPage: true,
         },
     ];
 }
@@ -57,16 +58,16 @@ registerWebsitePreviewTour("website_links_tour", {
             trigger: "a[data-menu-xmlid='website_links.menu_link_tracker']",
             run: "click",
         },
-        {
-            content: "Add page title",
-            trigger: "div.o_field_widget[name='title'] .o_input",
-            run: "edit Test",
-        },
-        {
-            content: "Add page label",
-            trigger: "div.o_field_widget[name='label'] .o_input",
-            run: "edit Test label",
-        },
+        // {
+        //     content: "Add page title",
+        //     trigger: "div.o_field_widget[name='title'] .o_input",
+        //     run: "edit Test",
+        // },
+        // {
+        //     content: "Add page label",
+        //     trigger: "div.o_field_widget[name='label'] .o_input",
+        //     run: "edit Test label",
+        // },
         // First try to create a new UTM campaign from the UI
         ...fillSelectMenu("campaign_id", "Some new campaign"),
         {
@@ -91,6 +92,8 @@ registerWebsitePreviewTour("website_links_tour", {
             content: "Check that link was created and visit it",
             trigger: ".o_website_links_chart .o_website_links_short_url:contains('/r/')",
             run() {
+                // const { queryAll } = odoo.loader.modules.get("@odoo/hoot-dom");
+                // debugger;
                 window.location.href = document.querySelector(
                     "div.o_website_links_chart .o_website_links_short_url"
                 ).textContent;

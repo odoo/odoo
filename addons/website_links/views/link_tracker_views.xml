@@ -28,6 +28,24 @@
         </field>
     </record>
 
+    <record id="website_link_tracker_view_form" model="ir.ui.view">
+        <field name="name">website.link.tracker.view.form</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="replace"></xpath>
+            <xpath expr="//group[@name='link']" position="attributes">
+                <attribute name="colspan">8</attribute>
+            </xpath>
+            <xpath expr="//group[@name='utm']" position="attributes">
+                <attribute name="colspan">8</attribute>
+            </xpath>
+            <field name="title" position="replace"/>
+            <field name="label" position="replace"/>
+        </field>
+    </record>
+
     <record id="action_link_tracker_tree" model="ir.actions.act_window">
         <field name="name">Link Tracker</field>
         <field name="res_model">link.tracker</field>
