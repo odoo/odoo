@@ -1,4 +1,13 @@
 
+<<<<<<< 9cfe396da51362e6b50c242b904e618e47f4f611
+||||||| 5007c89c6ff7ae3218c070f2fd691cf94f0b6afb
+from freezegun import freeze_time
+from datetime import datetime, timedelta
+=======
+from freezegun import freeze_time
+from datetime import datetime, timedelta
+from unittest.mock import patch
+>>>>>>> eb6c5fedf4207ca7e554a96628d7f9f683d31859
 
 import odoo
 
@@ -6,8 +15,17 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form
+<<<<<<< 9cfe396da51362e6b50c242b904e618e47f4f611
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
+||||||| 5007c89c6ff7ae3218c070f2fd691cf94f0b6afb
+from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+=======
+from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from odoo.exceptions import UserError
+>>>>>>> eb6c5fedf4207ca7e554a96628d7f9f683d31859
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1695,6 +1713,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
+<<<<<<< 9cfe396da51362e6b50c242b904e618e47f4f611
 
     def test_branch_company_access_cost_currency_id(self):
         branch = self.env['res.company'].create({
@@ -1749,3 +1768,26 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_line = order.lines[0]
         self.env.invalidate_all()
         order_line.with_user(user).with_company(branch)._compute_total_cost(None)
+||||||| 5007c89c6ff7ae3218c070f2fd691cf94f0b6afb
+=======
+
+    def test_session_name_gap(self):
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        current_session_name = session.name
+        session.action_pos_session_closing_control()
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+
+        def _post_cash_details_message_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.session'], "_post_cash_details_message", _post_cash_details_message_patch):
+            with self.assertRaises(UserError):
+                session.set_opening_control(0, None)
+
+        session.set_opening_control(0, None)
+        self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
+>>>>>>> eb6c5fedf4207ca7e554a96628d7f9f683d31859
