@@ -379,7 +379,10 @@
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
                                         </div>
                                         <field name="employee_type"/>
-                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
+                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
+                                               invisible="not has_country_contract_type" domain="[('country_id', '=', company_country_id)]"/>
+                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
+                                               invisible="has_country_contract_type" domain="[('country_id', '=', False)]"/>
                                         <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 

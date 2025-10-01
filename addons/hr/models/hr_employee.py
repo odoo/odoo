@@ -272,6 +272,11 @@ class HrEmployee(models.Model):
         'A user cannot be linked to multiple employees in the same company.',
     )
 
+    has_country_contract_type = fields.Boolean(
+        compute='_compute_has_country_contract_type',
+        groups="hr.group_hr_user",
+    )
+
     def _prepare_create_values(self, vals_list):
         result = super()._prepare_create_values(vals_list)
         new_vals_list = []
@@ -601,6 +606,18 @@ class HrEmployee(models.Model):
             # To not trigger computed properties if still the same version
             if employee.current_version_id != new_current_version:
                 employee.current_version_id = new_current_version
+
+    @api.depends('company_country_id')
+    def _compute_has_country_contract_type(self):
+        count_contract_type_by_country = dict(self.env['hr.contract.type']._read_group(
+            domain=[],
+            groupby=['country_id'],
+            aggregates=['__count']
+        ))
+        for employee in self:
+            employee.has_country_contract_type = bool(
+                count_contract_type_by_country.get(employee.company_country_id)
+            )
 
     def _cron_update_current_version_id(self):
         self.search([])._compute_current_version_id()
