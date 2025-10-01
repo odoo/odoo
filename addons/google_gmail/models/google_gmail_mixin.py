@@ -8,9 +8,10 @@ import requests
 
 from werkzeug.urls import url_encode
 
-from odoo import _, fields, models, tools
+from odoo import _, fields, models, tools, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.urls import urljoin as url_join
+from odoo.addons.google_gmail.tools import get_iap_error_message
 
 GMAIL_TOKEN_REQUEST_TIMEOUT = 5
 
@@ -26,6 +27,8 @@ class GoogleGmailMixin(models.AbstractModel):
 
     _description = 'Google Gmail Mixin'
 
+    # The scope `https://mail.google.com/` is needed for SMTP and IMAP
+    # https://developers.google.com/workspace/gmail/imap/xoauth2-protocol
     _SERVICE_SCOPE = 'https://mail.google.com/ https://www.googleapis.com/auth/userinfo.email'
     _DEFAULT_GMAIL_IAP_ENDPOINT = 'https://gmail.api.odoo.com'
 
@@ -85,8 +88,13 @@ class GoogleGmailMixin(models.AbstractModel):
         is_configured = google_gmail_client_id and google_gmail_client_secret
 
         if not is_configured:  # use IAP (see '/google_gmail/iap_confirm')
+            if release.version_info[-1] != 'e':
+                raise UserError(_('Please configure your Gmail credentials.'))
+
             gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
-                'mail.server.gmail.iap.endpoint') or self._DEFAULT_GMAIL_IAP_ENDPOINT
+                'mail.server.gmail.iap.endpoint',
+                self._DEFAULT_GMAIL_IAP_ENDPOINT,
+            )
             db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
@@ -221,11 +229,7 @@ class GoogleGmailMixin(models.AbstractModel):
         return response
 
     def _raise_iap_error(self, error):
-        errors = {
-            "not_configured": _("Gmail is not configured on IAP."),
-            "no_subscription": _("You don't have an active subscription."),
-        }
-        raise UserError(_('An error occurred: %s.', errors.get(error, error)))
+        raise UserError(get_iap_error_message(self.env, error))
 
     def _generate_oauth2_string(self, user, refresh_token):
         """Generate a OAuth2 string which can be used for authentication.
