@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+<!-- SA : Saudi Arabia -->
+        <record id="l10n_sa_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Saudi Overtime Ruleset</field>
+            <field name="rate_combination_mode">sum</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+        <record id="l10n_sa_workdays_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Workdays Overtime</field>
+            <field name="ruleset_id" ref="l10n_sa_overtime_ruleset"/>
+            <field name="base_off">quantity</field>
+            <field name="quantity_period">day</field>
+            <field name="expected_hours_from_contract" eval="True"/>
+        </record>
+    </data>
+</odoo>

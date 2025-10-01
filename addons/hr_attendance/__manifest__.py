@@ -20,6 +20,7 @@ actions(Check in/Check out) performed by them.
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
         'security/ir.model.access.csv',
+        'data/hr_attendance_overtime_ruleset_data.xml',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
