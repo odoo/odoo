@@ -85,5 +85,12 @@
             <field name="perm_unlink" eval="0"/>
             <field name="perm_read" eval="1"/>
         </record>
+
+        <!-- Overtime Ruleset -->
+        <record id="hr_attendance_overtime_ruleset_rule_multi_company" model="ir.rule">
+            <field name="name">Overtime Ruleset: Multi Company</field>
+            <field name="model_id" ref="model_hr_attendance_overtime_ruleset"/>
+            <field name="domain_force">[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]</field>
+        </record>
     </data>
 </odoo>
