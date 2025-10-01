@@ -416,27 +416,6 @@ class Cart(PaymentPortal):
             ]
         }
 
-    @route(
-        route='/shop/cart/quantity',
-        type='jsonrpc',
-        auth='public',
-        methods=['POST'],
-        website=True
-    )
-    def cart_quantity(self):
-        if 'website_sale_cart_quantity' not in request.session:
-            return request.cart.cart_quantity
-        return request.session['website_sale_cart_quantity']
-
-    @route(
-        route='/shop/cart/clear',
-        type='jsonrpc',
-        auth='public',
-        website=True
-    )
-    def clear_cart(self):
-        request.cart.order_line.unlink()
-
     def _get_cart_notification_information(self, order, added_qty_per_line):
         """ Get the information about the sales order lines to show in the notification.
 
