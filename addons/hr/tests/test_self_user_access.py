@@ -87,6 +87,20 @@ class TestSelfAccessPreferences(TestHrCommon):
         internal_user = new_test_user(self.env, login='mireille', groups='base.group_user', name='Mireille', email='mireille@example.com')
         self.env['hr.employee'].with_user(internal_user).search([]).read([])
 
+    def test_open_preferences_with_group_without_external_id(self):
+        """Test opening preferences when the user belongs to a group without an external ID."""
+        self.env['hr.employee'].create({
+            'name': 'John',
+            'user_id': self.env.user.id,
+        })
+        group = self.env['res.groups'].create({
+            'name': "Test Group",
+        })
+        self.env.user.group_ids = [Command.link(group.id)]
+        action = self.env.user.action_get()
+        self.assertEqual(action['type'], 'ir.actions.act_window')
+        self.assertEqual(action['display_name'], 'Change my Preferences')
+
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod
