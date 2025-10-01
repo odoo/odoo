@@ -166,6 +166,29 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
 
+    @users('admin')
+    def test_activity_type_changes_summary_and_note(self):
+        """Check that changing activity type updates summary and note fields correctly."""
+        activity_type_call = self.activity_type_call
+        activity_type_call.write({
+            'summary': 'test summary',
+            'default_note': 'test note'
+        })
+        # To-Do activity type doesn't have any default summary and note
+        activity_type_todo = self.activity_type_todo
+
+        test_record = self.test_records[0].with_env(self.env)
+
+        form = self._instantiate_activity_schedule_wizard(test_record)
+        form.activity_type_id = activity_type_call
+        self.assertEqual(form.activity_type_id, activity_type_call)
+        self.assertEqual(form.summary, activity_type_call.summary)
+        self.assertEqual(form.note, activity_type_call.default_note)
+        form.activity_type_id = activity_type_todo
+        # activity summary and note changed due change of activity type as To-Do Activity doesn't have default summary and note
+        self.assertEqual(form.summary, activity_type_todo.summary)
+        self.assertEqual(form.note, activity_type_todo.default_note)
+
     @users('employee')
     def test_plan_mode(self):
         """ Test the plan_mode that allows to preselect a compatible plan. """

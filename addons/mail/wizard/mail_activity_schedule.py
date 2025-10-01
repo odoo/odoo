@@ -167,14 +167,12 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('activity_type_id')
     def _compute_summary(self):
         for scheduler in self:
-            if scheduler.activity_type_id.summary:
-                scheduler.summary = scheduler.activity_type_id.summary
+            scheduler.summary = scheduler.activity_type_id.summary
 
     @api.depends('activity_type_id')
     def _compute_note(self):
         for scheduler in self:
-            if scheduler.activity_type_id.default_note:
-                scheduler.note = scheduler.activity_type_id.default_note
+            scheduler.note = scheduler.activity_type_id.default_note
 
     @api.depends('activity_type_id')
     def _compute_activity_user_id(self):
