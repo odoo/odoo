@@ -629,12 +629,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
+                        <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
+                        <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
                             <p>]<br></p>
                         </td>
                     </tr>
@@ -697,12 +697,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="bg-black" style="${defaultTextColor}">
+                        <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-black" style="${defaultTextColor}">
+                        <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
                             <p>]<br></p>
                         </td>
                     </tr>
