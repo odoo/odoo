@@ -5,6 +5,7 @@ import {
     EMOJI_REGEX,
     convertBrToLineBreak,
     decorateEmojis,
+    getNonEditableMentions,
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
@@ -573,7 +574,7 @@ export class Message extends Record {
         }
         this.composer = {
             mentionedPartners: this.partner_ids,
-            composerHtml: this.body,
+            composerHtml: getNonEditableMentions(this.body),
             selection: {
                 start: text.length,
                 end: text.length,
