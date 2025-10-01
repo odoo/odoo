@@ -1,8 +1,15 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, queryOne } from "@odoo/hoot-dom";
-import { contains, defineActions, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, Deferred, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    contains,
+    defineActions,
+    defineModels,
+    models,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
     addActionOption,
@@ -23,6 +30,7 @@ import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { WebsiteBuilder } from "@website/builder/website_builder";
 
 defineWebsiteModels();
 
@@ -436,4 +444,142 @@ test("'Switch Theme' after a mutation should only ask one confirmation", async (
         message: "There should not be the modal telling changes will be lost",
     });
     expect(".mock-switch-theme").toHaveCount(1);
+});
+
+describe("Add Language", () => {
+    class BaseLanguageInstall extends models.Model {
+        _name = "base.language.install";
+    }
+    defineModels([BaseLanguageInstall]);
+
+    defineActions([
+        {
+            tag: "__test__add_language__action__",
+            xml_id: "base.action_view_base_language_install",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            res_model: "base.language.install",
+            target: "new",
+        },
+    ]);
+
+    test("should hide the sidebar, and should return to editor if cancelled", async () => {
+        await setupWebsiteBuilder();
+        await contains(`.o-snippets-tabs button[data-name="theme"]`).click();
+        await contains(`.o_theme_tab button[data-action-id="addLanguage"]`).click();
+        expect(".modal main").toHaveText(/Adding a language/);
+        await contains(`.modal button:contains(Ok)`).click();
+        expect(".modal").not.toHaveText(/Adding a language/); // The modal mocking the add lang action
+        expect(".o-website-builder_sidebar").not.toBeVisible();
+        expect("button[data-action=save]").not.toBeEnabled();
+        await contains(".o_form_button_cancel").click();
+        expect(".o-website-builder_sidebar").toBeVisible();
+        expect("button[data-action=save]").toBeEnabled();
+    });
+
+    test("should hide the sidebar, and should return to editor if save failed", async () => {
+        expect.errors(1);
+        const deferSave = new Deferred();
+        addPlugin(
+            class extends Plugin {
+                static id = "test";
+                resources = {
+                    save_handlers: async () => {
+                        await deferSave;
+                        throw "save fails for the test";
+                    },
+                };
+            }
+        );
+        await setupWebsiteBuilder();
+        await contains(`.o-snippets-tabs button[data-name="theme"]`).click();
+        await contains(`.o_theme_tab button[data-action-id="addLanguage"]`).click();
+        expect(".modal main").toHaveText(/Adding a language/);
+        await contains(`.modal button:contains(Ok)`).click();
+        expect(".o-website-builder_sidebar").not.toBeVisible();
+        expect("button[data-action=save]").not.toBeEnabled();
+        deferSave.resolve();
+        await expect.waitForErrors(["save fails for the test"]);
+        await waitFor(".o_builder_sidebar_open");
+        expect(".o-website-builder_sidebar").toBeVisible();
+        expect("button[data-action=save]").toBeEnabled();
+    });
+});
+
+test("attempt to prevent closing window with unsaved changes", async () => {
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        setup() {
+            expect.step("setup WebsiteBuilder - start");
+            super.setup();
+            expect.step("setup WebsiteBuilder - end");
+        },
+        onBeforeUnload(event) {
+            expect.step("onBeforeUnload - start");
+            super.onBeforeUnload(event);
+            expect.step("onBeforeUnload - end");
+        },
+        async save() {
+            expect.step("save - start");
+            await super.save();
+            expect.step("save - end");
+        },
+    });
+    function dispatchBeforeUnloadEvent(tag) {
+        const event = new Event("beforeunload", { cancelable: true });
+        patchWithCleanup(event, {
+            preventDefault() {
+                expect.step(`preventDefault ${tag}`);
+                super.preventDefault();
+            },
+        });
+        if (!window.dispatchEvent(event)) {
+            expect.step(`cancelled ${tag}`);
+        }
+        if (event.defaultPrevented) {
+            expect.step(`defaultPrevented ${tag}`);
+        }
+    }
+    const deferSave = new Deferred();
+    addPlugin(
+        class extends Plugin {
+            static id = "test";
+            resources = { save_handlers: () => deferSave };
+        }
+    );
+    setupSaveAndReloadIframe();
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
+
+    dispatchBeforeUnloadEvent("when nothing to save");
+    expect.verifySteps([
+        "setup WebsiteBuilder - start",
+        "setup WebsiteBuilder - end",
+        "onBeforeUnload - start",
+        "onBeforeUnload - end",
+    ]);
+
+    await modifyText(getEditor(), getEditableContent());
+
+    dispatchBeforeUnloadEvent("when there is an unsaved modification");
+    expect.verifySteps([
+        "onBeforeUnload - start",
+        "preventDefault when there is an unsaved modification",
+        "onBeforeUnload - end",
+        "cancelled when there is an unsaved modification",
+        "defaultPrevented when there is an unsaved modification",
+    ]);
+
+    await contains("button[data-action=save]").click();
+
+    dispatchBeforeUnloadEvent("during saving");
+    expect.verifySteps([
+        "save - start",
+        "onBeforeUnload - start",
+        "preventDefault during saving",
+        "onBeforeUnload - end",
+        "cancelled during saving",
+        "defaultPrevented during saving",
+    ]);
+
+    deferSave.resolve();
+    await expect.waitForSteps(["save - end"]);
 });
