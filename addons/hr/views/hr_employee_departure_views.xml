@@ -29,6 +29,11 @@
                                         <field name="do_set_date_end" nolabel="1" readonly="state == 'done'"/>
                                         <span>Set Contracts End Date</span>
                                     </div>
+                                    <label for="do_archive_user" string="Related User" invisible="not is_user_employee"/>
+                                    <div invisible="not is_user_employee">
+                                        <field name="do_archive_user"/>
+                                        <span>Archive</span>
+                                    </div>
                                 </group>
                                 <group name="planned_actions_right"/>
                             </group>

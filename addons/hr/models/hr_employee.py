@@ -213,6 +213,34 @@ class HrEmployee(models.Model):
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 
+    # departure
+    departure_id = fields.Many2one(related='version_id.departure_id', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_reason_id = fields.Many2one(related='version_id.departure_reason_id', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_description = fields.Html(related='version_id.departure_description', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_date = fields.Date(related='version_id.departure_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_state = fields.Selection(related='version_id.departure_state', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_action_at = fields.Selection(related='version_id.departure_action_at', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_action_other_date = fields.Date(related='version_id.departure_action_other_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_archive_employee = fields.Boolean(related='version_id.departure_do_archive_employee', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_archive_user = fields.Boolean(related='version_id.departure_do_archive_user', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_set_date_end = fields.Boolean(related='version_id.departure_do_set_date_end', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_has_selected_actions = fields.Boolean(related='version_id.departure_has_selected_actions', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_apply_immediately = fields.Boolean(related='version_id.departure_apply_immediately', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_apply_date = fields.Date(related='version_id.departure_apply_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+
     # mail.activity.mixin
     activity_ids = fields.One2many(groups="hr.group_hr_user")
     activity_state = fields.Selection(groups="hr.group_hr_user")
@@ -1769,8 +1797,6 @@ class HrEmployee(models.Model):
         }
 
     def action_departure_multi(self):
-        if len(self) == 1:
-            return self.action_new_departure()
         return {
             'name': self.env._('End of collaboration'),
             'res_model': 'hr.departure.wizard',

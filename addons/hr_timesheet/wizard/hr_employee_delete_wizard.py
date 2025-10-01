@@ -29,22 +29,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
 
     def action_archive(self):
         self.ensure_one()
-        action = {
-            'name': self.env._('Employee Termination'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.departure.wizard',
-            'views': [[False, 'form']],
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_employee_ids': self.employee_ids.ids,
-            },
-        }
-        if len(self.employee_ids) != 1:
-            action.update({'res_model': 'hr.departure.wizard'})
-            return action
-        action.update({'res_model': 'hr.employee.departure'})
-        return action
+        return self.employee_ids.action_departure_multi()
 
     def action_confirm_delete(self):
         self.ensure_one()

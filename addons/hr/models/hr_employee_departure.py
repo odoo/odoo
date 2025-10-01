@@ -75,8 +75,8 @@ class HrEmployeeDeparture(models.Model):
 
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):
-        for wizard in self:
-            wizard.is_user_employee = bool(wizard.employee_id.user_id)
+        for departure in self:
+            departure.is_user_employee = bool(departure.employee_id.user_id)
 
     @api.depends(lambda self: self._get_action_fields())
     def _compute_has_selected_actions(self):
@@ -112,6 +112,7 @@ class HrEmployeeDeparture(models.Model):
             if active_version.contract_date_start and active_version.contract_date_start > departure.departure_date:
                 raise ValidationError(self.env._("Departure date can't be earlier than the start date of current contract."))
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         for departure in res:
@@ -119,6 +120,21 @@ class HrEmployeeDeparture(models.Model):
                 'departure_id': departure.id,
             })
         return res
+
+    def action_schedule(self):
+        self.state = 'scheduled'
+
+    def action_cancel(self):
+        self.state = 'cancelled'
+        self.employee_id.version_id.departure_id = False
+
+    def _cron_apply_departure(self):
+        departures = self.search([
+            ('state', '=', 'scheduled'),
+            ('apply_date', '<=', fields.Date.today()),
+        ])
+        for departure in departures:
+            departure.action_register()
 
     def action_register(self):
         def _get_user_archive_notification_action(message, message_type, next_action):
@@ -133,17 +149,25 @@ class HrEmployeeDeparture(models.Model):
                 },
             }
 
-        self._check_departure_validity()
-
-        departures_per_user = self.grouped('employee_id.user_id')
+        departures_per_user = {}
+        for departure in self:
+            if departure.employee_id.user_id in departures_per_user:
+                departures_per_user[departure.employee_id.user_id] += departure
+            else:
+                departures_per_user[departure.employee_id.user_id] = departure
         to_archive_users = self.env['res.users']
+        unarchived_users = self.env['res.users']
         for user, departures in departures_per_user.items():
-            active_user_employees = user.employee_ids.filtered('active')
-            if not user.active or (active_user_employees - departures.employee_id):
-                # We don't archive the user if all related active employees are not fired
+            if not user:
                 continue
-            if any(lambda d: d.do_archive_user, departures):
-                # We don't archive the user if any of the departures related asks to keep it active
+            active_user_employees = user.employee_ids.filtered('active')
+            if not user.active or\
+                    (active_user_employees - departures.employee_id) or\
+                    any(not d.do_archive_user for d in departures):
+                # We don't archive the user:
+                # - if all related active employees are not departing
+                # - if any of the departures related asks to keep it active
+                unarchived_users += user
                 continue
             to_archive_users += user
         if to_archive_users:
@@ -164,72 +188,17 @@ class HrEmployeeDeparture(models.Model):
 
         self.state = 'done'
 
-    def action_schedule(self):
-        self.state = 'scheduled'
-
-    def action_cancel(self):
-        self.state = 'cancelled'
-        self.employee_id.version_id.departure_id = False
-
-    def action_draft(self):
-        self.state = 'draft'
-
-    def _cron_apply_departure(self):
-        departures = self.search([
-            ('state', '=', 'scheduled'),
-            ('apply_date', '<=', fields.Date.today()),
-        ])
-        for departure in departures:
-            departure.action_register()
-
-    def action_register(self):
-
-        employee_ids = self.employee_ids
-        active_versions = employee_ids.version_id
-        allow_archived_users = self.env['res.users']
-        unarchived_users = self.env['res.users']
-        if self.remove_related_user:
-            related_users = employee_ids.grouped('user_id')
-            related_employees_count = dict(self.env['hr.employee'].sudo()._read_group(
-                    domain=[('user_id', 'in', employee_ids.user_id.ids)],
-                    groupby=['user_id'],
-                    aggregates=['id:count'],
-                ))
-            for user, emps in related_users.items():
-                if not user:
-                    continue
-                if len(emps) == related_employees_count.get(user, 0):
-                    allow_archived_users |= user
-                else:
-                    unarchived_users |= user
-
-        archived_employees = self.env['hr.employee']
-        archived_users = self.env['res.users']
-        for employee in employee_ids.filtered(lambda emp: emp.active):
-            if self.env.context.get('employee_termination', False):
-                archived_employees |= employee
-                if self.remove_related_user and employee.user_id in allow_archived_users:
-                    archived_users |= employee.user_id
-
-        archived_employees.with_context(no_wizard=True).action_archive()
-        archived_users.action_archive()
-
-        if self.set_date_end:
-            # Write date and update state of current contracts
-            active_versions = active_versions.filtered(lambda v: v.contract_date_start)
-            active_versions.write({'contract_date_end': self.departure_date})
-
         next_action = {'type': 'ir.actions.act_window_close'}
-        if archived_users:
+        if to_archive_users:
             message = self.env._(
                 "The following users have been archived: %s",
-                ', '.join(archived_users.mapped('name'))
+                ', '.join(to_archive_users.mapped('name')),
             )
             next_action = _get_user_archive_notification_action(message, 'success', next_action)
         if unarchived_users:
             message = self.env._(
                 "The following users have not been archived as they are still linked to another active employees: %s",
-                ', '.join(unarchived_users.mapped('name'))
+                ', '.join(unarchived_users.mapped('name')),
             )
             next_action = _get_user_archive_notification_action(message, 'danger', next_action)
 

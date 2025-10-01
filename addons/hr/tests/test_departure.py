@@ -57,7 +57,7 @@ class TestDeparture(TestHrCommon):
         with freeze_time('2025-06-01'):
             departure = self.env['hr.employee.departure'].create([{
                 'employee_id': self.emp.id,
-                'departure_date': date(2025, 6, 30),
+                'departure_date': date(2025, 6, 1),
                 'departure_reason_id': self.env.ref('hr.departure_fired').id,
                 'departure_description': "Didn't bring coffee",
             }])
