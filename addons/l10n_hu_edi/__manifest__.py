@@ -13,7 +13,6 @@
     'data': [
         'security/ir.model.access.csv',
         'data/uom.uom.csv',
-        'data/account_cash_rounding.xml',
         'data/template_requests.xml',
         'data/template_invoice.xml',
         'data/ir_cron.xml',

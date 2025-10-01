@@ -22,10 +22,10 @@ class AccountCashRounding(models.Model):
     strategy = fields.Selection([('biggest_tax', 'Modify tax amount'), ('add_invoice_line', 'Add a rounding line')],
         string='Rounding Strategy', default='add_invoice_line', required=True,
         help='Specify which way will be used to round the invoice amount to the rounding precision')
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company, ondelete='cascade')
     profit_account_id = fields.Many2one(
         'account.account',
         string='Profit Account',
-        company_dependent=True,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',
@@ -33,7 +33,6 @@ class AccountCashRounding(models.Model):
     loss_account_id = fields.Many2one(
         'account.account',
         string='Loss Account',
-        company_dependent=True,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',

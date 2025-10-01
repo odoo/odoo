@@ -173,6 +173,12 @@
         <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
     </record>
 
+    <record id="account_cash_rounding_comp_rule" model="ir.rule">
+        <field name="name">Account cash rounding multi-company</field>
+        <field name="model_id" ref="model_account_cash_rounding" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="tax_rep_comp_rule" model="ir.rule">
         <field name="name">Tax Repartition multi-company</field>
         <field name="model_id" ref="model_account_tax_repartition_line"/>
