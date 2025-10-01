@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.highlightPicker">
-    <div t-ref="root" class="p-2 grid gap-0" style="overflow-y:scroll; overflow-x:hidden; --text-highlight-color: #000000; --text-highlight-width: .15em;">
+    <div t-ref="root" class="p-2 grid gap-0" style="overflow: auto; scrollbar-width: thin; --text-highlight-color: #000000; --text-highlight-width: .15em;">
         <t t-foreach="this.getHighlightFactory()" t-as="highlight" t-key="highlight">
                 <div class="border g-col-4 position-relative"
                     style="padding: 20px 5px; cursor: pointer"
