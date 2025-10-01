@@ -24,8 +24,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             Dialog.is("Attribute selection"),
             {
                 content: "dialog discard",
-                trigger:
-                    ".modal-footer .o-default-button:contains(/^Add$/) + .o-default-button:contains(/^Discard$/)",
+                trigger: ".modal-footer button:contains(/^Add$/) + button:contains(/^Discard$/)",
                 run: "click",
             },
             combo.select("Combo Product 5"),
