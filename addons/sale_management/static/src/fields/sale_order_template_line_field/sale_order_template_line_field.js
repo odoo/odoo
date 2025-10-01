@@ -13,7 +13,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
 
     setup() {
         super.setup();
-        this.copyFields.push('is_optional');
+        this.copyFields.push('is_optional', 'collapse_composition', 'collapse_prices');
     }
 
     get showOptionalButton() {

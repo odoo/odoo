@@ -70,6 +70,16 @@ class SaleOrderTemplateLine(models.Model):
         copy=True,
         default=False,
     )
+    collapse_composition = fields.Boolean(
+        string="Collapse Composition",
+        copy=True,
+        default=False,
+    )
+    collapse_prices = fields.Boolean(
+        string="Collapse Prices",
+        copy=True,
+        default=False,
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -133,11 +143,13 @@ class SaleOrderTemplateLine(models.Model):
         """
         self.ensure_one()
         vals = {
+            'collapse_composition': self.collapse_composition,
+            'collapse_prices': self.collapse_prices,
             'display_type': self.display_type,
+            'is_optional': self.is_optional,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
             'product_uom_id': self.product_uom_id.id,
-            'is_optional': self.is_optional,
             'sequence': self.sequence,
         }
         if self.name:
