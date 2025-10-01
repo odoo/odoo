@@ -58,7 +58,7 @@
                         <field
                             name="sale_order_template_line_ids"
                             widget="so_template_line_o2m"
-                            options="{ 'subsections': True }"
+                            options="{'subsections': True, 'hide_prices': True, 'hide_composition': True}"
                         >
                             <form string="Quotation Template Lines">
                                 <!--
@@ -96,6 +96,8 @@
                                 </control>
                                 <field name="display_type" column_invisible="True"/>
                                 <field name="is_optional" column_invisible="True"/>
+                                <field name="collapse_prices" column_invisible="True"/>
+                                <field name="collapse_composition" column_invisible="True"/>
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
                                 <field name="name"/>
