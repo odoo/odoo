@@ -9,6 +9,8 @@ import { user } from "@web/core/user";
 export class CalendarSyncButtons extends Component {
     static props = {
         ...standardWidgetProps,
+        record: { type: Object, optional: true },
+        reloadModel: { type: Function, optional: true },
     };
     static template = "calendar.calendarSyncButtons";
 
@@ -22,7 +24,7 @@ export class CalendarSyncButtons extends Component {
     async initSyncValues() {
         const [credentialStatus, syncStatus] = await Promise.all([
             rpc("/calendar/check_credentials"),
-            this.orm.call("res.users", "check_synchronization_status", [[this.props.record ? this.props.record.id : user.userId]]),
+            this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
         ]);
 
         // this.googleCredentialsSet = true;

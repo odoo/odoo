@@ -4,7 +4,7 @@
         <t t-set="googleSyncStatus" t-value="this.googleSyncStatus"/>
         <t t-set="microsoftSyncStatus" t-value="this.microsoftSyncStatus"/>
 
-        <div id="header_synchronization_settings" class="d-flex o_calendar_sync_buttons">
+        <div id="calendar_sync_buttons" class="d-flex o_calendar_sync_buttons">
             <t t-if="(this.googleCredentialStatus or this.microsoftCredentialStatus or true)
             and (!googleSyncStatus or ['sync_stopped', 'missing_credentials'].includes(googleSyncStatus))
             and (!microsoftSyncStatus or ['sync_stopped', 'missing_credentials'].includes(microsoftSyncStatus))">

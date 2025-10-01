@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="microsoft_calendar.calendarSyncButtons" t-inherit="calendar.calendarSyncButtons" t-inherit-mode="extension">
         <!-- Credentials configured: show 'Google' button concatenated with the 'Synchronize with' label. -->
-        <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
+        <xpath expr="//div[@id='calendar_sync_buttons']//h5[@id='synchronize_with']" position="after">
             <!-- <a t-if="model.microsoftCredentialsSet and !model.microsoftIsSync and !model.microsoftIsPaused"> -->
             <a t-on-click="onMicrosoftSyncCalendar" role="button"
                 class="o_calendar_sync_button btn btn-sm bg-transparent border-info d-inline-flex align-items-center mx-1">

@@ -8,7 +8,7 @@
         </xpath>
         <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
             <div class="mx-1 ms-lg-auto">
-                <CalendarSyncButtons/>
+                <CalendarSyncButtons reloadModel.bind="reloadModel"/>
             </div>
         </xpath>
         <xpath expr="//t[@t-elif]//span[hasclass('o_current_week')]" position="attributes">

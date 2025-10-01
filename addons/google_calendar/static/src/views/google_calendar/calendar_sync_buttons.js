@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(CalendarSyncButtons.prototype, {
@@ -13,8 +13,11 @@ patch(CalendarSyncButtons.prototype, {
         this.actionService = useService("action")
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-    },
 
+        useBus(this.env.bus, "sync_google_calendar", async (ev) => {
+            await this.syncGoogleCalendar(true);
+        });
+    },
 
     async initSyncValues() {
         await super.initSyncValues();
@@ -48,8 +51,8 @@ patch(CalendarSyncButtons.prototype, {
                 });
             }
         } else {
-            await this.props.record.model.load();  // This will make sure all data is updated (mostly in config params?) NEEDED?
-            this.render(true);  // This will restart the component, right? to check (true role?)
+            await this.props.reloadModel?.();
+            this.render(true);
         }
     },
 
@@ -59,7 +62,7 @@ patch(CalendarSyncButtons.prototype, {
             "stop_google_synchronization",
             [[user.userId]],
         );
-        await this.props.record.model.load();
+        await this.props.reloadModel?.();
         this.render(true);
     },
 
@@ -70,11 +73,9 @@ patch(CalendarSyncButtons.prototype, {
             [[user.userId]],
         );
         await this.onStopGoogleSynchronization();
-        this.render(true);
     },
 
     async syncGoogleCalendar(silent = false) {
-        this.googlePendingSync = true;
         const result = await rpc(
             "/google_calendar/sync_data",
             {
@@ -90,8 +91,7 @@ patch(CalendarSyncButtons.prototype, {
         } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
             this.state.googleSyncIsDone = true;
         }
-        this.state.googleSyncIsPaused = result.status == "sync_paused";
-        this.googlePendingSync = false;
+        this.state.googleSyncIsPaused = result.status === "sync_paused";
         return result;
     },
 });

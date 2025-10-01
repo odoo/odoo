@@ -72,6 +72,10 @@ export class AttendeeCalendarController extends CalendarController {
         }
     }
 
+    async reloadModel() {
+        await this.model.load();
+    }
+
     /**
      * @override
      *
