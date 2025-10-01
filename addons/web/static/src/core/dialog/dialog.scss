@@ -14,8 +14,18 @@
             margin: 0; // Reset boostrap.
         }
 
-        button.o-default-button:not(:only-child) {
-            display: none;
+        // hide default buttons if there are non-default elements
+        // such as buttons added by the form dialog
+        &:has(> button.o-default-button):has(> :not(.o-default-button)) {
+            button.o-default-button {
+                display: none;
+            }
+        }
+        // in case the buttons were moved inside a div
+        *:has(> button.o-default-button):has(:not(.o-default-button)) {
+            button.o-default-button {
+                display: none;
+            }
         }
         
         @include media-breakpoint-down(md) {
