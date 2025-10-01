@@ -25,9 +25,13 @@ const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
  * @param {import("models").Persona[]} validMentions.partners
- * @returns {string|ReturnType<markup>}
+ * @returns {Promise<string|ReturnType<markup>>}
  */
 export function prettifyMessageText(rawBody, { validMentions = [] } = {}) {
+    if (rawBody instanceof markup().constructor) {
+        // markup is already "pretty"
+        return rawBody;
+    }
     let body = htmlTrim(rawBody);
     body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
     body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
@@ -250,7 +254,7 @@ function generateMentionsLinks(
 /**
  * @private
  * @param {string|ReturnType<markup>} htmlString
- * @returns {ReturnType<markup>}
+ * @returns {Promise<ReturnType<markup>>}
  */
 async function _generateEmojisOnHtml(htmlString) {
     const { emojis } = await loadEmoji();

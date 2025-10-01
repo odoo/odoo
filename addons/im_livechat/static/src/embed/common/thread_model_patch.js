@@ -1,11 +1,11 @@
 import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
+import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
-import { prettifyMessageContent } from "@mail/utils/common/format";
 
 /** @type {typeof Thread} */
 const threadStaticPatch = {
@@ -127,7 +127,7 @@ patch(Thread.prototype, {
             }
             const temporaryMsg = this.store["mail.message"].insert({
                 author_id: this.store.self,
-                body: await prettifyMessageContent(body, { allowEmojiLoading: false }),
+                body: await generateEmojisOnHtml(body, { allowEmojiLoading: false }),
                 id: this.store.getNextTemporaryId(),
                 model: "discuss.channel",
                 res_id: this.id,

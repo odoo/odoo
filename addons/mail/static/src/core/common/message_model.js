@@ -5,9 +5,9 @@ import {
     EMOJI_REGEX,
     convertBrToLineBreak,
     decorateEmojis,
+    generateEmojisOnHtml,
     getNonEditableMentions,
     htmlToTextContentInline,
-    prettifyMessageContent,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -549,7 +549,7 @@ export class Message extends Record {
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.ownership_token),
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await generateEmojisOnHtml(body),
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
         };
