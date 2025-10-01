@@ -281,6 +281,10 @@ export function getNonEditableMentions(body) {
     for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
         mention.setAttribute("contenteditable", false);
     }
+    // for special mentions
+    for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
+        mention.setAttribute("contenteditable", false);
+    }
     return markup(doc.body.innerHTML);
 }
 
