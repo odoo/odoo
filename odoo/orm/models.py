@@ -5905,7 +5905,11 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.__class__(self.env, tuple(ids), Prefetch.union(prefetch_ids_list))
+        ids = tuple(ids)
+        # add ids in prefetch_ids_list, in case the other prefetch_ids are
+        # empty (PrefetchRelational with empty cache)
+        prefetch_ids_list.append(ids)
+        return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5955,6 +5959,9 @@ class BaseModel(metaclass=MetaModel):
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
         ids = tuple(dict.fromkeys(ids))
+        # add ids in prefetch_ids_list, in case the other prefetch_ids are
+        # empty (PrefetchRelational with empty cache)
+        prefetch_ids_list.append(ids)
         return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
 
     def __eq__(self, other):
