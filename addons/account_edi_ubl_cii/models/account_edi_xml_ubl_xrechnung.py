@@ -56,3 +56,25 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
             })
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_header_nodes(document_node, vals)
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['xrechnung']}
+        if not document_node['cbc:BuyerReference']['_text']:
+            document_node['cbc:BuyerReference']['_text'] = 'N/A'
+
+    def _get_party_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        party_node = super()._get_party_node(vals)
+        partner = vals['partner']
+        if not party_node.get('cbc:EndpointID', {}).get('_text') and partner.email:
+            party_node['cbc:EndpointID'] = {
+                '_text': partner.email,
+                'schemeID': 'EM'
+            }
+        return party_node
