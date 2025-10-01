@@ -149,7 +149,7 @@ class HrLeaveAllocation(models.Model):
             return _(
                 '%(name)s (%(duration)s hour(s))',
                 name=self.holiday_status_id.name,
-                duration=self.number_of_days * self.employee_id._get_hours_per_day(self.date_from),
+                duration=float_round(self.number_of_days * self.employee_id._get_hours_per_day(self.date_from), precision_digits=2),
             )
         return _(
             '%(name)s (%(duration)s day(s))',
