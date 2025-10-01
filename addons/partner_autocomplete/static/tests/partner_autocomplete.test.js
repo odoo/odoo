@@ -1,5 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { expect, getFixture, test } from "@odoo/hoot";
+import { before, expect, getFixture, test } from "@odoo/hoot";
 import { advanceTime, queryOne } from "@odoo/hoot-dom";
 import {
     contains,
@@ -9,8 +9,8 @@ import {
     models,
     mountView,
     onRpc,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
+import { loadJS } from "@web/core/assets";
 
 // Autocomplete has a debounce time of 250 ms on input
 async function editAutocomplete(el, value) {
@@ -138,7 +138,7 @@ onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
 }));
 onRpc("/v1/companies/suggest", () => clearbitSuggestions);
 
-preloadBundle("web.jsvat_lib");
+before(() => loadJS("/partner_autocomplete/static/lib/jsvat.js"));
 
 test.tags("desktop");
 test("Partner autocomplete : Company type = Individual", async () => {
