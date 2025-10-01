@@ -54,3 +54,21 @@ class TestAccountCZ(AccountTestInvoicingCommon):
 
         inv_line = self.env['account.move'].search([('statement_line_id', '=', st_line.id)])
         self.assertNotEqual(inv_line.taxable_supply_date, st_line.date)
+
+    def test_cz_invoice_date_equals_taxable_supply_date(self):
+        """
+        Ensure the invoice date matches the taxable supply date and after posting
+        invoice date remains unchanged when the company partner address is updated.
+        """
+        invoice = self.invoice_a
+        invoice.write({
+            'partner_id': self.partner_a,
+            'taxable_supply_date': '2024-05-10'
+        })
+        invoice.action_post()
+        self.assertEqual(invoice.date, invoice.taxable_supply_date)
+        invoice.company_id.partner_id.write({
+            'street': 'New Street',
+            'zip': '12345'
+        })
+        self.assertEqual(invoice.date, invoice.taxable_supply_date)

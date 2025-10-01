@@ -14,10 +14,10 @@ class AccountMove(models.Model):
 
     @api.depends('taxable_supply_date')
     def _compute_date(self):
-        super()._compute_date()
-        for move in self:
-            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft' and not move.statement_line_id:
-                move.date = move.taxable_supply_date
+        draft_moves = self.filtered(lambda m: m.state == 'draft')
+        super(AccountMove, draft_moves)._compute_date()
+        for move in draft_moves.filtered(lambda m: m.country_code == 'CZ' and m.taxable_supply_date and not m.statement_line_id):
+            move.date = move.taxable_supply_date
 
     @api.depends('taxable_supply_date')
     def _compute_invoice_currency_rate(self):
