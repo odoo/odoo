@@ -8,7 +8,7 @@ import requests
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import hmac, email_normalize
 from odoo.tools.urls import urljoin as url_join
@@ -87,6 +87,9 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
 
         if not is_configured:  # use IAP (see '/microsoft_outlook/iap_confirm')
+            if release.version_info[-1] != 'e':
+                raise UserError(_('Please configure your Outlook credentials.'))
+
             outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
                 'mail.server.outlook.iap.endpoint',
                 self._DEFAULT_OUTLOOK_IAP_ENDPOINT,
@@ -113,7 +116,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
             response = response.json()
             if 'error' in response:
-                self._raise_iap_error(response['error'])
+                self._raise_iap_error_outlook(response['error'])
 
             # URL on IAP that will redirect to Outlook login page
             microsoft_outlook_uri = response['url']
@@ -122,7 +125,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             microsoft_outlook_uri = self.microsoft_outlook_uri
 
         if not microsoft_outlook_uri:
-            raise UserError(_('Please configure your outlook credentials.'))
+            raise UserError(_('Please configure your Outlook credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
@@ -225,11 +228,11 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
         response = response.json()
         if 'error' in response:
-            self._raise_iap_error(response['error'])
+            self._raise_iap_error_outlook(response['error'])
 
         return response
 
-    def _raise_iap_error(self, error):
+    def _raise_iap_error_outlook(self, error):
         errors = {
             "not_configured": _("Outlook is not configured on IAP."),
             "no_subscription": _("You don't have an active subscription."),
