@@ -1521,6 +1521,28 @@ class TestXMLTranslation(TransactionCase):
                 f'arch_db for {lang} should be {archf2} when check_translations'
             )
 
+    def test_t_call_no_normal_attribute_translation(self):
+        self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'key': 'test',
+            'arch': '<t t-out="placeholder"/>',
+        })
+        view0 = self.env['ir.ui.view'].with_context(lang='fr_FR', edit_translations=True).create({
+            'type': 'qweb',
+            'arch': '<t t-call="test" placeholder="hello"/>',
+        })
+        self.assertEqual(view0._render_template(view0.id, {'hello': 'world'}), 'world')
+        self.assertEqual(view0.arch_db, '<t t-call="test" placeholder="hello"/>')
+
+        view0.arch = '<t t-call="test" placeholder.translate="hello"/>'
+        translate_node = (
+            f'&lt;span data-oe-model=&#34;ir.ui.view&#34; data-oe-id=&#34;{view0.id}&#34;'
+            ' data-oe-field=&#34;arch_db&#34; data-oe-translation-state=&#34;to_translate&#34;'
+            ' data-oe-translation-source-sha=&#34;2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824&#34;&gt;hello&lt;/span&gt;'
+        )
+        self.assertEqual(view0._render_template(view0.id), translate_node)
+        self.assertEqual(view0.arch_db, f'<t t-call="test" placeholder.translate="{translate_node.replace("&#34;", "&quot;")}"/>')
+
     def test_update_field_translations_source_lang(self):
         """ call update_field_translations with source_lang """
         archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
