@@ -68,7 +68,7 @@ class ResCompany(models.Model):
             # Set profit/loss accounts on cash rounding method
             profit_account = self.env['account.chart.template'].with_company(company).ref('l10n_hu_969', raise_if_not_found=False)
             loss_account = self.env['account.chart.template'].with_company(company).ref('l10n_hu_869', raise_if_not_found=False)
-            rounding_method = self.env.ref('l10n_hu_edi.cash_rounding_1_huf', raise_if_not_found=False)
+            rounding_method = self.env['account.chart.template'].with_company(company).ref('cash_rounding_1_huf', raise_if_not_found=False)
             if profit_account and loss_account and rounding_method:
                 rounding_method.with_company(company).write({
                     'profit_account_id': profit_account.id,

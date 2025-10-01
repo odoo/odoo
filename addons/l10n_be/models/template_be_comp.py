@@ -7,6 +7,23 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
+    @template('be_comp', 'account.cash.rounding')
+    def _get_be_comp_account_cash_rounding(self):
+        return {
+            'cash_rounding_be_comp_05': {
+                'name': "Round to 0.05",
+                'name@fr': "Arrondi à 0.05",
+                'name@nl': "Afronding tot 0.05",
+                'name@de': "Rundung auf 0,05",
+                'rounding': 0.05,
+                'strategy': 'add_invoice_line',
+                'company_id': self.env.company.id,
+                'rounding_method': 'HALF-UP',
+                'profit_account_id': 'a743',
+                'loss_account_id': 'a643',
+            },
+        }
+
     @template('be_comp')
     def _get_be_comp_template_data(self):
         return {
