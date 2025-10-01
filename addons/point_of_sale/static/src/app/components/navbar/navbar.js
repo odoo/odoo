@@ -157,14 +157,19 @@ export class Navbar extends Component {
     }
 
     openCustomerDisplay() {
-        if (this.ui.isSmall) {
-            this.dialog.add(QrCodeCustomerDisplay, {
-                customerDisplayURL: `${this.pos.config._base_url}${this.customerDisplayPath}`,
-            });
-            return;
-        }
-        window.open(this.customerDisplayPath, "newWindow", "width=800,height=600,left=200,top=200");
-        this.notification.add(_t("PoS Customer Display opened in a new window"));
+        const getDeviceUuid = () => {
+            if (!localStorage.getItem("device_uuid")) {
+                localStorage.setItem("device_uuid", uuidv4());
+            }
+            return localStorage.getItem("device_uuid");
+        };
+        const customer_display_url = `/pos_customer_display/${
+            this.pos.config.id
+        }/${getDeviceUuid()}`;
+
+        this.dialog.add(QrCodeCustomerDisplay, {
+            customerDisplayURL: `${this.pos.session._base_url}${customer_display_url}`,
+        });
     }
 
     get showCreateProductButton() {
