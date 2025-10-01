@@ -28,6 +28,19 @@ class IrQweb(models.AbstractModel):
         'img': 'src',
     }
 
+    def _compile_root(self, element, compile_context):
+        # Removes the attributes used by the "/website/snippet/filter_templates"
+        # controller and used only to be filtered without using irQweb rendering
+        for data_filter in [
+                'data-number-of-elements', 'data-number-of-elements-sm',
+                'data-number-of-elements-fetch', 'data-row-per-slide',
+                'data-arrow-position', 'data-extra-classes',
+                'data-extra-snippet-classes', 'data-container-classes',
+                'data-content-classes', 'data-column-classes', 'data-thumb',
+            ]:
+            element.attrib.pop(data_filter, None)
+        return super()._compile_root(element, compile_context)
+
     def _get_template(self, template):
         element, document, ref = super()._get_template(template)
         if self.env.context.get('website_id'):

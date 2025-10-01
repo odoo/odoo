@@ -435,7 +435,7 @@
                                                         <span t-out="term_index + 1">1</span> - Installment of
                                                         <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
                                                         <span> due on </span>
-                                                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
+                                                        <t t-out="term.get('date')">2024-01-01</t>
                                                     </div>
                                                 </t>
                                             </div>

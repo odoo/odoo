@@ -65,8 +65,10 @@
 
 <!-- Multi record templates-->
 <!-- Picture Layout -->
-<template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5">
-    <div t-foreach="records" t-as="data" class="s_events_event w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+<template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5"
+        data-extra-classes="g-3"
+        data-column-classes="col-12 col-sm-6 col-lg-4">
+    <div t-foreach="records" t-as="data" class="s_events_event w-100">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
         <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1"
            t-att-href="data['call_to_action_url']">
@@ -95,8 +97,10 @@
     </div>
 </template>
 <!-- Card Layout -->
-<template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10">
-    <t t-foreach="records" t-as="data" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+<template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10"
+        data-extra-classes="g-3"
+        data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+    <t t-foreach="records" t-as="data">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
         <a t-att-href="data['call_to_action_url']" class="s_events_event card h-100 text-decoration-none">
             <div class="s_events_event_cover">
@@ -131,8 +135,10 @@
 
 <!-- Single record templates -->
 <!-- Offset Layout -->
-<template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+<template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset"
+        data-column-classes="col-lg-12"
+        data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -172,8 +178,10 @@
     </t>
 </template>
 <!-- Entry Layout -->
-<template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+<template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry"
+        data-column-classes="col-lg-12"
+        data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -205,8 +213,10 @@
     </t>
 </template>
 <!-- Card Layout -->
-<template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+<template id="dynamic_filter_template_event_event_single_card" name="Solo Card"
+        data-column-classes="col-lg-12"
+        data-content-classes="o_cc o_cc5 bg-transparent">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <t t-set="bg" t-value="record._get_background()"/>
@@ -241,8 +251,9 @@
     </t>
 </template>
 <!-- CTA Badge Layout -->
-<template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12 text-center">
+<template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge"
+        data-column-classes="col-lg-12 text-center">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -267,8 +278,9 @@
     </t>
 </template>
 <!-- Aside Layout -->
-<template id="dynamic_filter_template_event_event_single_aside" name="Solo Aside">
-    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12">
+<template id="dynamic_filter_template_event_event_single_aside" name="Solo Aside"
+        data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>

@@ -39,42 +39,42 @@ class IrQweb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    def _compile_node(self, el, compile_context, level):
-        snippet_key = compile_context.get('snippet-key')
+    def _compile_root(self, element, compile_context):
+        snippet_key = compile_context.pop('snippet-key', None)
+        sub_call_key = compile_context.pop('snippet-sub-call-key', None)
 
         template = compile_context['ref_name']
-        sub_call_key = compile_context.get('snippet-sub-call-key')
 
         # We only add the 'data-snippet' & 'data-name' attrib once when
         # compiling the root node of the template.
-        if not template or template not in {snippet_key, sub_call_key} or el.getparent() is not None:
-            return super()._compile_node(el, compile_context, level)
+        if not template or template not in {snippet_key, sub_call_key}:
+            return super()._compile_root(element, compile_context)
 
-        snippet_base_node = el
-        if el.tag == 't':
-            el_children = [child for child in list(el) if isinstance(child.tag, str) and child.tag != 't']
+        snippet_base_node = element
+        if element.tag == 't':
+            el_children = [child for child in list(element) if isinstance(child.tag, str) and child.tag != 't']
             if len(el_children) == 1:
                 snippet_base_node = el_children[0]
             elif not el_children:
                 # If there's not a valid base node we check if the base node is
                 # a t-call to another template. If so the called template's base
                 # node must take the current snippet key.
-                el_children = [child for child in list(el) if isinstance(child.tag, str)]
+                el_children = [child for child in list(element) if isinstance(child.tag, str)]
                 if len(el_children) == 1:
                     sub_call = el_children[0].get('t-call')
                     if sub_call:
                         el_children[0].set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
         # If it already has a data-snippet it is a saved or an
         # inherited snippet. Do not override it.
-        if 'data-snippet' not in snippet_base_node.attrib:
+        if snippet_base_node.tag != 't' and 'data-snippet' not in snippet_base_node.attrib:
             snippet_base_node.attrib['data-snippet'] = \
                 snippet_key.split('.', 1)[-1]
         # If it already has a data-name it is a saved or an
         # inherited snippet. Do not override it.
-        snippet_name = compile_context.get('snippet-name')
-        if snippet_name and 'data-name' not in snippet_base_node.attrib:
+        snippet_name = compile_context.pop('snippet-name', None)
+        if snippet_base_node.tag != 't' and snippet_name and 'data-name' not in snippet_base_node.attrib:
             snippet_base_node.attrib['data-name'] = snippet_name
-        return super()._compile_node(el, compile_context, level)
+        return super()._compile_root(element, compile_context)
 
     def _get_preload_attribute_xmlids(self):
         return super()._get_preload_attribute_xmlids() + ['t-snippet', 't-snippet-call']
@@ -130,19 +130,21 @@ class IrQweb(models.AbstractModel):
         key = el.attrib.pop('t-install')
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
         image_preview = el.attrib.pop('t-image-preview', None)
+        snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
         label = el.attrib.pop('label', None)
+        name = el.attrib.pop('string', 'Snippet')
         if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
-            name = el.attrib.get('string') or 'Snippet'
-            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s><section/></div>') % (
+            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s %s><section/></div>') % (
                 name,
                 module.id,
                 module.display_name,
                 escape_silent(image_preview),
                 thumbnail,
+                Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
                 Markup('data-o-group="%s"') % group if group else '',
                 Markup('data-o-label="%s"') % label if label else '',
             )
@@ -157,12 +159,15 @@ class IrQweb(models.AbstractModel):
 
     def _directives_eval_order(self):
         directives = super()._directives_eval_order()
+        # Insert before "call" and "options" to use this "call" directive after this one
+        index = directives.index('options') - 1
+        directives.insert(index, 'snippet-call')
+
         # Insert before "att" as those may rely on static attributes like
         # "string" and "att" clears all of those
         index = directives.index('att') - 1
         directives.insert(index, 'placeholder')
         directives.insert(index, 'snippet')
-        directives.insert(index, 'snippet-call')
         directives.insert(index, 'install')
         return directives
 
