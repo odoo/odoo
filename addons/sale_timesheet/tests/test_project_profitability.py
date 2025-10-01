@@ -504,8 +504,8 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'project_id': self.project_task_rate.id,
             'service_type': 'manual',
         })
-        saleorder_revenue = self.env['sale.order']
-        saleOrderLine_revenue = self.env['sale.order.line']
+        saleorder_revenue = self.env['sale.order'].with_context(tracking_disable=True)
+        saleOrderLine_revenue = self.env['sale.order.line'].with_context(tracking_disable=True)
         sale_order_revenue = saleorder_revenue.create({
             'partner_id': self.partner_b.id,
             'partner_invoice_id': self.partner_b.id,
@@ -513,9 +513,9 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         })
 
         sale_order_line_revenue = saleOrderLine_revenue.create({
-            'product_id':product_profitability_items.id,
-            'product_uom_qty':10,
-            'order_id':sale_order_revenue.id,
+            'product_id': product_profitability_items.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_revenue.id,
         })
 
         sequence_per_invoice_type = self.project_task_rate._get_profitability_sequence_per_invoice_type()
@@ -548,4 +548,11 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertDictEqual(
             self.project_task_rate._get_profitability_items(False),
             profitability_item_data
+        )
+        profitability_before = self.project_task_rate.get_panel_data()['profitability_items']
+        product_profitability_items.active = False
+        profitability_after = self.project_task_rate.get_panel_data()['profitability_items']
+        self.assertEqual(
+            profitability_before,
+            profitability_after,
         )
