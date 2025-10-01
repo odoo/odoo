@@ -214,4 +214,14 @@ describe("toolbar dropdowns", () => {
         await animationFrame();
         expect(p.firstChild).toHaveClass("test-font-size");
     });
+
+    test("Should not be able to change tag of `o_editable` element", async () => {
+        const { getEditor } = await setupHTMLBuilder(`<h1 class="o_editable">abcd</h1>`);
+        const editor = getEditor();
+        const h1 = editor.editable.querySelector("h1");
+        setSelection({ anchorNode: h1, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        expect(".o-we-toolbar .btn[name='font']").toHaveCount(0);
+    });
 });

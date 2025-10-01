@@ -574,10 +574,30 @@ export class DomPlugin extends Plugin {
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
+    /**
+     * Determines if a block element can be safely retagged.
+     *
+     * Certain blocks (like 'o_editable') should not be retagged because doing so
+     * will recreate the block, potentially causing issues. This function checks
+     * if retagging a block is safe.
+     *
+     * @param {HTMLElement} block
+     * @returns {boolean}
+     */
+    isRetaggingSafe(block) {
+        return !(
+            (isParagraphRelatedElement(block) ||
+                isListItemElement(block) ||
+                isPhrasingContent(block)) &&
+            this.getResource("unremovable_node_predicates").some((predicate) => predicate(block))
+        );
+    }
+
     getBlocksToTag() {
         const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
         return targetedBlocks.filter(
             (block) =>
+                this.isRetaggingSafe(block) &&
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
                 block.isContentEditable
         );
