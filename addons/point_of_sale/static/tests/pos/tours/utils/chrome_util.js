@@ -270,6 +270,46 @@ export function clickOnScanButton() {
         run: "click",
     };
 }
+
+export function ClickOnCustomerDisplayButton() {
+    return {
+        content: "Click on the customer display button inside the burger menu",
+        trigger: "span i.fa-desktop",
+        run: "click",
+    };
+}
+export function CustomerDisplayHasThisDeviceButton() {
+    return {
+        content: "Check that the customer display popup has a 'This device' button",
+        trigger: ".o_dialog .modal-body .container .btn-primary:contains('This device')",
+    };
+}
+export function CustomerDisplayHasQRButton() {
+    return {
+        content: "Check that the customer display popup has a 'Display QR' button",
+        trigger: ".o_dialog .modal-body .container .btn-secondary:contains('Display QR')",
+    };
+}
+export function ClickCustomerDisplayThisDeviceButton() {
+    return {
+        content: "Check that the customer display popup has a 'This device' button",
+        trigger: ".btn-primary:contains('This device')",
+        run: "click",
+    };
+}
+export function ClickCustomerDisplayQRButton() {
+    return {
+        content: "Check that the customer display popup has a 'Display QR' button",
+        trigger: ".btn-secondary:contains('Display QR')",
+        run: "click",
+    };
+}
+export function CustomerDisplayQRIsDisplayed() {
+    return {
+        content: "Check that the QR code is displayed on screen",
+        trigger: ".o-overlay-item .modal .modal-body img.square",
+    };
+}
 export function freezeDateTime(millis) {
     return [
         {
