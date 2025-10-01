@@ -517,14 +517,11 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
-        # Only for BIS3 invoices: if the 'account_edi_ubl_cii.use_new_dict_to_xml_helpers' param is set,
-        # use the new dict_to_xml helpers.
-        if (
-            self._name == 'account.edi.xml.ubl_bis3'
-            and str2bool(
-                self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
-                default=True,
-            )
+        # Use the new dict_to_xml helpers by default
+        # unless the 'account_edi_ubl_cii.use_new_dict_to_xml_helpers' param is set to False.
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
+            default=True,
         ):
             return self._export_invoice_new(invoice)
 
