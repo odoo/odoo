@@ -431,19 +431,22 @@ export class AddLanguageAction extends BuilderAction {
         if (!save) {
             return;
         }
-        this.config.builderSidebar.toggle(false);
-        await this.dependencies.savePlugin.save(/* not in translation */);
-        await this.services.action.doAction("base.action_view_base_language_install", {
-            additionalContext: {
-                params: {
-                    website_id: websiteId,
-                    url_return: "[lang]",
+        await this.config.builderSidebar.withHiddenSidebar(() =>
+            this.dependencies.savePlugin.save({
+                shouldSkipAfterSaveHandlers: async () => {
+                    await this.services.action.doAction("base.action_view_base_language_install", {
+                        additionalContext: {
+                            params: {
+                                website_id: websiteId,
+                                url_return: "[lang]",
+                            },
+                        },
+                        onClose: (closeParams) => def.resolve(!!closeParams?.noReload),
+                    });
+                    return await def;
                 },
-            },
-            onClose: def.resolve,
-        });
-        await def;
-        this.config.builderSidebar.toggle(true);
+            })
+        );
     }
 }
 
