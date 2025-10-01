@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 
 _ref_company_registry = {
     'jp': '7000012050002',
+    'fi': '8763054-9',
 }
 
 
