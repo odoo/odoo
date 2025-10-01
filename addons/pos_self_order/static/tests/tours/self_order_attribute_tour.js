@@ -99,6 +99,14 @@ registry.category("web_tour.tours").add("test_self_order_multi_check_attribute_w
         [
             Utils.clickBtn("Order Now"),
             ProductPage.clickProduct("Desk Organizer"),
+            {
+                content: "Check required badge for Fabric attribute",
+                trigger: "h2:contains('Fabric') .badge:contains('Required')",
+            },
+            {
+                content: "Check no required badge for Add-ons attribute",
+                trigger: "h2:contains('Add-ons'):not(:has(.badge))",
+            },
             ProductPage.setupAttribute(
                 [
                     { name: "Fabric", value: "Leather" },
