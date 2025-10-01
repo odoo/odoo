@@ -1360,6 +1360,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([])
         self.assertTrue(order[0].name == order[1].name + " REFUND")
 
+    def test_customer_display_popup(self):
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'customer_display_shows_qr_popup', login="pos_user")
+
     def test_lot_refund(self):
 
         self.product1 = self.env['product.product'].create({
@@ -3424,6 +3427,10 @@ class MobileTestUi(TestUi):
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True
+
+    # Skip customer display web tests on mobile
+    def test_customer_display_popup(self):
+        return
 
 
 class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
