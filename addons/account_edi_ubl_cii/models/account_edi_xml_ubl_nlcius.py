@@ -97,3 +97,50 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         # vals['vals'].pop('issue_date')  # careful, this causes other errors from the validator...
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_header_nodes(document_node, vals)
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['nlcius']}
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_payment_means_nodes(document_node, vals)
+        # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
+        payment_means_node = document_node['cac:PaymentMeans']
+        if 'name' in payment_means_node['cbc:PaymentMeansCode']:
+            payment_means_node['cbc:PaymentMeansCode']['name'] = None
+        if 'listID' in payment_means_node['cbc:PaymentMeansCode']:
+            payment_means_node['cbc:PaymentMeansCode']['listID'] = None
+
+    def _get_address_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        address_node = super()._get_address_node(vals)
+        # [BR-NL-28] The use of a country subdivision (cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
+        # /cbc:CountrySubentity) is not recommended
+        address_node['cbc:CountrySubentity'] = None
+        return address_node
+
+    def _get_line_discount_allowance_charge_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        node = super()._get_line_discount_allowance_charge_node(vals)
+        if node:
+            # [BR-NL-32] Use of Discount reason code ( AllowanceChargeReasonCode ) is not recommended.
+            # [BR-EN-34] Use of Charge reason code ( AllowanceChargeReasonCode ) is not recommended.
+            # Careful! [BR-42]-Each Invoice line allowance (BG-27) shall have an Invoice line allowance reason (BT-139)
+            # or an Invoice line allowance reason code (BT-140).
+            node['cbc:AllowanceChargeReason'] = {'_text': 'Discount'}
+            node['cbc:AllowanceChargeReasonCode'] = None
+        return node
+
+    def _get_tax_category_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        node = super()._get_tax_category_node(vals)
+        # [BR-NL-35] The use of a tax exemption reason code (cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory
+        # /cbc:TaxExemptionReasonCode) is not recommended
+        node['cbc:TaxExemptionReasonCode'] = None
+        return node
