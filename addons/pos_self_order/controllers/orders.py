@@ -239,6 +239,7 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
+        request.update_env(user=user)
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
     def _verify_config_constraint(self, pos_config_sudo, check_active_session=True):

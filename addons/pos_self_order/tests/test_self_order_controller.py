@@ -3,7 +3,9 @@
 import json
 import odoo.tests
 from datetime import timedelta
+from unittest.mock import patch
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -88,6 +90,16 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertEqual(len(data['pos.order']), 1)
         self.assertEqual(data['pos.order'][0]['id'], order1.id)
+
+        # In case of write in the request, there should not be any access error
+        partner = self.env['res.partner'].search([], limit=1)
+
+        def _generate_return_values_patch(self, order, config):
+            order.message_partner_ids = order.env['res.partner'].browse(partner.id)
+
+        with patch.object(PosSelfOrderController, "_generate_return_values", _generate_return_values_patch):
+            self.make_request_to_controller('/pos-self-order/get-user-data', params)
+            self.assertIn(partner.id, order1.message_partner_ids.ids)
 
         # A cancelled order should be returned
         order2.action_pos_order_cancel()
