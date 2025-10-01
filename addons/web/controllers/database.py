@@ -1,28 +1,90 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import csv
 import datetime
 import logging
 import os
 import re
 import tempfile
+from collections.abc import Iterable
+from operator import itemgetter
+from xml.etree import ElementTree as ET
 
 from lxml import html
 
 import odoo
 import odoo.modules.registry
-from odoo import http
-from odoo.http import content_disposition, dispatch_rpc, request, Response
+from odoo import http, release
+from odoo.http import Response, content_disposition, dispatch_rpc, request
 from odoo.service import db
+from odoo.sql_db import db_connect
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
 
 from odoo.addons.base.models.ir_qweb import render as qweb_render
 
-
 _logger = logging.getLogger(__name__)
 
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
+
+
+def list_db_incompatible(databases: Iterable[str]) -> list[str]:
+    """
+    Check a list of databases if they are compatible with this version
+    of Odoo.
+
+    :param databases: A list of existing Postgresql databases.
+    :returns: A sub-list of incompatible databases.
+    """
+    incompatible_databases = []
+    for database_name in databases:
+        with db_connect(database_name, readonly=True).cursor() as cr:
+            if odoo.tools.sql.table_exists(cr, 'ir_module_module'):
+                cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
+                base_version = cr.fetchone()
+                if not base_version or not base_version[0]:
+                    incompatible_databases.append(database_name)
+                else:
+                    # e.g. 19.1.1.3 -> 19.1
+                    local_version = '.'.join(base_version[0].split('.')[:2])
+                    if local_version != release.serie:
+                        incompatible_databases.append(database_name)
+            else:
+                incompatible_databases.append(database_name)
+    for database_name in incompatible_databases:
+        # don't fill the pool with connections to incompatible databases
+        odoo.sql_db.close_db(database_name)
+    return incompatible_databases
+
+
+def list_countries():
+    list_countries = []
+    root = ET.parse(os.path.join(odoo.tools.config.root_path, 'addons/base/data/res_country_data.xml')).getroot()
+    for country in root.find('data').findall('record[@model="res.country"]'):
+        name = country.find('field[@name="name"]').text
+        code = country.find('field[@name="code"]').text
+        list_countries.append((code, name))
+    return sorted(list_countries, key=lambda c: c[1])
+
+
+def scan_languages() -> list[tuple[str, str]]:
+    """ Returns all languages supported for translation
+
+    :returns: a list of (lang_code, lang_name) pairs
+    :rtype: [(str, unicode)]
+    """
+    # read (code, name) from languages in base/data/res.lang.csv
+    with file_open('base/data/res.lang.csv') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        fields = next(reader)
+        code_index = fields.index("code")
+        name_index = fields.index("name")
+        result = [
+            (row[code_index], row[name_index])
+            for row in reader
+        ]
+    return sorted(result or [('en_US', 'English')], key=itemgetter(1))
 
 
 class Database(http.Controller):
@@ -31,13 +93,17 @@ class Database(http.Controller):
         d.setdefault('manage', True)
         d['insecure'] = odoo.tools.config.verify_admin_password('admin')
         d['list_db'] = odoo.tools.config['list_db']
-        d['langs'] = odoo.service.db.exp_list_lang()
-        d['countries'] = odoo.service.db.exp_list_countries()
+        try:
+            d['langs'] = scan_languages()
+        except Exception:
+            _logger.exception("Could not read res.lang.csv")
+            d['langs'] = []
+        d['countries'] = list_countries()
         d['pattern'] = DBNAME_PATTERN
         # databases list
         try:
             d['databases'] = http.db_list()
-            d['incompatible_databases'] = odoo.service.db.list_db_incompatible(d['databases'])
+            d['incompatible_databases'] = list_db_incompatible(d['databases'])
         except odoo.exceptions.AccessDenied:
             d['databases'] = [request.db] if request.db else []
 

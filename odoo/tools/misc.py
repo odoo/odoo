@@ -414,30 +414,6 @@ def get_iso_codes(lang: str) -> str:
     return lang
 
 
-def scan_languages() -> list[tuple[str, str]]:
-    """ Returns all languages supported by OpenERP for translation
-
-    :returns: a list of (lang_code, lang_name) pairs
-    :rtype: [(str, unicode)]
-    """
-    try:
-        # read (code, name) from languages in base/data/res.lang.csv
-        with file_open('base/data/res.lang.csv') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            fields = next(reader)
-            code_index = fields.index("code")
-            name_index = fields.index("name")
-            result = [
-                (row[code_index], row[name_index])
-                for row in reader
-            ]
-    except Exception:
-        _logger.error("Could not read res.lang.csv")
-        result = []
-
-    return sorted(result or [('en_US', u'English')], key=itemgetter(1))
-
-
 def mod10r(number: str) -> str:
     """
     Input number : account or invoice number
