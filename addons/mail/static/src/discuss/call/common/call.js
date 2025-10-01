@@ -133,7 +133,7 @@ export class Call extends Component {
 
     /**
      * @param {import("models").RtcSession} session
-     * @param {String} [videoType]
+     * @param {import("@mail/discuss/call/common/rtc_service").VideoType} [videoType]
      */
     setInset(session, videoType) {
         const key = "session_" + session.id;

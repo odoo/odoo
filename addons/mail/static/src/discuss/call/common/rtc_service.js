@@ -23,7 +23,30 @@ let sequence = 1;
 const getSequence = () => sequence++;
 
 /**
- * @typedef {'audio' | 'camera' | 'screen' } streamType
+ * @typedef {'camera' | 'screen' } VideoType
+ */
+
+/**
+ * @typedef {'audio' | VideoType } StreamType
+ */
+
+/**
+ * @typedef {object} DownloadStates
+ * @property {boolean} [audio]
+ * @property {boolean} [camera]
+ * @property {boolean} [screen]
+ */
+
+/**
+ * @typedef {object} CrossTabActions
+ * @property {boolean} [is_muted]
+ * @property {boolean} [is_deaf]
+ * @property {boolean} [raisingHand]
+ * @property {boolean} [pip]
+ */
+
+/**
+ * @typedef {Object<string, (import("@mail/discuss/call/common/rtc_session_model").ServerSessionInfo|import("@mail/discuss/call/common/rtc_session_model").SessionInfo)>} SessionInfoMap
  */
 
 /**
@@ -81,20 +104,12 @@ const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
  * @returns {Boolean}
  */
 function hasTurn(iceServers) {
-    return iceServers.some((server) => {
-        let hasTurn = false;
-        if (server.url) {
-            hasTurn = server.url.startsWith("turn:");
-        }
-        if (server.urls) {
-            if (Array.isArray(server.urls)) {
-                hasTurn = server.urls.some((url) => url.startsWith("turn:")) || hasTurn;
-            } else {
-                hasTurn = server.urls.startsWith("turn:") || hasTurn;
-            }
-        }
-        return hasTurn;
-    });
+    return iceServers.some(
+        (server) =>
+            server.url?.startsWith("turn:") ||
+            server.urls?.startsWith?.("turn:") ||
+            server.urls?.some?.((url) => url.startsWith("turn:"))
+    );
 }
 
 /**
@@ -118,6 +133,10 @@ class Network {
         this.sfu = sfu;
     }
 
+    /**
+     * @param sessionId
+     * @returns {{ type: StreamType, state: string }[]}
+     */
     getSfuConsumerStats(sessionId) {
         const consumers = this.sfu?._consumers.get(sessionId);
         if (!consumers) {
@@ -172,22 +191,21 @@ class Network {
         this.sfu?.addEventListener(name, f);
     }
     /**
-     * @param {streamType} type
+     * @param {StreamType} type
      * @param {MediaStreamTrack | null} track track to be sent to the other call participants,
      * not setting it will remove the track from the server
      */
     async updateUpload(type, track) {
-        const proms = [this.p2p.updateUpload(type, track)];
-        if (this.sfu?.state === "connected") {
-            proms.push(this.sfu.updateUpload(type, track));
-        }
-        await Promise.all(proms);
+        await Promise.all([
+            this.sfu?.state === "connected" && this.sfu.updateUpload(type, track),
+            this.p2p.updateUpload(type, track),
+        ]);
     }
     /**
      * Stop or resume the consumption of tracks from the other call participants.
      *
      * @param {number} sessionId
-     * @param {Object<[streamType, boolean]>} states e.g: { audio: true, camera: false }
+     * @param {DownloadStates} states e.g: { audio: true, camera: false }
      */
     updateDownload(sessionId, states) {
         this.p2p.updateDownload(sessionId, states);
@@ -197,11 +215,11 @@ class Network {
      * Updates the server with the info of the session (isTalking, isCameraOn,...) so that it can broadcast it to the
      * other call participants.
      *
-     * @param {import("#src/models/session.js").SessionInfo} info
+     * @param {import("@mail/discuss/call/common/rtc_session_model").SessionInfo} info
      * @param {Object} [options] see documentation of respective classes
      */
     updateInfo(info, options = {}) {
-        this.p2p.updateInfo(info, options);
+        this.p2p.updateInfo(info);
         this.sfu?.updateInfo(info, options);
     }
     disconnect() {
@@ -680,6 +698,10 @@ export class Rtc extends Record {
         }
     }
 
+    /**
+     * @param {import("models").RtcSession} session
+     * @param {number} volume
+     */
     setVolume(session, volume) {
         session.volume = volume;
         this.store.settings.saveVolumeSetting({
@@ -954,7 +976,7 @@ export class Rtc extends Record {
     /**
      * Send an action to the host tab of the call
      *
-     * @param {Object} changes
+     * @param {CrossTabActions} changes
      */
     _remoteAction(changes) {
         this._postToTabs({
@@ -984,6 +1006,7 @@ export class Rtc extends Record {
         });
     }
 
+    /** @param {SessionInfoMap} changes */
     _updateRemoteTabs(changes) {
         this._postToTabs({
             type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
@@ -1080,6 +1103,7 @@ export class Rtc extends Record {
         }
     }
 
+    /** @param {CrossTabActions} actions */
     async _localAction(actions = {}) {
         const promises = [];
         for (const [key, value] of Object.entries(actions)) {
@@ -1329,6 +1353,7 @@ export class Rtc extends Record {
         );
     }
 
+    /** @param {SessionInfoMap} payload */
     updateSessionInfo(payload) {
         if (!payload) {
             return;
@@ -1346,7 +1371,6 @@ export class Rtc extends Record {
                 }
                 // `isRaisingHand` is turned into the Date `raisingHand`
                 this.setRemoteRaiseHand(session, info.isRaisingHand);
-                delete info.isRaisingHand;
                 assignDefined(session, {
                     is_muted: info.isSelfMuted ?? info.is_muted,
                     is_deaf: info.isDeaf ?? info.is_deaf,
@@ -1408,7 +1432,7 @@ export class Rtc extends Record {
     /**
      * @param {import("models").RtcSession} session
      * @param {MediaStreamTrack} track
-     * @param {streamType} type
+     * @param {StreamType} type
      * @param {boolean} active false if the track is muted/disabled
      */
     async handleRemoteTrack({ session, track, type, active = true }) {
@@ -1777,10 +1801,11 @@ export class Rtc extends Record {
 
     /**
      * @param {string} type
-     * @param {Object} [param1]
-     * @param {boolean} [param1.force]
-     * @param {boolean} [param1.env]
-     * @param {boolean} [param1.refreshStream]
+     * @param {Object} [options]
+     * @param {boolean} [options.force] if defined, bypass the toggle to force the state
+     * @param {import("@web/env").OdooEnv} [options.env]
+     * @param {boolean} [options.refreshStream] if true, the stream be requested from the device again instead of
+     *     potentially reusing the current stream.
      */
     async toggleVideo(type, options) {
         let force;
@@ -1868,6 +1893,13 @@ export class Rtc extends Record {
         }
     }
 
+    /**
+     * @param {object} data
+     * @param {boolean} [data.is_camera_on]
+     * @param {boolean} [data.is_screen_sharing_on]
+     * @param {boolean} [data.is_muted]
+     * @param {boolean} [data.is_deaf]
+     */
     updateAndBroadcast(data) {
         this._updateRemoteTabs({ [this.localSession.id]: data });
         assignDefined(this.localSession, data);
@@ -1887,11 +1919,12 @@ export class Rtc extends Record {
     }
 
     /**
+     * @param {MediaStreamTrack} track
      * @param {String} type 'camera' or 'screen'
-     * @param {Object} [param1] options
-     * @param {Boolean} [param1.activateVideo=false] options
-     * @param {Env} [param1.env]
-     * @param {Boolean} [param1.refreshStream] whether we are requesting a new stream
+     * @param {Object} [options] options
+     * @param {Boolean} [options.activateVideo=false] options
+     * @param {import("@web/env").OdooEnv} [options.env]
+     * @param {Boolean} [options.refreshStream] whether we are requesting a new stream
      */
     async setVideo(track, type, options) {
         let activateVideo;
@@ -2130,10 +2163,9 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").id} id
+     * @param {import("models").RtcSession} session
      */
-    deleteSession(id) {
-        const session = this.store["discuss.channel.rtc.session"].get(id);
+    deleteSession(session) {
         if (session) {
             if (this.localSession && session.eq(this.localSession)) {
                 this.log(this.localSession, "self session deleted, ending call", {
@@ -2157,7 +2189,7 @@ export class Rtc extends Record {
      * @param {MediaStreamTrack} track
      * @param {Object} [parm1]
      * @param {boolean} [parm1.mute]
-     * @param {"camera"|"screen"} [parm1.videoType]
+     * @param {VideoType} [parm1.videoType]
      */
     async updateStream(session, track, { mute, videoType } = {}) {
         const stream = new window.MediaStream();
@@ -2191,8 +2223,9 @@ export class Rtc extends Record {
     /**
      * @param {import("models").RtcSession} session
      * @param {Object} [param1]
-     * @param {String} [param1.type]
-     * @param {boolean} [param1.cleanup]
+     * @param {import("@mail/discuss/call/common/rtc_service").VideoType} [param1.type]
+     * @param {boolean} [param1.cleanup] when removing streams from the local session, we may still want to keep
+     * them alive, set to false to prevent the streams from being closed.
      */
     removeVideoFromSession(session, { type, cleanup = true } = {}) {
         if (type) {
@@ -2234,7 +2267,7 @@ export class Rtc extends Record {
 
     /**
      * @param {import("models").RtcSession} session
-     * @param {"screen"|"camera"} [videoType]
+     * @param {VideoType} [videoType]
      * @param {Object} [parm2]
      * @param {boolean} [parm2.addVideo]
      */
@@ -2271,7 +2304,7 @@ export class Rtc extends Record {
     /**
      * @param {import("models").RtcSession} rtcSession
      * @param {Object} [param1]
-     * @param {number} [param1.viewCountIncrement=0] negative value to decrement
+     * @param {number} [param1.viewCountIncrement=0] can be a negative value to decrement
      */
     updateVideoDownload(rtcSession, { viewCountIncrement = 0 } = {}) {
         rtcSession.videoComponentCount += viewCountIncrement;
