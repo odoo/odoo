@@ -46,6 +46,7 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             },
         )
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        self.authenticate(john.login, john.login)
         self.make_jsonrpc_request("/mail/rtc/channel/join_call", {"channel_id": channel.id})
         self.assertEqual(
             channel.message_ids[-1].body,
