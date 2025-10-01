@@ -3,6 +3,7 @@
 
 from datetime import timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 import odoo
 from odoo import fields
@@ -2859,3 +2860,23 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         order_line = order.lines[0]
         self.env.invalidate_all()
         order_line.with_user(user).with_company(branch)._compute_total_cost(None)
+
+    def test_session_name_gap(self):
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        current_session_name = session.name
+        session.action_pos_session_closing_control()
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+
+        def _post_cash_details_message_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.session'], "_post_cash_details_message", _post_cash_details_message_patch):
+            with self.assertRaises(UserError):
+                session.set_opening_control(0, None)
+
+        session.set_opening_control(0, None)
+        self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
