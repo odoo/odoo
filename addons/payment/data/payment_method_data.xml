@@ -2306,11 +2306,15 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"
                eval="[Command.set([
+                         ref('base.de'),
+                         ref('base.fi'),
+                         ref('base.fr'),
                          ref('base.uk'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
+                         ref('base.EUR'),
                          ref('base.GBP'),
                      ])]"
         />
