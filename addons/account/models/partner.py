@@ -19,7 +19,6 @@ _logger = logging.getLogger(__name__)
 _ref_company_registry = {
     'jp': '7000012050002',
     'dk': '58403288',
-
     # Using the same placeholder value for France and all its overseas territories/collectivities
     'fr': '33417522101010',
     'pf': '33417522101010',
@@ -34,6 +33,7 @@ _ref_company_registry = {
     'pm': '33417522101010',
     'yt': '33417522101010',
     'wf': '33417522101010',
+    'fi': '8763054-9',
 }
 
 
