@@ -68,8 +68,10 @@
 
 <!-- Multi record "Load-time" templates (rendered in JS on page load) -->
 <!-- List layout -->
-<template id="dynamic_filter_template_blog_post_list" name="List">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post border-0 rounded-3" data-extra-classes="g-4" data-column-classes="col-12 col-sm-6 col-lg-4">
+<template id="dynamic_filter_template_blog_post_list" name="List"
+        data-extra-classes="g-4"
+        data-column-classes="col-12 col-sm-6 col-lg-4">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post border-0 rounded-3">
         <t t-set="record" t-value="data['_record']"/>
         <div class="d-flex flex-wrap mb-2 small">
             <span class="w-100 w-sm-auto">
@@ -90,8 +92,11 @@
     </div>
 </template>
 <!-- Big picture layout -->
-<template id="dynamic_filter_template_blog_post_big_picture" name="Big picture">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4" data-extra-snippet-classes="s_blog_posts_effect_marley s_blog_posts_post_picture_size_default">
+<template id="dynamic_filter_template_blog_post_big_picture" name="Big picture"
+        data-extra-classes="g-3"
+        data-column-classes="col-12 col-sm-6 col-lg-4"
+        data-extra-snippet-classes="s_blog_posts_effect_marley s_blog_posts_post_picture_size_default">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100">
         <t t-set="record" t-value="data['_record']"/>
         <a class="s_blog_posts_post_cover position-relative d-block h-100 rounded shadow-sm overflow-hidden text-decoration-none text-reset ratio ratio-1x1" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
             <t t-call="website.record_cover">
@@ -114,8 +119,9 @@
     </div>
 </template>
 <!-- Horizontal layout -->
-<template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100" data-number-of-elements="1">
+<template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal"
+        data-number-of-elements="1">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100">
         <t t-set="record" t-value="data['_record']"/>
         <div t-attf-class="pb-4 {{not data_last and 'border-bottom'}}">
             <div class="row flex-md-nowrap">
@@ -150,8 +156,10 @@
     </div>
 </template>
 <!-- Card layout -->
-<template id="dynamic_filter_template_blog_post_card" name="Card">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+<template id="dynamic_filter_template_blog_post_card" name="Card"
+        data-extra-classes="g-3"
+        data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100">
         <t t-set="record" t-value="data['_record']"/>
         <div class="card h-100">
             <a class="text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
@@ -182,8 +190,10 @@
 
 <!-- Single record templates -->
 <!-- Full Layout -->
-<template id="dynamic_filter_template_blog_post_single_full" name="Solo Full">
-    <t t-if="len(records)" class="s_blog_posts_post" data-extra-snippet-classes="o_cc o_cc5" data-column-classes="col-lg-12">
+<template id="dynamic_filter_template_blog_post_single_full" name="Solo Full"
+        data-extra-snippet-classes="o_cc o_cc5"
+        data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -208,8 +218,9 @@
     </t>
 </template>
 <!-- Aside Layout -->
-<template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside">
-    <t t-if="len(records)" class="s_blog_posts_post" data-column-classes="col-lg-12">
+<template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside"
+        data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -240,8 +251,11 @@
     </t>
 </template>
 <!-- Circle Layout -->
-<template id="dynamic_filter_template_blog_post_single_circle" name="Solo Circle">
-    <t t-if="len(records)" class="s_blog_posts_post" data-extra-snippet-classes="o_cc o_cc2" data-column-classes="col-lg-12" data-container-classes="o_container_small">
+<template id="dynamic_filter_template_blog_post_single_circle" name="Solo Circle"
+        data-extra-snippet-classes="o_cc o_cc2"
+        data-column-classes="col-lg-12"
+        data-container-classes="o_container_small">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -270,8 +284,9 @@
     </t>
 </template>
 <!-- CTA Badge Layout -->
-<template id="dynamic_filter_template_blog_post_single_badge" name="Solo Badge">
-    <t t-if="len(records)" class="s_blog_posts_post" data-column-classes="col-lg-12 text-center">
+<template id="dynamic_filter_template_blog_post_single_badge" name="Solo Badge"
+        data-column-classes="col-lg-12 text-center">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>

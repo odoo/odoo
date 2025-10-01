@@ -475,6 +475,7 @@ form: module.record_id""" % (xml_id,)
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name'))
         full_tpl_id = tpl_id
+        attrib = el.attrib
         if '.' not in full_tpl_id:
             full_tpl_id = '%s.%s' % (self.module, tpl_id)
         # set the full template name for qweb <module>.<id>
@@ -483,7 +484,7 @@ form: module.record_id""" % (xml_id,)
             el.tag = 't'
         else:
             el.tag = 'data'
-        el.attrib.pop('id', None)
+        attrib.pop('id', None)
 
         if self.module.startswith('theme_'):
             model = 'theme.ir.ui.view'
@@ -495,8 +496,8 @@ form: module.record_id""" % (xml_id,)
             'model': model,
         }
         for att in ['forcecreate', 'context']:
-            if att in el.attrib:
-                record_attrs[att] = el.attrib.pop(att)
+            if att in attrib:
+                record_attrs[att] = attrib.pop(att)
 
         Field = builder.E.field
         name = el.get('name', tpl_id)
@@ -505,27 +506,27 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(name, name='name'))
         record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
-        if 'track' in el.attrib:
-            record.append(Field(el.get('track'), name='track'))
-        if 'priority' in el.attrib:
-            record.append(Field(el.get('priority'), name='priority'))
-        if 'inherit_id' in el.attrib:
-            record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
-        if 'website_id' in el.attrib:
-            record.append(Field(name='website_id', ref=el.get('website_id')))
-        if 'key' in el.attrib:
-            record.append(Field(el.get('key'), name='key'))
-        if el.get('active') in ("True", "False"):
+        if 'track' in attrib:
+            record.append(Field(attrib.pop('track'), name='track'))
+        if 'priority' in attrib:
+            record.append(Field(attrib.pop('priority'), name='priority'))
+        if 'inherit_id' in attrib:
+            record.append(Field(name='inherit_id', ref=attrib.pop('inherit_id')))
+        if 'website_id' in attrib:
+            record.append(Field(name='website_id', ref=attrib.pop('website_id')))
+        if 'key' in attrib:
+            record.append(Field(attrib.pop('key'), name='key'))
+        if (active := attrib.pop('active', None)) in ("True", "False"):
             view_id = self.id_get(tpl_id, raise_if_not_found=False)
             if self.mode != "update" or not view_id:
-                record.append(Field(name='active', eval=el.get('active')))
-        if el.get('customize_show') in ("True", "False"):
-            record.append(Field(name='customize_show', eval=el.get('customize_show')))
-        groups = el.attrib.pop('groups', None)
+                record.append(Field(name='active', eval=active))
+        if (customize_show := attrib.pop('customize_show', None)) in ("True", "False"):
+            record.append(Field(name='customize_show', eval=customize_show))
+        groups = attrib.pop('groups', None)
         if groups:
             grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
             record.append(Field(name="group_ids", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
-        if el.get('primary') == 'True':
+        if attrib.pop('primary', None) == 'True':
             # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
             el.append(
                 builder.E.xpath(

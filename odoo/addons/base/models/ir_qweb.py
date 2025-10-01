@@ -397,6 +397,7 @@ from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, MissingError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, FONT_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
@@ -464,7 +465,12 @@ FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
 # Attribute name used outside the context of the QWeb.
-SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
+# When importing data, the <template> generate a root <t> with the `t-name` of
+# the template (equal to the xmlid). This is deprecated. It was used when
+# multiple templates were sent in the same etree.
+# Inside the template, `id` could be used as anchor for xpath. Actually `name`
+# is also used as anchor but is depreciated.
+SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title', 'id', 'name'} | set(MOVABLE_BRANDING)
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
@@ -1026,7 +1032,7 @@ class IrQweb(models.AbstractModel):
 
         compile_context.pop('raise_if_not_found', None)
 
-        ref_name = element.attrib.pop('t-name', None)
+        ref_name = element.attrib.get('t-name')
         if isinstance(ref, int) or (isinstance(template, str) and '<' not in template):
             ref_name = self._get_template_info(ref)['key'] or ref_name
 
@@ -1068,9 +1074,6 @@ class IrQweb(models.AbstractModel):
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
 
-        if element.text:
-            element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
-
         compile_context['template_functions'] = {}
 
         compile_context['_text_concat'] = []
@@ -1078,7 +1081,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][f'{def_name}_content'] = (
             [f"def {def_name}_content(self, values):"]
             + [indent_code('attrs = None', 1)]
-            + self._compile_node(element, compile_context, 1)
+            + self._compile_root(element, compile_context)
             + self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context['template_functions'][def_name] = [indent_code(f"""
@@ -1624,6 +1627,12 @@ class IrQweb(models.AbstractModel):
 
     # compile
 
+    def _compile_root(self, element, compile_context):
+        element.attrib.pop('t-name', None)
+        if element.text:
+            element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
+        return self._compile_node(element, compile_context, 1)
+
     def _compile_node(self, el, compile_context, level):
         """ Compile the given element into python code.
 
@@ -1868,6 +1877,14 @@ class IrQweb(models.AbstractModel):
             expression.
         """
         code = []
+        if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
+            # if it's an invisible element <t>
+            if not el.get('t-out') and not el.get('t-esc') and not el.get('t-raw') and el.getparent() is not None:
+                # if this invisible doesn't generate content, attributes will never be consumed
+                return code
+            if el.attrib.get('t-consumed-options') != 'True':
+                # If the content is inserted without using a widget, attributes will never be consumed
+                return code
 
         # Compile the introduced new namespaces of the given element.
         #
@@ -1919,15 +1936,6 @@ class IrQweb(models.AbstractModel):
                     elif isinstance(atts_value, (list, tuple)):
                         attrs.update(dict(atts_value))
                     """, level))
-
-        if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
-            # if it's an invisible element <t>
-            if not el.get('t-out') and el.getparent() is not None:
-                # if this invisible doesn't generate content, attributes will never be consumed
-                return []
-            if el.attrib.get('t-consumed-options') != 'True':
-                # If the content is inserted without using a widget, attributes will never be consumed
-                return []
 
         if code:
             code = [indent_code("attrs = {}", level)] + code
@@ -2501,9 +2509,6 @@ class IrQweb(models.AbstractModel):
         el_tag = etree.QName(el.tag).localname if el.nsmap else el.tag
         if el_tag != 't':
             raise SyntaxError(f"t-call must be on a <t> element (actually on <{el_tag}>).")
-
-        if el.attrib.get('t-call-options'): # retro-compatibility
-            el.attrib.set('t-options', el.attrib.pop('t-call-options'))
 
         nsmap = compile_context.get('nsmap')
 

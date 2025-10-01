@@ -300,9 +300,9 @@
                 <t t-else="">
                     <t t-call-assets="web.assets_web" media="screen" t-js="false"/>
                 </t>
-                <t t-call="web.conditional_assets_tests" media="screen"/>
+                <t t-call="web.conditional_assets_tests"/>
             </t>
-            <t t-set="head" t-value="head_web + (head or '')" media="screen"/>
+            <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
         </t>
     </template>

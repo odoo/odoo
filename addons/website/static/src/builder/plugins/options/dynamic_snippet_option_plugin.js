@@ -140,18 +140,18 @@ class DynamicSnippetOptionPlugin extends Plugin {
         }
         el.classList.add(this.getTemplateClass(newTemplateKey));
 
-        if (template.numOfEl) {
-            el.dataset.numberOfElements = template.numOfEl;
+        if (template.numberOfElements) {
+            el.dataset.numberOfElements = template.numberOfElements;
         } else {
             delete el.dataset.numberOfElements;
         }
-        if (template.numOfElSm) {
-            el.dataset.numberOfElementsSmallDevices = template.numOfElSm;
+        if (template.numberOfElementsSmallDevices) {
+            el.dataset.numberOfElementsSmallDevices = template.numberOfElementsSmallDevices;
         } else {
             delete el.dataset.numberOfElementsSmallDevices;
         }
-        if (template.numOfElFetch) {
-            el.dataset.numberOfRecords = template.numOfElFetch;
+        if (template.numberOfRecords) {
+            el.dataset.numberOfRecords = template.numberOfRecords;
         }
         if (template.extraClasses) {
             el.dataset.extraClasses = template.extraClasses;

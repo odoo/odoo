@@ -31,7 +31,7 @@
     </div>
 
     <div t-if="not is_profile" t-attf-class="o_wforum_index_entry_tags mb-lg-1">
-        <t if="tag.posts_count and not hide_tags" t-foreach="question.tag_ids" t-as="question_tag">
+        <t t-foreach="question.tag_ids" t-as="question_tag" t-if="question_tag.posts_count and not hide_tags">
 
             <!-- Toggle Tags on click -->
             <t t-if="tag and tag.name == question_tag.name" t-set="click_action"

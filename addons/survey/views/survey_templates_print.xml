@@ -75,9 +75,7 @@
                                                 </t>
                                                 <t t-else="">
                                                     <t t-if="question.question_type == 'text_box'" t-call="survey.question_text_box"/>
-                                                    <t t-if="question.question_type == 'char_box'" class="o_survey_print o_survey_comment_container p-0">
-                                                        <span t-out="answer_lines[0].value_char_box or None"/>
-                                                    </t>
+                                                    <span t-if="question.question_type == 'char_box'" t-out="answer_lines[0].value_char_box or None" class="o_survey_print o_survey_comment_container p-0"/>
                                                     <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
                                                     <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
                                                     <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>

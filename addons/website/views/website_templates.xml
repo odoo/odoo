@@ -1919,7 +1919,7 @@
                                     <a href="#">Terms of Services</a>
                                 </li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
-                                <t t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
+                                <t t-foreach="configurator_footer_links" t-as="link">
                                     <li class="list-inline-item">•</li>
                                     <li class="list-inline-item">
                                         <a t-att-href="link['href']" t-out="link['text']"/>
