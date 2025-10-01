@@ -29,9 +29,13 @@ export class TogglePriceListDescriptionAction extends BuilderAction {
                 descriptionEl.classList.add(
                     params.descriptionClass,
                     "d-block",
+                    "mt-2",
                     "pe-5",
                     "text-muted"
                 );
+                if (params.descriptionExtraClass) {
+                    descriptionEl.classList.add(params.descriptionExtraClass);
+                }
                 descriptionEl.textContent = _t("Add a description here");
                 item.appendChild(descriptionEl);
             }
