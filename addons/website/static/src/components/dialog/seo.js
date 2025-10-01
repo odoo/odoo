@@ -960,7 +960,7 @@ export class OptimizeSEODialog extends Component {
         const imageEls = this.pageDocumentElement.querySelectorAll('#wrap img');
         return [...new Set(Array.from(imageEls)
             .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200)
-            .map(({ src }) => (src))
+            .map(img => img.getAttribute("src"))
         )];
     }
 
