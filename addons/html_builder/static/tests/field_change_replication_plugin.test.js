@@ -1,7 +1,7 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, queryOne, waitFor } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -179,5 +179,26 @@ describe("replicate changes", () => {
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
         expect([span2, span3]).toHaveText(span1.textContent); // all the same text
+    });
+
+    test("Changing field element should keep its content", async () => {
+        const { getEditor } = await setupHTMLBuilder("", {
+            headerContent: `<h1 data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">hello</h1>`,
+        });
+        const h1 = queryOne(":iframe h1");
+
+        getEditor().shared.selection.setSelection({
+            anchorNode: h1,
+            anchorOffset: 0,
+            focusNode: h1,
+            focusOffset: 1,
+        });
+        await animationFrame();
+        await waitFor('[name="font"] button');
+        await click('[name="font"] button');
+        await waitFor('span[name="h6"]');
+        await click('span[name="h6"]');
+
+        expect(queryOne(':iframe h6[data-oe-id="600"]')).toHaveInnerHTML("hello");
     });
 });

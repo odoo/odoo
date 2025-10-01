@@ -26,6 +26,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             .map((r) =>
                 closestElement(r.target, "[data-oe-model], [data-oe-translation-source-sha]")
             )
+            .filter((field) => field?.isConnected)
             .filter(Boolean)
             // Do not forward "unstyled" copies to other nodes.
             .filter((fieldEl) => !fieldEl.classList.contains("o_translation_without_style"))
