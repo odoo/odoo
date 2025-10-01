@@ -30,6 +30,7 @@ export class CustomerDisplayPosAdapter {
     }
 
     formatOrderData(order) {
+        this.currency = order.currency;
         this.data = {
             finalized: order.finalized,
             general_customer_note: order.general_customer_note,
@@ -65,7 +66,7 @@ export class CustomerDisplayPosAdapter {
     getPaymentData(payment) {
         return {
             name: payment.payment_method_id.name,
-            amount: formatCurrency(payment.amount, payment.pos_order_id.currency),
+            amount: formatCurrency(payment.amount, this.currency),
         };
     }
 }
