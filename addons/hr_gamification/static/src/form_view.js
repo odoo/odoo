@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { EmployeeFormController } from "@hr/views/form_view";
+import { EmployeeFormController } from "@hr/views/hr_employee_form_view";
 import { onMounted } from "@odoo/owl";
 
 class BadgeTabRenderer extends FormRenderer {
