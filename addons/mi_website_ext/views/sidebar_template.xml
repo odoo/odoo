@@ -463,10 +463,7 @@
                                         <t t-set="current_month_qweb" t-value="datetime.datetime.now().month"/>
                                         <t t-set="current_year_qweb" t-value="datetime.datetime.now().year"/>
                                         <t t-set="today_date_obj_qweb" t-value="datetime.date.today()"/>
-                                        <t t-set="all_active_employees" t-value="request.env['hr.employee'].sudo().search([
-            ('active', '=', True),
-            ('company_id', '=', request.website.company_id.id)
-        ])"/>
+                                        <t t-set="all_active_employees" t-value="request.env['hr.employee'].with_user(SUPERUSER_ID).search([('active', '=', True)])"/>
                                         <t t-set="anniversary_display_list_final" t-value="[]"/>
                                         <t t-foreach="all_active_employees" t-as="employee_in_loop">
                                             <t t-set="first_contract_loop" t-value="request.env['hr.contract'].sudo().search([
