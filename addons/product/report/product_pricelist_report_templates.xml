@@ -27,6 +27,7 @@
                             <th class="text-end px-1" colspan="100%">Quantities (Price)</th>
                             <tr>
                                 <th class="px-1">Products</th>
+                                <th class="px-1">Internal Reference</th>
                                 <th class="px-1" groups="uom.group_uom">UOM</th>
                                 <t t-foreach="quantities" t-as="qty">
                                     <th class="text-end px-1"><span t-out="qty">10 Units</span></th>
@@ -42,6 +43,7 @@
                                         </a>
                                         <span t-else="" t-out="product['name']">Acme Widget</span>
                                     </td>
+                                    <td class="px-1" t-out="product['default_code']"> </td>
                                     <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
                                     <t t-foreach="quantities" t-as="qty">
                                         <td class="text-end px-1">
@@ -57,6 +59,7 @@
                                             </a>
                                             <span t-else="" class="ms-4" t-out="variant['name']">Acme Widget - Blue</span>
                                         </td>
+                                        <td class="px-1" t-out="variant['default_code']"> </td>
                                         <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
                                         <t t-foreach="quantities" t-as="qty">
                                             <td class="text-end px-1">

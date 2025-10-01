@@ -22,8 +22,8 @@ class ResConfigSettings(models.TransientModel):
     group_discount_per_so_line = fields.Boolean(
         string="Discounts", implied_group='sale.group_discount_per_so_line')
     group_proforma_sales = fields.Boolean(
-        string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
-        help="Allows you to send pro-forma invoice.")
+        string="Pro Forma Invoice", implied_group='sale.group_proforma_sales',
+        help="Allows you to send pro forma invoice.")
     group_warning_sale = fields.Boolean(
         string="Sale Order Warnings", implied_group='sale.group_warning_sale')
 

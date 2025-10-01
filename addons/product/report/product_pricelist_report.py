@@ -48,9 +48,10 @@ class ReportProductReport_Pricelist(models.AbstractModel):
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities):
         data = {
             'id': product.id,
-            'name': is_product_tmpl and product.name or product.display_name,
+            'name': product.name,
             'price': dict.fromkeys(quantities, 0.0),
             'uom': product.uom_id.name,
+            'default_code': product.default_code,
         }
         for qty in quantities:
             data['price'][qty] = pricelist._get_product_price(product, qty)
