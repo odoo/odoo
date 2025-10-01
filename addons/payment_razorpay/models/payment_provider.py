@@ -284,7 +284,7 @@ class PaymentProvider(models.Model):
             )
 
         headers = None
-        if not is_proxy_request and self.razorpay_access_token:
+        if not is_proxy_request and self.razorpay_access_token and not self.razorpay_key_id:
             if self.razorpay_access_token_expiry < fields.Datetime.now():
                 self._razorpay_refresh_access_token()
             headers = {'Authorization': f'Bearer {self.razorpay_access_token}'}
