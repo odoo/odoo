@@ -1,6 +1,24 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
 
+/**
+ * @typedef {object} ServerSessionInfo
+ * @property {boolean} [is_camera_on]
+ * @property {boolean} [is_screen_sharing_on]
+ * @property {boolean} [is_muted]
+ * @property {boolean} [is_deaf]
+ */
+
+/**
+ * @typedef {object} SessionInfo
+ * @property {boolean} [isSelfMuted]
+ * @property {boolean} [isDeaf]
+ * @property {boolean} [isTalking]
+ * @property {boolean} [isRaisingHand]
+ * @property {boolean} [isCameraOn]
+ * @property {boolean} [isScreenSharingOn]
+ */
+
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";
@@ -111,9 +129,9 @@ export class RtcSession extends Record {
     /** @type {Date|undefined} */
     raisingHand;
     videoComponentCount = 0;
-    /** @type {Map<'screen'|'camera', MediaStream>} */
+    /** @type {Map<import("@mail/discuss/call/common/rtc_service").VideoType, MediaStream>} */
     videoStreams = new Map();
-    /** @type {string} */
+    /** @type {import("@mail/discuss/call/common/rtc_service").VideoType} */
     mainVideoStreamType;
     /**
      * Represents the sequence of the last valid connection with that session. This can be used to
@@ -157,9 +175,7 @@ export class RtcSession extends Record {
         return isActive && this.videoStreams.get(type);
     }
 
-    /**
-     * @returns {{isSelfMuted: boolean, isDeaf: boolean, isTalking: boolean, isRaisingHand: boolean}}
-     */
+    /** @returns {SessionInfo} */
     get info() {
         return {
             isSelfMuted: this.is_muted,
@@ -185,6 +201,7 @@ export class RtcSession extends Record {
         return this.audioElement?.volume || this.localVolume;
     }
 
+    /** @param {number} value */
     set volume(value) {
         if (this.audioElement) {
             this.audioElement.volume = value;
@@ -209,7 +226,7 @@ export class RtcSession extends Record {
     }
 
     /**
-     * @param {"audio" | "camera" | "screen"} type
+     * @param {import("@mail/discuss/call/common/rtc_service").StreamType} type
      * @param {boolean} state
      */
     updateStreamState(type, state) {

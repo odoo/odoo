@@ -33,7 +33,7 @@ const ThreadPatch = {
         this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
-                this.store.env.services["discuss.rtc"].deleteSession(r.id);
+                this.store.env.services["discuss.rtc"].deleteSession(r);
             },
             /** @this {import("models").Thread} */
             async onUpdate() {
