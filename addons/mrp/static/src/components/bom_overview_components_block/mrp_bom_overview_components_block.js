@@ -33,7 +33,7 @@ export class BomOverviewComponentsBlock extends Component {
         }
 
         if (this.hasComponents) {
-            useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
+            useBus(this.env.overviewBus, "toggle-fold-all-bom", (ev) => this._toggleFoldAll(ev.detail.foldAll));
         }
 
         onWillUpdateProps(newProps => {
@@ -60,12 +60,11 @@ export class BomOverviewComponentsBlock extends Component {
         this.props.changeFolded({ ids: [foldId], isFolded: newState });
     }
 
-    _toggleFoldAll() {
+    _toggleFoldAll(foldAll) {
         const allChildIds = this.childIds;
-
-        this.state.unfoldAll = !this.state.unfoldAll;
-        allChildIds.forEach(id => this.state[id] = !this.state.unfoldAll);
-        this.props.changeFolded({ ids: allChildIds, isFolded: !this.state.unfoldAll });
+        this.state.unfoldAll = !foldAll;
+        allChildIds.forEach(id => this.state[id] = foldAll);
+        this.props.changeFolded({ ids: allChildIds, isFolded: foldAll });
     }
 
     //---- Getters ----

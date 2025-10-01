@@ -45,7 +45,7 @@ export class MoOverviewOperationsBlock extends Component {
             this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfold());
+        useBus(this.env.overviewBus, "toggle-fold-all-mo", (ev) => this._toggleFoldAll(ev.detail.foldAll));
     }
 
     //---- Handlers ----
@@ -55,9 +55,9 @@ export class MoOverviewOperationsBlock extends Component {
         this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: this.state.isFolded });
     }
 
-    unfold() {
-        this.state.isFolded = false;
-        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
+    _toggleFoldAll(foldAll) {
+        this.state.isFolded = foldAll;
+        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: foldAll });
     }
 
     //---- Helpers ----

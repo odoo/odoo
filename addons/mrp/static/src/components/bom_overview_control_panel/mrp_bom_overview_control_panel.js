@@ -65,7 +65,8 @@ export class BomOverviewControlPanel extends Component {
     }
 
     clickTogglefold() {
-        this.env.overviewBus.trigger("toggle-fold-all");
+        this.props.allFolded = !this.props.allFolded;
+        this.env.overviewBus.trigger("toggle-fold-all-bom", { foldAll: this.props.allFolded });
     }
 
     getDomain() {
