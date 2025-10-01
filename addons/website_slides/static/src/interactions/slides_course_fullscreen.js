@@ -1,7 +1,6 @@
 /* global YT, Vimeo */
 
 import { WebsiteSlidesCommon } from "@website_slides/interactions/slides_course_common";
-import { SlideShareDialog } from "../js/public/components/slide_share_dialog/slide_share_dialog";
 import "@website_slides/interactions/slides_course_join";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { rpc } from "@web/core/network/rpc";
@@ -245,9 +244,6 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
         ".o_wslides_fs_youtube_player, .o_wslides_fs_vimeo_player": {
             "t-on-slide_set_completed": this.onSlideSetCompleted,
         },
-//        ".o_wslides_fs_share": {
-//            "t-on-click": this.onShareSlideClick,
-//        },
     };
 
     setup() {
@@ -390,12 +386,6 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
             return this.fetchHtmlContent();
         }
         return Promise.resolve();
-    }
-
-    getDocumentMaxPage() {
-        const iframe = this.el.querySelector("iframe.o_wslides_iframe_viewer");
-        const iframeDocument = iframe.contentWindow.document;
-        return parseInt(iframeDocument.querySelector("#page_count").innerText);
     }
 
     stringToElements(str) {
@@ -566,20 +556,6 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
         if (this.slide.id === slide.id && this.slide.hasQuestion && !slide.completed) {
             this.renderSlide();
         }
-    }
-
-    onShareSlideClick() {
-        const slide = this.slide;
-        this.dialog.add(SlideShareDialog, {
-            category: slide.category,
-            documentMaxPage: slide.category == "document" && this.getDocumentMaxPage(),
-            emailSharing: slide.emailSharing,
-            embedCode: slide.embedCode || "",
-            id: slide.id,
-            isFullscreen: true,
-            name: slide.name,
-            url: slide.websiteShareUrl,
-        });
     }
 
     /**

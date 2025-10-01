@@ -9,6 +9,17 @@ export class Share extends Interaction {
         _root: { "t-on-click.prevent.stop.withTarget": this.onClick },
     }
 
+    setup() {
+        if (this.isFullscreen()) {
+            this.slidesService = this.services.website_slides;
+            this.slide = this.slidesService.data.slide;
+        }
+    }
+
+    isFullscreen() {
+        return document.querySelector('.o_wslides_fs_main');
+    }
+
     getDocumentMaxPage() {
         const iframe = document.querySelector("iframe.o_wslides_iframe_viewer");
         const iframeDocument = iframe.contentWindow.document;
@@ -20,16 +31,17 @@ export class Share extends Interaction {
      * @param {HTMLElement} currentTargetEl
      */
     onClick(ev, currentTargetEl) {
-        const data = currentTargetEl.dataset;
+        const slide = this.isFullscreen() ? this.slide : currentTargetEl.dataset;
         this.services.dialog.add(SlideShareDialog, {
-            category: data.category,
-            documentMaxPage: data.category == 'document' && this.getDocumentMaxPage(),
-            emailSharing: data.emailSharing === 'True',
-            embedCode: data.embedCode,
-            id: parseInt(data.id),
-            isChannel: data.isChannel === 'True',
-            name: data.name,
-            url: data.url,
+            category: slide.category,
+            documentMaxPage: slide.category == 'document' && this.getDocumentMaxPage(),
+            emailSharing: slide.emailSharing || slide.emailSharing === 'True',
+            embedCode: slide.embedCode || "",
+            id: parseInt(slide.id),
+            isChannel: slide.isChannel === 'True',
+            name: slide.name,
+            url: slide.websiteShareUrl || slide.url,
+            ...(this.isFullscreen() && { isFullscreen: true })
         });
     }
 }
