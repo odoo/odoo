@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("course_member", {
         },
         // eLearning: share the first slide
         {
-            trigger: ".o_wslides_fs_share",
+            trigger: ".o_wslides_share",
             run: "click",
         },
         {
