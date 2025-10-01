@@ -11,6 +11,7 @@ from itertools import starmap
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
+from odoo.fields import Domain
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 _logger = logging.getLogger(__name__)
@@ -476,7 +477,8 @@ class L10nInEwaybill(models.Model):
         })
         self.message_post(
             author_id=self.env.ref('base.partner_root').id,
-            attachment_ids=attachment.ids
+            attachment_ids=attachment.ids,
+            body=_("E-waybill %s request has been sent to government portal.", _('cancellation') if is_cancel else '')
         )
 
     def _ewaybill_cancel(self):
@@ -736,3 +738,16 @@ class L10nInEwaybill(models.Model):
     def _unlink_l10n_in_ewaybill_prevent(self):
         if self.filtered(lambda ewaybill: ewaybill.state != 'pending'):
             raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))
+
+    def _get_mail_thread_data_attachments(self):
+        res = super()._get_mail_thread_data_attachments()
+        return res | self._l10n_in_ewaybill_get_extra_attachments()
+
+    def _l10n_in_ewaybill_get_extra_attachments(self):
+        domain = (
+            Domain('res_id', 'in', self.ids) &
+            Domain('res_model', '=', self._name) &
+            Domain('res_field', '=', 'attachment_file')
+        )
+        attachments = self.env['ir.attachment'].search(domain)
+        return attachments
