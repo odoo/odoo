@@ -969,3 +969,37 @@ test("bottom-fit has the same width as the target", getFittingTest("bottom-fit",
 test("top-fit has the same width as the target", getFittingTest("top-fit", "width"));
 test("left-fit has the same height as the target", getFittingTest("left-fit", "height"));
 test("right-fit has the same height as the target", getFittingTest("right-fit", "height"));
+
+test("popper with the fit variant and a large content inside is resized to match the toggler - horizontally", async () => {
+    const TestComp = getTestComponent(
+        { position: "bottom-fit" },
+        {
+            content: {
+                width: "500px",
+            },
+            popper: {
+                width: "unset",
+            },
+        }
+    );
+    await mountWithCleanup(TestComp);
+    expect(queryOne("#target").getBoundingClientRect().left).toBe(225);
+    expect("#popper").toHaveStyle({ left: "225px", width: "50px" });
+});
+
+test("popper with the fit variant and a large content inside is resized to match the toggler - vertically", async () => {
+    const TestComp = getTestComponent(
+        { position: "right-fit" },
+        {
+            content: {
+                height: "500px",
+            },
+            popper: {
+                height: "unset",
+            },
+        }
+    );
+    await mountWithCleanup(TestComp);
+    expect(queryOne("#target").getBoundingClientRect().top).toBe(225);
+    expect("#popper").toHaveStyle({ top: "225px", height: "50px" });
+});
