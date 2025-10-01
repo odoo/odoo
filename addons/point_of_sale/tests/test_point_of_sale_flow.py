@@ -1,12 +1,13 @@
 import odoo
 
 from freezegun import freeze_time
+from unittest.mock import patch
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1828,6 +1829,26 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
+
+    def test_session_name_gap(self):
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        session.set_opening_control(0, None)
+        current_session_name = session.name
+        session.action_pos_session_closing_control()
+
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+
+        def _post_cash_details_message_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.session'], "_post_cash_details_message", _post_cash_details_message_patch):
+            with self.assertRaises(UserError):
+                session.set_opening_control(0, None)
+
+        session.set_opening_control(0, None)
+        self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
 
     def test_open_ui_missing_country(self):
         """ Test that a POS can not be opened if it has no country """
