@@ -2,7 +2,7 @@ import { MAIN_PLUGINS } from "./plugin_sets";
 import { createBaseContainer } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
-import { sequenceNumber, withSequence } from "./utils/resource";
+import { resourceSequenceObject, sequenceNumber, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 
 /**
@@ -189,18 +189,7 @@ export class Editor {
         }
 
         for (const key in resources) {
-            const resource = resources[key]
-                .flat()
-                .map((r) => {
-                    const isObjectWithSequence =
-                        typeof r === "object" && r !== null && sequenceNumber in r;
-                    return isObjectWithSequence ? r : withSequence(10, r);
-                })
-                .sort((a, b) => a[sequenceNumber] - b[sequenceNumber])
-                .map((r) => r.object);
-
-            resources[key] = resource;
-            Object.freeze(resources[key]);
+            // to adapt
         }
 
         return Object.freeze(resources);
