@@ -193,12 +193,14 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         url = f'https://api.razorpay.com/{api_version}/{endpoint}'
-        headers = None
-        if self.razorpay_access_token:
+        if self.razorpay_key_id and self.razorpay_key_secret:
+            headers = None
+            auth = (self.razorpay_key_id, self.razorpay_key_secret)
+        else:
             if self.razorpay_access_token_expiry < fields.Datetime.now():
                 self._razorpay_refresh_access_token()
             headers = {'Authorization': f'Bearer {self.razorpay_access_token}'}
-        auth = (self.razorpay_key_id, self.razorpay_key_secret) if self.razorpay_key_id else None
+            auth = None
         try:
             if method == 'GET':
                 response = requests.get(
