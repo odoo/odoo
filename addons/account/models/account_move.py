@@ -326,7 +326,7 @@ class AccountMove(models.Model):
     made_sequence_gap = fields.Boolean(compute='_compute_made_sequence_gap', store=True)  # store wether this is the first move breaking the natural sequencing
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
-    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True, depends=['company_id'])
     account_fiscal_country_group_codes = fields.Json(related="company_id.account_fiscal_country_group_codes")
     company_price_include = fields.Selection(related='company_id.account_price_include', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
