@@ -443,12 +443,18 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
-        if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
-            errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
+        if self._compare_datetime_to_sa_time_now(invoice.l10n_sa_confirmation_datetime):
+            errors.append(_("- Please, make sure the issue date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(
                 _("- Please, make sure either the Reversed Entry or the Reversal Reason are specified when confirming a Credit/Debit note"))
         return errors
+
+    @api.model
+    def _compare_datetime_to_sa_time_now(self, datetime):
+        def _convert_to_sa_datetime(datetime):
+            return fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), datetime)
+        return _convert_to_sa_datetime(datetime) > _convert_to_sa_datetime(fields.Datetime.now())
 
     def _needs_web_services(self):
         """

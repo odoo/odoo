@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.view.form.l10n_sa</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='invoice_date'][1]" position="attributes">
+                    <attribute name="invisible" add="(show_delivery_date and l10n_sa_hide_equal_date)" separator=" or " />
+                </xpath>
+                <xpath expr="//label[@for='invoice_date'][2]" position="attributes">
+                    <attribute name="invisible" add="(show_delivery_date and l10n_sa_hide_equal_date)" separator=" or " />
+                </xpath>
+                <field name="invoice_date" position="attributes">
+                    <attribute name="invisible" add="(show_delivery_date and l10n_sa_hide_equal_date)" separator=" or " />
+                </field>
+                <field name="invoice_date" position="after">
+                    <field name="l10n_sa_hide_equal_date" invisible="1"/>
+                    <field name="l10n_sa_confirmation_datetime"
+                        options="{'warn_future': true, 'rounding': 0}"
+                        invisible="not show_delivery_date"
+                        required="show_delivery_date"
+                        readonly="state != 'draft'"
+                        widget="real_time_datetime"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

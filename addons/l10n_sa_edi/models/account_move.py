@@ -31,6 +31,18 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.partner_id.company_type == 'person'
 
+    def button_draft(self):
+        for move in self:
+            if move.company_id.country_code == 'SA' and move.edi_error_count:
+                move.edi_document_ids\
+                    .filtered(lambda doc: doc.state not in ('sent', 'cancelled') and doc.blocking_level == 'error')\
+                    .write({
+                        'state': 'cancelled',
+                        'error': False,
+                        'blocking_level': False
+                    })
+        super().button_draft()
+
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id',
                  'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json', 'edi_document_ids',
                  'l10n_sa_invoice_signature', 'l10n_sa_chain_index', 'state')
