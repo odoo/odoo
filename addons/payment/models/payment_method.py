@@ -225,6 +225,11 @@ class PaymentMethod(models.Model):
         if payment_method_unknown in self:
             raise UserError(_("You cannot delete the default payment method."))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_linked_to_providers(self):
+        if any(record.provider_ids for record in self):
+            raise UserError(_("You cannot delete a payment method linked to a provider."))
+
     # === BUSINESS METHODS === #
 
     def _get_compatible_payment_methods(
