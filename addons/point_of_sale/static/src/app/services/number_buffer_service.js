@@ -303,8 +303,12 @@ class NumberBuffer extends EventBus {
         } else if (input[0] === "+" && !isNaN(parseFloat(input))) {
             // when input is like '+10', '+50', etc
             const inputValue = oParseFloat(input.slice(1));
-            const currentBufferValue = this.state.buffer ? oParseFloat(this.state.buffer) : 0;
-            this.state.buffer = (inputValue + currentBufferValue).toString();
+            const currentBufferValue = this.state.buffer
+                ? oParseFloat(this.state.buffer.replace(".", this.decimalPoint))
+                : 0;
+            this.state.buffer = (inputValue + currentBufferValue)
+                .toString()
+                .replace(".", this.decimalPoint);
         } else if (!isNaN(parseInt(input, 10))) {
             if (this.state.toStartOver) {
                 // when we want to erase the current buffer for a new value
