@@ -238,7 +238,7 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get title() {
-        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const info = this.props.productTemplate.getTaxDetails();
         const name = this.props.productTemplate.display_name;
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         const taxName = info?.taxes_data[0]?.name || "";

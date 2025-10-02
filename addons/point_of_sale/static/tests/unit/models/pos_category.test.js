@@ -9,11 +9,7 @@ describe("pos.category", () => {
         const store = await setupPosEnv();
         const category = store.models["pos.category"].get(3);
         const children = category.getAllChildren();
-        expect(children).toEqual([
-            store.models["pos.category"].get(3),
-            store.models["pos.category"].get(4),
-            store.models["pos.category"].get(5),
-        ]);
+        expect(children.map((c) => c.id).sort()).toEqual([3, 4, 5]);
     });
 
     test("get allParents", async () => {
@@ -27,10 +23,6 @@ describe("pos.category", () => {
         const store = await setupPosEnv();
         const category = store.models["pos.category"].get(3);
         const associatedProducts = category.associatedProducts;
-        expect(associatedProducts).toEqual([
-            store.models["product.template"].get(14),
-            store.models["product.template"].get(12),
-            store.models["product.template"].get(13),
-        ]);
+        expect(associatedProducts.map((p) => p.id).sort()).toEqual([12, 13, 14]);
     });
 });

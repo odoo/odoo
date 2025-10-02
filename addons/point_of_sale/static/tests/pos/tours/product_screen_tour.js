@@ -352,7 +352,7 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Test Product", true, "1", "100.0"),
-            ProductScreen.totalAmountIs("110.0"),
+            ProductScreen.totalAmountIs("100.0"), // Order total is also displayed excluding tax
             Chrome.endTour(),
         ].flat(),
 });

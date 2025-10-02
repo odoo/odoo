@@ -44,7 +44,7 @@ class TestHash(CommonPosTest):
         paid_order = {
             'access_token': False,
             'amount_paid': 20,
-            'amount_return': 5.0,
+            'amount_return': -5.0,
             'amount_tax': 0,
             'amount_total': 15.0,
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),

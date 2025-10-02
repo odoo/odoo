@@ -104,19 +104,6 @@ export function paymentLineContains(paymentMethodName, amount) {
         },
     ];
 }
-export function receiptRoundingAmountIsNotThere() {
-    return [
-        {
-            isActive: ["desktop"], // not rendered on mobile
-            trigger: ".receipt-screen",
-            run: function () {
-                if (document.querySelector(".receipt-rounding")) {
-                    throw new Error("A rounding amount has been found in receipt.");
-                }
-            },
-        },
-    ];
-}
 export function receiptToPayAmountIs(value) {
     return [
         {

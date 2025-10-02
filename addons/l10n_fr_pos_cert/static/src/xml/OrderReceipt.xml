@@ -15,7 +15,7 @@
                     Old unit price:
                     <span class="oldPrice">
                         <s>
-                            <t t-out="formatCurrency(line.getTaxedlstUnitPrice())" /> / Units
+                            <t t-out="line.currencyDisplayPrice" /> / Units
                         </s>
                     </span>
                 </div>

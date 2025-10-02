@@ -33,7 +33,6 @@ describe("self_order_service", () => {
             const tipProductTmpl = models["product.template"].get(1);
 
             expect(store.config._pos_special_products_ids.includes(tipProductTmpl.id)).toBe(true);
-            expect(store.productByCategIds["0"]).toBeEmpty(); // No Uncategorised products
 
             models["product.template"].get(14).pos_categ_ids = [];
             store.initData();

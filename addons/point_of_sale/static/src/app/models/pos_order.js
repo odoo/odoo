@@ -1,15 +1,13 @@
 import { registry } from "@web/core/registry";
-import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
-import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 
 const { DateTime } = luxon;
 
-export class PosOrder extends Base {
+export class PosOrder extends PosOrderAccounting {
     static pythonModel = "pos.order";
 
     setup(vals) {
@@ -193,126 +191,11 @@ export class PosOrder extends Base {
         }
     }
 
-    /**
-     * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
-     * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
-     */
-    get taxTotals() {
-        return this.getTaxTotalsOfLines(this.lines);
-    }
-
-    getTaxTotalsOfLines(lines) {
-        const currency = this.currency;
-        const company = this.company;
-
-        // If each line is negative, we assume it's a refund order.
-        // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
-        // TODO: Properly differentiate refund orders from normal ones.
-        const documentSign = this.isRefund ? -1 : 1;
-        const baseLines = lines.map((line) =>
-            accountTaxHelpers.prepare_base_line_for_taxes_computation(
-                line,
-                line.prepareBaseLineForTaxesComputationExtraValues({
-                    quantity: documentSign * line.qty,
-                })
-            )
-        );
-        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
-        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
-
-        // For the generic 'get_tax_totals_summary', we only support the cash rounding that round the whole document.
-        const cashRounding =
-            !this.config.only_round_cash_method && this.config.cash_rounding
-                ? this.config.rounding_method
-                : null;
-
-        const taxTotals = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
-            cash_rounding: cashRounding,
-        });
-
-        taxTotals.order_sign = documentSign;
-        taxTotals.order_total =
-            taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
-
-        let order_rounding = 0;
-        let remaining = taxTotals.order_total;
-        const validPayments = this.payment_ids.filter((p) => p.isDone() && !p.is_change);
-        for (const [payment, isLast] of validPayments.map((p, i) => [
-            p,
-            i === validPayments.length - 1,
-        ])) {
-            const paymentAmount = documentSign * payment.getAmount();
-            if (isLast) {
-                if (this.config.cash_rounding) {
-                    const roundedRemaining = this.getRoundedRemaining(
-                        this.config.rounding_method,
-                        remaining
-                    );
-                    if (!this.currency.isZero(paymentAmount - remaining)) {
-                        order_rounding = roundedRemaining - remaining;
-                    }
-                }
-            }
-            remaining -= paymentAmount;
-        }
-
-        taxTotals.order_rounding = order_rounding;
-        taxTotals.order_remaining = remaining;
-
-        return taxTotals;
-    }
-
-    shouldRound(paymentMethod) {
-        return (
-            this.config.cash_rounding &&
-            (!this.config.only_round_cash_method || paymentMethod.is_cash_count)
-        );
-    }
-
-    get orderHasZeroRemaining() {
-        const { order_remaining, order_rounding } = this.taxTotals;
-        const remaining_with_rounding = order_remaining + order_rounding;
-        return this.currency.isZero(remaining_with_rounding);
-    }
-
-    /**
-     * Get the amount to pay by default when creating a new payment.
-     * @param paymentMethod: The payment method of the payment to be created.
-     * @returns A monetary value.
-     */
-    getDefaultAmountDueToPayIn(paymentMethod) {
-        const { order_remaining, order_sign } = this.taxTotals;
-        const amount = this.shouldRound(paymentMethod)
-            ? this.getRoundedRemaining(this.config.rounding_method, order_remaining)
-            : order_remaining;
-        return order_sign * amount;
-    }
-
-    getRoundedRemaining(roundingMethod, remaining) {
-        remaining = roundCurrency(remaining, this.currency);
-        if (this.currency.isZero(remaining)) {
-            return 0;
-        } else if (this.currency.isNegative(remaining)) {
-            return roundingMethod.asymmetricRound(remaining);
-        } else {
-            return roundingMethod.round(remaining);
-        }
-    }
-
     getCashierName() {
         return this.user_id?.name?.split(" ").at(0);
     }
     canPay() {
         return this.lines.length;
-    }
-    recomputeOrderData() {
-        this.amount_paid = this.getTotalPaid();
-        this.amount_tax = this.getTotalTax();
-        this.amount_total = this.getTotalWithTax();
-        this.amount_return = this.getChange();
-        this.lines.forEach((line) => {
-            line.setLinePrice();
-        });
     }
 
     get isBooked() {
@@ -415,7 +298,7 @@ export class PosOrder extends Base {
         } else {
             for (const line of lines) {
                 if (line.getProduct() === tip_product) {
-                    return line.getUnitPrice();
+                    return line.prices.total_excluded_currency;
                 }
             }
             return 0;
@@ -547,25 +430,34 @@ export class PosOrder extends Base {
     /* ---- Payment Lines --- */
     addPaymentline(payment_method) {
         this.assertEditable();
-        if (this.electronicPaymentInProgress()) {
-            return false;
-        } else {
-            const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
-            const newPaymentLine = this.models["pos.payment"].create({
-                pos_order_id: this,
-                payment_method_id: payment_method,
-            });
-            this.selectPaymentline(newPaymentLine);
-            newPaymentLine.setAmount(totalAmountDue);
+        const existingCash = this.payment_ids.find((pl) => pl.payment_method_id.is_cash_count);
 
-            if (
-                (payment_method.payment_terminal && !this.isRefund) ||
-                payment_method.payment_method_type === "qr_code"
-            ) {
-                newPaymentLine.setPaymentStatus("pending");
-            }
-            return newPaymentLine;
+        if (this.electronicPaymentInProgress()) {
+            return {
+                status: false,
+                data: _t("There is already an electronic payment in progress."),
+            };
         }
+
+        if (existingCash && payment_method.is_cash_count) {
+            return { status: false, data: _t("There is already a cash payment line.") };
+        }
+
+        const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
+        const newPaymentLine = this.models["pos.payment"].create({
+            pos_order_id: this,
+            payment_method_id: payment_method,
+        });
+        this.selectPaymentline(newPaymentLine);
+        newPaymentLine.setAmount(totalAmountDue);
+
+        if (
+            (payment_method.payment_terminal && !this.isRefund) ||
+            payment_method.payment_method_type === "qr_code"
+        ) {
+            newPaymentLine.setPaymentStatus("pending");
+        }
+        return { status: true, data: newPaymentLine };
     }
 
     getPaymentlineByUuid(uuid) {
@@ -603,27 +495,6 @@ export class PosOrder extends Base {
         });
     }
 
-    getTotalWithTax() {
-        return this.taxTotals.order_sign * this.taxTotals.order_total;
-    }
-
-    getTotalWithTaxOfLines(lines) {
-        const taxTotals = this.getTaxTotalsOfLines(lines);
-        return taxTotals.order_sign * taxTotals.total_amount_currency;
-    }
-
-    getTotalWithoutTax() {
-        const base_amount =
-            this.taxTotals.base_amount_currency +
-            (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
-        return this.taxTotals.order_sign * base_amount;
-    }
-
-    getTotalWithoutTaxOfLines(lines) {
-        const taxTotals = this.getTaxTotalsOfLines(lines);
-        return taxTotals.order_sign * taxTotals.base_amount_currency;
-    }
-
     _getIgnoredProductIdsTotalDiscount() {
         return [];
     }
@@ -633,17 +504,16 @@ export class PosOrder extends Base {
         return this.currency.round(
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
-                    sum +=
-                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
-                        orderLine.getAllPrices().priceWithTax;
+                    const data = orderLine.order_id.prices.baseLineByLineUuids[orderLine.uuid];
+                    sum += data.tax_details.discount_amount;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
                         !(orderLine.price_type === "manual") &&
                         orderLine.discount == 0
                     ) {
                         sum +=
-                            (orderLine.getTaxedlstUnitPrice() -
-                                orderLine.getUnitDisplayPriceBeforeDiscount()) *
+                            (orderLine.currencyDisplayPriceUnit -
+                                orderLine.unitPrices.no_discount_total_included) *
                             orderLine.getQuantity();
                     }
                 }
@@ -652,103 +522,8 @@ export class PosOrder extends Base {
         );
     }
 
-    getTotalTax() {
-        return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
-    }
-
-    getTotalPaid() {
-        return this.currency.round(
-            this.payment_ids.reduce(function (sum, paymentLine) {
-                if (paymentLine.isDone()) {
-                    sum += paymentLine.getAmount();
-                }
-                return sum;
-            }, 0)
-        );
-    }
-
-    getTotalDue() {
-        return this.taxTotals.order_sign * this.taxTotals.order_total;
-    }
-
-    getTaxDetails() {
-        return this.getTaxDetailsOfLines(this.lines);
-    }
-
-    getTaxDetailsOfLines(lines) {
-        const taxDetails = {};
-        for (const line of lines) {
-            for (const taxData of line.allPrices.taxesData) {
-                const taxId = taxData.tax.id;
-                if (!taxDetails[taxId]) {
-                    taxDetails[taxId] = Object.assign({}, taxData, {
-                        amount: 0.0,
-                        base: 0.0,
-                        tax_percentage: taxData.tax.amount,
-                    });
-                }
-                taxDetails[taxId].base += taxData.base_amount_currency;
-                taxDetails[taxId].amount += taxData.tax_amount_currency;
-            }
-        }
-        return Object.values(taxDetails);
-    }
-
-    // TODO: deprecated. Remove it and fix l10n_de_pos_cert accordingly.
-    getTotalForTaxes(tax_id) {
-        let total = 0;
-
-        if (!(tax_id instanceof Array)) {
-            tax_id = [tax_id];
-        }
-
-        const tax_set = {};
-
-        for (var i = 0; i < tax_id.length; i++) {
-            tax_set[tax_id[i]] = true;
-        }
-
-        this.lines.forEach((line) => {
-            var taxes_ids = this.tax_ids || line.getProduct().taxes_id;
-            for (var i = 0; i < taxes_ids.length; i++) {
-                if (tax_set[taxes_ids[i]]) {
-                    total += line.getPriceWithTax();
-                    return;
-                }
-            }
-        });
-
-        return total;
-    }
-
-    /**
-     * Checks whether to show "Remaining" or "Change" in the payment status.
-     * If the remaining amount is compensated by the rounding, then we show "Remaining".
-     */
-    hasRemainingAmount() {
-        const { order_remaining } = this.taxTotals;
-        return this.orderHasZeroRemaining || !this.currency.isNegative(order_remaining);
-    }
-
-    getChange() {
-        let { order_sign, order_remaining: remaining } = this.taxTotals;
-        if (this.config.cash_rounding) {
-            remaining = this.getRoundedRemaining(this.config.rounding_method, remaining);
-        }
-        return -order_sign * remaining;
-    }
-
-    getDue() {
-        return this.taxTotals.order_sign * this.currency.round(this.taxTotals.order_remaining);
-    }
-
-    getRoundingApplied() {
-        return this.taxTotals.order_sign * (this.taxTotals.order_rounding || 0.0);
-    }
-
     isPaid() {
-        const { order_remaining } = this.taxTotals;
-        return this.orderHasZeroRemaining || this.currency.isNegative(order_remaining);
+        return this.orderHasZeroRemaining;
     }
 
     isRefundInProcess() {
@@ -953,16 +728,8 @@ export class PosOrder extends Base {
         this.internal_note = note || "";
     }
 
-    get orderChange() {
-        return this.getChange();
-    }
-
-    get showRounding() {
-        return !this.currency.isZero(this.taxTotals.order_rounding);
-    }
-
     get showChange() {
-        return !this.currency.isZero(this.orderChange) && this.finalized;
+        return !this.currency.isZero(this.change) && this.finalized;
     }
 
     getLinesToCompute() {

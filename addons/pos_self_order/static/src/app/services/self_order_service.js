@@ -20,10 +20,6 @@ import {
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
-import {
-    getTaxesAfterFiscalPosition,
-    getTaxesValues,
-} from "@point_of_sale/app/models/utils/tax_utils";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 export class SelfOrder extends Reactive {
@@ -616,9 +612,9 @@ export class SelfOrder extends Reactive {
         }
 
         try {
+            this.currentOrder.setOrderPrices();
             const tableIdentifier = this.router.getTableIdentifier([]);
             let uuid = this.selectedOrderUuid;
-            this.currentOrder.recomputeOrderData();
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
@@ -816,21 +812,18 @@ export class SelfOrder extends Reactive {
             ? this.currentOrder.preset_id?.pricelist_id
             : this.config.pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-        let taxes = productTemplate.taxes_id;
 
         if (!product) {
             product = productTemplate;
         }
 
-        // Fiscal position.
-        const order = this.currentOrder;
-        if (order && order.fiscal_position_id) {
-            taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
-        }
-
         // Taxes computation.
-        const taxesData = getTaxesValues(taxes, price, 1, product, {}, this.company, this.currency);
-
+        const order = this.currentOrder;
+        const taxesData = product.getTaxDetails({
+            price_unit: price,
+            quantity: 1,
+            fiscalPosition: order?.fiscal_position_id || false,
+        });
         return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {

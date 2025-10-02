@@ -10,7 +10,7 @@ test("Displays the table with details of the down payment", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();
 
-    const productDownPayment = store.models["product.template"].get(15);
+    const productDownPayment = store.models["product.template"].get(105);
     const sol1 = store.models["sale.order.line"].get(1);
     const sol2 = store.models["sale.order.line"].get(2);
     const line = await store.addLineToOrder(

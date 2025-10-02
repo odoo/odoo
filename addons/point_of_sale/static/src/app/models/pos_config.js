@@ -13,6 +13,12 @@ export class PosConfig extends Base {
         this.uiState = {};
     }
 
+    get hasCashRounding() {
+        return this.cash_rounding && this.only_round_cash_method;
+    }
+    get hasGlobalRounding() {
+        return this.cash_rounding && !this.only_round_cash_method;
+    }
     get canInvoice() {
         return Boolean(this.raw.invoice_journal_id);
     }

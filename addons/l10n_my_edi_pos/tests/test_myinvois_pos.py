@@ -469,6 +469,9 @@ class TestMyInvoisPoS(TestPoSCommon):
                 # Fails, the order should be invoiced in such a case
                 with self.assertRaises(UserError):
                     self._create_order({
+                        'pos_order_ui_args': {
+                            'is_refund': True,
+                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -480,6 +483,9 @@ class TestMyInvoisPoS(TestPoSCommon):
                 # If it is, it will work
                 self.invoicing_customer.vat = 'EI00000000010'
                 self._create_order({
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -500,6 +506,9 @@ class TestMyInvoisPoS(TestPoSCommon):
                 # Fails, the order should be invoiced in such a case
                 with self.assertRaises(UserError):
                     self._create_order({
+                        'pos_order_ui_args': {
+                            'is_refund': True,
+                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -510,6 +519,9 @@ class TestMyInvoisPoS(TestPoSCommon):
                     })
                 # If invoicing is checked, it will work.
                 self._create_order({
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -571,6 +583,9 @@ class TestMyInvoisPoS(TestPoSCommon):
             # We then create the refund for the order
             with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 self._create_order({
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -690,6 +705,9 @@ class TestMyInvoisPoS(TestPoSCommon):
             # We then create the refund for the first_order
             with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 self._create_order({
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': product_1,

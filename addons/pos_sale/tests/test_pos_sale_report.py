@@ -104,7 +104,7 @@ class TestPoSSaleReport(TestPoSCommon):
         })
         self.open_new_session()
 
-        data = self.create_ui_order_data([(product_0, 1)], self.customer, True)
+        data = self.create_ui_order_data([(product_0, 1)], {}, self.customer, True)
         data['lines'][0][2]['sale_order_origin_id'] = sale_order.id
         data['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].id
         order_ids = self.env['pos.order'].sync_from_ui([data])
@@ -140,7 +140,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
         orders = []
 
-        orders.append(self.create_ui_order_data([(self.product0, 5, 100), (self.product0, 3)], self.partner_1))
+        orders.append(self.create_ui_order_data([(self.product0, 5, 100), (self.product0, 3)], {}, self.partner_1))
         orders[0]['shipping_date'] = fields.Date.to_string(fields.Date.today())
 
         order = self.env['pos.order'].sync_from_ui(orders)
