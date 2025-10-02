@@ -10,3 +10,4 @@ from . import hr_version
 from . import ir_http
 from . import res_company
 from . import res_users
+from . import resource_calendar_leaves

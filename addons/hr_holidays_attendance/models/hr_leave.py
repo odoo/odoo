@@ -63,6 +63,7 @@ class HrLeave(models.Model):
         self._check_overtime_deductible(self)
         return res
 
+<<<<<<< fddc31d5d21dd1c2b2c6719af64d4a386bae1395
     def _update_leaves_overtime(self):  # TODO: Remove in master, since its no longer used.
         date_from, date_to = self.mapped('date_from'), self.mapped('date_to')
         if date_from and date_to:
@@ -71,6 +72,55 @@ class HrLeave(models.Model):
                 ('check_out', '>=', min(date_from)),
                 ('employee_id', 'in', self.employee_id.ids),
             ])._update_overtime()
+||||||| c5b3f308b428207fd5125e0a60dca183903333f9
+    def action_refuse(self):
+        res = super().action_refuse()
+        self.sudo().overtime_id.unlink()
+        return res
+
+    def _validate_leave_request(self):
+        super()._validate_leave_request()
+        self._update_leaves_overtime()
+
+    def _remove_resource_leave(self):
+        res = super()._remove_resource_leave()
+        self._update_leaves_overtime()
+        return res
+
+    def _update_leaves_overtime(self):
+        employee_dates = defaultdict(set)
+        for leave in self:
+            if leave.employee_id:
+                for d in range((leave.date_to - leave.date_from).days + 1):
+                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
+        if employee_dates:
+            self.env['hr.attendance'].sudo()._update_overtime(employee_dates)
+
+    def unlink(self):
+        # TODO master change to ondelete
+        self.sudo().overtime_id.unlink()
+        return super().unlink()
+=======
+    def action_refuse(self):
+        res = super().action_refuse()
+        self.sudo().overtime_id.unlink()
+        return res
+
+    def _update_leaves_overtime(self):
+        # Deprecated - will be removed in master
+        employee_dates = defaultdict(set)
+        for leave in self:
+            if leave.employee_id:
+                for d in range((leave.date_to - leave.date_from).days + 1):
+                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
+        if employee_dates:
+            self.env['hr.attendance'].sudo()._update_overtime(employee_dates)
+
+    def unlink(self):
+        # TODO master change to ondelete
+        self.sudo().overtime_id.unlink()
+        return super().unlink()
+>>>>>>> e9b27e33906b7e47a78fc5b3a55cfab560fc07c4
 
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)
