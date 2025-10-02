@@ -9,6 +9,9 @@ export class DiscussChannel extends Record {
     get channel_member_ids() {
         return this.thread.channel_member_ids;
     }
+    get channel_type() {
+        return this.thread.channel_type;
+    }
     thread = fields.One("Thread", {
         inverse: "channel",
         onDelete: (r) => r.delete(),

@@ -191,7 +191,7 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickInvite() {
-        if (this.props.thread.channel_type === "chat") {
+        if (this.props.thread.channel?.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.thread.correspondent) {
                 partnerIds.unshift(this.props.thread.correspondent.partner_id.id);
@@ -225,11 +225,11 @@ export class ChannelInvitation extends Component {
         if (!this.props.thread) {
             return "";
         }
-        if (this.props.thread.channel_type === "channel") {
+        if (this.props.thread.channel?.channel_type === "channel") {
             return _t("Invite");
-        } else if (this.props.thread.channel_type === "group") {
+        } else if (this.props.thread.channel?.channel_type === "group") {
             return _t("Invite to Group Chat");
-        } else if (this.props.thread.channel_type === "chat") {
+        } else if (this.props.thread.channel?.channel_type === "chat") {
             if (this.props.thread.correspondent?.persona.eq(this.store.self)) {
                 if (this.selectedPartners.length === 0) {
                     return _t("Invite");

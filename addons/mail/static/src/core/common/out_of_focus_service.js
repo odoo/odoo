@@ -42,7 +42,7 @@ export class OutOfFocusService {
             notificationTitle = _t("New message");
         } else {
             icon = author.avatarUrl;
-            if (message.thread?.channel_type === "channel") {
+            if (message.thread?.channel?.channel_type === "channel") {
                 notificationTitle = _t("%(author name)s from %(channel name)s", {
                     "author name": message.authorName,
                     "channel name": message.thread.displayName,

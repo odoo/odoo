@@ -109,7 +109,7 @@ export class CallInvitation extends Component {
 
     get avatarTitle() {
         const channelName = this.props.thread.displayName;
-        if (this.props.thread.channel_type === "chat") {
+        if (this.props.thread.channel?.channel_type === "chat") {
             return _t("View chat with %(channel_name)s", { channel_name: channelName });
         }
         return _t("View the %(channel_name)s channel", { channel_name: channelName });
@@ -120,7 +120,7 @@ export class CallInvitation extends Component {
     }
 
     get incomingCallText() {
-        if (this.props.thread.channel_type === "chat" || !this.inviter) {
+        if (this.props.thread.channel?.channel_type === "chat" || !this.inviter) {
             return _t("Incoming call");
         }
         return _t("Incoming call from %(inviter)s", { inviter: this.inviter.name });

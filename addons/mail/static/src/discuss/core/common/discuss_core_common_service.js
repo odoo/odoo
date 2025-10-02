@@ -114,7 +114,7 @@ export class DiscussCoreCommon {
             }
         }
         if (
-            thread.channel_type !== "channel" &&
+            thread.channel?.channel_type !== "channel" &&
             this.store.self_partner &&
             thread.self_member_id
         ) {

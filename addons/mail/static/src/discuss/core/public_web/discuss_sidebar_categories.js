@@ -92,7 +92,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get actionsTitle() {
-        if (this.thread.channel_type === "channel") {
+        if (this.thread.channel?.channel_type === "channel") {
             return _t("Channel Actions");
         }
         return _t("Chat Actions");
