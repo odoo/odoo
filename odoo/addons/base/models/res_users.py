@@ -989,12 +989,34 @@ class ResUsers(models.Model):
             'tag': 'reload_context',
         }
 
+    def action_change_login_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'change.password.wizard',
+            'view_mode': 'form',
+            'name': _('Change Login'),
+            'context': {'default_mode': 'login'},
+        }
+
     def action_change_password_wizard(self):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_model': 'change.password.wizard',
             'view_mode': 'form',
+            'name': _('Change Password'),
+        }
+
+    @check_identity
+    def preference_change_login(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'change.password.own',
+            'view_mode': 'form',
+            'name': _('Change Login'),
+            'context': {'default_mode': 'login'},
         }
 
     @check_identity
@@ -1004,6 +1026,7 @@ class ResUsers(models.Model):
             'target': 'new',
             'res_model': 'change.password.own',
             'view_mode': 'form',
+            'name': _('Change Password'),
         }
 
     @check_identity
@@ -1461,7 +1484,15 @@ class ChangePasswordWizard(models.TransientModel):
             for user in self.env['res.users'].browse(user_ids)
         ]
 
+    mode = fields.Selection(selection=[('login', 'Login'), ('password', 'Password')], default='password')
     user_ids = fields.One2many('change.password.user', 'wizard_id', string='Users', default=_default_user_ids)
+
+    def change_login_button(self):
+        self.ensure_one()
+        self.user_ids.change_login_button()
+        if self.env.user in self.user_ids.user_id:
+            return {'type': 'ir.actions.client', 'tag': 'reload'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def change_password_button(self):
         self.ensure_one()
@@ -1477,8 +1508,14 @@ class ChangePasswordUser(models.TransientModel):
     _description = 'User, Change Password Wizard'
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
-    user_login = fields.Char(string='User Login', readonly=True)
+    user_login = fields.Char(string='Login', readonly=True)
+    new_login = fields.Char(string='New Login')
     new_passwd = fields.Char(string='New Password', default='')
+
+    def change_login_button(self):
+        for line in self:
+            if line.new_login:
+                line.user_id.login = line.new_login
 
     def change_password_button(self):
         for line in self:
@@ -1493,6 +1530,9 @@ class ChangePasswordOwn(models.TransientModel):
     _description = "User, change own password wizard"
     _transient_max_hours = 0.1
 
+    mode = fields.Selection(selection=[('login', 'Login'), ('password', 'Password')], default='password')
+    user_login = fields.Char(string="Login", default=lambda self: self.env.user.login, readonly=True)
+    new_login = fields.Char(string="New Login")
     new_password = fields.Char(string="New Password")
     confirm_password = fields.Char(string="New Password (Confirmation)")
 
@@ -1504,6 +1544,14 @@ class ChangePasswordOwn(models.TransientModel):
     @check_identity
     def change_password(self):
         self.env.user._change_password(self.new_password)
+        self.unlink()
+        # reload to avoid a session expired error
+        # would be great to update the session id in-place, but it seems dicey
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    @check_identity
+    def change_login(self):
+        self.env.user.login = self.new_login
         self.unlink()
         # reload to avoid a session expired error
         # would be great to update the session id in-place, but it seems dicey
