@@ -31,7 +31,7 @@ function getBlockBounds({ initCoord, coord }) {
 }
 
 function getSelectedCellsInBlock(ctx) {
-    const { cellIsSelectable, current, ref } = ctx;
+    const { current, ref } = ctx;
     const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
     const selectedCells = [];
     for (const cell of ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)) {
@@ -40,8 +40,7 @@ function getSelectedCellsInBlock(ctx) {
             startColIndex <= colIndex &&
             colIndex <= endColIndex &&
             startRowIndex <= rowIndex &&
-            rowIndex <= endRowIndex &&
-            cellIsSelectable(cell)
+            rowIndex <= endRowIndex
         ) {
             selectedCells.push(cell);
         }
@@ -50,7 +49,7 @@ function getSelectedCellsInBlock(ctx) {
 }
 
 function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
-    const { cellIsSelectable, ref } = ctx;
+    const { ref } = ctx;
     const cells = [...ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)];
     const index1 = cells.indexOf(prevCell);
     if (index1 === -1) {
@@ -58,18 +57,15 @@ function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     }
     const index2 = cells.indexOf(cellClicked);
     const [startIndex, endIndex] = [index1, index2].sort((a, b) => a - b);
-    return new Set(cells.slice(startIndex, endIndex + 1).filter((cell) => cellIsSelectable(cell)));
+    return new Set(cells.slice(startIndex, endIndex + 1));
 }
 
 // @ts-ignore
 const useBlockSelection = makeDraggableHook({
     name: "useBlockSelection",
-    acceptedParams: {
-        cellIsSelectable: [Function],
-    },
-    onComputeParams({ ctx, params }) {
+    acceptedParams: {},
+    onComputeParams({ ctx }) {
         ctx.followCursor = false;
-        ctx.cellIsSelectable = params.cellIsSelectable;
     },
     onWillStartDrag({ addClass, ctx }) {
         const { current, ref } = ctx;
@@ -102,8 +98,7 @@ const useBlockSelection = makeDraggableHook({
     },
 });
 
-export function useSquareSelection(params = {}) {
-    const cellIsSelectable = params.cellIsSelectable || (() => true);
+export function useSquareSelection() {
     const component = useComponent();
     const ref = useRef("fullCalendar");
     const highlightClass = "o-highlight";
@@ -153,7 +148,6 @@ export function useSquareSelection(params = {}) {
         elements: CELL_SELECTOR,
         ref,
         edgeScrolling: { speed: 40, threshold: 150 },
-        cellIsSelectable,
         onDragStart: ({ selectedCells }) => {
             prevSelectedCell = null;
             action = ctrlPressed ? "add" : "replace";
@@ -190,7 +184,7 @@ export function useSquareSelection(params = {}) {
         }
         const coord = getCoordinates(cell);
         const current = { initCoord: coord, coord };
-        const pseudoCtx = { current, ref, cellIsSelectable };
+        const pseudoCtx = { current, ref };
         const { selectedCells } = getSelectedCellsInBlock(pseudoCtx);
         const selectedCell = selectedCells[0];
         if (prevSelectedCell && shiftPressed) {

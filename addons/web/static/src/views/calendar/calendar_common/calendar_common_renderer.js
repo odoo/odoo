@@ -93,9 +93,7 @@ export class CalendarCommonRenderer extends Component {
         );
 
         this.ref = useRef("fullCalendar");
-        useSquareSelection({
-            cellIsSelectable: this.constructor.cellIsSelectable,
-        });
+        useSquareSelection();
     }
 
     get disabledOptions() {

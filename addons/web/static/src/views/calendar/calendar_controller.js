@@ -255,17 +255,11 @@ export class CalendarController extends Component {
     }
 
     updateMultiSelection(selectedCells) {
-        if (selectedCells.length) {
-            this.selectedCells = selectedCells;
-            this.multiSelectionButtonsReactive.visible = true;
-            this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
-                this.selectedCells
-            ).length;
-        } else {
-            this.selectedCells = null;
-            this.multiSelectionButtonsReactive.visible = false;
-            this.multiSelectionButtonsReactive.nbSelected = 0;
-        }
+        this.selectedCells = selectedCells;
+        this.multiSelectionButtonsReactive.visible = true;
+        this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
+            this.selectedCells
+        ).length;
     }
 
     cleanSquareSelection() {
