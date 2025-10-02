@@ -9,38 +9,33 @@ import {
     useRef,
 } from "@odoo/owl";
 
-export class BackgroundPositionOverlay extends Component {
-    static template = "html_builder.BackgroundPositionOverlay";
+export class ImagePositionOverlay extends Component {
+    static template = "html_builder.ImagePositionOverlay";
     static props = {
-        editingElement: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        mockEditingElOnImg: { validate: (p) => p.tagName === "IMG" },
-        applyPosition: { type: Function },
-        discardPosition: { type: Function },
+        targetEl: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
+        close: { type: Function },
+        onDrag: { type: Function },
+        getPosition: { type: Function },
+        /**
+         * `getDelta` should return the difference between the image container
+         * dimensions and the image rendered dimensions. Effectively giving the
+         * room the image has to move around in each x and y directions.
+         */
+        getDelta: { type: Function },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         history: Object,
     };
 
     setup() {
-        this.backgroundOverlayRef = useRef("backgroundOverlay");
+        this.overlayRef = useRef("overlay");
         this.overlayMaskRef = useRef("overlayMask");
         this.overlayContentRef = useRef("overlayContent");
-        this.bgDraggerRef = useRef("bgDragger");
+        this.draggerRef = useRef("dragger");
 
-        this.iframe = this.props.editable.ownerDocument.defaultView.frameElement;
+        this.iframeEl = this.props.editable.ownerDocument.defaultView.frameElement;
         this.builderOverlayContainerEl = document.querySelector(
             "[data-oe-local-overlay-id='builder-overlay-container']:not(:empty)"
         );
-        // If there is a Scroll Effect, a span.s_parallax_bg inside the section
-        // contains the background. Otherwise it's the section itself.
-        // And targetContainerEl should always be the section.
-        if (this.props.editingElement.matches(".s_parallax_bg")) {
-            const parallaxBgParentEl = this.props.editingElement.parentElement;
-            this.targetContainerEl = parallaxBgParentEl.matches(".s_parallax_bg_wrap")
-                ? parallaxBgParentEl.parentElement
-                : parallaxBgParentEl; // <- kept for compatibility
-        } else {
-            this.targetContainerEl = this.props.editingElement;
-        }
 
         this._dimensionOverlay = this.dimensionOverlay.bind(this);
 
@@ -50,14 +45,15 @@ export class BackgroundPositionOverlay extends Component {
         useExternalListener(document, "pointerdown", this.discard.bind(this));
 
         useExternalListener(window, "resize", this._dimensionOverlay);
-        useExternalListener(this.iframe.contentWindow, "resize", this._dimensionOverlay);
-        useExternalListener(this.iframe.contentWindow, "scroll", this._dimensionOverlay);
+        useExternalListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
+        useExternalListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay);
 
         onWillStart(async () => {
-            const position = getComputedStyle(this.props.editingElement)
-                .backgroundPosition.split(" ")
+            const position = this.props
+                .getPosition()
+                .split(" ")
                 .map((v) => parseInt(v));
-            const delta = this.getBackgroundDelta();
+            const delta = this.props.getDelta();
             // originalPosition kept in % for when movement in one direction
             // doesn't make sense.
             this.originalPosition = { left: position[0], top: position[1] };
@@ -68,25 +64,25 @@ export class BackgroundPositionOverlay extends Component {
                 top: (position[1] / 100) * delta.y || 0,
             };
             // Make sure the editing element is visible
-            const rect = this.targetContainerEl.getBoundingClientRect();
+            const rect = this.props.targetEl.getBoundingClientRect();
             const isEditingElEntirelyVisible =
                 rect.top >= 0 &&
-                rect.bottom <= this.targetContainerEl.ownerDocument.defaultView.innerHeight;
+                rect.bottom <= this.props.targetEl.ownerDocument.defaultView.innerHeight;
             if (!isEditingElEntirelyVisible) {
-                await scrollTo(this.targetContainerEl, { extraOffset: 50 });
+                await scrollTo(this.props.targetEl, { extraOffset: 50 });
             }
         });
 
         onMounted(() => {
             this.reloadSavePoint = this.props.history.makeSavePoint();
             this.dimensionOverlay();
-            this.targetContainerEl.classList.add("o_we_background_positioning");
+            this.props.targetEl.classList.add("o_we_image_positioning");
         });
 
         useEffect(() => {
-            this.tooltip = window.Tooltip.getOrCreateInstance(this.bgDraggerRef.el, {
+            this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
                 trigger: "manual",
-                container: this.backgroundOverlayRef.el,
+                container: this.overlayRef.el,
             });
             this.tooltip.show();
         });
@@ -98,46 +94,50 @@ export class BackgroundPositionOverlay extends Component {
     }
 
     apply() {
-        const position = getComputedStyle(this.props.editingElement).backgroundPosition;
+        const position = this.props.getPosition();
         this.reloadSavePoint();
-        this.props.applyPosition(position);
+        this.props.close(position);
     }
 
     discard() {
         this.reloadSavePoint();
-        this.props.discardPosition();
+        this.props.close(null);
     }
 
     onWheel(ev) {
         if (ev.ctrlKey) {
             return;
         }
-        this.iframe.contentWindow.scrollBy(ev.deltaX, ev.deltaY);
+        this.iframeEl.contentWindow.scrollBy(ev.deltaX, ev.deltaY);
     }
 
-    onDragBackgroundStart(ev) {
-        this.backgroundOverlayRef.el.classList.add("o_we_grabbing");
+    onDragStart() {
+        this.overlayRef.el.classList.add("o_we_grabbing");
         const documentEl = window.document;
-        const onDragBackgroundMove = this.onDragBackgroundMove.bind(this);
-        documentEl.addEventListener("mousemove", onDragBackgroundMove);
+        const onDragMove = this.onDragMove.bind(this);
+        documentEl.addEventListener("mousemove", onDragMove);
         documentEl.addEventListener(
             "mouseup",
             () => {
-                this.backgroundOverlayRef.el.classList.remove("o_we_grabbing");
-                documentEl.removeEventListener("mousemove", onDragBackgroundMove);
+                this.overlayRef.el.classList.remove("o_we_grabbing");
+                documentEl.removeEventListener("mousemove", onDragMove);
             },
             { once: true }
         );
     }
 
     /**
-     * Drags the overlay's background image.
-     *
+     * Drags the overlay's image.
      */
-    onDragBackgroundMove(ev) {
+    onDragMove(ev) {
         ev.preventDefault();
 
-        const delta = this.getBackgroundDelta();
+        const delta = this.props.getDelta();
+        const clamp = (val, bounds) => {
+            // We sort the bounds because delta.x or delta.y can be negative.
+            bounds = bounds.sort();
+            return Math.max(bounds[0], Math.min(val, bounds[1]));
+        };
         this.currentPosition.left = clamp(this.currentPosition.left + ev.movementX, [0, delta.x]);
         this.currentPosition.top = clamp(this.currentPosition.top + ev.movementY, [0, delta.y]);
 
@@ -155,20 +155,12 @@ export class BackgroundPositionOverlay extends Component {
             ? percentPosition.top
             : this.originalPosition.top;
 
-        this.props.editingElement.style.backgroundPosition = `${percentPosition.left}% ${percentPosition.top}%`;
-
-        function clamp(val, bounds) {
-            // We sort the bounds because when one dimension of the rendered
-            // background is larger than the container, delta is negative, and
-            // we want to use it as lower bound.
-            bounds = bounds.sort();
-            return Math.max(bounds[0], Math.min(val, bounds[1]));
-        }
+        this.props.onDrag(percentPosition);
     }
 
     dimensionOverlay() {
-        const iframeRect = this.iframe.getBoundingClientRect();
-        const targetContainerRect = this.targetContainerEl.getBoundingClientRect();
+        const iframeRect = this.iframeEl.getBoundingClientRect();
+        const targetContainerRect = this.props.targetEl.getBoundingClientRect();
         const scale = this.getIframeContainerScale();
         const scaledRect = new DOMRect(
             scale * targetContainerRect.x,
@@ -192,7 +184,7 @@ export class BackgroundPositionOverlay extends Component {
         this.builderOverlayContainerEl.style.clipPath = clipPath;
 
         // The overlay covers the whole iframe excluding the scrollbar.
-        Object.assign(this.backgroundOverlayRef.el.style, {
+        Object.assign(this.overlayRef.el.style, {
             left: `${iframeRect.left}px`,
             top: `${iframeRect.top}px`,
             height: `${this.props.editable.ownerDocument.body.clientHeight * scale}px`,
@@ -206,8 +198,8 @@ export class BackgroundPositionOverlay extends Component {
         });
         const overlayButtonsEl = this.overlayContentRef.el.querySelector(".o_we_overlay_buttons");
         overlayButtonsEl.style.top = `${Math.max(0, -scaledRect.top)}px`;
-        this.bgDraggerRef.el.style.setProperty("width", `${scaledRect.width}px`, "important");
-        this.bgDraggerRef.el.style.setProperty("height", `${scaledRect.height}px`, "important");
+        this.draggerRef.el.style.setProperty("width", `${scaledRect.width}px`, "important");
+        this.draggerRef.el.style.setProperty("height", `${scaledRect.height}px`, "important");
 
         // Refresh tooltip position after overlay reposition
         if (this.tooltip) {
@@ -222,7 +214,7 @@ export class BackgroundPositionOverlay extends Component {
      * @returns {number} The scale factor (1 if no transform is applied)
      */
     getIframeContainerScale() {
-        const matrix = getComputedStyle(this.iframe.parentElement).transform;
+        const matrix = getComputedStyle(this.iframeEl.parentElement).transform;
         if (matrix === "none") {
             return 1;
         }
@@ -231,50 +223,5 @@ export class BackgroundPositionOverlay extends Component {
             .split(",")
             .map(parseFloat);
         return values[0];
-    }
-
-    /**
-     * Returns the difference between the editing element's size and the
-     * background's rendered size. Background position values in % are a
-     * percentage of this.
-     *
-     */
-    getBackgroundDelta() {
-        const naturalWidth = this.props.mockEditingElOnImg.naturalWidth;
-        const naturalHeight = this.props.mockEditingElOnImg.naturalHeight;
-        const editingElStyle = getComputedStyle(this.props.editingElement);
-        // If background-attachment: fixed, the background is sized relative to
-        // the page viewport.
-        const bgRect =
-            editingElStyle.backgroundAttachment === "fixed"
-                ? this.iframe.getBoundingClientRect()
-                : this.props.editingElement.getBoundingClientRect();
-
-        if (editingElStyle.backgroundSize === "cover") {
-            const renderRatio = Math.max(
-                bgRect.width / naturalWidth,
-                bgRect.height / naturalHeight
-            );
-
-            return {
-                x: bgRect.width - Math.round(renderRatio * naturalWidth),
-                y: bgRect.height - Math.round(renderRatio * naturalHeight),
-            };
-        }
-
-        let [width, height] = editingElStyle.backgroundSize.split(" ");
-        if (width === "auto" && (height === "auto" || !height)) {
-            return {
-                x: bgRect.width - naturalWidth,
-                y: bgRect.height - naturalHeight,
-            };
-        }
-        // At least one of width or height is not auto, so we can use it to
-        // calculate the other if it's not set.
-        [width, height] = [parseInt(width), parseInt(height)];
-        return {
-            x: bgRect.width - (width || (height * naturalWidth) / naturalHeight),
-            y: bgRect.height - (height || (width * naturalHeight) / naturalWidth),
-        };
     }
 }
