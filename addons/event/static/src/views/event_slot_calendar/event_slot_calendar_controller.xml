@@ -6,5 +6,10 @@
                 <button class="btn btn-primary o-calendar-button-new" t-on-click="onClickAddButton">New</button>
             </t>
         </xpath>
+        <xpath expr="//div[hasclass('o_calendar_header')]" position="inside">
+            <h5 class="o_event_slot_multi_create_hint position-fixed start-0 end-0 text-muted text-center mb-0">
+                Select days to add slots
+            </h5>
+        </xpath>
     </t>
 </templates>

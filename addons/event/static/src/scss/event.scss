@@ -22,3 +22,18 @@
         }
     }
 }
+
+/* EVENT SLOT */
+
+.o_event_slot_calendar_view {
+    // Hide slot multi create hint on small screen sizes to prevent overlaps.
+    .o_event_slot_multi_create_hint {
+        @include media-breakpoint-down(md) {
+            display: none;
+        }
+    }
+    // Hide slot multi create hint when calendar dates have been selected.
+    .o_multi_selection_buttons + .o_event_slot_multi_create_hint {
+        display: none;
+    }
+}
