@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, useState, xml } from "@odoo/owl";
+import { Component, markup, reactive, useState, xml } from "@odoo/owl";
 import {
     contains,
     editAce,
@@ -12,6 +12,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 
 preloadBundle("web.ace_lib");
@@ -232,11 +233,19 @@ test("Mode props update imports the mode", async () => {
     }
 
     const codeEditor = await mountWithCleanup(Parent);
-    expect.verifySteps(["ace/mode/xml"]);
+    expect.verifySteps([
+        {
+            path: "ace/mode/xml",
+        },
+    ]);
 
     await codeEditor.setMode("javascript");
     await animationFrame();
-    expect.verifySteps(["ace/mode/javascript"]);
+    expect.verifySteps([
+        {
+            path: "ace/mode/javascript",
+        },
+    ]);
 });
 
 test("Theme props updates imports the theme", async () => {
@@ -351,4 +360,72 @@ test("code editor can take an initial cursor position", async () => {
             value: "new\nvalue",
         },
     ]);
+});
+
+test("qweb mode readonly attributes", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor maxLines="10" mode="props.state.mode" value="props.state.value" modeOptions="props.state.modeOptions" initialCursorPosition="props.state.initialCursorPosition"/>`;
+        static props = ["*"];
+    }
+
+    const initialValue = `
+        <form lock-id="0" name="some_name" >
+        <div />
+        </form>
+        `.replace(/^\s*/gm, ""); // simple dedent;
+
+    const state = reactive({
+        value: initialValue,
+        mode: "qweb",
+        modeOptions: {
+            highlightRulesConfig: {
+                readonlyAttributes: ["lock-id"],
+            },
+        },
+        initialCursorPosition: { column: 17, row: 0 },
+    });
+
+    await mountWithCleanup(Parent, {
+        props: { state },
+    });
+    await animationFrame();
+    const editor = window.ace.edit(queryOne(".ace_editor"));
+    expect(document.activeElement).toBe(editor.textInput.getElement());
+
+    expect(".ace_editor .ace_odoo_attr_readonly").toHaveCount(5);
+
+    for (let i = 0; i < 'lock-id="0"'.length; i++) {
+        editor.commands.commands.backspace.exec(editor);
+    }
+    await animationFrame();
+    expect(editor.getValue()).toBe(initialValue);
+    expect(pick(editor.getSelection().getRange(), "start", "end")).toEqual({
+        start: {
+            row: 0,
+            column: 6,
+        },
+        end: {
+            row: 0,
+            column: 6,
+        },
+    });
+
+    editor.commands.commands.insertstring.exec(editor, 'lol="5"');
+    expect(editor.getValue()).toBe(
+        `
+        <form lol="5" lock-id="0" name="some_name" >
+        <div />
+        </form>
+        `.replace(/^\s*/gm, "")
+    );
+
+    editor.getSelection().selectLine();
+    editor.commands.commands.backspace.exec(editor);
+    expect(editor.getValue()).toBe(
+        `
+        <div />
+        </form>
+        `.replace(/^\s*/gm, "")
+    );
 });
