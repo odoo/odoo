@@ -329,18 +329,14 @@ class Cursor(BaseCursor):
             *any* data which may be modified during the life of the cursor.
 
     """
-    sql_from_log: dict[str, tuple[int, float]]
-    sql_into_log: dict[str, tuple[int, float]]
-    sql_log_count: int
-
     def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
         super().__init__()
-        self.sql_from_log = {}
-        self.sql_into_log = {}
+        self.sql_from_log: dict[str, tuple[int, float]] = {}
+        self.sql_into_log: dict[str, tuple[int, float]] = {}
 
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
-        self.sql_log_count = 0
+        self.sql_log_count: int = 0
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
@@ -352,7 +348,7 @@ class Cursor(BaseCursor):
         self._cnx: PsycoConnection = pool.borrow(dsn)
         self._obj: psycopg2.extensions.cursor = self._cnx.cursor()
         if _logger.isEnabledFor(logging.DEBUG):
-            self.__caller = frame_codeinfo(currentframe(), 2)
+            self.__caller: tuple[str, str | int] | None = frame_codeinfo(currentframe(), 2)
         else:
             self.__caller = None
         self._closed = False   # real initialization value
