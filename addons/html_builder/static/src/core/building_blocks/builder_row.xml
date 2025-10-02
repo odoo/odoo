@@ -8,6 +8,8 @@
             t-att-class="this.getLevelClass()"
             t-ref="root"
             t-att-data-label="props.label"
+            t-att-data-disabled="props.disabled"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
             >
 
             <button
