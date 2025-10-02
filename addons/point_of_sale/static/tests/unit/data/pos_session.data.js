@@ -157,6 +157,14 @@ export class PosSession extends models.ServerModel {
         return {};
     }
 
+    try_cash_in_out() {
+        return true;
+    }
+
+    log_partner_message() {
+        return true;
+    }
+
     _records = [
         {
             id: 1,

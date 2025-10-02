@@ -248,7 +248,6 @@ export class PosOrderline extends Base {
             quantity = -Math.abs(quantity);
         }
 
-        this.order_id.assertEditable();
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
 
