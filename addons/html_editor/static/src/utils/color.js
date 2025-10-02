@@ -1,5 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isColorGradient } from "@web/core/utils/colors";
+import { isElement } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "primary",
@@ -73,6 +74,26 @@ export const TEXT_CLASSES_REGEX =
 export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
 
 /**
+ * Returns true if the given element has a visible color applied
+ * by `TEXT_CLASSES_REGEX` or `BG_CLASSES_REGEX`
+ *
+ * @param {Element} element
+ * @param {string} mode 'color' or 'backgroundColor'
+ * @returns {boolean}
+ */
+export function hasTextColorClass(element, mode) {
+    if (!element || !isElement(element)) {
+        return false;
+    }
+    const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+    const parent = element.parentNode;
+    return (
+        classRegex.test(element.className) &&
+        (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
+    );
+}
+
+/**
  * Returns true if the given element has a visible color (fore- or
  * -background depending on the given mode).
  *
@@ -83,7 +104,6 @@ export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
 export function hasColor(element, mode) {
     const style = element.style;
     const parent = element.parentNode;
-    const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
     if (element.classList.contains("btn")) {
         // Ignore style applied on buttons from color detection
         return false;
@@ -104,8 +124,7 @@ export function hasColor(element, mode) {
             style[mode] !== "inherit" &&
             style[mode] !== "initial" &&
             (!parent || style[mode] !== parent.style[mode])) ||
-        (classRegex.test(element.className) &&
-            (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode]))
+        hasTextColorClass(element, mode)
     );
 }
 
