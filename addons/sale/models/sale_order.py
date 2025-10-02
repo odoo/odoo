@@ -357,10 +357,15 @@ class SaleOrder(models.Model):
         for order in self:
             order.require_payment = order.company_id.portal_confirmation_pay
 
-    @api.depends('require_payment')
+    @api.depends('require_payment', 'payment_term_id')
     def _compute_prepayment_percent(self):
         for order in self:
-            order.prepayment_percent = order.company_id.prepayment_percent
+            prepayment_percent = order.company_id.prepayment_percent
+            first_line = order.payment_term_id.line_ids[:1]
+            if first_line and first_line.value == "percent":
+                prepayment_percent = first_line.value_amount / 100
+
+            order.prepayment_percent = prepayment_percent
 
     @api.depends('company_id')
     def _compute_validity_date(self):
