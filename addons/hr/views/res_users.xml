@@ -188,14 +188,20 @@
                 </xpath>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
                 <xpath expr="//h5[@name='h5_email']" position="attributes">
-                    <attribute name="invisible">not id or employee_id</attribute>
+                    <attribute name="invisible">employee_id or login == email</attribute>
                 </xpath>
                 <!-- Must be replaced by work_phone when the user has an employee_id. -->
                 <xpath expr="//h5[@name='h5_phone']" position="attributes">
                     <attribute name="invisible">employee_id</attribute>
                 </xpath>
+                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-envelope')]" position="attributes">
+                    <attribute name="invisible">(not employee_id and login != email) or (employee_id and login != work_email)</attribute>
+                </xpath>
+                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-key')]" position="attributes">
+                    <attribute name="invisible">(not employee_id and login == email) or (employee_id and login == work_email)</attribute>
+                </xpath>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <h5 class="d-flex align-items-baseline mb-0" invisible="not id or not employee_id">
+                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id or login == work_email">
                         <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
                         <field name="email_domain_placeholder" invisible="1" />
                         <field name="work_email" widget="email" string="Work Email" class="w-75" options="{'placeholder_field': 'email_domain_placeholder'}"/>
