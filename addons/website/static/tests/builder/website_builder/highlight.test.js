@@ -10,7 +10,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
 import { highlightIdToName } from "@website/builder/plugins/highlight/highlight_configurator";
-import { textHighlightFactory } from "@website/js/highlight_utils";
+import { textHighlightFactory, makeHighlightSvg } from "@website/js/highlight_utils";
 
 defineMailModels();
 
@@ -191,4 +191,19 @@ test("each highlight has a name", () => {
     highlightWithAName.sort();
     highlightWithAPath.sort();
     expect(highlightWithAPath).toEqual(highlightWithAName);
+});
+
+test(`Fill highlights don't have the 'stroke' attribute`, () => {
+    const params = {
+        width: 50,
+        height: 50,
+        numberOfCharPerWidth: () => 1,
+    };
+    const strokeSvg = makeHighlightSvg("freehand_1", params);
+    const fillSvg = makeHighlightSvg("freehand_3", params);
+
+    expect(strokeSvg.querySelector("path")).toHaveAttribute("stroke");
+    expect(strokeSvg.querySelector("path")).not.toHaveAttribute("fill");
+    expect(fillSvg.querySelector("path")).toHaveAttribute("fill");
+    expect(fillSvg.querySelector("path")).not.toHaveAttribute("stroke");
 });
