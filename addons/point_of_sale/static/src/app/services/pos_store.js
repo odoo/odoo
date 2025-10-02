@@ -293,24 +293,6 @@ export class PosStore extends WithLazyGetterTrap {
         this._storeConnectedCashier(user);
     }
 
-    getProductPrice(product, price = false, formatted = false) {
-        const order = this.getOrder();
-        const fiscalPosition = order.fiscal_position_id || this.config.fiscal_position_id;
-        const pricelist = order.pricelist_id || this.config.pricelist_id;
-        const pPrice = product.getProductPrice(price, pricelist, fiscalPosition);
-
-        if (formatted) {
-            const formattedPrice = this.env.utils.formatCurrency(pPrice);
-            if (product.to_weight) {
-                return `${formattedPrice}/${product.uom_id.name}`;
-            } else {
-                return formattedPrice;
-            }
-        }
-
-        return pPrice;
-    }
-
     _getConnectedCashier() {
         const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
         if (cashier_id && this.models["res.users"].get(cashier_id)) {
@@ -530,7 +512,7 @@ export class PosStore extends WithLazyGetterTrap {
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
                     order.pos_reference,
-                    this.env.utils.formatCurrency(order.getTotalWithTax())
+                    this.env.utils.formatCurrency(order.priceIncl)
                 ),
             });
             if (!confirmed) {
@@ -818,6 +800,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (typeof vals.product_tmpl_id == "number") {
             vals.product_tmpl_id = this.data.models["product.template"].get(vals.product_tmpl_id);
         }
+
         const productTemplate = vals.product_tmpl_id;
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -902,7 +885,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.scale.setProduct(
                     values.product_id,
                     decimalAccuracy,
-                    this.getProductPrice(values.product_id)
+                    values.product_id.getTaxDetails().total_included
                 );
                 const weight = await this.weighProduct();
                 if (weight) {
@@ -961,9 +944,6 @@ export class PosStore extends WithLazyGetterTrap {
                 setQuantity: true,
             });
         }
-
-        // FIXME: Put this in an effect so that we don't have to call it manually.
-        order.recomputeOrderData();
 
         if (configure) {
             this.numberBuffer.reset();
@@ -1270,8 +1250,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.selectPreset(this.config.default_preset_id, order);
         }
 
-        order.recomputeOrderData();
-
         return order;
     }
     addNewOrder(data = {}) {
@@ -1404,8 +1382,14 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    // There for override
-    async preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {
+        // Prices are computed on the fly on the pos.order and pos.order.line model
+        // we need to set them before sending the orders to the backend
+        for (const order of orders) {
+            order.setOrderPrices();
+        }
+    }
+
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1434,11 +1418,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             // Add order IDs to the syncing set
             orders.forEach((order) => this.syncingOrders.add(order.uuid));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
 
             const serializedOrder = orders.map((order) => order.serializeForORM());
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
@@ -1579,14 +1558,14 @@ export class PosStore extends WithLazyGetterTrap {
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
         const margin = priceWithoutTax - productTemplate.standard_price;
-        const orderPriceWithoutTax = order.getTotalWithoutTax();
+        const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
         const orderMargin = orderPriceWithoutTax - orderCost;
         const orderTaxTotalCurrency = this.env.utils.formatCurrency(
-            order.taxTotals.order_sign * order.taxTotals.tax_amount_currency
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.tax_amount_currency
         );
         const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
-            order.taxTotals.order_sign * order.taxTotals.total_amount_currency
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
         const taxAmount = this.env.utils.formatCurrency(
             productInfo.all_prices.tax_details[0]?.amount || 0
@@ -2649,19 +2628,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         return this.sortByWordIndex(matches, words);
     }
-
     getPaymentMethodFmtAmount(pm, order) {
-        const { cash_rounding, only_round_cash_method } = this.config;
         const amount = order.getDefaultAmountDueToPayIn(pm);
-        const fmtAmount = this.env.utils.formatCurrency(amount, true);
-        if (
-            this.currency.isPositive(amount) &&
-            cash_rounding &&
-            !only_round_cash_method &&
-            pm.type === "cash"
-        ) {
-            return fmtAmount;
-        }
+        return this.env.utils.formatCurrency(amount, true);
     }
     getDate(date) {
         const todayTs = DateTime.now().startOf("day").ts;

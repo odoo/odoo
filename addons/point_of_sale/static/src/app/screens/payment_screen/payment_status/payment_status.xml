@@ -5,18 +5,12 @@
         <div t-if="props.order.payment_ids.length == 0" class="d-flex justify-content-center align-items-center text-center fs-4 flex-grow-1">
     Please select a payment method
         </div>
-        <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ props.order.getDue() > 0 ? 'text-danger' : 'text-success'}}">
+        <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ !isComplete ? 'text-danger' : 'text-success'}}">
             <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
-                <div t-if="this.props.order.hasRemainingAmount()" class="payment-status-remaining d-flex justify-content-between flex-grow-1">
-                    <span class="label pe-2">Remaining</span>
-                    <span class="amount align-self-end me-5 pe-5" t-att-class="{ 'highlight text-danger fw-bolder': props.order.getDue() > 0 }">
-                        <PriceFormatter price="remainingText" />
-                    </span>
-                </div>
-                <div t-else="" class="payment-status-change d-flex justify-content-between flex-grow-1">
-                    <span class="label pe-2">Change</span>
-                    <span class="amount align-self-end me-5 pe-5" t-att-class="{ 'highlight text-success fw-bolder': props.order.getChange() > 0 }">
-                        <PriceFormatter price="changeText" />
+                <div class="payment-status-amount d-flex justify-content-between flex-grow-1">
+                    <span class="label pe-2" t-out="statusText" />
+                    <span class="amount align-self-end me-5 pe-5" t-att-class="{ 'highlight text-danger fw-bolder': !isComplete }">
+                        <PriceFormatter price="amountText" />
                     </span>
                 </div>
             </div>

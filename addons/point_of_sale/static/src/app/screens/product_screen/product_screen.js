@@ -194,7 +194,7 @@ export class ProductScreen extends Component {
         return this.pos.getOrder();
     }
     get total() {
-        return this.env.utils.formatCurrency(this.currentOrder?.getTotalWithTax() ?? 0);
+        return this.currentOrder?.currencyDisplayPrice || 0;
     }
     get items() {
         return this.env.utils.formatProductQty(
@@ -319,10 +319,6 @@ export class ProductScreen extends Component {
     switchPane() {
         this.pos.scanning = false;
         this.pos.switchPane();
-    }
-
-    getProductPrice(product) {
-        return this.pos.getProductPrice(product, false, true);
     }
 
     getProductImage(product) {

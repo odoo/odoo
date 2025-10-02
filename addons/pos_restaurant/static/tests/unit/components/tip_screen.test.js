@@ -51,7 +51,7 @@ test("overallAmountStr", async () => {
     });
     screen.state.inputTipAmount = "2";
     const result = screen.overallAmountStr;
-    const total = order.getTotalWithTax();
+    const total = order.priceIncl;
     const original = screen.env.utils.formatCurrency(total);
     const tip = screen.env.utils.formatCurrency(2);
     const overall = screen.env.utils.formatCurrency(total + 2);

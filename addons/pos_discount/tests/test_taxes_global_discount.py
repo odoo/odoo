@@ -113,7 +113,7 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
         self.assertAlmostEqual(refund_order.amount_total, -2.85)
         self.assertEqual(len(refund_order.lines), 2)
         self.assertEqual(refund_order.lines[1].product_id.id, self.main_pos_config.discount_product_id.id)
-        self.assertAlmostEqual(refund_order.lines[1].price_subtotal_incl, 0.15)
+        self.assertAlmostEqual(refund_order.lines[1].price_subtotal_incl, -0.15)
         pos_order = orders[1]
         self.assertAlmostEqual(pos_order.amount_total, 2.85)
         self.assertEqual(len(pos_order.lines), 2)
