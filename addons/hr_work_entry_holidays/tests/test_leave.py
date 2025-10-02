@@ -188,15 +188,12 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'work_entry_type_id': entry_type_paid.id,
         })
 
-        flex_40h_calendar = self.env['resource.calendar'].create({
-            'name': 'Flexible 40h/week',
-            'hours_per_day': 8.0,
-            'full_time_required_hours': 40.0,
-            'flexible_hours': True,
+        self.jules_emp.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8,
             'tz': self.jules_emp.tz
         })
-
-        self.jules_emp.resource_calendar_id = flex_40h_calendar
 
         leave_paid = self.env['hr.leave'].create({
             'name': 'Paid leave',

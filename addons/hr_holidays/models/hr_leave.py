@@ -645,10 +645,13 @@ class HrLeave(models.Model):
         for leave in self:
             leave.tz_mismatch = leave.tz != self.env.user.tz
 
-    @api.depends('resource_calendar_id.tz')
+    @api.depends('employee_id.tz')
     def _compute_tz(self):
         for leave in self:
-            leave.tz = leave.resource_calendar_id.tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+            tz = self.env.user.tz or 'UTC'
+            if leave.employee_id:
+                tz = leave.employee_id._get_tz(leave.date_from) or tz
+            leave.tz = tz
 
     @api.depends('number_of_hours', 'number_of_days', 'leave_type_request_unit')
     def _compute_duration_display(self):
@@ -1667,13 +1670,9 @@ class HrLeave(models.Model):
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        calendar = self.resource_calendar_id
-        if not calendar:
-            return (0, 24)
-        calendar.ensure_one()
 
-        hour_from, _ = calendar._get_hours_for_date(request_date_from, day_period)
-        _, hour_to = calendar._get_hours_for_date(request_date_to, day_period)
+        hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period)
+        _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period)
 
         return (hour_from, hour_to)
 

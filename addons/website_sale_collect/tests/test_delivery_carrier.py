@@ -49,25 +49,14 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
             'name': 'Opening hours',
             'attendance_ids': [
                 Command.create({
-                    'name': 'Monday Morning',
                     'dayofweek': '0',
                     'hour_from': 8,
                     'hour_to': 12,
-                    'day_period': 'morning',
                 }),
                 Command.create({
-                    'name': 'Monday Lunch',
-                    'dayofweek': '0',
-                    'hour_from': 12,
-                    'hour_to': 13,
-                    'day_period': 'lunch',
-                }),
-                Command.create({
-                    'name': 'Monday Afternoon',
                     'dayofweek': '0',
                     'hour_from': 13,
                     'hour_to': 17,
-                    'day_period': 'afternoon',
                 }),
             ],
         })

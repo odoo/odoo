@@ -271,20 +271,22 @@ class HrEmployee(models.Model):
     def _get_schedules_by_employee_by_work_type(self, start, stop, version_periods_by_employee):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
-        attendance_intervals_by_cal = defaultdict(Intervals)
-        lunch_intervals_by_cal = defaultdict(Intervals)
+        attendance_intervals_by_employee = defaultdict(Intervals)
 
         for employee, intervals in version_periods_by_employee.items():
             for (_start, _stop, version) in intervals:
                 employees_by_calendar[version.resource_calendar_id] |= employee
 
         for cal, employees in employees_by_calendar.items():
-            if not cal:  # employees are fully flex
-                continue
+            if not cal:  # employees are flex or fully flex
+                employees = employees.filtered(lambda e: not e.is_fully_flexible)
+                if not employees:
+                    continue
+            resources_per_tz = employees._get_resources_per_tz()
             cal_leave_intervals_by_resource = cal._leave_intervals_batch(
                 start,
                 stop,
-                resources=employees.resource_id,
+                resources_per_tz=resources_per_tz,
             )
             for resource, leave_intervals in cal_leave_intervals_by_resource.items():
                 naive_leave_intervals = Intervals([(
@@ -294,47 +296,33 @@ class HrEmployee(models.Model):
                 ) for (i_start, i_stop, i_model) in leave_intervals])
                 leave_intervals_by_cal_by_resource[cal][resource] = naive_leave_intervals
 
-            cal_attendance_intervals = cal._attendance_intervals_batch(
+            cal_attendance_intervals_by_resource = cal._attendance_intervals_batch(
                 start,
                 stop,
-            )[False]
-            attendance_intervals_by_cal[cal] = Intervals([(
+                resources_per_tz=resources_per_tz,
+            )
+            for employee in employees:
+                attendance_intervals_by_employee[employee] = Intervals([(
                     i_start.replace(tzinfo=None),
                     i_stop.replace(tzinfo=None),
                     i_model
-                ) for (i_start, i_stop, i_model) in cal_attendance_intervals])
-
-            cal_lunch_intervals = cal._attendance_intervals_batch(
-                start,
-                stop,
-                lunch=True
-            )[False]
-            lunch_intervals_by_cal[cal] = Intervals([(
-                    i_start.replace(tzinfo=None),
-                    i_stop.replace(tzinfo=None),
-                    i_model
-                ) for (i_start, i_stop, i_model) in cal_lunch_intervals])
+                ) for (i_start, i_stop, i_model) in cal_attendance_intervals_by_resource[employee.resource_id.id]])
 
         full_schedule_by_employee = {
             'leave': defaultdict(Intervals),
-            'schedule': defaultdict(lambda: {
-                'work': Intervals([]),
-                'lunch': Intervals([]),
-            }),
+            'schedule': defaultdict(Intervals),
             'fully_flexible': defaultdict(Intervals)
         }
         for employee, intervals in version_periods_by_employee.items():
+            employee_attendances = attendance_intervals_by_employee[employee]
             for (p_start, p_stop, version) in intervals:
                 interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
-                calendar = version.resource_calendar_id
-                if not calendar:
+                if version.is_fully_flexible:
                     full_schedule_by_employee['fully_flexible'][employee] |= interval
                     continue
+                calendar = version.resource_calendar_id
                 employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
-                employee_attendances = attendance_intervals_by_cal[calendar]
-                full_schedule_by_employee['schedule'][employee]['work'] |= employee_attendances & interval
-                employee_lunches = lunch_intervals_by_cal[calendar]
-                full_schedule_by_employee['schedule'][employee]['lunch'] |= employee_lunches & interval
+                full_schedule_by_employee['schedule'][employee] |= employee_attendances & interval
 
         return full_schedule_by_employee

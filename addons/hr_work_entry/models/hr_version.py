@@ -94,41 +94,24 @@ class HrVersion(models.Model):
     def _get_attendance_intervals(self, start_dt, end_dt):
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
-        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
+        versions_by_calendar = defaultdict(lambda: self.env['hr.version'])
         for version in self:
             if version.work_entry_source != 'calendar':
                 continue
-            employees_by_calendar[version.resource_calendar_id] |= version.employee_id
+            versions_by_calendar[version.resource_calendar_id] |= version
         result = dict()
-        for calendar, employees in employees_by_calendar.items():
-            if not calendar:
-                for employee in employees:
-                    result.update({employee.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
-            else:
+        for calendar, versions in versions_by_calendar.items():
+            fully_flex_versions = versions.filtered('is_fully_flexible')
+            for version in fully_flex_versions:
+                result.update({version.employee_id.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
+            remaining_versions = versions - fully_flex_versions
+            resources_per_tz = remaining_versions._get_resources_per_tz()
+            if remaining_versions:
                 result.update(calendar._attendance_intervals_batch(
                     start_dt,
                     end_dt,
-                    resources=employees.resource_id,
-                    tz=ZoneInfo(calendar.tz) if calendar.tz else UTC
+                    resources_per_tz=resources_per_tz,
                 ))
-        return result
-
-    def _get_lunch_intervals(self, start_dt, end_dt):
-        # {resource: intervals}
-        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
-        for version in self:
-            employees_by_calendar[version.resource_calendar_id] |= version.employee_id
-        result = {}
-        for calendar, employees in employees_by_calendar.items():
-            if not calendar:
-                continue
-            result.update(calendar._attendance_intervals_batch(
-                start_dt,
-                end_dt,
-                resources=employees.resource_id,
-                tz=ZoneInfo(calendar.tz),
-                lunch=True,
-            ))
         return result
 
     def _get_interval_work_entry_type(self, interval):
@@ -182,8 +165,7 @@ class HrVersion(models.Model):
             employee = version.employee_id
             calendar = version.resource_calendar_id
             resource = employee.resource_id
-            # if the version is fully flexible, we refer to the employee's timezone
-            tz = ZoneInfo(resource.tz) if version._is_fully_flexible() else ZoneInfo(calendar.tz)
+            tz = ZoneInfo(version._get_tz())
             attendances = attendances_by_resource[resource.id]
 
             # Other calendars: In case the employee has declared time off in another calendar
@@ -225,10 +207,10 @@ class HrVersion(models.Model):
             worked_leaves = mapped_worked_leaves[resource.id]
 
             real_attendances = attendances - leaves - worked_leaves
-            if not calendar:
+            if version.is_fully_flexible:
                 real_leaves = leaves
                 real_worked_leaves = worked_leaves
-            elif calendar.flexible_hours:
+            elif version.is_flexible:
                 # Flexible hours case
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
                 # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days
@@ -237,8 +219,9 @@ class HrVersion(models.Model):
                 one_day_worked_leaves = Intervals([l for l in worked_leaves if l[0].date() == l[1].date()], keep_distinct=True)
                 multi_day_leaves = leaves - one_day_leaves
                 multi_day_worked_leaves = worked_leaves - one_day_worked_leaves
+                resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources=resource, tz=tz)[resource.id]
+                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
                 real_worked_leaves = (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
 
@@ -248,8 +231,9 @@ class HrVersion(models.Model):
                 real_leaves = attendances - real_attendances - real_worked_leaves
             else:
                 # In the case of attendance based versions use regular attendances to generate leave intervals
+                resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources=resource, tz=tz)[resource.id]
+                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = static_attendances & leaves
                 real_worked_leaves = static_attendances & worked_leaves
 
@@ -344,7 +328,7 @@ class HrVersion(models.Model):
             version_vals = []
             versions_by_tz = defaultdict(lambda: self.env['hr.version'])
             for version in self:
-                versions_by_tz[version.resource_calendar_id.tz] += version
+                versions_by_tz[version._get_tz()] += version
             for version_tz, versions in versions_by_tz.items():
                 tz = ZoneInfo(version_tz) if version_tz else UTC
                 version_vals += versions._get_version_work_entries_values(
@@ -396,7 +380,7 @@ class HrVersion(models.Model):
         for version in self:
             versions_by_company_tz[
                 version.company_id,
-                (version.resource_calendar_id or version.employee_id).tz,
+                version.tz or version.employee_id.user_id.tz,
             ] += version
         new_work_entries = self.env['hr.work.entry']
         for (company, version_tz), versions in versions_by_company_tz.items():
@@ -519,7 +503,7 @@ class HrVersion(models.Model):
             if version_id in tz_by_version:
                 return tz_by_version[version_id]
             version = self.env['hr.version'].browse(version_id)
-            tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
+            tz = version._get_tz()
             if not tz:
                 raise UserError(_('Missing timezone for work entries generation.'))
             tz = ZoneInfo(tz)
@@ -582,7 +566,7 @@ class HrVersion(models.Model):
                 continue
             version = self.env['hr.version'].browse(vals['version_id'])
             calendar = version.resource_calendar_id
-            if not calendar:
+            if not calendar and not version.hours_per_week and not version.hours_per_day:
                 vals['date'] = date_start.astimezone(tz).date()
                 vals['duration'] = 0.0
                 continue
@@ -602,10 +586,12 @@ class HrVersion(models.Model):
                 date_stop = vals['date_stop']
                 version = self.env['hr.version'].browse(vals['version_id'])
                 calendar = version.resource_calendar_id
+                hours_per_week = version.hours_per_week
+                hours_per_day = version.hours_per_day
                 employee = version.employee_id
                 tz = _get_tz(vals['version_id'])
                 vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
+                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar or hours_per_week or hours_per_day else 0.0
             vals.pop('date_start', False)
             vals.pop('date_stop', False)
 

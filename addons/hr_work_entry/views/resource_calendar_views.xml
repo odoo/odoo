@@ -16,8 +16,8 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
         <field name="arch" type="xml">
-            <field name="week_type" position="after">
-                <field name="work_entry_type_id"/>
+            <field name="hour_to" position="after">
+                <field name="work_entry_type_id" placeholder="Default: Attendance" optional="hidden"/>
             </field>
         </field>
     </record>
@@ -27,9 +27,9 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_form"/>
         <field name="arch" type="xml">
-            <field name="day_period" position="after">
+            <div id="resource_attendance_hours" position="after">
                 <field name="work_entry_type_id"/>
-            </field>
+            </div>
         </field>
     </record>
 

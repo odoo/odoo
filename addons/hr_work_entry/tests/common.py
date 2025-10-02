@@ -12,7 +12,19 @@ class TestWorkEntryBase(TransactionCase):
         super().setUpClass()
 
         cls.env.user.tz = 'Europe/Brussels'
-        cls.env.ref('resource.resource_calendar_std').tz = 'Europe/Brussels'
+        cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                (0, 0,
+                    {
+                        'dayofweek': weekday,
+                        'hour_from': hour,
+                        'hour_to': hour + 4,
+                    })
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+            'name': 'Standard 40h/week',
+        })
 
         cls.dep_rd = cls.env['hr.department'].create({
             'name': 'Research & Development - Test',

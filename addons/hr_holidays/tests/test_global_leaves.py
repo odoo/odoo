@@ -19,37 +19,30 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         super().setUpClass()
         cls.calendar_1 = cls.env['resource.calendar'].create({
             'name': 'Classic 40h/week',
-            'tz': 'UTC',
             'hours_per_day': 8.0,
             'attendance_ids': [
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
             ]
         })
 
         cls.calendar_2 = cls.env['resource.calendar'].create({
             'name': 'Classic 20h/week',
-            'tz': 'UTC',
             'hours_per_day': 4.0,
             'attendance_ids': [
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
             ]
         })
 
@@ -104,34 +97,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'date_to': date(2022, 3, 8),
                 'calendar_id': self.calendar_1.id,
             })
-
-    @freeze_time('2023-05-12')
-    def test_global_leave_timezone(self):
-        """
-            It is necessary to use the timezone of the calendar
-            for the global leaves (without resource).
-        """
-        calendar_asia = self.env['resource.calendar'].create({
-            'name': 'Asia calendar',
-            'tz': 'Asia/Kolkata', # UTC +05:30
-            'hours_per_day': 8.0,
-            'attendance_ids': []
-        })
-        self.env.user.tz = 'Europe/Brussels'
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
-            'name': 'Public holiday',
-            'date_from': "2023-05-15 06:00:00", # utc from 8:00:00 for Europe/Brussels (UTC +02:00)
-            'date_to': "2023-05-15 15:00:00", # utc from 17:00:00 for Europe/Brussels (UTC +02:00)
-            'calendar_id': calendar_asia.id,
-        })
-        # Expectation:
-        # 6:00:00 in UTC (data from the browser) --> 8:00:00 for Europe/Brussel (UTC +02:00)
-        # 8:00:00 for Asia/Kolkata (UTC +05:30) --> 2:30:00 in UTC
-        self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 2, 30))
-        self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 11, 30))
-        # Note:
-        # The user in Europe/Brussels timezone see 4:30 and not 2:30 because he is in UTC +02:00.
-        # The user in Asia/Kolkata timezone (determined via the browser) see 8:00 because he is in UTC +05:30
 
     def test_global_leave_number_of_days_with_new(self):
         """
@@ -304,21 +269,25 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         multi-day holidays in flexible schedules
         """
 
-        flex_cal = self.env['resource.calendar'].create({
-            'name': 'Flexible', 'tz': 'UTC', 'flexible_hours': True, 'hours_per_day': 8.0
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Flexible',
+            'calendar_id': False,
+            'hours_per_week': 40.0,
+            'hours_per_day': 8,
+            'tz': 'UTC',
         })
 
         # tuesday to thursday
         self.env['resource.calendar.leaves'].create({
-            'name': '3 day holiday', 'calendar_id': flex_cal.id,
-            'date_from': datetime(2024, 3, 5), 'date_to': date(2024, 3, 7)
+            'name': '3 day holiday', 'calendar_id': False,
+            'date_from': datetime(2024, 3, 5), 'date_to': datetime(2024, 3, 7, 23, 59, 59)
         })
 
         # monday to saturday
         start = datetime(2024, 3, 4)
         end = datetime(2024, 3, 10)
 
-        flex_days = flex_cal._get_unusual_days(start, end)
+        flex_days = self.env['resource.calendar']._get_unusual_days(start, end, resource=flex_resource)
 
         expected = {
             '2024-03-04': False,

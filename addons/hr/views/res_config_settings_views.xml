@@ -62,6 +62,9 @@
                                 domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
                                 context="{'default_company_id': company_id}"/>
                         </setting>
+                        <setting company_dependent="1" id="default_company_tz">
+                            <field name="company_tz" required="1" class="o_light_label"/>
+                        </setting>
                     </block>
                     <block title="Contract" id="contract_work_permit_expiration_notify">
                     <setting string="Contract Expiration Notice Period" id="contract_notice_period"

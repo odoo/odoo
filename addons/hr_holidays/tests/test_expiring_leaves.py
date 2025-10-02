@@ -555,15 +555,12 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             ],
         })
 
-        self.flex_40h_calendar = self.env['resource.calendar'].sudo().create({
-            'name': 'Flexible 40h/week',
-            'tz': 'UTC',
-            'hours_per_day': 8.0,
-            'full_time_required_hours': 80.0,
-            'flexible_hours': True,
-        })
         logged_in_emp = self.env.user.employee_id
-        logged_in_emp.resource_calendar_id = self.flex_40h_calendar
+        logged_in_emp.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
+        })
 
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),

@@ -1,8 +1,6 @@
 from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import fields
-
 from odoo.tests import tagged
 
 from odoo.addons.test_resource.tests.common import TestResourceCommon
@@ -116,61 +114,6 @@ class TestCalendar(TestResourceCommon):
 
         leave.unlink()
 
-        # 2 weeks calendar week 1
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 30)
-
-        # 2 weeks calendar week 1
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 16, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 20, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 30)
-
-        # 2 weeks calendar week 2
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 16)
-
-        # 2 weeks calendar week 2, leave during a day where he doesn't work this week
-        leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Time Off Jules week 2',
-            'calendar_id': self.calendar_jules.id,
-            'resource_id': False,
-            'date_from': self.datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
-            'date_to': self.datetime_str(2018, 4, 13, 4, 0, 0, tzinfo=self.jules.tz),
-        })
-
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 16)
-
-        leave.unlink()
-
-        # 2 weeks calendar week 2, leave during a day where he works this week
-        leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Time Off Jules week 2',
-            'calendar_id': self.calendar_jules.id,
-            'resource_id': False,
-            'date_from': self.datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            'date_to': self.datetime_str(2018, 4, 9, 23, 59, 0, tzinfo=self.jules.tz),
-        })
-
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 8)
-
-        leave.unlink()
-
         # leave without calendar, should count for anyone in the company
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small leave',
@@ -189,34 +132,27 @@ class TestCalendar(TestResourceCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard 35 hours/week',
             'company_id': self.env.company.id,
-            'tz': 'UTC',
             'attendance_ids': [(5, 0, 0),
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16}),
             ],
         })
         res = calendar.get_work_hours_count(
-            fields.Datetime.from_string('2017-05-03 14:03:00'),  # Wednesday (8:00-12:00, 13:00-16:00)
-            fields.Datetime.from_string('2017-05-04 11:03:00'),  # Thursday (8:00-12:00, 13:00-16:00)
+            self.datetime_tz(2017, 5, 3, 14, 3, 0, tzinfo='UTC'),   # Wednesday (8:00-12:00, 13:00-16:00)
+            self.datetime_tz(2017, 5, 4, 11, 3, 0, tzinfo='UTC'),   # Thursday (8:00-12:00, 13:00-16:00)
             compute_leaves=False)
         self.assertEqual(res, 5.0)
 
     def test_calendar_working_hours_24(self):
         self.att_4 = self.env['resource.calendar.attendance'].create({
-            'name': 'Att4',
             'calendar_id': self.calendar_jean.id,
             'dayofweek': '2',
             'hour_from': 0,
@@ -306,60 +242,63 @@ class TestCalendar(TestResourceCommon):
         # Tuesdays 8-16
         # Fridays 8-13 and 16-23
         dt = self.datetime_tz(2020, 4, 2, 7, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertFalse(calendar_dt, "It should not return any value for unattended days")
 
         dt = self.datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)
         range_start = self.datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
         range_end = self.datetime_tz(2020, 4, 3, 19, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, search_range=(range_start, range_end))
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, search_range=(range_start, range_end), resource=self.john.resource_id)
         self.assertFalse(calendar_dt, "It should not return any value if dt outside of range")
 
         dt = self.datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)  # before
         start = self.datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should return the start of the day")
 
         dt = self.datetime_tz(2020, 4, 3, 10, 0, 0, tzinfo=self.john.tz)  # after
         start = self.datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should return the start of the closest attendance")
 
         dt = self.datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)  # before
         end = self.datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
 
         dt = self.datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz)  # after
         end = self.datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
 
         dt = self.datetime_tz(2020, 4, 3, 0, 0, 0, tzinfo=self.john.tz)
         start = self.datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should return the start of the closest attendance")
 
         dt = self.datetime_tz(2020, 4, 3, 23, 59, 59, tzinfo=self.john.tz)
         end = self.datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
 
     def test_attendance_interval_edge_tz(self):
         # When genereting the attendance intervals in an edge timezone, the last interval shouldn't
         # be truncated if the timezone is correctly set
         self.env.user.tz = "America/Los_Angeles"
-        self.calendar_jean.tz = "America/Los_Angeles"
         attendances = self.calendar_jean._attendance_intervals_batch(
             datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=UTC),
-            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=UTC))
+            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=UTC),
+            resources_per_tz={ZoneInfo("America/Los_Angeles"): self.jean.resource_id}
+        )
         last_attendance = list(attendances[False])[-1]
         self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
         self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 15, 59, 59, 999999))
 
         attendances = self.calendar_jean._attendance_intervals_batch(
             datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=ZoneInfo("America/Los_Angeles")),
-            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=ZoneInfo("America/Los_Angeles")))
+            datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=ZoneInfo("America/Los_Angeles")),
+            resources_per_tz={ZoneInfo("America/Los_Angeles"): self.jean.resource_id}
+        )
         last_attendance = list(attendances[False])[-1]
         self.assertEqual(last_attendance[0].replace(tzinfo=None), datetime(2023, 1, 31, 8))
         self.assertEqual(last_attendance[1].replace(tzinfo=None), datetime(2023, 1, 31, 16))
@@ -383,8 +322,8 @@ class TestCalendar(TestResourceCommon):
         })
 
         # Jean changes working schedule to Jules'
-        self.jean.resource_calendar_id = self.calendar_jules
-        self.assertEqual(leave.calendar_id, self.calendar_jules, "Leave calendar should update")
+        self.jean.resource_calendar_id = self.calendar_patel
+        self.assertEqual(leave.calendar_id, self.calendar_patel, "Leave calendar should update")
         self.assertEqual(holiday.calendar_id, self.calendar_jean, "Global leave shouldn't change")
 
     def test_compute_work_time_rate_with_one_week_calendar(self):
@@ -392,17 +331,13 @@ class TestCalendar(TestResourceCommon):
         # Define a mid time
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Calendar Mid-Time',
-            'tz': "Europe/Brussels",
-            'two_weeks_calendar': False,
             'full_time_required_hours': 40,
             'attendance_ids': [
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
             ],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
@@ -411,10 +346,9 @@ class TestCalendar(TestResourceCommon):
         resource_calendar.write({
             'name': 'Calendar (4 / 5)',
             'attendance_ids': [
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
             ],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
@@ -422,66 +356,13 @@ class TestCalendar(TestResourceCommon):
         # Define a 9/10
         resource_calendar.write({
             'name': 'Calendar (9 / 10)',
-            'attendance_ids': [(0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})],
+            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12})],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
 
         # Define a Full-Time
         resource_calendar.write({
             'name': 'Calendar Full-Time',
-            'attendance_ids': [(0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})],
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
-
-    def test_compute_work_time_rate_with_two_weeks_calendar(self):
-        """Test Case: check if the computation of the work time rate in the resource.calendar is correct."""
-        def create_attendance_ids(attendance_list):
-            return [(0, 0, {'week_type': str(i), **attendance}) for i in range(0, 2) for attendance in attendance_list]
-
-        attendance_list = [
-            {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
-            {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'},
-            {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'},
-            {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
-            {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'},
-            {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'},
-            {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
-        ]
-
-        # Define a mid time
-        resource_calendar = self.env['resource.calendar'].create({
-            'name': 'Calendar Mid-Time',
-            'tz': "Europe/Brussels",
-            'two_weeks_calendar': True,
-            'full_time_required_hours': 40,
-            'attendance_ids': create_attendance_ids(attendance_list),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
-
-        attendance_list = [
-            {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'},
-            {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
-            {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'},
-            {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'},
-        ]
-
-        # Define a 4/5
-        resource_calendar.write({
-            'name': 'Calendar (4 / 5)',
-            'attendance_ids': create_attendance_ids(attendance_list),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
-
-        # Define a 9/10
-        resource_calendar.write({
-            'name': 'Calendar (9 / 10)',
-            'attendance_ids': create_attendance_ids([{'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}]),
-        })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
-
-        # Define a Full-Time
-        resource_calendar.write({
-            'name': 'Calendar Full-Time',
-            'attendance_ids': create_attendance_ids([{'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}]),
+            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)

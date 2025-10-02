@@ -376,6 +376,24 @@
 
                                         <separator name="schedule" string="Schedule"/>
                                         <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Flexible"/>
+                                        <label for="hours_per_week" string="Hours Per Week" invisible="resource_calendar_id"/>
+                                        <div class="o_row" name="flexible_hours_per_week" invisible="resource_calendar_id">
+                                            <div invisible="not hours_per_week">
+                                                <field name="hours_per_week" class="o_hr_narrow_field" widget="float_time"/> / week
+                                            </div>
+                                            <div invisible="hours_per_week">
+                                                <field name="hours_per_week" class="o_hr_narrow_field" widget="optional_float_field" placeholder="Not limited"/>
+                                            </div>
+                                        </div>
+                                        <label for="hours_per_day" string="Average Hours" invisible="resource_calendar_id or not hours_per_week"/>
+                                        <div class="o_row" name="flexible_hours_per_day" invisible="resource_calendar_id or not hours_per_week">
+                                            <div invisible="not hours_per_day">
+                                                <field name="hours_per_day" class="o_hr_narrow_field" widget="float_time"/> / day
+                                            </div>
+                                            <div invisible="hours_per_day">
+                                                <field name="hours_per_day" class="o_hr_narrow_field" widget="optional_float_field" placeholder="Variable Hours"/>
+                                            </div>
+                                        </div>
                                     </group>
                                 </group>
                             </page>

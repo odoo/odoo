@@ -46,7 +46,7 @@ class TestOee(TestMrpCommon):
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)
 
-        tz = ZoneInfo(self.workcenter_1.resource_calendar_id.tz)
+        tz = ZoneInfo(self.workcenter_1.tz)
 
         def time_to_string_utc_datetime(time):
             return fields.Datetime.to_string(

@@ -19,7 +19,19 @@ class TestWorkEntry(TestWorkEntryBase):
         cls.tz = ZoneInfo(cls.richard_emp.tz)
         cls.start = datetime(2015, 11, 1, 1, 0, 0)
         cls.end = datetime(2015, 11, 30, 23, 59, 59)
-        cls.resource_calendar_id = cls.env['resource.calendar'].create({'name': 'My Calendar'})
+        cls.resource_calendar_id = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                (0, 0,
+                    {
+                        'dayofweek': weekday,
+                        'hour_from': hour,
+                        'hour_to': hour + 4,
+                    })
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+            'name': 'Standard 40h/week',
+        })
         cls.richard_emp.create_version({
             'date_version': cls.start.date() - relativedelta(days=5),
             'contract_date_start': cls.start.date() - relativedelta(days=5),
@@ -76,19 +88,18 @@ class TestWorkEntry(TestWorkEntryBase):
         """ Test work entries with different timezone """
         hk_resource_calendar_id = self.env['resource.calendar'].create({
             'name': 'HK Calendar',
-            'tz': 'Asia/Hong_Kong',
             'hours_per_day': 8,
             'attendance_ids': [(5, 0, 0),
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                (0, 0, {'dayofweek': '0', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
             ]
         })
         hk_employee = self.env['hr.employee'].create({
@@ -98,6 +109,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'contract_date_start': datetime(2023, 8, 1),
             'contract_date_end': False,
             'wage': 1000,
+            'tz': 'Asia/Hong_Kong',
         })
         self.env['resource.calendar.leaves'].create({
             'date_from': datetime(2023, 8, 2, 0, 0, 0).replace(tzinfo=ZoneInfo('Asia/Hong_Kong')).astimezone(UTC).replace(tzinfo=None),
@@ -115,7 +127,7 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(work_entries[1].duration, 8)
 
     def test_separate_overlapping_work_entries_by_type(self):
-        calendar = self.env['resource.calendar'].create({'name': 'Calendar', 'tz': 'Europe/Brussels'})
+        calendar = self.env['resource.calendar'].create({'name': 'Calendar'})
         employee = self.env['hr.employee'].create({
             'name': 'Test',
             'resource_calendar_id': calendar.id,
@@ -123,6 +135,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'contract_date_start': datetime(2024, 9, 1),
             'contract_date_end': datetime(2024, 9, 30),
             'wage': 5000.0,
+            'tz': 'Europe/Brussels',
         })
         calendar.attendance_ids -= calendar.attendance_ids.filtered(lambda attendance: attendance.dayofweek == '0')
 
@@ -135,37 +148,29 @@ class TestWorkEntry(TestWorkEntryBase):
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
-                'name': 'Same type 1',
                 'hour_from': 8,
                 'hour_to': 11,
-                'day_period': 'morning',
                 'work_entry_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
-                'name': 'Same type 2',
                 'hour_from': 11,
                 'hour_to': 12,
-                'day_period': 'morning',
                 'work_entry_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
-                'name': 'Different types 1',
                 'hour_from': 13,
                 'hour_to': 16,
-                'day_period': 'afternoon',
                 'work_entry_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
-                'name': 'Different types 2',
                 'hour_from': 16,
                 'hour_to': 17,
-                'day_period': 'afternoon',
                 'work_entry_type_id': entry_type_2.id,
             },
         ])
@@ -192,12 +197,6 @@ class TestWorkEntry(TestWorkEntryBase):
 
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
-        flexible_calendar = self.env['resource.calendar'].create({
-            'name': 'flexible calendar',
-            'flexible_hours': True,
-            'full_time_required_hours': 21,
-            'hours_per_day': 3,
-        })
         # create 4 employees that have versions corresponding to these 4 cases:
         # flexible calendar then standard calendar
         # standard calendar then flexible calendar
@@ -213,7 +212,9 @@ class TestWorkEntry(TestWorkEntryBase):
         ])
         self.env['hr.version'].create([{
             'employee_id': emp_flex_std.id,
-            'resource_calendar_id': flexible_calendar.id,
+            'resource_calendar_id': False,
+            'hours_per_week': 21,
+            'hours_per_day': 3,
             'date_version': datetime(2025, 9, 1),
             'contract_date_start': datetime(2025, 9, 1),
             'contract_date_end': datetime(2025, 9, 15),
@@ -243,7 +244,9 @@ class TestWorkEntry(TestWorkEntryBase):
         },
         {
             'employee_id': emp_std_flex.id,
-            'resource_calendar_id': flexible_calendar.id,
+            'resource_calendar_id': False,
+            'hours_per_week': 21,
+            'hours_per_day': 3,
             'date_version': datetime(2025, 9, 16),
             'contract_date_start': datetime(2025, 9, 16),
             'contract_date_end': datetime(2025, 9, 30),
@@ -254,6 +257,8 @@ class TestWorkEntry(TestWorkEntryBase):
         {
             'employee_id': emp_fullyflex_std.id,
             'resource_calendar_id': False,
+            'hours_per_week': 0,
+            'hours_per_day': 0,
             'date_version': datetime(2025, 9, 1),
             'contract_date_start': datetime(2025, 9, 1),
             'contract_date_end': datetime(2025, 9, 15),
@@ -284,6 +289,8 @@ class TestWorkEntry(TestWorkEntryBase):
         {
             'employee_id': emp_std_fullyflex.id,
             'resource_calendar_id': False,
+            'hours_per_week': 0,
+            'hours_per_day': 0,
             'date_version': datetime(2025, 9, 16),
             'contract_date_start': datetime(2025, 9, 16),
             'contract_date_end': datetime(2025, 9, 30),
@@ -369,36 +376,34 @@ class TestWorkEntry(TestWorkEntryBase):
         """
         calendar_40h = self.env['resource.calendar'].create({
             'name': '40h Calendar',
-            'tz': 'Europe/Brussels',
             'hours_per_day': 8,
             'attendance_ids': [(5, 0, 0),
-               (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+               (0, 0, {'dayofweek': '0', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '1', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '2', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '3', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '4', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
             ]
         })
         calendar_35h = self.env['resource.calendar'].create({
             'name': '35h Calendar',
-            'tz': 'Europe/Brussels',
             'hours_per_day': 7,
             'attendance_ids': [(5, 0, 0),
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+                (0, 0, {'dayofweek': '0', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16})
             ]
         })
 
@@ -442,36 +447,34 @@ class TestWorkEntry(TestWorkEntryBase):
         """
         calendar_40h = self.env['resource.calendar'].create({
             'name': '40h Calendar',
-            'tz': 'Europe/Brussels',
             'hours_per_day': 8,
             'attendance_ids': [(5, 0, 0),
-               (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-               (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-               (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+               (0, 0, {'dayofweek': '0', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '1', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '2', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '3', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+               (0, 0, {'dayofweek': '4', 'hour_from': 7, 'hour_to': 11}),
+               (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
             ]
         })
         calendar_35h = self.env['resource.calendar'].create({
             'name': '35h Calendar',
-            'tz': 'Europe/Brussels',
             'hours_per_day': 7,
             'attendance_ids': [(5, 0, 0),
-                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+                (0, 0, {'dayofweek': '0', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 7, 'hour_to': 11}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16})
             ]
         })
 

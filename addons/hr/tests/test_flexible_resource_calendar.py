@@ -10,16 +10,12 @@ class TestFlexibleResourceCalendar(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.calendar_40h_flex = cls.env['resource.calendar'].create({
-            'name': 'Flexible 40h/week',
-            'tz': 'UTC',
-            'hours_per_day': 8.0,
-            'flexible_hours': True,
-        })
         cls.flex_resource, cls.fully_flex_resource = cls.env['resource.resource'].create([{
             'name': 'Flex',
             'tz': 'UTC',
-            'calendar_id': cls.calendar_40h_flex.id,
+            'calendar_id': False,
+            'hours_per_week': 40.0,
+            'hours_per_day': 8.0,
         }, {
             'name': 'fully flex',
             'tz': 'UTC',
@@ -33,7 +29,9 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'contract_date_start': date(2025, 1, 1),
             'contract_date_end': date(2025, 7, 29),
             'wage': 10,
-            'resource_calendar_id': self.calendar_40h_flex.id,
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
             'resource_id': self.flex_resource.id,
         }, {
             'name': "fully flex employee",
@@ -48,7 +46,9 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'date_version': date(2025, 8, 2),
             'contract_date_start': date(2025, 8, 2),
             'wage': 10,
-            'resource_calendar_id': self.calendar_40h_flex.id,
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
         })
 
         fully_flex_employee.create_version({

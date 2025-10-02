@@ -7,6 +7,7 @@ class ResConfigSettings(models.TransientModel):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Company Working Hours',
         related='company_id.resource_calendar_id', readonly=False)
+    company_tz = fields.Selection(related='company_id.tz', string='Company Timezone', readonly=False)
     module_hr_presence = fields.Boolean(string="Advanced Presence Control")
     module_hr_skills = fields.Boolean(string="Skills Management")
     hr_presence_control_login = fields.Boolean(related='company_id.hr_presence_control_login', readonly=False)

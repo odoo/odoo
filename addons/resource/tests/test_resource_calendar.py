@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
 
 from odoo.tests.common import tagged, TransactionCase
 
@@ -13,7 +14,6 @@ class TestResourceCalendar(TransactionCase):
         """
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard Calendar',
-            'two_weeks_calendar': False,
         })
         resource = self.env['resource.resource'].create({
             'name': 'Wade Wilson',
@@ -21,7 +21,6 @@ class TestResourceCalendar(TransactionCase):
             'tz': 'America/New_York',  # -04:00 UTC offset in the summer
         })
         self.env['resource.calendar.attendance'].create({
-            'name': 'TEMP',
             'calendar_id': calendar.id,
             'dayofweek': '2',  # Wednesday
             'hour_from': 14,   # 18:00 UTC
@@ -29,8 +28,11 @@ class TestResourceCalendar(TransactionCase):
         })
         start_dt = datetime(2025, 6, 4, 18, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 4, 21, 0, 0).astimezone(UTC)
+        resources_per_tz = {
+            ZoneInfo('America/New_York'): resource
+        }
         result_per_resource_id = calendar._attendance_intervals_batch(
-            start_dt, end_dt, resource
+            start_dt, end_dt, resources_per_tz
         )
         start, end, attendance = result_per_resource_id[resource.id]._items[0]
         # For a flexible resource, we expect the output times to match the
@@ -40,17 +42,16 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(start, start_dt, "Output start time should match the input start time")
         self.assertEqual(end, end_dt, "Output end time should match the input end time")
         self.assertEqual(attendance.duration_hours, 3.0, "Attendance duration should be 3 hours")
-        self.assertEqual(attendance.duration_days, 0.125, "Attendance duration should be 0.125 days (3 hours)")
 
     def test_flexible_calendar_attendance_interval_duration(self):
         """
         Test that the duration of an attendance interval for flexible calendar is correctly computed.
         """
-        flexible_calendar = self.env['resource.calendar'].create({
-            'name': 'Flexible Calendar',
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Test FlexResource',
+            'calendar_id': False,
+            'hours_per_week': 30.0,
             'hours_per_day': 7.0,
-            'full_time_required_hours': 30,
-            'flexible_hours': True,
             'tz': 'UTC',
         })
 
@@ -60,21 +61,24 @@ class TestResourceCalendar(TransactionCase):
 
         start_dt = datetime(2025, 6, 2, 0, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 7, 23, 59, 59).astimezone(UTC)
-        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
-            start_dt, end_dt
+        resources_per_tz = {
+            UTC: flex_resource
+        }
+        result_per_resource_id = self.env['resource.calendar']._attendance_intervals_batch(
+            start_dt, end_dt, resources_per_tz=resources_per_tz
         )
-        self.assertEqual(expected_hours, [(end - start).total_seconds() / 3600 for start, end, dummy_attendance in result_per_resource_id[0]._items])
-        self.assertEqual(expected_hours, [dummy_attendance.duration_hours for start, end, dummy_attendance in result_per_resource_id[0]._items])
+        self.assertEqual(expected_hours, [(end - start).total_seconds() / 3600 for start, end, dummy_attendance in result_per_resource_id[flex_resource.id]._items])
+        self.assertEqual(expected_hours, [dummy_attendance.duration_hours for start, end, dummy_attendance in result_per_resource_id[flex_resource.id]._items])
 
         # Case 2: check attendances are all contained between start_dt and end_dt
         start_dt = datetime(2025, 6, 2, 11, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 7, 13, 0, 0).astimezone(UTC)
-        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
-            start_dt, end_dt
+        result_per_resource_id = self.env['resource.calendar']._attendance_intervals_batch(
+            start_dt, end_dt, resources_per_tz=resources_per_tz
         )
 
-        self.assertTrue(start_dt <= result_per_resource_id[0]._items[0][0], "First attendance interval should not start before start_dt")
-        self.assertTrue(end_dt >= result_per_resource_id[0]._items[4][1], "Last attendance interval should not end after end_dt")
+        self.assertTrue(start_dt <= result_per_resource_id[flex_resource.id]._items[0][0], "First attendance interval should not start before start_dt")
+        self.assertTrue(end_dt >= result_per_resource_id[flex_resource.id]._items[4][1], "Last attendance interval should not end after end_dt")
 
     def test_working_time_holiday_multicompany(self):
         """

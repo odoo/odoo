@@ -11,6 +11,20 @@ class TestHrCommon(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                (0, 0,
+                    {
+                        'dayofweek': weekday,
+                        'hour_from': hour,
+                        'hour_to': hour + 4,
+                    })
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+            'name': 'Standard 40h/week',
+        })
+
         cls.res_users_hr_officer = mail_new_test_user(
             cls.env,
             email='hro@example.com',

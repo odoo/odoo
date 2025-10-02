@@ -272,14 +272,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(timesheet_count + 1, new_timesheet_count)
 
     def test_timesheet_timeoff_flexible_employee(self):
-        flex_40h_calendar = self.env['resource.calendar'].create({
-            'name': 'Flexible 40h/week',
+        self.empl_employee.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
             'hours_per_day': 8.0,
-            'full_time_required_hours': 40.0,
-            'flexible_hours': True,
         })
-
-        self.empl_employee.resource_calendar_id = flex_40h_calendar
 
         time_off = self.Requests.with_user(self.user_employee).create({
             'name': 'Test Time off please',
@@ -350,14 +347,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-29')
 
     def test_one_day_timesheet_timeoff_flexible_employee(self):
-        flex_40h_calendar = self.env['resource.calendar'].create({
-            'name': 'Flexible 10h/week',
+        self.empl_employee.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 10,
             'hours_per_day': 10,
-            'full_time_required_hours': 10,
-            'flexible_hours': True,
         })
-
-        self.empl_employee.resource_calendar_id = flex_40h_calendar
 
         time_off = self.Requests.with_user(self.user_employee).create({
             'name': 'Test 1 day Time off',

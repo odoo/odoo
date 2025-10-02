@@ -87,15 +87,14 @@ class TestWorkingHours(TestHrCalendarCommon):
     def test_working_hours_2_emp_same_calendar_hours_different_timezone(self):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id]
-        calendar_35h_london_tz = self.calendar_35h.copy()
-        calendar_35h_london_tz.tz = 'Europe/London'
-        self.employeeD.resource_calendar_id = calendar_35h_london_tz
+        self.employeeD.resource_calendar_id = self.calendar_35h
+        self.employeeD.tz = 'Europe/London'
         work_hours = self.env['res.partner'].get_working_hours_for_all_attendees(
             [self.partnerA.id, self.partnerD.id],
             datetime(2023, 12, 25).isoformat(),
             datetime(2023, 12, 31).isoformat(),
         )
-        # calendar_35h_london_tz.tz = UTC, calendar_35h.tz = UTC +1
+        # employeeD.tz = UTC +1
         self.assertEqual(work_hours, [
             {'daysOfWeek': [1], 'startTime': '09:00', 'endTime': '12:00'},
             {'daysOfWeek': [1], 'startTime': '14:00', 'endTime': '16:00'},
@@ -389,16 +388,14 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
     def test_working_hours_2_emp_same_calendar_different_timezone(self):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id]
-
-        calendar_35h_london_tz = self.calendar_35h.copy()
-        calendar_35h_london_tz.tz = 'Europe/London'
-        self.contractD.resource_calendar_id = calendar_35h_london_tz
+        self.contractD.resource_calendar_id = self.calendar_35h
+        self.contractD.tz = 'Europe/London'
         work_hours = self.env['res.partner'].get_working_hours_for_all_attendees(
             [self.partnerA.id, self.partnerD.id],
             datetime(2023, 12, 25).isoformat(),
             datetime(2023, 12, 31).isoformat()
         )
-        # calendar_35h_london_tz.tz = UTC, calendar_35h.tz = UTC +1
+        # contractD.tz = UTC +1
         self.assertEqual(work_hours, [
             {'daysOfWeek': [1], 'startTime': '09:00', 'endTime': '12:00'},
             {'daysOfWeek': [1], 'startTime': '14:00', 'endTime': '16:00'},

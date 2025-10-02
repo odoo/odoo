@@ -16,12 +16,9 @@ class ResUsers(models.Model):
     def write(self, vals):
         rslt = super().write(vals)
 
-        # If the timezone of the admin user gets set on their first login, also update the timezone of the default working calendar
+        # If the timezone of the admin user gets set on their first login, also update the timezone of the company
         if (vals.get('tz') and len(self) == 1 and not self.env.user.login_date
             and self.env.user == self.env.ref('base.user_admin', False) and self == self.env.user):
-            if self.resource_calendar_id:
-                self.resource_calendar_id.tz = vals['tz']
-            else:
-                self.env.ref('resource.resource_calendar_std', False).tz = vals['tz']
-
+            if self.company_id:
+                self.company_id.tz = vals['tz']
         return rslt

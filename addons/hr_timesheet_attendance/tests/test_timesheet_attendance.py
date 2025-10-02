@@ -30,5 +30,5 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             aggregates=['total_timesheet:sum', 'total_attendance:sum'],
         )[0]
         self.assertEqual(total_timesheet, 6.0, "Total timesheet in report should be 4.0")
-        self.assertEqual(total_attendance, 7.0, "Total attendance in report should be 8.0")
-        self.assertEqual(total_attendance - total_timesheet, 1)
+        self.assertEqual(total_attendance, 8.0, "Total attendance in report should be 8.0")
+        self.assertEqual(total_attendance - total_timesheet, 2)

@@ -28,7 +28,6 @@ class HrLeave(models.Model):
     def _get_fr_date_from_to(self, date_from, date_to):
         self.ensure_one()
         # What we need to compute is how much we will need to push date_to in order to account for the lost days
-        # This gets even more complicated in two_weeks_calendars
 
         # The following computation doesn't work for resource calendars in
         # which the employee works zero hours.
@@ -39,11 +38,9 @@ class HrLeave(models.Model):
             # Use company's working schedule hours for the leave to avoid duration calculation issues.
             def adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, employee_id):
                 period_ids_from = attendance_ids.filtered(lambda a: a.day_period in from_period
-                                                                    and int(a.dayofweek) == date_from.weekday()
-                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_from)))
+                                                                    and int(a.dayofweek) == date_from.weekday())
                 period_ids_to = attendance_ids.filtered(lambda a: a.day_period in to_period
-                                                                    and int(a.dayofweek) == date_to.weekday()
-                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_to)))
+                                                                    and int(a.dayofweek) == date_to.weekday())
                 if period_ids_from:
                     min_hour = min(attendance.hour_from for attendance in period_ids_from)
                     date_from = self._to_utc(date_from, min_hour, employee_id)
@@ -67,13 +64,11 @@ class HrLeave(models.Model):
             # leave_type_request_unit = 'half_day' allows us to choose between `am` and `pm`
             # In a case where we work from mon-wed and request a half day in the morning
             # we do not want to push date_to since the next work attendance is actually in the afternoon
-            date_from_weektype = str(self.env['resource.calendar.attendance'].get_week_type(date_from))
             date_from_dayofweek = str(date_from.weekday())
             # Fetch the attendances we care about
             attendance_ids = self.resource_calendar_id.attendance_ids.filtered(lambda a:
                 a.dayofweek == date_from_dayofweek
-                and a.day_period != "lunch"
-                and (not self.resource_calendar_id.two_weeks_calendar or a.week_type == date_from_weektype))
+            )
             if len(attendance_ids) == 2:
                 # The employee took the morning off on a day where he works the afternoon aswell
                 return (date_from, date_to)

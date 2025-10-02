@@ -425,7 +425,7 @@ class DigestDigest(models.Model):
 
     def _compute_timeframes(self, company):
         start_datetime = datetime.now(UTC)
-        tz_name = company.resource_calendar_id.tz
+        tz_name = company.tz
         if tz_name:
             start_datetime = start_datetime.replace(tzinfo=ZoneInfo(tz_name))
         return [
