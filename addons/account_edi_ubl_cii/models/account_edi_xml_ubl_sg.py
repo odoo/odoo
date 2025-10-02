@@ -30,7 +30,7 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
         # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
 
-        for party_tax_scheme in vals['party_tax_scheme_vals']:
+        for party_tax_scheme in vals.get('party_tax_scheme_vals', []):
             party_tax_scheme['tax_scheme_vals'] = {'id': 'GST'}
 
         return vals
