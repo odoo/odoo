@@ -506,7 +506,7 @@ class CardCampaign(models.Model):
             if not self[dyn_field]:
                 result[el] = self[text_field]
             elif not (field_path := self[path_field]):
-                result[el] = record
+                result[el] = False
             else:
                 fnames = field_path.split('.')
                 try:
