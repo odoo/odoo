@@ -213,3 +213,27 @@ class TestTaxesTaxTotalsSummarySale(TestTaxCommonSale, TestTaxesTaxTotalsSummary
             },
             soft_checking=True,
         )
+
+    def test_prepayment_computation_based_on_payment_term(self):
+        """
+        Test that assigning a payment term to a sale order automatically
+        triggers the computation of prepayment_percent based on the first
+        line of the payment term.
+        """
+        self.sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+
+        payment_term = self.env['account.payment.term'].search(
+            [('name', '=', '30% Now, Balance 60 Days')],
+            limit=1
+        )
+
+        self.sale_order.payment_term_id = payment_term
+
+        self.assertAlmostEqual(
+            self.sale_order.prepayment_percent,
+            0.3,
+            places=2,
+            msg="Prepayment percent should be 30% from payment term"
+        )
