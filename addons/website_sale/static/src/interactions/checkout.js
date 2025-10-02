@@ -156,13 +156,13 @@ export class Checkout extends Interaction {
             zipCode: zipCode,
             selectedLocationId: locationId,
             isFrontend: true,
-            save: async location => {
-                const jsonLocation = JSON.stringify(location);
+            save: async locationData => {
+                const jsonLocation = JSON.stringify(locationData);
                 // Assign the selected pickup location to the order.
                 await this.waitFor(this._setPickupLocation(jsonLocation));
 
                 //  Show and set the order location details.
-                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
+                this._updatePickupLocation(deliveryMethodContainer, locationData, jsonLocation);
 
                 this._enableMainButton();
             },

@@ -66,16 +66,17 @@ patch(Checkout.prototype, {
     },
 
     /**
-     * Remove a warning if available pickup location is selected.
+     * Reload the page after setting the pickup location if the delivery method is in_store to
+     * update the warning message.
      *
      * @override method from `@website_sale/interactions/checkout`
      */
-    _updatePickupLocation(button, location, jsonLocation) {
+    _updatePickupLocation(button, locationData, jsonLocation) {
         super._updatePickupLocation(...arguments);
         const dmContainer = this._getDeliveryMethodContainer(button);
         const radio = dmContainer.querySelector('[name="o_delivery_radio"]');
         if (radio.dataset.deliveryType === 'in_store') {
-            dmContainer.querySelector('[name="unavailable_products_warning"]')?.remove();
+            location.reload();
         }
     },
 
