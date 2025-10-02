@@ -46,6 +46,8 @@ class Partner extends models.Model {
     _records = [];
 }
 
+onRpc("has_group", () => true);
+
 defineModels([Partner]);
 
 defineActions([
@@ -78,7 +80,7 @@ async function executeImport(data, shouldWait = false) {
             },
         ];
     }
-    if (data[3].skip + 1 < totalRows) {
+    if (data[3].limit + data[3].skip < totalRows) {
         res.nextrow = data[3].skip + data[3].limit;
     } else {
         res.nextrow = 0;
@@ -1097,6 +1099,38 @@ describe("Import view", () => {
         });
     });
 
+    test("test in batches then reset starting row", async () => {
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                // make sure the UI displays the batched import options
+                return true;
+            },
+        });
+
+        await mountWebClient();
+        onRpc("base_import.import", "execute_import", ({ args }) => executeImport(args, true));
+        await getService("action").doAction(1);
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains("input#o_import_batch_limit").edit(1);
+        await contains(".o_control_panel_main_buttons button:first").click();
+
+        await animationFrame();
+        expect("input#o_import_row_start").toHaveValue("2");
+        await animationFrame();
+        expect("input#o_import_row_start").toHaveValue("3");
+
+        await animationFrame();
+        expect(".o_import_data_content .alert-info").toHaveText("Everything seems valid.");
+        expect("input#o_import_row_start").toHaveValue("1", {
+            message: "the actual import will resume at line 1",
+        });
+    });
+
     test("relational fields correctly mapped on preview", async () => {
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", ({ args }) =>
@@ -1361,9 +1395,7 @@ describe("Import view", () => {
             ".o_control_panel_main_buttons > div:visible > button:contains(Import):eq(0)"
         ).click();
         expect.verifySteps(["parse_preview", "parse_preview", "execute_import"]);
-        expect(".o_import_date_format").toHaveValue("YYYYMMDD", {
-            message: "UI displays the human formatted date",
-        });
+        await waitFor(".o_list_view");
     });
 });
 
