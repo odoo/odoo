@@ -15,6 +15,7 @@ class PaymentProvider(models.Model):
     website_id = fields.Many2one(
         "website",
         check_company=True,
+        copy=False,  # handled in `copy` override to prevent company inconsistencies
         ondelete="restrict",
     )
 
@@ -60,4 +61,8 @@ class PaymentProvider(models.Model):
         res = super().copy(default=default)
         if self._context.get('stripe_connect_onboarding'):
             res.website_id = False
+        elif not default or 'website_id' not in default:
+            for src, copy in zip(self, res):
+                if src.website_id and src.company_id in copy.company_id.parent_ids:
+                    copy.website_id = src.website_id
         return res
