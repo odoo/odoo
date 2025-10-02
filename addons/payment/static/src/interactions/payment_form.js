@@ -283,9 +283,7 @@ export class PaymentForm extends Interaction {
      * @return {void}
      */
     _adaptSubmitButtonLabel(paymentMethodCode) {
-        const buttonLabel = this._isPayLaterPaymentMethod(paymentMethodCode)
-            ? _t("Confirm")
-            : this.defaultSubmitButtonLabel;
+        const buttonLabel = this._getSubmitButtonLabel(paymentMethodCode);
         for (const btn of document.querySelectorAll('button[name="o_payment_submit_button"]')) {
             if (btn.textContent !== buttonLabel) {
                 btn.textContent = buttonLabel;
@@ -294,16 +292,16 @@ export class PaymentForm extends Interaction {
     }
 
     /**
-     * Check whether the given payment method expects immediate payment.
+     * Get the appropriate submit button label based on the payment method.
      *
-     * Override this method to change the submit button label from the default label to "Confirm".
+     * Override this method to change the submit button label from the default label to a custom one.
      *
      * @private
      * @param {string} paymentMethodCode - The code of the selected payment method, if any.
-     * @return {boolean}
+     * @return {string} -the correct button label
      */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return false;
+    _getSubmitButtonLabel(paymentMethodCode) {
+        return this.defaultSubmitButtonLabel;
     }
 
     /**

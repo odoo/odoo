@@ -1,3 +1,4 @@
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
@@ -5,15 +6,15 @@ import { PaymentForm } from '@payment/interactions/payment_form';
 patch(PaymentForm.prototype, {
 
     /**
-     * Configure 'cash_on_delivery' as a pay later method.
+     * Determine the label for the submit button based on the selected payment method.
      *
      * @override
      */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return (
-            paymentMethodCode === 'cash_on_delivery'
-            || super._isPayLaterPaymentMethod(...arguments)
-        );
+    _getSubmitButtonLabel(paymentMethodCode) {
+        if (paymentMethodCode === 'cash_on_delivery') {
+            return _t('Confirm');
+        }
+        return  super._getSubmitButtonLabel(paymentMethodCode);
     }
 
 });

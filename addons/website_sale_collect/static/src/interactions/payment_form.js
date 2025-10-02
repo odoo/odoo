@@ -1,3 +1,4 @@
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
@@ -5,12 +6,15 @@ import { PaymentForm } from '@payment/interactions/payment_form';
 patch(PaymentForm.prototype, {
 
     /**
-     * Configure 'pay_on_site' as a pay later method.
+     * Determine the label for the submit button based on the selected payment method.
      *
      * @override
      */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return paymentMethodCode === 'pay_on_site' || super._isPayLaterPaymentMethod(...arguments);
+    _getSubmitButtonLabel(paymentMethodCode) {
+        if (paymentMethodCode === 'pay_on_site') {
+            return _t('Confirm');
+        }
+        return  super._getSubmitButtonLabel(paymentMethodCode);
     }
 
 });
