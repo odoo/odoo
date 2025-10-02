@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import logging
 import threading
 import time
@@ -53,7 +54,7 @@ _intervalTypes = {
 }
 
 
-class CompletionStatus:  # inherit from enum.StrEnum in 3.11
+class CompletionStatus(enum.StrEnum):
     FULLY_DONE = 'fully done'
     PARTIALLY_DONE = 'partially done'
     FAILED = 'failed'

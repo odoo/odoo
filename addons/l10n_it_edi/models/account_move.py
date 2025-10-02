@@ -44,11 +44,10 @@ def get_date(tree, xpath):
 
 def get_datetime(tree, xpath):
     """ Datetimes in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DDThh:mm:ss[Z|(+|-)hh:mm]'
-        Python 3.7 -> 3.11 doesn't support 'Z'.
     """
     if datetime_str := get_text(tree, xpath):
         try:
-            return datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
+            return datetime.fromisoformat(datetime_str)
         except (ValueError, TypeError):
             return False
     return False
