@@ -1699,6 +1699,8 @@ class Response(Proxy):
             elif isinstance(arg, werkzeug.wrappers.Response):
                 response = _Response.load(arg)
         if response is None:
+            if isinstance(kwargs.get('headers'), Headers):
+                kwargs['headers'] = kwargs['headers']._wrapped__
             response = _Response(*args, **kwargs)
 
         super().__init__(response)
