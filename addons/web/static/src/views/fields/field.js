@@ -244,7 +244,9 @@ export class Field extends Component {
             decorations: {},
             attrs: {},
             domain: undefined,
+            tab: undefined,
         };
+        debugger;
 
         for (const attr of ["invisible", "column_invisible", "readonly", "required"]) {
             fieldInfo[attr] = node.getAttribute(attr);

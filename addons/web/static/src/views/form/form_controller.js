@@ -331,6 +331,10 @@ export class FormController extends Component {
         }
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+        // Search where is the field in the view that is opening
+        // If the field is in a tab, open the tab
+        // Focus the field
+        debugger;
     }
 
     get cogMenuProps() {
