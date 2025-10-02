@@ -115,6 +115,17 @@ class WebsocketClient(Thread):
                         'status': 'success',
                         'result': {'enabled': helpers.is_ngrok_enabled()}
                     })
+                case "test_connection":
+                    send_to_controller({
+                        'session_id': payload['session_id'],
+                        'iot_box_identifier': helpers.get_identifier(),
+                        'device_identifier': helpers.get_identifier(),
+                        'status': 'success',
+                        'result': {
+                            'lan_quality': helpers.check_network(),
+                            'wan_quality': helpers.check_network("www.odoo.com"),
+                        }
+                    })
                 case _:
                     continue
 
