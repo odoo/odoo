@@ -34,7 +34,7 @@
     <template id="website_sale.product_variant_preview">
         <div
             t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap overflow-hidden {{
-                'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
+                'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' else ''
             }}"
             t-att-data-hidden-ptav-count="product_ptavs_data.get('hidden_ptavs_count')"
         >
@@ -92,7 +92,7 @@
                     </div>
                     <span
                         t-else=""
-                        t-attf-class="{{'' if ppr == 2 and layout_mode != 'list' else 'btn-sm'}} o_wsale_product_ptav_pill btn w-100 bg-body text-body"
+                        t-attf-class="{{'' if ppr == 2 else 'btn-sm'}} o_wsale_product_ptav_pill btn w-100 bg-body text-body"
                     >
                         <span class="o_wsale_product_ptav_pill_label d-block text-truncate" t-out="ptav.name"/>
                     </span>
@@ -1613,18 +1613,6 @@
                 <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
             </div>
         </t>
-    </template>
-
-    <template
-        id="website_sale.products_list_view"
-        inherit_id="website_sale.products"
-        name="List View (by default)"
-        active="False"
-    >
-        <xpath expr="//div[@id='products_grid']" position="after">
-            <!-- Nothing to do, this view is only meant to allow the server -->
-            <!-- to know if the list view layout should be used -->
-        </xpath>
     </template>
 
     <!-- Enable HTML previews in edition mode. The template is active by default, but can be

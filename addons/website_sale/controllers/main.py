@@ -17,9 +17,9 @@ from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
+from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
-from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
@@ -446,11 +446,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_ids = [attribute.id for attribute, *aggregates in attributes_grouped]
         attributes = lazy(lambda: ProductAttribute.browse(attribute_ids).sorted())
 
-        if website.is_view_active('website_sale.products_list_view'):
-            layout_mode = 'list'
-        else:
-            layout_mode = 'grid'
-
         products_prices = lazy(lambda: products._get_sales_prices(website))
         product_query_params = self._get_product_query_params(**post)
 
@@ -480,7 +475,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'attributes': attributes,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
-            'layout_mode': layout_mode,
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': float_round,
@@ -970,11 +964,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo := request.cart:
             order_sudo.pricelist_id = pricelist
             order_sudo._recompute_prices()
-
-    @route('/shop/save_shop_layout_mode', type='jsonrpc', auth='public', website=True)
-    def save_shop_layout_mode(self, layout_mode):
-        assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
-        request.session['website_sale_shop_layout_mode'] = layout_mode
 
     # ------------------------------------------------------
     # Checkout
