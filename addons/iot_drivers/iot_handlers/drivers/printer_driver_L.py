@@ -188,7 +188,7 @@ class PrinterDriver(PrinterDriverBase):
             )
 
         if iot_status['ssid']:
-            wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
+            wlan = '\nWireless network:\n%s\n' % iot_status["ssid"]
 
         ips = iot_status["ips"]
         if len(ips) == 0:
@@ -203,7 +203,7 @@ class PrinterDriver(PrinterDriverBase):
 
         if len(ips) >= 1:
             identifier = '\nIdentifier:\n%s\n' % iot_status["identifier"]
-            homepage = '\nIoT Box Homepage:\nhttp://%s:8069\n\n' % ips[0]
+            homepage = '\nIoT Box Homepage:\nhttp://%s:8069\n' % ips[0]
 
         title = b'IoT Box Connected' if helpers.get_odoo_server_url() else b'IoT Box Status'
         body = pairing_code + wlan + identifier + ip + homepage
