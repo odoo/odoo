@@ -1,16 +1,30 @@
 .o_mailing_portal_body {
     // Taken from webclient.scss to copy backend styling
-    // Uppercase primary and secondary except when secondary is used as a dropdown
-    // toggler.
-    .btn-primary,
-    .btn-secondary:not(.dropdown-toggle):not(.dropdown-item),
-    .btn-secondary.o_arrow_button:not(.dropdown-item) {
-      text-transform: uppercase;
+    .o_mailing_subscription_form_list_toggle {
+        > span:last-of-type {
+            color: $green-700;
+        }
+        &:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+    }
+    .o_mailing_subscription_form_list_description {
+        margin-left: 54px;
+        overflow: hidden;
+    }
+    li {
+        border-radius: 0.5em;
     }
 
-    .o_mailing_list_unsubscribed {
-        margin-left: 20px;
-        color: #005326;
-        font-size: 90%;
+    &.editor_enable {
+        .o_mailing_portal_alert, #o_mailing_subscription_feedback_info, #o_mailing_subscription_feedback,
+        #o_mailing_subscription_form_manage, #o_mailing_subscription_form_blocklisted,
+        #button_subscription_update_preferences {
+            display: block !important;
+        }
+        .o_mailing_subscription_form_list_description {
+            margin-bottom: 16px;
+        }
     }
 }
