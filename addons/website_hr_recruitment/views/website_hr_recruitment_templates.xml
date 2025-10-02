@@ -630,7 +630,7 @@
                                     Your application has been posted successfully,<br class="mb-2"/>
                                     We usually respond within 3 days...
                                 </p>
-                                <img class="img-fluid o_we_custom_image" t-attf-style="width:{{ '50%' if (job_sudo and job_sudo.user_id) else '25%' }} !important;" src="/website_hr_recruitment/static/src/img/job_congratulations.svg" alt="Congratulations!"/>
+                                <img class="img-fluid o_we_custom_image" t-attf-style="width:{{ '50%' if (job_sudo and job_sudo.recruiter_id) else '25%' }} !important;" src="/website_hr_recruitment/static/src/img/job_congratulations.svg" alt="Congratulations!"/>
                                 <div class="row" id="o_recruitment_thank_cta">
                                     <div class="col-lg-12 text-center mt32 mb48">
                                         <p>
@@ -642,7 +642,7 @@
                                 </div>
                             </div>
                             <!-- HR Recruiter Block -->
-                            <t t-if="job_sudo and job_sudo.user_id">
+                            <t t-if="job_sudo and job_sudo.recruiter_id">
                                 <div class="col-lg-4 align-self-center ps-4 o_cc o_cc2 rounded">
                                     <section class="s_text_block pt24" data-snippet="s_text_block" data-name="Text">
                                         <div class="container">
@@ -655,17 +655,17 @@
                                                 <div class="o_jobs_hr_recruiter col-10 o_cc o_cc1 mt24 p-4 border border-primary rounded shadow">
                                                     <div class="row align-items-center">
                                                         <div class="col-lg-5 pb16 o_not_editable">
-                                                            <img t-att-src="image_data_uri(job_sudo.user_id.avatar_256)" class="img-fluid" loading="lazy"/>
+                                                            <img t-att-src="image_data_uri(job_sudo.recruiter_id.avatar_256)" class="img-fluid" loading="lazy"/>
                                                         </div>
                                                         <div class="col-lg-7 px-1">
-                                                            <h2 class="text-truncate" t-field="job_sudo.user_id.name"/>
-                                                            <p class="fw-light text-truncate" t-field="job_sudo.user_id.job_title"/>
+                                                            <h2 class="text-truncate" t-field="job_sudo.recruiter_id.name"/>
+                                                            <p class="fw-light text-truncate" t-field="job_sudo.recruiter_id.job_title"/>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <ul class="list-unstyled mb-0">
-                                                            <li t-if="job_sudo.user_id.work_phone"><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.user_id.work_phone"/></li>
-                                                            <li class="d-inline-flex align-items-baseline"><i class="fa fa-envelope fa-fw me-2"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.user_id.email}" t-field="job_sudo.user_id.email"/></span></li>
+                                                            <li t-if="job_sudo.recruiter_id.work_phone"><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.recruiter_id.work_phone"/></li>
+                                                            <li class="d-inline-flex align-items-baseline"><i class="fa fa-envelope fa-fw me-2"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.recruiter_id.work_email}" t-field="job_sudo.recruiter_id.work_email"/></span></li>
                                                         </ul>
                                                     </div>
                                                 </div>

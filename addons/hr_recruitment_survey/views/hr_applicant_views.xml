@@ -53,7 +53,7 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="before">
+            <xpath expr="//field[@name='recruiter_id']" position="before">
                 <field name="survey_id"/>
             </xpath>
         </field>

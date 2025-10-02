@@ -3,8 +3,7 @@
 import ast
 from collections import defaultdict
 
-from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
 
@@ -27,14 +26,25 @@ class HrJob(models.Model):
                 ('parent_id', 'in', self.sudo().env.companies.partner_id.ids),
                 ('id', 'in', self.sudo().env.companies.partner_id.ids)]
 
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+    def _get_default_favorite_recruiter_ids(self):
+        employee = self.env.user.employee_id
+        return [(6, 0, [employee.id])] if employee else [(6, 0, [])]
+
+    def _recruiter_domain(self):
+        recruiter_groups = [
+            self.env.ref("hr_recruitment.group_hr_recruitment_manager").id,
+            self.env.ref("hr_recruitment.group_hr_recruitment_user").id,
+        ]
+        return [
+            ("user_id", "!=", False),
+            ("user_id.share", "=", False),
+            ("user_id.group_ids", "in", recruiter_groups)
+        ]
 
     expected_employees = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     no_of_employee = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     requirements = fields.Text(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
-    user_id = fields.Many2one(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
-
+    recruiter_id = fields.Many2one(domain=_recruiter_domain, check_company=True, groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
         domain=lambda self: self._address_id_domain(), tracking=True,
@@ -60,7 +70,7 @@ class HrJob(models.Model):
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.", groups="hr_recruitment.group_hr_recruitment_interviewer")
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sql="_compute_sql_is_favorite", compute_sudo=True)
-    favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
+    favorite_recruiter_ids = fields.Many2many('hr.employee', 'job_favorite_recruiter_rel', 'job_id', 'recruiter_id', default=_get_default_favorite_recruiter_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
         domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
@@ -156,22 +166,29 @@ class HrJob(models.Model):
 
     def _compute_is_favorite(self):
         for job in self:
-            job.is_favorite = self.env.user in job.favorite_user_ids
+            job.is_favorite = self.env.user.employee_id in job.favorite_recruiter_ids
 
     def _inverse_is_favorite(self):
+        employee = self.env.user.employee_id
+        if not employee:
+            return
+
         unfavorited_jobs = favorited_jobs = self.env['hr.job']
         for job in self:
-            if self.env.user in job.favorite_user_ids:
+            if employee in job.favorite_recruiter_ids:
                 unfavorited_jobs |= job
             else:
                 favorited_jobs |= job
-        favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
-        unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
+        favorited_jobs.write({'favorite_recruiter_ids': [Command.link(employee.id)]})
+        unfavorited_jobs.write({'favorite_recruiter_ids': [Command.unlink(employee.id)]})
 
     def _compute_sql_is_favorite(self, table):
+        employee = self.env.user.employee_id
+        if not employee:
+            return SQL("FALSE")
         return SQL(
-            "%s IN (SELECT job_id FROM job_favorite_user_rel WHERE user_id = %s)",
-            table.id, self.env.uid,
+            "%s IN (SELECT job_id FROM job_favorite_recruiter_rel WHERE recruiter_id = %s)",
+            table.id, employee.id,
         )
 
     def _compute_document_ids(self):
@@ -299,7 +316,7 @@ class HrJob(models.Model):
                 'job_id': self.id,
                 'department_id': self.department_id.id,
                 'company_id': self.department_id.company_id.id or self.company_id.id,
-                'user_id': self.user_id.id,
+                'recruiter_id': self.recruiter_id.id,
             })
         return values
 
@@ -315,8 +332,6 @@ class HrJob(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            vals["favorite_user_ids"] = vals.get("favorite_user_ids", [])
         jobs = super().create(vals_list)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
         return jobs
@@ -327,7 +342,7 @@ class HrJob(models.Model):
         old_recruiters = {}
         for job in self:
             old_managers[job] = job.manager_id
-            old_recruiters[job] = job.user_id
+            old_recruiters[job] = job.recruiter_id
         if 'active' in vals and not vals['active']:
             self.application_ids.active = False
         res = super().write(vals)
@@ -337,27 +352,27 @@ class HrJob(models.Model):
             self.sudo().interviewer_ids._create_recruitment_interviewers()
 
         # Subscribe the recruiter if it has changed.
-        if "user_id" in vals:
+        if "recruiter_id" in vals:
             for job in self:
                 to_unsubscribe = [
                     partner
-                    for partner in old_recruiters[job].partner_id.ids
+                    for partner in old_recruiters[job].user_partner_id.ids
                     if partner not in job.manager_id._get_related_partners().ids
                 ]
                 job.message_unsubscribe(to_unsubscribe)
                 application_ids = job.application_ids.filtered(
                     lambda x:
-                        x.user_id == old_recruiters[job] and
+                        x.recruiter_id == old_recruiters[job] and
                         x.application_status == 'ongoing'
                 )
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
-                    application_ids.with_context(mail_auto_subscribe_no_notify=True).user_id = job.user_id
+                    application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id.user_id = job.recruiter_id.user_id
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
         # List of fields to keep synched with the alias
-        alias_fields = {'department_id', 'user_id'}
+        alias_fields = {'department_id', 'recruiter_id'}
         if any(field for field in alias_fields if field in vals):
             for job in self:
                 alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')

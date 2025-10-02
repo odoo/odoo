@@ -86,7 +86,7 @@ class HrEmployee(models.Model):
                     [
                         Domain("user_id", "!=", False),
                         Domain("parent_id.user_id", "!=", False),
-                        Domain("job_id.user_id", "!=", False),
+                        Domain("job_id.recruiter_id.user_id", "!=", False),
                     ],
                 ),
             ],
@@ -120,7 +120,7 @@ class HrEmployee(models.Model):
 
         for employee in employees:
             job_id = employee.job_id
-            responsible = employee.user_id or employee.parent_id.user_id or job_id.user_id
+            responsible = employee.user_id or employee.parent_id.user_id or job_id.recruiter_id.user_id
             if job_id not in job_skill_level_mapping or not responsible:
                 continue
 

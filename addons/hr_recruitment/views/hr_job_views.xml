@@ -80,19 +80,19 @@
                                         </div>
                                         <div groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user">
                                             <div groups="!base.group_multi_company">
-                                                    <field name="user_id" widget="many2one_avatar_user" class="text-muted"
+                                                    <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted"
                                                         options="{'display_avatar_name': True}"/>
                                                 </div>
                                                 <div groups="base.group_multi_company">
                                                     <t t-if="record.company_id.raw_value != 0">
                                                         <div class="d-flex flex-row">
-                                                            <field name="user_id" widget="many2one_avatar_user"
+                                                            <field name="recruiter_id" widget="many2one_avatar_employee"
                                                                 options="{'display_avatar_name': False}"/>
                                                             <field class="ms-1 text-muted" name="company_id" />
                                                         </div>
                                                     </t>
                                                     <t t-else="">
-                                                        <field name="user_id" widget="many2one_avatar_user" class="text-muted"
+                                                        <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted"
                                                             options="{'display_avatar_name': True}"/>
                                                     </t>
                                                 </div>
@@ -179,7 +179,7 @@
                                         <div class="col-1 me-1" style="max-width: 1.5rem;"
                                             groups="hr_recruitment.group_hr_recruitment_interviewer">
                                             <div class="d-flex flex-row justify-content-center">
-                                                <field name="user_id" widget="many2one_avatar_user"
+                                                <field name="recruiter_id" widget="many2one_avatar_employee"
                                                     options="{'display_avatar_name': False}"/>
                                             </div>
                                         </div>
@@ -189,11 +189,11 @@
                                                     <field name="company_id"/>
                                                 </t>
                                                 <t t-else="">
-                                                    <field name="user_id"/>
+                                                    <field name="recruiter_id"/>
                                                 </t>
                                             </div>
                                             <div groups="!base.group_multi_company">
-                                                <field name="user_id"/>
+                                                <field name="recruiter_id"/>
                                             </div>
                                         </div>
                                     </div>
@@ -226,7 +226,7 @@
         <field name="inherit_id" ref="hr.view_job_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
-                <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_user_ids', 'in', uid)]"/>
+                <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_recruiter_ids.user_id', 'in', uid)]"/>
                 <separator/>
             </xpath>
         </field>
@@ -351,7 +351,7 @@
                     groups="hr_recruitment.group_hr_recruitment_interviewer"
                     icon="fa-pencil"
                     name="%(action_hr_job_applications)d"
-                    context="{'default_user_id': user_id, 'active_test': False}"
+                    context="{'default_recruiter': recruiter_id, 'active_test': False}"
                     type="action">
                     <field name="all_application_count" widget="statinfo" string="Applications"/>
                 </button>
@@ -417,7 +417,7 @@
                     <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
                     <field name="department_id" icon="fa-users" enable_counters="1"/>
                 </searchpanel>
-                <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Job Positions" name="my_positions" domain="[('recruiter_id.user_id', '=', uid)]"/>
             </xpath>
         </field>
     </record>
@@ -443,7 +443,7 @@
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"
+                <field name="recruiter_id" widget="many2one_avatar_employee" optional="show"
                     groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </field>
             <list position="attributes">

@@ -62,7 +62,7 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
+            <xpath expr="//field[@name='recruiter_id']" position="after">
                 <field name="applicant_skill_ids"/>
             </xpath>
             <filter name="stage" position="after">
