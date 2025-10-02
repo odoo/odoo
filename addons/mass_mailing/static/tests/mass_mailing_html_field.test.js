@@ -9,10 +9,12 @@ import {
     patchWithCleanup,
     contains,
 } from "@web/../tests/web_test_helpers";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
+import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -22,7 +24,19 @@ class Mailing extends models.Model {
     body_arch = fields.Html();
     body_html = fields.Html();
     mailing_model_id = fields.Many2one({ relation: "ir.model", string: "Recipients" });
+    mailing_model_real = fields.Char({
+        string: "Recipients Model Name (real)",
+        compute: "compute_model_real",
+    });
     mailing_model_name = fields.Char({ string: "Recipients Model Name" });
+
+    compute_model_real() {
+        for (const record of this) {
+            record.mailing_model_real = this.env["ir.model"].browse([
+                record.mailing_model_id,
+            ])[0].model;
+        }
+    }
 
     action_fetch_favorites() {
         return [];
@@ -92,7 +106,8 @@ const mailViewArch = `
 <form>
     <field name="mailing_model_name" invisible="1"/>
     <field name="mailing_model_id" invisible="1"/>
-    <field name="body_html" invisible="1"/>
+    <field name="mailing_model_real" invisible="1"/>
+    <field name="body_html" class="o_mail_body_inline"/>
     <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
         options="{ 'inline_field': 'body_html' }"/>
 </form>
@@ -214,6 +229,32 @@ describe("field HTML", () => {
         await waitFor(overlayOptionsSelect + ":has(button[title='Move up'])");
         await contains(".o_dialog :iframe img").click();
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
+    });
+    test("preprocess some domain", async () => {
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await click(waitFor(".o_mailing_template_preview_wrapper a[data-name='default']"));
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
+            "o_default_theme"
+        );
+        await runAllTimers();
+        const section = queryAny(":iframe section");
+        section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
+        htmlField.editor.shared["history"].addStep();
+        await click(section);
+        await waitFor(".hb-row .hb-row-label span:contains(Domain)");
+        expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
+        await clickSave();
+        await waitFor("table[t-if]");
+        expect(queryOne("table[t-if]")).toHaveAttribute(
+            "t-if",
+            'object.filtered_domain([("id", "=", 1)])'
+        );
     });
 });
 describe("field HTML: with loaded assets", () => {
