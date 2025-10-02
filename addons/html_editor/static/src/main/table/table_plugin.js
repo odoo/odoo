@@ -735,10 +735,10 @@ export class TablePlugin extends Plugin {
             (node) => node.isContentEditable
         );
         if (selectedTds.length && mode === "backgroundColor") {
-            if (previewMode) {
-                // Temporarily remove backgroundColor applied by "o_selected_td" class with !important.
-                selectedTds.forEach((td) => td.classList.remove("o_selected_td"));
-            }
+            // Disable the `box-shadow` while previewing the background color.
+            selectedTds.forEach((td) =>
+                td.classList.toggle("o_selected_td_bg_color_preview", previewMode)
+            );
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
                 if (color) {

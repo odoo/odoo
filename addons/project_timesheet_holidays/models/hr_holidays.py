@@ -22,10 +22,10 @@ class HolidaysType(models.Model):
                 "('project_id', '!=', False),"
                 "('company_id', 'in', [False, company_id])]")
 
-    @api.depends('timesheet_task_id', 'timesheet_project_id')
+    @api.depends('timesheet_task_id', 'timesheet_project_id', 'time_type')
     def _compute_timesheet_generate(self):
         for leave_type in self:
-            leave_type.timesheet_generate = not leave_type.company_id or (leave_type.timesheet_task_id and leave_type.timesheet_project_id)
+            leave_type.timesheet_generate = leave_type.time_type != 'other' and (not leave_type.company_id or (leave_type.timesheet_task_id and leave_type.timesheet_project_id))
 
     @api.depends('company_id')
     def _compute_timesheet_project_id(self):

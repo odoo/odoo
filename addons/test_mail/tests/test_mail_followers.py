@@ -207,6 +207,18 @@ class BaseFollowersTest(MailCommon):
         test_record.write({'message_partner_ids': [(4, partner0.id), (4, partner1.id)]})
         self.assertEqual(test_record.message_follower_ids.partner_id, partner1)
 
+        # Test when the method inverse is called in batch
+        other_record = test_record.create({
+            'name': 'Other',
+        })
+        records = test_record + other_record
+
+        records.message_partner_ids = (partner2 + partner3)
+        self.assertEqual(records.message_partner_ids, partner2 + partner3)
+
+        records.message_partner_ids -= partner2
+        self.assertEqual(records.message_partner_ids, partner3)
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_followers_inverse_message_partner_access_rights(self):
         """ Make sure we're not bypassing security checks by setting a partner
