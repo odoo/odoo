@@ -280,7 +280,7 @@ class ResourceCalendar(models.Model):
     # Computation API
     # --------------------------------------------------
 
-    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False, booking_apt=False):
+    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         if not resources:
@@ -416,7 +416,7 @@ class ResourceCalendar(models.Model):
                                 allocate_hours = min(max_hours_per_day, remaining_hours)
                                 remaining_hours -= allocate_hours
 
-                                if booking_apt:
+                                if self.env.context.get('intervals_from_start_datetime', False):
                                     # If an appoinment is being booked, create interval starting start_dt
                                     start_time = start_datetime
                                     end_time = start_time + timedelta(hours=allocate_hours)
@@ -515,7 +515,7 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True, booking_apt=False):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
@@ -523,7 +523,7 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
 
-        attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, booking_apt=booking_apt, tz=tz or self.env.context.get("employee_timezone"))
+        attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
             return {
