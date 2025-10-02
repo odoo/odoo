@@ -22,6 +22,54 @@ function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
 
+/**
+ * Checks if a snippet is up to date by comparing its versions (vcss, vxml, vjs)
+ * with those of the original snippet in the model.
+ *
+ * @param {HTMLElement} el - The element to check (will look for parent with data-snippet if needed)
+ * @param {Object} editor - The editor instance containing config.snippetModel
+ * @returns {boolean} - true if the snippet is up to date, or if the element is not a snippet
+ */
+function isSnippetUpToDate(el, editor) {
+    const snippetEl = el?.closest?.("[data-snippet]");
+    if (!snippetEl) {
+        return true;
+    }
+    const snippetKey = snippetEl.dataset.snippet;
+    const snippet = editor?.config?.snippetModel?.getOriginalSnippet?.(snippetKey);
+    if (!snippet) {
+        return true;
+    }
+    const { vcss: originalVcss, vxml: originalVxml, vjs: originalVjs } = snippet.content.dataset;
+    const { vcss: elVcss, vxml: elVxml, vjs: elVjs } = snippetEl.dataset;
+    return originalVcss === elVcss && originalVxml === elVxml && originalVjs === elVjs;
+}
+
+/**
+ * Handles errors that occur during builder action operations.
+ * Checks if the error is due to an outdated snippet and displays an appropriate notification.
+ * Additional checks can be added here in the future.
+ *
+ * @param {Error} error - The error to handle
+ * @param {HTMLElement} editingElement - The element being edited
+ * @param {Object} editor - The editor instance
+ * @throws {Error} - Propagates the error if not handled (snippet is up to date)
+ */
+function handleBuilderActionError(error, editingElement, editor) {
+    if (!isSnippetUpToDate(editingElement, editor)) {
+        editor.services.notification.add(
+            "This snippet is outdated. Please drag a new version from the snippet panel to update it.",
+            {
+                type: "warning",
+                title: "Outdated Snippet",
+                sticky: true,
+            }
+        );
+    } else {
+        throw error;
+    }
+}
+
 export function useDomState(getState, { checkEditingElement = true } = {}) {
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
@@ -245,9 +293,14 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         let currentItem;
         let itemPriority = 0;
         for (const selectableItem of selectableItems) {
-            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
-                currentItem = selectableItem;
-                itemPriority = selectableItem.priority;
+            try {
+                if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
+                    currentItem = selectableItem;
+                    itemPriority = selectableItem.priority;
+                }
+            } catch (error) {
+                const editingElement = env.getEditingElement();
+                handleBuilderActionError(error, editingElement, env.editor);
             }
         }
         if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
@@ -518,26 +571,31 @@ export function useClickableBuilderComponent() {
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
-                proms.push(
-                    getAction(actionId).clean?.({
-                        isPreviewing,
-                        editingElement,
-                        params: actionParam,
-                        value: actionValue,
-                        dependencyManager: comp.env.dependencyManager,
-                        selectableContext: comp.env.selectableContext,
-                        get nextAction() {
-                            nextAction =
-                                nextAction ||
-                                nextApplySpecs.find((a) => a.actionId === actionId) ||
-                                {};
-                            return {
-                                params: nextAction.actionParam,
-                                value: nextAction.actionValue,
-                            };
-                        },
-                    })
-                );
+                const cleanPromise = (async () => {
+                    try {
+                        await getAction(actionId).clean?.({
+                            isPreviewing,
+                            editingElement,
+                            params: actionParam,
+                            value: actionValue,
+                            dependencyManager: comp.env.dependencyManager,
+                            selectableContext: comp.env.selectableContext,
+                            get nextAction() {
+                                nextAction =
+                                    nextAction ||
+                                    nextApplySpecs.find((a) => a.actionId === actionId) ||
+                                    {};
+                                return {
+                                    params: nextAction.actionParam,
+                                    value: nextAction.actionValue,
+                                };
+                            },
+                        });
+                    } catch (error) {
+                        handleBuilderActionError(error, editingElement, comp.env.editor);
+                    }
+                })();
+                proms.push(cleanPromise);
             }
         }
         return Promise.all(proms);
@@ -559,17 +617,22 @@ export function useClickableBuilderComponent() {
             const hasClean = !!applySpec.clean;
             const shouldClean = _shouldClean(comp, hasClean, isAlreadyApplied);
             if (shouldClean) {
-                cleanOrApplyProms.push(
-                    applySpec.action.clean({
-                        isPreviewing,
-                        editingElement: applySpec.editingElement,
-                        params: applySpec.actionParam,
-                        value: applySpec.actionValue,
-                        loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
-                        dependencyManager: comp.env.dependencyManager,
-                        selectableContext: comp.env.selectableContext,
-                    })
-                );
+                const cleanPromise = (async () => {
+                    try {
+                        await applySpec.action.clean({
+                            isPreviewing,
+                            editingElement: applySpec.editingElement,
+                            params: applySpec.actionParam,
+                            value: applySpec.actionValue,
+                            loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
+                            dependencyManager: comp.env.dependencyManager,
+                            selectableContext: comp.env.selectableContext,
+                        });
+                    } catch (error) {
+                        handleBuilderActionError(error, applySpec.editingElement, comp.env.editor);
+                    }
+                })();
+                cleanOrApplyProms.push(cleanPromise);
             } else {
                 cleanOrApplyProms.push(
                     applySpec.action.apply({
@@ -666,7 +729,7 @@ export function useInputBuilderComponent({
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
     const operationWithReload = useOperationWithReload(callApply, reload);
-    function getState(editingElement) {
+    async function getState(editingElement) {
         if (!isConnectedElement(editingElement)) {
             // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
@@ -675,11 +738,16 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        const actionValue =
-            getAction(actionId).getValue({ editingElement, params: actionParam }) || defaultValue;
-        return {
-            value: actionValue,
-        };
+        try {
+            const actionValue =
+                getAction(actionId).getValue({ editingElement, params: actionParam }) ||
+                defaultValue;
+            return {
+                value: actionValue,
+            };
+        } catch (error) {
+            handleBuilderActionError(error, editingElement, comp.env.editor);
+        }
     }
 
     function commit(userInputValue) {
@@ -912,28 +980,47 @@ export function getAllActionsAndOperations(comp) {
         const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
 
-        comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
-            load: async () =>
-                Promise.all(
-                    actionsSpecs.map(async (applySpec) => {
-                        if (!applySpec.action.has("load")) {
-                            return;
-                        }
-                        const hasClean = !!applySpec.action.has("clean");
-                        if (!applySpec.loadOnClean && _shouldClean(comp, hasClean, isApplied())) {
-                            // The element will be cleaned, do not load
-                            return;
-                        }
-                        const result = await applySpec.action.load({
-                            editingElement: applySpec.editingElement,
-                            params: applySpec.actionParam,
-                            value: applySpec.actionValue,
-                        });
-                        applySpec.loadResult = result;
-                    })
-                ),
-            ...params.operationParams,
-        });
+        comp.env.editor.shared.operation.next(
+            async () => {
+                try {
+                    await fn(actionsSpecs, isPreviewing);
+                } catch (error) {
+                    const editingElement = comp.env.getEditingElement();
+                    handleBuilderActionError(error, editingElement, comp.env.editor);
+                }
+            },
+            {
+                load: async () => {
+                    try {
+                        await Promise.all(
+                            actionsSpecs.map(async (applySpec) => {
+                                if (!applySpec.action.has("load")) {
+                                    return;
+                                }
+                                const hasClean = !!applySpec.action.has("clean");
+                                if (
+                                    !applySpec.loadOnClean &&
+                                    _shouldClean(comp, hasClean, isApplied())
+                                ) {
+                                    // The element will be cleaned, do not load
+                                    return;
+                                }
+                                const result = await applySpec.action.load({
+                                    editingElement: applySpec.editingElement,
+                                    params: applySpec.actionParam,
+                                    value: applySpec.actionValue,
+                                });
+                                applySpec.loadResult = result;
+                            })
+                        );
+                    } catch (error) {
+                        const editingElement = comp.env.getEditingElement();
+                        handleBuilderActionError(error, editingElement, comp.env.editor);
+                    }
+                },
+                ...params.operationParams,
+            }
+        );
     }
     function isApplied() {
         const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -948,12 +1035,16 @@ export function getAllActionsAndOperations(comp) {
             if (!isConnectedElement(editingElement)) {
                 return false;
             }
-            const isApplied = getAction(actionId).isApplied?.({
-                editingElement,
-                params: actionParam,
-                value: actionValue,
-            });
-            return comp.props.inverseAction ? !isApplied : isApplied;
+            try {
+                const isApplied = getAction(actionId).isApplied?.({
+                    editingElement,
+                    params: actionParam,
+                    value: actionValue,
+                });
+                return comp.props.inverseAction ? !isApplied : isApplied;
+            } catch (error) {
+                handleBuilderActionError(error, editingElement, comp.env.editor);
+            }
         });
         // If there is no `isApplied` method for the widget return false
         if (areActionsActiveTabs.every((el) => el === undefined)) {
