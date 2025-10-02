@@ -97,7 +97,8 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
 
         # Check that a lead was created from the survey
         self.assertEqual(survey_sudo.lead_count, 1)
-        lead_created = survey_sudo.lead_ids
+        lead_created = self.env['crm.lead'].search([('utm_reference', '=', f'{survey_sudo._name},{survey_sudo.id}')])
+        self.assertEqual(len(lead_created), 1)
         self.assertEqual(lead_created.name, "%(name)s survey results" % {'name': self.survey_user.display_name if login else answers[2]})
 
         # Ensure that the result values are present in lead description

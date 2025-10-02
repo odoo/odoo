@@ -60,7 +60,6 @@ class SurveyUser_Input(models.Model):
         return {
             'source_id': self.env['utm.mixin']._utm_ref('utm.utm_source_survey').id,
             'utm_reference': f'{survey._name},{survey.id}',
-            'origin_survey_id': survey.id,
             'team_id': sales_team.id,
             'type': 'opportunity',  # we assume that the lead is sufficiently qualified based on survey responses to be an opportunity
             'user_id': salesperson.id,
