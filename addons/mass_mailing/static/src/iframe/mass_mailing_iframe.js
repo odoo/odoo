@@ -213,6 +213,11 @@ export class MassMailingIframe extends Component {
             this.retargetLinks(
                 this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
             );
+            for (const el of this.iframeRef.el.contentDocument.body.querySelectorAll("t")) {
+                if (this.checkAllInline(el)) {
+                    el.setAttribute("data-oe-t-inline", "true");
+                }
+            }
         }
         // Set `ready` symbol for tours
         this.iframeRef.el.setAttribute("is-ready", "true");
@@ -222,6 +227,19 @@ export class MassMailingIframe extends Component {
         this.iframeLoaded.resolve(this.iframeRef.el);
         this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
+    }
+
+    checkAllInline(el) {
+        return [...el.children].every((child) => {
+            if (child.tagName === "T") {
+                return this.checkAllInline(child);
+            } else {
+                return (
+                    child.nodeType !== Node.ELEMENT_NODE ||
+                    this.window.getComputedStyle(child).display === "inline"
+                );
+            }
+        });
     }
 
     async setupBasicEditor() {
