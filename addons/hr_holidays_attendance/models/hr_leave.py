@@ -84,16 +84,8 @@ class HRLeave(models.Model):
         self.sudo().overtime_id.unlink()
         return res
 
-    def _validate_leave_request(self):
-        super()._validate_leave_request()
-        self._update_leaves_overtime()
-
-    def _remove_resource_leave(self):
-        res = super()._remove_resource_leave()
-        self._update_leaves_overtime()
-        return res
-
     def _update_leaves_overtime(self):
+        # Deprecated - will be removed in master
         employee_dates = defaultdict(set)
         for leave in self:
             if leave.employee_id:
