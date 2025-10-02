@@ -8,6 +8,11 @@
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],
+    'data': [
+        'views/snippets/s_company_team.xml',
+        'views/snippets/s_text_image.xml',
+        'views/snippets/s_image_text.xml',
+    ],
     'images': [
         'static/description/cover.png',
         'static/description/theme_default_screenshot.jpg',
