@@ -226,6 +226,21 @@ class SaleOrder(models.Model):
         change_default=True, check_company=True,  # Unrequired company
         tracking=True, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    incoterm = fields.Many2one(
+        comodel_name='account.incoterms',
+        string='Incoterm',
+        compute='_compute_incoterm',
+        precompute=True,
+        store=True,
+        readonly=False,
+        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    incoterm_location = fields.Char(
+        string='Incoterm Location',
+        compute='_compute_incoterm_location',
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
 
     # Lines and line based computes
     order_line = fields.One2many(
@@ -516,6 +531,16 @@ class SaleOrder(models.Model):
                     domain=self.env['crm.team']._check_company_domain(company_id),
                 )
             order.team_id = cached_teams[key]
+
+    @api.depends('partner_id')
+    def _compute_incoterm(self):
+        for order in self:
+            order.incoterm = order.partner_id.incoterm_id or order.company_id.incoterm_id
+
+    @api.depends('partner_id')
+    def _compute_incoterm_location(self):
+        for order in self:
+            order.incoterm_location = order.partner_id.incoterm_location
 
     def _default_team_id(self):
         return self.env.context.get('default_team_id', False) or self.team_id.id
@@ -1473,6 +1498,8 @@ class SaleOrder(models.Model):
             'company_id': self.company_id.id,
             'invoice_line_ids': [],
             'user_id': self.user_id.id,
+            'invoice_incoterm_id': self.incoterm.id,
+            'incoterm_location': self.incoterm_location,
         }
         if self.journal_id:
             values['journal_id'] = self.journal_id.id
@@ -1509,7 +1536,15 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id', 'fiscal_position_id']
+        return [
+            'company_id',
+            'partner_id',
+            'partner_shipping_id',
+            'currency_id',
+            'fiscal_position_id',
+            'invoice_incoterm_id',
+            'incoterm_location',
+        ]
 
     def _nothing_to_invoice_error_message(self):
         return _(

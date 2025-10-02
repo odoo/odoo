@@ -32,7 +32,6 @@ Preferences
         'views/stock_picking_views.xml',
         'views/stock_reference_views.xml',
 
-        'report/sale_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',
 
         'data/mail_templates.xml',

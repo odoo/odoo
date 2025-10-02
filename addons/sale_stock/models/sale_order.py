@@ -14,10 +14,6 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterm',
-        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
-    incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, default=lambda self: self.env.company.picking_policy,
@@ -295,7 +291,6 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         invoice_vals['delivery_date'] = self.effective_date
         return invoice_vals
 
