@@ -78,7 +78,6 @@ class PosOrder(models.Model):
         return res
 
     def _send_notification_online_payment_status(self, status):
-        self.config_id.notify_synchronisation(self.config_id.current_session_id.id, 0)
         self.config_id._notify("ONLINE_PAYMENT_STATUS", {
             'status': status,  # progress, success, fail
             'data': {
