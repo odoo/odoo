@@ -67,7 +67,15 @@ export class BackgroundVideo extends Interaction {
         const wrapperHeight = this.el.clientHeight;
         const relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
 
-        if (relativeRatio >= 1.0) {
+        if (this.el.closest(".s_ecomm_categories_showcase_block")) {
+            // Chrome-only: percentage sizing makes the video in "Categories
+            // Showcase" snippet jitter on hover, so force pixel values while
+            // keeping the ratio.
+            const iframeHeight = Math.round(relativeRatio >= 1 ? wrapperWidth * (9 / 16) : wrapperHeight);
+            const iframeWidth = Math.round(relativeRatio >= 1 ? wrapperWidth : wrapperHeight * (16 / 9));
+            this.iframeEl.style.height = `${iframeHeight}px`;
+            this.iframeEl.style.width = `${iframeWidth}px`;
+        } else if (relativeRatio >= 1.0) {
             this.iframeEl.style.width = "100%";
             this.iframeEl.style.height = (relativeRatio * 100) + "%";
             this.iframeEl.style.insetInlineStart = "0";
