@@ -1,16 +1,4 @@
-import { patch } from '@web/core/utils/patch';
+import { registerPayLaterLabel } from '@payment/interactions/payment_form';
+import { _t } from '@web/core/l10n/translation';
 
-import { PaymentForm } from '@payment/interactions/payment_form';
-
-patch(PaymentForm.prototype, {
-
-    /**
-     * Configure 'pay_on_site' as a pay later method.
-     *
-     * @override
-     */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return paymentMethodCode === 'pay_on_site' || super._isPayLaterPaymentMethod(...arguments);
-    }
-
-});
+registerPayLaterLabel('pay_on_site', _t('Confirm'));

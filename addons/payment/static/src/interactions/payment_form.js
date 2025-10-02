@@ -6,6 +6,20 @@ import { registry } from '@web/core/registry';
 import { renderToMarkup } from '@web/core/utils/render';
 import { Interaction } from '@web/public/interaction';
 
+const payLaterLabels = {};
+
+/**
+ * Registers a custom submit button label for a pay-later payment method.
+ *
+ * Modules can call this function to define what label the checkout submit button
+ * should display when a specific payment method is selected.
+ * @param {string} paymentMethodCode payment method unique code
+ * @param {string} label custom label to display on the submit button
+ */
+export function registerPayLaterLabel(paymentMethodCode, label) {
+    payLaterLabels[paymentMethodCode] = label;
+}
+
 export class PaymentForm extends Interaction {
     static selector = '#o_payment_form';
     dynamicContent = {
@@ -289,27 +303,12 @@ export class PaymentForm extends Interaction {
      * @return {void}
      */
     _adaptSubmitButtonLabel(paymentMethodCode) {
-        const buttonLabel = this._isPayLaterPaymentMethod(paymentMethodCode)
-            ? _t("Confirm")
-            : this.defaultSubmitButtonLabel;
+        const buttonLabel = payLaterLabels[paymentMethodCode] || this.defaultSubmitButtonLabel;
         for (const btn of document.querySelectorAll('button[name="o_payment_submit_button"]')) {
             if (btn.textContent !== buttonLabel) {
                 btn.textContent = buttonLabel;
             }
         }
-    }
-
-    /**
-     * Check whether the given payment method expects immediate payment.
-     *
-     * Override this method to change the submit button label from the default label to "Confirm".
-     *
-     * @private
-     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
-     * @return {boolean}
-     */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return false;
     }
 
     /**
