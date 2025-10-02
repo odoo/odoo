@@ -6,6 +6,7 @@ from functools import cache, wraps
 from importlib import util
 import inspect
 import io
+from ipaddress import ip_address
 import logging
 import netifaces
 from pathlib import Path
@@ -23,7 +24,15 @@ import zipfile
 from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
-from odoo.addons.iot_drivers.tools.system import IOT_CHAR, IOT_RPI_CHAR, IOT_WINDOWS_CHAR, IS_RPI, IS_TEST, IS_WINDOWS
+from odoo.addons.iot_drivers.tools.system import (
+    IOT_CHAR,
+    IOT_RPI_CHAR,
+    IOT_WINDOWS_CHAR,
+    IS_RPI,
+    IS_TEST,
+    IS_WINDOWS,
+    mtr,
+)
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
@@ -639,3 +648,34 @@ def toggle_remote_connection(token=""):
         )
         return True
     return False
+
+
+def check_network(host=None):
+    host = host or get_gateway()
+    if not host:
+        return None
+
+    host = socket.gethostbyname(host)
+    packet_loss, avg_latency = mtr(host)
+    thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
+
+    if packet_loss is None or packet_loss >= 50 or avg_latency is None:
+        return "unreachable"
+    if avg_latency < thresholds["fast"] and packet_loss < 1:
+        return "fast"
+    if avg_latency < thresholds["normal"] and packet_loss < 5:
+        return "normal"
+    return "slow"
+
+
+def get_gateway():
+    """Get the router IP address (default gateway)
+
+    :return: The IP address of the default gateway or None if it can't be determined
+    """
+    gws = netifaces.gateways()
+    default = gws.get("default", {})
+    gw = default.get(netifaces.AF_INET)
+    if gw:
+        return gw[0]
+    return None
