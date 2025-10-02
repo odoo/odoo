@@ -5,6 +5,7 @@ import {
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
+    hasTextColorClass,
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
@@ -333,7 +334,8 @@ export class ColorPlugin extends Plugin {
                         node,
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
-                    closestElement(node, "span");
+                    closestElement(node, "span") ||
+                    closestElement(node, (node) => hasTextColorClass(node, mode));
 
                 const faNodes = font?.querySelectorAll(".fa");
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
@@ -352,7 +354,10 @@ export class ColorPlugin extends Plugin {
                 if (
                     font &&
                     font.nodeName !== "T" &&
-                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (font.nodeName !== "SPAN" ||
+                        font.style[mode] ||
+                        font.style.backgroundImage ||
+                        hasTextColorClass(font, mode)) &&
                     (isColorGradient(color) ||
                         color === "" ||
                         !hasInlineGradient ||
