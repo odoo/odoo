@@ -352,6 +352,13 @@ export class Thread extends Record {
         return ["channel", "group"].includes(this.channel_type);
     }
 
+    get fullNameWithParent() {
+        const text = this.parent_channel_id
+            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
+            : this.displayName;
+        return text;
+    }
+
     get isTransient() {
         return !this.id || this.id < 0;
     }

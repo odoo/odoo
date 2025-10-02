@@ -434,9 +434,7 @@ export class Composer extends Component {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionThread",
                     options: suggestions.map((suggestion) => ({
-                        label: suggestion.parent_channel_id
-                            ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
-                            : suggestion.displayName,
+                        label: suggestion.fullNameWithParent,
                         thread: suggestion,
                         classList: "o-mail-Composer-suggestion",
                     })),
