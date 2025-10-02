@@ -18,5 +18,15 @@ export class AccountTaxGroup extends models.ServerModel {
             name: "Tax 0%",
             pos_receipt_label: false,
         },
+        {
+            id: 3,
+            name: "Tax 25%",
+            pos_receipt_label: false,
+        },
+        {
+            id: 4,
+            name: "No group",
+            pos_receipt_label: false,
+        },
     ];
 }

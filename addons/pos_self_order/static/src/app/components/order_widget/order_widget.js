@@ -62,7 +62,7 @@ export class OrderWidget extends Component {
                     if (!line.combo_parent_id) {
                         acc.count += value.qty;
                     }
-                    acc.price += line.getDisplayPrice();
+                    acc.price += line.prices.total_included;
                 }
                 return acc;
             },

@@ -48,7 +48,20 @@ export class AccountTax extends models.ServerModel {
             amount: 25.0,
             company_id: 250,
             sequence: 1,
-            tax_group_id: 1,
+            tax_group_id: 3,
+        },
+        {
+            id: 3,
+            name: "tax incl",
+            type_tax_use: "sale",
+            amount_type: "percent",
+            amount: 7,
+            price_include_override: "tax_included",
+            include_base_amount: true,
+            has_negative_factor: true,
+            company_id: 250,
+            is_base_affected: true,
+            tax_group_id: 4,
         },
     ];
 }

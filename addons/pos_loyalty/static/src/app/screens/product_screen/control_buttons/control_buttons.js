@@ -35,7 +35,7 @@ patch(ControlButtons.prototype, {
     async onClickWallet() {
         const order = this.pos.getOrder();
         const eWalletPrograms = this._getEWalletPrograms();
-        const orderTotal = order.getTotalWithTax();
+        const orderTotal = order.priceIncl;
         const eWalletRewards = this._getEWalletRewards(order);
         if (eWalletRewards.length === 0 && orderTotal >= 0) {
             this.dialog.add(AlertDialog, {

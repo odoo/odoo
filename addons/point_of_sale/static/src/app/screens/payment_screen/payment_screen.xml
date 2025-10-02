@@ -72,7 +72,7 @@
             }">
             <div class="total text-center text-dark"
                 t-att-style="!ui.isSmall? 'font-size: 125px;' : ''" >
-                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.getTotalDue())" />
+                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.totalDue)" />
             </div>
         </section>
     </t>
