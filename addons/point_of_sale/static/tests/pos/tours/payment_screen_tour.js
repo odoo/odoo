@@ -271,3 +271,17 @@ registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dial
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_add_money_button_with_different_decimal_separator", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Ouvrir la caisse"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickNumpad("+50"),
+            PaymentScreen.fillPaymentLineAmountMobile("Bank", "53,20"),
+            PaymentScreen.changeIs("50"),
+        ].flat(),
+});
