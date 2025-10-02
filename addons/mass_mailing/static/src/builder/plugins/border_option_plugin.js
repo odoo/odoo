@@ -25,8 +25,7 @@ export class BorderOptionPlugin extends Plugin {
             withSequence(VERTICAL_ALIGNMENT, {
                 template: "mass_mailing.BorderOption",
                 selector: ".row > div",
-                exclude:
-                    ".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div",
+                exclude: ".o_mail_wrapper_td, .s_image_gallery .row > div",
             }),
         ],
     };

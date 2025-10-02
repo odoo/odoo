@@ -6,7 +6,7 @@
                 t-if="template.modelId === this.props.config.mailingModelId"
                 t-on-click="() => this.onSelectFavorite(template.html)">
                 <div class="d-inline-flex flex-row align-items-center border px-2 py-2 w-100">
-                    <i class="fa fa-star text-warning me-2"/>
+                    <i class="fa fa-star me-2"/>
                     <span class="text-truncate" t-out="template.subject"/>
                     <div class="ms-auto">
                         <i class="o_mail_template_remove_favorite fa fa-trash ps-2 me-1" t-att-data-id="template.id" title="Remove from Templates"
