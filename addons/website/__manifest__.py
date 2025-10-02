@@ -391,7 +391,6 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/snippets/s_image_gallery/000.xml',
-            'website/static/src/snippets/s_image_gallery/001.xml',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website_form_editor.xml',
