@@ -34,11 +34,11 @@
     <br/><br/>
     Thank you,
     <div style="font-size: 11px; color: grey;">
-        <t t-if="object.user_id">
+        <t t-if="object.recruiter_id">
             -- <br/>
-            <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
-            Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t><br/>
-            Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t>
+            <strong t-out="object.recruiter_id.name or ''">Mitchell Admin</strong><br/>
+            Email: <t t-out="object.recruiter_id.work_email or ''">admin@yourcompany.example.com</t><br/>
+            Phone: <t t-out="object.recruiter_id.work_phone or ''">+1 650-123-4567</t>
         </t>
         <t t-else="">
             -- <br/>
@@ -76,11 +76,11 @@
                 t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
         </div>
 
-        <t t-if="object.user_id">
+        <t t-if="object.recruiter_id and object.recruiter_id.user_id">
             You will soon be contacted by:<br/>
-            <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
-            <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
-            <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
+            <strong t-out="object.recruiter_id.name or ''">Mitchell Admin</strong><br/>
+            <span>Email: <t t-out="object.recruiter_id.work_email or ''">admin@yourcompany.example.com</t></span><br/>
+            <span>Phone: <t t-out="object.recruiter_id.work_phone or ''">+1 650-123-4567</t></span>
             <br/><br/>
         </t>
         See you soon,
@@ -163,12 +163,12 @@
     </div>
 
     <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
-    <t t-if="object.user_id">
+    <t t-if="object.recruiter_id and object.recruiter_id.user_id">
         <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
         <p>
-            <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
-            <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
-            <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
+            <strong t-out="object.recruiter_id.name or ''">Mitchell Admin</strong><br/>
+            <span>Email: <t t-out="object.recruiter_id.work_email or ''">admin@yourcompany.example.com</t></span><br/>
+            <span>Phone: <t t-out="object.recruiter_id.work_phone or ''">+1 650-123-4567</t></span>
         </p>
         <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
     </t>
@@ -232,11 +232,11 @@
         <br/><br/>
         Best<br/>
         <div style="font-size: 11px; color: grey;">
-            <t t-if="object.user_id">
+            <t t-if="object.recruiter_id and object.recruiter_id.user_id">
                 -- <br/>
-                <strong t-out="object.user_id.name or ''">Marc Demo</strong><br/>
-                Email: <t t-out="object.user_id.email or ''">mark.brown23@example.com</t><br/>
-                Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t>
+                <strong t-out="object.recruiter_id.name or ''">Marc Demo</strong><br/>
+                Email: <t t-out="object.recruiter_id.work_email or ''">mark.brown23@example.com</t><br/>
+                Phone: <t t-out="object.recruiter_id.work_phone or ''">+1 650-123-4567</t>
             </t>
             <t t-else="">
                 -- <br/>
