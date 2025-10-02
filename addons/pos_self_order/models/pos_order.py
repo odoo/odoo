@@ -46,6 +46,13 @@ class PosOrder(models.Model):
         return [('id', '=', False)]
 
     @api.model
+    def _load_pos_self_data_fields(self, config):
+        fields = super()._load_pos_self_data_fields(config) or self._fields.keys()
+        # Loading the 'res.partner' model from the kiosk (public user)
+        # will throw an AccessError, so we don't include it.
+        return [field for field in fields if field != 'message_partner_ids']
+
+    @api.model
     def remove_from_ui(self, server_ids):
         order_ids = self.env['pos.order'].browse(server_ids)
         order_ids.state = 'cancel'
@@ -89,7 +96,7 @@ class PosOrder(models.Model):
             'payment_result': payment_result,
             'data': {
                 'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
-                'pos.order.line': self.lines.read(self._load_pos_self_data_fields(self.config_id), load=False),
+                'pos.order.line': self.lines.read(self.lines._load_pos_self_data_fields(self.config_id), load=False),
             }
         })
         if payment_result == 'Success':
