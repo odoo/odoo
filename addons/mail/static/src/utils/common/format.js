@@ -170,6 +170,63 @@ export function addLink(node, transformChildren) {
     return markup(node.outerHTML);
 }
 
+function generateMentionElement({ className, id, model, text }) {
+    const link = document.createElement("a");
+    setAttributes(link, {
+        href: router.stateToUrl({ model: model, resId: id }),
+        class: className,
+        "data-oe-id": id,
+        "data-oe-model": model,
+        target: "_blank",
+        contenteditable: "false",
+    });
+    link.textContent = text;
+    return link;
+}
+
+/** @param {import("models").ResPartner} partner */
+export function generatePartnerMentionElement(partner) {
+    return generateMentionElement({
+        className: "o_mail_redirect",
+        id: partner.id,
+        model: "res.partner",
+        text: `@${partner.name}`,
+    });
+}
+
+/** @param {import("models").ResRole} role */
+export function generateRoleMentionElement(role) {
+    return generateMentionElement({
+        className: "o-discuss-mention",
+        id: role.id,
+        model: "res.role",
+        text: `@${role.name}`,
+    });
+}
+
+/** @param {string} label */
+export function generateSpecialMentionElement(label) {
+    const link = document.createElement("a");
+    setAttributes(link, {
+        class: "o-discuss-mention",
+        contenteditable: "false",
+    });
+    link.textContent = `@${label}`;
+    return link;
+}
+
+/** @param {import("models").Thread} thread */
+export function generateThreadMentionElement(thread) {
+    return generateMentionElement({
+        className: `o_channel_redirect${
+            thread.parent_channel_id ? " o_channel_redirect_asThread" : ""
+        }`,
+        id: thread.id,
+        model: "discuss.channel",
+        text: `#${thread.fullNameWithParent}`,
+    });
+}
+
 /**
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
@@ -185,63 +242,41 @@ function generateMentionsLinks(
         const placeholder = `@-mention-partner-${partner.id}`;
         const text = `@${partner.name}`;
         mentions.push({
-            class: "o_mail_redirect",
-            id: partner.id,
-            model: "res.partner",
+            link: generatePartnerMentionElement(partner),
             placeholder,
-            text,
         });
         body = htmlReplace(body, text, placeholder);
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
-        let className, text;
-        if (thread.parent_channel_id) {
-            className = "o_channel_redirect o_channel_redirect_asThread";
-            text = `#${thread.parent_channel_id.displayName} > ${thread.displayName}`;
-        } else {
-            className = "o_channel_redirect";
-            text = `#${thread.displayName}`;
-        }
+        const text = `#${thread.fullNameWithParent}`;
         mentions.push({
-            class: className,
-            id: thread.id,
-            model: "discuss.channel",
+            link: generateThreadMentionElement(thread),
             placeholder,
-            text,
         });
         body = htmlReplace(body, text, placeholder);
     }
     for (const special of specialMentions) {
-        body = htmlReplace(
-            body,
-            `@${special}`,
-            markup`<a href="#" class="o-discuss-mention">@${special}</a>`
-        );
+        const text = `@${special}`;
+        const placeholder = `@-mention-special-${special}`;
+        mentions.push({
+            link: generateSpecialMentionElement(special),
+            placeholder,
+        });
+        body = htmlReplace(body, text, placeholder);
     }
     for (const role of roles) {
         const placeholder = `@-mention-role-${role.id}`;
         const text = `@${role.name}`;
         mentions.push({
-            class: "o-discuss-mention",
-            id: role.id,
-            model: "res.role",
+            link: generateRoleMentionElement(role),
             placeholder,
-            text,
         });
         body = htmlReplace(body, text, placeholder);
     }
     for (const mention of mentions) {
-        const link = document.createElement("a");
-        setAttributes(link, {
-            href: router.stateToUrl({ model: mention.model, resId: mention.id }),
-            class: mention.class,
-            "data-oe-id": mention.id,
-            "data-oe-model": mention.model,
-            target: "_blank",
-            contenteditable: "false",
-        });
-        link.textContent = mention.text;
+        const link = mention.link;
+        // markup: outerHTML is safe when used as a node
         body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
     }
     return htmlEscape(body);

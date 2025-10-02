@@ -33,9 +33,6 @@ export class SuggestionService {
         if (env?.inFrontendPortalChatter) {
             return [[":", undefined, 2]];
         }
-        if (this.composer.htmlEnabled) {
-            return [["::"], [":", undefined, 2]];
-        }
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 

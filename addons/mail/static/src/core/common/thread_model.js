@@ -321,6 +321,13 @@ export class Thread extends Record {
         return this.module_icon ?? this.store.DEFAULT_AVATAR;
     }
 
+    get fullNameWithParent() {
+        const text = this.parent_channel_id
+            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
+            : this.displayName;
+        return text;
+    }
+
     get isTransient() {
         return !this.id || this.id < 0;
     }
