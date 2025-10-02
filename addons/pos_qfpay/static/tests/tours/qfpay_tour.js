@@ -10,6 +10,8 @@ import { registry } from "@web/core/registry";
 import { QFPay } from "@pos_qfpay/app/qfpay";
 import { mockQFPayWebhook } from "@pos_qfpay/../tests/tours/utils/common";
 
+const { DateTime } = luxon;
+
 // Patch QFPay to validate the request that would be sent to the terminal
 patch(QFPay.prototype, {
     makeQFPayRequest: async function (endpoint, payload) {
@@ -48,6 +50,10 @@ let paymentUuid = "";
 registry.category("web_tour.tours").add("qfpay_order_and_refund", {
     steps: () =>
         [
+            // Refund have to be made on the same day before 23:00 HKT.
+            Chrome.freezeDateTime(
+                DateTime.now().setZone("Asia/Hong_Kong").set({ hour: 12 }).toMillis()
+            ),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
