@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-10-01 23:40+0000\n"
+"PO-Revision-Date: 2025-10-02 23:40+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website/da/>\n"
@@ -3190,7 +3190,7 @@ msgstr "Et kort og en liste over dine butikker"
 #. odoo-python
 #: code:addons/website/models/website_menu.py:0
 msgid "A mega menu cannot have a parent or child menu."
-msgstr "En megamenu kan ikke have en overordnet menu eller en undermenu."
+msgstr "En megamenu kan ikke have en overordnet menu eller en hierarkisk menu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -5909,7 +5909,7 @@ msgstr "Teknisk direktør <br/><br/>"
 #: model:ir.model.fields,field_description:website.field_website_menu__child_id
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Child Menus"
-msgstr "Undermenuer"
+msgstr "Hierarkiske menuer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8133,7 +8133,7 @@ msgstr "Træk <b>%s</b>blokken, og slip den nederst på siden."
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Drag to the right to get a submenu"
-msgstr "Træk mod højre for at få en undermenu"
+msgstr "Træk mod højre for at få en hierarkisk menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -10755,8 +10755,8 @@ msgstr "Hvis angivet, vil en hjemmesidemenu blive oprettet for funktionen."
 msgid ""
 "If set, add the menu as a second level menu, as a child of \"Company\" menu."
 msgstr ""
-"Hvis angivet, vil menuen blive tilføjet som en undermenu på andet niveau, et "
-"underpunkt af \"Virksomhedsmenuen\"."
+"Hvis angivet, vil menuen blive tilføjet som en hierarkisk menu på andet "
+"niveau, et underpunkt af \"Virksomhedsmenuen\"."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__social_default_image
@@ -10810,9 +10810,8 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr ""
-"Hvis du kasserer de nuværende redigeringer, vil alle ændringer, der ikke er "
-"gemte, gå tabt. Du kan annullere for at vende tilbage til "
-"redigeringstilstand."
+"Hvis du kasserer de nuværende ikke-gemte redigeringer, vil de gå tabt. Du "
+"kan annullere for at vende tilbage til redigeringstilstand."
 
 #. module: website
 #. odoo-javascript
@@ -12884,7 +12883,7 @@ msgstr "Menuer kan højst have to hierarkiniveauer."
 #. odoo-python
 #: code:addons/website/models/website_menu.py:0
 msgid "Menus with child menus cannot be added as a submenu."
-msgstr "Undermenuer kan ikke indeholde yderligere undermenuer."
+msgstr "Hierarkiske menuer kan ikke indeholde yderligere hierarkiske menuer."
 
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
@@ -17626,7 +17625,7 @@ msgstr "Style"
 #: code:addons/website/static/src/builder/plugins/header_navbar_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sub Menus"
-msgstr "Undermenuer"
+msgstr "Hierarkiske menuer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
