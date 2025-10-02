@@ -19,17 +19,14 @@ class TestSandwichLeave(TransactionCase):
             "company_id": self.indian_company.id,
             "attendance_ids": [
                 Command.create({
-                    "name": f"Day {day} {label}",
                     "dayofweek": str(day),
                     "hour_from": hour_from,
                     "hour_to": hour_to,
-                    "day_period": label.lower(),
                 })
                 for day in range(5)
-                for label, hour_from, hour_to in (
-                    ("Morning", 8, 12),
-                    ("Lunch", 12, 13),
-                    ("Afternoon", 13, 17),
+                for hour_from, hour_to in (
+                    (8, 12),
+                    (13, 17),
                 )
             ]},
         )

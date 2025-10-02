@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import UTC
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
@@ -41,8 +41,9 @@ class CalendarEvent(models.Model):
         company's calendar.
         If an allday event is scheduled on a day when the company is closed, the interval of this event will be empty.
         """
-        start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=UTC)
-        stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=UTC)
+        company_tz = ZoneInfo(self.env.company.tz)
+        start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=company_tz)
+        stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=company_tz)
         company_calendar = self.env.company.resource_calendar_id
         global_interval = company_calendar._work_intervals_batch(start, stop)[False]
         interval_by_event = {}
@@ -50,14 +51,14 @@ class CalendarEvent(models.Model):
             if event.allday:
                 # Avoid allday event with a duration of 0
                 allday_event_interval = Intervals([(
-                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC),
-                    event.stop.replace(hour=23, minute=59, second=59, tzinfo=UTC),
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=company_tz),
+                    event.stop.replace(hour=23, minute=59, second=59, tzinfo=company_tz),
                     self.env['resource.calendar']
                 )])
 
                 if any(not (Intervals([(
-                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC) + relativedelta(days=i),
-                    event.start.replace(hour=23, minute=59, second=59, tzinfo=UTC) + relativedelta(days=i),
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=company_tz) + relativedelta(days=i),
+                    event.start.replace(hour=23, minute=59, second=59, tzinfo=company_tz) + relativedelta(days=i),
                     self.env['resource.calendar']
                 )]) & global_interval) for i in range(0, (event.stop_date - event.start_date).days + 1)):
                     interval_by_event[event] = Intervals([])

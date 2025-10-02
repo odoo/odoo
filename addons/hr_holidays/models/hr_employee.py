@@ -125,16 +125,18 @@ class HrEmployee(models.Model):
             periods = self._get_calendar_periods(dt.date(), dt.date() + timedelta(days=lookahead_day))
             if not periods:
                 calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+                resources_per_tz = self._get_resources_per_tz(dt)
                 work_intervals = calendar._work_intervals_batch(
-                    dt, dt + timedelta(days=lookahead_day), resources=self.resource_id)
+                    dt, dt + timedelta(days=lookahead_day), resources_per_tz=resources_per_tz)
             else:
                 for start, end, calendar in periods[self]:
                     calendar = calendar or self.company_id.resource_calendar_id
-                    ctz = ZoneInfo(calendar.tz)
+                    ctz = ZoneInfo(self._get_tz(start))
+                    resources_per_tz = self._get_resources_per_tz(start)
                     work_intervals = calendar._work_intervals_batch(
                         datetime.combine(start, time.min, ctz),
                         datetime.combine(end, time.max, ctz),
-                        resources=self.resource_id)
+                        resources_per_tz=resources_per_tz)
             if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
                 # return start time of the earliest interval
                 return work_intervals[self.resource_id.id]._items[0][0]
@@ -641,3 +643,74 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
+
+    def _get_hours_for_date(self, target_date, day_period=None):
+        """
+        An instance method on a calendar to get the start and end float hours for a given date.
+        :param target_date: The date to find working hours.
+        :param day_period: Optional string ('morning', 'afternoon') to filter for half-days.
+        :return: A tuple of floats (hour_from, hour_to).
+        """
+        if self:
+            self.ensure_one()
+        if not target_date:
+            err = "Target Date cannot be empty"
+            raise ValueError(err)
+        calendar = self.env.company.resource_calendar_id
+        if self:
+            version = self._get_version(target_date)
+            if version.is_fully_flexible:
+                return (0, 24)
+            if version.is_flexible or version.resource_calendar_id._is_duration_based_on_date(target_date):
+                # Quick calculation to center flexible hours around 12PM midday
+                if version.is_flexible:
+                    hours_day = version.hours_per_day
+                else:
+                    hours_day = self.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
+                datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
+                if day_period:
+                    return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
+                return (datetimes[0], datetimes[2])
+            calendar = version.resource_calendar_id
+
+        domain = [
+            ('calendar_id', '=', calendar.id),
+            ('display_type', '=', False),
+        ]
+
+        init_attendances = self.env['resource.calendar.attendance']._read_group(
+            domain=domain,
+            groupby=['dayofweek', 'day_period'],
+            aggregates=['hour_from:min', 'hour_to:max'],
+            order='dayofweek,hour_from:min'
+        )
+
+        init_attendances = [
+            {
+                'hour_from': hour_from,
+                'hour_to': hour_to,
+                'dayofweek': dayofweek,
+                'day_period': day_period,
+            } for dayofweek, day_period, hour_from, hour_to in init_attendances
+        ]
+
+        if day_period:
+            attendances = [att for att in init_attendances if att['day_period'] == day_period]
+            for attendance in filter(lambda att: att['day_period'] == 'full_day', init_attendances):
+                attendance.update({
+                    'hour_from': min(attendance['hour_from'], 12) if day_period == 'morning' else 12,
+                    'hour_to': max(attendance['hour_to'], 12) if day_period == 'afternoon' else 12,
+                })
+                attendances.append(attendance)
+
+        else:
+            attendances = init_attendances
+
+        default_start = min((att['hour_from'] for att in attendances), default=0.0)
+        default_end = max((att['hour_to'] for att in attendances), default=0.0)
+
+        filtered_attendances = [att for att in attendances if int(att['dayofweek']) == target_date.weekday()]
+        hour_from = min((att['hour_from'] for att in filtered_attendances), default=default_start)
+        hour_to = max((att['hour_to'] for att in filtered_attendances), default=default_end)
+
+        return (hour_from, hour_to)

@@ -179,15 +179,10 @@ class HrAttendance(models.Model):
             between check_in and check_out, without taking into account the lunch_interval"""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
-                calendar = attendance._get_employee_calendar()
-                resource = attendance.employee_id.resource_id
-                tz = ZoneInfo(resource.tz) if not calendar else ZoneInfo(calendar.tz)
+                tz = ZoneInfo(attendance.employee_id._get_tz(attendance.check_in))
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = []
-                if not resource._is_flexible():
-                    lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
-                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)])
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
                 attendance.worked_hours = delta / 3600.0
             else:
@@ -249,8 +244,8 @@ class HrAttendance(models.Model):
         # Returns a tuple containing the datetime in naive UTC of the employee's start of the day
         # and the date it was for that employee
         if not dt.tzinfo:
-            calendar_tz = employee._get_calendar_tz_batch(dt)[employee.id]
-            date_employee_tz = dt.replace(tzinfo=UTC).astimezone(ZoneInfo(calendar_tz))
+            employee_tz = employee._get_tz(dt)[employee.id]
+            date_employee_tz = dt.replace(tzinfo=UTC).astimezone(ZoneInfo(employee_tz))
         else:
             date_employee_tz = dt
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)
@@ -572,7 +567,7 @@ class HrAttendance(models.Model):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
-             ('employee_id.resource_calendar_id.flexible_hours', '=', False)]
+             ('employee_id.resource_calendar_id', '!=', False)]
         )
 
         if not to_verify:
@@ -606,7 +601,6 @@ class HrAttendance(models.Model):
                 expected_worked_hours = sum(
                     att.employee_id.resource_calendar_id.attendance_ids.filtered(
                         lambda a: a.dayofweek == str(check_in_datetime.weekday())
-                            and (not a.two_weeks_calendar or a.week_type == str(a.get_week_type(check_in_datetime.date())))
                     ).mapped("duration_hours")
                 )
 
@@ -637,7 +631,7 @@ class HrAttendance(models.Model):
         absent_employees = self.env['hr.employee'].search([
             ('id', 'not in', checked_in_employees.ids),
             ('company_id', 'in', companies.ids),
-            ('resource_calendar_id.flexible_hours', '=', False),
+            ('resource_calendar_id', '!=', False),
             ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
         ])
 

@@ -49,6 +49,20 @@ class TestStockCommon(ProductVariantsCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                (0, 0,
+                    {
+                        'dayofweek': weekday,
+                        'hour_from': hour,
+                        'hour_to': hour + 4,
+                    })
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+            'name': 'Standard 40h/week',
+        })
+
         # Product environment related data
         cls.uom_dunit = cls.env['uom.uom'].create({
             'name': 'DeciUnit',

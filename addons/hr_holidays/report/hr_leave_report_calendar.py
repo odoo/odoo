@@ -63,8 +63,7 @@ class HrLeaveReportCalendar(models.Model):
             em.user_id AS user_id,
             COALESCE(
                 rr.tz,
-                rc.tz,
-                cc.tz,
+                p.tz,
                 'UTC'
             ) AS tz,
             hl.state = 'refuse' as is_striked,
@@ -75,12 +74,10 @@ class HrLeaveReportCalendar(models.Model):
             LEFT JOIN hr_version v ON v.id = em.current_version_id
             LEFT JOIN resource_resource rr
                 ON rr.id = em.resource_id
-            LEFT JOIN resource_calendar rc
-                ON rc.id = v.resource_calendar_id
-            LEFT JOIN res_company co
-                ON co.id = em.company_id
-            LEFT JOIN resource_calendar cc
-                ON cc.id = co.resource_calendar_id
+            LEFT JOIN res_users u
+                ON u.id = em.user_id
+            LEFT JOIN res_partner p
+                ON p.id = u.partner_id
         WHERE
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
         );

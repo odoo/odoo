@@ -21,7 +21,7 @@ class ResourceCalendarLeaves(models.Model):
             self.env['resource.calendar.leaves'],
         )
         for contract, leaves in leaves_by_contract.items():
-            tz = ZoneInfo(contract.resource_calendar_id.tz or 'UTC')
+            tz = ZoneInfo(contract._get_tz())
             start_dt = date2datetime(contract.date_start, tz)
             end_dt = date2datetime(contract.date_end, tz) if contract.date_end else datetime.max
             # only modify leaves that fall under the active contract

@@ -10,20 +10,17 @@ class TestFlexibleResourceCalendar(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.flex_calendar = cls.env['resource.calendar'].create({
-            'name': 'Flexible 40h/week',
-            'tz': 'UTC',
-            'hours_per_day': 8.0,
-            'flexible_hours': True,
-        })
-
         cls.fully_flex_resource, cls.flex_resource = cls.env['resource.resource'].create([{
             'name': 'Wade Wilson',
             'calendar_id': False,
+            'hours_per_week': 0,
+            'hours_per_day': 0,
             'tz': 'UTC',
         }, {
             'name': 'Wade Wilson',
-            'calendar_id': cls.flex_calendar.id,
+            'calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
             'tz': 'UTC',
         }])
 
@@ -49,7 +46,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
                 'date_to': datetime(2025, 8, 1, 17),
             },
             {
-                'calendar_id': cls.flex_calendar.id,
+                'calendar_id': False,
                 'date_from': datetime(2025, 8, 4, 8),
                 'date_to': datetime(2025, 8, 4, 17),
             },
@@ -98,11 +95,9 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         work_intervals, hours_per_day, hours_per_week = self.resources._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
 
-        self.assertEqual(work_intervals[self.flex_resource.id]._items, [], "flex calendar have a public holidays on day 4, and there's a public holiday on day 5 for all calendars")
+        self.assertEqual(work_intervals[self.flex_resource.id]._items, [], "there's a public holiday on day 4 and 5 for all calendars")
 
-        self.assertEqual(work_intervals[self.fully_flex_resource.id]._items, [
-            (datetime(2025, 8, 4, 0, 0, tzinfo=UTC), datetime(2025, 8, 4, 23, 59, 59, 999999, tzinfo=UTC), self.env['resource.calendar.attendance']),
-        ], "fully flex resource doesn't have a calendar, he should not follow the flex calendar public holiday, he follows holidays without a calendar")
+        self.assertEqual(work_intervals[self.fully_flex_resource.id]._items, [], "there's a public holiday on day 4 and 5 for all calendars")
 
     def test_hours_per_week_for_different_years(self):
         start_dt = datetime(2025, 12, 26).astimezone(UTC)

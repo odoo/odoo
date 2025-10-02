@@ -59,7 +59,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             self.env['hr.attendance'].create({
                 'employee_id': self.employee_emp.id,
                 'check_in': datetime.datetime(2017, 12, 6, 8, 0, 0),
-                'check_out': datetime.datetime(2017, 12, 6, 13, 22, 0),
+                'check_out': datetime.datetime(2017, 12, 6, 12, 22, 0),
             })
 
             with freeze_time(tomorrow):
@@ -88,11 +88,18 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
             })],
         })
-        self.env['hr.attendance'].create({
+        self.env['hr.attendance'].create([
+            {
                 'employee_id': self.employee_emp.id,
                 'check_in': datetime.datetime(2024, 4, 1, 8, 0, 0),
+                'check_out': datetime.datetime(2024, 4, 1, 12, 0, 0),
+            },
+            {
+                'employee_id': self.employee_emp.id,
+                'check_in': datetime.datetime(2024, 4, 1, 13, 0, 0),
                 'check_out': datetime.datetime(2024, 4, 1, 17, 0, 0),
-            })
+            }
+        ])
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'accrual'
             allocation_form.employee_id = self.employee_emp

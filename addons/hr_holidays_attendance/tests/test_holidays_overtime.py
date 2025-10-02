@@ -20,6 +20,19 @@ class TestHolidaysOvertime(TransactionCase):
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
         })
+        cls.company.resource_calendar_id = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                (0, 0,
+                    {
+                        'dayofweek': weekday,
+                        'hour_from': hour,
+                        'hour_to': hour + 4,
+                    })
+                for weekday in ['0', '1', '2', '3', '4']
+                for hour in [8, 13]
+            ],
+            'name': 'Standard 40h/week',
+        })
         cls.user = new_test_user(cls.env, login='user', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_id=cls.company.id).with_company(cls.company)
         cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
 
@@ -267,11 +280,11 @@ class TestHolidaysOvertime(TransactionCase):
             self.env['hr.attendance'].create({
                 'employee_id': emp.id,
                 'check_in': datetime(2022, 5, 5, 8),
-                'check_out': datetime(2022, 5, 5, 17),
+                'check_out': datetime(2022, 5, 5, 16),
             })
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
-        self.assertEqual(self.manager.total_overtime, 9, "Should have 9 hours of overtime")
+        self.assertEqual(self.manager.total_overtime, 8, "Should have 8 hours of overtime")
 
     def test_public_leave_overtime_without_timing_rule(self):
         self.manager.company_id = self.env.company
@@ -288,7 +301,7 @@ class TestHolidaysOvertime(TransactionCase):
             self.env['hr.attendance'].create({
                 'employee_id': emp.id,
                 'check_in': datetime(2022, 5, 5, 8),
-                'check_out': datetime(2022, 5, 5, 17),
+                'check_out': datetime(2022, 5, 5, 16),
             })
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
@@ -324,14 +337,21 @@ class TestHolidaysOvertime(TransactionCase):
         })
         leave._action_validate()
 
-        att = self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2021, 1, 5, 8),
-            'check_out': datetime(2021, 1, 5, 16),
-        })
+        atts = self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2021, 1, 5, 8),
+                'check_out': datetime(2021, 1, 5, 12),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2021, 1, 5, 13),
+                'check_out': datetime(2021, 1, 5, 16),
+            }
+        ])
 
-        self.assertEqual(att.overtime_hours, 0)
-        self.assertEqual(att.worked_hours, 7)
+        self.assertEqual(sum(atts.mapped('overtime_hours')), 0)
+        self.assertEqual(sum(atts.mapped('worked_hours')), 7)
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
 
@@ -374,13 +394,19 @@ class TestHolidaysOvertime(TransactionCase):
         # These attendances will create some extra hours that is deductible as
         # time off
         self.new_attendance(
-            check_in=datetime(2021, 1, 1, 8), check_out=datetime(2021, 1, 1, 20)
+            check_in=datetime(2021, 1, 1, 8), check_out=datetime(2021, 1, 1, 12)
+        )
+        self.new_attendance(
+            check_in=datetime(2021, 1, 1, 13), check_out=datetime(2021, 1, 1, 20)
         )
         self.new_attendance(
             check_in=datetime(2021, 1, 2, 4), check_out=datetime(2021, 1, 2, 20)
         )
         self.new_attendance(
-            check_in=datetime(2021, 2, 2, 4), check_out=datetime(2021, 2, 2, 18)
+            check_in=datetime(2021, 2, 2, 4), check_out=datetime(2021, 2, 2, 12)
+        )
+        self.new_attendance(
+            check_in=datetime(2021, 2, 2, 13), check_out=datetime(2021, 2, 2, 18)
         )
 
         # The extra hours from the next attendances will not be deductible as
@@ -408,7 +434,10 @@ class TestHolidaysOvertime(TransactionCase):
         # Creates extra hours, but won't be usable as time off
         # Affects not_compensable_overtime's value.
         self.new_attendance(
-            check_in=datetime(2021, 3, 3, 5), check_out=datetime(2021, 3, 3, 20)
+            check_in=datetime(2021, 3, 3, 5), check_out=datetime(2021, 3, 3, 12)
+        )
+        self.new_attendance(
+            check_in=datetime(2021, 3, 3, 13), check_out=datetime(2021, 3, 3, 20)
         )
 
         # Use some of the overtime as a day off (8 hours)

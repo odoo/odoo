@@ -590,7 +590,8 @@ class HrLeaveType(models.Model):
                         closest_allocation_dict['days'] = (end_datetime - start_datetime).days + 1
                     else:
                         # closest_allocation_duration corresponds to the time remaining before the allocation expires
-                        calendar_attendance = calendar._work_intervals_batch(start_datetime, end_datetime, resources=employee.resource_id)
+                        resources_per_tz = employee._get_resources_per_tz(start_datetime)
+                        calendar_attendance = calendar._work_intervals_batch(start_datetime, end_datetime, resources_per_tz=resources_per_tz)
                         closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
                     if leave_type.unit_of_measure in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']

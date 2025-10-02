@@ -128,7 +128,6 @@ class TestHrWorkEntry(TransactionCase):
         no matter what's the timezone of the employee
         """
         self.employee_a.tz = 'Europe/Brussels'
-        self.employee_a.resource_calendar_id.tz = 'Europe/Brussels'
 
         january_work_entries = self.employee_a.generate_work_entries(date(2024, 1, 1), date(2024, 1, 31), force=True)
         self.employee_a.generate_work_entries(date(2024, 2, 1), date(2024, 2, 28), force=True)

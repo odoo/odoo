@@ -2311,7 +2311,7 @@ class TestMrpOrder(TestMrpCommon):
         # Workcenter is based in Bangkok
         # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
         workcenter = self.workcenter_1
-        workcenter.resource_calendar_id.tz = 'Asia/Bangkok'
+        workcenter.tz = 'Asia/Bangkok'
         # The test will try to plan some WO on next Monday. We need to unlink all
         # useless times off to ensure that nothing will disturb the slot reservation
         (workcenter.resource_calendar_id.global_leave_ids | workcenter.resource_calendar_id.leave_ids).unlink()
@@ -3395,7 +3395,7 @@ class TestMrpOrder(TestMrpCommon):
         """
 
         self.bom_3.write({'product_uom_id': self.uom_unit.id})
-        self.env.company.resource_calendar_id.tz = 'UTC'
+        self.env.company.tz = 'UTC'
 
         # Create an MO.
         mo_form = Form(self.env['mrp.production'])
@@ -3431,24 +3431,27 @@ class TestMrpOrder(TestMrpCommon):
     def test_planning_cancelled_workorder(self):
         """Test when plan start time for workorders, cancelled workorders won't be taken into account.
         """
-        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
+        self.env.company.tz = 'Europe/Brussels'
         workcenter_1 = self.env['mrp.workcenter'].create({
             'name': 'wc1',
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 100,
+            'tz': 'Europe/Brussels',
         })
         workcenter_2 = self.env['mrp.workcenter'].create({
             'name': 'wc2',
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 100,
+            'tz': 'Europe/Brussels',
         })
         workcenter_3 = self.env['mrp.workcenter'].create({
             'name': 'wc3',
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 100,
+            'tz': 'Europe/Brussels',
         })
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
@@ -4262,7 +4265,7 @@ class TestMrpOrder(TestMrpCommon):
         will be set too. As if the finish date is not set the planned workorder will not
         be shown in planning gantt view
         """
-        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
+        self.env.company.tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'product_uom_id': self.bom_1.product_uom_id.id,
@@ -4864,7 +4867,6 @@ class TestMrpOrder(TestMrpCommon):
             'hours_per_day': 24,
             'attendance_ids': [
                 Command.create({
-                    'name': f'{day}',
                     'dayofweek': str(week_days.index(day)),
                     'hour_from': 0,
                     'hour_to': 24,

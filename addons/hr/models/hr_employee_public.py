@@ -52,6 +52,9 @@ class HrEmployeePublic(models.Model):
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     resource_calendar_id = fields.Many2one('resource.calendar', readonly=True)
+    hours_per_week = fields.Float(compute="_compute_hours_per_week")
+    hours_per_day = fields.Float(compute="_compute_hours_per_day")
+
     country_code = fields.Char(compute='_compute_country_code')
 
     # Manager-only fields
@@ -195,6 +198,12 @@ class HrEmployeePublic(models.Model):
             (new_hire_field, '>', fields.Datetime.now() - timedelta(days=90))
         ])
         return [('id', operator, new_hires.ids)]
+
+    def _compute_hours_per_week(self):
+        self._compute_from_employee('hours_per_week')
+
+    def _compute_hours_per_day(self):
+        self._compute_from_employee('hours_per_day')
 
     @api.model
     def _get_fields(self):

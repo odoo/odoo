@@ -273,11 +273,11 @@ class TestMrpCommon(TestStockCommon):
         calendar = self.env['resource.calendar'].search([])
         calendar.write({'attendance_ids': [(5, 0, 0)]})
         calendar.write({'attendance_ids': [
-            (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Saturday', 'dayofweek': '5', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Sunday', 'dayofweek': '6', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'dayofweek': '0', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '1', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '2', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '3', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '4', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '5', 'hour_from': 0, 'hour_to': 24}),
+            (0, 0, {'dayofweek': '6', 'hour_from': 0, 'hour_to': 24}),
         ]})

@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -31,8 +31,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
     date_to = fields.Date('End Date', required=True, default=lambda self: fields.Date.today())
-    hour_from = fields.Float(string='Hour from', compute='_compute_hour_from_to', readonly=False, store=True)
-    hour_to = fields.Float(string='Hour to', compute='_compute_hour_from_to', readonly=False, store=True)
+    hour_from = fields.Float(string='Hour from')
+    hour_to = fields.Float(string='Hour to')
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
     date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
@@ -40,18 +40,6 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     date_to_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period End", default='pm')
-
-    @api.depends('employee_ids', 'date_from', 'date_to', 'leave_type_request_unit')
-    def _compute_hour_from_to(self):
-        company_calendar = self.env.company.resource_calendar_id
-        for record in self:
-            calendar = record.employee_ids.resource_calendar_id if len(record.employee_ids.resource_calendar_id) == 1 else company_calendar
-            if (record.leave_type_request_unit != 'hour'
-                    and record.date_from
-                    and record.date_to
-                    and calendar):
-                record.hour_from, _ = calendar._get_hours_for_date(record.date_from)
-                _, record.hour_to = calendar._get_hours_for_date(record.date_to)
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
@@ -81,7 +69,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         self.ensure_one()
         employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
 
-        tz = ZoneInfo(self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC')
+        tz = ZoneInfo(self.company_id.tz or self.env.user.tz or 'UTC')
         if self.leave_type_request_unit == 'hour':
             date_from_tz = (datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_from)).astimezone(UTC).replace(tzinfo=None)
             date_to_tz = (datetime.combine(self.date_to, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_to)).astimezone(UTC).replace(tzinfo=None)

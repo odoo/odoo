@@ -45,7 +45,7 @@ class TestResource(TestResourceCommon):
         self.assertFalse(interval - false_entry[false_calendar], "Calendar validity should cover all interval")
 
     def test_performance(self):
-        calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
+        calendars = [self.calendar_jean, self.calendar_john, self.calendar_patel]
         calendars_len = len(calendars)
         self.resources_test = self.env['resource.test'].create([{
             'name': 'resource ' + str(i),
@@ -67,51 +67,16 @@ class TestResource(TestResourceCommon):
         self.assertEqual(58, sum_work_intervals, "Sum of the work intervals for the resource jean should be 40h+18h = 58h")
 
     def test_get_valid_work_intervals_calendars_only(self):
-        calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
+        calendars = [self.calendar_jean, self.calendar_john, self.calendar_patel]
         start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
         end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
         _, calendars_intervals = self.env['resource.resource']._get_valid_work_intervals(start, end, calendars)
         sum_work_intervals_jean = sum_intervals(calendars_intervals[self.calendar_jean.id])
-        self.assertEqual(58, sum_work_intervals_jean, "Sum of the work intervals for the calendar of jean should be 40h+18h = 58h")
+        self.assertEqual(60, sum_work_intervals_jean, "Sum of the work intervals for the calendar of jean should be 40h+20h = 60h")
         sum_work_intervals_john = sum_intervals(calendars_intervals[self.calendar_john.id])
-        self.assertEqual(26 - 1 / 3600, sum_work_intervals_john, "Sum of the work intervals for the calendar of john should be 20h+6h-1s = 25h59m59s")
-        sum_work_intervals_jules = sum_intervals(calendars_intervals[self.calendar_jules.id])
-        self.assertEqual(31, sum_work_intervals_jules, "Sum of the work intervals for the calendar of jules should be Wodd:15h+Wpair:16h = 31h")
+        self.assertEqual(32, sum_work_intervals_john, "Sum of the work intervals for the calendar of john should be 24h+8h = 32h")
         sum_work_intervals_patel = sum_intervals(calendars_intervals[self.calendar_patel.id])
-        self.assertEqual(49, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 14+35h = 49h")
-
-    def test_switch_two_weeks_resource(self):
-        """
-            Check that it is possible to switch the company's default calendar
-        """
-        self.env.company.resource_calendar_id = self.two_weeks_resource
-        company_resource = self.env.company.resource_calendar_id
-        # Switch two times to be sure to test both cases
-        company_resource.switch_calendar_type()
-        company_resource.switch_calendar_type()
-
-    def test_create_company_using_two_weeks_resource(self):
-        """
-            Check that we can create a new company
-            if the default company calendar is two weeks
-        """
-        self.env.company.resource_calendar_id = self.two_weeks_resource
-        self.env['res.company'].create({'name': 'New Company'})
-
-    def test_empty_working_hours_for_two_weeks_resource(self):
-        resource = self._define_calendar_2_weeks(
-            'Two weeks resource',
-            [],
-            'Europe/Brussels',
-        )
-        self.env['resource.calendar.attendance'].create({
-            'name': 'test',
-            'calendar_id': resource.id,
-            'hour_from': 0,
-            'hour_to': 0,
-        })
-        resource_hour = resource._get_hours_per_day()
-        self.assertEqual(resource_hour, 0.0)
+        self.assertEqual(53, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 4h+14h+35h = 53h")
 
     def test_resource_without_calendar(self):
         resource = self.env['resource.resource'].create({

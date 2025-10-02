@@ -32,30 +32,31 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
-            calendar = leave.employee_id.resource_calendar_id
+            employee = leave.employee_id
+            tz = employee._get_tz()
 
-            if not calendar or not calendar.tz:
+            if employee.sudo().is_fully_flexible or not tz:
                 continue
 
-            calendar_timezone = ZoneInfo(calendar.tz)
+            employee_timezone = ZoneInfo(tz)
 
-            if calendar.flexible_hours and (leave.leave_type_request_unit == 'hour' or leave.leave_type_request_unit == 'half_day' or leave.date_from.date() == leave.date_to.date()):
-                leave_date = leave.date_from.astimezone(calendar_timezone).date()
+            if employee.sudo().is_flexible and (leave.leave_type_request_unit == 'hour' or leave.leave_type_request_unit == 'half_day' or leave.date_from.date() == leave.date_to.date()):
+                leave_date = leave.date_from.astimezone(employee_timezone).date()
                 if leave.leave_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
                 elif leave.leave_type_request_unit == 'half_day':
-                    hours = calendar.hours_per_day / 2
+                    hours = employee.sudo().hours_per_day / 2
                 else:  # Single-day leave
-                    hours = calendar.hours_per_day
+                    hours = employee.sudo().hours_per_day
                 work_hours_data = [(leave_date, hours)]
             else:
                 ignored_resource_calendar_leaves = ignored_resource_calendar_leaves or []
                 if leave in mapped_calendar_leaves:
                     ignored_resource_calendar_leaves.append(mapped_calendar_leaves[leave])
-                work_hours_data = leave.employee_id._list_work_time_per_day(
+                work_hours_data = employee._list_work_time_per_day(
                     leave.date_from,
                     leave.date_to,
-                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None)[leave.employee_id.id]
+                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None)[employee.id]
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))

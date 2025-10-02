@@ -33,7 +33,10 @@ class TestResourcePerformance(TransactionCase):
             start = datetime.now(UTC) + relativedelta(month=1, day=1)
             stop = datetime.now(UTC) + relativedelta(month=12, day=31)
             start_time = time.time()
-            calendar._attendance_intervals_batch(start, stop, resources=resources.resource_id)
+            resources_per_tz = {
+                UTC: resources.resource_id
+            }
+            calendar._attendance_intervals_batch(start, stop, resources_per_tz=resources_per_tz)
             _logger.info('Attendance Intervals Batch (100): --- %s seconds ---', time.time() - start_time)
             # Before
             #INFO master test_performance: Attendance Intervals Batch (100): --- 2.0667169094085693 seconds ---
