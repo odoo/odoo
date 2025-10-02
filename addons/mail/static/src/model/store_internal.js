@@ -145,12 +145,22 @@ export class StoreInternal extends RecordInternal {
             recordListFullProxy.data = data;
         }
     }
+    canOverrideField(record, fieldName, version, strict = false) {
+        if (version !== undefined) {
+            const currentFieldVersion = record._.versionByField.get(fieldName) || 0;
+            if (strict) {
+                return currentFieldVersion < version;
+            }
+            return currentFieldVersion <= version;
+        }
+        return true;
+    }
     /**
      * @param {Record} record
      * @param {string} fieldName
      * @param {any} value
      */
-    updateAttr(record, fieldName, value) {
+    updateAttr(record, fieldName, value, version) {
         const Model = record.Model;
         const fieldType = Model._.fieldsType.get(fieldName);
         const fieldHtml = Model._.fieldsHtml.get(fieldName);
@@ -169,6 +179,7 @@ export class StoreInternal extends RecordInternal {
             }
             shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
         }
+        shouldChange = shouldChange && this.canOverrideField(record, fieldName, version);
         let newValue = value;
         if (fieldHtml) {
             newValue =
@@ -186,6 +197,9 @@ export class StoreInternal extends RecordInternal {
         if (shouldChange) {
             record._.updatingAttrs.set(fieldName, true);
             targetRecord[fieldName] = newValue;
+            if (version !== undefined) {
+                record._.versionByField.set(fieldName, version);
+            }
             record._.updatingAttrs.delete(fieldName);
         }
     }
@@ -194,11 +208,17 @@ export class StoreInternal extends RecordInternal {
      * @param {Object} vals
      */
     updateFields(record, vals) {
-        for (const [fieldName, value] of Object.entries(vals)) {
-            if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
-                this.updateAttr(record, fieldName, value);
-            } else {
-                this.updateRelation(record, fieldName, value);
+        const version = vals.version;
+        for (const [fieldName, value] of Object.entries(vals).filter(([k]) => k !== "version")) {
+            if (this.canOverrideField(record, fieldName, version)) {
+                if (
+                    !record.Model._.fields.get(fieldName) ||
+                    record.Model._.fieldsAttr.get(fieldName)
+                ) {
+                    this.updateAttr(record, fieldName, value, version);
+                } else {
+                    this.updateRelation(record, fieldName, value, version);
+                }
             }
         }
     }
@@ -207,14 +227,46 @@ export class StoreInternal extends RecordInternal {
      * @param {string} fieldName
      * @param {any} value
      */
-    updateRelation(record, fieldName, value) {
+    updateRelation(record, fieldName, value, version) {
+        let updateVersion = true;
         /** @type {RecordList<Record>} */
         const recordList = record[fieldName];
         if (isMany(record.Model, fieldName)) {
-            this.updateRelationMany(recordList, value);
+            if (isCommand(value) && version !== undefined) {
+                if (!this.canOverrideField(record, fieldName, version, true)) {
+                    // if the version is the same as the current one, we ignore the command
+                    return;
+                }
+                const currentOverride = record._.overrideByField.get(fieldName) || [];
+                // WARN: this is broken for now if commands are not received in order of version
+                const override = [version, (rl) => this.updateRelationMany(rl, value)];
+                record._.overrideByField.set(fieldName, currentOverride.concat([override]));
+                updateVersion = false;
+            } else {
+                this.updateRelationMany(recordList, value);
+                this.cleanOverrides(record, fieldName, version);
+            }
+            const overrides = record._.overrideByField.get(fieldName) || [];
+            overrides.forEach(([, fn]) => {
+                console.log(fn, record, fieldName, value, version);
+                fn(recordList);
+            });
         } else {
             this.updateRelationOne(recordList, value);
         }
+        if (updateVersion && version !== undefined) {
+            record._.versionByField.set(fieldName, version);
+        }
+    }
+
+    cleanOverrides(record, fieldName, version) {
+        const overrides = record._.overrideByField.get(fieldName) || [];
+        if (version === undefined) {
+            record._.overrideByField.set(fieldName, []);
+            return;
+        }
+        overrides.filter(([v]) => v > version).sort((a, b) => a[0] - b[0]);
+        record._.overrideByField.set(fieldName, overrides);
     }
     /**
      * @param {RecordList} recordList
