@@ -22,6 +22,7 @@ export class BuilderRow extends Component {
         extraLabelClass: { type: String, optional: true },
         observeCollapseContent: { type: Boolean, optional: true },
         fullRowToggler: { type: Boolean, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
     static defaultProps = { expand: false, observeCollapseContent: false, fullRowToggler: false };
 
