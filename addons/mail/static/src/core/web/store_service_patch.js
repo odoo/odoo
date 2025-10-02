@@ -30,6 +30,9 @@ const StorePatch = {
         this.starred = fields.One("Thread");
         this.history = fields.One("Thread");
     },
+    computeGlobalCounter() {
+        return super.computeGlobalCounter() + (this.inbox?.counter ?? 0);
+    },
     async initialize() {
         await Promise.all([
             this.fetchStoreData("failures"),

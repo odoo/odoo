@@ -21,24 +21,4 @@ patch(MessagingMenu.prototype, {
             this.dropdown.close();
         }
     },
-    get counter() {
-        const count = super.counter;
-        const channelsContribution =
-            this.store.channels.status !== "fetched"
-                ? this.store.initChannelsUnreadCounter
-                : Object.values(this.store.Thread.records).filter(
-                      (thread) =>
-                          thread.displayToSelf &&
-                          !thread.self_member_id?.mute_until_dt &&
-                          (thread.self_member_id?.message_unread_counter ||
-                              thread.message_needaction_counter)
-                  ).length;
-        // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
-        const channelsNeedactionCounter = Object.values(this.store.Thread.records).reduce(
-            (acc, thread) =>
-                acc + (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0),
-            0
-        );
-        return count + channelsContribution - channelsNeedactionCounter;
-    },
 });
