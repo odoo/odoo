@@ -360,16 +360,3 @@ class ResPartnerBank(models.Model):
         # `acc_number` variable instead.
         default_acc_number = self.env.context.get('default_acc_number', False) or self.env.context.get('default_name', False)
         return super(ResPartnerBank, self.with_context(default_acc_number=default_acc_number)).default_get(fields)
-
-    @api.depends('allow_out_payment', 'acc_number', 'bank_id')
-    @api.depends_context('display_account_trust')
-    def _compute_display_name(self):
-        super()._compute_display_name()
-        if self.env.context.get('display_account_trust'):
-            for acc in self:
-                trusted_label = _('trusted') if acc.allow_out_payment else _('untrusted')
-                if acc.bank_id:
-                    name = f'{acc.acc_number} - {acc.bank_id.name} ({trusted_label})'
-                else:
-                    name = f'{acc.acc_number} ({trusted_label})'
-                acc.display_name = name

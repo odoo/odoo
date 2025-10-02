@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="view_partner_bank_kanban_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.kanban.account</field>
+            <field name="model">res.partner.bank</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="allow_out_payment"/>
+                    <templates>
+                        <t t-name="card">
+                            <t t-value="record.allow_out_payment.raw_value" t-set="trusted"/>
+                            <div class="d-flex">
+                                <i class="fa me-1 align-self-center" 
+                                   t-att-class="{
+                                        'fa-shield text-success': trusted,
+                                        'fa-exclamation-circle text-danger': !trusted,
+                                   }"/>
+                                <field name="display_name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
             <field name="name">res.partner.bank.form.inherit.account</field>
             <field name="model">res.partner.bank</field>

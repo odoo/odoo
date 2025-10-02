@@ -733,7 +733,7 @@
                                     or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                                     or invoice_has_outstanding
                                 )"
-                                context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
+                                context="{'dont_redirect_to_payments': True}"
                                 string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Register Payment (only invoices / receipts, with outstanding payments) -->
@@ -745,7 +745,7 @@
                                     or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                                     or not invoice_has_outstanding
                                 )"
-                                context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
+                                context="{'dont_redirect_to_payments': True}"
                                 string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
@@ -1041,7 +1041,8 @@
                                        readonly="inalterable_hash != False"
                                        placeholder="Use Bill Reference"/>
                                 <field name="partner_bank_id"
-                                       context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
+                                       widget="many2one_bank"
+                                       context="{'default_partner_id': bank_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                        readonly="is_move_sent and state != 'draft'"/>
@@ -1468,7 +1469,8 @@
                                         <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
-                                               context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
+                                               widget="many2one_bank"
+                                               context="{'default_partner_id': bank_partner_id}"
                                                domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                                readonly="is_move_sent and state != 'draft'"/>
                                         <field name="payment_reference"
@@ -1958,7 +1960,7 @@
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
-            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund', 'display_account_trust': True}</field>
+            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
@@ -1977,7 +1979,7 @@
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund', 'in_receipt'])]</field>
-            <field name="context">{'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
+            <field name="context">{'default_move_type': 'in_invoice'}</field>
             <field name="help" type="html">
                 <!-- An owl component should be displayed instead -->
                 <p class="o_view_nocontent_smiling_face">
@@ -1997,7 +1999,7 @@
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund', 'in_receipt'])]</field>
-            <field name="context">{'search_default_in_invoice': 1, 'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
+            <field name="context">{'search_default_in_invoice': 1, 'default_move_type': 'in_invoice'}</field>
             <field name="help" type="html">
                 <!-- An owl component should be displayed instead -->
                 <p class="o_view_nocontent_smiling_face">
@@ -2116,7 +2118,7 @@ if records:
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
-            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund', 'display_account_trust': True}</field>
+            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
