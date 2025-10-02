@@ -270,6 +270,20 @@ class TestMarketingCardRender(MarketingCardCommon):
             self.static_campaign.preview_record_ref = self.partners[0]
             self.assertEqual(self.static_campaign.res_model, 'res.partner')
 
+    @users('marketing_card_user')
+    def test_empty_path(self):
+        campaign = self.campaign.with_user(self.env.user)
+        with self.mock_image_renderer():
+            campaign.write({
+                'content_header': False,
+                'content_header_dyn': True,
+                'content_header_path': '',
+            })
+            self.assertTrue(campaign.image_preview)
+        self.assertFalse(campaign._get_card_element_values(campaign.preview_record_ref)['header'], 'Empty path should lead to a Falsy value.')
+        header_val = _extract_values_from_document(html.fromstring(self._wkhtmltoimage_bodies[0]))['header']
+        self.assertFalse(header_val, 'Empty path should lead to nothing rendered, with this test template.')
+
     @mock_image_render
     def test_fetch_datetime(self):
         """Fetching a datetime field should attempt to translate it in the relevant timezone."""
