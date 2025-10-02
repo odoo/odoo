@@ -108,7 +108,7 @@ export class EditorOverlay extends Component {
             ...this.props.positionOptions,
             onPositioned: (el, solution) => {
                 this.props.positionOptions?.onPositioned?.(el, solution);
-                this.updateVisibility(el, solution, container);
+                this.updateVisibility(el, solution, scrollContainer);
             },
         };
         position = usePosition("root", getTarget, positionOptions);
@@ -156,13 +156,17 @@ export class EditorOverlay extends Component {
         return this.rangeElement;
     }
 
-    updateVisibility(overlayElement, solution, container) {
+    updateVisibility(overlayElement, solution, scrollContainer) {
         // @todo: mobile tests rely on a visible (yet overflowing) toolbar
         // Remove this once the mobile toolbar is fixed?
         if (this.env.isSmall) {
             return;
         }
-        const shouldBeVisible = this.shouldOverlayBeVisible(overlayElement, solution, container);
+        const shouldBeVisible = this.shouldOverlayBeVisible(
+            overlayElement,
+            solution,
+            scrollContainer
+        );
         overlayElement.style.visibility = shouldBeVisible ? "visible" : "hidden";
         this.overlayState.isOverlayVisible = shouldBeVisible;
     }
@@ -170,17 +174,22 @@ export class EditorOverlay extends Component {
     /**
      * @param {HTMLElement} overlayElement
      * @param {Object} solution
-     * @param {HTMLElement} container
+     * @param {HTMLElement} scrollContainer
      */
-    shouldOverlayBeVisible(overlayElement, solution, container) {
-        const containerRect = container.getBoundingClientRect();
-        const overflowsTop = solution.top < containerRect.top;
-        const overflowsBottom = solution.top + overlayElement.offsetHeight > containerRect.bottom;
+    shouldOverlayBeVisible(overlayElement, solution, scrollContainer) {
+        if (!scrollContainer) {
+            return true;
+        }
+        const scrollContainerRect = scrollContainer.getBoundingClientRect();
+        const top = Math.max(scrollContainerRect.top, 0);
+        const bottom = top + scrollContainerRect.height;
+        const overflowsTop = solution.top < top;
+        const overflowsBottom = solution.top + overlayElement.offsetHeight > bottom;
         const canFlip = this.props.positionOptions?.flip ?? true;
         if (overflowsTop) {
             if (overflowsBottom) {
-                // Overlay is bigger than the cointainer. Hiding it would it
-                // make always invisible.
+                // Overlay is bigger than the cointainer. Hiding it would make
+                // it always invisible.
                 return true;
             }
             if (solution.direction === "top" && canFlip) {
