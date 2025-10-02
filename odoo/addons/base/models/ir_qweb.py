@@ -299,10 +299,6 @@ instead of ``_get_widget``. It's the ``ir.qweb.field.*`` models that format
 the value. The rendering model is chosen according to the type of field. The
 rendering model can be modified via the ``t-options-widget``.
 
-``t-raw``
-~~~~~~~~~
-Deprecated, please use ``t-out``
-
 ``t-set``
 ~~~~~~~~~
 **Values**: key name
@@ -1613,7 +1609,7 @@ class IrQweb(models.AbstractModel):
             'options',
             'call',
             'att',
-            'field', 'raw', 'out',
+            'field', 'out',
             'tag-open',
             'set',
             'inner-content',
@@ -1673,7 +1669,7 @@ class IrQweb(models.AbstractModel):
             if el_tag not in VOID_ELEMENTS:
                 el.set('t-tag-close', el_tag)
 
-        if not ({'t-out', 't-raw', 't-field'} & set(el.attrib)):
+        if not {'t-out', 't-field'}.intersection(el.attrib):
             el.set('t-inner-content', 'True')
 
         return body + self._compile_directives(el, compile_context, level)
@@ -1920,7 +1916,7 @@ class IrQweb(models.AbstractModel):
 
         if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
             # if it's an invisible element <t>
-            if not el.get('t-out') and not el.get('t-esc') and not el.get('t-raw') and el.getparent() is not None:
+            if not el.get('t-out') and el.getparent() is not None:
                 # if this invisible doesn't generate content, attributes will never be consumed
                 return []
             if el.attrib.get('t-consumed-options') != 'True':
@@ -2334,10 +2330,6 @@ class IrQweb(models.AbstractModel):
         if expr is None:
             ttype = 't-field'
             expr = el.attrib.pop('t-field', None)
-            if expr is None:
-                # deprecated use.
-                ttype = 't-raw'
-                expr = el.attrib.pop('t-raw')
 
         flush = self._flush_text(compile_context, level)
 
@@ -2396,13 +2388,6 @@ class IrQweb(models.AbstractModel):
                 force_display_dependent = True
             else:
                 force_display_dependent = False
-
-            if ttype == 't-raw':
-                # deprecated use.
-                code.append(indent_code("""
-                    if content is not None and content is not False:
-                        content = Markup(content)
-                """, level))
 
         level_tag = level + (0 if is_slot else 1)
         tag_open = (
@@ -2466,17 +2451,6 @@ class IrQweb(models.AbstractModel):
             code.append(indent_code("""else: attrs = None""", level))
 
         return code
-
-    def _compile_directive_raw(self, el, compile_context, level):
-        # deprecated use.
-        _logger.warning(
-            "Found deprecated directive @t-raw=%r in template %r. Replace by "
-            "@t-out, and explicitely wrap content in `Markup` if "
-            "necessary (which likely is not the case)",
-            el.get('t-raw'),
-            compile_context.get('ref', '<unknown>'),
-        )
-        return self._compile_directive_out(el, compile_context, level)
 
     def _compile_directive_field(self, el, compile_context, level):
         """Compile ``t-field`` expressions into a python code as a list of
