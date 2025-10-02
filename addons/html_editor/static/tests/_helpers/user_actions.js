@@ -10,6 +10,11 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
 
 /**
+ * Simulates text insertion in the editor by dispatching keyboard/input events
+ * for each character and inserting them into the current selection's position.
+ * In case of a non-collapsed selection, the selection is deleted first
+ * (assuming the Delete Plugin is present in Editor).
+ *
  * @param {Editor} editor
  * @param {string} text
  */
@@ -40,7 +45,6 @@ export async function insertText(editor, text) {
         }
     };
     for (const char of text) {
-        // KeyDownEvent is required to trigger deleteRange.
         const [keydownEvent] = await manuallyDispatchProgrammaticEvent.silent(
             editor.editable,
             "keydown",
@@ -49,6 +53,7 @@ export async function insertText(editor, text) {
         if (keydownEvent.defaultPrevented) {
             continue;
         }
+        // Beforeinput is required to trigger deleteSelection.
         // InputEvent is required to simulate the insert text.
         const [beforeinputEvent] = await manuallyDispatchProgrammaticEvent.silent(
             editor.editable,
