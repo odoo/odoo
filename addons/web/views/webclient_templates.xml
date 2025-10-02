@@ -86,14 +86,12 @@
 
     <template id="brand_promotion_message" name="Brand Promotion Message">
         <t t-set="odoo_logo">
-            <a target="_blank"
-                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
-                class="badge text-bg-light">
-                <img alt="Odoo"
-                    src="/web/static/img/odoo_logo_tiny.png"
-                    width="62" height="20"
-                    style="width: auto; height: 1em; vertical-align: baseline;"/>
-            </a>
+            <strong>
+                <a target="_blank"
+                    t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}">
+                    Odoo
+                </a>
+            </strong>
         </t>
         <t t-set="final_message">Powered by %s%s</t>
         <t t-out="final_message % (odoo_logo, _message and ('- ' + _message) or '')"/>
