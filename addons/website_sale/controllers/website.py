@@ -10,8 +10,8 @@ from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
-    PRICELIST_SELECTED_SESSION_CACHE_KEY
 )
 
 
@@ -59,12 +59,6 @@ class Website(main.Website):
         if 'display_currency' not in options:
             options['display_currency'] = request.website.currency_id
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
-
-    @route()
-    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
-        super().theme_customize_data(is_view_data, enable, disable, reset_view_arch)
-        if any(key in enable or key in disable for key in ['website_sale.products_list_view', 'website_sale.add_grid_or_list_option']):
-            request.session.pop('website_sale_shop_layout_mode', None)
 
     @route()
     def get_current_currency(self, **kwargs):
