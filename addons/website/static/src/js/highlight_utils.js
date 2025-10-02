@@ -238,6 +238,10 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
         );
     }
 
+    // Extract the highlight width value for fill mode scaling
+    const highlightWidthStr = style.getPropertyValue("--text-highlight-width").trim();
+    const highlightWidth = parseFloat(highlightWidthStr);
+
     const textNodes = descendants(highlightEl).filter((el) => el.nodeType === Node.TEXT_NODE);
     const rects = textNodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
     const finalRects = rectToBatch(rects).map((rects) => getBiggestBoxFromBoxes(rects));
@@ -264,6 +268,8 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
             width: rects.width * scale,
             height: rects.height * scale,
             numberOfCharPerWidth,
+            highlightWidth,
+            defaultSize: 2,
         });
         svgs.push(svg);
         const spanOffsetX = firstRect.x - containerRect.x;
@@ -366,12 +372,24 @@ function buildPath(templates, options) {
     return templates.map((d) => {
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("stroke-width", "var(--text-highlight-width)");
-        path.setAttribute("stroke", "var(--text-highlight-color)");
         path.setAttribute("stroke-linecap", "round");
         if (options.mode === "fill") {
             const wScale = options.width / options.SVGWidth;
             let hScale = options.height / options.SVGHeight;
+
+            // Apply width scaling based on --text-highlight-width
+            // Default base is 0.1em, scale proportionally from that
+            const heightScaleFactor = Math.max(
+                1,
+                (options.height + 2 * options.highlightWidth) /
+                    (options.height + 2 * options.defaultSize)
+            );
+
+            hScale *= heightScaleFactor;
+
             const transforms = [];
+            const moveY = options.highlightWidth - options.defaultSize;
+            transforms.push(`translate(0 -${Math.max(0, moveY * 0.4)})`);
             if (options.position === "bottom") {
                 hScale *= 0.3;
                 transforms.push(`translate(0 ${options.height * 0.8})`);
@@ -379,6 +397,8 @@ function buildPath(templates, options) {
             transforms.push(`scale(${wScale}, ${hScale})`);
             path.setAttribute("fill", "var(--text-highlight-color)");
             path.setAttribute("transform", transforms.join(" "));
+        } else {
+            path.setAttribute("stroke", "var(--text-highlight-color)");
         }
         path.setAttribute("d", d);
         return path;
