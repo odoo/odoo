@@ -1,14 +1,14 @@
-import io
 import os
 import re
 import subprocess as sp
 import sys
-import textwrap
-import time
 import unittest
+from contextlib import redirect_stdout
+from io import BytesIO, TextIOWrapper
 from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
+from odoo.cli.i18n import I18n
 from odoo.tests import BaseCase, Like, TransactionCase
 from odoo.tools import config, file_path
 
@@ -140,51 +140,58 @@ class TestCommand(BaseCase):
 
 class TestCommandUsingDb(TestCommand, TransactionCase):
 
-    @unittest.skipIf(
-        os.name != 'posix' and sys.version_info < (3, 12),
-        "os.set_blocking on files only available in windows starting 3.12",
-    )
     def test_i18n_export(self):
-        # i18n export is a process that takes a long time to run, we are
-        # not interrested in running it in full, we are only interrested
-        # in making sure it starts correctly.
-        #
-        # This test only asserts the first few lines and then SIGTERM
-        # the process. We took the challenge to write a cross-platform
-        # test, the lack of a select-like API for Windows makes the code
-        # a bit complicated. Sorry :/
+        reader_mock_result = [
+            ('base', 'code', 'addons/template_inheritance.py', 331,
+             "Invalid position attribute: '%s'", '', ('odoo-python',)),
+            ('base', 'code', 'addons/template_inheritance.py', 341,
+             "Element '%s' cannot be located in parent view", '', ('odoo-python',)),
+        ]
+        expected_text = [
+            "# Translation of Odoo Server.",
+            "# This file contains the translation of the following modules:",
+            '# \t* base',
+            "#",
+            'msgid ""',
+            'msgstr ""',
+            Like('"Project-Id-Version: ..."'),
+            '"Report-Msgid-Bugs-To: \\n"',
+            Like('"POT-Creation-Date: ...'),
+            Like('"PO-Revision-Date: ...'),
+            '"Last-Translator: \\n"',
+            '"Language-Team: \\n"',
+            '"MIME-Version: 1.0\\n"',
+            '"Content-Type: text/plain; charset=UTF-8\\n"',
+            '"Content-Transfer-Encoding: \\n"',
+            '"Plural-Forms: \\n"',
+            '#. module: base',
+            '#. odoo-python',
+            '#: code:addons/template_inheritance.py:0',
+            'msgid "Element \'%s\' cannot be located in parent view"',
+            'msgstr ""',
+            '#. module: base',
+            '#. odoo-python',
+            '#: code:addons/template_inheritance.py:0',
+            'msgid "Invalid position attribute: \'%s\'"',
+            'msgstr ""',
+        ]
 
-        expected_text = textwrap.dedent("""\
-            # Translation of Odoo Server.
-            # This file contains the translation of the following modules:
-            # \t* base
-        """).encode()
+        def mock_result():
+            def inner(env, modules, lang):
+                return reader_mock_result
+            return inner
 
-        proc = self.popen_command(
-            'i18n', 'export', '-d', self.env.cr.dbname, '-o', '-', 'base',
-            # ensure we get a io.FileIO and not a buffered or text shit
-            text=False, bufsize=0,
-        )
+        with unittest.mock.patch('odoo.tools.translate.TranslationModuleReader', new_callable=mock_result):
+            output_buffer = BytesIO()
+            output_wrapper = TextIOWrapper(output_buffer, encoding="utf-8")
+            with redirect_stdout(output_wrapper):
+                args = f"export -d {self.env.cr.dbname} -o - base".split()
+                I18n().run(args)
+                output_wrapper.flush()
 
-        # Feed the buffer for maximum 5 seconds.
-        buffer = io.BytesIO()
-        timeout = time.monotonic() + 5
-        os.set_blocking(proc.stdout.fileno(), False)
-        while buffer.tell() < len(expected_text) and time.monotonic() < timeout:
-            if chunk := proc.stdout.read(len(expected_text) - buffer.tell()):
-                buffer.write(chunk)
-            else:
-                # would had loved to use select() for its timeout, but
-                # select doesn't work on files on windows, use a flat
-                # sleep instead: not great, not terrible.
-                time.sleep(.1)
-
-        self.assertEqual(buffer.getvalue(), expected_text,
-            "The subprocess did not write the prelude in under 5 seconds.")
-
-        proc.terminate()
-        try:
-            proc.wait(timeout=5)
-        except sp.TimeoutExpired:
-            proc.kill()
-            raise
+            actual_text = [
+                stripped
+                for line in output_buffer.getvalue().decode().splitlines()
+                if (stripped := line.strip()) and stripped
+            ]
+            self.assertEqual(actual_text, expected_text)
