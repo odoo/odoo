@@ -1,5 +1,7 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
+/* global idbKeyval */
+importScripts("/mail/static/lib/idb-keyval/idb-keyval.js");
 
 const MESSAGE_TYPE = { POST_RTC_LOGS: "POST_RTC_LOGS" };
 const PUSH_NOTIFICATION_TYPE = {
@@ -11,8 +13,10 @@ const PUSH_NOTIFICATION_ACTION = {
     DECLINE: "DECLINE",
 };
 
+const { Store, set, get } = idbKeyval;
 const LOG_AGE_LIMIT = 24 * 60 * 60 * 1000; // 24h
 let db;
+const unread_store = new Store("odoo-mail-unread-db", "odoo-mail-unread-store");
 let interactionSinceCleanupCount = 0;
 
 async function openDatabase() {
@@ -229,6 +233,13 @@ self.addEventListener("message", ({ data }) => {
     }
 });
 
+async function incrementUnread() {
+    const oldCounter = (await get("unread", unread_store)) ?? 0;
+    const newCounter = oldCounter + 1;
+    set("unread", newCounter, unread_store);
+    navigator.setAppBadge?.(newCounter);
+}
+
 async function handlePushEvent(notification) {
     const { model, res_id } = notification.options?.data || {};
     const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -252,7 +263,8 @@ async function handlePushEvent(notification) {
                 })
             );
         });
-        timeoutId = setTimeout(() => {
+        timeoutId = setTimeout(async () => {
+            await incrementUnread();
             self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
                 clients.forEach((client) =>
                     client.postMessage({

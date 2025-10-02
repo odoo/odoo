@@ -167,7 +167,7 @@ patch(MessagingMenu.prototype, {
     },
     get counter() {
         let value =
-            this.store.inbox.counter +
+            this.store.globalCounter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;
