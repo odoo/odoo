@@ -992,7 +992,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('employee')
     @warmup
     def test_message_get_suggested_recipients(self):
-        record = self.test_records_recipients[0].with_env(self.env)
+        record = self.test_records_recipients[0].with_env(self.env).with_prefetch()
         with self.assertQueryCount(employee=22):  # tm: 16
             recipients = record._message_get_suggested_recipients(no_create=False)
         new_partner = self.env['res.partner'].search([('email_normalized', '=', 'only.email.1@test.example.com')])
