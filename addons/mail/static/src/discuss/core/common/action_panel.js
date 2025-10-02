@@ -1,7 +1,8 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, useSubEnv } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useBackNavigation, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -29,6 +30,9 @@ export class ActionPanel extends Component {
         this.ui = useService("ui");
         useForwardRefToParent("contentRef");
         useSubEnv({ inDiscussActionPanel: true });
+        if (isMobileOS()) {
+            useBackNavigation({ action: () => this.env.closeActionPanel() });
+        }
     }
 
     get classNames() {
