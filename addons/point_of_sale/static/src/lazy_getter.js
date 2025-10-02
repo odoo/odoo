@@ -35,6 +35,9 @@ function getLazyGetters(Class) {
             getters.set(name, _defineLazyGetter(name, func));
         }
         classGetters.set(Class, getters);
+        // for (const [lazyName, func] of getters.values()) {
+        // attachLazyComputed(instance, lazyName, func);
+        // }
     }
     return classGetters.get(Class);
 }
@@ -55,7 +58,7 @@ export function createLazyGetter(object, name, func) {
         throw new Error("The object must be an instance of WithLazyGetterTrap");
     }
     const [lazyName, lazyMethod] = _defineLazyGetter(name, func);
-    lazyComputed(object, lazyName, lazyMethod);
+    attachLazyComputed(object, lazyName, lazyMethod);
     const getter = function () {
         const disabler = getDisabler(object, name);
         if (disabler.isDisabled()) {
@@ -70,9 +73,18 @@ export function createLazyGetter(object, name, func) {
     });
 }
 
+const targetKeyGetters = new WeakMap();
+
 function defineLazyGetterTrap(Class) {
-    const getters = getLazyGetters(Class);
+    // const getters = getLazyGetters(Class);
     return function get(target, prop, receiver) {
+        const keysToGetters = targetKeyGetters.get(target);
+        const getters = keysToGetters?.get(prop);
+        const getter = getters?.get(prop);
+        if (!getter) {
+            return Reflect.get(target, prop, receiver);
+        }
+
         const disabler = getDisabler(target, prop);
         if (disabler.isDisabled() || !getters.has(prop)) {
             return Reflect.get(target, prop, receiver);
@@ -90,7 +102,7 @@ function defineLazyGetterTrap(Class) {
     };
 }
 
-function lazyComputed(obj, propName, compute) {
+function attachLazyComputed(obj, propName, compute) {
     const key = Symbol(propName);
     Object.defineProperty(obj, propName, {
         get() {
@@ -104,27 +116,108 @@ function lazyComputed(obj, propName, compute) {
      * - When one of the dependencies of `compute` changed, `recompute` invalidates the cache of the `compute`.
      * - The cache of `compute` is saved in `value`.
      */
-    effect(
-        function recompute(obj) {
-            const value = [];
-            obj[key] = () => {
-                if (!value.length) {
-                    value.push(compute(obj));
-                }
-                return value[0];
-            };
-        },
-        [obj]
-    );
+    effect(function recompute() {
+        const cache = {};
+        obj[key] = () => {
+            if (!("value" in cache)) {
+                cache.value = compute(obj);
+            }
+            return cache.value;
+        };
+    });
 }
 
 export class WithLazyGetterTrap {
     constructor({ traps = {} }) {
         const Class = this.constructor;
         const instance = new Proxy(this, { get: defineLazyGetterTrap(Class), ...traps });
-        for (const [lazyName, func] of getLazyGetters(Class).values()) {
-            lazyComputed(instance, lazyName, func);
-        }
         return instance;
     }
 }
+
+// const pos = reactive({}, (change) => {
+//     console.log(changes);
+// });
+
+// let first = true;
+// effect(() => {
+//     pos.x; // track
+//     if (!first) {
+//         addChange(pos, "x");
+//     }
+//     first = false;
+// });
+
+// export function computedField(compute) {
+//     let lastFn = () => {
+//         let result;
+//         let computed = false;
+//         effect(() => {
+//             const obj = {};
+//             lastFn = () => {
+//                 if (!("value" in obj)) {
+//                     obj.value = compute();
+//                 }
+//                 return obj.value;
+//             };
+//             result = !computed && lastFn();
+//             computed = true;
+//         });
+//         return result;
+//     };
+//     return () => lastFn();
+// }
+export function computedField(compute) {
+    let lastFn = () => {
+        let result;
+        effect(() => {
+            const obj = {};
+            lastFn = () => {
+                if (!("value" in obj)) {
+                    obj.value = compute();
+                }
+                return obj.value;
+            };
+            result = lastFn();
+        });
+        return result;
+    };
+    return () => lastFn();
+}
+
+// const r = reactive({ value: "test" });
+
+class A extends WithLazyGetterTrap {
+    x = 1;
+    get f1() {
+        console.log("compute f1", this.x);
+    }
+    get f2() {
+        console.log("compute f2", this.x);
+    }
+}
+class B extends WithLazyGetterTrap {
+    x = 1;
+    get f3() {
+        console.log("compute f3", this.x);
+    }
+    get f4() {
+        console.log("compute f4", this.x);
+    }
+}
+
+const fn = () => {
+    const a1 = new A();
+    const a2 = new A();
+    const b1 = new B();
+    const b2 = new B();
+
+    a1.f1();
+    a1.x++;
+};
+fn();
+
+const reactive1 = reactive({ value: 1 });
+const derived1 = derived(() => reactive1.value + 100);
+
+derived1();

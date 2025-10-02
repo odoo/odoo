@@ -44,7 +44,10 @@ export class ColorSelector extends Component {
             "#00000000", //Default Background color
         ];
         effect(() => {
+            // todo: check if it works
             const selectedColors = this.props.getSelectedColors();
+            // Object.keys(selectedColors); // track any key changes? is it necessary
+
             withoutReactivity(() => {
                 this.state.selectedColor = selectedColors[this.props.mode];
                 this.state.defaultTab = this.getCorrespondingColorTab(

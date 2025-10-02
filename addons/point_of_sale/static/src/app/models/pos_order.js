@@ -186,9 +186,9 @@ export class PosOrder extends Base {
      * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
-    get taxTotals() {
-        return this.getTaxTotalsOfLines(this.lines);
-    }
+    taxTotals = computedField(() => {
+        this.getTaxTotalsOfLines(this.lines);
+    });
 
     getTaxTotalsOfLines(lines) {
         const currency = this.currency;
