@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-14 08:06+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mrp/nl/>\n"
@@ -41,8 +41,8 @@ msgstr ""
 "van de onderdelen worden getriggerd.\n"
 "* In behandeling: De productie is gestart (op de productieorder of op de "
 "werkorder).\n"
-"* Te sluiten: de productie is klaar, de productieorder moet worden gesloten."
-"\n"
+"* Te sluiten: de productie is klaar, de productieorder moet worden "
+"gesloten.\n"
 "* Klaar: de productieorder is gesloten, de voorraadbewegingen zijn geboekt.\n"
 "* Geannuleerd: de productieorder is geannuleerd, kan niet meer worden "
 "bevestigd."
@@ -60,9 +60,9 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/>De geproduceerde producten worden verplaatst naar "
-"<b>%(destination)s</b>,  <br/> zoals gespecificeerd in de bestemming van "
-"<b>%(operation)s</b>."
+" <br/><br/>De geproduceerde producten worden verplaatst naar <b>%"
+"(destination)s</b>,  <br/> zoals gespecificeerd in de bestemming van <b>%"
+"(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -670,8 +670,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Een stuklist van het type kit wordt niet geproduceerd met een "
-"productieorder.<br/>\n"
+"Een stuklist van het type kit wordt niet geproduceerd met een productieorder."
+"<br/>\n"
 "In plaats daarvan wordt deze gebruikt om een stuklijst in zijn onderdelen te "
 "ontleden wanneer:"
 
@@ -1043,8 +1043,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Automatisch het partij/NS-label afdrukken wanneer de knop "
-"\"Maak een nieuw serie/partijnummer\" wordt gebruikt."
+"Automatisch het partij/NS-label afdrukken wanneer de knop \"Maak een nieuw "
+"serie/partijnummer\" wordt gebruikt."
 
 #. module: mrp
 #. odoo-javascript
@@ -2174,12 +2174,12 @@ msgstr ""
 "op de stuklijst is gedefinieerd:\n"
 "  * Toegestaan: toegestaan voor alle productiegebruikers.\n"
 "  * Toegestaan met waarschuwing: toegestaan voor alle productiegebruikers "
-"met overzicht van verbruiksverschillen bij het sluiten van de productieorder."
-"\n"
+"met overzicht van verbruiksverschillen bij het sluiten van de "
+"productieorder.\n"
 "  Houd er rekening mee dat in het geval van Handmatig verbruik van "
 "onderdelen, waarbij het verbruik uitsluitend handmatig wordt geregistreerd, "
-"er nog steeds verbruikswaarschuwingen worden afgegeven indien van toepassing."
-"\n"
+"er nog steeds verbruikswaarschuwingen worden afgegeven indien van "
+"toepassing.\n"
 "  * Geblokkeerd: alleen een beheerder kan een productieorder sluiten wanneer "
 "de comsumptie van de stuklijst niet wordt nageleefd."
 
@@ -2303,6 +2303,7 @@ msgstr "Weergave"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2857,6 +2858,7 @@ msgstr "Uren"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -3045,6 +3047,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Voorraadverplaatsingen"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3491,7 +3498,8 @@ msgstr "Beheer bewerkingen met werkorders"
 #: model:res.groups,comment:mrp.group_mrp_manager
 msgid ""
 "Manage the manufacturing processes and generate reports on those processes."
-msgstr "Beheer de productieprocessen en genereer rapporten over deze processen."
+msgstr ""
+"Beheer de productieprocessen en genereer rapporten over deze processen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
@@ -6935,8 +6943,8 @@ msgid ""
 msgstr ""
 "Het is niet toegestaan om een partij- of serienummer te maken of te bewerken "
 "voor de onderdelen met het bewerkingssoort \"Productie\". Om dit te "
-"wijzigen, ga je naar het bewerkingssoort en vink je het vakje aan "
-"\"Nieuwe partijen / serienummers voor onderdelen maken\"."
+"wijzigen, ga je naar het bewerkingssoort en vink je het vakje aan \"Nieuwe "
+"partijen / serienummers voor onderdelen maken\"."
 
 #. module: mrp
 #. odoo-python
@@ -7113,16 +7121,16 @@ msgid ""
 msgstr ""
 "Je hebt voor de volgende producten een ander aantal verbruikt dan verwacht.\n"
 "                        <b invisible=\"consumption == 'strict'\">\n"
-"                            Graag te bevestigen dat dit met opzet is gedaan."
-"\n"
+"                            Graag te bevestigen dat dit met opzet is "
+"gedaan.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Controleer het verbruik van je onderdelen of "
 "vraag aan een manager om\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">deze productieorder</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">deze productieorders</span> te bevestigen.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">deze productieorder</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">deze productieorders</span> te bevestigen.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7181,8 +7189,8 @@ msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
 msgstr ""
-"Je moet partij-/serienummer voor producten opgeven en deze 'consumeren': "
-"%(missing_products)s"
+"Je moet partij-/serienummer voor producten opgeven en deze 'consumeren': %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

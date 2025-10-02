@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 21:16+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/product/"
@@ -97,6 +97,7 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -321,8 +322,8 @@ msgid ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Valuta\" title=\"Valuta\""
-"/>"
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Valuta\" title=\"Valuta\"/"
+">"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -3348,6 +3349,12 @@ msgid "Ray-Ban"
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr ""
@@ -3740,8 +3747,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
-"Attributten %(attribute)s skal have mindst én værdi for produktet "
-"%(product)s."
+"Attributten %(attribute)s skal have mindst én værdi for produktet %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4158,8 +4165,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Værdi af produktet (automatisk beregnet i AVCO).\n"
-"        Bruges til at værdiansætte produktet, når købsprisen ikke er kendt ("
-"f.eks. lagerjustering).\n"
+"        Bruges til at værdiansætte produktet, når købsprisen ikke er kendt "
+"(f.eks. lagerjustering).\n"
 "        Bruges til at beregne avancer på salgsordrer."
 
 #. module: product
@@ -4501,23 +4508,14 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"Du kan ikke tildele den primære prisliste som en anden prisliste i Prisliste "
-"genstand"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
 "because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Du kan  ikke ændre varianters oprettelses tilstanden for egenskab "
-"%(attribute)s, fordi den anvendes på følgende produkter:\n"
+"Du kan  ikke ændre varianters oprettelses tilstanden for egenskab %"
+"(attribute)s, fordi den anvendes på følgende produkter:\n"
 "%(products)s"
 
 #. module: product
@@ -4535,8 +4533,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Du kan ikke ændre produktet for værdien %(value)s, angivet på produkt "
-"%(product)s."
+"Du kan ikke ændre produktet for værdien %(value)s, angivet på produkt %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -4805,6 +4803,12 @@ msgstr "til"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr ""
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "Du kan ikke tildele den primære prisliste som en anden prisliste i "
+#~ "Prisliste genstand"
 
 #~ msgid "%(percentage)s %% discount and %(price)s surcharge"
 #~ msgstr "%(percentage)s %% rabat og %(price)s ekstragebyr"

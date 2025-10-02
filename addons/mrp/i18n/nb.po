@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 18:39+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
@@ -474,8 +474,8 @@ msgid ""
 "</span>"
 msgstr ""
 "<span class=\"text-muted\">Å endre mengden som skal produseres vil også "
-"endre mengden komponenter som skal forbrukes for denne "
-"produksjonsordren.</span>"
+"endre mengden komponenter som skal forbrukes for denne produksjonsordren.</"
+"span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -668,8 +668,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"En stykkliste (BoM) av typen Kit produseres ikke med en produksjonsordre. <"
-"br/> \n"
+"En stykkliste (BoM) av typen Kit produseres ikke med en produksjonsordre. "
+"<br/> \n"
 "                               I stedet brukes den til å dele opp en "
 "stykkliste i komponenter når:"
 
@@ -1039,8 +1039,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Skriv automatisk ut Lot/serienummeretiketten når knappen "
-"\"Opprett et nytt serienummer/partinummer\" brukes."
+"Skriv automatisk ut Lot/serienummeretiketten når knappen \"Opprett et nytt "
+"serienummer/partinummer\" brukes."
 
 #. module: mrp
 #. odoo-javascript
@@ -2272,6 +2272,7 @@ msgstr "Visning"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2813,6 +2814,7 @@ msgstr "Timer"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -3001,6 +3003,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Lagerbevegelse"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -5664,7 +5671,8 @@ msgstr "Teknisk felt for å sjekke når vi kan avbestille reservasjonsmengder"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr "Stykklisten er blitt oppdatert siden opprettelsen av produksjonsordren."
+msgstr ""
+"Stykklisten er blitt oppdatert siden opprettelsen av produksjonsordren."
 
 #. module: mrp
 #. odoo-python
@@ -6468,7 +6476,8 @@ msgstr "Venter Tilgjengelighet"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
-msgstr "Venter på den forrige arbeidsordren, planlagt fra %(start)s til %(end)s"
+msgstr ""
+"Venter på den forrige arbeidsordren, planlagt fra %(start)s til %(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -6849,8 +6858,8 @@ msgid ""
 msgstr ""
 "Du har ikke lov til å opprette eller redigere et lot- eller serienummer for "
 "komponenter med operasjonstype \"Produksjon\". For å endre dette, gå til "
-"operasjonstypen og merk av boksen "
-"\"Opprett nye lot-/serienumre for komponenter\"."
+"operasjonstypen og merk av boksen \"Opprett nye lot-/serienumre for "
+"komponenter\"."
 
 #. module: mrp
 #. odoo-python
@@ -7025,8 +7034,8 @@ msgstr ""
 "leder om å validere\n"
 "                           <span invisible=\"mrp_production_count != 1\"> "
 "denne produksjons ordre</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">disse produksjons ordrene</span>.\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">disse produksjons ordrene</span>.\n"
 "                        </b>"
 
 #. module: mrp

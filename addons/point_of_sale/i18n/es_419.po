@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-10-01 02:30+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -1591,6 +1591,12 @@ msgstr "Cancelar solicitud de pago"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Cancelled"
 msgstr "Cancelado"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot edit orderline"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4712,8 +4718,10 @@ msgstr "Cargando..."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
-msgstr "Dirección IP local de una impresora de recibos Epson."
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -8244,6 +8252,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Faltan algunos números de serie o de lote"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr "Algunas órdenes ya se están facturando. Inténtalo de nuevo más tarde."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8396,12 +8410,6 @@ msgstr "Almacene las órdenes editadas en el backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr "Algunas órdenes ya se están facturando. Inténtalo de nuevo más tarde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8612,8 +8620,8 @@ msgstr "El valor \"Disponible después de\" debe estar entre 00:00 y 24:00"
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"El valor \"Disponible hasta\" debe ser mayor que el valor "
-"\"Disponible después de\"."
+"El valor \"Disponible hasta\" debe ser mayor que el valor \"Disponible "
+"después de\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8680,8 +8688,8 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
-msgid "The Ticket Number should be at least 14 characters long."
-msgstr "El número de ticket debe tener al menos 14 caracteres."
+msgid "The Ticket Number should be at least 12 characters long."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8704,8 +8712,8 @@ msgid ""
 msgstr ""
 "Los importes de tus líneas de pago deben estar redondeadas para validar la "
 "transacción.\n"
-"La precisión de redondeo es %(rounding)s, así que debes registrar "
-"%(expectedAmount)s como importe en lugar de %(paidAmount)s."
+"La precisión de redondeo es %(rounding)s, así que debes registrar %"
+"(expectedAmount)s como importe en lugar de %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -9431,6 +9439,13 @@ msgstr ""
 "sincronizada y vuelva a intentarlo."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid ""
+"This orderline has already been sent to the kitchen and cannot be edited."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
@@ -9563,7 +9578,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "To enable invoice creation, please add a journal for it in the settings."
-msgstr "Agrega un diario en los ajustes para habilitar la creación de facturas."
+msgstr ""
+"Agrega un diario en los ajustes para habilitar la creación de facturas."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10067,9 +10083,7 @@ msgid "Warehouse (PoS)"
 msgstr "Almacén (PdV)"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
@@ -10345,12 +10359,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "No puede editar el pago de una orden registrada."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10745,6 +10753,15 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid "Local IP address of an Epson receipt printer."
+#~ msgstr "Dirección IP local de una impresora de recibos Epson."
+
+#~ msgid "The Ticket Number should be at least 14 characters long."
+#~ msgstr "El número de ticket debe tener al menos 14 caracteres."
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
 
 #~ msgid ""
 #~ "\n"

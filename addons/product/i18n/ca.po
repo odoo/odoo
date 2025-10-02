@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-10-01 02:30+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/product/"
@@ -83,10 +83,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
-"%(base)s amb un descompte del %(discount)s %% %(discount_type)s i "
-"%(surcharge)s un cost addicional\n"
-"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"%(base)s amb un descompte del %(discount)s %% %(discount_type)s i %"
+"(surcharge)s un cost addicional\n"
+"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -118,6 +118,7 @@ msgstr "%(percentage)s %% de descompte en el preu de venda"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -162,8 +163,8 @@ msgstr "- %(amount)s de rebaixa"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- El codi de barres «%(barcode)s» ja està assignat al(s) producte(s): "
-"%(product_list)s"
+"- El codi de barres «%(barcode)s» ja està assignat al(s) producte(s): %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -3378,6 +3379,12 @@ msgid "Ray-Ban"
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr ""
@@ -3774,8 +3781,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
-"L'atribut %(attribute)s  ha de tenir almenys un valor per al producte "
-"%(product)s."
+"L'atribut %(attribute)s  ha de tenir almenys un valor per al producte %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4548,15 +4555,6 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"No podeu assignar la llista de cotitzacions a l' element Preu de la llista "
-"de cotitzacions"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4584,8 +4582,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"No podeu canviar el producte del valor %(value)s establert en el producte "
-"%(product)s."
+"No podeu canviar el producte del valor %(value)s establert en el producte %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -4594,8 +4592,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"No podeu canviar el valor del valor %(value)s establert en el producte "
-"%(product)s."
+"No podeu canviar el valor del valor %(value)s establert en el producte %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -4866,6 +4864,12 @@ msgstr "fins"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr ".xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "No podeu assignar la llista de cotitzacions a l' element Preu de la "
+#~ "llista de cotitzacions"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 15:27+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -54,8 +54,8 @@ msgid ""
 "expiration_date\"/>"
 msgstr ""
 "<span title=\"警报\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
-"invisible="
-"\"product_qty <= 0 or not product_expiry_alert or not expiration_date\"/>"
+"invisible=\"product_qty <= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -256,6 +256,12 @@ msgid "Expired Lots"
 msgstr ""
 
 #. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
 msgstr "已提醒过期时间"
@@ -291,12 +297,6 @@ msgstr "预测数量"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
 msgstr "可用数量 "
-
-#. module: product_expiry
-#. odoo-javascript
-#: code:addons/product_expiry/static/src/forecasted_details.js:0
-msgid "Fresh Free Stock"
-msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -543,7 +543,8 @@ msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage "
 "product expiration, on the product and on the corresponding lot/serial "
 "numbers"
-msgstr "选中该复选框后，您就可以在产品和相应的批号/序列号上指定日期，以管理产品的过期"
+msgstr ""
+"选中该复选框后，您就可以在产品和相应的批号/序列号上指定日期，以管理产品的过期"
 "时间。"
 
 #. module: product_expiry

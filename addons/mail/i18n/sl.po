@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:47+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 21:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/mail/"
@@ -246,12 +246,11 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sVnesite%(bold_start)s@uporabniško_ime%(bold_end)s da "
-"omenite nekoga in pritegnete njegovo "
-"pozornost.%(new_line)sVnesite%(bold_start)s#kanal%(bold_end)s da omenite "
-"kanal.%(new_line)sVnesite %(bold_start)s/ukaz%(bold_end)s da izvedete "
-"ukaz.%(new_line)sVnesite %(bold_start)s::bližnjico%(bold_end)s da vstavite "
-"vnaprej pripravljen odgovor v "
-"sporočilo.%(new_line)sVnesite%(bold_start)s:emoji:%(bold_end)s da vstavite "
+"omenite nekoga in pritegnete njegovo pozornost.%(new_line)sVnesite%"
+"(bold_start)s#kanal%(bold_end)s da omenite kanal.%(new_line)sVnesite %"
+"(bold_start)s/ukaz%(bold_end)s da izvedete ukaz.%(new_line)sVnesite %"
+"(bold_start)s::bližnjico%(bold_end)s da vstavite vnaprej pripravljen odgovor "
+"v sporočilo.%(new_line)sVnesite%(bold_start)s:emoji:%(bold_end)s da vstavite "
 "emoji v sporočilo."
 
 #. module: mail
@@ -276,10 +275,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s "
-"%(open_em)sda%(open_cancel)sprekličete%(close_cancel)s%(close_em)s, "
-"%(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sda "
-"%(open_save)sshranite%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sda%(open_cancel)sprekličete%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sda %(open_save)sshranite%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -289,10 +287,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)sto "
-"%(open_cancel)sprekličete%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)sda "
-"%(open_save)sshranite%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)sprekličete%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sda %"
+"(open_save)sshranite%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -323,6 +320,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr "%(user)s povezan/a. To je njihova prva povezava. Zaželi jim srečo."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -522,8 +525,8 @@ msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
 msgstr ""
-"<b invisible=\"not no_record\" class=\"text-warning\">Za ta model ni "
-"zapisa</b>"
+"<b invisible=\"not no_record\" class=\"text-warning\">Za ta model ni zapisa</"
+"b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -1025,6 +1028,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/core/web/activity_menu.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1197,12 +1201,6 @@ msgstr "Dodaj GIF-e"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_reactions.xml:0
-msgid "Add Reaction"
-msgstr "Dodaj reakcijo"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add Star"
 msgstr ""
@@ -1293,7 +1291,8 @@ msgstr "Dodaj/odstrani sledilce"
 msgid ""
 "Adding followers on channels is not possible. Consider adding members "
 "instead."
-msgstr "Dodajanje sledilcev na kanale ni mogoče. Razmislite o dodajanju članov."
+msgstr ""
+"Dodajanje sledilcev na kanale ni mogoče. Razmislite o dodajanju članov."
 
 #. module: mail
 #. odoo-python
@@ -1301,7 +1300,8 @@ msgstr "Dodajanje sledilcev na kanale ni mogoče. Razmislite o dodajanju članov
 msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
-msgstr "V ta klepet ni mogoče dodati več članov; zasnovan je samo za dve osebi."
+msgstr ""
+"V ta klepet ni mogoče dodati več članov; zasnovan je samo za dve osebi."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -1405,8 +1405,9 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"Vzdevek%(matching_name)s (%(current_id)s) je že povezan z %(alias_model_name)"
-"s (%(matching_id)s) in ga uporablja %(parent_name)s %(parent_model_name)s."
+"Vzdevek%(matching_name)s (%(current_id)s) je že povezan z %"
+"(alias_model_name)s (%(matching_id)s) in ga uporablja %(parent_name)s %"
+"(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1415,8 +1416,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Vzdevek %(matching_name)s (%(current_id)s) je že povezan z "
-"%(alias_model_name)s (%(matching_id)s)."
+"Vzdevek %(matching_name)s (%(current_id)s) je že povezan z %"
+"(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1520,8 +1521,8 @@ msgid ""
 "An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
 " %s"
 msgstr ""
-"Prišlo je do izjeme SSL. Preverite konfiguracijo SSL/TLS na vratih strežnika."
-"\n"
+"Prišlo je do izjeme SSL. Preverite konfiguracijo SSL/TLS na vratih "
+"strežnika.\n"
 " %s"
 
 #. module: mail
@@ -1605,7 +1606,8 @@ msgstr "Arhivirano"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arhivirano, ker je %(user_name)s (#%(user_id)s) izbrisal portalni račun"
+msgstr ""
+"Arhivirano, ker je %(user_name)s (#%(user_id)s) izbrisal portalni račun"
 
 #. module: mail
 #. odoo-javascript
@@ -1860,6 +1862,11 @@ msgid ""
 msgstr "Samodejno načrtuj to dejavnost, ko je trenutna označena kot končana."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Available everywhere"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -2002,13 +2009,12 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Blokirano zaradi izbrisa portalnega računa %(portal_user_name)s od "
-"%(user_name)s (#%(user_id)s)"
+"Blokirano zaradi izbrisa portalnega računa %(portal_user_name)s od %"
+"(user_name)s (#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 msgid "Blur Background"
 msgstr "Zameglitev ozadja"
 
@@ -2236,12 +2242,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Camera is off"
-msgstr "Kamera je izklopljena"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Camera is unavailable outside the call tab."
 msgstr "Kamera ni na voljo zunaj zavihka za klic."
@@ -2373,8 +2373,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Začetnega sporočila niti nadrejenega kanala ni mogoče spremeniti: "
-"%(channels)s."
+"Začetnega sporočila niti nadrejenega kanala ni mogoče spremeniti: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3567,6 +3567,13 @@ msgstr "Izbriši e-pošto"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Delete Thread"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 msgid "Delete all previews"
 msgstr "Izbriši vse predoglede"
@@ -3645,7 +3652,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr "Določa, ali lahko trenutni uporabnik ureja vnaprej pripravljen odgovor."
+msgstr ""
+"Določa, ali lahko trenutni uporabnik ureja vnaprej pripravljen odgovor."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
@@ -5227,6 +5235,12 @@ msgstr "Skrij vse pogovore"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Hide camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Hide sidebar"
 msgstr "Skrij stransko vrstico"
@@ -5675,12 +5689,6 @@ msgid "Inbox"
 msgstr "Prejeto"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Call..."
-msgstr "Dohodni klic ..."
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
@@ -5706,15 +5714,17 @@ msgstr "Vhodni poštni strežniki"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Video Call..."
-msgstr "Dohodni video klic ..."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call"
 msgstr "Dohodni klic"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call from %(inviter)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5894,8 +5904,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Neveljavna predloga ali referenca izvorne kode pogleda %(svalue)s, je "
-"%(model)s namesto tega"
+"Neveljavna predloga ali referenca izvorne kode pogleda %(svalue)s, je %"
+"(model)s namesto tega"
 
 #. module: mail
 #. odoo-python
@@ -6840,8 +6850,8 @@ msgid ""
 "Mailing or posting with a source should not be called with an empty %"
 "(source_type)s"
 msgstr ""
-"Pošiljanje ali objavljanje z virom se ne sme klicati s praznim "
-"%(source_type)s"
+"Pošiljanje ali objavljanje z virom se ne sme klicati s praznim %"
+"(source_type)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -7365,15 +7375,6 @@ msgid "Models"
 msgstr "Modeli"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid ""
-"Modifying the model can have an impact on existing activities using this "
-"activity type, be careful."
-msgstr ""
-"Spreminjanje modela lahko vpliva na obstoječe dejavnosti, ki uporabljajo to "
-"vrsto dejavnosti, zato bodite previdni."
-
-#. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
 msgstr "Odstrani modul"
@@ -7398,6 +7399,7 @@ msgstr "Več dejanj"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "Izklop zvoka"
 
@@ -7897,8 +7899,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Obvestilo naj prejme priloge kot seznam seznamov ali naborov "
-"(prejeto%(aids)s)"
+"Obvestilo naj prejme priloge kot seznam seznamov ali naborov (prejeto%"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7916,8 +7918,8 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Obvestilo bi morali prejeti partnerji v obliki seznama ID-jev (prejetih "
-"%(pids)s)"
+"Obvestilo bi morali prejeti partnerji v obliki seznama ID-jev (prejetih %"
+"(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8745,6 +8747,12 @@ msgid "Performance Warning:"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+msgid "Permanently delete this thread?"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -9013,8 +9021,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Objavljeno sporočilo mora prejeti priloge kot seznam seznamov ali naborov ("
-"prejetih %(aids)s)"
+"Objavljeno sporočilo mora prejeti priloge kot seznam seznamov ali naborov "
+"(prejetih %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -9033,8 +9041,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Objava sporočila bi morala partnerjem poslati seznam ID-jev (prejetih "
-"%(pids)s)"
+"Objava sporočila bi morala partnerjem poslati seznam ID-jev (prejetih %"
+"(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -9080,12 +9088,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
 msgstr "Predogled"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Preview my camera"
-msgstr "Predogled moje kamere"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -9455,12 +9457,6 @@ msgstr "Odstrani"
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Remove Blur"
 msgstr "Odstrani zameglitev"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid "Remove Blur Background"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10523,6 +10519,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Show camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Show sidebar"
 msgstr "Prikaži stransko vrstico"
@@ -10763,6 +10765,7 @@ msgstr "Ustavitev deljenja zaslona"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Stop camera"
 msgstr "Ustavi kamero"
 
@@ -11045,8 +11048,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"Upodabljanje predlog podpira samo inline_template, qweb ali qweb_view ("
-"pogled ali surovi kod); namesto tega so bile prejete %(engine)s ."
+"Upodabljanje predlog podpira samo inline_template, qweb ali qweb_view "
+"(pogled ali surovi kod); namesto tega so bile prejete %(engine)s ."
 
 #. module: mail
 #. odoo-javascript
@@ -11161,8 +11164,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Vrsta dejavnosti \"%(activity_type_name)s\" ni združljiva z načrtom "
-"\"%(plan_name)s\" ker je omejena na model \"%(activity_type_model)s\"."
+"Vrsta dejavnosti \"%(activity_type_name)s\" ni združljiva z načrtom \"%"
+"(plan_name)s\" ker je omejena na model \"%(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-javascript
@@ -11264,10 +11267,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Spodnjega sporočila ni bilo mogoče sprejeti na naslovu "
-"%(alias_display_name)s.\n"
-"                 Samo%(contact_description)s lahko stopijo v stik z njim.<br "
-"/><br />\n"
+"Spodnjega sporočila ni bilo mogoče sprejeti na naslovu %"
+"(alias_display_name)s.\n"
+"                 Samo%(contact_description)s lahko stopijo v stik z njim."
+"<br /><br />\n"
 "                 Prosimo, preverite, ali uporabljate pravilen naslov, ali pa "
 "nas kontaktirajte na %(default_email)s ."
 
@@ -11660,6 +11663,18 @@ msgstr "Nit"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
+msgid "Thread \"%(thread_name)s\" has been deleted"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Thread Actions"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
@@ -11691,12 +11706,6 @@ msgstr "Omogočeno za niti"
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
 msgstr "Niti"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Threads Actions"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
@@ -11967,6 +11976,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Turn camera on"
 msgstr "Vklopi kamero"
 
@@ -12015,8 +12025,8 @@ msgstr ""
 "- 'Ustvari dejavnost': ustvari dejavnost (Razprava)\n"
 "- 'Pošlji e-pošto': objavi sporočilo, opombo ali pošlji e-pošto (Razprava)\n"
 "- 'Pošlji SMS': pošiljanje SMS-ov, beleženje v dokumentih (SMS) - 'Dodaj/"
-"odstrani sledilce': dodajanje ali odstranjevanje sledilcev zapisu (Razprava)"
-"\n"
+"odstrani sledilce': dodajanje ali odstranjevanje sledilcev zapisu "
+"(Razprava)\n"
 "- 'Ustvari zapis': ustvari nov zapis z novimi vrednostmi\n"
 "- 'Izvedi kodo': blok kode Python, ki bo izveden\n"
 "- »Pošlji obvestilo o spletnem kavlju«: pošlji zahtevo POST zunanjemu "
@@ -12169,6 +12179,7 @@ msgstr "Neznana napaka: %(error)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr "Vklopi zvok"
 
@@ -12735,9 +12746,21 @@ msgstr "Ogled vseh dejavnosti"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View chat with %(channel_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
 msgstr "Ogled kanalov ali pridružitev"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View the %(channel_name)s channel"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12837,8 +12860,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena "
-"%(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
+"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena %"
+"(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
 "dokument lastnika pripada podjetju %(company_name)s."
 
 #. module: mail
@@ -12849,8 +12872,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena "
-"%(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
+"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena %"
+"(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
 "ciljni dokument pripada podjetju %(company_name)s."
 
 #. module: mail
@@ -13223,7 +13246,8 @@ msgstr "Predloge ne smete definirati na abstraktnem modelu: %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr "Ali res želiš, da to sporočilo ostane pripeto%(conversation)s za vedno?"
+msgstr ""
+"Ali res želiš, da to sporočilo ostane pripeto%(conversation)s za vedno?"
 
 #. module: mail
 #. odoo-javascript
@@ -13260,8 +13284,8 @@ msgstr "Vaš"
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
-"E-poštni naslov vašega računa je bil spremenjen iz %(old_email)s "
-"v%(new_email)s."
+"E-poštni naslov vašega računa je bil spremenjen iz %(old_email)s v%"
+"(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -13274,12 +13298,6 @@ msgstr "Prijava v vaš račun je bila posodobljena"
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account password has been updated"
 msgstr "cPrijava v vaš račun je posodobljena"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Your browser does not support videoconference"
-msgstr "Vaš brskalnik ne podpira videokonferenc"
 
 #. module: mail
 #. odoo-javascript
@@ -13967,6 +13985,31 @@ msgstr "vaš vzdevek"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” v “%(channel_name)s”"
+
+#~ msgid "Add Reaction"
+#~ msgstr "Dodaj reakcijo"
+
+#~ msgid "Camera is off"
+#~ msgstr "Kamera je izklopljena"
+
+#~ msgid "Incoming Call..."
+#~ msgstr "Dohodni klic ..."
+
+#~ msgid "Incoming Video Call..."
+#~ msgstr "Dohodni video klic ..."
+
+#~ msgid ""
+#~ "Modifying the model can have an impact on existing activities using this "
+#~ "activity type, be careful."
+#~ msgstr ""
+#~ "Spreminjanje modela lahko vpliva na obstoječe dejavnosti, ki uporabljajo "
+#~ "to vrsto dejavnosti, zato bodite previdni."
+
+#~ msgid "Preview my camera"
+#~ msgstr "Predogled moje kamere"
+
+#~ msgid "Your browser does not support videoconference"
+#~ msgstr "Vaš brskalnik ne podpira videokonferenc"
 
 #~ msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 #~ msgstr ""

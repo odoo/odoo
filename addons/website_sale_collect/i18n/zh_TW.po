@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -24,10 +24,16 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "%(available_qty)s/%(line_qty)s available at this location"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
-" your products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
+"your products."
 msgstr "<b>你的訂單已確認。</b><i></i><br>請前往實體商店，支付產品費用。"
 
 #. module: website_sale_collect
@@ -65,6 +71,12 @@ msgid "Configure Pickup Locations"
 msgstr "配置取貨地點"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
+msgid "Contact Details"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
 msgid "Custom Mode"
 msgstr "自訂模式"
@@ -80,6 +92,11 @@ msgstr "送餐"
 #: code:addons/website_sale_collect/models/res_config_settings.py:0
 msgid "Delivery Methods"
 msgstr "送貨方式"
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
+msgid "Delivery method"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
@@ -184,11 +201,6 @@ msgid "Remove"
 msgstr "移除"
 
 #. module: website_sale_collect
-#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
-msgid "Remove from cart"
-msgstr "從購物車中移除"
-
-#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Restrictions may apply"
@@ -198,6 +210,12 @@ msgstr "可能有適用限制"
 #: model:ir.model,name:website_sale_collect.model_sale_order
 msgid "Sales Order"
 msgstr "銷售訂單"
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
+msgid "Same as contact details"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -247,6 +265,16 @@ msgid "The delivery method must have at least one warehouse to be published."
 msgstr "送貨方式必須至少有一個倉庫可以發佈。"
 
 #. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Update cart quantities"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Update cart with available stock"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
 msgid "Warehouse"
 msgstr "倉庫"
@@ -260,8 +288,7 @@ msgstr "網站"
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/payment.py:0
 msgid ""
-"You can only pay on site when selecting the pick up in store delivery "
-"method."
+"You can only pay on site when selecting the pick up in store delivery method."
 msgstr "選擇店內取貨方式時，只可現場付款。"
 
 #. module: website_sale_collect
@@ -291,3 +318,6 @@ msgstr "可用"
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
 msgstr "沒有店內取貨方式可用"
+
+#~ msgid "Remove from cart"
+#~ msgstr "從購物車中移除"

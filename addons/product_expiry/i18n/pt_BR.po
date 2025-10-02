@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-25 17:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -46,8 +46,8 @@ msgid ""
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)\""
-">Expirando</span>\n"
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Expirando</span>\n"
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Expirado</span>"
 
@@ -59,8 +59,8 @@ msgid ""
 "expiration_date\"/>"
 msgstr ""
 "<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
-"invisible="
-"\"product_qty &lt;= 0 or not product_expiry_alert or not expiration_date\"/>"
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -180,8 +180,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
-"Data que determina a expiração de lotes e números de série usando o filtro “"
-"alertas de expiração”."
+"Data que determina a expiração de lotes e números de série usando o filtro "
+"“alertas de expiração”."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -267,6 +267,12 @@ msgid "Expired Lots"
 msgstr ""
 
 #. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
 msgstr "A validade foi alertada"
@@ -306,12 +312,6 @@ msgstr "Quantidade prevista"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
 msgstr "Quantidade livre para uso "
-
-#. module: product_expiry
-#. odoo-javascript
-#: code:addons/product_expiry/static/src/forecasted_details.js:0
-msgid "Fresh Free Stock"
-msgstr "Estoque gratuito fresco"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -708,6 +708,9 @@ msgstr ""
 #: model:product.removal,method:product_expiry.removal_fefo
 msgid "fefo"
 msgstr "pvps"
+
+#~ msgid "Fresh Free Stock"
+#~ msgstr "Estoque gratuito fresco"
 
 #~ msgid ""
 #~ "Number of days before the Expiration Date after which the goods should be "

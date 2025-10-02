@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 10:06+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/payment/"
@@ -43,8 +43,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
-"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
@@ -92,10 +92,11 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible="
-"\"support_partial_capture != 'full_only'\" title=\"Niektóre z transakcji, "
-"które starasz się przechwycić mogą być przechwycone jedynie w całości. "
-"Obsługuj transakcje indywidualnie, aby przechwycić częściowe ilości.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Niektóre z "
+"transakcji, które starasz się przechwycić mogą być przechwycone jedynie w "
+"całości. Obsługuj transakcje indywidualnie, aby przechwycić częściowe ilości."
+"\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -103,8 +104,8 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Usuń metodę płatności\" data-bs-toggle="
-"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"fa fa-trash\" title=\"Usuń metodę płatności\" data-bs-"
+"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -253,8 +254,8 @@ msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE STRIPE"
-msgstr "AKTYWUJ STRIPE"
+msgid "ACTIVATE"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -2525,7 +2526,8 @@ msgstr "Kwota do przechwycenia musi być dodatnia i nie może być wyższa niż 
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr "Podstawowy obraz używany dla tej metody płatności; w formacie 64x64 px."
+msgstr ""
+"Podstawowy obraz używany dla tej metody płatności; w formacie 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
@@ -2589,7 +2591,8 @@ msgstr "Należy wypełnić następujące pola: %s"
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The following kwargs are not whitelisted: %s"
-msgstr "Następujące argumenty kluczowe (kwargs) nie są na liście dozwolonych:%s"
+msgstr ""
+"Następujące argumenty kluczowe (kwargs) nie są na liście dozwolonych:%s"
 
 #. module: payment
 #. odoo-python
@@ -2685,7 +2688,8 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr "Komunikat wyświetlany w celu wyjaśnienia i ułatwienia procesu płatności"
+msgstr ""
+"Komunikat wyświetlany w celu wyjaśnienia i ułatwienia procesu płatności"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -3454,6 +3458,9 @@ msgstr "tokenizacja nie jest wspierana"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenizacja bez płatności nie jest wspierana"
+
+#~ msgid "ACTIVATE STRIPE"
+#~ msgstr "AKTYWUJ STRIPE"
 
 #~ msgid " Data Fetched"
 #~ msgstr " Pobierane Dane"

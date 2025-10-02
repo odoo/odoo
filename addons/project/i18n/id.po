@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 02:32+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
@@ -315,15 +315,15 @@ msgstr ""
 "\"<strong t-out=\"object.name or ''\">Renovasi</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">Anda menerima email ini karena "
-"project Anda telah digerakkan ke tahap <b t-out="
-"\"object.stage_id.name or ''\">Selesai</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">Anda menerima "
+"email ini karena project Anda telah digerakkan ke tahap <b t-"
+"out=\"object.stage_id.name or ''\">Selesai</b></span>\n"
 "            "
 
 #. module: project
@@ -357,14 +357,15 @@ msgstr ""
 "    Tim kami saat ini meninjau pertanyaan Anda dan akan menanggapi email "
 "Anda secepat mungkin.<br/>\n"
 "    Bila Anda memiliki pertanyaan atau kekhawatiran apa pun saat ini, jangan "
-"sungkan untuk memberitahu kami. Kami hadir di sini untuk membantu Anda.<br/><"
-"br/>\n"
+"sungkan untuk memberitahu kami. Kami hadir di sini untuk membantu Anda.<br/"
+"><br/>\n"
 "    Terima kasih atas kesabaran Anda.<br/>\n"
 "    Salam hormat,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -380,14 +381,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg < 3.66\" title=\"Senang\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"Netral\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg >= 2.33\" title=\"Tidak Senang\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg < 3.66\" title=\"Senang\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" "
+"title=\"Netral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg >= 2.33\" title=\"Tidak Senang\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -440,8 +440,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" title="
-"\"Alias Domain\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
+"title=\"Alias Domain\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1066,8 +1066,8 @@ msgid ""
 msgstr ""
 "Secara otomatis modifikasi status saat pelanggan menjawab ke feedback untuk "
 "tahap ini.\n"
-" * Feedback bagus dari pelanggan akan mengupdate status ke 'Disetujui' ("
-"lingkaran hijau).\n"
+" * Feedback bagus dari pelanggan akan mengupdate status ke 'Disetujui' "
+"(lingkaran hijau).\n"
 " * Feedback netral atau jelek akan mengupdate status kanban ke 'Perubahan "
 "Diminta' (lingkaran oranye).\n"
 
@@ -2547,8 +2547,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "Kolom-kolom invalid: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2724,6 +2724,12 @@ msgstr "Milestone Terlambat"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Nanti"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4857,14 +4863,6 @@ msgid "Tasks in Recurrence"
 msgstr "Task pada Pengulangan"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
-"Tugas-tugas di templat project tidak dapat dikonversi menjadi tugas-tugas "
-"reguler."
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
@@ -4931,7 +4929,8 @@ msgstr "Tahap task pribadi user saat ini."
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "The document does not exist or you do not have the rights to access it."
-msgstr "Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
+msgstr ""
+"Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
 
 #. module: project
 #. odoo-python
@@ -5135,10 +5134,10 @@ msgid ""
 "records to align them under the same company."
 msgstr ""
 "Project ini terkait %(project_company)s, sementara tahap yang dipilih "
-"berasal dari %(stage_company)s. Terdapat beberapa opsi untuk dipertimbangkan:"
-" baik hapus perusahaan dari project atau dari tahap. Jalan alternatif adalah "
-"Anda dapat memperbarui informasi perusahan untuk record-record ini untuk "
-"menggabungkan mereka di bawah perusahaan yang sama."
+"berasal dari %(stage_company)s. Terdapat beberapa opsi untuk "
+"dipertimbangkan: baik hapus perusahaan dari project atau dari tahap. Jalan "
+"alternatif adalah Anda dapat memperbarui informasi perusahan untuk record-"
+"record ini untuk menggabungkan mereka di bawah perusahaan yang sama."
 
 #. module: project
 #. odoo-python
@@ -5753,9 +5752,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Anda tidak dapat mengubah perusahaan di tahap ini menjadi %(company_name)s "
-"karena saat ini termasuk project yang terkait dengan %(project_company_name)"
-"s. Mohon pastikan tahap ini secara eksklusif memiliki project yang terhubung "
-"ke %(company_name)s."
+"karena saat ini termasuk project yang terkait dengan %"
+"(project_company_name)s. Mohon pastikan tahap ini secara eksklusif memiliki "
+"project yang terhubung ke %(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -6114,6 +6113,14 @@ msgstr "👤 Belum Ditugaskan"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Kolom-kolom invalid: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr ""
+#~ "Tugas-tugas di templat project tidak dapat dikonversi menjadi tugas-tugas "
+#~ "reguler."
 
 #~ msgid "# Tasks"
 #~ msgstr "# Kegiatans"

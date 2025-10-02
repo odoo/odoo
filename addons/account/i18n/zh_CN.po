@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:42+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 15:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -70,8 +70,8 @@ msgstr ""
 "\n"
 "    - “税组”为一组子税项的统称。\n"
 "- 固定税项：不论价钱多少，税款金额维持一样。\n"
-"- 以百分比计算：税款为价钱的某个百分比： 例： 100 × (1 + 10%) = 110 "
-"（不包含价钱） 例： 110 ÷ (1 + 10%) = 100 （包含价钱） \n"
+"- 以百分比计算：税款为价钱的某个百分比： 例： 100 × (1 + 10%) = 110 （不包含"
+"价钱） 例： 110 ÷ (1 + 10%) = 100 （包含价钱） \n"
 "- 以连税百分比计算：税款由总价钱除以某个百分比得出： 例： 180 ÷ (1 − 10%) = "
 "200 （不包含价钱） \n"
 "例： 200 × (1 − 10%) = 180 （包含价钱）\n"
@@ -148,8 +148,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s （由 %(user)s 于 %(date)s "
-"取消附上）%(attachment_extension)s"
+"%(attachment_name)s （由 %(user)s 于 %(date)s 取消附上）%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -188,8 +188,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s "
-"已记入账单，%(quantity_received)s已收到，每件单价为 %(unit_price)s"
+"%(order)s - %(order_line)s; %(quantity_billed)s 已记入账单，%"
+"(quantity_received)s已收到，每件单价为 %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -198,8 +198,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s；%(quantity_invoiced)s "
-"已开立发票，%(quantity_delivered)s已送货，%(unit_price)s 每件单价为"
+"%(order)s - %(order_line)s；%(quantity_invoiced)s 已开立发票，%"
+"(quantity_delivered)s已送货，%(unit_price)s 每件单价为"
 
 #. module: account
 #. odoo-python
@@ -227,9 +227,9 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
-"%(tax_account)s (%(account_name)s) should be an account of type "
-"\"%(receivable)s\" or \"%(payable)s\" with both options "
-"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+"%(tax_account)s (%(account_name)s) should be an account of type \"%"
+"(receivable)s\" or \"%(payable)s\" with both options \"%"
+"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 
 #. module: account
 #. odoo-python
@@ -250,16 +250,11 @@ msgstr "%d分录"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid "%s (Copy)"
-msgstr "%s（副本）"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_tax.py:0
 msgid "%s (copy)"
 msgstr "%s（副本）"
 
@@ -355,8 +350,9 @@ msgstr "- %(name)s在%(company)s"
 msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
-msgstr "- 加入 «总计（含税）» "
-"新字段，使用正确科目和税项自动创建记项，加快并控制账单编码过程。"
+msgstr ""
+"- 加入 «总计（含税）» 新字段，使用正确科目和税项自动创建记项，加快并控制账单"
+"编码过程。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -783,8 +779,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b>安装<b>%(amount)s</b>到期日<b style='color: "
-"#704A66;'>%(date)s</b>"
+"<b>%(count)s#</b>安装<b>%(amount)s</b>到期日<b style='color: #704A66;'>%"
+"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1030,8 +1026,9 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        亲爱的\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> （"
-"<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>），\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"（<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+"t>），\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>，\n"
@@ -1046,20 +1043,21 @@ msgstr ""
 "            退货凭证\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            （参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</t>）"
-"\n"
+"            （参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>）\n"
 "        </t>\n"
-"        金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        金额为 <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        退款方 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        如有问题，请随时联系我们。\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
-"data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
-">Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1095,15 +1093,16 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        亲爱的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><"
-"br/><br/>\n"
+"        亲爱的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
 "        感谢您的支付。\n"
-"        附上您的付款收据 <span style=\"font-weight:bold;\" t-out=\"("
-"object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> ，"
-"金额为\n"
-"         <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount, object.currency_id) or ''\">$ 10.00</span>，付款由 <t t-out=\""
-"object.company_id.name or ''\">YourCompany</t>作出。\n"
+"        附上您的付款收据 <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
+"span> ，金额为\n"
+"         <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span>，付款由 <t t-out=\"object.company_id.name or ''\">YourCompany</t>作"
+"出。\n"
 "        <br/><br/>\n"
 "        如有任何疑问，请随时联系我们。\n"
 "        <br/><br/>\n"
@@ -1111,9 +1110,9 @@ msgstr ""
 "        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
 "container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1143,10 +1142,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role="
-"\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\""
-">已支付</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\">已支付"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1158,8 +1157,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\""
-">已撤销</span>"
+"                                    <span class=\"d-none d-md-inline\">已撤销"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1169,10 +1168,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title="
-"\"处理付款\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"处理付款</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"处理"
+"付款\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> 处理"
+"付款</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1182,10 +1181,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role="
-"\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\""
-">待付款</span>"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\">待付款"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1245,8 +1244,8 @@ msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
 "                                    <i class=\"fa fa-fw fa-remove\" aria-"
 "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\""
-">已取消</span>\n"
+"                                    <span class=\"d-none d-md-inline\">已取消"
+"</span>\n"
 "                                </span>"
 
 #. module: account
@@ -1271,10 +1270,10 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class"
-"=\"text-muted\">不信任</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class"
-"=\"text-success\">受信任</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">不信任</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">受信任</span>\n"
 "                        </span>"
 
 #. module: account
@@ -1282,8 +1281,9 @@ msgstr ""
 msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
-msgstr "<span class=\"figure-caption\""
-">通过自动报表和警报，绝不会错过最后期限。</span>"
+msgstr ""
+"<span class=\"figure-caption\">通过自动报表和警报，绝不会错过最后期限。</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1291,9 +1291,8 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
-"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
-">或</span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">或</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -1301,8 +1300,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\""
-">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1310,8 +1309,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">and</"
 "span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\""
-">和</span>"
+"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">和</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1496,8 +1495,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\">发票</span>\n"
-"                                        <span invisible="
-"\"reconciled_invoices_type == 'invoice'\">退款单</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\">退款单</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1695,8 +1694,9 @@ msgstr ""
 msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
-msgstr "<span>在安装会计应用程序之前，通过发票应用程序生成该分录。其余额已单独导入。<"
-"/span>"
+msgstr ""
+"<span>在安装会计应用程序之前，通过发票应用程序生成该分录。其余额已单独导入。"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1856,8 +1856,8 @@ msgid ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/odoo_logo_dark.svg\" style=\"height: 2em; object-fit: contain;\" "
-"class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -2005,7 +2005,8 @@ msgstr "同一个银行账户，只能关联一个日记账。"
 msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
-msgstr "银行账户（账号：%(number)s）已存在于合作伙伴%(partner)s名下，但处于归档状态。"
+msgstr ""
+"银行账户（账号：%(number)s）已存在于合作伙伴%(partner)s名下，但处于归档状态。"
 "请改为取消归档。"
 
 #. module: account
@@ -2097,7 +2098,8 @@ msgstr "已经存在具有相同代码的报表行。"
 msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
-msgstr "如果价格含税，则建议每行进行四舍五入。这样，所有行小计之和即等于含税总计。"
+msgstr ""
+"如果价格含税，则建议每行进行四舍五入。这样，所有行小计之和即等于含税总计。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2463,7 +2465,8 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
-msgstr "科目类型用于信息目的，用于生成符合特定国家/地区的正式报表，以及设置关闭会计年"
+msgstr ""
+"科目类型用于信息目的，用于生成符合特定国家/地区的正式报表，以及设置关闭会计年"
 "度、生成期初分录的规则。"
 
 #. module: account
@@ -2738,8 +2741,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
 "its reverse entry: %(reverse_entry)s."
 msgstr ""
-"应计分录创建于%(date)s：%(accrual_entry)s。                    "
-"其撤销分录：%(reverse_entry)s。"
+"应计分录创建于%(date)s：%(accrual_entry)s。                    其撤销分录：%"
+"(reverse_entry)s。"
 
 #. module: account
 #. odoo-python
@@ -3560,7 +3563,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
-msgstr "在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时"
+msgstr ""
+"在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时"
 "间。 此锁定日期不可逆转，亦不允许任何例外。"
 
 #. module: account
@@ -3568,7 +3572,8 @@ msgstr "在该日期及之前（包括该日期）的任何条目，都将根据
 msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
-msgstr "在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时"
+msgstr ""
+"在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时"
 "间。"
 
 #. module: account
@@ -3577,7 +3582,8 @@ msgid ""
 "Any entry with taxes up to and including that date will be postponed to a "
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
-msgstr "在该日期及之前（包括该日期）的任何连税条目，都将根据其日记账顺序，推迟至较后"
+msgstr ""
+"在该日期及之前（包括该日期）的任何连税条目，都将根据其日记账顺序，推迟至较后"
 "的时间。 税务锁定日期会在税务结算记项过账时自动设定。"
 
 #. module: account
@@ -3604,7 +3610,8 @@ msgstr "任意标签"
 msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr "在此日期及之前（包括此日期）的任何采购条目，都将根据其日记账顺序，推迟至较后"
+msgstr ""
+"在此日期及之前（包括此日期）的任何采购条目，都将根据其日记账顺序，推迟至较后"
 "的日期。"
 
 #. module: account
@@ -3612,7 +3619,8 @@ msgstr "在此日期及之前（包括此日期）的任何采购条目，都将
 msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr "在此日期及之前（包括此日期）的任何销售条目，都将根据其日记账顺序，推迟至较后"
+msgstr ""
+"在此日期及之前（包括此日期）的任何销售条目，都将根据其日记账顺序，推迟至较后"
 "的日期。"
 
 #. module: account
@@ -3651,7 +3659,8 @@ msgstr "仅当合作伙伴有增值税编码时应用。"
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
-msgstr "如果满足匹配标准（增值税/国家/地区），则自动在发票上应用税项和科目映射。"
+msgstr ""
+"如果满足匹配标准（增值税/国家/地区），则自动在发票上应用税项和科目映射。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3881,6 +3890,11 @@ msgid "Automation"
 msgstr "自动化"
 
 #. module: account
+#: model:account.group,name:account.2_us_group_665
+msgid "Automobile Expenses"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -4073,7 +4087,8 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
-msgstr "向其支付发票的银行账号。如果是客户发票或供应商贷方凭证，则为公司银行账户，否"
+msgstr ""
+"向其支付发票的银行账号。如果是客户发票或供应商贷方凭证，则为公司银行账户，否"
 "则应为合作伙伴的银行账号。"
 
 #. module: account
@@ -4127,6 +4142,11 @@ msgstr "银行对账分录预置"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
 msgstr "银行对账分录预置"
+
+#. module: account
+#: model:account.group,name:account.2_us_group_650
+msgid "Bank Service Charges"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4488,7 +4508,8 @@ msgstr ""
 msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
-msgstr "在默认情况下，总是展开可以展开的行。如果勾选该项，则在默认情况下，可展开行不"
+msgstr ""
+"在默认情况下，总是展开可以展开的行。如果勾选该项，则在默认情况下，可展开行不"
 "会展开，显示折叠按钮。"
 
 #. module: account
@@ -4892,8 +4913,9 @@ msgid ""
 "Certain countries apply withholding at source on the amount of invoices, in "
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
-msgstr "某些国家/地区根据其法律对发票金额实行源扣缴。所有源扣缴由客户将向税务机关支付"
-"。在任何情况下，均不能"
+msgstr ""
+"某些国家/地区根据其法律对发票金额实行源扣缴。所有源扣缴由客户将向税务机关支"
+"付。在任何情况下，均不能"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -5140,7 +5162,8 @@ msgstr "列"
 msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
-msgstr "来自account.move.line（日记账项目）的逗号分隔字段列表。设置后，该行将生成按这"
+msgstr ""
+"来自account.move.line（日记账项目）的逗号分隔字段列表。设置后，该行将生成按这"
 "些建分组的子行。"
 
 #. module: account
@@ -5464,6 +5487,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
 #: model:account.account,name:account.2_account_account_us_cost_of_goods_sold
+#: model:account.group,name:account.2_us_group_5
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
 msgstr "售出货物的成本"
@@ -5729,8 +5753,8 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
-"根据需要创建任意数量的分类账组，以便为本地 GAAP、IFRS "
-"或财政管理部门维护单独的分类账\n"
+"根据需要创建任意数量的分类账组，以便为本地 GAAP、IFRS 或财政管理部门维护单独"
+"的分类账\n"
 "调整，确保遵守各种法规。"
 
 #. module: account
@@ -6365,7 +6389,8 @@ msgstr "重新排序的日期（含）。"
 msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
-msgstr "重新排序的日期（含）。如果未设置，截至期间结束的所有日记账分录将重新排序。"
+msgstr ""
+"重新排序的日期（含）。如果未设置，截至期间结束的所有日记账分录将重新排序。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -6655,7 +6680,8 @@ msgstr "定义用于现金支付的币别的最小面额"
 msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
-msgstr "定义哪家公司可以在报表筛选器中选择多分类账。如果未提供，则所有公司都可使用"
+msgstr ""
+"定义哪家公司可以在报表筛选器中选择多分类账。如果未提供，则所有公司都可使用"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -6782,8 +6808,9 @@ msgid ""
 "Determines where the tax is selectable. Note: 'None' means a tax can't be "
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
-msgstr "确定可选择税项的位置。注：“无”表示不能单独使用税项，但仍可在税组中使用。“调整"
-"”用于执行税项调整。"
+msgstr ""
+"确定可选择税项的位置。注：“无”表示不能单独使用税项，但仍可在税组中使用。“调"
+"整”用于执行税项调整。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -7826,7 +7853,8 @@ msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
 "country %(country_name)s. You should probably update your localization app "
 "first."
-msgstr "加载本地化时出错：缺少国家/地区%(country_name)s的缺漏税项标签%(tag_name)s。请"
+msgstr ""
+"加载本地化时出错：缺少国家/地区%(country_name)s的缺漏税项标签%(tag_name)s。请"
 "先尝试更新本地化应用程序。"
 
 #. module: account
@@ -8446,7 +8474,8 @@ msgstr "强制审计追踪"
 msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
-msgstr "强制该科目中的所有日记账项目具有特定币别（即银行日记账）。如果未设置币别，分"
+msgstr ""
+"强制该科目中的所有日记账项目具有特定币别（即银行日记账）。如果未设置币别，分"
 "录可使用任何币别。"
 
 #. module: account
@@ -8523,9 +8552,8 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
-"公式的形式为 "
-"line_code.expression_label。这样就可以为该表达式（在_carryover_*标记的表达式"
-"上）设置结转的目标，以避免与母行不同。"
+"公式的形式为 line_code.expression_label。这样就可以为该表达式（在_carryover_*"
+"标记的表达式上）设置结转的目标，以避免与母行不同。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -8598,7 +8626,8 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "您可以在该报表中查看供应商开具发票的金额。搜索工具可用于个性化发票报表，以便"
+msgstr ""
+"您可以在该报表中查看供应商开具发票的金额。搜索工具可用于个性化发票报表，以便"
 "根据您的需求匹配分析。"
 
 #. module: account
@@ -8607,7 +8636,8 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "您可以在该报表中查看供应商开具发票的金额。搜索工具可用于个性化发票报表，以便"
+msgstr ""
+"您可以在该报表中查看供应商开具发票的金额。搜索工具可用于个性化发票报表，以便"
 "根据您的需求匹配分析。"
 
 #. module: account
@@ -8967,7 +8997,8 @@ msgid ""
 "Highest Date such that all posted journal entries prior to (including) the "
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
-msgstr "最高日期，这样在该日期之前（包括该日期）的所有过账日记账都会得到保护。只有硬"
+msgstr ""
+"最高日期，这样在该日期之前（包括该日期）的所有过账日记账都会得到保护。只有硬"
 "锁定日期之后的日记账才会被考虑。"
 
 #. module: account
@@ -9209,7 +9240,8 @@ msgstr ""
 msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
-msgstr "如果为空，折扣将直接在收入/支出账户中折现。如果设置，发票折扣将在独立账户中实"
+msgstr ""
+"如果为空，折扣将直接在收入/支出账户中折现。如果设置，发票折扣将在独立账户中实"
 "现。"
 
 #. module: account
@@ -9236,7 +9268,8 @@ msgstr "如果设置，进行尝试、序列较低的税费可能影响该项。
 msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
-msgstr "如果设置，将向根据该税费计算得出的金额分配同一分析科目，作为发票行（如有）"
+msgstr ""
+"如果设置，将向根据该税费计算得出的金额分配同一分析科目，作为发票行（如有）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9260,7 +9293,8 @@ msgid ""
 "If set, this value will be used on documents as the label of a subtotal "
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
-msgstr "如果设置，在显示之前，该值将在单据中用作不包含该税项组的小计的标签。如果不设"
+msgstr ""
+"如果设置，在显示之前，该值将在单据中用作不包含该税项组的小计的标签。如果不设"
 "置，税项组将显示在“未税金额”小计之后。"
 
 #. module: account
@@ -9310,8 +9344,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"若向欧盟境外国家的客户销售商品及服务，必须根据交货地址征收增值税。"
-"                                 此规则适用于任何地区。"
+"若向欧盟境外国家的客户销售商品及服务，必须根据交货地址征收增值"
+"税。                                 此规则适用于任何地区。"
 
 #. module: account
 #. odoo-python
@@ -9590,7 +9624,8 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
-msgstr "国际贸易术语是一系列销售术语，用于划分交易成本和买卖双方的责任，以及反映最先"
+msgstr ""
+"国际贸易术语是一系列销售术语，用于划分交易成本和买卖双方的责任，以及反映最先"
 "进的运输实践。"
 
 #. module: account
@@ -9631,6 +9666,11 @@ msgstr "分期付款切换金额"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_html
 msgid "Installments Switch Html"
 msgstr "分期付款切换 Html"
+
+#. module: account
+#: model:account.group,name:account.2_us_group_655
+msgid "Insurance Expenses"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_liability_insurance
@@ -9776,8 +9816,9 @@ msgstr "无效"
 msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
-msgstr "“邮政编码范围”无效，您必须为邮政编码范围设置 “从” 和 “到” 数值，并且 “到” "
-"应大于 “从” 。"
+msgstr ""
+"“邮政编码范围”无效，您必须为邮政编码范围设置 “从” 和 “到” 数值，并且 “到” 应"
+"大于 “从” 。"
 
 #. module: account
 #. odoo-python
@@ -10192,7 +10233,8 @@ msgstr "不规则序列"
 msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
-msgstr "由于有草稿、已取消或已删除的账单，而账单包括上次锁定日期之后的序列号码，导致"
+msgstr ""
+"由于有草稿、已取消或已删除的账单，而账单包括上次锁定日期之后的序列号码，导致"
 "出现不一致。"
 
 #. module: account
@@ -10201,7 +10243,8 @@ msgstr "由于有草稿、已取消或已删除的账单，而账单包括上次
 msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
-msgstr "由于有草稿、已取消或已删除的发票，而发票包括上次锁定日期之后的序列号码，导致"
+msgstr ""
+"由于有草稿、已取消或已删除的发票，而发票包括上次锁定日期之后的序列号码，导致"
 "出现不一致。"
 
 #. module: account
@@ -10639,7 +10682,8 @@ msgid ""
 "Keep this field empty to use the default value from the product category. If "
 "anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
-msgstr "保持该字段留空，以使用基于产品类别的默认值。如果配置了具有自动估值方法的盎格"
+msgstr ""
+"保持该字段留空，以使用基于产品类别的默认值。如果配置了具有自动估值方法的盎格"
 "鲁-撒克逊会计，则将使用产品类别下的费用科目。"
 
 #. module: account
@@ -10960,8 +11004,9 @@ msgstr "行"
 msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
-msgstr "资料行“%(line)s”将另一行“%(parent_line)s”设为其母项，但在报表上出现的位置较前"
-"。母项必须先行。"
+msgstr ""
+"资料行“%(line)s”将另一行“%(parent_line)s”设为其母项，但在报表上出现的位置较"
+"前。母项必须先行。"
 
 #. module: account
 #. odoo-python
@@ -11308,6 +11353,11 @@ msgstr "标记为已发送"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
 msgstr "标记为已全额支付"
+
+#. module: account
+#: model:account.group,name:account.2_us_group_67
+msgid "Marketing Expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -12257,6 +12307,11 @@ msgid "Off-Balance Sheet"
 msgstr "资产负债表外"
 
 #. module: account
+#: model:account.group,name:account.2_us_group_651
+msgid "Office Expenses"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.demo_office_furniture_account
 msgid "Office Furniture"
 msgstr "Office Furniture"
@@ -12426,7 +12481,8 @@ msgstr "哎呀"
 msgid ""
 "Oops! You can only change the period or account for items that are not yet "
 "reconciled! Other ones aren't up for an adventure like that!"
-msgstr "哎呀！ 尚未完成对账的项目，只可更改期间或记账账户，其他资料已不可修改。"
+msgstr ""
+"哎呀！ 尚未完成对账的项目，只可更改期间或记账账户，其他资料已不可修改。"
 
 #. module: account
 #. odoo-python
@@ -12500,6 +12556,11 @@ msgstr "期初余额"
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "经营活动"
+
+#. module: account
+#: model:account.group,name:account.2_us_group_6
+msgid "Operating Expenses"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12602,6 +12663,7 @@ msgid "Other Employees Benefits"
 msgstr ""
 
 #. module: account
+#: model:account.group,name:account.2_us_group_7
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_other
 msgid "Other Expenses"
 msgstr "其他开支"
@@ -12639,7 +12701,8 @@ msgid ""
 "Our invoices are payable within 21 working days, unless another payment "
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
-msgstr "我们的发票需在21个工作日内支付，发票或订单另有规定除外。如果截至到期应付日期"
+msgstr ""
+"我们的发票需在21个工作日内支付，发票或订单另有规定除外。如果截至到期应付日期"
 "未能未完成付款,"
 
 #. module: account
@@ -13274,13 +13337,19 @@ msgstr "付款"
 msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
-msgstr "付款用于登记流动性移动。可以通过您自己的方式或使用安装的设备处理该等付款。"
+msgstr ""
+"付款用于登记流动性移动。可以通过您自己的方式或使用安装的设备处理该等付款。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
 msgstr "与未指定银行账户的合作伙伴相关的付款将被跳过。"
+
+#. module: account
+#: model:account.group,name:account.2_us_group_61
+msgid "Payroll Expenses"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payroll_tax
@@ -13720,6 +13789,11 @@ msgid "Professional %"
 msgstr "专业版 %"
 
 #. module: account
+#: model:account.group,name:account.2_us_group_62
+msgid "Professional Fees"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_professional_insurance
 msgid "Professional Insurance"
 msgstr ""
@@ -14138,11 +14212,6 @@ msgid ""
 msgstr "用于发布该付款的单据参考号。如支票编号、单据名称等。"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "Refresh currency rate to the invoice date"
-msgstr "将汇率刷新至发票日期"
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 msgid "Refresh e-Invoices Status"
@@ -14364,6 +14433,11 @@ msgid "Resequence"
 msgstr "重新排序"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Reset the currency rate to the default accordingly to the invoice date"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
@@ -14440,6 +14514,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
@@ -14984,7 +15059,8 @@ msgid ""
 "Select a product category which will use analytic account specified in "
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
-msgstr "选择使用分析默认值中指定的分析账户的产品类别（例如：如果选择该产品，则创建新"
+msgstr ""
+"选择使用分析默认值中指定的分析账户的产品类别（例如：如果选择该产品，则创建新"
 "的客户发票或销售订单，并自动用作分析账户）"
 
 #. module: account
@@ -14993,7 +15069,8 @@ msgid ""
 "Select a product for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
-msgstr "选择使用分析分摊的产品（例如：如果选择该产品，则创建新的客户发票或销售订单，"
+msgstr ""
+"选择使用分析分摊的产品（例如：如果选择该产品，则创建新的客户发票或销售订单，"
 "并自动用作分析账户）"
 
 #. module: account
@@ -15028,7 +15105,8 @@ msgstr "选择特定发票和送货地址"
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
-msgstr "如果是现金收付税项，则选择该项，以便在对账期间为给定科目的税项创建分录。"
+msgstr ""
+"如果是现金收付税项，则选择该项，以便在对账期间为给定科目的税项创建分录。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -15157,8 +15235,8 @@ msgid ""
 "money."
 msgstr ""
 "发送包含欺诈账号的假发票是常见的网络钓鱼行为。为了保护自己，每次请验证新的银"
-"行账号，最好打电话与供应商确认，因为供应商电子邮件泄露后，通常会发生网络钓鱼"
-"。验证后即可启用汇款功能。"
+"行账号，最好打电话与供应商确认，因为供应商电子邮件泄露后，通常会发生网络钓"
+"鱼。验证后即可启用汇款功能。"
 
 #. module: account
 #. odoo-python
@@ -16363,6 +16441,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
+#: model:account.group,name:account.2_us_group_8
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
@@ -16426,7 +16505,8 @@ msgid ""
 "Technical field containing the countries for which this company is using tax-"
 "related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
-msgstr "包含该公司使用税务相关功能的国家/地区的技术字段（因此，l10n模块需显示税务相关"
+msgstr ""
+"包含该公司使用税务相关功能的国家/地区的技术字段（因此，l10n模块需显示税务相关"
 "字段）。"
 
 #. module: account
@@ -16458,7 +16538,8 @@ msgstr "获取银行域的技术字段"
 msgid ""
 "Technical field used to display a warning if the IBAN country is different "
 "than the holder country."
-msgstr "国际银行账号（IBAN）国家/地区与持有者国家/地区不同时用于显示警告消息的技术字"
+msgstr ""
+"国际银行账号（IBAN）国家/地区与持有者国家/地区不同时用于显示警告消息的技术字"
 "段。"
 
 #. module: account
@@ -16482,11 +16563,11 @@ msgid ""
 "P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
 "用于强制执行系统通常会误解的复杂序列构成的技术字段。\n"
-"这是正则表达式，可以包含所有以下捕获组：前缀1、年份、前缀2、月份、前缀3、序列"
-"、 后缀。\n"
+"这是正则表达式，可以包含所有以下捕获组：前缀1、年份、前缀2、月份、前缀3、序"
+"列、 后缀。\n"
 "前缀*组是年、月、实际递增序列号间的分隔符。\n"
-"例如：^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
-"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"例如：^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
@@ -16589,10 +16670,9 @@ msgid ""
 "To maintain date-based sequences, select entries and use the resequence "
 "option from the actions menu, available in developer mode."
 msgstr ""
-"输入的%(date_field)s "
-"（%(date)s）与现有序列号码（%(sequence)s）不一致。请清除序列号码以继续。若要"
-"维护基于日期的序列，请选取所需记项，然后使用操作选单中的重新排序选项（该选项"
-"在开发人员模式可用）。"
+"输入的%(date_field)s （%(date)s）与现有序列号码（%(sequence)s）不一致。请清除"
+"序列号码以继续。若要维护基于日期的序列，请选取所需记项，然后使用操作选单中的"
+"重新排序选项（该选项在开发人员模式可用）。"
 
 #. module: account
 #. odoo-python
@@ -16689,8 +16769,9 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr "税务识别码。此处的值将根据国家格式进行验证。您可以使用“/”表示合作伙伴无需纳税"
-"。"
+msgstr ""
+"税务识别码。此处的值将根据国家格式进行验证。您可以使用“/”表示合作伙伴无需纳"
+"税。"
 
 #. module: account
 #. odoo-python
@@ -16710,7 +16791,8 @@ msgstr "科目代码只能包含字母、数字和点。"
 msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
-msgstr "该科目已经用于“销售”或“采购”日记账。这意味着该科目的类型不能是“应收账款”或“应"
+msgstr ""
+"该科目已经用于“销售”或“采购”日记账。这意味着该科目的类型不能是“应收账款”或“应"
 "付账款”。"
 
 #. module: account
@@ -16719,7 +16801,8 @@ msgstr "该科目已经用于“销售”或“采购”日记账。这意味着
 msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
-msgstr "在您的日记账分录中选定的该科目强制提供第二币别。应在科目中删除第二币别。"
+msgstr ""
+"在您的日记账分录中选定的该科目强制提供第二币别。应在科目中删除第二币别。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -16749,7 +16832,8 @@ msgid ""
 "is debited and negative when account is credited. If the currency is the "
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
-msgstr "以第二币别表示的金额在科目为借方时须为正数，在科目为贷方时须为负数。如果第二"
+msgstr ""
+"以第二币别表示的金额在科目为借方时须为正数，在科目为贷方时须为负数。如果第二"
 "币别与公司币别相同，则该金额须等于余额。"
 
 #. module: account
@@ -16760,8 +16844,8 @@ msgid ""
 "data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"%(partner_name)s的金额似乎不正常。根据您的历史数据，预计金额为%(mean)s（%(wig"
-"gle)s）。\n"
+"%(partner_name)s的金额似乎不正常。根据您的历史数据，预计金额为%(mean)s（%"
+"(wiggle)s）。\n"
 "请核实该金额是否准确。"
 
 #. module: account
@@ -16824,7 +16908,8 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
-msgstr "客户明确放弃其标准条款和条件，即使该等标准条款和条件是在标准销售条款和条件之"
+msgstr ""
+"客户明确放弃其标准条款和条件，即使该等标准条款和条件是在标准销售条款和条件之"
 "后制定的。为了生效，任何放弃须经事先、明确书面同意。"
 
 #. module: account
@@ -16916,7 +17001,8 @@ msgstr ""
 msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
-msgstr "日期设置早于：%(lock_date_info)s。日记账分录将在过账后的%(invoice_date)s进行"
+msgstr ""
+"日期设置早于：%(lock_date_info)s。日记账分录将在过账后的%(invoice_date)s进行"
 "会计处理。"
 
 #. module: account
@@ -17011,7 +17097,8 @@ msgid ""
 "anglo-saxon accounting with perpetual inventory valuation in which case the "
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
-msgstr "供应商账单验证后，该费用入账，具有永续库存估值的盎格鲁-撒克逊会计除外，在此类"
+msgstr ""
+"供应商账单验证后，该费用入账，具有永续库存估值的盎格鲁-撒克逊会计除外，在此类"
 "情况下，该费用（货物销售科目成本）在客户发票验证过程中识别。"
 
 #. module: account
@@ -17065,7 +17152,8 @@ msgstr ""
 msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though "
 "it was detected as eligible: "
-msgstr "虽然侦测到“%(candidate)s” 符合资格，但以下错误导致系统未能为其生成二维码： "
+msgstr ""
+"虽然侦测到“%(candidate)s” 符合资格，但以下错误导致系统未能为其生成二维码： "
 
 #. module: account
 #. odoo-python
@@ -17189,8 +17277,9 @@ msgstr "多币别分录的其他币别选项。"
 msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
-msgstr "该行表达可选数量，例如，已售产品的数量。数量并非法定要求，但对某些报表很有用"
-"。"
+msgstr ""
+"该行表达可选数量，例如，已售产品的数量。数量并非法定要求，但对某些报表很有"
+"用。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -17198,7 +17287,8 @@ msgid ""
 "The order in which distribution lines are displayed and matched. For refunds "
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
-msgstr "显示、匹配分配行的顺序。为了顺利退款，发票分配行应按其对应的退款分配行的相同"
+msgstr ""
+"显示、匹配分配行的顺序。为了顺利退款，发票分配行应按其对应的退款分配行的相同"
 "顺序排列。"
 
 #. module: account
@@ -17569,7 +17659,8 @@ msgid ""
 "There are still unreconciled bank statement lines before the selected date. "
 "The entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
-msgstr "在选定日期之前仍有未调节的银行对账单行。包含它们的日记账前缀条目将不受保护：%"
+msgstr ""
+"在选定日期之前仍有未调节的银行对账单行。包含它们的日记账前缀条目将不受保护：%"
 "(prefix_info)s"
 
 #. module: account
@@ -17638,7 +17729,8 @@ msgid ""
 "There's nothing left to pay for the selected journal items, so no payment "
 "registration is necessary. You've got your finances under control like a "
 "boss!"
-msgstr "所选日记账项目无需支付，因此无需登记付款。您像老板一样牢牢掌控着财务状况！"
+msgstr ""
+"所选日记账项目无需支付，因此无需登记付款。您像老板一样牢牢掌控着财务状况！"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -17707,8 +17799,9 @@ msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the "
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
-msgstr "会计师可以管理分析预算和交叉预算。 "
-"主预算和预算确定后，项目经理可以在各分析科目设置计划金额。"
+msgstr ""
+"会计师可以管理分析预算和交叉预算。 主预算和预算确定后，项目经理可以在各分析科"
+"目设置计划金额。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -17760,7 +17853,8 @@ msgid ""
 "This entry contains one or more taxes that are incompatible with your fiscal "
 "country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
-msgstr "该分录包含一个或多个与您会计所在国家/地区不兼容的税项。在设置中查看公司会计所"
+msgstr ""
+"该分录包含一个或多个与您会计所在国家/地区不兼容的税项。在设置中查看公司会计所"
 "在国家/地区，在税项配置中查年税务所在国家/地区。"
 
 #. module: account
@@ -17769,8 +17863,9 @@ msgstr "该分录包含一个或多个与您会计所在国家/地区不兼容�
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position. "
 "Check the country set in fiscal position and in your tax configuration."
-msgstr "该分录包含与您财政状况不兼容的税项。在应税设定和税项配置中查看设置的国家/地区"
-"。"
+msgstr ""
+"该分录包含与您财政状况不兼容的税项。在应税设定和税项配置中查看设置的国家/地"
+"区。"
 
 #. module: account
 #. odoo-python
@@ -17869,7 +17964,8 @@ msgstr "该行及其子将在所有列为0时隐藏。"
 msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
-msgstr "该分录无法锁定，因为某些具有相同序列前缀的分录数字更高。您可能需要重新排序。"
+msgstr ""
+"该分录无法锁定，因为某些具有相同序列前缀的分录数字更高。您可能需要重新排序。"
 
 #. module: account
 #. odoo-python
@@ -17943,7 +18039,8 @@ msgid ""
 "This view shows only the journal entries that were selected from another "
 "context,\n"
 "                such as for sending by email or reviewing a batch of records."
-msgstr "本视图仅显示从其他上下文（如邮件发送或批量记录审核）中选择的日记账分录。"
+msgstr ""
+"本视图仅显示从其他上下文（如邮件发送或批量记录审核）中选择的日记账分录。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18042,8 +18139,9 @@ msgid ""
 "To record payments with %(method_name)s, the recipient bank account must be "
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
-msgstr "要使用%(method_name)s记录付款，必须手动验证收款人银行账户。您应登录%(partner)"
-"s合作伙伴银行账户，以进行验证。"
+msgstr ""
+"要使用%(method_name)s记录付款，必须手动验证收款人银行账户。您应登录%"
+"(partner)s合作伙伴银行账户，以进行验证。"
 
 #. module: account
 #. odoo-python
@@ -18052,7 +18150,8 @@ msgid ""
 "To record payments with %(payment_method)s, the recipient bank account must "
 "be manually validated. You should go on the partner bank account in order to "
 "validate it."
-msgstr "要使用%(payment_method)s记录付款，必须手动验证收款人银行账户。您应登录合作伙"
+msgstr ""
+"要使用%(payment_method)s记录付款，必须手动验证收款人银行账户。您应登录合作伙"
 "伴银行账户，以进行验证。"
 
 #. module: account
@@ -18320,6 +18419,11 @@ msgid "Transfer to %s"
 msgstr "转账至%s"
 
 #. module: account
+#: model:account.group,name:account.2_us_group_661
+msgid "Travel Expenses"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_public_transportation
 msgid "Travel expenses done using public transit (metro, bus, tramways, ...)"
 msgstr ""
@@ -18337,8 +18441,8 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
-"为合作伙伴创建发票和销售订单时，若单据应收款总额超过限额，触发警报。"
-"                                    设置大于 0.0 的值以激活信用额度检查"
+"为合作伙伴创建发票和销售订单时，若单据应收款总额超过限额，触发警"
+"报。                                    设置大于 0.0 的值以激活信用额度检查"
 
 #. module: account
 #. odoo-python
@@ -18394,7 +18498,8 @@ msgid ""
 "Uh-oh! Those payment terms are quite popular and can't be deleted since "
 "there are still some records referencing them. How about archiving them "
 "instead?"
-msgstr "哎呀！这些付款条件使用频率太高啦，由于仍有记录在引用它们，暂时无法删除。不如"
+msgstr ""
+"哎呀！这些付款条件使用频率太高啦，由于仍有记录在引用它们，暂时无法删除。不如"
 "试试将它们归档吧？"
 
 #. module: account
@@ -18739,7 +18844,8 @@ msgid ""
 "beginning of time instead of from the fiscal year only. Account types that "
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
-msgstr "用于报表，旨在确定是否应从最初而非会计年度考虑日记账项目。在各新的会计年度应"
+msgstr ""
+"用于报表，旨在确定是否应从最初而非会计年度考虑日记账项目。在各新的会计年度应"
 "重置为0的科目（如费用、收入等）不应设置该选项。"
 
 #. module: account
@@ -18806,6 +18912,7 @@ msgstr "用户税务锁定日期"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_utilities
+#: model:account.group,name:account.2_us_group_64
 msgid "Utilities"
 msgstr ""
 
@@ -18896,10 +19003,10 @@ msgid ""
 msgstr ""
 "销记行金额的值\n"
 "    * 百分比：余额的百分比，介于0~100之间。\n"
-"    * 固定：销记固定值。如果为负值，金额将计作借方，如果为正值，则计为贷方。"
-"\n"
-"    * 自标签：不需要正则表达式分隔符，只需要正则表达式。例如，"
-"如果希望从以下内容提取金额\n"
+"    * 固定：销记固定值。如果为负值，金额将计作借方，如果为正值，则计为贷"
+"方。\n"
+"    * 自标签：不需要正则表达式分隔符，只需要正则表达式。例如，如果希望从以下"
+"内容提取金额\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "可以输入\n"
 "BRT: ([\\d,]+)"
@@ -19178,7 +19285,8 @@ msgstr "勾选后，显示该表达式值时不显示0值。"
 msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
-msgstr "当针对一个表达式进行结转时，该表达式的标签必须以 _applied_carryover_ 开头"
+msgstr ""
+"当针对一个表达式进行结转时，该表达式的标签必须以 _applied_carryover_ 开头"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
@@ -19346,7 +19454,8 @@ msgid ""
 "You can set here the default communication that will appear on customer "
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
-msgstr "可以在此处设置显示在客户发票上的通信，以便在验证完成后，帮助客户在付款时参考"
+msgstr ""
+"可以在此处设置显示在客户发票上的通信，以便在验证完成后，帮助客户在付款时参考"
 "特定发票。"
 
 #. module: account
@@ -19384,8 +19493,8 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
-"若未有在公司或 %(journal)s 日记账中的 %(payment_method)s "
-"付款方式上，设定未结清付款/收款账户，便无法建立新付款。"
+"若未有在公司或 %(journal)s 日记账中的 %(payment_method)s 付款方式上，设定未结"
+"清付款/收款账户，便无法建立新付款。"
 
 #. module: account
 #. odoo-python
@@ -19401,7 +19510,8 @@ msgstr "如果没有在%s日记账中设置的暂记科目，则不能创建新�
 msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
-msgstr "您无法为属于不同分支机构的凭证创建付款，除非拥有对母公司/总部的访问权限。"
+msgstr ""
+"您无法为属于不同分支机构的凭证创建付款，除非拥有对母公司/总部的访问权限。"
 
 #. module: account
 #. odoo-python
@@ -19415,7 +19525,8 @@ msgstr "不能为不同公司的分录创建付款。"
 msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
-msgstr "您不能删除已发布的日记账项目。不要在会计记录上做手脚，删除前应将日记账分录重"
+msgstr ""
+"您不能删除已发布的日记账项目。不要在会计记录上做手脚，删除前应将日记账分录重"
 "置为草稿。"
 
 #. module: account
@@ -19436,7 +19547,8 @@ msgstr "您无法生成未过账的发票。"
 msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
-msgstr "同一个日记账内，不可有两个付款方式资料行的付款类型（%(payment_type)s）及名称"
+msgstr ""
+"同一个日记账内，不可有两个付款方式资料行的付款类型（%(payment_type)s）及名称"
 "（%(name)s）相同。"
 
 #. module: account
@@ -19574,8 +19686,9 @@ msgstr "不能删除此账户标签（%s），它用于账户图表的定义内�
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
-msgstr "您不能删除此分录，因为它已经消耗了一个序列号并且不是相应链中的最后一个. "
-"您可能应该要还原它."
+msgstr ""
+"您不能删除此分录，因为它已经消耗了一个序列号并且不是相应链中的最后一个. 您可"
+"能应该要还原它."
 
 #. module: account
 #. odoo-python
@@ -19643,7 +19756,8 @@ msgid ""
 "You cannot edit the journal of an account move if it has been posted once, "
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
-msgstr "如果会计分录已经过账，则无法编辑其日记账，除非名称被删除或设置为“/”。这可能会"
+msgstr ""
+"如果会计分录已经过账，则无法编辑其日记账，除非名称被删除或设置为“/”。这可能会"
 "在序列中造成空缺。"
 
 #. module: account
@@ -19653,7 +19767,8 @@ msgid ""
 "You cannot edit the journal of an account move with a sequence number "
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
-msgstr "除非删除名称或设置为“/”，否则无法编辑已分配序列号的会计分录的日记账。这可能导"
+msgstr ""
+"除非删除名称或设置为“/”，否则无法编辑已分配序列号的会计分录的日记账。这可能导"
 "致序列中出现空缺。"
 
 #. module: account
@@ -19679,8 +19794,9 @@ msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
-msgstr "如果期初分录（%s）已经发布，则无法导入 \"openning_balance\"。 "
-"如果您确定要修改账户期初余额，请将分录重置为草稿。"
+msgstr ""
+"如果期初分录（%s）已经发布，则无法导入 \"openning_balance\"。 如果您确定要修"
+"改账户期初余额，请将分录重置为草稿。"
 
 #. module: account
 #. odoo-python
@@ -19716,7 +19832,8 @@ msgstr "在已提交的移动操作中，您无法修改以下只读字段：%s"
 msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
-msgstr "不能修改与已过账日记账项目相关的税项，要想修改，应先将日记账分录重置为草稿。"
+msgstr ""
+"不能修改与已过账日记账项目相关的税项，要想修改，应先将日记账分录重置为草稿。"
 
 #. module: account
 #. odoo-python
@@ -19814,7 +19931,8 @@ msgstr "不能在该科目下设置币别，因为存在以不同外币表示的
 msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
-msgstr "如果合作伙伴的 %(vat_label)s 不同，则不能将其设置为另一个合作伙伴的开票地址。"
+msgstr ""
+"如果合作伙伴的 %(vat_label)s 不同，则不能将其设置为另一个合作伙伴的开票地址。"
 
 #. module: account
 #. odoo-python
@@ -19848,7 +19966,8 @@ msgstr "不能对具有资产负债表外科目的行使用税项"
 msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
-msgstr "如果表达式中的标签不是以 _carryover_ 开头，则不能使用字段 carryover_target"
+msgstr ""
+"如果表达式中的标签不是以 _carryover_ 开头，则不能使用字段 carryover_target"
 
 #. module: account
 #. odoo-python
@@ -19871,7 +19990,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
-msgstr "不能验证总金额为负的发票。应创建退款账单。使用操作菜单将其转换为退款账单或退"
+msgstr ""
+"不能验证总金额为负的发票。应创建退款账单。使用操作菜单将其转换为退款账单或退"
 "款。"
 
 #. module: account
@@ -19919,7 +20039,8 @@ msgid ""
 "You have to configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "须在公司设置中配置“汇兑损益日记账”，以自动管理与汇率差异相关的会计分录记录。"
+msgstr ""
+"须在公司设置中配置“汇兑损益日记账”，以自动管理与汇率差异相关的会计分录记录。"
 
 #. module: account
 #. odoo-python
@@ -20018,7 +20139,7 @@ msgstr "[未设置]"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "[Partner name]"
+msgid "[Partner id]"
 msgstr ""
 
 #. module: account
@@ -20106,7 +20227,8 @@ msgid ""
 "cannot under any circumstances, be required by the client to appear as a "
 "third party in the context of any claim for damages filed against the client "
 "by an end consumer."
-msgstr "在任何情况下，在终端消费者针对客户提出的任何损害索赔中，客户均不得要求作为第"
+msgstr ""
+"在任何情况下，在终端消费者针对客户提出的任何损害索赔中，客户均不得要求作为第"
 "三方。"
 
 #. module: account
@@ -20467,7 +20589,8 @@ msgid ""
 "undertakes to do its best to supply performant services in due time in "
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
-msgstr "承诺尽最大努力、按照约定时间表、在到期日期前提供优质服务。但其任何义务不得视"
+msgstr ""
+"承诺尽最大努力、按照约定时间表、在到期日期前提供优质服务。但其任何义务不得视"
 "作取得成果的义务。"
 
 #. module: account
@@ -20565,6 +20688,12 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "%s (Copy)"
+#~ msgstr "%s（副本）"
+
+#~ msgid "Refresh currency rate to the invoice date"
+#~ msgstr "将汇率刷新至发票日期"
 
 #~ msgid ""
 #~ "\n"

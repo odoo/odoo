@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-24 19:22+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -54,8 +54,8 @@ msgid ""
 "expiration_date\"/>"
 msgstr ""
 "<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
-"invisible="
-"\"product_qty &lt;= 0 or not product_expiry_alert or not expiration_date\"/>"
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -108,10 +108,10 @@ msgid ""
 "type."
 msgstr ""
 "가용 수량(보유 수량 - 출고 + 입고 - 예약 수량- 반출 수량으로 계산)단일 재고 "
-"위치인 상황에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 "
-"포함합니다.단일 창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 "
-"있는 품목까지 포함합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 "
-"중인 품목이 포함됩니다."
+"위치인 상황에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합"
+"니다.단일 창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목"
+"까지 포함합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목"
+"이 포함됩니다."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -171,7 +171,8 @@ msgstr "작성일자"
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
-msgstr "\"만료 경고\" 필터를 사용하여 만료된 로트 및 일련번호를 확인하는 날짜입니다."
+msgstr ""
+"\"만료 경고\" 필터를 사용하여 만료된 로트 및 일련번호를 확인하는 날짜입니다."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -257,6 +258,12 @@ msgid "Expired Lots"
 msgstr ""
 
 #. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
 msgstr "만료 알림 전송됨"
@@ -278,11 +285,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 "
-"상황에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 "
-"포함합니다.단일 창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 "
-"있는 품목까지 포함합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 "
-"중인 품목이 포함됩니다."
+"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 상황"
+"에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합니다.단일 "
+"창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목까지 포함"
+"합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목이 포함됩"
+"니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
@@ -293,12 +300,6 @@ msgstr "예상 수량"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
 msgstr "수량 사용 가능 "
-
-#. module: product_expiry
-#. odoo-javascript
-#: code:addons/product_expiry/static/src/forecasted_details.js:0
-msgid "Fresh Free Stock"
-msgstr "신선 여유 재고"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -349,8 +350,8 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
-"품목이 위험해질 수 있고 반드시 소모할 품목이 아닐 경우 품목을 입고할 기간("
-"공급업체 또는 생산 후의 재고)입니다. Lot/일련번호에 계산됩니다."
+"품목이 위험해질 수 있고 반드시 소모할 품목이 아닐 경우 품목을 입고할 기간(공"
+"급업체 또는 생산 후의 재고)입니다. Lot/일련번호에 계산됩니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -359,8 +360,9 @@ msgid ""
 "Number of days before the Expiration Date after which an alert should be "
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
-msgstr "로트 및 일련번호 기준으로 경고를 안내해야 하는 만료일까지 남은 날짜입니다. "
-"로트 및 일련번호를 기준으로 계산합니다."
+msgstr ""
+"로트 및 일련번호 기준으로 경고를 안내해야 하는 만료일까지 남은 날짜입니다. 로"
+"트 및 일련번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -370,9 +372,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
-"유통기한까지 남은 날짜 기준 기간이며 품목이 재고에서 제거되어 더 이상 신선 "
-"보유 재고로 포함되지 않는 기간입니다. 로트번호 및 일련번호를 기준으로 "
-"계산됩니다."
+"유통기한까지 남은 날짜 기준 기간이며 품목이 재고에서 제거되어 더 이상 신선 보"
+"유 재고로 포함되지 않는 기간입니다. 로트번호 및 일련번호를 기준으로 계산됩니"
+"다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -390,8 +392,9 @@ msgstr ""
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
-msgstr "보유 중인 수량으로 이동 예약이 되지 않고 아직 유효하며, 품목의 기본 측정 "
-"단위로 표시되어 있는 수량"
+msgstr ""
+"보유 중인 수량으로 이동 예약이 되지 않고 아직 유효하며, 품목의 기본 측정 단위"
+"로 표시되어 있는 수량"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -555,8 +558,9 @@ msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage "
 "product expiration, on the product and on the corresponding lot/serial "
 "numbers"
-msgstr "체크박스가 선택되면, 품목과 관련된 lot/일련번호에 품목이 유효기간을 관리할 "
-"특정날짜가 생성됩니다."
+msgstr ""
+"체크박스가 선택되면, 품목과 관련된 lot/일련번호에 품목이 유효기간을 관리할 특"
+"정날짜가 생성됩니다."
 
 #. module: product_expiry
 #. odoo-python
@@ -687,6 +691,9 @@ msgstr ""
 #: model:product.removal,method:product_expiry.removal_fefo
 msgid "fefo"
 msgstr "선한선출"
+
+#~ msgid "Fresh Free Stock"
+#~ msgstr "신선 여유 재고"
 
 #~ msgid "Procurement Group"
 #~ msgstr "조달 그룹"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 08:06+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -52,9 +52,9 @@ msgid ""
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 msgstr ""
-"<span title=\"Waarschuwing\" class="
-"\"fa fa-exclamation-triangle text-danger me-2\" invisible="
-"\"product_qty <= 0 or not product_expiry_alert or not expiration_date\"/>"
+"<span title=\"Waarschuwing\" class=\"fa fa-exclamation-triangle text-danger "
+"me-2\" invisible=\"product_qty <= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -111,8 +111,8 @@ msgstr ""
 "In de context van één voorraadlocatie omvat dit de goederen die in deze "
 "locatie of in een van de onderliggende locaties zijn opgeslagen.\n"
 "In de context van één magazijn omvat dit de goederen die zijn opgeslagen in "
-"de voorraadlocatie van dat magazijn of in een van de onderliggende locaties."
-"\n"
+"de voorraadlocatie van dat magazijn of in een van de onderliggende "
+"locaties.\n"
 "In andere gevallen omvat dit de goederen die zijn opgeslagen in elke "
 "voorraadlocatie van het type intern."
 
@@ -262,6 +262,12 @@ msgid "Expired Lots"
 msgstr ""
 
 #. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
 msgstr "Herinnering van vervallen is getoond"
@@ -288,8 +294,8 @@ msgstr ""
 "In de context van één voorraadlocatie omvat dit de goederen die in deze "
 "locatie of in een van de onderliggende locaties zijn opgeslagen.\n"
 "In de context van één magazijn omvat dit de goederen die zijn opgeslagen in "
-"de voorraadlocatie van dat magazijn of in een van de onderliggende locaties."
-"\n"
+"de voorraadlocatie van dat magazijn of in een van de onderliggende "
+"locaties.\n"
 "In andere gevallen omvat dit de goederen die zijn opgeslagen in elke "
 "voorraadlocatie van het type intern."
 
@@ -302,12 +308,6 @@ msgstr "Verwachte aantal"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
 msgstr "Vrije voorraad "
-
-#. module: product_expiry
-#. odoo-javascript
-#: code:addons/product_expiry/static/src/forecasted_details.js:0
-msgid "Fresh Free Stock"
-msgstr "Verse vrije voorraad"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -706,6 +706,9 @@ msgstr ""
 #: model:product.removal,method:product_expiry.removal_fefo
 msgid "fefo"
 msgstr "fefo"
+
+#~ msgid "Fresh Free Stock"
+#~ msgstr "Verse vrije voorraad"
 
 #~ msgid ""
 #~ "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "

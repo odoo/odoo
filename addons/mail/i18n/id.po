@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:47+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 02:35+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/mail/"
@@ -69,8 +69,8 @@ msgstr ""
 "            </p><p>\n"
 "                Untuk melindungi Anda dari siklus spam dan balasan, Odoo "
 "secara otomatis memblokir email\n"
-"                yang datang ke gateway Anda yang melebihi ambang batas "
-"<b>%(threshold)i</b> email setiap <b>%(minutes)i</b>\n"
+"                yang datang ke gateway Anda yang melebihi ambang batas <b>%"
+"(threshold)i</b> email setiap <b>%(minutes)i</b>\n"
 "                menit. Bila ada beberapa alamat yang mengirimkan Anda update "
 "yang sangat\n"
 "                sering, Anda dapat menambahkan alamat mereka di bawah dan "
@@ -110,8 +110,8 @@ msgstr "# Pesan"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr ""
-"%(activity)s, ditugaskan pada %(name)s, memiliki tenggat waktu pada "
-"%(deadline)s"
+"%(activity)s, ditugaskan pada %(name)s, memiliki tenggat waktu pada %"
+"(deadline)s"
 
 #. module: mail
 #. odoo-javascript
@@ -244,12 +244,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sKetik %(bold_start)s@username%(bold_end)s untuk "
-"mention orang lain, dan menarik perhatian mereka.%(new_line)sKetik "
-"%(bold_start)s#channel%(bold_end)s untuk mention channel.%(new_line)sKetik "
-"%(bold_start)s/command%(bold_end)s untuk menjalankan command.%(new_line)"
-"sKetik %(bold_start)s::shortcut%(bold_end)s untuk memasukkan tanggapan "
-"otomatis di pesan Anda.%(new_line)sKetik %(bold_start)s:emoji:%(bold_end)s "
-"untuk memasukkan emoji di pesan Anda."
+"mention orang lain, dan menarik perhatian mereka.%(new_line)sKetik %"
+"(bold_start)s#channel%(bold_end)s untuk mention channel.%(new_line)sKetik %"
+"(bold_start)s/command%(bold_end)s untuk menjalankan command.%"
+"(new_line)sKetik %(bold_start)s::shortcut%(bold_end)s untuk memasukkan "
+"tanggapan otomatis di pesan Anda.%(new_line)sKetik %(bold_start)s:emoji:%"
+"(bold_end)s untuk memasukkan emoji di pesan Anda."
 
 #. module: mail
 #. odoo-javascript
@@ -273,10 +273,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)suntuk "
-"%(open_cancel)smembatalkan%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)suntuk "
-"%(open_save)smenyimpan%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)suntuk %(open_cancel)smembatalkan%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -286,10 +285,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)suntuk "
-"%(open_cancel)smembatalkan%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)suntuk "
-"%(open_save)smenyimpan%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)suntuk %(open_cancel)smembatalkan%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+"(open_em)suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -322,6 +320,12 @@ msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr ""
 "%(user)s terhubung. Ini adalah koneksi pertama mereka. Semoga mereka "
 "beruntung."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -696,14 +700,14 @@ msgstr ""
 "                                        templat dan tidak akan muncul di "
 "sejarah pesan.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'note'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
 "                                        Pesan akan diposting sebagai catatan "
 "internal yang terlihat untuk user\n"
 "                                        internal di sejarah pesan.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'comment'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
 "                                        Pesan akan dipost sebagai pesan di "
 "rekaman,\n"
 "                                        menotifikasi semua pengikut. Pesan "
@@ -1045,6 +1049,7 @@ msgstr "Kegiatan harus ditugaskan bila tidak terlampir ke dokumen."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/core/web/activity_menu.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1214,12 +1219,6 @@ msgstr "Tambah Pengikut"
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
 msgid "Add GIFs"
 msgstr "Tambahkan GIF"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_reactions.xml:0
-msgid "Add Reaction"
-msgstr "Tambahkan Reaksi"
 
 #. module: mail
 #. odoo-javascript
@@ -1428,9 +1427,9 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) sudah dihubungkan dengan "
-"%(alias_model_name)s (%(matching_id)s) dan digunakan oleh %(parent_name)s "
-"%(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) sudah dihubungkan dengan %"
+"(alias_model_name)s (%(matching_id)s) dan digunakan oleh %(parent_name)s %"
+"(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1439,8 +1438,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) sudah dihubungkan dengan "
-"%(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) sudah dihubungkan dengan %"
+"(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1884,6 +1883,11 @@ msgstr ""
 "Otomatis jadwalkan kegiatan ini setelah kegiatan saat ini ditandai selesai."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Available everywhere"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -2026,13 +2030,12 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Diblokir melalui penghapusan akun portal %(portal_user_name)s oleh "
-"%(user_name)s (#%(user_id)s)"
+"Diblokir melalui penghapusan akun portal %(portal_user_name)s oleh %"
+"(user_name)s (#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 msgid "Blur Background"
 msgstr "Blur Latar Belakang"
 
@@ -2107,8 +2110,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' sudah digunakan oleh "
-"%(document_name)s. Pilih alias lain atau ubah alias pada dokumen tersebut."
+"Bounce/Catchall '%(matching_alias_name)s' sudah digunakan oleh %"
+"(document_name)s. Pilih alias lain atau ubah alias pada dokumen tersebut."
 
 #. module: mail
 #. odoo-python
@@ -2259,12 +2262,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Camera is off"
-msgstr "Kamera mati"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Camera is unavailable outside the call tab."
 msgstr "Kamera tidak tersedia di luar tab panggilan."
@@ -2393,7 +2390,8 @@ msgstr "Tidak dapat mengubah kelompok otoritas dari sub-channel: %(channels)s."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr "Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
+msgstr ""
+"Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3582,6 +3580,13 @@ msgstr "Hapus"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
 msgstr "Hapus Email"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Delete Thread"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5244,6 +5249,12 @@ msgstr "Sembunyikan semua percakapan"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Hide camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Hide sidebar"
 msgstr "Sembunyikan sidebar"
@@ -5696,12 +5707,6 @@ msgid "Inbox"
 msgstr "Kotak Pesan"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Call..."
-msgstr "Panggilan Masuk..."
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
@@ -5727,15 +5732,17 @@ msgstr "Mail Server masuk"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Video Call..."
-msgstr "Panggilan Video Masuk..."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call"
 msgstr "Panggilan masuk"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call from %(inviter)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5850,7 +5857,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr "Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
+msgstr ""
+"Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
 
 #. module: mail
 #. odoo-javascript
@@ -5914,8 +5922,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Templat tidak valid atau tampilan sumber referensi %(svalue)s ternyata "
-"%(model)s"
+"Templat tidak valid atau tampilan sumber referensi %(svalue)s ternyata %"
+"(model)s"
 
 #. module: mail
 #. odoo-python
@@ -7389,15 +7397,6 @@ msgid "Models"
 msgstr "Model"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid ""
-"Modifying the model can have an impact on existing activities using this "
-"activity type, be careful."
-msgstr ""
-"Hati-hati, memodifikasi model dapat berdampak pada kegiatan saat ini yang "
-"menggunakan tipe kegiatan ini."
-
-#. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
 msgstr "Module Uninstal"
@@ -7422,6 +7421,7 @@ msgstr "Lebih Banyak Action"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "Mute"
 
@@ -7923,8 +7923,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Notifikasi harusnya menerima lampiran sebagai list of list atau tuples ("
-"diterima %(aids)s)"
+"Notifikasi harusnya menerima lampiran sebagai list of list atau tuples "
+"(diterima %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7933,8 +7933,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"Notifikasi harusnya menerima lampiran record sebagai list of ID (diterima "
-"%(aids)s)"
+"Notifikasi harusnya menerima lampiran record sebagai list of ID (diterima %"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7943,8 +7943,8 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Notifikasi harusnya menerima partner yang diberikan sebagai list of ID ("
-"diterima %(pids)s)"
+"Notifikasi harusnya menerima partner yang diberikan sebagai list of ID "
+"(diterima %(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8244,7 +8244,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 msgid "Only administrators can modify 'model' and 'res_id' fields."
-msgstr "Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
+msgstr ""
+"Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
 
 #. module: mail
 #. odoo-python
@@ -8780,6 +8781,12 @@ msgid "Performance Warning:"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+msgid "Permanently delete this thread?"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -9049,8 +9056,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Posting pesan harus menerima lampiran sebagai list of list atau tuples ("
-"diterima %(aids)s)"
+"Posting pesan harus menerima lampiran sebagai list of list atau tuples "
+"(diterima %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -9069,8 +9076,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Memposting pesan harus menerima partner sebagai list of ID (diterima "
-"%(pids)s)"
+"Memposting pesan harus menerima partner sebagai list of ID (diterima %"
+"(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -9118,12 +9125,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
 msgstr "Pratinjau"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Preview my camera"
-msgstr "Pratinjau kamera saya"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -9493,12 +9494,6 @@ msgstr "Hapus"
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Remove Blur"
 msgstr "Hapus Blur"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid "Remove Blur Background"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10572,6 +10567,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Show camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Show sidebar"
 msgstr "Tunjukkan sidebar"
@@ -10812,6 +10813,7 @@ msgstr "Berhenti Membagi Layar"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Stop camera"
 msgstr "Hentikan kamera"
 
@@ -11096,8 +11098,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"Rendering templat hanya mendukung inline_template, qweb, atau qweb_view ("
-"view atau raw); alih-alih menerima %(engine)s."
+"Rendering templat hanya mendukung inline_template, qweb, atau qweb_view "
+"(view atau raw); alih-alih menerima %(engine)s."
 
 #. module: mail
 #. odoo-javascript
@@ -11212,9 +11214,9 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Tipe kegiatan \"%(activity_type_name)s\" tidak kompatibel dengan rencana "
-"\"%(plan_name)s\" karena terabatas hanya untuk model "
-"\"%(activity_type_model)s\"."
+"Tipe kegiatan \"%(activity_type_name)s\" tidak kompatibel dengan rencana \"%"
+"(plan_name)s\" karena terabatas hanya untuk model \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-javascript
@@ -11697,8 +11699,8 @@ msgstr "Minggu ini"
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Value-value tersebut tidak didukung sebagai opsi saat me-render: "
-"%(param_names)s"
+"Value-value tersebut tidak didukung sebagai opsi saat me-render: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -11706,13 +11708,25 @@ msgstr ""
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Value-value tersebut tidak didukung saat memposting atau menotifikasi: "
-"%(param_names)s"
+"Value-value tersebut tidak didukung saat memposting atau menotifikasi: %"
+"(param_names)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Thread"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
+msgid "Thread \"%(thread_name)s\" has been deleted"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Thread Actions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11747,12 +11761,6 @@ msgstr "Thread-Diaktifkan"
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
 msgstr "Thread-Thread"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Threads Actions"
-msgstr "Threads Action"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
@@ -12025,6 +12033,7 @@ msgstr "Dipicu Berikutnya"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Turn camera on"
 msgstr "Nyalakan kamera"
 
@@ -12226,6 +12235,7 @@ msgstr "Error tidak diketahui: %(error)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr "Batalkan mute"
 
@@ -12794,9 +12804,21 @@ msgstr "Lihat semua kegiatan"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View chat with %(channel_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
 msgstr "Lihat atau ikuti channel"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View the %(channel_name)s channel"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12896,8 +12918,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Kita tidak dapat membuat alias %(alias_name)s karena domain "
-"%(alias_domain_name)s dimiliki perusahaan %(alias_company_names)s sementara "
+"Kita tidak dapat membuat alias %(alias_name)s karena domain %"
+"(alias_domain_name)s dimiliki perusahaan %(alias_company_names)s sementara "
 "pemilik dokumen adalah perusahaan %(company_name)s."
 
 #. module: mail
@@ -12908,8 +12930,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Kita tidak dapat membuat alias %(alias_name)s karena domain "
-"%(alias_domain_name)s dimiliki perusahaan %(alias_company_names)s sementara "
+"Kita tidak dapat membuat alias %(alias_name)s karena domain %"
+"(alias_domain_name)s dimiliki perusahaan %(alias_company_names)s sementara "
 "dokumen tujuan dimiliki perusahaan %(company_name)s."
 
 #. module: mail
@@ -13337,12 +13359,6 @@ msgstr "Password akun Anda telah diupdate"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Your browser does not support videoconference"
-msgstr "Browser Anda tidak mendukung konferensi video"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Your browser does not support voice activation"
 msgstr "Browser Anda tidak mendukung pengaktifan melalui suara"
@@ -13567,8 +13583,8 @@ msgstr "contoh \"Email selamat datang\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"contoh \"Selamat datang ke PerusahaanSaya\" atau "
-"\"Senang bertemu Anda, {{ object.name }}\""
+"contoh \"Selamat datang ke PerusahaanSaya\" atau \"Senang bertemu Anda, "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -14029,6 +14045,34 @@ msgstr "alias Anda"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” di “%(channel_name)s”"
+
+#~ msgid "Add Reaction"
+#~ msgstr "Tambahkan Reaksi"
+
+#~ msgid "Camera is off"
+#~ msgstr "Kamera mati"
+
+#~ msgid "Incoming Call..."
+#~ msgstr "Panggilan Masuk..."
+
+#~ msgid "Incoming Video Call..."
+#~ msgstr "Panggilan Video Masuk..."
+
+#~ msgid ""
+#~ "Modifying the model can have an impact on existing activities using this "
+#~ "activity type, be careful."
+#~ msgstr ""
+#~ "Hati-hati, memodifikasi model dapat berdampak pada kegiatan saat ini yang "
+#~ "menggunakan tipe kegiatan ini."
+
+#~ msgid "Preview my camera"
+#~ msgstr "Pratinjau kamera saya"
+
+#~ msgid "Threads Actions"
+#~ msgstr "Threads Action"
+
+#~ msgid "Your browser does not support videoconference"
+#~ msgstr "Browser Anda tidak mendukung konferensi video"
 
 #~ msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 #~ msgstr ""

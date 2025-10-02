@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:55+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 15:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -626,8 +626,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       "
-"22,137.50</span></strong>"
+"                                                       22,137.50</span></"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -1104,12 +1104,6 @@ msgstr "以及更多"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Angle"
-msgstr "角度"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Animals & Nature"
 msgstr "动物和自然"
@@ -1468,7 +1462,6 @@ msgstr "补丁修复保证"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 msgid "Button"
 msgstr "按钮"
@@ -2176,7 +2169,7 @@ msgstr "当前值"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
 msgid "Custom"
 msgstr "自定义"
 
@@ -2390,19 +2383,14 @@ msgstr "默认："
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Define a custom gradient"
-msgstr "定义一个自定义渐变"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid ""
 "Defines the minimum number of characters to perform the search. If not set, "
 "the search is performed on focus."
-msgstr "设定执行搜寻最少需要的字符数目。 "
-"若未设定，字段获得焦点时（focus）便会进行搜寻。"
+msgstr ""
+"设定执行搜寻最少需要的字符数目。 若未设定，字段获得焦点时（focus）便会进行搜"
+"寻。"
 
 #. module: web
 #. odoo-javascript
@@ -2542,8 +2530,6 @@ msgid "Discard changes"
 msgstr "放弃变更"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
@@ -2771,7 +2757,6 @@ msgstr "最早接受日期"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
@@ -2905,12 +2890,6 @@ msgstr "参赛人数"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
-msgid "Error"
-msgstr "错误"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Europe"
 msgstr "欧洲"
@@ -2976,30 +2955,6 @@ msgstr "不支持将分组数据导出到csv。"
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.js:0
 msgid "Expression is invalid. Please correct it"
 msgstr "表达式无效。请更正"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest corner"
-msgstr "延伸到最近的角落"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest side"
-msgstr "延伸到最近的一侧"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest corner"
-msgstr "延伸到最远的角落"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest side"
-msgstr "延伸到最远的一侧"
 
 #. module: web
 #. odoo-javascript
@@ -3112,7 +3067,8 @@ msgstr "不支持字段属性"
 msgid ""
 "Field that holds the maximum value of the progress bar. If set, will be "
 "displayed next to the progress bar (e.g. 10 / 200)."
-msgstr "保存进度条最大值的字段。如果设置，将显示在进度条旁边（例如 10 / 200）。"
+msgstr ""
+"保存进度条最大值的字段。如果设置，将显示在进度条旁边（例如 10 / 200）。"
 
 #. module: web
 #. odoo-javascript
@@ -3345,12 +3301,6 @@ msgstr "谷歌幻灯片播放器"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Gradient"
-msgstr "渐变"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "绿色"
@@ -3486,8 +3436,9 @@ msgid ""
 "Houston, we have a database naming issue! Make sure you only use letters, "
 "numbers, underscores, hyphens, or dots in the database name, and you'll be "
 "golden."
-msgstr "休斯顿，我们遇到了数据库命名问题！确保在数据库名称中只使用字母、数字、下划线"
-"、连字符或点，这样就万无一失了。"
+msgstr ""
+"休斯顿，我们遇到了数据库命名问题！确保在数据库名称中只使用字母、数字、下划"
+"线、连字符或点，这样就万无一失了。"
 
 #. module: web
 #. odoo-javascript
@@ -3570,7 +3521,8 @@ msgid ""
 "If checked, clicking on the tag will open the form that allows to directly "
 "edit it. Note that if a color field is also set, the tag edition will "
 "prevail. So, the color picker will not be displayed on click on the tag."
-msgstr "如果选中，点击标签将打开一个可以直接编辑它的表单。请注意，如果还设置了颜色字"
+msgstr ""
+"如果选中，点击标签将打开一个可以直接编辑它的表单。请注意，如果还设置了颜色字"
 "段，则标签编辑将优先。因此，点击标签时不会显示颜色选择器。"
 
 #. module: web
@@ -3590,7 +3542,8 @@ msgstr "如果选中，则在修改字段时将立即保存记录。"
 msgid ""
 "If checked, users will not be able to create records based on the text "
 "input; they will still be able to create records via a popup form."
-msgstr "如果选中该选项，用户将无法根据文本输入创建记录；但仍可通过弹出表单创建记录。"
+msgstr ""
+"如果选中该选项，用户将无法根据文本输入创建记录；但仍可通过弹出表单创建记录。"
 
 #. module: web
 #. odoo-javascript
@@ -3599,8 +3552,9 @@ msgstr "如果选中该选项，用户将无法根据文本输入创建记录；
 msgid ""
 "If checked, users will not be able to create records based through a popup "
 "form; they will still be able to create records based on the text input."
-msgstr "如果选中此选项，用户将无法通过弹出式表单创建记录；但仍可根据文本输入创建记录"
-"。"
+msgstr ""
+"如果选中此选项，用户将无法通过弹出式表单创建记录；但仍可根据文本输入创建记"
+"录。"
 
 #. module: web
 #. odoo-javascript
@@ -3716,6 +3670,12 @@ msgstr "间隔"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
+msgid "Invalid Display Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Invalid Operation"
 msgstr "无效操作"
@@ -3768,13 +3728,6 @@ msgstr "非法的字段链"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 msgid "Invalid fields"
 msgstr "无效的字段"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/record.js:0
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
-msgid "Invalid fields: "
-msgstr "无效的字段: "
 
 #. module: web
 #. odoo-python
@@ -4243,12 +4196,6 @@ msgstr "线状图"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Linear"
-msgstr "线性折旧"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
 msgstr "导入"
@@ -4546,6 +4493,12 @@ msgstr "缺失记录"
 #: code:addons/web/controllers/json.py:0
 msgid "Missing record id"
 msgstr "缺少记录ID"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+msgid "Missing required fields"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5202,7 +5155,8 @@ msgstr "Odoo首先需要您的授权。"
 msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
-msgstr "在所选的 %(selectedRecord)s 项记录中，只归档/取消归档了 %(firstRecords)s 项。"
+msgstr ""
+"在所选的 %(selectedRecord)s 项记录中，只归档/取消归档了 %(firstRecords)s 项。"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -5260,7 +5214,8 @@ msgstr "只支持类型为%(supported_types)s的分类（发现类型为%(field_
 msgid ""
 "Only types %(supported_types)s are supported for filter (found type %"
 "(field_type)s)"
-msgstr "只支持类型为 %(supported_types)s 的筛选条件 (发现类型为 %(field_type)s)"
+msgstr ""
+"只支持类型为 %(supported_types)s 的筛选条件 (发现类型为 %(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -5564,18 +5519,6 @@ msgid "Please, scan again!"
 msgstr "请重新扫描！"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position X"
-msgstr "X 坐标"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position Y"
-msgstr "Y 坐标"
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
 msgstr "由%s%s提供支持"
@@ -5803,12 +5746,6 @@ msgstr "快速搜索: %s"
 #: model:ir.model,name:web.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
 msgstr "Qweb 图像字段"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Radial"
-msgstr "辐射"
 
 #. module: web
 #. odoo-javascript
@@ -6604,7 +6541,6 @@ msgstr "显示周末"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
@@ -6627,7 +6563,7 @@ msgstr "微笑与情感"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
 msgid "Solid"
 msgstr "实体"
 
@@ -6915,7 +6851,6 @@ msgstr "模板:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -7026,7 +6961,8 @@ msgid ""
 "The style compilation failed. This is an administrator or developer error "
 "that must be fixed for the entire database before continuing working. See "
 "browser console or server logs for details."
-msgstr "样式编译失败。这是管理员或开发人员的错误，必须修复整个数据库的错误后才能继续"
+msgstr ""
+"样式编译失败。这是管理员或开发人员的错误，必须修复整个数据库的错误后才能继续"
 "工作。有关详情，请查看浏览器控制台或服务器日志。"
 
 #. module: web
@@ -7035,12 +6971,6 @@ msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
 msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Theme"
-msgstr "主题"
 
 #. module: web
 #. odoo-javascript
@@ -7056,8 +6986,9 @@ msgstr "数据量太多，此图表只显示部分样本，请通过筛选器缩
 msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
-msgstr "尝试导出为 Excel 2007-2013（.xlsx）格式的列数太多（%(count)s "
-"列，上限：%(limit)s）。可考虑分拆导出。"
+msgstr ""
+"尝试导出为 Excel 2007-2013（.xlsx）格式的列数太多（%(count)s 列，上限：%"
+"(limit)s）。可考虑分拆导出。"
 
 #. module: web
 #. odoo-javascript
@@ -7191,7 +7122,6 @@ msgstr "二氧化钛"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
@@ -7339,7 +7269,6 @@ msgstr "周二"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
@@ -7618,7 +7547,8 @@ msgstr "打开这个视图时请使用默认过滤器"
 msgid ""
 "Use to override the display value (e.g. if your progress bar is a computed "
 "percentage but you want to display the actual field value instead)."
-msgstr "用于覆盖显示值（例如：如果进度条是计算的百分比，但您想显示实际字段值）。"
+msgstr ""
+"用于覆盖显示值（例如：如果进度条是计算的百分比，但您想显示实际字段值）。"
 
 #. module: web
 #. odoo-javascript
@@ -7807,7 +7737,6 @@ msgstr "WC"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Warning"
@@ -8040,7 +7969,8 @@ msgid ""
 "You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order "
 "to get a correct display of headers and footers as well as support for table-"
 "breaking between pages.%(link)s"
-msgstr "您应该将Wkhtmltopdf的版本至少升级到0.12.0，以便正确显示页眉和页脚，以及支持页"
+msgstr ""
+"您应该将Wkhtmltopdf的版本至少升级到0.12.0，以便正确显示页眉和页脚，以及支持页"
 "之间的表分隔。%(link)s"
 
 #. module: web
@@ -11956,12 +11886,6 @@ msgstr "装饰"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "deer"
 msgstr "鹿"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "deg"
-msgstr "度"
 
 #. module: web
 #. odoo-javascript
@@ -26952,6 +26876,51 @@ msgstr "“空缺”"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "Angle"
+#~ msgstr "角度"
+
+#~ msgid "Define a custom gradient"
+#~ msgstr "定义一个自定义渐变"
+
+#~ msgid "Error"
+#~ msgstr "错误"
+
+#~ msgid "Extend to the closest corner"
+#~ msgstr "延伸到最近的角落"
+
+#~ msgid "Extend to the closest side"
+#~ msgstr "延伸到最近的一侧"
+
+#~ msgid "Extend to the farthest corner"
+#~ msgstr "延伸到最远的角落"
+
+#~ msgid "Extend to the farthest side"
+#~ msgstr "延伸到最远的一侧"
+
+#~ msgid "Gradient"
+#~ msgstr "渐变"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "无效的字段: "
+
+#~ msgid "Linear"
+#~ msgstr "线性折旧"
+
+#~ msgid "Position X"
+#~ msgstr "X 坐标"
+
+#~ msgid "Position Y"
+#~ msgstr "Y 坐标"
+
+#~ msgid "Radial"
+#~ msgstr "辐射"
+
+#~ msgid "Theme"
+#~ msgstr "主题"
+
+#~ msgid "deg"
+#~ msgstr "度"
 
 #~ msgid " records"
 #~ msgstr " 记录"

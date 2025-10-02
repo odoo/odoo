@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 21:19+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/project/"
@@ -405,8 +405,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domän Alias\" title="
-"\"Domän Alias\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domän Alias\" "
+"title=\"Domän Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1033,8 +1033,8 @@ msgstr ""
 "Ändra automatiskt status när kunden svarar på feedbacken för detta steg.\n"
 " * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön "
 "punkt).\n"
-" * Neutral eller dålig feedback gör att kanbanstatus ändras till "
-"\"Changes Requested\" (orange punkt).\n"
+" * Neutral eller dålig feedback gör att kanbanstatus ändras till \"Changes "
+"Requested\" (orange punkt).\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -2514,8 +2514,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "Ogiltiga fält: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2580,8 +2580,8 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till "
-"slutförande.<br>\n"
+"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
+"<br>\n"
 "                    Samarbeta effektivt genom att chatta i realtid eller via "
 "e-post."
 
@@ -2593,10 +2593,10 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till "
-"slutförande.<br>\n"
-"                Samarbeta effektivt genom att chatta i realtid eller via "
-"e-post."
+"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
+"<br>\n"
+"                Samarbeta effektivt genom att chatta i realtid eller via e-"
+"post."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2693,6 +2693,12 @@ msgstr "Sena milstolpar"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Senare"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4401,7 +4407,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
+msgstr ""
+"Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
 
 #. module: project
 #. odoo-javascript
@@ -4727,8 +4734,8 @@ msgstr "Aktivitetstitel..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
-"Uppgift överförd från projekt  %(source_project)s till "
-"%(destination_project)s"
+"Uppgift överförd från projekt  %(source_project)s till %"
+"(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4828,12 +4835,6 @@ msgstr "Aktivitetsetapper"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
 msgstr "Uppgifter i återkommande"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
@@ -5109,10 +5110,10 @@ msgid ""
 "records to align them under the same company."
 msgstr ""
 "Det här projektet är associerat med %(project_company)s, medan den valda "
-"etappen tillhör %(stage_company)s. Det finns ett par alternativ att överväga:"
-" antingen tar du bort företagsbeteckningen från projektet eller från "
-"etappen. Alternativt kan du uppdatera företagsinformationen för dessa poster "
-"så att de hamnar under samma företag."
+"etappen tillhör %(stage_company)s. Det finns ett par alternativ att "
+"överväga: antingen tar du bort företagsbeteckningen från projektet eller "
+"från etappen. Alternativt kan du uppdatera företagsinformationen för dessa "
+"poster så att de hamnar under samma företag."
 
 #. module: project
 #. odoo-python
@@ -5717,8 +5718,8 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Du kan inte byta företag för detta steg till %(company_name)s eftersom det "
-"för närvarande innehåller projekt som är associerade med "
-"%(project_company_name)s. Se till att denna etapp endast består av projekt "
+"för närvarande innehåller projekt som är associerade med %"
+"(project_company_name)s. Se till att denna etapp endast består av projekt "
 "som är kopplade till %(company_name)s."
 
 #. module: project
@@ -6076,6 +6077,9 @@ msgstr "👤 Ej tilldelad"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Ogiltiga fält: "
 
 #~ msgid "# Tasks"
 #~ msgstr "# Aktiviteter"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 21:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_loyalty/"
@@ -23,7 +23,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
@@ -86,6 +87,12 @@ msgid "Add Balance"
 msgstr ""
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
+msgid "Add existing Gift Card"
+msgstr ""
+
+#. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
 msgstr "PoS ทั้งหมด"
@@ -95,6 +102,12 @@ msgstr "PoS ทั้งหมด"
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Amount"
 msgstr "จำนวน"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "An error occurred while checking the gift card."
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
@@ -112,10 +125,28 @@ msgstr ""
 " คุณจะยังสามารถรับรางวัลได้ผ่านปุ่มรางวัล"
 
 #. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning order %s"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning partner %s"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "รางวัลที่มีอยู่"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -224,7 +255,7 @@ msgstr "ผิดพลาด"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "Error validating rewards"
 msgstr "เกิดข้อผิดพลาดในการตรวจสอบรางวัล"
 
@@ -238,6 +269,12 @@ msgstr "สิ้นสุด"
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
 msgid "Free Product - Simple Pen"
 msgstr "สินค้าฟรี - ปากกาธรรมดา"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Gift Card"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -282,6 +319,12 @@ msgstr "รางวัลนี้ใช้แต้มสะสมเท่า
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__id
 msgid "ID"
 msgstr "ไอดี"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "Invalid Gift Card Code"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-python
@@ -536,8 +579,13 @@ msgstr "ปากกาธรรมดา"
 msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
+msgstr "คูปองบางรายการไม่ถูกต้อง คูปองที่ใช้ได้รับการอัปเดตแล้ว กรุณาตรวจสอบคำสั่งซื้อ"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
 msgstr ""
-"คูปองบางรายการไม่ถูกต้อง คูปองที่ใช้ได้รับการอัปเดตแล้ว กรุณาตรวจสอบคำสั่งซื้อ"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
@@ -583,7 +631,8 @@ msgstr "คูปองที่ใช้ในการรับรางวั
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
 "รหัสต่อไปนี้มีอยู่แล้วในฐานข้อมูล ในบางกรณี อาจมีการขายไปแล้ว?\n"
@@ -594,8 +643,7 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
-msgstr ""
-"การดำเนินการรายงานที่จะดำเนินการเมื่อสร้างคูปอง/บัตรของขวัญ/บัตรสะสมคะแนนใน PoS"
+msgstr "การดำเนินการรายงานที่จะดำเนินการเมื่อสร้างคูปอง/บัตรของขวัญ/บัตรสะสมคะแนนใน PoS"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -603,8 +651,7 @@ msgstr ""
 msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
-msgstr ""
-"รางวัล \"%s\" มีข้อผิดพลาดในโดเมน โดเมนของคุณจะต้องเข้ากันได้กับ PoS ของลูกค้า"
+msgstr "รางวัล \"%s\" มีข้อผิดพลาดในโดเมน โดเมนของคุณจะต้องเข้ากันได้กับ PoS ของลูกค้า"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -641,8 +688,7 @@ msgstr "มีสินค้าในตะกร้าไม่เพียง
 msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
-msgstr ""
-"ไม่มีเทมเพลตอีเมลในโปรแกรมบัตรของขวัญ และ POS ของคุณได้รับการตั้งค่าให้พิมพ์ออกมา"
+msgstr "ไม่มีเทมเพลตอีเมลในโปรแกรมบัตรของขวัญ และ POS ของคุณได้รับการตั้งค่าให้พิมพ์ออกมา"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -650,8 +696,7 @@ msgstr ""
 msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
-msgstr ""
-"ไม่มีรายงานที่ถูกพิมพ์ในโปรแกรมบัตรของขวัญ และ POS ของคุณได้รับการตั้งค่าให้พิมพ์ออกมา"
+msgstr "ไม่มีรายงานที่ถูกพิมพ์ในโปรแกรมบัตรของขวัญ และ POS ของคุณได้รับการตั้งค่าให้พิมพ์ออกมา"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -660,8 +705,9 @@ msgstr "สินค้าเหล่านี้คือสินค้าท
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "This Gift card has already been sold."
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid ""
+"This code seems to be invalid, please check the Gift Card code and try again."
 msgstr ""
 
 #. module: pos_loyalty
@@ -694,8 +740,7 @@ msgstr "คูปองนี้ยังไม่ถูกต้อง (%s)"
 msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
-msgstr ""
-"บัตรของขวัญนี้ไม่ได้เชื่อมโยงกับคำสั่งซื้อใดๆ คุณต้องการใช้บัตรรางวัลนี้?"
+msgstr "บัตรของขวัญนี้ไม่ได้เชื่อมโยงกับคำสั่งซื้อใดๆ คุณต้องการใช้บัตรรางวัลนี้?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -713,8 +758,7 @@ msgstr ""
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid ""
 "To continue, make the following reward products available in Point of Sale."
-msgstr ""
-"หากต้องการดำเนินการต่อ โปรดทำให้รางวัลสินค้าต่อไปนี้พร้อมใช้งานในการขายหน้าร้าน"
+msgstr "หากต้องการดำเนินการต่อ โปรดทำให้รางวัลสินค้าต่อไปนี้พร้อมใช้งานในการขายหน้าร้าน"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -769,6 +813,12 @@ msgstr "รายการนี้เป็นส่วนหนึ่งขอ
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Yes"
 msgstr "ใช่"
@@ -776,9 +826,14 @@ msgstr "ใช่"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgid "You cannot change the quantity or price of a physical gift card."
 msgstr ""
-"คุณไม่สามารถกำหนดจำนวนหรือราคามีค่าเป็นลบให้กับบัตรของขวัญหรือ ewallet ได้"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgstr "คุณไม่สามารถกำหนดจำนวนหรือราคามีค่าเป็นลบให้กับบัตรของขวัญหรือ ewallet ได้"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -816,8 +871,5 @@ msgstr "eWallet กำหนดให้ลูกค้าต้องได้�
 msgid "no expiration"
 msgstr "ไม่มีวันหมดอายุ"
 
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "the gift cards"
-msgstr "บัตรของขวัญ"
+#~ msgid "the gift cards"
+#~ msgstr "บัตรของขวัญ"

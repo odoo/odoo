@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 13:43+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -32,40 +32,20 @@ msgstr "عدد الجلسات"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "<small>%</small>"
-msgstr "<small>%</small>"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "<span>Livechat Channel</span>"
-msgstr "<span>قناة الدردشة المباشرة</span>"
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
+msgid "(closed on: %(date)s)"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
 msgid "Available"
 msgstr "متاح"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "Avatar"
-msgstr "الصورة الرمزية"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Bad"
-msgstr "سيئ"
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
-msgid "Can Publish"
-msgstr "بإمكانه النشر "
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -76,6 +56,12 @@ msgstr "القناة"
 #: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
 msgid "Channel Name"
 msgstr "اسم القناة"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/im_livechat_channel.py:0
+msgid "Channel created: %(name)s"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -105,9 +91,16 @@ msgid "Config Settings"
 msgstr "تهيئة الإعدادات"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
-msgid "Description of the channel displayed on the website page"
-msgstr "وصف القناة المعروضة على صفحة الموقع الإلكتروني "
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Country"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
+msgid "Country & Language"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
@@ -115,9 +108,16 @@ msgid "Discussion Channel"
 msgstr "قناة المناقشة"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Great"
-msgstr "رائع "
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
@@ -125,15 +125,16 @@ msgid "HTTP Routing"
 msgstr "مسار HTTP"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Happy face"
-msgstr "وجه سعيد"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "History"
-msgstr "السجل"
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_livechat.field_website__id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
+msgid "ID"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -141,36 +142,15 @@ msgid "In Conversation"
 msgstr "في المحادثة"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
-msgid "Is Published"
-msgstr "تم نشره "
-
-#. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "Lang"
-msgstr "اللغة"
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/website.py:0
-msgid "Live Support"
-msgstr "الدعم المباشر "
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Language"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
 msgstr "قناة الدردشة المباشرة"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "Livechat Support Channels"
-msgstr "قنوات دعم الدردشة المباشرة"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Neutral face"
-msgstr "وجه محايد"
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.im_livechat_channel_action_add
@@ -184,16 +164,6 @@ msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr "تتيح لك قناة الدردشة المباشرة إرسال طلب دردشة للموقع الإلكتروني %s."
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Not rated yet"
-msgstr "لم يتم التقييم بعد "
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Okay"
-msgstr "حسناً "
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 msgid "Operator Avatar"
 msgstr "الصورة الرمزية للمشغل"
@@ -204,17 +174,24 @@ msgid "Operator Name"
 msgstr "اسم المشغل"
 
 #. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent conversations"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent page views"
+msgstr ""
+
+#. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
 "Recipients are not available. Please refresh the page to get latest visitors "
 "status."
 msgstr "المستلمون غير متاحون. يرجى تحديث الصفحة لرؤية حالات آخر الزوار."
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Sad face"
-msgstr "وجه حزين"
 
 #. module: website_livechat
 #: model:ir.actions.server,name:website_livechat.website_livechat_send_chat_request_action_server
@@ -237,29 +214,9 @@ msgid "Speaking with"
 msgstr "التحدث مع"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Statistics"
-msgstr "الإحصائيات"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
 msgid "Test"
 msgstr "اختبار"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "The"
-msgstr " "
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "The Team"
-msgstr "الفريق"
-
-#. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
-msgid "The full URL to access the document through the website."
-msgstr "رابطURL الكامل للوصول إلى المستند من خلال الموقع الإلكتروني. "
 
 #. module: website_livechat
 #. odoo-python
@@ -268,24 +225,15 @@ msgid "The visitor"
 msgstr "الزائر"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "There are no public livechat channels to show."
-msgstr "لا توجد قنوات دردشة مباشرة لإظهارها. "
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "There are no ratings for this channel for now."
-msgstr "لا توجد تقييمات لهذه القناة بعد. "
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
-msgid "Visible on current website"
-msgstr "مرئي في الموقع الإلكتروني الحالي "
-
-#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
 msgid "Visitor"
 msgstr "زائر"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr ""
 
 #. module: website_livechat
 #. odoo-python
@@ -296,16 +244,8 @@ msgstr "زائر رقم %d"
 
 #. module: website_livechat
 #. odoo-python
-#. odoo-javascript
-#: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
-msgid "Visitor #%s"
-msgstr "الزائر رقم %s"
-
-#. module: website_livechat
-#. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
+msgid "Visitor left the conversation."
 msgstr ""
 
 #. module: website_livechat
@@ -325,7 +265,7 @@ msgstr "الزائرين"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
 msgstr "الموقع الإلكتروني"
@@ -341,11 +281,6 @@ msgid "Website Live Chat Channel"
 msgstr "قناة الدردشة المباشرة للموقع الإلكتروني"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
-msgid "Website URL"
-msgstr "رابط URL للموقع الإلكتروني "
-
-#. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
@@ -353,9 +288,11 @@ msgid "Website Visitor"
 msgstr "زائر الموقع الإلكتروني"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
-msgid "Website description"
-msgstr "وصف الموقع الإلكتروني "
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__is_pending_chat_request
+msgid ""
+"When created from an operator, whether the channel is yet to be opened on "
+"the visitor side."
+msgstr ""
 
 #. module: website_livechat
 #. odoo-python
@@ -363,7 +300,86 @@ msgstr "وصف الموقع الإلكتروني "
 msgid "an operator"
 msgstr "مشغل"
 
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "last feedbacks"
-msgstr "آخر الملاحظات "
+#~ msgid "<small>%</small>"
+#~ msgstr "<small>%</small>"
+
+#~ msgid "<span>Livechat Channel</span>"
+#~ msgstr "<span>قناة الدردشة المباشرة</span>"
+
+#~ msgid "Avatar"
+#~ msgstr "الصورة الرمزية"
+
+#~ msgid "Bad"
+#~ msgstr "سيئ"
+
+#~ msgid "Can Publish"
+#~ msgstr "بإمكانه النشر "
+
+#~ msgid "Description of the channel displayed on the website page"
+#~ msgstr "وصف القناة المعروضة على صفحة الموقع الإلكتروني "
+
+#~ msgid "Great"
+#~ msgstr "رائع "
+
+#~ msgid "Happy face"
+#~ msgstr "وجه سعيد"
+
+#~ msgid "History"
+#~ msgstr "السجل"
+
+#~ msgid "Is Published"
+#~ msgstr "تم نشره "
+
+#~ msgid "Lang"
+#~ msgstr "اللغة"
+
+#~ msgid "Live Support"
+#~ msgstr "الدعم المباشر "
+
+#~ msgid "Livechat Support Channels"
+#~ msgstr "قنوات دعم الدردشة المباشرة"
+
+#~ msgid "Neutral face"
+#~ msgstr "وجه محايد"
+
+#~ msgid "Not rated yet"
+#~ msgstr "لم يتم التقييم بعد "
+
+#~ msgid "Okay"
+#~ msgstr "حسناً "
+
+#~ msgid "Sad face"
+#~ msgstr "وجه حزين"
+
+#~ msgid "Statistics"
+#~ msgstr "الإحصائيات"
+
+#~ msgid "The"
+#~ msgstr " "
+
+#~ msgid "The Team"
+#~ msgstr "الفريق"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "رابطURL الكامل للوصول إلى المستند من خلال الموقع الإلكتروني. "
+
+#~ msgid "There are no public livechat channels to show."
+#~ msgstr "لا توجد قنوات دردشة مباشرة لإظهارها. "
+
+#~ msgid "There are no ratings for this channel for now."
+#~ msgstr "لا توجد تقييمات لهذه القناة بعد. "
+
+#~ msgid "Visible on current website"
+#~ msgstr "مرئي في الموقع الإلكتروني الحالي "
+
+#~ msgid "Visitor #%s"
+#~ msgstr "الزائر رقم %s"
+
+#~ msgid "Website URL"
+#~ msgstr "رابط URL للموقع الإلكتروني "
+
+#~ msgid "Website description"
+#~ msgstr "وصف الموقع الإلكتروني "
+
+#~ msgid "last feedbacks"
+#~ msgstr "آخر الملاحظات "

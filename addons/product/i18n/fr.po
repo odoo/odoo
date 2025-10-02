@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 21:10+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/product/"
@@ -70,10 +70,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
-"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %(surcharge)"
-"s des frais supplémentaires\n"
-"Exemple : %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %"
+"(surcharge)s des frais supplémentaires\n"
+"Exemple : %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -105,6 +105,7 @@ msgstr "%(percentage)s %% de remise sur le prix de vente"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -149,8 +150,8 @@ msgstr "- %(amount)s de rabais"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) "
-":%(product_list)s"
+"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) :%"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -316,8 +317,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Contactez-nous</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Contactez-nous</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2692,8 +2693,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Sur le produit %(product)s vous ne pouvez pas transformer l'attribut "
-"%(attribute_src)s en %(attribute_dest)s."
+"Sur le produit %(product)s vous ne pouvez pas transformer l'attribut %"
+"(attribute_src)s en %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -3396,6 +3397,12 @@ msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr "Rouge"
@@ -3796,8 +3803,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
-"L'attribut %(attribute)s doit avoir au moins une valeur pour le produit "
-"%(product)s."
+"L'attribut %(attribute)s doit avoir au moins une valeur pour le produit %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4507,8 +4514,8 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Vous êtes sur le point d'ajouter la valeur \"%(attribute_value)s\" à "
-"%(product_count)s produits."
+"Vous êtes sur le point d'ajouter la valeur \"%(attribute_value)s\" à %"
+"(product_count)s produits."
 
 #. module: product
 #. odoo-python
@@ -4585,23 +4592,14 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"Vous ne pouvez pas attribuer la liste de prix principale en tant qu'autre "
-"liste de prix dans l'élément de liste de prix"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
 "because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut "
-"%(attribute)s, car il est utilisé sur les produits suivants :\n"
+"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut %"
+"(attribute)s, car il est utilisé sur les produits suivants :\n"
 "%(products)s"
 
 #. module: product
@@ -4685,8 +4683,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"Vous ne pouvez pas déplacer l'attribut %(attribute)s du produit "
-"%(product_src)s vers le produit %(product_dest)s."
+"Vous ne pouvez pas déplacer l'attribut %(attribute)s du produit %"
+"(product_src)s vers le produit %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4902,6 +4900,12 @@ msgstr "au"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "Vous ne pouvez pas attribuer la liste de prix principale en tant qu'autre "
+#~ "liste de prix dans l'élément de liste de prix"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-23 02:30+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -32,6 +32,12 @@ msgid ""
 msgstr ""
 ".\n"
 "                수동 작업이 필요할 수 있습니다."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "1 Quotation"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -72,10 +78,10 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class="
-"\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> "
-"배송됨\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> 배송"
+"됨\n"
 "                                    </span>"
 
 #. module: sale_stock
@@ -220,9 +226,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"고객에게 약속할 수 있는 배송 날짜로, 서비스 제품의 경우 주문 내역의 최소 "
-"리드타임을 기준으로 계산됩니다. 배송되는 품목의 경우, 주문의 배송 정책을 "
-"고려하여 주문 내역의 최소 또는 최대 리드타임을 사용하도록 권장합니다."
+"고객에게 약속할 수 있는 배송 날짜로, 서비스 제품의 경우 주문 내역의 최소 리드"
+"타임을 기준으로 계산됩니다. 배송되는 품목의 경우, 주문의 배송 정책을 고려하"
+"여 주문 내역의 최소 또는 최대 리드타임을 사용하도록 권장합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -395,8 +401,9 @@ msgstr "인코텀즈:"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 "
-"용어입니다."
+msgstr ""
+"Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 용어"
+"입니다."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
@@ -468,9 +475,9 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"고객에게 약속한 날짜에 대한 오차 범위입니다. 상품은 공급망의 예기치 않은 "
-"지연 사태에 대처하기 위해 실제 약속 날짜보다 며칠 전에 조달 및 납품할 수 "
-"있도록 예약해야 합니다."
+"고객에게 약속한 날짜에 대한 오차 범위입니다. 상품은 공급망의 예기치 않은 지"
+"연 사태에 대처하기 위해 실제 약속 날짜보다 며칠 전에 조달 및 납품할 수 있도"
+"록 예약해야 합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -776,8 +783,8 @@ msgid ""
 "document."
 msgstr ""
 "판매 주문의 배송 주소가<br/>\n"
-"                        <strong>\"%(old_address)s\"</strong>에서 <strong>"
-"\"%(new_address)s\"</strong>로 업데이트되었습니다.\n"
+"                        <strong>\"%(old_address)s\"</strong>에서 <strong>\"%"
+"(new_address)s\"</strong>로 업데이트되었습니다.\n"
 "                        이 문서의 파트너 정보를 업데이트해야 할 수 있습니다."
 
 #. module: sale_stock
@@ -786,8 +793,9 @@ msgstr ""
 msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
-msgstr "주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. 대신, 재고에 반품 "
-"항목을 생성하시기 바랍니다."
+msgstr ""
+"주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. 대신, 재고에 반품 항"
+"목을 생성하시기 바랍니다."
 
 #. module: sale_stock
 #. odoo-python
@@ -795,7 +803,8 @@ msgstr "주문 수량은 이미 배송 완료된 수량보다 적을 수 없습�
 msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
-msgstr "판매주문서 줄에 있는 주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. "
+msgstr ""
+"판매주문서 줄에 있는 주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. "
 "대신, 재고에 반품 항목을 생성하시기 바랍니다."
 
 #. module: sale_stock

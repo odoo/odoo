@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 04:40+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -32,6 +32,12 @@ msgstr "$1000"
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
 msgstr "$5000"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -171,7 +177,8 @@ msgstr "BoM에서 가격 계산"
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "제조된 품목에 대해서만 자재명세서의 품목 및 작업 내용을 바탕으로 제품 가격을 "
+msgstr ""
+"제조된 품목에 대해서만 자재명세서의 품목 및 작업 내용을 바탕으로 제품 가격을 "
 "계산합니다."
 
 #. module: mrp_account
@@ -477,7 +484,8 @@ msgstr ""
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
-msgstr "이 WIP 항목과 관련된 MO입니다. 이는 WIP 항목을 생성할 때 정의해야 합니다."
+msgstr ""
+"이 WIP 항목과 관련된 MO입니다. 이는 WIP 항목을 생성할 때 정의해야 합니다."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -485,7 +493,8 @@ msgid ""
 "The expense is accounted for when the manufacturing order is marked as done. "
 "If not set, it is the expense account of the final product that will be used "
 "instead."
-msgstr "제조 주문이 완료됨으로 표시되면 비용이 기록됩니다. 이 설정을 구성하지 않으면 "
+msgstr ""
+"제조 주문이 완료됨으로 표시되면 비용이 기록됩니다. 이 설정을 구성하지 않으면 "
 "최종 제품의 계정으로 비용이 대신 청구됩니다."
 
 #. module: mrp_account
@@ -496,10 +505,10 @@ msgid ""
 "                If there are any workcenter/employee costs, this value will "
 "remain on the account once the production is completed."
 msgstr ""
-"제조 주문에 포함되는 부품과 완제품 모두에 대한 평가액으로 사용되는 "
-"계정입니다.\n"
-"                작업장/인건비가 있는 경우, 생산이 완료된 후에도 이 값은 "
-"계정에 남게 됩니다."
+"제조 주문에 포함되는 부품과 완제품 모두에 대한 평가액으로 사용되는 계정입니"
+"다.\n"
+"                작업장/인건비가 있는 경우, 생산이 완료된 후에도 이 값은 계정"
+"에 남게 됩니다."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form

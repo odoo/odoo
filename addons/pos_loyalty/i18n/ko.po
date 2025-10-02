@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 04:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -23,12 +23,13 @@ msgstr ""
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
-"        여러 개의 리워드 내역을 동일한 리워드 항목에서 함께 연결하는데 "
-"사용하는 기술 필드입니다.\n"
+"        여러 개의 리워드 내역을 동일한 리워드 항목에서 함께 연결하는데 사용하"
+"는 기술 필드입니다.\n"
 "    "
 
 #. module: pos_loyalty
@@ -70,8 +71,9 @@ msgstr "리워드를 불러올 수 없습니다"
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
-msgstr "프로모션 코드 대신 사용하는 기술 필드입니다. 프로모션 코드가 변경될 경우 "
-"자동으로 생성됩니다."
+msgstr ""
+"프로모션 코드 대신 사용하는 기술 필드입니다. 프로모션 코드가 변경될 경우 자동"
+"으로 생성됩니다."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__loyalty_card_count
@@ -86,6 +88,12 @@ msgid "Add Balance"
 msgstr "잔액 추가"
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
+msgid "Add existing Gift Card"
+msgstr ""
+
+#. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
 msgstr "전체 POS"
@@ -95,6 +103,12 @@ msgstr "전체 POS"
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Amount"
 msgstr "금액"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "An error occurred while checking the gift card."
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
@@ -112,10 +126,28 @@ msgstr ""
 "리워드 버튼을 통해 계속 요청하실 수 있습니다."
 
 #. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning order %s"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning partner %s"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "사용 가능한 리워드"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -224,7 +256,7 @@ msgstr "오류"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "Error validating rewards"
 msgstr "리워드 승인 오류"
 
@@ -238,6 +270,12 @@ msgstr "만료일"
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
 msgid "Free Product - Simple Pen"
 msgstr "무료 품목 - 일반 펜"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Gift Card"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -284,17 +322,25 @@ msgid "ID"
 msgstr "ID"
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "Invalid Gift Card Code"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr "잘못된 기프트 카드 프로그램 리워드입니다. 포인트 할인당 1 단위 통화를 "
-"사용하십시오."
+msgstr ""
+"잘못된 기프트 카드 프로그램 리워드입니다. 포인트 할인당 1 단위 통화를 사용하"
+"십시오."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr "잘못된 기프트 카드 프로그램 규칙입니다. 사용 통화 당 1 포인트를 사용하십시오."
+msgstr ""
+"잘못된 기프트 카드 프로그램 규칙입니다. 사용 통화 당 1 포인트를 사용하십시오."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -482,8 +528,9 @@ msgstr "e월렛으로 환불 완료"
 msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
-msgstr "충전 또는 리워드 품목으로 e월렛이나 기프트 카드 프로그램을 환불할 수 "
-"없습니다."
+msgstr ""
+"충전 또는 리워드 품목으로 e월렛이나 기프트 카드 프로그램을 환불할 수 없습니"
+"다."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -537,8 +584,15 @@ msgstr "일반 펜"
 msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
-msgstr "일부 쿠폰이 유효하지 않습니다. 적용한 쿠폰이 업데이트되었습니다. 주문을 "
-"확인해주시기 바랍니다."
+msgstr ""
+"일부 쿠폰이 유효하지 않습니다. 적용한 쿠폰이 업데이트되었습니다. 주문을 확인"
+"해주시기 바랍니다."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
@@ -584,11 +638,12 @@ msgstr "해당 리워드 신청에 사용된 쿠폰입니다."
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
-"다음 코드는 이미 데이터베이스에 존재하는 코드입니다. 이미 판매가 "
-"완료되었습니까?\n"
+"다음 코드는 이미 데이터베이스에 존재하는 코드입니다. 이미 판매가 완료되었습니"
+"까?\n"
 "%s"
 
 #. module: pos_loyalty
@@ -596,8 +651,9 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
-msgstr "POS에서 쿠폰이나 기프트카드, 적립 카드를 생성할 때 실행되는 리포트 "
-"작업입니다."
+msgstr ""
+"POS에서 쿠폰이나 기프트카드, 적립 카드를 생성할 때 실행되는 리포트 작업입니"
+"다."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -605,7 +661,8 @@ msgstr "POS에서 쿠폰이나 기프트카드, 적립 카드를 생성할 때 �
 msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
-msgstr "\"%s\" 보상의 도메인에 오류가 있습니다. 도메인은 POS 클라이언트와 호환되어야 "
+msgstr ""
+"\"%s\" 보상의 도메인에 오류가 있습니다. 도메인은 POS 클라이언트와 호환되어야 "
 "합니다."
 
 #. module: pos_loyalty
@@ -643,7 +700,8 @@ msgstr "장바구니에 담겨 있는 품목이 신청할 수 있는 리워드�
 msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
-msgstr "기프트 카드 프로그램에는 이메일 서식이 없으며 POS에서 프린트하도록 설정되어 "
+msgstr ""
+"기프트 카드 프로그램에는 이메일 서식이 없으며 POS에서 프린트하도록 설정되어 "
 "있습니다."
 
 #. module: pos_loyalty
@@ -652,7 +710,8 @@ msgstr "기프트 카드 프로그램에는 이메일 서식이 없으며 POS에
 msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
-msgstr "기프트 카드 프로그램에는 인쇄 보고서가 없으며 POS에서 프린트하도록 설정되어 "
+msgstr ""
+"기프트 카드 프로그램에는 인쇄 보고서가 없으며 POS에서 프린트하도록 설정되어 "
 "있습니다."
 
 #. module: pos_loyalty
@@ -662,9 +721,10 @@ msgstr "이 규칙에 유효한 품목입니다."
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "This Gift card has already been sold."
-msgstr "이미 판매 완료된 기프트 카드입니다."
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid ""
+"This code seems to be invalid, please check the Gift Card code and try again."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-python
@@ -769,9 +829,21 @@ msgstr "이 내역이 리워드 중 일부인지의 여부입니다."
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Yes"
 msgstr "예"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "You cannot change the quantity or price of a physical gift card."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -815,8 +887,8 @@ msgstr "고객이 e월렛을 선택해야 합니다"
 msgid "no expiration"
 msgstr "유효 기간 없음"
 
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "the gift cards"
-msgstr "기프트 카드"
+#~ msgid "This Gift card has already been sold."
+#~ msgstr "이미 판매 완료된 기프트 카드입니다."
+
+#~ msgid "the gift cards"
+#~ msgstr "기프트 카드"

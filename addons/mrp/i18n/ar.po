@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 13:40+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/mrp/ar/>\n"
@@ -1033,8 +1033,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"قم بطباعة ملصق الدفعة/الرقم التسلسلي تلقائيًا عند استخدام الزر "
-"\"إنشاء رقم تسلسلي/رقم الدفعة جديد\"."
+"قم بطباعة ملصق الدفعة/الرقم التسلسلي تلقائيًا عند استخدام الزر \"إنشاء رقم "
+"تسلسلي/رقم الدفعة جديد\"."
 
 #. module: mrp
 #. odoo-javascript
@@ -1467,8 +1467,8 @@ msgid ""
 "Cannot compute days to prepare due to missing route info for at least 1 "
 "component or for the final product."
 msgstr ""
-"لا يمكن حساب الأيام المطلوبة لتجهيز المكونات نظراً لعدم وجود معلومات مسار مكوّ"
-"ن واحد على الأقل من مكونات المنتج النهائي."
+"لا يمكن حساب الأيام المطلوبة لتجهيز المكونات نظراً لعدم وجود معلومات مسار "
+"مكوّن واحد على الأقل من مكونات المنتج النهائي."
 
 #. module: mrp
 #. odoo-python
@@ -2012,8 +2012,8 @@ msgstr ""
 "الكمية الحالية من المنتجات.\n"
 "في سياق به موقع مخزون واحد، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي "
 "من توابعه.\n"
-"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع،"
-" أو أي من توابعه.\n"
+"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا "
+"المستودع، أو أي من توابعه.\n"
 "التخزين في موقع المخزون لمستودع هذا المحل، أو أي من توابعه.\n"
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'."
 
@@ -2278,6 +2278,7 @@ msgstr "عرض"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2628,8 +2629,8 @@ msgstr ""
 "المراد إزالتها)\n"
 "في سياق به موقع مخزون واحد، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي "
 "من توابعه.\n"
-"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع،"
-" أو أي من توابعه.\n"
+"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا "
+"المستودع، أو أي من توابعه.\n"
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'."
 
 #. module: mrp
@@ -2824,6 +2825,7 @@ msgstr "ساعات"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -2892,7 +2894,8 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء سجل مورد دون إزالته."
+msgstr ""
+"إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء سجل مورد دون إزالته."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
@@ -3006,6 +3009,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "تحركات المخزون"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3928,9 +3936,9 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"انتبه لكون مركز (مراكز) العمل المؤرشفة: '%s' لا تزال مرتبطة بقائمة مواد نشطة،"
-" مما يعني أنه لا يزال بالإمكان تخطيط العمليات عليها. لمنع حدوث ذلك، ننصح "
-"بحذف مركز العمل عوضاً عن ذلك."
+"انتبه لكون مركز (مراكز) العمل المؤرشفة: '%s' لا تزال مرتبطة بقائمة مواد "
+"نشطة، مما يعني أنه لا يزال بالإمكان تخطيط العمليات عليها. لمنع حدوث ذلك، "
+"ننصح بحذف مركز العمل عوضاً عن ذلك."
 
 #. module: mrp
 #. odoo-python
@@ -5819,7 +5827,8 @@ msgstr ""
 msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
-msgstr "لا يمكن أن يتخطى إجمالي حصة التكلفة للمنتجات الثانوية لأمر التصنيع 100."
+msgstr ""
+"لا يمكن أن يتخطى إجمالي حصة التكلفة للمنتجات الثانوية لأمر التصنيع 100."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
@@ -6830,8 +6839,8 @@ msgid ""
 "Components\"."
 msgstr ""
 "لا يسمح لك بإنشاء أو تحرير رقم تسلسلي أو رقم دفعة للمكونات التي لها نوع "
-"عمليات \"التصنيع\". لتغيير ذلك، اذهب إلى نوع العمليات وحدد المربع "
-"\"إنشاء دفعات جديدة/أرقام تسلسلية جديدة للمكونات\"."
+"عمليات \"التصنيع\". لتغيير ذلك، اذهب إلى نوع العمليات وحدد المربع \"إنشاء "
+"دفعات جديدة/أرقام تسلسلية جديدة للمكونات\"."
 
 #. module: mrp
 #. odoo-python
@@ -6999,10 +7008,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            يرجى مراجعة استهلاك المكونات الخاصة بك أو مطالبة "
 "المدير بالتحقق من صحتها\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">أمر التصنيع هذا</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">هذه أوامر التصنيع</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">أمر التصنيع هذا</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">هذه أوامر التصنيع</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7058,8 +7067,8 @@ msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
 msgstr ""
-"عليك التزويد بالأرقام التسلسلية/أرقام مجموعات المنتجات و\"استهلاكها\": "
-"%(missing_products)s"
+"عليك التزويد بالأرقام التسلسلية/أرقام مجموعات المنتجات و\"استهلاكها\": %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

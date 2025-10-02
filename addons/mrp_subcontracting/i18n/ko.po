@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 04:49+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -43,6 +43,11 @@ msgid "All"
 msgstr "전체"
 
 #. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
+msgid "Assign serial numbers to production order"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
 msgstr "자재명세서 현황 보고서"
@@ -74,21 +79,17 @@ msgid "Change Production Qty"
 msgstr "생산 수량 변경"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid ""
-"Check this box to create a new dedicated subcontracting location for this "
-"company. Note that standard subcontracting routes will be adapted so as to "
-"take these into account automatically."
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Check Availability"
 msgstr ""
-"이 회사에 대해 새롭게 지정된 외주 생산 위치를 생성하려면 체크박스에 "
-"표시해주십시오. 표준 하도급 경로는 이러한 사항을 자동으로 고려하도록 "
-"조정됩니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr "외주로 품목을 공급받으려는 경우 외주업체 유형의 거래처를 선택해 주세요."
+msgstr ""
+"외주로 품목을 공급받으려는 경우 외주업체 유형의 거래처를 선택해 주세요."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -106,9 +107,15 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Continue"
-msgstr "계속"
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Create New Production"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -131,20 +138,31 @@ msgid "Detail Component"
 msgstr "세부 구성 요소"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "세부 정보"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Discard"
-msgstr "취소"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
-msgid "Display Action Record Components"
-msgstr "부품 기록 작업 표시"
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_change_production_qty__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -152,11 +170,6 @@ msgstr "부품 기록 작업 표시"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Done"
 msgstr "완료"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
-msgid "Facultative"
-msgstr "조건적"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
@@ -169,9 +182,26 @@ msgid "Has been recorded?"
 msgstr "기록됨"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
-msgid "Hide"
-msgstr "숨기기"
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_change_production_qty__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
+msgid "ID"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -179,8 +209,9 @@ msgstr "숨기기"
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
-msgstr "재고를 정확하게 관리하려면 외주 생산 위치는 회사와 연관된 내부 형태의 "
-"공간이어야 합니다."
+msgstr ""
+"재고를 정확하게 관리하려면 외주 생산 위치는 회사와 연관된 내부 형태의 공간이"
+"어야 합니다."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -198,16 +229,12 @@ msgid "Is Subcontract"
 msgstr "외주 생산"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid "Is a Subcontracting Location?"
-msgstr "외주 생산 위치"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid ""
-"List of Products used in the BoM, used to filter the list of products in the"
-" subcontracting portal view"
-msgstr "외주 포털 보기에서 필터링 하는데 사용되는 자재명세서의 품목 목록입니다."
+"List of Products used in the BoM, used to filter the list of products in the "
+"subcontracting portal view"
+msgstr ""
+"외주 포털 보기에서 필터링 하는데 사용되는 자재명세서의 품목 목록입니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -221,13 +248,9 @@ msgstr "협력사가 외주업체인 MRP 생산"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr "재고 현황에 불일치가 발생하지 않도록 외주업체에 재공급 피킹을 검증하거나 "
-"조정해야 합니다."
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
-msgid "Mandatory"
-msgstr "필수"
+msgstr ""
+"재고 현황에 불일치가 발생하지 않도록 외주업체에 재공급 피킹을 검증하거나 조정"
+"해야 합니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
@@ -258,26 +281,9 @@ msgid "Newest"
 msgstr "최신"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_picking.py:0
-msgid "Nothing to record"
-msgstr "레코드할 내용 없음"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_quant.py:0
-msgid "Operation not supported"
-msgstr ""
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Operations"
 msgstr "작업"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
-msgid "Operations without package"
-msgstr "패키지 없는 작업"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -286,22 +292,25 @@ msgstr "주문"
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+msgid ""
+"Please set a lot/serial for the currently opened subcontracting MO first."
+msgstr ""
+
+#. module: mrp_subcontracting
+#. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
-msgstr "포털 사용자는 '완료' 상태로 재고 이동을 생성하거나 현재 상태를 '완료'로 "
-"변경할 수 없습니다."
+msgstr ""
+"포털 사용자는 '완료' 상태로 재고 이동을 생성하거나 현재 상태를 '완료'로 변경"
+"할 수 없습니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "품목 이동 (재고 이동 내역)"
-
-#. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_stock_replenish_mixin
-msgid "Product Replenish Mixin"
-msgstr "제품 보충 믹스인"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -321,25 +330,9 @@ msgstr "수량"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "Raw Materials for %s"
-msgstr "%s용 원자재"
-
-#. module: mrp_subcontracting
-#. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 msgid "Ready"
 msgstr "준비"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Record Production"
-msgstr "생산 기록"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-msgid "Record components"
-msgstr "부품 기록"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -361,7 +354,6 @@ msgstr "외주업체 재공급"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_replenish_mixin.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 msgid "Resupply Subcontractor on Order"
@@ -389,6 +381,7 @@ msgstr "예정일"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
 msgstr "외주 생산 세부 표시"
 
@@ -419,12 +412,6 @@ msgid "Stock Rule"
 msgstr "재고 규칙"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "Subcontract"
-msgstr "외주"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
 msgstr "하도급함"
@@ -437,15 +424,13 @@ msgstr "외주 제조 주문은 병합할 수 없습니다."
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/res_company.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracting"
 msgstr "외주 생산"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/res_company.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
 msgstr "외주 생산 위치"
@@ -454,6 +439,13 @@ msgstr "외주 생산 위치"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
 msgstr "외주 생산 위치"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+msgid "Subcontracting MOs"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -474,6 +466,11 @@ msgstr "외주 운영 유형"
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
 msgstr "외주 포털"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Subcontracting Productions"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -528,27 +525,20 @@ msgstr "외주 입고에 대한 이동입니다."
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
-msgstr "하도급 업무 절차 중에 이 연락처로 상품을 보낼 때 자재나 대상으로 사용되는 "
-"재고 위치."
+msgstr ""
+"하도급 업무 절차 중에 이 연락처로 상품을 보낼 때 자재나 대상으로 사용되는 재"
+"고 위치."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+msgid "The subcontracted goods have already been received."
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
 msgstr "현재 계정에 대한 생산이 없습니다."
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_picking.py:0
-msgid ""
-"There shouldn't be multiple productions to record for the same subcontracted"
-" move."
-msgstr "동일한 외주 이동에 대해 여러 개의 생산을 기록할 수 없습니다."
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "This MO isn't related to a subcontracted move"
-msgstr "이 제조 주문은 외주 이동과 관련이 없습니다"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -572,14 +562,6 @@ msgid "Warehouse"
 msgstr "창고"
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
-msgid ""
-"Wizard in case of consumption in warning/strict and more component has been "
-"used for a MO (related to the bom)"
-msgstr "경고/최소 모드에서 소비시 자재명세서와 비교하여 더 많은 부품이 제조주문에 "
-"들어간 경우 사용되는 마법사"
-
-#. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
 msgid ""
@@ -600,26 +582,88 @@ msgid "You cannot write on fields %s in mrp.production."
 msgstr "mrp.production 의 %s에는 작성할 수 없습니다."
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "You must enter a serial number for %s"
-msgstr "%s의 일련번호를 입력해주십시오"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "You must enter a serial number for each line of %s"
-msgstr "각 줄에 %s의 일련번호를 입력해야 합니다"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid ""
-"You must indicate a non-zero amount consumed for at least one of your "
-"components"
-msgstr "부품 중 이상에 대해 0이 아닌 소비량을 지정해야 합니다."
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "e.g. PO0032"
 msgstr "예: PO0032"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/controllers/portal.py:0
+msgid "state"
+msgstr ""
+
+#~ msgid ""
+#~ "Check this box to create a new dedicated subcontracting location for this "
+#~ "company. Note that standard subcontracting routes will be adapted so as "
+#~ "to take these into account automatically."
+#~ msgstr ""
+#~ "이 회사에 대해 새롭게 지정된 외주 생산 위치를 생성하려면 체크박스에 표시해"
+#~ "주십시오. 표준 하도급 경로는 이러한 사항을 자동으로 고려하도록 조정됩니다."
+
+#~ msgid "Continue"
+#~ msgstr "계속"
+
+#~ msgid "Discard"
+#~ msgstr "취소"
+
+#~ msgid "Display Action Record Components"
+#~ msgstr "부품 기록 작업 표시"
+
+#~ msgid "Facultative"
+#~ msgstr "조건적"
+
+#~ msgid "Hide"
+#~ msgstr "숨기기"
+
+#~ msgid "Is a Subcontracting Location?"
+#~ msgstr "외주 생산 위치"
+
+#~ msgid "Mandatory"
+#~ msgstr "필수"
+
+#~ msgid "Nothing to record"
+#~ msgstr "레코드할 내용 없음"
+
+#~ msgid "Operations without package"
+#~ msgstr "패키지 없는 작업"
+
+#~ msgid "Product Replenish Mixin"
+#~ msgstr "제품 보충 믹스인"
+
+#~ msgid "Raw Materials for %s"
+#~ msgstr "%s용 원자재"
+
+#~ msgid "Record Production"
+#~ msgstr "생산 기록"
+
+#~ msgid "Record components"
+#~ msgstr "부품 기록"
+
+#~ msgid "Subcontract"
+#~ msgstr "외주"
+
+#~ msgid ""
+#~ "There shouldn't be multiple productions to record for the same "
+#~ "subcontracted move."
+#~ msgstr "동일한 외주 이동에 대해 여러 개의 생산을 기록할 수 없습니다."
+
+#~ msgid "This MO isn't related to a subcontracted move"
+#~ msgstr "이 제조 주문은 외주 이동과 관련이 없습니다"
+
+#~ msgid ""
+#~ "Wizard in case of consumption in warning/strict and more component has "
+#~ "been used for a MO (related to the bom)"
+#~ msgstr ""
+#~ "경고/최소 모드에서 소비시 자재명세서와 비교하여 더 많은 부품이 제조주문에 "
+#~ "들어간 경우 사용되는 마법사"
+
+#~ msgid "You must enter a serial number for %s"
+#~ msgstr "%s의 일련번호를 입력해주십시오"
+
+#~ msgid "You must enter a serial number for each line of %s"
+#~ msgstr "각 줄에 %s의 일련번호를 입력해야 합니다"
+
+#~ msgid ""
+#~ "You must indicate a non-zero amount consumed for at least one of your "
+#~ "components"
+#~ msgstr "부품 중 이상에 대해 0이 아닌 소비량을 지정해야 합니다."

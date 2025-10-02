@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 02:34+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/project/"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: project
@@ -388,8 +388,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Псевдоним домена\" title="
-"\"Псевдоним домена\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Псевдоним домена\" "
+"title=\"Псевдоним домена\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1018,8 +1018,8 @@ msgid ""
 msgstr ""
 "Автоматически изменять состояние, когда клиент отвечает на отзыв для этого "
 "этапа.\n"
-" * Хороший отзыв от клиента обновит состояние до «Одобрено» (зеленый маркер)."
-"\n"
+" * Хороший отзыв от клиента обновит состояние до «Одобрено» (зеленый "
+"маркер).\n"
 " * Нейтральный или плохой отзыв установит статус Kanban на «Требуются "
 "изменения» (оранжевый маркер).\n"
 
@@ -2499,7 +2499,7 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
+msgid "Invalid Display Name"
 msgstr ""
 
 #. module: project
@@ -2553,7 +2553,8 @@ msgstr "Версия проблемы"
 #: model:ir.model.fields,help:project.field_project_project__duration_tracking
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr "JSON, который сопоставляет ID из поля many2one с потраченными секундами"
+msgstr ""
+"JSON, который сопоставляет ID из поля many2one с потраченными секундами"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2676,6 +2677,12 @@ msgstr "Просроченные вехи"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Позже"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3351,7 +3358,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr "Компания партнера не может отличаться от компании его назначенных задач"
+msgstr ""
+"Компания партнера не может отличаться от компании его назначенных задач"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -4714,8 +4722,8 @@ msgstr "Название задачи..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
-"Задача перенесена из проекта %(source_project)s в проект "
-"%(destination_project)s"
+"Задача перенесена из проекта %(source_project)s в проект %"
+"(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4815,12 +4823,6 @@ msgstr "Этапы задач"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
 msgstr "Задачи в повторении"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
@@ -5158,8 +5160,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
-"Они представляют собой различные категории дел, которые вам нужно сделать ("
-"например, «Звонок» или «Отправить email»)."
+"Они представляют собой различные категории дел, которые вам нужно сделать "
+"(например, «Звонок» или «Отправить email»)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5339,7 +5341,8 @@ msgstr "Отслеживайте время, затраченное на про�
 msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
-msgstr "Прозрачные теги не видны в представлении Kanban ваших проектов и задач."
+msgstr ""
+"Прозрачные теги не видны в представлении Kanban ваших проектов и задач."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__bimonthly

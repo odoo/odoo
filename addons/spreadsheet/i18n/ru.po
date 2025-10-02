@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 02:33+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: spreadsheet
@@ -1781,8 +1781,8 @@ msgid ""
 "(Grand Column Total))"
 msgstr ""
 "Расчет по формуле:\n"
-"((значение в ячейке) × (Общий итог по всем)) / ((Общий итог по строке) × ("
-"Общий итог по столбцу))"
+"((значение в ячейке) × (Общий итог по всем)) / ((Общий итог по строке) × "
+"(Общий итог по столбцу))"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2324,6 +2324,12 @@ msgstr "Запятая"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Compare two numeric values, returning 1 if they're equal."
 msgstr "Сравнивает два числовых значения, возвращая 1, если они равны."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Compute from totals"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10016,8 +10022,8 @@ msgid ""
 "The model (%(model)s) of this global filter is not valid (it may have been "
 "renamed/deleted)."
 msgstr ""
-"Модель (%(model)s), связанная с этим глобальным фильтром, недействительна ("
-"возможно, была переименована или удалена)."
+"Модель (%(model)s), связанная с этим глобальным фильтром, недействительна "
+"(возможно, была переименована или удалена)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12782,12 +12788,8 @@ msgstr "Изменение значения по сравнению с ключ�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
-"expect a number or a range."
+msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
 msgstr ""
-"Значение для параметра %d отсутствует, в то время как функция [[ИМЯ "
-"ФУНКЦИИ]] ожидает число или диапазон."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13848,6 +13850,13 @@ msgstr "вчера"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "ноль"
+
+#~ msgid ""
+#~ "Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
+#~ "expect a number or a range."
+#~ msgstr ""
+#~ "Значение для параметра %d отсутствует, в то время как функция [[ИМЯ "
+#~ "ФУНКЦИИ]] ожидает число или диапазон."
 
 #~ msgid "#LINK"
 #~ msgstr "#LINK"

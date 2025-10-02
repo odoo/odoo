@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-24 19:22+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/mrp/el/>\n"
@@ -866,7 +866,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr "Να επιτρέπεται η δημιουργία παρτίδων/σειριακών αριθμών για τα συστατικά"
+msgstr ""
+"Να επιτρέπεται η δημιουργία παρτίδων/σειριακών αριθμών για τα συστατικά"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
@@ -2180,9 +2181,9 @@ msgstr ""
 "  * Επιτρέπεται με προειδοποίηση: επιτρέπεται για όλους τους χρήστες "
 "παραγωγής, με συνοπτική αναφορά των διαφορών κατανάλωσης κατά το κλείσιμο "
 "της εντολής παραγωγής.\n"
-"  Σημειώστε ότι στην περίπτωση της προβολής «Επισήμανση Ανάλωσης Συστατικού»"
-", όπου η ανάλωση καταχωρείται αποκλειστικά χειροκίνητα, θα εμφανίζονται "
-"προειδοποιήσεις ανάλωσης όπου χρειάζεται.\n"
+"  Σημειώστε ότι στην περίπτωση της προβολής «Επισήμανση Ανάλωσης "
+"Συστατικού», όπου η ανάλωση καταχωρείται αποκλειστικά χειροκίνητα, θα "
+"εμφανίζονται προειδοποιήσεις ανάλωσης όπου χρειάζεται.\n"
 "  * Μπλοκαρισμένο: μόνο διαχειριστής μπορεί να κλείσει την εντολή παραγωγής "
 "όταν δεν τηρείται η προβλεπόμενη ανάλωση της Συνταγής Παραγωγής."
 
@@ -2306,6 +2307,7 @@ msgstr "Εμφάνιση"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2852,6 +2854,7 @@ msgstr "Ώρες"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -3042,6 +3045,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Κινήσεις Αποθεμάτων"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3265,7 +3273,8 @@ msgstr ""
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
-msgstr "Στρώσεις που συγκολλούνται μεταξύ τους για να σχηματίσουν ξύλινα πάνελ."
+msgstr ""
+"Στρώσεις που συγκολλούνται μεταξύ τους για να σχηματίσουν ξύλινα πάνελ."
 
 #. module: mrp
 #. odoo-javascript
@@ -4450,7 +4459,8 @@ msgstr "Παρακαλώ εισάγετε θετική ποσότητα."
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Please set the first Serial Number or a default sequence"
-msgstr "Παρακαλώ ορίστε τον πρώτο σειριακό αριθμό ή μια προεπιλεγμένη ακολουθία"
+msgstr ""
+"Παρακαλώ ορίστε τον πρώτο σειριακό αριθμό ή μια προεπιλεγμένη ακολουθία"
 
 #. module: mrp
 #. odoo-python
@@ -5798,9 +5808,9 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"Το ποσοστό του τελικού κόστους παραγωγής για αυτή τη γραμμή υποπροϊόντος ("
-"διαιρούμενο με την παραγόμενη ποσότητα). Το σύνολο του μεριδίου κόστους όλων "
-"των υποπροϊόντων πρέπει να είναι μικρότερο ή ίσο του 100."
+"Το ποσοστό του τελικού κόστους παραγωγής για αυτή τη γραμμή υποπροϊόντος "
+"(διαιρούμενο με την παραγόμενη ποσότητα). Το σύνολο του μεριδίου κόστους "
+"όλων των υποπροϊόντων πρέπει να είναι μικρότερο ή ίσο του 100."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -5867,8 +5877,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already "
 "been produced"
 msgstr ""
-"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το υποπροϊόν "
-"%(product_name)s έχει ήδη παραχθεί"
+"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το υποπροϊόν %"
+"(product_name)s έχει ήδη παραχθεί"
 
 #. module: mrp
 #. odoo-python
@@ -5877,8 +5887,8 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
-"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το συστατικό "
-"%(component)s έχει ήδη αναλωθεί"
+"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το συστατικό %"
+"(component)s έχει ήδη αναλωθεί"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
@@ -7121,10 +7131,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Παρακαλώ επανεξετάστε την ανάλωση των συστατικών "
 "ή ζητήστε από έναν υπεύθυνο να επικυρώσει\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">αυτή την εντολή παραγωγής</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">αυτές τις εντολές παραγωγής</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">αυτή την εντολή παραγωγής</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">αυτές τις εντολές παραγωγής</span>.\n"
 "                        </b>"
 
 #. module: mrp
