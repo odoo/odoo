@@ -1,6 +1,6 @@
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder_plugin";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
@@ -234,7 +234,7 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin],
+            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_PLACEHOLDER_PLUGINS],
         };
     }
 
