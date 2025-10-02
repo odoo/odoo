@@ -819,7 +819,7 @@ class PosSession(models.Model):
         data = self._create_pay_later_receivable_lines(data)
         data = self._create_cash_statement_lines_and_cash_move_lines(data)
         data = self._create_invoice_receivable_lines(data)
-        data = self._create_stock_output_lines(data)
+        data = self._create_stock_valuation_lines(data)
         if balancing_account and amount_to_balance:
             data = self._create_balancing_line(data, balancing_account, amount_to_balance)
 
@@ -846,7 +846,7 @@ class PosSession(models.Model):
         taxes = defaultdict(tax_amounts)
         stock_expense = defaultdict(amounts)
         stock_return = defaultdict(amounts)
-        stock_output = defaultdict(amounts)
+        stock_valuation = defaultdict(amounts)
         rounding_difference = {'amount': 0.0, 'amount_converted': 0.0}
         # Track the receivable lines of the order's invoice payment moves for reconciliation
         # These receivable lines are reconciled to the corresponding invoice receivable lines
@@ -950,6 +950,32 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
+        if self.company_id.anglo_saxon_accounting:
+            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+            if all_picking_ids:
+                # Combine stock lines
+                stock_move_sudo = self.env['stock.move'].sudo()
+                stock_moves = stock_move_sudo.search([
+                    ('picking_id', 'in', all_picking_ids),
+                    ('company_id.anglo_saxon_accounting', '=', True),
+                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
+                    ('product_id.is_storable', '=', True),
+                ])
+                for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
+                    for move in stock_moves_batch:
+                        product_accounts = move.product_id._get_product_accounts()
+                        exp_key = product_accounts['expense']
+                        stock_key = product_accounts['stock_valuation']
+                        signed_product_qty = move.quantity
+                        if move._is_in():
+                            signed_product_qty *= -1
+                        amount = signed_product_qty * move._get_price_unit()
+                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                        if move._is_in():
+                            stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                        else:
+                            stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
@@ -964,7 +990,7 @@ class PosSession(models.Model):
             'split_receivables_pay_later':         split_receivables_pay_later,
             'combine_receivables_pay_later':       combine_receivables_pay_later,
             'stock_return':                        stock_return,
-            'stock_output':                        stock_output,
+            'stock_valuation':                     stock_valuation,
             'combine_inv_payment_receivable_lines': combine_inv_payment_receivable_lines,
             'rounding_difference':                 rounding_difference,
             'MoveLine':                            MoveLine,
@@ -1229,23 +1255,21 @@ class PosSession(models.Model):
         data.update({'split_invoice_receivable_lines': split_invoice_receivable_lines})
         return data
 
-    def _create_stock_output_lines(self, data):
-        # Keep reference to the stock output lines because
-        # they are reconciled with output lines in the stock.move's account.move.line
+    def _create_stock_valuation_lines(self, data):
         MoveLine = data.get('MoveLine')
-        stock_output = data.get('stock_output')
+        stock_valuation = data.get('stock_valuation')
         stock_return = data.get('stock_return')
 
-        stock_output_vals = defaultdict(list)
-        stock_output_lines = {}
-        for stock_moves in [stock_output, stock_return]:
+        stock_valuation_vals = defaultdict(list)
+        stock_valuation_lines = {}
+        for stock_moves in [stock_valuation, stock_return]:
             for account, amounts in stock_moves.items():
-                stock_output_vals[account].append(self._get_stock_output_vals(account, amounts['amount'], amounts['amount_converted']))
+                stock_valuation_vals[account].append(self._get_stock_valuation_vals(account, amounts['amount'], amounts['amount_converted']))
 
-        for output_account, vals in stock_output_vals.items():
-            stock_output_lines[output_account] = MoveLine.create(vals)
+        for stock_valuation_acc, vals in stock_valuation_vals.items():
+            stock_valuation_lines[stock_valuation_acc] = MoveLine.create(vals)
 
-        data.update({'stock_output_lines': stock_output_lines})
+        data.update({'stock_valuation_lines': stock_valuation_lines})
         return data
 
     def _reconcile_account_move_lines(self, data):
@@ -1412,8 +1436,8 @@ class PosSession(models.Model):
         partial_args = {'account_id': exp_account.id, 'move_id': self.move_id.id}
         return self._debit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
-    def _get_stock_output_vals(self, out_account, amount, amount_converted):
-        partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
+    def _get_stock_valuation_vals(self, stock_val_account, amount, amount_converted):
+        partial_args = {'account_id': stock_val_account.id, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
     def _get_combine_statement_line_vals(self, journal, amount, payment_method):
