@@ -6,6 +6,7 @@ import {
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { animationFrame, click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
+import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
 
 defineWebsiteModels();
 
@@ -216,12 +217,34 @@ test("set cover image width", async () => {
 });
 
 test("cover image set to wide aspect ratio can be vertically aligned", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(cardWithImageHtml, {
+        loadIframeBundles: true,
+    });
     await contains(":iframe .s_card").click();
-    await waitFor("[data-action-id='alignCoverImage']");
-    expect("[data-label='Alignment'] [data-action-id='alignCoverImage'").toHaveCount(1);
-    await setInputRange("[data-action-id='alignCoverImage'] input", 50);
+    await waitSidebarUpdated();
+    await contains("[data-label='Position'] [data-action-id='coverImagePositionOverlay']").click();
+    await waitFor(".o-overlay-container .o_we_overlay_dragger", { timeout: 2000 });
+
+    const movement = 200;
+    const positionStartDrag = { x: 100, y: 100 };
+    const { startDrag, endDrag } = patchDragImage(
+        ".o-overlay-container .o_we_overlay_dragger",
+        positionStartDrag,
+        { x: positionStartDrag.x + movement, y: positionStartDrag.y + movement }
+    );
+
+    await endDrag(await startDrag());
+
     await animationFrame();
-    expect(":iframe .s_card .o_card_img_wrapper").toHaveClass("o_card_img_adjust_v");
-    expect(":iframe .s_card").toHaveStyle({ "--card-img-ratio-align": "50%" });
+    const cardImage = queryOne(":iframe .s_card .o_card_img");
+    // Delta Y obtained by applying the formula in getDelta of CardImageOptionPlugin
+    const deltaY = cardImage.clientHeight - cardImage.clientWidth;
+    expect(parseInt(cardImage.style.objectPosition.split(" ")[1])).toBeCloseTo(
+        // Formula derived from the one in onDragMove of ImagePositionOverlay
+        // 50% being the starting position
+        50 + (movement / deltaY) * 100,
+        {
+            message: "Image should only be dragged vertically and the right amount",
+        }
+    );
 });

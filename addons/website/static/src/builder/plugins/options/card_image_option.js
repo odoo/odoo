@@ -1,9 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { CardImageAlignmentOption } from "./card_image_alignment_option";
+import { CardImagePositionOption } from "./card_image_position_option";
 
 export class CardImageOption extends BaseOptionComponent {
     static template = "website.CardImageOption";
-    static components = { CardImageAlignmentOption };
+    static components = { CardImagePositionOption };
 
     setup() {
         super.setup();
