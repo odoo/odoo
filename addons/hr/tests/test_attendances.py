@@ -25,9 +25,7 @@ class TestAttendances(TestHrCommon):
             'name': "Test Calendar: Half Time",
             'company_id': cls.env.company.id,
             'tz': "Europe/Brussels",
-            'two_weeks_calendar': False,
             'attendance_ids': [(5, 0, 0)] + [(0, 0, {
-                'name': "Attendance",
                 'dayofweek': dayofweek,
                 'hour_from': hour_from,
                 'hour_to': hour_to,

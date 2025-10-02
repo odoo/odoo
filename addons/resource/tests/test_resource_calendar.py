@@ -13,7 +13,6 @@ class TestResourceCalendar(TransactionCase):
         """
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard Calendar',
-            'two_weeks_calendar': False,
         })
         resource = self.env['resource.resource'].create({
             'name': 'Wade Wilson',
@@ -21,7 +20,6 @@ class TestResourceCalendar(TransactionCase):
             'tz': 'America/New_York',  # -04:00 UTC offset in the summer
         })
         self.env['resource.calendar.attendance'].create({
-            'name': 'TEMP',
             'calendar_id': calendar.id,
             'dayofweek': '2',  # Wednesday
             'hour_from': 14,   # 18:00 UTC
@@ -41,7 +39,6 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(start, start_dt, "Output start time should match the input start time")
         self.assertEqual(end, end_dt, "Output end time should match the input end time")
         self.assertEqual(attendance.duration_hours, 3.0, "Attendance duration should be 3 hours")
-        self.assertEqual(attendance.duration_days, 0.125, "Attendance duration should be 0.125 days (3 hours)")
 
     def test_flexible_calendar_attendance_interval_duration(self):
         """

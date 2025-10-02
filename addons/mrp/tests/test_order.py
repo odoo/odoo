@@ -4845,7 +4845,6 @@ class TestMrpOrder(TestMrpCommon):
             'hours_per_day': 24,
             'attendance_ids': [
                 Command.create({
-                    'name': f'{day}',
                     'dayofweek': str(week_days.index(day)),
                     'hour_from': 0,
                     'hour_to': 24,
