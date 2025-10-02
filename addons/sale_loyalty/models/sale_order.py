@@ -1067,10 +1067,13 @@ class SaleOrder(models.Model):
         coupons_to_unlink = self.env['loyalty.card']
         point_entries_to_unlink = self.env['sale.order.coupon.points']
         # Remove any coupons that are expired
-        if self.applied_coupon_ids:
-            self.applied_coupon_ids = self.applied_coupon_ids.filtered(lambda c:
-                (not c.expiration_date or c.expiration_date >= fields.Date.today())
+        if initial_coupons := self.applied_coupon_ids:
+            check_date = self._get_confirmed_tx_create_date()
+            self.applied_coupon_ids = initial_coupons.filtered(
+                lambda c: not c.expiration_date or c.expiration_date >= check_date,
             )
+            removed = initial_coupons - self.applied_coupon_ids
+            lines_to_unlink |= self.order_line.filtered(lambda sol: sol.coupon_id in removed)
         point_ids_per_program = defaultdict(lambda: self.env['sale.order.coupon.points'])
         for pe in self.coupon_point_ids:
             # Update coupons that were created for Public User
