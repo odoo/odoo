@@ -706,13 +706,13 @@ class TestStockLot(TestStockCommon):
 
         self.StockQuantObj.with_context(inventory_mode=True).create({
             'product_id': self.apple_product.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.stock_location.id,
             'quantity': 100,
             'lot_id': lot.id,
         })
         picking = self.PickingObj.create({
             'partner_id': self.partner_1.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
                 'product_id': self.apple_product.id,
                 'product_uom_qty': 2,
