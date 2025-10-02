@@ -62,13 +62,9 @@ const threadPatch = {
         super.setup();
         this.channel = fields.One("discuss.channel", {
             inverse: "thread",
+            /** @this {import("models").Thread} */
             compute() {
-                if (this.model === "discuss.channel") {
-                    return {
-                        id: this.id,
-                    };
-                }
-                return undefined;
+                return this.model === "discuss.channel" ? this.id : undefined;
             },
             onDelete: (r) => r.delete(),
         });
@@ -105,7 +101,9 @@ const threadPatch = {
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
-                return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+                return this.store.channel_types_with_seen_infos.includes(
+                    this.channel?.channel_type
+                );
             },
         });
         this.firstUnreadMessage = fields.One("mail.message", {
@@ -239,7 +237,7 @@ const threadPatch = {
         return this.member_count === this.channel?.channel_member_ids.length;
     },
     get avatarUrl() {
-        if (this.channel_type === "channel" || this.channel_type === "group") {
+        if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
                 unique: this.avatar_cache_key,
             });
@@ -257,13 +255,13 @@ const threadPatch = {
         const res = await super.checkReadAccess();
         if (!res && this.model === "discuss.channel") {
             // channel is assumed to be readable if its channel_type is known
-            return this.channel_type;
+            return this.channel.channel_type;
         }
         return res;
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (this.channel_type === "channel") {
+        if (this.channel?.channel_type === "channel") {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -290,7 +288,7 @@ const threadPatch = {
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
             return this.self_member_id.custom_channel_name;
         }
-        if (this.channel_type === "chat" && this.correspondent) {
+        if (this.channel?.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;
         }
         if (this.channel_name_member_ids.length && !this.name) {
@@ -351,7 +349,7 @@ const threadPatch = {
         }
     },
     get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group"].includes(this.channel?.channel_type);
     },
     get hasSelfAsMember() {
         return Boolean(this.self_member_id);
@@ -475,7 +473,8 @@ const threadPatch = {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
-                (!command.channel_types || command.channel_types.includes(this.channel_type))
+                (!command.channel_types ||
+                    command.channel_types.includes(this.channel?.channel_type))
             ) {
                 await this.executeCommand(command, textContent);
                 return;
@@ -494,7 +493,7 @@ const threadPatch = {
     },
     get canLeave() {
         return (
-            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
+            this.allowedToLeaveChannelTypes.includes(this.channel?.channel_type) &&
             this.group_ids.length === 0 &&
             this.store.self_partner
         );
@@ -504,7 +503,8 @@ const threadPatch = {
     },
     get canUnpin() {
         return (
-            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+            this.parent_channel_id ||
+            this.allowedToUnpinChannelTypes.includes(this.channel?.channel_type)
         );
     },
     get typesAllowingCalls() {
@@ -513,18 +513,18 @@ const threadPatch = {
     get allowCalls() {
         return (
             !this.isTransient &&
-            this.typesAllowingCalls.includes(this.channel_type) &&
+            this.typesAllowingCalls.includes(this.channel?.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
     },
     get isChatChannel() {
-        return ["chat", "group"].includes(this.channel_type);
+        return ["chat", "group"].includes(this.channel?.channel_type);
     },
     get allowDescription() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group"].includes(this.channel?.channel_type);
     },
     get invitationLink() {
-        if (!this.uuid || this.channel_type === "chat") {
+        if (!this.uuid || this.channel?.channel_type === "chat") {
             return undefined;
         }
         return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
@@ -560,7 +560,7 @@ const threadPatch = {
     },
     async leaveChannel({ force = false } = {}) {
         if (
-            this.channel_type !== "group" &&
+            this.channel?.channel_type !== "group" &&
             this.create_uid?.eq(this.store.self.main_user_id) &&
             !force
         ) {
@@ -568,7 +568,7 @@ const threadPatch = {
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
         }
-        if (this.channel_type === "group" && !force) {
+        if (this.channel?.channel_type === "group" && !force) {
             await this.askLeaveConfirmation(
                 _t(
                     "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
@@ -585,9 +585,12 @@ const threadPatch = {
         const newName = name.trim();
         if (
             newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") || this.isChatChannel)
+            ((newName && this.channel?.channel_type === "channel") || this.isChatChannel)
         ) {
-            if (this.channel_type === "channel" || this.channel_type === "group") {
+            if (
+                this.channel?.channel_type === "channel" ||
+                this.channel?.channel_type === "group"
+            ) {
                 this.name = newName;
                 await this.store.env.services.orm.call(
                     "discuss.channel",

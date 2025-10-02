@@ -8,7 +8,7 @@ import { joinChannelAction } from "@mail/discuss/core/web/thread_actions";
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
     condition: ({ owner, thread }) =>
-        thread?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
+        thread?.channel?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
@@ -19,7 +19,9 @@ registerThreadAction("livechat-info", {
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
     condition: ({ owner, thread }) =>
-        thread?.channel_type === "livechat" && !thread.livechat_end_dt && !owner.isDiscussContent,
+        thread?.channel?.channel_type === "livechat" &&
+        !thread.livechat_end_dt &&
+        !owner.isDiscussContent,
     dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",

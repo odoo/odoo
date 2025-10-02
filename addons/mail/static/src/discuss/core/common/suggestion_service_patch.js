@@ -30,9 +30,9 @@ const suggestionServicePatch = {
     getPartnerSuggestions(thread) {
         const isNonPublicChannel =
             thread &&
-            (thread.channel_type === "group" ||
-                thread.channel_type === "chat" ||
-                (thread.channel_type === "channel" &&
+            (thread.channel?.channel_type === "group" ||
+                thread.channel?.channel_type === "chat" ||
+                (thread.channel?.channel_type === "channel" &&
                     (thread.parent_channel_id || thread).group_public_id));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
@@ -43,7 +43,7 @@ const suggestionServicePatch = {
             let partners = (thread.channel?.channel_member_ids ?? [])
                 .filter((m) => m.partner_id)
                 .map((m) => m.partner_id);
-            if (thread.channel_type === "channel") {
+            if (thread.channel?.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
                 partners = new Set([...partners, ...(group?.partners ?? [])]);
             }
@@ -73,7 +73,7 @@ const suggestionServicePatch = {
                     return false;
                 }
                 if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel_type);
+                    return command.channel_types.includes(thread.channel?.channel_type);
                 }
                 return true;
             })

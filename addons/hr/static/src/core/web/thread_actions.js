@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("open-hr-profile", {
     condition: ({ owner, thread }) =>
-        thread?.channel_type === "chat" &&
+        thread?.channel?.channel_type === "chat" &&
         owner.props.chatWindow?.isOpen &&
         thread.correspondent?.partner_id?.employeeId &&
         !owner.isDiscussSidebarChannelActions,

@@ -5,7 +5,7 @@ patch(ThreadAction.prototype, {
     _condition({ action, owner, store, thread }) {
         if (
             action.id === "create-lead" &&
-            thread?.channel_type === "livechat" &&
+            thread?.channel?.channel_type === "livechat" &&
             store.has_access_create_lead &&
             !owner.isDiscussSidebarChannelActions
         ) {

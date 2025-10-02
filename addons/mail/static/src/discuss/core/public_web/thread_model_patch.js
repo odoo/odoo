@@ -10,7 +10,9 @@ const threadPatch = {
         super.setup(...arguments);
         this.appAsUnreadChannels = fields.One("DiscussApp", {
             compute() {
-                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+                return this.channel?.channel_type === "channel" && this.isUnread
+                    ? this.store.discuss
+                    : null;
             },
         });
         this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
@@ -56,10 +58,10 @@ const threadPatch = {
         if (this.parent_channel_id) {
             return;
         }
-        if (["group", "chat"].includes(this.channel_type)) {
+        if (["group", "chat"].includes(this.channel?.channel_type)) {
             return this.store.discuss.chats;
         }
-        if (this.channel_type === "channel") {
+        if (this.channel?.channel_type === "channel") {
             return this.store.discuss.channels;
         }
     },
@@ -73,7 +75,7 @@ const threadPatch = {
         super.delete(...arguments);
     },
     get hasSubChannelFeature() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group"].includes(this.channel?.channel_type);
     },
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;

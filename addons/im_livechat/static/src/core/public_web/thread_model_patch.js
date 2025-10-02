@@ -9,14 +9,14 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.appAsLivechats = fields.One("DiscussApp", {
             compute() {
-                return this.channel_type === "livechat" ? this.store.discuss : null;
+                return this.channel?.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
         this.country_id = fields.One("res.country");
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
     },
     _computeDiscussAppCategory() {
-        if (this.channel_type !== "livechat") {
+        if (this.channel?.channel_type !== "livechat") {
             return super._computeDiscussAppCategory();
         }
         return (
@@ -24,7 +24,7 @@ patch(Thread.prototype, {
         );
     },
     get hasMemberList() {
-        return this.channel_type === "livechat" || super.hasMemberList;
+        return this.channel?.channel_type === "livechat" || super.hasMemberList;
     },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
@@ -37,7 +37,7 @@ patch(Thread.prototype, {
 
     computeCorrespondent() {
         const correspondent = super.computeCorrespondent();
-        if (this.channel_type === "livechat" && !correspondent) {
+        if (this.channel?.channel_type === "livechat" && !correspondent) {
             return this.livechatVisitorMember;
         }
         return correspondent;
@@ -45,7 +45,7 @@ patch(Thread.prototype, {
 
     get displayName() {
         if (
-            this.channel_type !== "livechat" ||
+            this.channel?.channel_type !== "livechat" ||
             !this.correspondent ||
             this.self_member_id?.custom_channel_name
         ) {
@@ -61,7 +61,7 @@ patch(Thread.prototype, {
     },
 
     get inChathubOnNewMessage() {
-        return this.channel_type === "livechat" || super.inChathubOnNewMessage;
+        return this.channel?.channel_type === "livechat" || super.inChathubOnNewMessage;
     },
 
     /**
@@ -70,13 +70,13 @@ patch(Thread.prototype, {
      */
     setAsDiscussThread(pushState) {
         super.setAsDiscussThread(pushState);
-        if (this.store.env.services.ui.isSmall && this.channel_type === "livechat") {
+        if (this.store.env.services.ui.isSmall && this.channel?.channel_type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
     },
     async leaveChannel({ force = false } = {}) {
         if (
-            this.channel_type === "livechat" &&
+            this.channel?.channel_type === "livechat" &&
             this.channel?.channel_member_ids.length <= 2 &&
             !this.livechat_end_dt &&
             !force

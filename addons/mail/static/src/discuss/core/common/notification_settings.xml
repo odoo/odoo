@@ -28,7 +28,7 @@
                         </t>
                     </Dropdown>
                 </div>
-                <t t-if="props.thread.channel_type === 'channel'">
+                <t t-if="props.thread.channel?.channel_type === 'channel'">
                     <hr class="solid mx-1 my-2"/>
                     <button class="btn d-flex w-100 p-0 border-0" t-on-click="() => store.settings.setCustomNotifications(false, props.thread)">
                         <div class="d-flex flex-grow-1 align-items-center px-2 rounded">
