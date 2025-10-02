@@ -547,7 +547,7 @@ class ResourceCalendar(models.Model):
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources, domain, tz)
         result = {}
         for resource in resources_list:
-            if resource and resource._is_fully_flexible():
+            if resource and (resource._is_fully_flexible() or resource._is_flexible()):
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
