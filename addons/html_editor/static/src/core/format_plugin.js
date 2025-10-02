@@ -190,7 +190,11 @@ export class FormatPlugin extends Plugin {
             return insertedNode;
         }
         const emptyZWS = closestElement(anchorNode, "[data-oe-zws-empty-inline]");
-        if (!emptyZWS) {
+        if (
+            !emptyZWS ||
+            !emptyZWS.parentElement.isContentEditable ||
+            this.getResource("unremovable_node_predicates").some((p) => p(emptyZWS))
+        ) {
             return insertedNode;
         }
         const cursors = this.dependencies.selection.preserveSelection();
