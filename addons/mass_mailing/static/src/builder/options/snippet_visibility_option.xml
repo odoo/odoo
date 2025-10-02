@@ -1,0 +1,24 @@
+<templates>
+    <t t-name="mass_mailing.VisibilityOption">
+        <BuilderRow label.translate="Visibility">
+            <BuilderSelect dataAttributeAction="'filterDomain'">
+                <BuilderSelectItem dataAttributeActionValue="''">Always Visible</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="this.stringifiedDomain" id="'show_domain_selector'">Conditionally</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderContext t-if="this.isActiveItem('show_domain_selector')">
+            <BuilderRow level="1" label.translate="Domain">
+                <div class="d-flex flex-column">
+                    <div class="d-inline-flex align-items-center pt-1" t-foreach="this.state.facets || []" t-as="facet" t-key="facet_index">
+                        <span class="fa fa-filter pe-1"/>
+                        <span t-out="facet"/>
+                    </div>
+                    <button class="btn btn-secondary me-auto mt-1" t-on-click="this.onClickEditDomain">
+                        <t t-if="this.state.facets and this.state.facets.length">Add Conditions</t>
+                        <t t-else="">Edit Conditions</t>
+                    </button>
+                </div>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</templates>

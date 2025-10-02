@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -216,6 +217,7 @@ export class MassMailingHtmlField extends HtmlField {
         delete config.Plugins;
         return {
             ...config,
+            record: this.props.record,
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/jpeg",
             onEditorReady: () => this.commitChanges(),
@@ -303,6 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
             ".o_mass_mailing_processing_container"
         );
         processingContainer.append(processingEl);
+        this.preprocessFilterDomains(processingEl);
         const cssRules = getCSSRules(this.iframeRef.el.contentDocument);
         await toInline(processingEl, cssRules);
         const inlineValue = processingEl.innerHTML;
@@ -318,6 +321,22 @@ export class MassMailingHtmlField extends HtmlField {
             })
             .catch(() => (this.isDirty = true));
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
+    }
+    /**
+     *
+     * @param {HTMLElement} htmlEl
+     */
+    preprocessFilterDomains(htmlEl) {
+        htmlEl
+            .querySelectorAll("[data-filter-domain]")
+            .forEach((el) =>
+                el.setAttribute(
+                    "t-if",
+                    `object.filtered_domain(${new Domain(
+                        JSON.parse(el.dataset.filterDomain)
+                    ).toString()})`
+                )
+            );
     }
 }
 
