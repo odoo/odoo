@@ -331,7 +331,7 @@ class HrAttendance(models.Model):
             employee_dates[attendance.employee_id].extend(
                 {attendance.date, *Rule._get_period_keys(attendance.date).values()}
             )
-        version_map = self.env['hr.version']._get_versions_by_employee_and_date(employee_dates)
+        version_map = self.env['hr.version'].sudo()._get_versions_by_employee_and_date(employee_dates)
 
         # attendances on dates for which the employee did not exist do no not generate overtimes
         all_attendances = all_attendances.filtered(
