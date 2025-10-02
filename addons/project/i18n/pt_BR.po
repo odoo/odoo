@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-18 08:15+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -312,21 +312,21 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    Olá <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
-"Freeman</t>,<br/>\n"
-"    Tenho o prazer de informar que concluímos o projeto \"<strong t-out=\""
-"object.name or ''\">Renovações</strong>\".\n"
+"    Olá <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t>,<br/>\n"
+"    Tenho o prazer de informar que concluímos o projeto \"<strong t-"
+"out=\"object.name or ''\">Renovações</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">Você está recebendo este e-mail "
-"porque seu projeto foi movido para a etapa <b t-out="
-"\"object.stage_id.name or ''\">Concluído</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">Você está "
+"recebendo este e-mail porque seu projeto foi movido para a etapa <b t-"
+"out=\"object.stage_id.name or ''\">Concluído</b></span>\n"
 "            "
 
 #. module: project
@@ -365,8 +365,9 @@ msgstr ""
 "    Cordialmente,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -382,14 +383,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" "
+"title=\"Neutral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -442,8 +442,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" title="
-"\"Domain Alias\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1070,8 +1070,8 @@ msgid ""
 msgstr ""
 "Modificar automaticamente o estado quando o cliente responder ao feedback "
 "desse estágio.\n"
-"*Feedbacks bons atualizarão o estado para “Aprovado” (marcador verde). *"
-"Feedbacks neutros ou ruins definirão o estado do Kanban como “Alterações "
+"*Feedbacks bons atualizarão o estado para “Aprovado” (marcador verde). "
+"*Feedbacks neutros ou ruins definirão o estado do Kanban como “Alterações "
 "solicitadas” (marcador laranja).\n"
 
 #. module: project
@@ -2551,8 +2551,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "Campos inválidos: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2728,6 +2728,12 @@ msgstr "Marcos atrasados"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Mais tarde"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3967,8 +3973,8 @@ msgstr "Ler"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
 msgstr ""
-"Leitura: os colaboradores podem visualizar as tarefas, mas não podem "
-"editá-las."
+"Leitura: os colaboradores podem visualizar as tarefas, mas não podem editá-"
+"las."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3979,8 +3985,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
-"Leitura: os colaboradores podem visualizar as tarefas, mas não podem "
-"editá-las.\n"
+"Leitura: os colaboradores podem visualizar as tarefas, mas não podem editá-"
+"las.\n"
 "Edição com acesso limitado: os colaboradores podem visualizar e editar as "
 "tarefas que seguem no modo de visualização Kanban.\n"
 "Edição: os colaboradores podem visualizar e editar todas as tarefas no modo "
@@ -4595,9 +4601,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
-"Soma das horas alocadas para todas as subtarefas (e suas próprias subtarefas)"
-" vinculadas a essa tarefa. Geralmente menor ou igual às horas alocadas dessa "
-"tarefa."
+"Soma das horas alocadas para todas as subtarefas (e suas próprias "
+"subtarefas) vinculadas a essa tarefa. Geralmente menor ou igual às horas "
+"alocadas dessa tarefa."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4865,14 +4871,6 @@ msgid "Tasks in Recurrence"
 msgstr "Tarefas em recorrência"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
-"As tarefas em um modelo de projeto não podem ser convertidas em tarefas "
-"regulares."
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
@@ -4988,7 +4986,8 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr "O projeto e o usuário associado devem estar vinculados à mesma empresa."
+msgstr ""
+"O projeto e o usuário associado devem estar vinculados à mesma empresa."
 
 #. module: project
 #. odoo-python
@@ -6127,6 +6126,14 @@ msgstr "👤 Não atribuído"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Campos inválidos: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr ""
+#~ "As tarefas em um modelo de projeto não podem ser convertidas em tarefas "
+#~ "regulares."
 
 #~ msgid "# Tasks"
 #~ msgstr "# Tarefas"

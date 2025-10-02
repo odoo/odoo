@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-24 19:22+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -135,12 +135,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
 msgstr "추가 작업"
-
-#. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
-msgid "Activate"
-msgstr "활성화"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -330,6 +324,7 @@ msgstr "입고할 위치 유형"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
@@ -480,6 +475,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__id
@@ -501,6 +497,11 @@ msgstr "입고 배송"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
 msgstr "인코텀즈 지역"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -648,9 +649,8 @@ msgid ""
 "number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"지난 x일 동안 정시에 수령한 품목 수를 주문한 품목 수로 나눈 값입니다. "
-"x는시스템 파라미터 purchase_stock.on_time_delivery_days 또는 기본값 "
-"365입니다."
+"지난 x일 동안 정시에 수령한 품목 수를 주문한 품목 수로 나눈 값입니다. x는시스"
+"템 파라미터 purchase_stock.on_time_delivery_days 또는 기본값 365입니다."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -822,8 +822,8 @@ msgstr "품목을 공급업체로부터 고객에게 직접 배달하도록 요�
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
-msgid "Requests for quotation"
-msgstr "견적 요청서"
+msgid "Requests for quotation :"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -992,7 +992,8 @@ msgstr ""
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr "구매발주서 상의 수량이 청구서 수량보다 적습니다. 환불 요청을 해야 합니다."
+msgstr ""
+"구매발주서 상의 수량이 청구서 수량보다 적습니다. 환불 요청을 해야 합니다."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1002,9 +1003,9 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"창고 작업 유형(%(operation_type)s)이 지정된 위치(%(location)s)와 재주문 "
-"규칙(%(reordering_rule)s)을 가지고 있는 품목%(product)s과 일치하지 않습니다. "
-"작업 유형을 조정하거나 견적 요청을 취소해 주세요."
+"창고 작업 유형(%(operation_type)s)이 지정된 위치(%(location)s)와 재주문 규칙"
+"(%(reordering_rule)s)을 가지고 있는 품목%(product)s과 일치하지 않습니다. 작"
+"업 유형을 조정하거나 견적 요청을 취소해 주세요."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1014,8 +1015,8 @@ msgid ""
 "%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
 "Go on the product form and complete the list of vendors."
 msgstr ""
-"%s 품목에 맞는 업체 가격이 없어서 구매발주서를 생성할 수 없습니다 (지정된 "
-"공급업체가 없거나 최소 수량 미충족, 날짜 오류).\n"
+"%s 품목에 맞는 업체 가격이 없어서 구매발주서를 생성할 수 없습니다 (지정된 공"
+"급업체가 없거나 최소 수량 미충족, 날짜 오류).\n"
 "품목 양식 화면으로 이동하여 공급업체 목록에 입력하세요."
 
 #. module: purchase_stock
@@ -1027,10 +1028,10 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
-"이렇게 하면 제품에 적용할 주문 보충(MTO) 경로가 추가되어 수요에 따른 재고 "
-"보충(온디맨드) 보충을 생성하며 확정 즉시 판매주문서(예를 들면)와 같이 직전 "
-"연결된 경우 보충이 생성됩니다. 구매발주서, 제조지시서 등은 제품에 설정된 "
-"보충 방식(구매 또는 제조 경로)에 따라 자동 실행됩니다."
+"이렇게 하면 제품에 적용할 주문 보충(MTO) 경로가 추가되어 수요에 따른 재고 보"
+"충(온디맨드) 보충을 생성하며 확정 즉시 판매주문서(예를 들면)와 같이 직전 연결"
+"된 경우 보충이 생성됩니다. 구매발주서, 제조지시서 등은 제품에 설정된 보충 방"
+"식(구매 또는 제조 경로)에 따라 자동 실행됩니다."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1042,9 +1043,8 @@ msgid ""
 "address and not your warehouse."
 msgstr ""
 "거래처가 고객에게 배송을 요청하기 위해 제품에 적용할 운송 방법을 추가합니다. "
-"직배송할 상품은 판매 주문이 확인되면 견적 요청 구매를 생성합니다. 이러한 "
-"방식은 주문형 플로우로, 요청된 배송 주소는 창고가 아닌 고객 배송 주소가 "
-"됩니다."
+"직배송할 상품은 판매 주문이 확인되면 견적 요청 구매를 생성합니다. 이러한 방식"
+"은 주문형 플로우로, 요청된 배송 주소는 창고가 아닌 고객 배송 주소가 됩니다."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -1209,6 +1209,12 @@ msgstr "다음 대신 주문됨"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "이 품목은 수동으로 보충해야 합니다."
+
+#~ msgid "Activate"
+#~ msgstr "활성화"
+
+#~ msgid "Requests for quotation"
+#~ msgstr "견적 요청서"
 
 #~ msgid "<strong>Shipping address:</strong>"
 #~ msgstr "<strong>배송주소 :</strong>"

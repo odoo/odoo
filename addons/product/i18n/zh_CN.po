@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 15:29+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -69,8 +69,8 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
-"%(base)s 然后套用 %(discount)s%% %(discount_type)s 并加上 %(surcharge)s "
-"额外费用\n"
+"%(base)s 然后套用 %(discount)s%% %(discount_type)s 并加上 %(surcharge)s 额外"
+"费用\n"
 "例：%(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
@@ -79,7 +79,8 @@ msgstr ""
 msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
-msgstr "%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(start_date)s）之后"
+msgstr ""
+"%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(start_date)s）之后"
 
 #. module: product
 #. odoo-python
@@ -101,6 +102,7 @@ msgstr "%(percentage)s %% 销售价格折扣"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -307,8 +309,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">联络我们</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">联络"
+"我们</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -329,7 +331,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -945,10 +948,10 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"若更改产品的计量单位，将会套用以下换算：1 %(old_uom_name)s = 1 "
-"%(new_uom_name)s。\n"
-"所有包括此产品的现有记录（销售单、采购订单等）都会相应更新，替换新的单位名称"
-"。"
+"若更改产品的计量单位，将会套用以下换算：1 %(old_uom_name)s = 1 %"
+"(new_uom_name)s。\n"
+"所有包括此产品的现有记录（销售单、采购订单等）都会相应更新，替换新的单位名"
+"称。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -2633,8 +2636,9 @@ msgstr ""
 msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
-msgstr "在产品 %(product)s 上，您不能将值 %(value)s 与属性 %(attribute)s "
-"关联起来，因为它们不匹配。"
+msgstr ""
+"在产品 %(product)s 上，您不能将值 %(value)s 与属性 %(attribute)s 关联起来，因"
+"为它们不匹配。"
 
 #. module: product
 #. odoo-python
@@ -2642,8 +2646,9 @@ msgstr "在产品 %(product)s 上，您不能将值 %(value)s 与属性 %(attrib
 msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
-msgstr "对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%(attribute_dest)"
-"s。"
+msgstr ""
+"对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%"
+"(attribute_dest)s。"
 
 #. module: product
 #. odoo-javascript
@@ -3338,6 +3343,12 @@ msgid "Ray-Ban"
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr ""
@@ -3578,8 +3589,9 @@ msgstr "特定属性产品价格表"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "指定一个产品类别 "
-"，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情况留空。"
+msgstr ""
+"指定一个产品类别 ，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情"
+"况留空。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3746,8 +3758,9 @@ msgid ""
 "The desk organiser is perfect for storing all kinds of small things and "
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
-msgstr "这款桌面收纳盒非常适合存放各种小东西，由于 5 "
-"个盒子都是松散的，您可以按照最适合自己和物品的方式移动和摆放它们。"
+msgstr ""
+"这款桌面收纳盒非常适合存放各种小东西，由于 5 个盒子都是松散的，您可以按照最适"
+"合自己和物品的方式移动和摆放它们。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3776,7 +3789,8 @@ msgid ""
 "to prorate the price of this combo with respect to the other combos in a "
 "combo product. This heuristic ensures that whatever product the user chooses "
 "in a combo, it will always be the same price."
-msgstr "该组合中产品的最低价格。该值将用于按比例分配该组合相对于组合产品中其他组合的"
+msgstr ""
+"该组合中产品的最低价格。该值将用于按比例分配该组合相对于组合产品中其他组合的"
 "价格。这种启发式方法确保用户在组合中选择任何产品时，价格始终相同。"
 
 #. module: product
@@ -3794,7 +3808,8 @@ msgid ""
 "not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
-msgstr "要生成的变量数量超过了允许的限制。要么不为每个组合生成变体，要么根据销售订单"
+msgstr ""
+"要生成的变量数量超过了允许的限制。要么不为每个组合生成变体，要么根据销售订单"
 "的要求生成变体。为此，请打开属性的表单视图并更改*创建变量*模式。"
 
 #. module: product
@@ -3814,7 +3829,8 @@ msgid ""
 "The quantity to purchase from this vendor to benefit from the unit price. If "
 "a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
-msgstr "从该供应商处购买，可享受单价优惠的数量。如果供应商设置了指定单位，则应以该单"
+msgstr ""
+"从该供应商处购买，可享受单价优惠的数量。如果供应商设置了指定单位，则应以该单"
 "位设定数量，否则应使用产品的预设单位。"
 
 #. module: product
@@ -4457,13 +4473,6 @@ msgstr "您无法存档此属性，因为仍有产品链接到它"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "您不能将主要价格表分配为PriceList项目中的其他价格表"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4545,7 +4554,8 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
-msgstr "无法将属性%(attribute)s从产品%(product_src)s调整至产品%(product_dest)s。"
+msgstr ""
+"无法将属性%(attribute)s从产品%(product_src)s调整至产品%(product_dest)s。"
 
 #. module: product
 #. odoo-python
@@ -4753,6 +4763,10 @@ msgstr "到"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr "您不能将主要价格表分配为PriceList项目中的其他价格表"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

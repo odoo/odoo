@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-14 21:21+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/mrp/fr/>\n"
@@ -58,9 +58,9 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Les produits fabriqués seront transportés vers "
-"<b>%(destination)s</b>, <br/> comme indiqué dans la destination de "
-"<b>%(operation)s</b>."
+" <br/><br/> Les produits fabriqués seront transportés vers <b>%"
+"(destination)s</b>, <br/> comme indiqué dans la destination de <b>%"
+"(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -669,8 +669,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Une nomenclature du type kit n'est pas produite avec un ordre de "
-"fabrication.<br/>\n"
+"Une nomenclature du type kit n'est pas produite avec un ordre de fabrication."
+"<br/>\n"
 "Au lieu de cela, il est utilisé pour décomposer une nomenclature en ses "
 "composants lorsque :"
 
@@ -2313,6 +2313,7 @@ msgstr "Afficher"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2663,8 +2664,9 @@ msgstr ""
 "Quantité à retirer)\n"
 "Dans un contexte avec un seul emplacement de stock, cela inclut les biens "
 "stockés dans cet emplacement ou dans l’un de ses sous-emplacements.\n"
-"Dans un contexte avec un seul entrepôt, cela inclut les biens stockés dans l’"
-"emplacement de stock de cet entrepôt ou dans l’un de ses sous-emplacements.\n"
+"Dans un contexte avec un seul entrepôt, cela inclut les biens stockés dans "
+"l’emplacement de stock de cet entrepôt ou dans l’un de ses sous-"
+"emplacements.\n"
 "Sinon, cela inclut les biens stockés dans tout emplacement de stock de type "
 "\"interne\"."
 
@@ -2864,6 +2866,7 @@ msgstr "Heures"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -3054,6 +3057,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Mouvements de stock"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -4564,7 +4572,8 @@ msgstr "Défaut de processus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr "Traiter les ordres de fabrication à partir de l'application code-barres"
+msgstr ""
+"Traiter les ordres de fabrication à partir de l'application code-barres"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -6952,8 +6961,8 @@ msgid ""
 msgstr ""
 "Vous n'êtes pas autorisé à créer ou modifier un numéro de lot/série pour des "
 "composants dans une opération de type \"Fabrication\". Pour changer cela, "
-"vous pouvez aller sur le type d'opération et sélectionner "
-"\"Créer nouveaux lots/numéros de série pour les composants\"."
+"vous pouvez aller sur le type d'opération et sélectionner \"Créer nouveaux "
+"lots/numéros de série pour les composants\"."
 
 #. module: mrp
 #. odoo-python
@@ -7134,10 +7143,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Veuillez revoir votre consommation de composants "
 "ou demander à un responsable de valider\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">cet ordre de fabrication</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">ces ordres de fabrication</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">cet ordre de fabrication</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">ces ordres de fabrication</span>.\n"
 "                        </b>"
 
 #. module: mrp

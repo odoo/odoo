@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 15:22+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -76,8 +76,9 @@ msgstr "<code>model</code>：触发操作的模型；不包含记录结果集"
 msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
-msgstr "<code>payload</code>：调用的有效载荷（GET 参数、JSON 主体），以 字典 "
-"形式存在。"
+msgstr ""
+"<code>payload</code>：调用的有效载荷（GET 参数、JSON 主体），以 字典 形式存"
+"在。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -85,8 +86,8 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
-"<code>time</code>、<code>datetime</code>、<code>dateutil</code>、<code>timezo"
-"ne</code>：可用的 Python 库"
+"<code>time</code>、<code>datetime</code>、<code>dateutil</code>、"
+"<code>timezone</code>：可用的 Python 库"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
@@ -99,8 +100,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> 对于来自其他 Odoo 实例的任何 "
-"webhook，默认目标记录获取器都将立即生效。"
+"<i class=\"fa fa-info-circle\"/> 对于来自其他 Odoo 实例的任何 webhook，默认目"
+"标记录获取器都将立即生效。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -109,9 +110,8 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> "
-"<em>无论保存与否</em>，用户界面更改触发的自动化规则都会在<em>每次</em>观察字"
-"段更改时执行。"
+"<i class=\"fa fa-warning\"/> <em>无论保存与否</em>，用户界面更改触发的自动化"
+"规则都会在<em>每次</em>观察字段更改时执行。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -186,7 +186,6 @@ msgstr "应用于"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "已归档"
 
@@ -333,7 +332,8 @@ msgstr "电子邮件活动"
 msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
-msgstr "删除记录时不能使用电子邮件、追随者或活动操作类型，因为没有更多记录可应用这些"
+msgstr ""
+"删除记录时不能使用电子邮件、追随者或活动操作类型，因为没有更多记录可应用这些"
 "更改！"
 
 #. module: base_automation
@@ -431,6 +431,11 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr "如果已续期，请在调用此 Webhook 的第三方应用中更新密钥 URL。"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -713,7 +718,8 @@ msgid ""
 "Send an email when an object changes state, archive records after a month of "
 "inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
-msgstr "当对象更改状态时发送电子邮件，在一个月不活动后归档记录，或在添加特定标签时提"
+msgstr ""
+"当对象更改状态时发送电子邮件，在一个月不活动后归档记录，或在添加特定标签时提"
 "醒自己跟进任务。<br>借助自动化规则，您可以自动化任何工作流程。"
 
 #. module: base_automation
@@ -952,8 +958,8 @@ msgid ""
 "be checked at creation and update."
 msgstr ""
 "何时触发条件。\n"
-"                "
-"如果存在，将由调度程序检查。如果为空，将在创建和更新时进行检查。"
+"                如果存在，将由调度程序检查。如果为空，将在创建和更新时进行检"
+"查。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

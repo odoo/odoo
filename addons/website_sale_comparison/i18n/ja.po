@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 21:21+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -25,67 +25,25 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
-msgid "134.7 x 200 x 7.2 mm"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
-msgid "308 g"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
 msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<i class=\"oi oi-chevron-left me-1\"/> Back to shop"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
 msgid ""
-"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
-"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+"<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
+"                    <span class=\"o_label small ms-2\">Compare</span>"
 msgstr ""
-"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" role="
-"\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid ""
-"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
-"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
-msgstr ""
-"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" role="
-"\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>タグ</span>"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart me-2\"/>カートに入れる"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
-msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
-msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
-msgstr "<span class=\"fa fa-exchange me-2\"/>比較"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<span>Tags</span>"
-msgstr "<span>タグ</span>"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<strong>Price:</strong>"
-msgstr "<strong>価格:</strong>"
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<strong>x</strong>"
-msgstr "<strong>x</strong>"
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
-msgid "Apple"
+msgid "Add to compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -95,7 +53,8 @@ msgid "Attribute Categories"
 msgstr "属性カテゴリ"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom of Page"
 msgstr "ページ下"
 
@@ -106,24 +65,33 @@ msgstr "カテゴリ名"
 
 #. module: website_sale_comparison
 #. odoo-javascript
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale_comparison/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Compare"
 msgstr "比較"
 
 #. module: website_sale_comparison
-#. odoo-javascript
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Compare Products"
 msgstr "製品を比較"
 
 #. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
+msgid "Compare products"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Contact Us"
 msgstr "お問い合わせ"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Continue shopping"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.actions.act_window,help:website_sale_comparison.product_attribute_category_action
@@ -141,13 +109,20 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_8
-#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_2
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_design
+msgid "Design"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_dimensions
 msgid "Dimensions"
 msgstr "次元"
 
 #. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_template_attribute_line__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -171,9 +146,18 @@ msgstr ""
 "　　　　グループ化します。"
 
 #. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_template_attribute_line__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
+msgid "In accordion"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -186,15 +170,21 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 msgid "None"
 msgstr "なし"
 
 #. module: website_sale_comparison
-#. odoo-javascript
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
-msgid "Product"
-msgstr "プロダクト"
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_options
+msgid "Options"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute
@@ -208,6 +198,12 @@ msgid "Product Attribute Category"
 msgstr "製品属性カテゴリ"
 
 #. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_row/product_row.xml:0
+msgid "Product Image"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
 msgstr "プロダクトテンプレート属性明細"
@@ -219,7 +215,6 @@ msgstr "プロダクトバリアント"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
 msgstr "プロダクト画像"
 
@@ -229,9 +224,29 @@ msgid "Related Attributes"
 msgstr "関連属性"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
-msgid "Remove"
-msgstr "削除"
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
+msgid "Remove All"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Remove all"
+msgstr ""
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Remove all products from comparison"
+msgstr ""
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_row/product_row.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Remove product from comparison"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__sequence
@@ -243,7 +258,8 @@ msgstr "シーケンス"
 msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
-msgstr "eコマースの比較ページで、類似した属性を同じセクションの下に再グループ化するた"
+msgstr ""
+"eコマースの比較ページで、類似した属性を同じセクションの下に再グループ化するた"
 "めのカテゴリを設定します"
 
 #. module: website_sale_comparison
@@ -252,44 +268,102 @@ msgid "Shop Comparator"
 msgstr "店舗比較機能"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
+msgid "Show products added to comparison"
+msgstr ""
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 msgid "Specification"
 msgstr "仕様設計"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "仕様設計"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "Tags"
+msgstr ""
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/interactions/product_comparison.js:0
+msgid "This product has already been added to the comparison."
+msgstr ""
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/interactions/product_comparison.js:0
+msgid "Too many products to compare"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "未分類"
 
 #. module: website_sale_comparison
 #. odoo-javascript
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
-msgid "Warning"
-msgstr "警告"
-
-#. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_7
-msgid "Weight"
-msgstr "重量"
-
-#. module: website_sale_comparison
-#. odoo-javascript
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
-msgid "You can compare max 4 products."
-msgstr "最大で4製品を比較できます。"
+#: code:addons/website_sale_comparison/static/src/interactions/product_comparison.js:0
+msgid "You can compare up to 4 products at a time."
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
 msgstr "eコマースカテゴリ"
 
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "または"
+#~ msgid ""
+#~ "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+#~ "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+#~ "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+#~ "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+#~ "role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>タグ</span>"
+
+#~ msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
+#~ msgstr "<i class=\"fa fa-shopping-cart me-2\"/>カートに入れる"
+
+#~ msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+#~ msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+
+#~ msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
+#~ msgstr "<span class=\"fa fa-exchange me-2\"/>比較"
+
+#~ msgid "<span>Tags</span>"
+#~ msgstr "<span>タグ</span>"
+
+#~ msgid "<strong>Price:</strong>"
+#~ msgstr "<strong>価格:</strong>"
+
+#~ msgid "<strong>x</strong>"
+#~ msgstr "<strong>x</strong>"
+
+#~ msgid "Product"
+#~ msgstr "プロダクト"
+
+#~ msgid "Remove"
+#~ msgstr "削除"
+
+#~ msgid "Warning"
+#~ msgstr "警告"
+
+#~ msgid "Weight"
+#~ msgstr "重量"
+
+#~ msgid "You can compare max 4 products."
+#~ msgstr "最大で4製品を比較できます。"
+
+#~ msgid "or"
+#~ msgstr "または"

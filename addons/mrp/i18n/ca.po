@@ -32,11 +32,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 04:41+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/mrp/ca/>"
-"\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/mrp/ca/"
+">\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,8 +77,8 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Els productes fabricats es mouran cap a <b>%(destination)s</b>, <"
-"br/> segon s'especifica a la destinació <b>%(operation)s</b>."
+" <br/><br/> Els productes fabricats es mouran cap a <b>%(destination)s</b>, "
+"<br/> segon s'especifica a la destinació <b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -493,8 +493,8 @@ msgid ""
 "</span>"
 msgstr ""
 "<span class=\"text-muted\">Modificar la quantitat a produir també modificarà "
-"les quantitats dels components a consumir d'aquesta ordre de "
-"fabricació.</span>"
+"les quantitats dels components a consumir d'aquesta ordre de fabricació.</"
+"span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2309,6 +2309,7 @@ msgstr "Mostrar"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2856,6 +2857,7 @@ msgstr "Hores"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -3048,6 +3050,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Moviments d'inventari"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -4362,7 +4369,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 msgid "Pick components, manufacture, then store products (3 steps)"
-msgstr "Tria components, fabrica i després emmagatzema els productes (3 passos)"
+msgstr ""
+"Tria components, fabrica i després emmagatzema els productes (3 passos)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -5447,8 +5455,8 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Com que algunes ordres de treball ja estan finalitzades, no és possible anul·"
-"lar la planificació d'una ordre de treball.\n"
+"Com que algunes ordres de treball ja estan finalitzades, no és possible "
+"anul·lar la planificació d'una ordre de treball.\n"
 "\n"
 "Seria una llàstima perdre tot el progrés, no?"
 
@@ -7106,10 +7114,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Si us plau, revisa el consum de components o "
 "demana-li a un gestor que validi\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">aquesta ordre de fabricació</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">aquestes ordres de fabricació</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">aquesta ordre de fabricació</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">aquestes ordres de fabricació</span>.\n"
 "                        </b>"
 
 #. module: mrp

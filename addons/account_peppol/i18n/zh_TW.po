@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 08:09+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -185,19 +185,19 @@ msgstr ""
 "color: #454748; width: 100%; border-collapse:separate;\">\n"
 "    <tr>\n"
 "        <td align=\"center\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
-"border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
 "                <!-- HEADER -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;\""
-">通知</span>\n"
+"                                    <span style=\"font-size: 10px;\">通知</"
+"span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -207,20 +207,19 @@ msgstr ""
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
-"!important; font-weight: 400; background-color: {{ "
-"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            傳送發票\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object.uses_default_logo\">"
-"\n"
-"                                        <img t-att-src="
-"\"'/logo.png?company=%s' % object.id\" style="
-"\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt="
-"\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?"
+"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
+"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
@@ -237,25 +236,25 @@ msgstr ""
 "                <!-- BODY -->\n"
 "                <tr>\n"
 "                    <td align=\"center\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p><t t-out=\"object.name or ''\""
-">YourCompany</t> 你好！</p>\n"
+"                                    <p><t t-out=\"object.name or "
+"''\">YourCompany</t> 你好！</p>\n"
 "\n"
 "                                    <p>我們已成功將你的公司加入 "
 "<strong>Peppol 網絡</strong>。</p>\n"
 "\n"
-"                                    <p>你現可透過 Odoo <strong>傳送<t t-if="
-"\"object.account_peppol_proxy_state == 'receiver'\""
-">及接收</t></strong>電子發票，費用全免！</p>\n"
+"                                    <p>你現可透過 Odoo <strong>傳送<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\">及接收</t></strong>電"
+"子發票，費用全免！</p>\n"
 "\n"
 "                                    <p>順祝  安康</p>\n"
 "\n"
-"                                    <p style=\"margin-bottom: 24px;\">Odoo "
-"團隊</p>\n"
+"                                    <p style=\"margin-bottom: 24px;\">Odoo 團"
+"隊</p>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -333,8 +332,9 @@ msgstr "由於捆綁組合內有相關的訊息單元引致錯誤，因此組合
 msgid ""
 "A participant with these details has already been registered on the network. "
 "If you have previously registered to a Peppol service, please deregister."
-msgstr "Peppol 網絡上已有參與者使用相同的資料註冊。如果你之前已註冊使用 Peppol "
-"服務，請取消註冊。"
+msgstr ""
+"Peppol 網絡上已有參與者使用相同的資料註冊。如果你之前已註冊使用 Peppol 服務，"
+"請取消註冊。"
 
 #. module: account_peppol
 #. odoo-python
@@ -531,7 +531,8 @@ msgid ""
 "An entry in the routing function is matched that assigns the message to an "
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
-msgstr "路由功能中已有記項相符，將訊息分配給 MPC 進行拉取，但中間的 MSH 無法使用此 "
+msgstr ""
+"路由功能中已有記項相符，將訊息分配給 MPC 進行拉取，但中間的 MSH 無法使用此 "
 "MPC 將訊息儲存"
 
 #. module: account_peppol
@@ -563,9 +564,8 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
-"有一個中間 MSH 已將訊息指派給 MPC "
-"以進行拉取，並成功儲存該訊息。不過，中間程式設定了自身會等待訊息被拉取的時間"
-"限制，而該時間限制已經到達。"
+"有一個中間 MSH 已將訊息指派給 MPC 以進行拉取，並成功儲存該訊息。不過，中間程"
+"式設定了自身會等待訊息被拉取的時間限制，而該時間限制已經到達。"
 
 #. module: account_peppol
 #. odoo-python
@@ -667,6 +667,12 @@ msgstr ""
 "用於識別 BIS 賬單 3.0 及其衍生產品所使用終端點的代碼。\n"
 "             詳細列表： https://docs.peppol.eu/poacc/billing/3.0/codelist/"
 "eas/"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_common
+msgid ""
+"Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -781,6 +787,7 @@ msgid "Disconnected this branch company peppol configuration from %s."
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
@@ -895,6 +902,7 @@ msgid "Got it !"
 msgstr "知道！"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
@@ -1237,9 +1245,9 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
-msgstr "已成功接收 Peppol 文件（UUID：%(uuid)s）"
+#: code:addons/account_peppol/models/account_edi_common.py:0
+msgid "Peppol document UUID: %s"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
@@ -1266,6 +1274,12 @@ msgstr "Peppol 終端點驗證"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol error: %s"
 msgstr "Peppol 錯誤： %s"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_common.py:0
+msgid "Peppol invoice received"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata_updated_at
@@ -1499,7 +1513,8 @@ msgid ""
 "Some reliability function as implemented by the Reliability module, is not "
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
-msgstr "由可靠性模組實施的部份可靠性功能未能運行，或與此訊息序列相關聯的可靠性狀態無"
+msgstr ""
+"由可靠性模組實施的部份可靠性功能未能運行，或與此訊息序列相關聯的可靠性狀態無"
 "效。"
 
 #. module: account_peppol
@@ -1557,7 +1572,8 @@ msgid ""
 "The MSH is unable to resolve an external payload reference (i.e. a Part that "
 "is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
-msgstr "MSH 未能理解外部的有效負載參照（即 ebMS 訊息未包含的部份，以 PartInfo 或 "
+msgstr ""
+"MSH 未能理解外部的有效負載參照（即 ebMS 訊息未包含的部份，以 PartInfo 或 "
 "href URI 識別）。"
 
 #. module: account_peppol
@@ -1668,8 +1684,9 @@ msgstr "電子發票網絡"
 msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
-msgstr "複製至片段標頭的 eb3:Message 標頭，與重組得出的來源訊息中的 eb3:Message "
-"標頭不符。"
+msgstr ""
+"複製至片段標頭的 eb3:Message 標頭，與重組得出的來源訊息中的 eb3:Message 標頭"
+"不符。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1686,8 +1703,9 @@ msgid ""
 "The ebMS header or another header (e.g. reliability, security) expected by "
 "the MSH is not compatible with the expected content, based on the associated "
 "P-Mode."
-msgstr "根據相關聯的 P-Mode，MSH 期望的 ebMS "
-"標頭或另一標頭（例如：可靠性、安全性），與預期的內容不相容。"
+msgstr ""
+"根據相關聯的 P-Mode，MSH 期望的 ebMS 標頭或另一標頭（例如：可靠性、安全性），"
+"與預期的內容不相容。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1695,8 +1713,9 @@ msgstr "根據相關聯的 P-Mode，MSH 期望的 ebMS "
 msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
-msgstr "對於原意給 \"ebms\" SOAP "
-"操作器使用的安全性標頭，安全性模組未能解密其加密資料參照。"
+msgstr ""
+"對於原意給 \"ebms\" SOAP 操作器使用的安全性標頭，安全性模組未能解密其加密資料"
+"參照。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1761,7 +1780,8 @@ msgid ""
 "The processor determined that the message's security methods, parameters, "
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
-msgstr "處理程式已斷定訊息的安全性方法、參數、範圍或其他安全性政策等級的要求或協議，"
+msgstr ""
+"處理程式已斷定訊息的安全性方法、參數、範圍或其他安全性政策等級的要求或協議，"
 "未獲滿足或遵守。"
 
 #. module: account_peppol
@@ -1777,7 +1797,8 @@ msgstr "就比利時業務而言，建議的識別方式是你的公司註冊號
 msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
-msgstr "對於原意給 \"ebms\" SOAP 操作器使用的安全性標頭，安全性模組未能驗證其簽名。"
+msgstr ""
+"對於原意給 \"ebms\" SOAP 操作器使用的安全性標頭，安全性模組未能驗證其簽名。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1888,7 +1909,8 @@ msgstr "此使用者未在我們的接入點上註冊。"
 msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
-msgstr "此使用者不是 Peppol 用戶。關聯的 proxy_type 必須為 \"peppol\"。建立新的 "
+msgstr ""
+"此使用者不是 Peppol 用戶。關聯的 proxy_type 必須為 \"peppol\"。建立新的 "
 "peppol 參與者時，必須如此設定。"
 
 #. module: account_peppol
@@ -2084,8 +2106,9 @@ msgstr "你沒有足夠點數"
 msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
-msgstr "你已到達今天可發送的文件數量上限，請稍後再試。若需要提高上限，請聯絡支援團隊"
-"。"
+msgstr ""
+"你已到達今天可發送的文件數量上限，請稍後再試。若需要提高上限，請聯絡支援團"
+"隊。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2124,7 +2147,8 @@ msgstr "你的 Peppol 註冊會很快啟動。你現已可以傳送發票。"
 msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
-msgstr "你的公司已註冊使用接入點（%s）接收發票。Odoo 系統只會將你註冊為發送人。"
+msgstr ""
+"你的公司已註冊使用接入點（%s）接收發票。Odoo 系統只會將你註冊為發送人。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2206,6 +2230,9 @@ msgstr "以傳送發票，但這個"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "使用"
+
+#~ msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
+#~ msgstr "已成功接收 Peppol 文件（UUID：%(uuid)s）"
 
 #~ msgid "Primary contact email for Peppol-related communication"
 #~ msgstr "Peppol 相關通訊的主要聯絡電郵"

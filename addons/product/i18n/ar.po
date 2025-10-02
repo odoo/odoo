@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 13:41+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/product/"
@@ -68,10 +68,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
-"%(base)s مع خصم %(discount)s %% %(discount_type)s ورسوم إضافية %(surcharge)"
-"s\n"
-"مثال: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"%(base)s مع خصم %(discount)s %% %(discount_type)s ورسوم إضافية %"
+"(surcharge)s\n"
+"مثال: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -103,6 +103,7 @@ msgstr "%(percentage)s %% خصم على سعر المبيعات"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -147,8 +148,8 @@ msgstr "- %(amount)s خصم"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- الباركود \"%(barcode)s\" تم تعيينه بالفعل للمنتج (المنتجات): "
-"%(product_list)s"
+"- الباركود \"%(barcode)s\" تم تعيينه بالفعل للمنتج (المنتجات): %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -954,8 +955,8 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"سيؤدي تغيير وحدة القياس في منتجك إلى تطبيق معدل تحويل قدره 1 %(old_uom_name)"
-"s = 1 %(new_uom_name)s.\n"
+"سيؤدي تغيير وحدة القياس في منتجك إلى تطبيق معدل تحويل قدره 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "سيتم تحديث كافة السجلات الموجودة (أوامر البيع، أوامر الشراء، إلخ) التي "
 "تستخدم هذا المنتج عن طريق استبدال اسم الوحدة."
 
@@ -2663,14 +2664,15 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"في المنتج %(product)s لا يمكنك تحويل الخاصية %(attribute_src)s إلى الخاصية "
-"%(attribute_dest)s."
+"في المنتج %(product)s لا يمكنك تحويل الخاصية %(attribute_src)s إلى الخاصية %"
+"(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr "اوه! الملف '%(fileName)s' لم يتم رفعه لأن صيغة هذا الملف غير مسموح بها."
+msgstr ""
+"اوه! الملف '%(fileName)s' لم يتم رفعه لأن صيغة هذا الملف غير مسموح بها."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
@@ -3361,6 +3363,12 @@ msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr "أحمر"
@@ -3883,7 +3891,8 @@ msgstr ""
 msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
-msgstr "القيمة %(value)s غير محددة للخاصية %(attribute)s في المنتج %(product)s."
+msgstr ""
+"القيمة %(value)s غير محددة للخاصية %(attribute)s في المنتج %(product)s."
 
 #. module: product
 #. odoo-python
@@ -4513,14 +4522,6 @@ msgstr "لا يمكنك أرشفة هذه السمة حيث لا تزال هنا
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"لا يمكنك إسناد قائمة الأسعار الرئيسية كقائمة أسعار أخرى في عنصر قائمة الأسعار"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4538,8 +4539,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on "
 "the following products: %(products)s"
 msgstr ""
-"لا يمكنك تغيير الخاصية للقيمة %(value)s لأنها مستخدَمة في المنتجات التالية: "
-"%(products)s"
+"لا يمكنك تغيير الخاصية للقيمة %(value)s لأنها مستخدَمة في المنتجات التالية: %"
+"(products)s"
 
 #. module: product
 #. odoo-python
@@ -4606,8 +4607,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"لا يمكنك نقل الخاصية %(attribute)s من المنتج %(product_src)s إلى المنتج "
-"%(product_dest)s."
+"لا يمكنك نقل الخاصية %(attribute)s من المنتج %(product_src)s إلى المنتج %"
+"(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4652,8 +4653,8 @@ msgid ""
 msgstr ""
 "يجب عليك تحديد منتج لكل شيئ تقوم ببيعه أو شرائه،\n"
 "                سواءً كان منتجاً قابلاً للتخزين أو استهلاكي أو خدمة. \n"
-"                تحتوي استمارة المنتج على معلومات تهدف إلى تبسيط عملية البيع:"
-"\n"
+"                تحتوي استمارة المنتج على معلومات تهدف إلى تبسيط عملية "
+"البيع:\n"
 "                السعر، ملاحظات عرض السعر، البيانات المحاسبية، طرق الشراء، "
 "إلخ."
 
@@ -4670,8 +4671,8 @@ msgid ""
 msgstr ""
 "يجب عليك تحديد منتج لكل شيئ تقوم ببيعه، سواءً كان منتجاً فعلياً\n"
 "                أو منتج استهلاكي أو خدمة تقدمها لعملائك. \n"
-"                تحتوي استمارة المنتج على معلومات تهدف إلى تبسيط عملية البيع:"
-"\n"
+"                تحتوي استمارة المنتج على معلومات تهدف إلى تبسيط عملية "
+"البيع:\n"
 "                السعر، ملاحظات عرض السعر، البيانات المحاسبية، طرق الشراء، "
 "إلخ."
 
@@ -4821,6 +4822,12 @@ msgstr "إلى"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "لا يمكنك إسناد قائمة الأسعار الرئيسية كقائمة أسعار أخرى في عنصر قائمة "
+#~ "الأسعار"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

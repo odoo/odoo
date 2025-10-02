@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-14 21:14+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -45,8 +45,9 @@ msgstr "\"%s\"タグが追加されました"
 msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
-msgstr "\"本番更新時 \"の自動化規則は、\"Pythonコードの実行 \""
-"アクションタイプでのみ使用できます。"
+msgstr ""
+"\"本番更新時 \"の自動化規則は、\"Pythonコードの実行 \"アクションタイプでのみ"
+"使用できます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -70,16 +71,18 @@ msgstr "<code>env</code>: アクションがトリガされる環境"
 msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is "
 "a void recordset"
-msgstr "<code>モデル</code>: "
-"アクションがトリガされるレコードのモデル;は無効なレコードセットです。"
+msgstr ""
+"<code>モデル</code>: アクションがトリガされるレコードのモデル;は無効なレコー"
+"ドセットです。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
-msgstr "<code>ペイロード</code>: "
-"dictとしての呼出のペイロード(GETパラメータ、JSONボディ)"
+msgstr ""
+"<code>ペイロード</code>: dictとしての呼出のペイロード(GETパラメータ、JSONボ"
+"ディ)"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -101,9 +104,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\""
-"/>デフォルトのターゲットレコードゲッターは、他のOdooインスタンスからのWebhook"
-"に対してすぐに動作します。"
+"<i class=\"fa fa-info-circle\"/>デフォルトのターゲットレコードゲッターは、他"
+"のOdooインスタンスからのWebhookに対してすぐに動作します。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -112,9 +114,9 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> "
-"UIの変更によってトリガされる自動化規則は監視されているフィールドが変更される"
-"たびに<em>常に</em>、<em>保存の有無にかかわらず</em>実行されます。"
+"<i class=\"fa fa-warning\"/> UIの変更によってトリガされる自動化規則は監視され"
+"ているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず</"
+"em>実行されます。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -189,7 +191,6 @@ msgstr "適用対象"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "アーカイブ済"
 
@@ -287,8 +288,9 @@ msgstr "遅延モード"
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
 "Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
-msgstr "遅延は正の値でなければなりません。遅延を無効にするには、「遅延モード」を「前"
-"」に設定してください。"
+msgstr ""
+"遅延は正の値でなければなりません。遅延を無効にするには、「遅延モード」を"
+"「前」に設定してください。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
@@ -337,7 +339,8 @@ msgstr "Eメールイベント"
 msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
-msgstr "Eメール、フォロワー、または活動のアクションタイプは、レコードを削除する際には"
+msgstr ""
+"Eメール、フォロワー、または活動のアクションタイプは、レコードを削除する際には"
 "使用できません。"
 
 #. module: base_automation
@@ -420,15 +423,17 @@ msgstr "チェックされている場合、一部のメッセージに配信エ
 msgid ""
 "If present, this condition must be satisfied before executing the automation "
 "rule."
-msgstr "存在する場合、この条件は、自動化規則を実行する前に満たされなければなりません"
-"。"
+msgstr ""
+"存在する場合、この条件は、自動化規則を実行する前に満たされなければなりませ"
+"ん。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
-msgstr "この条件が存在する場合、レコードの更新前にこの条件を満たす必要があります。レ"
+msgstr ""
+"この条件が存在する場合、レコードの更新前にこの条件を満たす必要があります。レ"
 "コード作成時にはチェックされません。"
 
 #. module: base_automation
@@ -436,8 +441,14 @@ msgstr "この条件が存在する場合、レコードの更新前にこの条
 msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
-msgstr "更新された場合は、このWebhookを呼び出すサードパーティアプリのシークレットURL"
+msgstr ""
+"更新された場合は、このWebhookを呼び出すサードパーティアプリのシークレットURL"
 "を更新します。"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -480,7 +491,8 @@ msgstr "ログ"
 msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
-msgstr "メールイベントはモデルには設定できません%s。ディスカッション機能を持つモデル"
+msgstr ""
+"メールイベントはモデルには設定できません%s。ディスカッション機能を持つモデル"
 "のみ使用可能です。"
 
 #. module: base_automation
@@ -514,7 +526,8 @@ msgstr "モデル名"
 msgid ""
 "Model of action %(action_name)s should match the one from automated rule %"
 "(rule_name)s."
-msgstr "アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致す"
+msgstr ""
+"アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致す"
 "る必要があります。"
 
 #. module: base_automation
@@ -743,7 +756,8 @@ msgstr "明確な名前を設定してください"
 msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
-msgstr "いくつかのトリガは選択フィールドへの参照を必要とします。このフィールドはそれ"
+msgstr ""
+"いくつかのトリガは選択フィールドへの参照を必要とします。このフィールドはそれ"
 "を格納するために使用されます。"
 
 #. module: base_automation
@@ -751,7 +765,8 @@ msgstr "いくつかのトリガは選択フィールドへの参照を必要と
 msgid ""
 "Some triggers need a reference to another field. This field is used to store "
 "it."
-msgstr "いくつかのトリガは別のフィールドへの参照を必要とします。このフィールドはそれ"
+msgstr ""
+"いくつかのトリガは別のフィールドへの参照を必要とします。このフィールドはそれ"
 "を格納するために使用されます。"
 
 #. module: base_automation
@@ -806,15 +821,16 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
 "(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" "
-"動作タイプとのみ使えます"
+"\"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" 動作タイプとの"
+"み使えます"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
 msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
-msgstr "これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空"
+msgstr ""
+"これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空"
 "の場合、すべてのフィールドが監視されます。"
 
 #. module: base_automation
@@ -838,7 +854,8 @@ msgstr "自動化ルールのスケジュール済みアクションが消えて
 msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
-msgstr "このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
+msgstr ""
+"このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -957,8 +974,9 @@ msgstr "ウェブサイト通信履歴"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr "日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するために"
-"、カレンダーを使用することが可能です。"
+msgstr ""
+"日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するため"
+"に、カレンダーを使用することが可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -968,9 +986,8 @@ msgid ""
 "be checked at creation and update."
 msgstr ""
 "いつその条件をトリガーするのか。\n"
-"　　　　"
-"存在する場合、スケジューラによって確認されます。空の場合は、作成時と更新時に"
-"確認されます。"
+"　　　　存在する場合、スケジューラによって確認されます。空の場合は、作成時と"
+"更新時に確認されます。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1003,7 +1020,8 @@ msgstr "管理者にこの自動化を無効にするか修正するよう依頼
 msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
-msgstr "削除されたレコードに対して、メールを送信したり、フォロワーを追加したり、活動"
+msgstr ""
+"削除されたレコードに対して、メールを送信したり、フォロワーを追加したり、活動"
 "を作成したりできません。 単に動作しません。"
 
 #. module: base_automation

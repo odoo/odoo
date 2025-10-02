@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -39,15 +39,15 @@ msgstr ""
 "聊天請求已被取消。"
 
 #. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
+msgid "(closed on: %(date)s)"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
 msgid "Available"
 msgstr "可用"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "Avatar"
-msgstr "頭像"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -93,6 +93,18 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Country"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
+msgid "Country & Language"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "討論群組"
@@ -115,12 +127,6 @@ msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "History"
-msgstr "歷史"
-
-#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__id
 #: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__id
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__id
@@ -139,9 +145,9 @@ msgstr "關閉對話"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "Lang"
-msgstr "語言"
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Language"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -170,11 +176,23 @@ msgid "Operator Name"
 msgstr "客服人員名稱"
 
 #. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent conversations"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent page views"
+msgstr ""
+
+#. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors"
-" status."
+"Recipients are not available. Please refresh the page to get latest visitors "
+"status."
 msgstr "收件者不可用。請刷新頁面以獲取最新的訪問者狀態。"
 
 #. module: website_livechat
@@ -221,22 +239,10 @@ msgstr "訪客 #%(id)d 已離開對話。"
 
 #. module: website_livechat
 #. odoo-python
-#: code:addons/website_livechat/models/website_visitor.py:0
-msgid "Visitor #%(id)d."
-msgstr "訪客 #%(id)d。"
-
-#. module: website_livechat
-#. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "Visitor #%d"
 msgstr "訪客 #%d"
-
-#. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/controllers/main.py:0
-msgid "Visitor #%s"
-msgstr "訪客 #%s"
 
 #. module: website_livechat
 #. odoo-python
@@ -261,7 +267,7 @@ msgstr "訪客"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
 msgstr "網站"
@@ -295,3 +301,18 @@ msgstr "若由操作員建立，表示訪客是否尚未開啟該頻道。"
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "an operator"
 msgstr "客服人員"
+
+#~ msgid "Avatar"
+#~ msgstr "頭像"
+
+#~ msgid "History"
+#~ msgstr "歷史"
+
+#~ msgid "Lang"
+#~ msgstr "語言"
+
+#~ msgid "Visitor #%(id)d."
+#~ msgstr "訪客 #%(id)d。"
+
+#~ msgid "Visitor #%s"
+#~ msgstr "訪客 #%s"

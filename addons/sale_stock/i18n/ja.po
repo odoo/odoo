@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-23 02:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -32,6 +32,12 @@ msgid ""
 msgstr ""
 "。\n"
 "                マニュアルでのフォローが必要かもしれません。"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "1 Quotation"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -72,10 +78,10 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class="
-"\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> "
-"配送済\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> 配送"
+"済\n"
 "                                    </span>"
 
 #. module: sale_stock
@@ -106,12 +112,12 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます："
-"\n"
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
+"す：\n"
 "  - 手動: 数量を明細上で手動で設定します\n"
 "  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
-"  - タイムシート: 数量は、"
-"この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - タイムシート: 数量は、この売上明細にリンクされたタスクに記録された時間の"
+"合計です\n"
 "  - 在庫移動: 数量は確定したピッキングに由来します\n"
 
 #. module: sale_stock
@@ -459,8 +465,8 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"顧客に約束した日付の誤差。サプライチェーンにおける予期せぬ遅延に対処するため"
-"、プロダクトは実際の約束日より何日か早く納品されるよう予定されます。"
+"顧客に約束した日付の誤差。サプライチェーンにおける予期せぬ遅延に対処するた"
+"め、プロダクトは実際の約束日より何日か早く納品されるよう予定されます。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -778,10 +784,10 @@ msgid ""
 "document."
 msgstr ""
 "販売オーダ上で配送先住所が変更されました。<br/>\n"
-"                        変更前： <strong>\"%(old_address)s\"</strong> "
-"変更後： <strong>\"%(new_address)s\"</strong>,\n"
-"                        "
-"このドキュメント上で取引先を更新する必要があるでしょう。"
+"                        変更前： <strong>\"%(old_address)s\"</strong> 変更"
+"後： <strong>\"%(new_address)s\"</strong>,\n"
+"                        このドキュメント上で取引先を更新する必要があるでしょ"
+"う。"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -789,7 +795,8 @@ msgstr ""
 msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
-msgstr "オーダ済数量をすでに納入された数量より減らすことはできません。代わりに、在庫"
+msgstr ""
+"オーダ済数量をすでに納入された数量より減らすことはできません。代わりに、在庫"
 "に返品を作成して下さい。"
 
 #. module: sale_stock
@@ -798,8 +805,9 @@ msgstr "オーダ済数量をすでに納入された数量より減らすこと
 msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
-msgstr "販売オーダ明細のオーダ数量を、すでに納入された数量より減らすことはできません"
-"。代わりに、在庫に返品を作成して下さい。"
+msgstr ""
+"販売オーダ明細のオーダ数量を、すでに納入された数量より減らすことはできませ"
+"ん。代わりに、在庫に返品を作成して下さい。"
 
 #. module: sale_stock
 #. odoo-javascript

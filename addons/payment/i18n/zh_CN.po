@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 15:28+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -47,8 +47,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> 这些属性是为\n"
 "                                供应商及其与\n"
-"                                Odoo 就付款方式进行整合而设置。"
-"任何更改都可能导致错误\n"
+"                                Odoo 就付款方式进行整合而设置。任何更改都可能"
+"导致错误\n"
 "                                并应首先在测试数据库中进行测试。"
 
 #. module: payment
@@ -66,10 +66,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible="
-"\"support_partial_capture != 'full_only'\" title=\"Some of the transactions "
-"you intend to capture can only be captured in full. Handle the transactions "
-"individually to capture a partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -77,8 +77,8 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-toggle="
-"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
+"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -219,8 +219,8 @@ msgstr "ACH 直接扣账"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE STRIPE"
-msgstr "启动 Stripe支付"
+msgid "ACTIVATE"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -1039,7 +1039,8 @@ msgid ""
 "Express checkout allows customers to pay faster by using a payment method "
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
-msgstr "快速结账允许客户使用一种可提供所有必要账单和发货信息的付款方式，从而跳过结账"
+msgstr ""
+"快速结账允许客户使用一种可提供所有必要账单和发货信息的付款方式，从而跳过结账"
 "流程，加快付款速度。"
 
 #. module: payment
@@ -2566,7 +2567,8 @@ msgid ""
 "The list of countries in which this payment method can be used (if the "
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
-msgstr "可使用该付款方式的国家列表（如果供应商允许）。在其他国家，客户无法使用此付款"
+msgstr ""
+"可使用该付款方式的国家列表（如果供应商允许）。在其他国家，客户无法使用此付款"
 "方式。"
 
 #. module: payment
@@ -2575,7 +2577,8 @@ msgid ""
 "The list of currencies for that are supported by this payment method (if the "
 "provider allows it). When paying with another currency, this payment method "
 "is not available to customers."
-msgstr "该付款方式支持的币别列表（如果提供商允许）。使用其他币别付款时，客户无法使用"
+msgstr ""
+"该付款方式支持的币别列表（如果提供商允许）。使用其他币别付款时，客户无法使用"
 "此付款方式。"
 
 #. module: payment
@@ -2805,7 +2808,8 @@ msgstr ""
 msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
-msgstr "这种付款方式需要一个合作伙伴；您应首先启用支持这种付款方式的付款提供商。"
+msgstr ""
+"这种付款方式需要一个合作伙伴；您应首先启用支持这种付款方式的付款提供商。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
@@ -2843,7 +2847,8 @@ msgstr "令牌化"
 msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
-msgstr "令牌化是将支付信息保存为令牌的过程，以后无需再次输入支付信息即可重复使用。"
+msgstr ""
+"令牌化是将支付信息保存为令牌的过程，以后无需再次输入支付信息即可重复使用。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
@@ -3360,6 +3365,9 @@ msgstr "不支持令牌化"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "不支持没有付款的标记化"
+
+#~ msgid "ACTIVATE STRIPE"
+#~ msgstr "启动 Stripe支付"
 
 #~ msgid " Data Fetched"
 #~ msgstr " 数据已获取"

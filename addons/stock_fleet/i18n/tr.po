@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-17 17:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -38,6 +38,14 @@ msgid "%(weight_capacity)s %(weight_uom)s"
 msgstr "%(weight_capacity)s %(weight_uom)s"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+msgid ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">From</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">To</span>"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Dock:</strong>"
 msgstr ""
@@ -50,6 +58,11 @@ msgstr ""
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Vehicle:</strong>"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
+msgid "Allowed Docks"
 msgstr ""
 
 #. module: stock_fleet
@@ -74,20 +87,53 @@ msgid "Category of the model"
 msgstr "Modelin kategorisi"
 
 #. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
+msgid "Dispatch Management"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
+msgid "Dock"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Dock Dispatching"
 msgstr ""
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Dock Location"
+msgstr ""
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+msgid "Dock Locations"
 msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
 msgid "Driver"
 msgstr "Sürücü"
+
+#. module: stock_fleet
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__dispatch_management
+msgid ""
+"Enable this option to display dispatch management related details in the "
+"batch/wave form view and operations kanban overview."
+msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -100,13 +146,12 @@ msgid "Graph View"
 msgstr "Grafik Görünümü"
 
 #. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_stock_location
-msgid "Inventory Locations"
-msgstr "Stok Konumları"
-
-#. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_location__is_a_dock
-msgid "Is a Dock Location"
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
+msgid "ID"
 msgstr ""
 
 #. module: stock_fleet
@@ -142,6 +187,11 @@ msgstr "Operasyon Türü"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Own Fleet"
+msgstr ""
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_picking_type
+msgid "Picking Type"
 msgstr ""
 
 #. module: stock_fleet
@@ -248,6 +298,11 @@ msgid "Volume unit of measure label"
 msgstr "Hacim ölçü birimi etiketi"
 
 #. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_warehouse
+msgid "Warehouse"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Weight"
 msgstr "Ağırlık"
@@ -272,3 +327,6 @@ msgstr "PK"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "semi-truck"
 msgstr ""
+
+#~ msgid "Inventory Locations"
+#~ msgstr "Stok Konumları"

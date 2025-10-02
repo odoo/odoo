@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 13:41+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/project/"
@@ -312,21 +312,20 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن "
-"فريمان</t>،<br/>\n"
-"    يسرنا إخبارك بأننا قد أتممنا المشروع \"<strong t-out=\"object.name or ''"
-"\">عمليات الترميم</strong>\".\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</"
+"t>،<br/>\n"
+"    يسرنا إخبارك بأننا قد أتممنا المشروع \"<strong t-out=\"object.name or "
+"''\">عمليات الترميم</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">لقد وصلتك هذه الرسالة لأنه قد تم نقل "
-"مشروعك إلى مرحلة <b t-out=\"object.stage_id.name or ''\">تم "
-"الانتهاء</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">لقد وصلتك هذه "
+"الرسالة لأنه قد تم نقل مشروعك إلى مرحلة <b t-out=\"object.stage_id.name or "
+"''\">تم الانتهاء</b></span>\n"
 "            "
 
 #. module: project
@@ -353,8 +352,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن "
-"فريمان</t>،<br/><br/>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</"
+"t>،<br/><br/>\n"
 "    شكراً لتواصلك معنا. نحن نُقدِّر اهتمامك بمنتجاتنا/خدماتنا.<br/>\n"
 "    يقوم فريقنا بمراجعة استفسارك وسيقومون بالرد عليك في أقرب وقت ممكن.<br/>\n"
 "    إذا كانت لديك أي أسئلة أو استفسارات أخرى في الوقت الحالي، لا تتردد في "
@@ -363,8 +362,8 @@ msgstr ""
 "    مع أطيب التحيات،\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -380,14 +379,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg < 3.66\" title=\"سعيد \"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"محايد \"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg >= 2.33\" title=\"غير سعيد \"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg < 3.66\" title=\"سعيد \"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" "
+"title=\"محايد \"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg >= 2.33\" title=\"غير سعيد \"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -746,7 +744,8 @@ msgstr "إضافة محتوى إضافي لعرضه في البريد الإكت
 msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
-msgstr "قم بإضافة حقول خصائص خاصة بالمشروع في المهام لتخصيص عملية إدارة مشروعك."
+msgstr ""
+"قم بإضافة حقول خصائص خاصة بالمشروع في المهام لتخصيص عملية إدارة مشروعك."
 
 #. module: project
 #. odoo-javascript
@@ -2525,8 +2524,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "الحقول غير الصالحة: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2702,6 +2701,12 @@ msgstr "مؤشرات التقدم المتأخرة"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "لاحقاً"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4721,7 +4726,8 @@ msgstr "عنوان المهمة..."
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
-msgstr "تم نقل المهمة من المشروع %(source_project)s إلى %(destination_project)s"
+msgstr ""
+"تم نقل المهمة من المشروع %(source_project)s إلى %(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4821,12 +4827,6 @@ msgstr "مراحل المهام"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
 msgstr "المهام في التكرار"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr "لا يمكن تحويل المهام في قالب المشروع إلى مهام عادية."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
@@ -5094,8 +5094,8 @@ msgid ""
 "stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
-"هذا المشروع مرتبط بـ %(project_company)s، بينما تنتمي المرحلة المحددة إلى "
-"%(stage_company)s. هناك خياران يجب أخذهما بعين الاعتبار: إما إزالة تعيين "
+"هذا المشروع مرتبط بـ %(project_company)s، بينما تنتمي المرحلة المحددة إلى %"
+"(stage_company)s. هناك خياران يجب أخذهما بعين الاعتبار: إما إزالة تعيين "
 "الشركة من المشروع أو من المرحلة، أو يمكنك تحديث معلومات الشركة لهذه السجلات "
 "لمواءمتها ضمن نفس الشركة."
 
@@ -5151,7 +5151,8 @@ msgstr "تم حجب هذه المهمة حالياً بواسطة"
 msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
-msgstr "سيقوم ذلك بأرشفة المراحل وكافة المهام التي تحتويها من المشاريع التالية:"
+msgstr ""
+"سيقوم ذلك بأرشفة المراحل وكافة المهام التي تحتويها من المشاريع التالية:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
@@ -6042,6 +6043,12 @@ msgstr "👤 غير مسند"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 خاص"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "الحقول غير الصالحة: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr "لا يمكن تحويل المهام في قالب المشروع إلى مهام عادية."
 
 #~ msgid ""
 #~ "\n"

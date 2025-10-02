@@ -39,7 +39,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 15:28+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/project/"
@@ -340,15 +340,15 @@ msgstr ""
 "''\">Remontit</strong>\" on saatu päätökseen onnistuneesti.\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">Saat tämän sähköpostin, koska "
-"projektisi on siirretty vaiheeseen <b t-out=\"object.stage_id.name or ''\""
-">Valmis</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">Saat tämän "
+"sähköpostin, koska projektisi on siirretty vaiheeseen <b t-"
+"out=\"object.stage_id.name or ''\">Valmis</b></span>\n"
 "            "
 
 #. module: project
@@ -375,8 +375,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
-"Freeman</t>,<br/><br/>\n"
+"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t>,<br/><br/>\n"
 "    Kiitos yhteydenotostasi. Arvostamme kiinnostustasi tuotteitamme/"
 "palveluitamme kohtaan.<br/>\n"
 "    Tiimimme käsittelee parhaillaan kyselyäsi ja vastaa sinulle "
@@ -387,8 +387,9 @@ msgstr ""
 "    Ystävällisin terveisin,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -404,14 +405,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" "
+"title=\"Neutral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1088,12 +1088,12 @@ msgid ""
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
 "(orange bullet).\n"
 msgstr ""
-"Muuta tilaa automaattisesti, kun asiakas vastaa tämän vaiheen palautteeseen."
-"\n"
+"Muuta tilaa automaattisesti, kun asiakas vastaa tämän vaiheen "
+"palautteeseen.\n"
 " * Asiakkaan antama hyvä palaute päivittää tilan \"Hyväksytty\" (vihreä "
 "pallo).\n"
-" * Neutraali tai huono palaute muuttaa kanban-tilan tilaksi "
-"\"Muutoksia pyydetään\" (oranssi luoti).\n"
+" * Neutraali tai huono palaute muuttaa kanban-tilan tilaksi \"Muutoksia "
+"pyydetään\" (oranssi luoti).\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -2576,8 +2576,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "Virheelliset kentät: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2630,7 +2630,8 @@ msgstr "Tapauksen versio"
 #: model:ir.model.fields,help:project.field_project_project__duration_tracking
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr "JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+msgstr ""
+"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2753,6 +2754,12 @@ msgstr "Myöhässä olevat virstanpylväät"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Myöhemmin"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4790,8 +4797,8 @@ msgstr "Tehtävän otsikko..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
-"Tehtävä siirretty projektista %(source_project)s kohteeseen "
-"%(destination_project)s"
+"Tehtävä siirretty projektista %(source_project)s kohteeseen %"
+"(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4891,12 +4898,6 @@ msgstr "Tehtävien vaiheet"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
 msgstr "Toistuvat tehtävät"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr "Projektimallin tehtäviä ei voi muuntaa tavallisiksi tehtäviksi."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
@@ -5049,7 +5050,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The task and the associated partner must be linked to the same company."
-msgstr "Tehtävän ja siihen liittyvän kumppanin on liityttävä samaan yritykseen."
+msgstr ""
+"Tehtävän ja siihen liittyvän kumppanin on liityttävä samaan yritykseen."
 
 #. module: project
 #. odoo-javascript
@@ -5788,9 +5790,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Et voi vaihtaa tämän vaiheen yritystä arvoon %(company_name)s, koska se "
-"sisältää tällä hetkellä hankkeita, jotka liittyvät arvoon "
-"%(project_company_name)s. Varmista, että tämä vaihe koostuu yksinomaan "
-"%(company_name)s-projektiin liittyvistä hankkeista."
+"sisältää tällä hetkellä hankkeita, jotka liittyvät arvoon %"
+"(project_company_name)s. Varmista, että tämä vaihe koostuu yksinomaan %"
+"(company_name)s-projektiin liittyvistä hankkeista."
 
 #. module: project
 #. odoo-javascript
@@ -6143,6 +6145,12 @@ msgstr "👤 Ei määritetty"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Yksityinen"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Virheelliset kentät: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr "Projektimallin tehtäviä ei voi muuntaa tavallisiksi tehtäviksi."
 
 #~ msgid ""
 #~ "\n"

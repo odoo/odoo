@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 18:40+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/mrp/"
@@ -52,8 +52,8 @@ msgstr ""
 "componentes foram acionados.\n"
 " * Em progresso: a produção iniciou (na OP ou na OT).\n"
 " * A ser fechado: a produção foi concluída, a OP deve ser fechada.\n"
-" * Concluído: a OP está fechada, as movimentações de estoque foram lançadas. "
-"\n"
+" * Concluído: a OP está fechada, as movimentações de estoque foram "
+"lançadas. \n"
 " * Cancelado: a OP foi cancelada, não pode mais ser confirmada."
 
 #. module: mrp
@@ -2272,6 +2272,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2816,6 +2817,7 @@ msgstr "Horas"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -2994,6 +2996,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "Movimentos de Inventário"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -5126,8 +5133,8 @@ msgstr "Data Agendada"
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Agendado antes da ordem de trabalho anterior, planejado a partir de %(start)"
-"s até %(end)s"
+"Agendado antes da ordem de trabalho anterior, planejado a partir de %"
+"(start)s até %(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5719,8 +5726,8 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"A porcentagem do custo de produção final para essa linha de subproduto ("
-"dividida entre a quantidade produzida). O total da divisão de custos de "
+"A porcentagem do custo de produção final para essa linha de subproduto "
+"(dividida entre a quantidade produzida). O total da divisão de custos de "
 "todos os subprodutos deve ser menor ou igual a 100."
 
 #. module: mrp

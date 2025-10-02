@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-24 19:21+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/barcodes/"
@@ -34,20 +34,32 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>Ονοματολογία Barcodes</i> καθορίζει πως τα barcodes αναγνωρίζονται και κατηγοριοποιούνται.\n"
-"                                Όταν γίνεται η σάρωση το barcode συσχετίζεται με τον <i>πρώτο</i> κανόνα με ένα αντίστοιχο\n"
-"                               πρότυπο. Η σύνταξη των προτύπων είναι αυτή μιας κανονικής έκφραση και το barcode είναι αντίστοιχο\n"
-"                                εάν η κανονική έκφραση ταιριάζει με το πρόθεμα του barcode."
+"<i>Ονοματολογία Barcodes</i> καθορίζει πως τα barcodes αναγνωρίζονται και "
+"κατηγοριοποιούνται.\n"
+"                                Όταν γίνεται η σάρωση το barcode "
+"συσχετίζεται με τον <i>πρώτο</i> κανόνα με ένα αντίστοιχο\n"
+"                               πρότυπο. Η σύνταξη των προτύπων είναι αυτή "
+"μιας κανονικής έκφραση και το barcode είναι αντίστοιχο\n"
+"                                εάν η κανονική έκφραση ταιριάζει με το "
+"πρόθεμα του barcode."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
-msgstr "Μια ονοματολογία barcode καθορίζει το πώς το σημείο πώλησης εντοπίζει και ερμηνεύει barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
+msgstr ""
+"Μια ονοματολογία barcode καθορίζει το πώς το σημείο πώλησης εντοπίζει και "
+"ερμηνεύει barcodes"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -79,6 +91,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
 msgstr "Οποιοδήποτε"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+msgid "Apply"
+msgstr ""
 
 #. module: barcodes
 #. odoo-javascript
@@ -124,7 +142,7 @@ msgstr "Barcode Σαρώθηκε"
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
-msgid "Barcode: "
+msgid "Barcode: %(barcode)s"
 msgstr ""
 
 #. module: barcodes
@@ -147,6 +165,9 @@ msgstr "Δημιουργήθηκε στις"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__display_name
+#: model:ir.model.fields,field_description:barcodes.field_res_company__display_name
 msgid "Display Name"
 msgstr "Εμφανιζόμενο Όνομα"
 
@@ -171,6 +192,12 @@ msgid "Encoding"
 msgstr "Κωδικοποίηση"
 
 #. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/manual_barcode.js:0
+msgid "Enter a barcode..."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Routing"
@@ -178,8 +205,19 @@ msgstr "HTTP Routing"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
+#: model:ir.model.fields,field_description:barcodes.field_ir_http__id
+#: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
 msgstr "Κωδικός"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_events_mixin.py:0
+msgid ""
+"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
+"must be implemented"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -206,11 +244,16 @@ msgstr "Ονοματολογία"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
 
@@ -252,6 +295,13 @@ msgid "The barcode matching pattern"
 msgstr "Το μοτίβο αντιστοίχισης barcode"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "Η λίστα των κανόνων barcode"
@@ -264,7 +314,9 @@ msgstr "Το αντιστοίχισμένο μοτίβο θα έχει ψευδ�
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
 msgstr ""
 "Υπάρχει συντακτικό σφάλμα στο μοτίβο του barcode %(pattern)s: ένας κανόνας "
 "μπορεί να περιέχει μόνο ένα ζευγάρι αγκύλες."
@@ -272,7 +324,9 @@ msgstr ""
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr ""
 "Υπάρχει συντακτικό σφάλμα στο μοτίβο του barcode %(pattern)s: οι αγκύλες "
 "μπορούν να περιέχουν μόνο 'N' που ακολουθούνται από 'D'."
@@ -280,13 +334,16 @@ msgstr ""
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
 "Υπάρχει συντακτικό σφάλμα στο μοτίβο του barcode %(pattern)s: κενές αγκύλες."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr ""
 "Αυτός ο κανόνας θα ισχύει μόνο εάν το barcode είναι κωδικοποιημένο με την "
 "καθορισμένη κωδικοποίηση."
@@ -298,7 +355,10 @@ msgstr "Τύπος"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "Οι κωδικοί UPC μπορούν να μετατραπούν σε EAN προσθέτοντας ένα μηδενικό στην "
 "αρχή. Αυτή η ρύθμιση καθορίζει εάν ένας κωδικός UPC/EAN θα πρέπει να "
@@ -334,9 +394,18 @@ msgstr "Άγνωστη εντολή barcode"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "Χρησιμοποιείται για να ταξινομεί κανόνες με μια μικρότερη ακολουθία αντιστοίχισης"
+msgstr ""
+"Χρησιμοποιείται για να ταξινομεί κανόνες με μια μικρότερη ακολουθία "
+"αντιστοίχισης"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Τιμή του τελευταίου barcode που σαρώθηκε."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""

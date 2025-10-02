@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 02:32+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -71,8 +71,8 @@ msgid ""
 "(total_amount)s"
 msgstr ""
 "%(base)s với %(discount)s %% %(discount_type)s và %(surcharge)s phí bổ sung\n"
-"Ví dụ: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Ví dụ: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -81,8 +81,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
-"%(item_name)s: ngày kết thúc (%(end_date)s) nên diễn ra sau ngày bắt đầu "
-"(%(start_date)s)"
+"%(item_name)s: ngày kết thúc (%(end_date)s) nên diễn ra sau ngày bắt đầu (%"
+"(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -104,6 +104,7 @@ msgstr "Chiết khấu %(percentage)s %% trên giá bán"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -314,8 +315,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Liên hệ</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Liên hệ</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -595,7 +596,8 @@ msgstr "Thêm vào sản phẩm"
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
-msgstr "Các bao bì bổ sung cho sản phẩm này có thể được sử dụng trong bán hàng."
+msgstr ""
+"Các bao bì bổ sung cho sản phẩm này có thể được sử dụng trong bán hàng."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_adidas
@@ -959,8 +961,8 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"Việc thay đổi đơn vị tính cho sản phẩm của bạn sẽ áp dụng quy đổi 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s. \n"
+"Việc thay đổi đơn vị tính cho sản phẩm của bạn sẽ áp dụng quy đổi 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s. \n"
 "Tất cả bản ghi hiện có (Đơn bán hàng, Đơn mua hàng,...) sử dụng sản phẩm này "
 "sẽ được cập nhật bằng cách thay thế tên đơn vị."
 
@@ -2673,8 +2675,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Trên sản phẩm %(product)s bạn không thể chuyển đổi thuộc tính "
-"%(attribute_src)s thành thuộc tính %(attribute_dest)s."
+"Trên sản phẩm %(product)s bạn không thể chuyển đổi thuộc tính %"
+"(attribute_src)s thành thuộc tính %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -3374,6 +3376,12 @@ msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr "Đỏ"
@@ -3771,8 +3779,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
-"Thuộc tính %(attribute)s phải có ít nhất một giá trị cho sản phẩm "
-"%(product)s."
+"Thuộc tính %(attribute)s phải có ít nhất một giá trị cho sản phẩm %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4200,8 +4208,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Giá trị của sản phẩm (được tính tự động trong AVCO).\n"
-"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng ("
-"ví dụ: điều chỉnh tồn kho).\n"
+"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng "
+"(ví dụ: điều chỉnh tồn kho).\n"
 "        Được sử dụng để tính toán lợi nhuận trên các đơn bán hàng."
 
 #. module: product
@@ -4546,14 +4554,6 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"Bạn không thể chỉ định Bảng giá chính là Bảng giá khác trong Mục bảng giá"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4591,8 +4591,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Bạn không thể thay đổi giá trị của giá trị %(value)s được cài trên sản phẩm "
-"%(product)s."
+"Bạn không thể thay đổi giá trị của giá trị %(value)s được cài trên sản phẩm %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -4863,6 +4863,11 @@ msgstr "đến"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "Bạn không thể chỉ định Bảng giá chính là Bảng giá khác trong Mục bảng giá"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

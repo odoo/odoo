@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 21:13+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -25,12 +25,38 @@ msgid "Access Token"
 msgstr "アクセストークン"
 
 #. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Account Country"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
+msgid "An error occurred"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
+msgid "An error occurred while linking your Mercado Pago account with Odoo."
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Are you sure you want to disconnect?"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
+msgid "Back to the Mercado Pago provider"
+msgstr ""
+
+#. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
-msgstr "カード発行会社に電話してカードを有効化するか、別の支払方法を利用して下さい。"
+msgstr ""
+"カード発行会社に電話してカードを有効化するか、別の支払方法を利用して下さい。"
 "電話番号はカード裏面に記載されています。"
 
 #. module: payment_mercado_pago
@@ -63,10 +89,46 @@ msgid "Code"
 msgstr "コード"
 
 #. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Connect"
+msgstr ""
+
+#. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "APIへの接続を確立できませんでした。"
+msgid "Connect your account before enabling tokenization."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/controllers/onboarding.py:0
+msgid "Could not find Mercado Pago provider %s"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Disconnect Your Mercado Pago Account"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-javascript
+#: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
+msgid "Incorrect payment details"
+msgstr ""
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
@@ -79,10 +141,56 @@ msgid "Mercado Pago Access Token"
 msgstr "Mercado Pago アクセストークン"
 
 #. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token_expiry
+msgid "Mercado Pago Access Token Expiry"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
+msgid "Mercado Pago Account Country"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__mercado_pago_customer_id
+msgid "Mercado Pago Customer"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_is_oauth_supported
+msgid "Mercado Pago Is Oauth Supported"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_public_key
+msgid "Mercado Pago Public Key"
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_refresh_token
+msgid "Mercado Pago Refresh Token"
+msgstr ""
+
+#. module: payment_mercado_pago
 #. odoo-python
-#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "参照に一致する取引が見つかりません%s。"
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"Mercado Pago credentials are missing. Click the \"Connect\" button to set up "
+"your account."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"Mercado Pago is not available in your country; please use another payment "
+"provider."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid "Other Payment Providers"
+msgstr ""
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -90,22 +198,34 @@ msgid "Payment Provider"
 msgstr "決済プロバイダー"
 
 #. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_token
+msgid "Payment Token"
+msgstr ""
+
+#. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "決済トランザクション"
 
 #. module: payment_mercado_pago
+#. odoo-javascript
+#: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
+msgid "Payment processing failed"
+msgstr ""
+
+#. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Payment was not processed, use another card or contact issuer."
-msgstr "支払が処理されませんでした。別のカードを使用するか、発行会社に連絡して下さい"
-"。"
+msgstr ""
+"支払が処理されませんでした。別のカードを使用するか、発行会社に連絡して下さ"
+"い。"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
-msgid "Received data with invalid status: %s"
-msgstr "無効なステータスの受信データ: %s"
+msgid "Received data with invalid status: %s."
+msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -116,32 +236,21 @@ msgstr "支払IDが欠落しているデータを受信しました。"
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "参照が欠落しているデータを受信しました。"
-
-#. module: payment_mercado_pago
-#. odoo-python
-#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with missing status."
 msgstr "ステータスが欠落しているデータを受信しました。"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Mercado Pago gave us the following "
-"information: '%(error_message)s' (code %(error_code)s)"
+msgid "Set the account country before connecting the account."
 msgstr ""
-"APIとのコミュニケーションに失敗しました。 Mercado "
-"Pagoは以下の情報を提供しています: '%(error_message)s' (コード %(error_code)s)"
 
 #. module: payment_mercado_pago
-#. odoo-python
-#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
 msgid ""
-"The communication with the API failed. The response is empty. Please verify "
-"your access token."
-msgstr "APIとの通信に失敗しました。回答が空です。アクセストークンを確認して下さい。"
+"The country of the Mercado Pago account. The currency will be updated to "
+"match the country of the Mercado Pago account."
+msgstr ""
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
@@ -160,7 +269,8 @@ msgstr "この支払方法では、分割払いは処理されません。"
 msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
-msgstr "お客様のお支払を処理中です。2営業日以内に、支払いが入金されたかどうかをEメー"
+msgstr ""
+"お客様のお支払を処理中です。2営業日以内に、支払いが入金されたかどうかをEメー"
 "ルでお知らせいたしますので、ご安心下さい。"
 
 #. module: payment_mercado_pago
@@ -170,7 +280,8 @@ msgid ""
 "We are processing your payment. Don't worry, less than 2 business days we "
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
-msgstr "お客様のお支払を処理中です。2営業日以内に、お支払いが入金されたかどうか、また"
+msgstr ""
+"お客様のお支払を処理中です。2営業日以内に、お支払いが入金されたかどうか、また"
 "は詳しい情報が必要な場合は、Eメールでお知らせいたします。"
 
 #. module: payment_mercado_pago
@@ -192,22 +303,33 @@ msgstr "支払いを処理できませんでしたので、他のカードをご
 msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
-msgstr "その金額分の支払はすでに完了しています。再度お支払いが必要な場合は、別のカー"
+msgstr ""
+"その金額分の支払はすでに完了しています。再度お支払いが必要な場合は、別のカー"
 "ドまたは別のお支払い方法をご利用下さい。"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid ""
-"You have reached the limit of allowed attempts. Choose another card or other"
-" means of payment."
-msgstr "ご利用可能回数に達しました。他のカードまたは他の支払い手段を選択して下さい。"
+"You have reached the limit of allowed attempts. Choose another card or other "
+"means of payment."
+msgstr ""
+"ご利用可能回数に達しました。他のカードまたは他の支払い手段を選択して下さい。"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "You must authorize the payment with this card."
 msgstr "このカードでの支払いを承認する必要があります。"
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid ""
+"You must renew your connection to Mercado Pago in order to enable the new\n"
+"                        Card payment method experience, which allows saving "
+"payment details for\n"
+"                        recurring payments."
+msgstr ""
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -219,7 +341,34 @@ msgstr "カードの残高が不足しています。"
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid ""
-"Your payment has been credited. In your summary you will see the charge as a"
-" statement descriptor."
-msgstr "お支払いが入金されました。お客様の概要には、明細の説明として請求が表示されま"
+"Your payment has been credited. In your summary you will see the charge as a "
+"statement descriptor."
+msgstr ""
+"お支払いが入金されました。お客様の概要には、明細の説明として請求が表示されま"
 "す。"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "APIへの接続を確立できませんでした。"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "参照に一致する取引が見つかりません%s。"
+
+#~ msgid "Received data with invalid status: %s"
+#~ msgstr "無効なステータスの受信データ: %s"
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "参照が欠落しているデータを受信しました。"
+
+#~ msgid ""
+#~ "The communication with the API failed. Mercado Pago gave us the following "
+#~ "information: '%(error_message)s' (code %(error_code)s)"
+#~ msgstr ""
+#~ "APIとのコミュニケーションに失敗しました。 Mercado Pagoは以下の情報を提供し"
+#~ "ています: '%(error_message)s' (コード %(error_code)s)"
+
+#~ msgid ""
+#~ "The communication with the API failed. The response is empty. Please "
+#~ "verify your access token."
+#~ msgstr ""
+#~ "APIとの通信に失敗しました。回答が空です。アクセストークンを確認して下さ"
+#~ "い。"

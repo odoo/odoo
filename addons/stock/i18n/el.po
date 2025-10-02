@@ -15,11 +15,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 18:37+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-24 19:22+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/stock/el/>"
-"\n"
+"Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/stock/el/"
+">\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -565,8 +565,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Τα προϊόντα θα μετακινηθούν προς τον προορισμό <b>%(destination)s</b>, <"
-"br/> όπως καθορίζεται από <b>%(operation)s</b> τον προορισμό."
+"<br>Τα προϊόντα θα μετακινηθούν προς τον προορισμό <b>%(destination)s</b>, "
+"<br/> όπως καθορίζεται από <b>%(operation)s</b> τον προορισμό."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -780,6 +780,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
 msgstr ""
 
 #. module: stock
@@ -1620,6 +1626,7 @@ msgstr "Βήμα Αυτόματης Αρίιθμησης προστέθηκε"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
@@ -1929,8 +1936,8 @@ msgstr ""
 "παρακράτηση φόρου στην πηγή θα καταβληθεί από τον πελάτη στις φορολογικές "
 "αρχές. Σε καμία περίπτωση η εταιρεία μας (My Company - Chicago) δεν μπορεί "
 "να εμπλακεί σε κόστη που σχετίζονται με τη νομοθεσία της εκάστοτε χώρας. "
-"Συνεπώς, το ποσό του τιμολογίου θα καταβληθεί στην εταιρεία μας (My Company -"
-" Chicago) στο σύνολό του και δεν περιλαμβάνει οποιαδήποτε κόστη που αφορούν "
+"Συνεπώς, το ποσό του τιμολογίου θα καταβληθεί στην εταιρεία μας (My Company "
+"- Chicago) στο σύνολό του και δεν περιλαμβάνει οποιαδήποτε κόστη που αφορούν "
 "τη νομοθεσία της χώρας στην οποία εδρεύει ο πελάτης."
 
 #. module: stock
@@ -2176,8 +2183,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Υπολογίστε τα έξοδα αποστολής και στείλτε με UPS<br/>\n"
-"                                    <strong>(μεταβείτε στην Αρχική&gt;"
-"Εφαρμογές για να το εγκαταστήσετε)</strong>"
+"                                    <strong>(μεταβείτε στην "
+"Αρχική&gt;Εφαρμογές για να το εγκαταστήσετε)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2294,6 +2301,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
 msgid "Container"
 msgstr ""
@@ -3037,8 +3045,6 @@ msgid "Deliveries"
 msgstr "Παραδόσεις"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
 msgid "Delivery"
@@ -3048,6 +3054,12 @@ msgstr "Εξερχόμενη"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Delivery Address"
 msgstr "Διεύθυνση Παράδοσης"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Delivery Date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -3532,6 +3544,12 @@ msgstr "Υπάρχει ήδη αυτός ο σειριακός αριθμός"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
 msgid "Dymo"
 msgstr "Dymo"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Earliest Possible Arrival"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -4461,10 +4479,10 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
-msgid "If ticked, you will be able to select entire packages to move"
+msgid ""
+"If ticked, packages to move will be directly displayed in Barcode instead of "
+"the products they contain"
 msgstr ""
-"Αν είναι επιλεγμένο, θα μπορείτε να επιλέγετε ολόκληρες συσκευασίες προς "
-"μετακίνηση"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4810,12 +4828,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
 msgid "Inventory Name"
 msgstr ""
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "Inventory On Hand"
-msgstr "Διαθέσιμο Απόθεμα"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -5237,6 +5249,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
 msgstr "Χρόνος Παράδοσης"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Lead Time Information"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -5781,7 +5799,8 @@ msgid "Move Quantity"
 msgstr "Ποσότητα Κίνησης"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Move a Pack"
 msgstr ""
 
@@ -6104,8 +6123,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Δεν βρέθηκε κανόνας αναπλήρωσης για το \"%(product)s\"στην τοποθεσία "
-"\"%(location)s\".\n"
+"Δεν βρέθηκε κανόνας αναπλήρωσης για το \"%(product)s\"στην τοποθεσία \"%"
+"(location)s\".\n"
 "Ελέγξτε τη ρύθμιση των δρομολογίων στο προϊόν."
 
 #. module: stock
@@ -6550,6 +6569,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
@@ -7210,7 +7230,6 @@ msgstr "Ποσ. Παραχθέντων"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -7754,8 +7773,8 @@ msgid ""
 msgstr ""
 "Ποσότητα προγραμματισμένων εξερχόμενων προϊόντων..\n"
 "Σε περιβάλλον με μία μόνο Αποθηκευτική Τοποθεσία, αυτό περιλαμβάνει αγαθά "
-"που φεύγουν από αυτή την Τοποθεσία ή από οποιαδήποτε από τις θυγατρικές της.."
-"\n"
+"που φεύγουν από αυτή την Τοποθεσία ή από οποιαδήποτε από τις θυγατρικές "
+"της..\n"
 "Σε περιβάλλον με μία μόνο Αποθήκη, αυτό περιλαμβάνει αγαθά που φεύγουν από "
 "την Αποθηκευτική Τοποθεσία της Αποθήκης αυτής ή από οποιαδήποτε από τις "
 "θυγατρικές της.\n"
@@ -7874,8 +7893,6 @@ msgid "Reason for relocation"
 msgstr "Αιτιολογία μετακίνησης"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 msgid "Receipt"
 msgstr "Εισερχόμενη"
@@ -8129,8 +8146,6 @@ msgid "Replenish wizard"
 msgstr "Οδηγός Ανατροφοδοσίας"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
@@ -8703,13 +8718,11 @@ msgid "Search not supported without a value."
 msgstr "Η αναζήτηση δεν υποστηρίζεται χωρίς τιμή."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
-msgid "Select"
-msgstr ""
-
-#. module: stock
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
+#: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
 msgstr ""
 
@@ -8735,8 +8748,8 @@ msgid ""
 "Selected storage category does not exist in the 'store to' location or any "
 "of its sublocations"
 msgstr ""
-"Η επιλεγμένη κατηγορία αποθήκευσης δεν υπάρχει στην τοποθεσία «αποθήκευση σε»"
-" ούτε σε κάποια από τις υποτοποθεσίες της."
+"Η επιλεγμένη κατηγορία αποθήκευσης δεν υπάρχει στην τοποθεσία «αποθήκευση "
+"σε» ούτε σε κάποια από τις υποτοποθεσίες της."
 
 #. module: stock
 #. odoo-python
@@ -8827,9 +8840,9 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Ο σειριακός αριθμός (%(serial_number)s) υπάρχει ήδη στη/στις "
-"τοποθεσία/τοποθεσίες: %(location_list)s. Παρακαλώ διορθώστε τον "
-"κωδικοποιημένο σειριακό αριθμό."
+"Ο σειριακός αριθμός (%(serial_number)s) υπάρχει ήδη στη/στις τοποθεσία/"
+"τοποθεσίες: %(location_list)s. Παρακαλώ διορθώστε τον κωδικοποιημένο "
+"σειριακό αριθμό."
 
 #. module: stock
 #. odoo-python
@@ -8840,9 +8853,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"Ο σειριακός αριθμός (%(serial_number)s) δεν βρίσκεται στην τοποθεσία "
-"%(source_location)s, αλλά βρίσκεται στην/στις τοποθεσία/τοποθεσίες: "
-"%(other_locations)s.\n"
+"Ο σειριακός αριθμός (%(serial_number)s) δεν βρίσκεται στην τοποθεσία %"
+"(source_location)s, αλλά βρίσκεται στην/στις τοποθεσία/τοποθεσίες: %"
+"(other_locations)s.\n"
 "\n"
 "Παρακαλώ διορθώστε το για να αποφύγετε ασυνεπή δεδομένα."
 
@@ -8855,12 +8868,12 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"Ο σειριακός αριθμός (%(serial_number)s) δεν βρίσκεται στην τοποθεσία "
-"%(source_location)s, αλλά βρίσκεται στην/στις τοποθεσία/τοποθεσίες: "
-"%(other_locations)s.\n"
+"Ο σειριακός αριθμός (%(serial_number)s) δεν βρίσκεται στην τοποθεσία %"
+"(source_location)s, αλλά βρίσκεται στην/στις τοποθεσία/τοποθεσίες: %"
+"(other_locations)s.\n"
 "\n"
-"Η αρχική τοποθεσία για αυτή τη μετακίνηση θα αλλάξει σε "
-"%(recommended_location)s"
+"Η αρχική τοποθεσία για αυτή τη μετακίνηση θα αλλάξει σε %"
+"(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -8904,8 +8917,8 @@ msgstr ""
 "ανεξάρτητα από την τοποθεσία προέλευσης για αυτή την κατηγορία προϊόντων.\n"
 "\n"
 "FIFO: τα προϊόντα/παρτίδες που αποθηκεύτηκαν πρώτα θα αποστέλλονται πρώτα.\n"
-"IFO: τα προϊόντα/παρτίδες που αποθηκεύτηκαν τελευταία θα αποστέλλονται πρώτα."
-"\n"
+"IFO: τα προϊόντα/παρτίδες που αποθηκεύτηκαν τελευταία θα αποστέλλονται "
+"πρώτα.\n"
 "Κοντινότερη τοποθεσία: τα προϊόντα/παρτίδες που βρίσκονται πιο κοντά στην "
 "προοριζόμενη τοποθεσία θα αποστέλλονται πρώτα.\n"
 "FEFO: τα προϊόντα/παρτίδες με την πλησιέστερη ημερομηνία αφαίρεσης θα "
@@ -9436,6 +9449,12 @@ msgid "Stock Text Validation with stock move"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Stock To Reserve:"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Stock level to reach when replenishing."
@@ -9536,8 +9555,8 @@ msgid ""
 "Store and retrieve information regarding every Lot/Serial Number (condition, "
 "product info, ...)."
 msgstr ""
-"Αποθηκεύστε και ανακτήστε πληροφορίες για κάθε Παρτίδα/Σειριακό Αριθμό ("
-"κατάσταση, πληροφορίες προϊόντος, ...)."
+"Αποθηκεύστε και ανακτήστε πληροφορίες για κάθε Παρτίδα/Σειριακό Αριθμό "
+"(κατάσταση, πληροφορίες προϊόντος, ...)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -10114,7 +10133,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
-msgstr "Αυτή η παρτίδα %(lot_name)sείναι ασύμβατη με το προϊόν %(product_name)s"
+msgstr ""
+"Αυτή η παρτίδα %(lot_name)sείναι ασύμβατη με το προϊόν %(product_name)s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -10208,8 +10228,8 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
-msgid "This record already exists."
-msgstr "Αυτή η εγγραφή υπάρχει ήδη."
+msgid "This record already exists"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10278,6 +10298,12 @@ msgid "Time Horizon"
 msgstr "Χρονικός Ορίζοντας"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Time to replenish:"
+msgstr ""
+
+#. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
 msgid "Tip: Monitor Lot details"
@@ -10287,7 +10313,8 @@ msgstr "Συμβουλή: Παρακολουθήστε τις λεπτομέρε
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr "Συμβουλή: Επιταχύνετε τις λειτουργίες της αποθήκης με τη χρήση barcodes"
+msgstr ""
+"Συμβουλή: Επιταχύνετε τις λειτουργίες της αποθήκης με τη χρήση barcodes"
 
 #. module: stock
 #. odoo-javascript
@@ -10335,8 +10362,6 @@ msgid "To Location"
 msgstr "Σε Τοποθεσία"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
@@ -10377,6 +10402,7 @@ msgstr "Προς Επαναπαραγγελία"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -10663,7 +10689,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Προσπαθήστε να προσθέσετε κάποιες εισερχόμενες ή εξερχόμενες μεταφορές."
+msgstr ""
+"Προσπαθήστε να προσθέσετε κάποιες εισερχόμενες ή εξερχόμενες μεταφορές."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -11240,8 +11267,8 @@ msgid ""
 "b> are created from <b>%(source_location)s</b> to fulfill the need. %"
 "(suffix)s"
 msgstr ""
-"Όταν τα προϊόντα χρειάζονται σε <b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> δημιουργούνται από <b>%(source_location)s</b> για να "
+"Όταν τα προϊόντα χρειάζονται σε <b>%(destination)s</b>, <br> <b>%"
+"(operation)s</b> δημιουργούνται από <b>%(source_location)s</b> για να "
 "ικανοποιήσουν την ανάγκη. %(suffix)s"
 
 #. module: stock
@@ -11251,9 +11278,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Όταν τα προϊόντα φτάνουν σε <b>%(source_location)s</b>, <br> "
-"<b>%(operation)s</b> δημιουργούνται για να τα στείλουν σε "
-"<b>%(destination)s</b>."
+"Όταν τα προϊόντα φτάνουν σε <b>%(source_location)s</b>, <br> <b>%"
+"(operation)s</b> δημιουργούνται για να τα στείλουν σε <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -11560,10 +11586,8 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
+msgid "You cannot change the Scheduled Date on a cancelled transfer."
 msgstr ""
-"Δεν μπορείτε να αλλάξετε την Προγραμματισμένη Ημερομηνία σε μια ολοκληρωμένη "
-"ή ακυρωμένη μεταφορά."
 
 #. module: stock
 #. odoo-python
@@ -11751,13 +11775,6 @@ msgid ""
 msgstr ""
 "Πρέπει να ενεργοποιήσετε τις αποθηκευτικές τοποθεσίες για να μπορείτε να "
 "εκτελείτε εσωτερικούς τύπους λειτουργιών."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/product_replenish.py:0
-msgid "You need to select a route to replenish your products"
-msgstr ""
-"Πρέπει να επιλέξετε μια διαδρομή για την ανατροφοδότηση των προϊόντων σας."
 
 #. module: stock
 #. odoo-python
@@ -12084,6 +12101,12 @@ msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
 msgstr "π.χ. d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "expected on"
+msgstr ""
+
+#. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
 msgstr "fifo"
@@ -12147,12 +12170,6 @@ msgid "report_stock_quantity_graph"
 msgstr "Γράφημα Ποσοτήτων Αποθέματος"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "reserved"
-msgstr "δεσμευμένο"
-
-#. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
 msgstr "Γράφημα Πίνακα Ελέγχου"
@@ -12202,8 +12219,32 @@ msgstr "μονάδες"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Εντολή Παράδοσης (Ref {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Εντολή Παράδοσης (Ref {{ object.name or 'n/"
+"a' }})"
+
+#~ msgid "If ticked, you will be able to select entire packages to move"
+#~ msgstr ""
+#~ "Αν είναι επιλεγμένο, θα μπορείτε να επιλέγετε ολόκληρες συσκευασίες προς "
+#~ "μετακίνηση"
+
+#~ msgid "Inventory On Hand"
+#~ msgstr "Διαθέσιμο Απόθεμα"
+
+#~ msgid "This record already exists."
+#~ msgstr "Αυτή η εγγραφή υπάρχει ήδη."
+
+#~ msgid ""
+#~ "You cannot change the Scheduled Date on a done or cancelled transfer."
+#~ msgstr ""
+#~ "Δεν μπορείτε να αλλάξετε την Προγραμματισμένη Ημερομηνία σε μια "
+#~ "ολοκληρωμένη ή ακυρωμένη μεταφορά."
+
+#~ msgid "You need to select a route to replenish your products"
+#~ msgstr ""
+#~ "Πρέπει να επιλέξετε μια διαδρομή για την ανατροφοδότηση των προϊόντων σας."
+
+#~ msgid "reserved"
+#~ msgstr "δεσμευμένο"
 
 #~ msgid ""
 #~ "* New: When the stock move is created and not yet confirmed.\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-09-30 18:36+0000\n"
 "PO-Revision-Date: 2025-09-14 21:10+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -43,6 +43,11 @@ msgid "All"
 msgstr "すべて"
 
 #. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
+msgid "Assign serial numbers to production order"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
 msgstr "部品表概要レポート"
@@ -74,15 +79,10 @@ msgid "Change Production Qty"
 msgstr "生産数量を変更"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid ""
-"Check this box to create a new dedicated subcontracting location for this "
-"company. Note that standard subcontracting routes will be adapted so as to "
-"take these into account automatically."
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Check Availability"
 msgstr ""
-"この会社用に新規の専用外注ロケーションを作成するには、このボックスにチェック"
-"を入れてください。なお、標準的な外注ルートは、これらを自動的に考慮するよう適"
-"応されます。"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -106,9 +106,15 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Continue"
-msgstr "次へ進む"
+#. odoo-javascript
+#: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
+msgid "Create New Production"
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -131,20 +137,31 @@ msgid "Detail Component"
 msgstr "詳細構成品"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "詳細"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Discard"
-msgstr "破棄"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
-msgid "Display Action Record Components"
-msgstr "アクション記録構成品を表示"
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_change_production_qty__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -152,11 +169,6 @@ msgstr "アクション記録構成品を表示"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Done"
 msgstr "完了"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
-msgid "Facultative"
-msgstr "任意の"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
@@ -169,9 +181,26 @@ msgid "Has been recorded?"
 msgstr "記録されましたか？"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
-msgid "Hide"
-msgstr "非表示"
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_change_production_qty__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production_serials__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
+msgid "ID"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -179,7 +208,8 @@ msgstr "非表示"
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
-msgstr "在庫を正確に管理するため、下請ロケーションは適切な会社にリンクされた内部型で"
+msgstr ""
+"在庫を正確に管理するため、下請ロケーションは適切な会社にリンクされた内部型で"
 "なければなりません。"
 
 #. module: mrp_subcontracting
@@ -198,16 +228,12 @@ msgid "Is Subcontract"
 msgstr "外注か"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid "Is a Subcontracting Location?"
-msgstr "外注ロケーションですか？"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid ""
-"List of Products used in the BoM, used to filter the list of products in the"
-" subcontracting portal view"
-msgstr "部品表に使用され、外注先ポータルビューのプロダクト表をフィルタするのに使用さ"
+"List of Products used in the BoM, used to filter the list of products in the "
+"subcontracting portal view"
+msgstr ""
+"部品表に使用され、外注先ポータルビューのプロダクト表をフィルタするのに使用さ"
 "れるプロダクト表"
 
 #. module: mrp_subcontracting
@@ -222,13 +248,9 @@ msgstr "取引先が外注先であるMRP生産"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr "在庫の不一致を避けるために、関連する補充のピッキングを検証するか、外注先に適"
+msgstr ""
+"在庫の不一致を避けるために、関連する補充のピッキングを検証するか、外注先に適"
 "合させるようにして下さい。"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
-msgid "Mandatory"
-msgstr "必須"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
@@ -259,26 +281,9 @@ msgid "Newest"
 msgstr "最新"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_picking.py:0
-msgid "Nothing to record"
-msgstr "記録対象なし"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_quant.py:0
-msgid "Operation not supported"
-msgstr ""
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Operations"
 msgstr "工程"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
-msgid "Operations without package"
-msgstr "梱包なしの工程"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -287,22 +292,25 @@ msgstr "オーダ"
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+msgid ""
+"Please set a lot/serial for the currently opened subcontracting MO first."
+msgstr ""
+
+#. module: mrp_subcontracting
+#. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
-msgstr "ポータルユーザーは、ステータスが「完了」の在庫移動を作成したり、現在の状態を"
+msgstr ""
+"ポータルユーザーは、ステータスが「完了」の在庫移動を作成したり、現在の状態を"
 "「完了」に変更することはできません。"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "プロダクトの移動(在庫移動ライン)"
-
-#. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_stock_replenish_mixin
-msgid "Product Replenish Mixin"
-msgstr "プロダクト補充Mixin"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -322,25 +330,9 @@ msgstr "保管ロット"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "Raw Materials for %s"
-msgstr "%s用原材料"
-
-#. module: mrp_subcontracting
-#. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 msgid "Ready"
 msgstr "準備完了"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Record Production"
-msgstr "生産を記録"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-msgid "Record components"
-msgstr "記録構成品"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -362,7 +354,6 @@ msgstr "外注先在庫補充"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_replenish_mixin.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 msgid "Resupply Subcontractor on Order"
@@ -390,6 +381,7 @@ msgstr "予定日"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
 msgstr "外注詳細を見えるように表示"
 
@@ -420,12 +412,6 @@ msgid "Stock Rule"
 msgstr "在庫規則"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-msgid "Subcontract"
-msgstr "外注"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
 msgstr "外注"
@@ -438,15 +424,13 @@ msgstr "外注製造オーダはマージできません。"
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/res_company.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracting"
 msgstr "外注"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/res_company.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
 msgstr "外注ロケーション"
@@ -455,6 +439,13 @@ msgstr "外注ロケーション"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
 msgstr "外注ロケーション"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+msgid "Subcontracting MOs"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -475,6 +466,11 @@ msgstr "外注オペレーションタイプ"
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
 msgstr "外注ポータル"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Subcontracting Productions"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -529,27 +525,20 @@ msgstr "移動は外注入荷です"
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
-msgstr "外注処理において、この連絡先に商品を送る際に、発送元および発送先として使用さ"
+msgstr ""
+"外注処理において、この連絡先に商品を送る際に、発送元および発送先として使用さ"
 "れる在庫ロケーション。"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+msgid "The subcontracted goods have already been received."
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
 msgstr "現在、アカウントに生産はありません。"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_picking.py:0
-msgid ""
-"There shouldn't be multiple productions to record for the same subcontracted"
-" move."
-msgstr "同じ外注移動用に記録される複数の生産が存在してはいけません。"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "This MO isn't related to a subcontracted move"
-msgstr "この製造オーダは外注移動に関連していません。"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -565,20 +554,13 @@ msgstr "転送"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
-msgstr "レコード規則を通じてポータルユーザのアクセスを制限するために使用されます。"
+msgstr ""
+"レコード規則を通じてポータルユーザのアクセスを制限するために使用されます。"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
 msgstr "倉庫"
-
-#. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
-msgid ""
-"Wizard in case of consumption in warning/strict and more component has been "
-"used for a MO (related to the bom)"
-msgstr "警告/厳密で消費され、より多くの構成品が製造オーダ（部品表）に使用された場合の"
-"ウィザード"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -601,26 +583,91 @@ msgid "You cannot write on fields %s in mrp.production."
 msgstr "%s mrp.production内のフィールドに入力することはできません。"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "You must enter a serial number for %s"
-msgstr "%s用のシリアル番号を入力する必要があります。"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid "You must enter a serial number for each line of %s"
-msgstr "%sの各明細用にシリアル番号を入力する必要があります。"
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-msgid ""
-"You must indicate a non-zero amount consumed for at least one of your "
-"components"
-msgstr "少なくとも1つの構成品について、消費量がゼロでないことを示す必要があります。"
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "e.g. PO0032"
 msgstr "[例] PO0032"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/controllers/portal.py:0
+msgid "state"
+msgstr ""
+
+#~ msgid ""
+#~ "Check this box to create a new dedicated subcontracting location for this "
+#~ "company. Note that standard subcontracting routes will be adapted so as "
+#~ "to take these into account automatically."
+#~ msgstr ""
+#~ "この会社用に新規の専用外注ロケーションを作成するには、このボックスにチェッ"
+#~ "クを入れてください。なお、標準的な外注ルートは、これらを自動的に考慮するよ"
+#~ "う適応されます。"
+
+#~ msgid "Continue"
+#~ msgstr "次へ進む"
+
+#~ msgid "Discard"
+#~ msgstr "破棄"
+
+#~ msgid "Display Action Record Components"
+#~ msgstr "アクション記録構成品を表示"
+
+#~ msgid "Facultative"
+#~ msgstr "任意の"
+
+#~ msgid "Hide"
+#~ msgstr "非表示"
+
+#~ msgid "Is a Subcontracting Location?"
+#~ msgstr "外注ロケーションですか？"
+
+#~ msgid "Mandatory"
+#~ msgstr "必須"
+
+#~ msgid "Nothing to record"
+#~ msgstr "記録対象なし"
+
+#~ msgid "Operations without package"
+#~ msgstr "梱包なしの工程"
+
+#~ msgid "Product Replenish Mixin"
+#~ msgstr "プロダクト補充Mixin"
+
+#~ msgid "Raw Materials for %s"
+#~ msgstr "%s用原材料"
+
+#~ msgid "Record Production"
+#~ msgstr "生産を記録"
+
+#~ msgid "Record components"
+#~ msgstr "記録構成品"
+
+#~ msgid "Subcontract"
+#~ msgstr "外注"
+
+#~ msgid ""
+#~ "There shouldn't be multiple productions to record for the same "
+#~ "subcontracted move."
+#~ msgstr "同じ外注移動用に記録される複数の生産が存在してはいけません。"
+
+#~ msgid "This MO isn't related to a subcontracted move"
+#~ msgstr "この製造オーダは外注移動に関連していません。"
+
+#~ msgid ""
+#~ "Wizard in case of consumption in warning/strict and more component has "
+#~ "been used for a MO (related to the bom)"
+#~ msgstr ""
+#~ "警告/厳密で消費され、より多くの構成品が製造オーダ（部品表）に使用された場"
+#~ "合のウィザード"
+
+#~ msgid "You must enter a serial number for %s"
+#~ msgstr "%s用のシリアル番号を入力する必要があります。"
+
+#~ msgid "You must enter a serial number for each line of %s"
+#~ msgstr "%sの各明細用にシリアル番号を入力する必要があります。"
+
+#~ msgid ""
+#~ "You must indicate a non-zero amount consumed for at least one of your "
+#~ "components"
+#~ msgstr ""
+#~ "少なくとも1つの構成品について、消費量がゼロでないことを示す必要がありま"
+#~ "す。"

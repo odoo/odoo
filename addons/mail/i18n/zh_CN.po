@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:47+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 15:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -73,9 +73,8 @@ msgstr ""
 "                将地址添加到新人列表\n"
 "            </p><p>\n"
 "                为防止垃圾邮件和回复循环，\n"
-"                Odoo "
-"会每隔<b>%(minutes)i</b>自动阻止超过<b>%(threshold)i</b>的电子邮件进入您的网"
-"关。 \n"
+"                Odoo 会每隔<b>%(minutes)i</b>自动阻止超过<b>%(threshold)i</b>"
+"的电子邮件进入您的网关。 \n"
 "                如您需要频繁从一些地址接收更新信息，\n"
 "                您可以在下方添加它们，Odoo 会对其放行。\n"
 "            </p>"
@@ -239,12 +238,11 @@ msgid ""
 "(bold_end)s to insert a canned response in your message.%(new_line)sType %"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
-"%(new_line)s%(new_line)s输入 %(bold_start)s@username%(bold_end)s "
-"提及某人，以吸引他们注意。%(new_line)s输入 %(bold_start)s#channel%(bold_end)"
-"s 以提及该频道。%(new_line)s输入 %(bold_start)s/command%(bold_end)s "
-"以执行指令。%(new_line)s输入 %(bold_start)s::shortcut%(bold_end)s "
-"以在信息中插入默认回复。%(new_line)s输入 %(bold_start)s:emoji:%(bold_end)s "
-"以在信息中插入表情符号。"
+"%(new_line)s%(new_line)s输入 %(bold_start)s@username%(bold_end)s 提及某人，以"
+"吸引他们注意。%(new_line)s输入 %(bold_start)s#channel%(bold_end)s 以提及该频"
+"道。%(new_line)s输入 %(bold_start)s/command%(bold_end)s 以执行指令。%"
+"(new_line)s输入 %(bold_start)s::shortcut%(bold_end)s 以在信息中插入默认回复。"
+"%(new_line)s输入 %(bold_start)s:emoji:%(bold_end)s 以在信息中插入表情符号。"
 
 #. module: mail
 #. odoo-javascript
@@ -267,10 +265,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"按 %(open_samp)sEsc%(close_samp)s "
-"%(open_em)s以%(open_cancel)s取消%(close_cancel)s%(close_em)s，%(open_samp)sCt"
-"rl+Enter%(close_samp)s "
-"%(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
+"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取消%"
+"(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s %"
+"(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -280,9 +277,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"按 %(open_samp)sEsc%(close_samp)s "
-"%(open_em)s以%(open_cancel)s取消%(close_cancel)s%(close_em)s，%(open_samp)sEn"
-"ter%(close_samp)s %(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
+"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取消%"
+"(close_cancel)s%(close_em)s，%(open_samp)sEnter%(close_samp)s %(open_em)s以%"
+"(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -313,6 +310,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr "%(user)s 已连接。这是他们第一次登入。祝他们好运。"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -677,17 +680,17 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
-"                                        "
-"信息将以电子邮件的形式发送给模板的收件人，\n"
+"                                        信息将以电子邮件的形式发送给模板的收"
+"件人，\n"
 "                                        不会出现在信息历史记录中。\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'note'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
 "                                        模板的收件人，\n"
 "                                        不会出现在信息历史记录中。\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'comment'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
 "                                        信息将作为内部备注发布，\n"
 "                                        内部用户可在信息历史记录中看到。\n"
 "                                    </span>"
@@ -1017,6 +1020,7 @@ msgstr "如果未将活动附在文件中，则必须分配活动。"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/core/web/activity_menu.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1184,12 +1188,6 @@ msgstr "添加关注者"
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
 msgid "Add GIFs"
 msgstr "添加 GIF"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_reactions.xml:0
-msgid "Add Reaction"
-msgstr "添加回应"
 
 #. module: mail
 #. odoo-javascript
@@ -1394,8 +1392,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"别名%(matching_name)s（%(current_id)s）已经与%(alias_model_name)s（%(matching"
-"_id)s）连接，并被%(parent_name)s%(parent_model_name)s使用。"
+"别名%(matching_name)s（%(current_id)s）已经与%(alias_model_name)s（%"
+"(matching_id)s）连接，并被%(parent_name)s%(parent_model_name)s使用。"
 
 #. module: mail
 #. odoo-python
@@ -1404,8 +1402,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"别名 %(matching_name)s （%(current_id)s）已与 %(alias_model_name)s "
-"（%(matching_id)s）相连。"
+"别名 %(matching_name)s （%(current_id)s）已与 %(alias_model_name)s （%"
+"(matching_id)s）相连。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1764,7 +1762,8 @@ msgstr "作者"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
-msgstr "消息编写者。如果未设置，email_from可能包含与任何合作伙伴均不匹配的电子邮箱地"
+msgstr ""
+"消息编写者。如果未设置，email_from可能包含与任何合作伙伴均不匹配的电子邮箱地"
 "址。"
 
 #. module: mail
@@ -1839,6 +1838,11 @@ msgstr "自动留言"
 msgid ""
 "Automatically schedule this activity once the current one is marked as done."
 msgstr "将当前活动标记为完成后，自动安排此活动。"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Available everywhere"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1985,7 +1989,6 @@ msgstr "通过删除门户帐户 %(portal_user_name)s 由 %(user_name)s %(user_i
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 msgid "Blur Background"
 msgstr "模糊背景"
 
@@ -2044,8 +2047,9 @@ msgstr "退件电子邮件"
 msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
-msgstr "跳转别名 %(bounce)s "
-"已用于另一个同名域名。请使用另一个跳转或直接使用另一个别名域。"
+msgstr ""
+"跳转别名 %(bounce)s 已用于另一个同名域名。请使用另一个跳转或直接使用另一个别"
+"名域。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
@@ -2059,8 +2063,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"反弹/捕捉'%(matching_alias_name)s'已被 %(document_name)s "
-"使用。请选择其他别名或在其他文件上更改别名。"
+"反弹/捕捉'%(matching_alias_name)s'已被 %(document_name)s 使用。请选择其他别名"
+"或在其他文件上更改别名。"
 
 #. module: mail
 #. odoo-python
@@ -2068,8 +2072,9 @@ msgstr ""
 msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
-msgstr "Bounce/Catchall '%(matching_alias_name)s' "
-"已被使用。请选择其他别名或在链接的模型上进行更改。"
+msgstr ""
+"Bounce/Catchall '%(matching_alias_name)s' 已被使用。请选择其他别名或在链接的"
+"模型上进行更改。"
 
 #. module: mail
 #. odoo-javascript
@@ -2205,12 +2210,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera and microphone access blocked. Enable in browser settings."
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Camera is off"
-msgstr "关闭相机"
 
 #. module: mail
 #. odoo-javascript
@@ -2365,8 +2364,9 @@ msgid ""
 "Cannot create %(channels)s: parent should not be a sub-channel and should be "
 "of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
-msgstr "无法创建%(channels)s：母项不应是子频道，类型应为 “频道” 或 "
-"“群组”。子频道的类型应与母频道相同。"
+msgstr ""
+"无法创建%(channels)s：母项不应是子频道，类型应为 “频道” 或 “群组”。子频道的类"
+"型应与母频道相同。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2410,8 +2410,9 @@ msgstr "预设邮件"
 msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
-msgstr "备用别名 %(catchall)s 已用于另一个同名域名。请使用另一个 catchall "
-"或直接使用另一个别名域。"
+msgstr ""
+"备用别名 %(catchall)s 已用于另一个同名域名。请使用另一个 catchall 或直接使用"
+"另一个别名域。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -2921,7 +2922,8 @@ msgstr "容器模型"
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
-msgstr "包含该用户在该频道中最近标注兴趣事件的日期和时间。包括：创建、加入、固定"
+msgstr ""
+"包含该用户在该频道中最近标注兴趣事件的日期和时间。包括：创建、加入、固定"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -3453,9 +3455,9 @@ msgid ""
 "local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
-"当不匹配外发服务器筛选器时的默认值。它可以是一个本地部分，例如'notifications'"
-"，也可以是完整的电子邮件地址，如'notifications@example.com'，用于覆盖所有外发"
-"电子邮件。"
+"当不匹配外发服务器筛选器时的默认值。它可以是一个本地部分，例"
+"如'notifications'，也可以是完整的电子邮件地址，"
+"如'notifications@example.com'，用于覆盖所有外发电子邮件。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -3514,6 +3516,13 @@ msgstr "删除"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
 msgstr "删除邮件"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Delete Thread"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4161,8 +4170,9 @@ msgstr "EMail地址已存在！"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "发送人的电子邮箱地址。找不到匹配的合作伙伴时，设置该字段，并替换聊天窗口中的a"
-"uthor_id字段。"
+msgstr ""
+"发送人的电子邮箱地址。找不到匹配的合作伙伴时，设置该字段，并替换聊天窗口中的"
+"author_id字段。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -4604,8 +4614,9 @@ msgstr ""
 msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
-msgstr "字段“%(field)s”（位于模型“%(model)s”内）必须是Many2one 类型，"
-"而且计算持续时间设为 tracking=True。"
+msgstr ""
+"字段“%(field)s”（位于模型“%(model)s”内）必须是Many2one 类型，而且计算持续时间"
+"设为 tracking=True。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -4764,7 +4775,8 @@ msgstr "Font Awesome图标，例如：fa-tasks"
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
-msgstr "对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
+msgstr ""
+"对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
 
 #. module: mail
 #. odoo-javascript
@@ -4808,9 +4820,9 @@ msgid ""
 "For Static values, the value will be used directly without evaluation, "
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
-"对于 Python 表达式，该字段可以包含一个 Python "
-"表达式，该表达式可以使用与服务器操作的代码字段相同的值，例如：`env.user.name`"
-" 可以将当前用户的名称设为值，`record.id` 可以将运行操作的记录的 ID 设为值。\n"
+"对于 Python 表达式，该字段可以包含一个 Python 表达式，该表达式可以使用与服务"
+"器操作的代码字段相同的值，例如：`env.user.name` 可以将当前用户的名称设为值，"
+"`record.id` 可以将运行操作的记录的 ID 设为值。\n"
 "\n"
 "对于静态值，将不经评估直接使用该值，例如`42`或`我的自定义名称`或所选记录。"
 
@@ -5144,6 +5156,12 @@ msgstr "隐藏置顶消息"
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Hide all conversations"
 msgstr "隐藏所有对话"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Hide camera preview"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5553,7 +5571,8 @@ msgid ""
 "In comment mode: if set, postpone notifications sending. In mass mail mode: "
 "if sent, send emails after that date. This date is considered as being in "
 "UTC timezone."
-msgstr "在评论模式下：如果设置，则推迟发送通知。在邮件群发模式下：如果已发送，则在该"
+msgstr ""
+"在评论模式下：如果设置，则推迟发送通知。在邮件群发模式下：如果已发送，则在该"
 "日期后发送邮件。该日期为 UTC 时区。"
 
 #. module: mail
@@ -5574,12 +5593,6 @@ msgstr "收件服务器"
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__inbox
 msgid "Inbox"
 msgstr "收件箱"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Call..."
-msgstr "来电..."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
@@ -5607,15 +5620,17 @@ msgstr "收件服务器"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Video Call..."
-msgstr "视频来电..."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call"
 msgstr "通话来电"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call from %(inviter)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -6007,7 +6022,8 @@ msgid ""
 "It appears you're trying to create a channel member, but it seems like you "
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
-msgstr "您正在尝试创建一个频道成员，但似乎忘记指定相关频道。如要继续，请确保提供必要"
+msgstr ""
+"您正在尝试创建一个频道成员，但似乎忘记指定相关频道。如要继续，请确保提供必要"
 "的频道信息。"
 
 #. module: mail
@@ -6455,16 +6471,18 @@ msgstr "收件时检测本地的别名域"
 msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
-msgstr "电子邮件的本地部分用于回复至以捕获答案，例如在'catchall@example.com'中的'catc"
-"hall'。"
+msgstr ""
+"电子邮件的本地部分用于回复至以捕获答案，例如在'catchall@example.com'中"
+"的'catchall'。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
 msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
-msgstr "电子邮件的本地部分用于在电子邮件反弹时用作Return-"
-"Path的使用，例如在'bounce@example.com'中的'bounce'。"
+msgstr ""
+"电子邮件的本地部分用于在电子邮件反弹时用作Return-Path的使用，例如"
+"在'bounce@example.com'中的'bounce'。"
 
 #. module: mail
 #. odoo-javascript
@@ -6665,8 +6683,9 @@ msgstr "邮件跟踪值"
 msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
-msgstr "注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模型%(model_name)s"
-"）。"
+msgstr ""
+"注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模型%"
+"(model_name)s）。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -7062,7 +7081,8 @@ msgstr "消息子类型跟随，意味着将被推到用户墙上的子类型。
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：电子邮件用于电子邮件消息，通知用于系统消息，评论用于其他消息，如用"
+msgstr ""
+"消息类型：电子邮件用于电子邮件消息，通知用于系统消息，评论用于其他消息，如用"
 "户回复"
 
 #. module: mail
@@ -7226,13 +7246,6 @@ msgid "Models"
 msgstr "模型"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid ""
-"Modifying the model can have an impact on existing activities using this "
-"activity type, be careful."
-msgstr "注意，这个活动类型修改模型会影响现有活动."
-
-#. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
 msgstr "模块卸载"
@@ -7257,6 +7270,7 @@ msgstr "更多操作"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "静音"
 
@@ -8114,7 +8128,8 @@ msgstr "只有消息类型的备注才能在模型“discuss.channel”上更新
 msgid ""
 "Oops! We couldn't save your template due to an issue with this value: %"
 "(template_txt)s. Correct it and try again."
-msgstr "哎呀！由于以下值的问题，我们无法保存您的模板：%(template_txt)s。更正后重试。"
+msgstr ""
+"哎呀！由于以下值的问题，我们无法保存您的模板：%(template_txt)s。更正后重试。"
 
 #. module: mail
 #. odoo-javascript
@@ -8249,8 +8264,7 @@ msgid ""
 " This has an impact on the generated message-id."
 msgstr ""
 "原始讨论：答案在原始单据讨论线程中。\n"
-" "
-"另一个电子邮箱地址：答案发送至追踪消息ID中提到的电子邮箱地址，而非原始单据讨"
+" 另一个电子邮箱地址：答案发送至追踪消息ID中提到的电子邮箱地址，而非原始单据讨"
 "论线程。\n"
 "将影响生成的消息ID。"
 
@@ -8501,8 +8515,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如"
-"：project(parent_model) 和任务 (模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
+"如：project(parent_model) 和任务 (模型)）"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -8510,8 +8524,9 @@ msgid ""
 "Parent subtype, used for automatic subscription. This field is not correctly "
 "named. For example on a project, the parent_id of project subtypes refers to "
 "task-related subtypes."
-msgstr "母模型子类型（用于自动订阅）。该字段命名存在歧义，例如在项目中，"
-"project子类型的 parent_id 实际指向的是任务相关子类型。"
+msgstr ""
+"母模型子类型（用于自动订阅）。该字段命名存在歧义，例如在项目中，project子类型"
+"的 parent_id 实际指向的是任务相关子类型。"
 
 #. module: mail
 #. odoo-javascript
@@ -8582,6 +8597,12 @@ msgstr "负载"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+msgid "Permanently delete this thread?"
 msgstr ""
 
 #. module: mail
@@ -8849,7 +8870,8 @@ msgstr "应在业务文档上发布消息。使用 message_notify 向用户发�
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr "发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
+msgstr ""
+"发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -8911,12 +8933,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
 msgstr "预览"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Preview my camera"
-msgstr "预览我的相机"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -9287,12 +9303,6 @@ msgid "Remove Blur"
 msgstr "移除模糊"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid "Remove Blur Background"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
 msgstr "移除上下文操作"
@@ -9437,7 +9447,8 @@ msgid ""
 "Represents a role in the system used to categorize users. Each role has a "
 "unique name and can be associated with multiple users. Roles can be "
 "mentioned in messages to notify all associated users."
-msgstr "用于对用户进行分类的系统角色。每个角色拥有唯一名称，并可关联多个用户。在消息"
+msgstr ""
+"用于对用户进行分类的系统角色。每个角色拥有唯一名称，并可关联多个用户。在消息"
 "中提及角色时，将自动通知所有关联用户。"
 
 #. module: mail
@@ -10348,6 +10359,12 @@ msgstr "显示所有逾期未完成活动的记录"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Show camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Show sidebar"
 msgstr "显示侧边栏"
@@ -10370,8 +10387,9 @@ msgstr "只显示视频参与者"
 msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
-msgstr "正在显示 %(result_count)s 项结果；总共有 %(total_count)s "
-"项结果。你可缩窄搜寻范围，以查看更多选择。"
+msgstr ""
+"正在显示 %(result_count)s 项结果；总共有 %(total_count)s 项结果。你可缩窄搜寻"
+"范围，以查看更多选择。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -10578,6 +10596,7 @@ msgstr "停止共享屏幕"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Stop camera"
 msgstr "关闭相机"
 
@@ -10855,9 +10874,9 @@ msgstr "模板绘制应只使用识别码清单呼叫。相反，收到 “%(res
 msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
-msgstr "模板渲染仅支持 "
-"inline_template、qweb或qweb_view（视图或原始视图）；但实际接收到了%(engine)s"
-"。"
+msgstr ""
+"模板渲染仅支持 inline_template、qweb或qweb_view（视图或原始视图）；但实际接收"
+"到了%(engine)s。"
 
 #. module: mail
 #. odoo-javascript
@@ -10923,7 +10942,8 @@ msgstr "'期望到期日'不能是以前的日期。"
 msgid ""
 "The 'To-Do' activity type is used to create reminders from the top bar menu "
 "and the command palette. Consequently, it cannot be archived or deleted."
-msgstr "'待办事项'活动类型用于从顶栏菜单和命令调板创建提醒事项。因此，它不能归档或删"
+msgstr ""
+"'待办事项'活动类型用于从顶栏菜单和命令调板创建提醒事项。因此，它不能归档或删"
 "除。"
 
 #. module: mail
@@ -10933,7 +10953,8 @@ msgid ""
 "The Push-to-Talk feature is only accessible within tab focus. To enable the "
 "Push-to-Talk functionality outside of this tab, we recommend downloading our "
 "%(anchor_start)sextension%(anchor_end)s."
-msgstr "一键通功能只能在选项卡焦点范围内使用。要在该选项卡之外启用一键通功能，建议下"
+msgstr ""
+"一键通功能只能在选项卡焦点范围内使用。要在该选项卡之外启用一键通功能，建议下"
 "载我们的%(anchor_start)s扩展程序 。"
 
 #. module: mail
@@ -10966,8 +10987,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"活动类型\"%(activity_type_name)s\"与计划\"%(plan_name)s\"不兼容，"
-"因为它仅限于模型\"%(activity_type_model)s\"。"
+"活动类型\"%(activity_type_name)s\"与计划\"%(plan_name)s\"不兼容，因为它仅限于"
+"模型\"%(activity_type_model)s\"。"
 
 #. module: mail
 #. odoo-javascript
@@ -11089,7 +11110,8 @@ msgstr ""
 msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
-msgstr "在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
+msgstr ""
+"在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -11113,8 +11135,9 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> "
-"的EMail,别名就要设为：\"jobs\""
+msgstr ""
+"邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设"
+"为：\"jobs\""
 
 #. module: mail
 #. odoo-python
@@ -11377,7 +11400,8 @@ msgid ""
 "This option permanently removes any track of email after it's been sent, "
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
-msgstr "该选项在电子邮件发送后永久删除任何邮件追踪，包括从设置中的技术菜单删除，以保"
+msgstr ""
+"该选项在电子邮件发送后永久删除任何邮件追踪，包括从设置中的技术菜单删除，以保"
 "留Odoo数据库的存储空间。"
 
 #. module: mail
@@ -11445,6 +11469,18 @@ msgstr "线程"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
+msgid "Thread \"%(thread_name)s\" has been deleted"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Thread Actions"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
@@ -11476,12 +11512,6 @@ msgstr "已启用对话串"
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
 msgstr "讨论串"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Threads Actions"
-msgstr "对话串操作"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
@@ -11751,6 +11781,7 @@ msgstr "触发的下一步"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Turn camera on"
 msgstr "打开相机"
 
@@ -11798,8 +11829,8 @@ msgstr ""
 "- 更新记录：更新记录的值\n"
 "- 创建活动：创建活动（讨论）\n"
 "- 发送电子邮件：发布信息、备注或发送电子邮件（讨论）\n"
-"- 发送短信：发送短信，将其记录在文件中（短信）- "
-"添加/删除关注者：添加或删除记录中的关注者（讨论）\n"
+"- 发送短信：发送短信，将其记录在文件中（短信）- 添加/删除关注者：添加或删除记"
+"录中的关注者（讨论）\n"
 "- 创建记录：使用新值创建新记录\n"
 "- 执行代码：将执行的 Python 代码块\n"
 "- 发送 Webhook 通知：向外部系统发送 POST 请求，也称为 Webhook\n"
@@ -11950,6 +11981,7 @@ msgstr "未知错误：%(error)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr "打开麦克风"
 
@@ -12099,8 +12131,9 @@ msgstr "上传中"
 msgid ""
 "Use 'Specific User' to always assign the same user on the next activity. Use "
 "'Dynamic User' to specify the field name of the user to choose on the record."
-msgstr "使用 \"特定用户 \"可在下一个活动中始终指定相同的用户。使用 \"动态用户 \""
-"指定要在记录中选择的用户字段名。"
+msgstr ""
+"使用 \"特定用户 \"可在下一个活动中始终指定相同的用户。使用 \"动态用户 \"指定"
+"要在记录中选择的用户字段名。"
 
 #. module: mail
 #. odoo-javascript
@@ -12502,9 +12535,21 @@ msgstr "查看所有活动"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View chat with %(channel_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
 msgstr "查看或加入频道"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View the %(channel_name)s channel"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12603,8 +12648,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 "
-"%(alias_company_names)s，而所有者文件属于公司 %(company_name)s。"
+"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 %"
+"(alias_company_names)s，而所有者文件属于公司 %(company_name)s。"
 
 #. module: mail
 #. odoo-python
@@ -12614,8 +12659,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 "
-"%(alias_company_names)s，而目标文档属于公司 %(company_name)s。"
+"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 %"
+"(alias_company_names)s，而目标文档属于公司 %(company_name)s。"
 
 #. module: mail
 #. odoo-python
@@ -12902,7 +12947,8 @@ msgstr ""
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
-msgstr "在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
+msgstr ""
+"在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
 
 #. module: mail
 #. odoo-python
@@ -13013,12 +13059,6 @@ msgstr "您的账户登录信息已更新"
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account password has been updated"
 msgstr "您的账户密码已更新"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Your browser does not support videoconference"
-msgstr "您的浏览器不支持视频会议"
 
 #. module: mail
 #. odoo-javascript
@@ -13700,6 +13740,32 @@ msgstr "你的别名"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\"中的\"%(member_name)s\""
+
+#~ msgid "Add Reaction"
+#~ msgstr "添加回应"
+
+#~ msgid "Camera is off"
+#~ msgstr "关闭相机"
+
+#~ msgid "Incoming Call..."
+#~ msgstr "来电..."
+
+#~ msgid "Incoming Video Call..."
+#~ msgstr "视频来电..."
+
+#~ msgid ""
+#~ "Modifying the model can have an impact on existing activities using this "
+#~ "activity type, be careful."
+#~ msgstr "注意，这个活动类型修改模型会影响现有活动."
+
+#~ msgid "Preview my camera"
+#~ msgstr "预览我的相机"
+
+#~ msgid "Threads Actions"
+#~ msgstr "对话串操作"
+
+#~ msgid "Your browser does not support videoconference"
+#~ msgstr "您的浏览器不支持视频会议"
 
 #~ msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 #~ msgstr "%(user_name)s邀请您关注%(document)s 文件: %(title)s"

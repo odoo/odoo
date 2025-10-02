@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2025-09-30 18:35+0000\n"
 "PO-Revision-Date: 2025-09-29 02:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/mrp/ko/>\n"
@@ -235,8 +235,8 @@ msgid ""
 msgstr ""
 "1단계: 재고 및 생산에서 부품을 소비합니다. \n"
 "              2단계: 재고에서 부품을 선택한 다음 생산합니다. \n"
-"              3 단계: 재고에서 부품을 선택하고 생산한 후 최종 제품을 생산 "
-"영역에서 재고로 이동합니다."
+"              3 단계: 재고에서 부품을 선택하고 생산한 후 최종 제품을 생산 영"
+"역에서 재고로 이동합니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -469,8 +469,8 @@ msgid ""
 "modify the quantities of components to consume for this manufacturing order."
 "</span>"
 msgstr ""
-"<span class=\"text-muted\">생산 수량을 변경하면 이 제조 주문을 처리하는데 "
-"소요되는 부품의 수량도 변경됩니다.</span>"
+"<span class=\"text-muted\">생산 수량을 변경하면 이 제조 주문을 처리하는데 소"
+"요되는 부품의 수량도 변경됩니다.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -664,15 +664,16 @@ msgid ""
 "its components when:"
 msgstr ""
 "키트 유형의 자재명세서는 제조 주문으로 생산할 수 없습니다.<br/>\n"
-"                                대신 자재명세서를 각 부품별로 분해할 때 "
-"사용됩니다:"
+"                                대신 자재명세서를 각 부품별로 분해할 때 사용"
+"됩니다:"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "키트 형식의 자재명세서가 있는 품목에는 재주문 규칙을 설정할 수 없습니다."
+msgstr ""
+"키트 형식의 자재명세서가 있는 품목에는 재주문 규칙을 설정할 수 없습니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -752,9 +753,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
-"자재명세서에 부산물을 추가합니다. 이 옵션은 여러 완제품을 가져오는 데에도 "
-"사용될 수 있습니다. 이 옵션이 없으면 A + B = C만 수행하지만 이 옵션을 사용할 "
-"경우 A + B = C + D를 수행할 수 있게됩니다."
+"자재명세서에 부산물을 추가합니다. 이 옵션은 여러 완제품을 가져오는 데에도 사"
+"용될 수 있습니다. 이 옵션이 없으면 A + B = C만 수행하지만 이 옵션을 사용할 경"
+"우 A + B = C + D를 수행할 수 있게됩니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -901,7 +902,8 @@ msgstr "생산 파견 근무를 위해 이 작업 센터를 대체할 대체 작
 msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
-msgstr "완제품을 다시 부품으로 분해하는 작업을 진행하려면 해체지시서를 생성해 주세요."
+msgstr ""
+"완제품을 다시 부품으로 분해하는 작업을 진행하려면 해체지시서를 생성해 주세요."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
@@ -943,9 +945,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"해당 품목에 %(uom)s가 아닌 다른 단위(예: %(problem_uom)s)를 이미 "
-"사용하였으므로 단위 변경을 할 수 없습니다. 단위를 변경하려면 품목을 보관한 "
-"후 새로 품목을 만드세요."
+"해당 품목에 %(uom)s가 아닌 다른 단위(예: %(problem_uom)s)를 이미 사용하였으므"
+"로 단위 변경을 할 수 없습니다. 단위를 변경하려면 품목을 보관한 후 새로 품목"
+"을 만드세요."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1026,8 +1028,9 @@ msgstr "생산된 품목 라벨 자동 인쇄"
 msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
-msgstr "\"새 일련번호/Lot 생성\" 버튼을 사용하면 Lot/일련번호 라벨이 자동으로 "
-"인쇄됩니다."
+msgstr ""
+"\"새 일련번호/Lot 생성\" 버튼을 사용하면 Lot/일련번호 라벨이 자동으로 인쇄됩"
+"니다."
 
 #. module: mrp
 #. odoo-javascript
@@ -1071,10 +1074,10 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at "
 "which components should be sent to the subcontractor."
 msgstr ""
-"이 품목을 생산하는 데 걸리는 평균 리드타임입니다. 여러 단계로 이루어진 "
-"자재명세서의 경우 부품의 제조 리드타임이 추가로 계산됩니다. 품목이 외주를 "
-"통해 제작되는 경우 부품을 외주업체에 보내야 하는 날짜를 결정하는 데 사용할 "
-"수 있습니다."
+"이 품목을 생산하는 데 걸리는 평균 리드타임입니다. 여러 단계로 이루어진 자재명"
+"세서의 경우 부품의 제조 리드타임이 추가로 계산됩니다. 품목이 외주를 통해 제작"
+"되는 경우 부품을 외주업체에 보내야 하는 날짜를 결정하는 데 사용할 수 있습니"
+"다."
 
 #. module: mrp
 #. odoo-javascript
@@ -1242,8 +1245,9 @@ msgstr "자재명세서"
 msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components "
 "and work order instructions."
-msgstr "자재명세서는 하나의 레시피처럼 부품 및 작업 지시를 자동 완성하는 데 "
-"사용됩니다."
+msgstr ""
+"자재명세서는 하나의 레시피처럼 부품 및 작업 지시를 자동 완성하는 데 사용됩니"
+"다."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1456,8 +1460,9 @@ msgstr "취소됨"
 msgid ""
 "Cannot compute days to prepare due to missing route info for at least 1 "
 "component or for the final product."
-msgstr "하나 이상의 부품 또는 최종 제품에 대한 경로 정보가 누락되었으므로 준비 "
-"일수를 계산할 수 없습니다."
+msgstr ""
+"하나 이상의 부품 또는 최종 제품에 대한 경로 정보가 누락되었으므로 준비 일수"
+"를 계산할 수 없습니다."
 
 #. module: mrp
 #. odoo-python
@@ -1519,8 +1524,9 @@ msgstr "생산량 변경"
 msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
-msgstr "제품 또는 추가 옵션을 변경하면 기존에 입력된 모든 옵션 관련 데이터가 "
-"영구적으로 초기화됩니다."
+msgstr ""
+"제품 또는 추가 옵션을 변경하면 기존에 입력된 모든 옵션 관련 데이터가 영구적으"
+"로 초기화됩니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1861,8 +1867,9 @@ msgstr "잔여주문 생성"
 msgid ""
 "Create a backorder if you expect to process the remaining products later. Do "
 "not create a backorder if you will not process the remaining products."
-msgstr "남은 품목을 나중에 처리하려면 잔여 주문서를 생성하십시오. 남은 품목을 "
-"처리하지 않는 경우에는 잔여 주문서를 생성하지 마십시오."
+msgstr ""
+"남은 품목을 나중에 처리하려면 잔여 주문서를 생성하십시오. 남은 품목을 처리하"
+"지 않는 경우에는 잔여 주문서를 생성하지 마십시오."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1903,8 +1910,8 @@ msgid ""
 "started simultaneously."
 msgstr ""
 "제조 주문 확인 시 계획 및 작업 지시 상황에 영향을 미치는 작업 수준 종속성을 "
-"생성합니다. 해당 기능을 설정하고 아무런 추가 사항을 지정하지 않은 경우 "
-"Odoo는 모든 작업을 동시에 시작할 수 있다고 가정합니다."
+"생성합니다. 해당 기능을 설정하고 아무런 추가 사항을 지정하지 않은 경우 Odoo"
+"는 모든 작업을 동시에 시작할 수 있다고 가정합니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1996,10 +2003,10 @@ msgid ""
 "type."
 msgstr ""
 "품목의 현재 수량입니다.\n"
-"단일 재고 공간의 경우, 해당 위치 또는 그 하위 공간에 보관된 품목을 "
-"포함합니다.\n"
-"단일 창고의 경우, 해당 창고의 재고 위치 또는 그 하위 창고에 저장된 품목을 "
-"포함합니다.\n"
+"단일 재고 공간의 경우, 해당 위치 또는 그 하위 공간에 보관된 품목을 포함합니"
+"다.\n"
+"단일 창고의 경우, 해당 창고의 재고 위치 또는 그 하위 창고에 저장된 품목을 포"
+"함합니다.\n"
 "이 상점의 창고 재고 위치 또는 그 하위 창고에 보관된 품목을 포함합니다.\n"
 "기타의 경우, '내부' 유형의 모든 재고 공간에 보관된 품목을 포함합니다."
 
@@ -2038,10 +2045,10 @@ msgid ""
 "deadline.                                           Orange if the scheduled "
 "date is in the past."
 msgstr ""
-"시작 예정일입니다.                                           종료 예정일이 "
-"생산 주문 마감일 이후인 경우 빨간색으로 "
-"표시됩니다.                                           예정일을 과거 날짜인 "
-"경우 주황색으로 표시됩니다."
+"시작 예정일입니다.                                           종료 예정일이 생"
+"산 주문 마감일 이후인 경우 빨간색으로 표시됩니"
+"다.                                           예정일을 과거 날짜인 경우 주황"
+"색으로 표시됩니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2113,8 +2120,9 @@ msgstr ""
 msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
-msgstr "직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 "
-"근무 시간을 갖게 됩니다."
+msgstr ""
+"직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 근"
+"무 시간을 갖게 됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -2130,15 +2138,15 @@ msgid ""
 "  * Blocked: only a manager can close a manufacturing order when the BoM "
 "consumption is not respected."
 msgstr ""
-"자재명세서에 명시되어 있는 수량보다 더 많거나 적은 부품을 사용할 수 있는지 "
-"여부를 정의합니다:\n"
+"자재명세서에 명시되어 있는 수량보다 더 많거나 적은 부품을 사용할 수 있는지 여"
+"부를 정의합니다:\n"
 "  * 허용: 모든 작업자에게 허용됩니다.\n"
-"  * 경고와 함께 허용: 모든 작업자에게 허용되며, 제조 주문 마감시 소비량 "
-"차이에 대한 내용이 표시됩니다.\n"
-"  소비량을 수동으로 등록하는 부품의 경우에도 소비량에 대해 경고가 계속 "
-"발생합니다.\n"
-"  * 차단: 재료 명세서에 명시되어 있는 수량을 준수하지 않을 경우, 관리자만 "
-"제조 주문을 마감할 수 있습니다."
+"  * 경고와 함께 허용: 모든 작업자에게 허용되며, 제조 주문 마감시 소비량 차이"
+"에 대한 내용이 표시됩니다.\n"
+"  소비량을 수동으로 등록하는 부품의 경우에도 소비량에 대해 경고가 계속 발생합"
+"니다.\n"
+"  * 차단: 재료 명세서에 명시되어 있는 수량을 준수하지 않을 경우, 관리자만 제"
+"조 주문을 마감할 수 있습니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2260,6 +2268,7 @@ msgstr "표시"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2606,11 +2615,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 "
-"상황에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 "
-"포함합니다.단일 창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 "
-"있는 품목까지 포함합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 "
-"중인 품목이 포함됩니다."
+"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 상황"
+"에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합니다.단일 "
+"창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목까지 포함"
+"합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목이 포함됩"
+"니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2804,6 +2813,7 @@ msgstr "시간"
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -2831,8 +2841,9 @@ msgstr "예외 활동을 표시하기 위한 아이콘"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr "품목에 대한 세부선택사항이 정의되어 있는 경우 이 품목에 대해서만 "
-"자재명세서를 사용할 수 있습니다."
+msgstr ""
+"품목에 대한 세부선택사항이 정의되어 있는 경우 이 품목에 대해서만 자재명세서"
+"를 사용할 수 있습니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2863,8 +2874,9 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr "선택 시, 다음 조달에 의해 생성된 이동의 이전 이동이 취소되거나 분할되면 이 "
-"이동에 의해 생성된 이동도 함께 취소됩니다."
+msgstr ""
+"선택 시, 다음 조달에 의해 생성된 이동의 이전 이동이 취소되거나 분할되면 이 이"
+"동에 의해 생성된 이동도 함께 취소됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__active
@@ -2879,7 +2891,8 @@ msgstr ""
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
-msgstr "확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 생산주문의 할당 "
+msgstr ""
+"확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 생산주문의 할당 "
 "보고서 라벨을 인쇄합니다."
 
 #. module: mrp
@@ -2887,32 +2900,36 @@ msgstr "확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 �
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
-msgstr "확인란을 선택하면, 생산주문이 완료되고 이동이 생성되면 Odoo에서 자동으로 "
-"생산주문의 할당 보고서 라벨을 인쇄합니다."
+msgstr ""
+"확인란을 선택하면, 생산주문이 완료되고 이동이 생성되면 Odoo에서 자동으로 생산"
+"주문의 할당 보고서 라벨을 인쇄합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
-msgstr "확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 Lot/일련번호 "
-"라벨을 인쇄합니다."
+msgstr ""
+"확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 Lot/일련번호 라벨"
+"을 인쇄합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a MO when it is done."
-msgstr "확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 품목 라벨을 "
-"인쇄합니다."
+msgstr ""
+"확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 품목 라벨을 인쇄"
+"합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
-msgstr "확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 생산주문을 "
-"인쇄합니다."
+msgstr ""
+"확인란을 선택하면, 생산주문이 완료될 경우 Odoo에서 자동으로 생산주문을 인쇄합"
+"니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2973,13 +2990,19 @@ msgstr "MO 상"
 msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
-msgstr "정시에 납품하기 위해 제조 주문이 처리되어야 하는 시점을 정의할 수 있는 정보 "
+msgstr ""
+"정시에 납품하기 위해 제조 주문이 처리되어야 하는 시점을 정의할 수 있는 정보 "
 "제공 날짜입니다."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr "재고 이동"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Routes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3049,8 +3072,9 @@ msgstr "이미 차단이 해제되었습니다."
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
-msgstr "하나의 작업 지시만을 취소할 수 없습니다. 연결되어 있는 모든 작업의 계획을 "
-"취소하려면 제조주문서를 취소하십시오."
+msgstr ""
+"하나의 작업 지시만을 취소할 수 없습니다. 연결되어 있는 모든 작업의 계획을 취"
+"소하려면 제조주문서를 취소하십시오."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -3192,8 +3216,8 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
-"이 제조주문서에 대한 최신 부품이 사용 가능한 상태입니다. 녹색으로 표시될 "
-"경우 자재명세서 설정에 따라 제조 주문 준비가 완료되었다고 볼 수 있습니다."
+"이 제조주문서에 대한 최신 부품이 사용 가능한 상태입니다. 녹색으로 표시될 경"
+"우 자재명세서 설정에 따라 제조 주문 준비가 완료되었다고 볼 수 있습니다."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3220,8 +3244,8 @@ msgid ""
 "when this product is in a bill of material."
 msgstr ""
 "문서가 제품 양식에서만 액세스할 수 있는 경우에는 숨긴 상태로 유지합니다.\n"
-"제품이 자재명세서에 포함된 경우 이 문서를 제품 첨부 파일로 표시하려면 "
-"자재명세서를 선택합니다."
+"제품이 자재명세서에 포함된 경우 이 문서를 제품 첨부 파일로 표시하려면 자재명"
+"세서를 선택합니다."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3582,8 +3606,8 @@ msgid ""
 "                workers and/or machines, they are used for costing, "
 "scheduling, capacity planning, etc."
 msgstr ""
-"제조 작업은 작업장에서 처리됩니다. 작업장은 다음과 같은 요소로 구성될 수 "
-"있습니다.\n"
+"제조 작업은 작업장에서 처리됩니다. 작업장은 다음과 같은 요소로 구성될 수 있습"
+"니다.\n"
 "                작업자 및/또는 기계, 비용, 일정, 생산 용량 계획 수립 등."
 
 #. module: mrp
@@ -3595,8 +3619,8 @@ msgid ""
 "scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"제조 작업은 작업장에서 처리됩니다. 작업장은 다음과 같은 요소로 구성될 수 "
-"있습니다.\n"
+"제조 작업은 작업장에서 처리됩니다. 작업장은 다음과 같은 요소로 구성될 수 있습"
+"니다.\n"
 "                작업자 및/또는 기계, 비용, 일정, 생산 용량 계획 수립 등.\n"
 "                상기 구성 요소는 환경 설정 메뉴에서 정의할 수 있습니다."
 
@@ -3913,8 +3937,9 @@ msgstr ""
 msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
-msgstr "품목 관련 사항: '%s'은 활성화된 자재명세서와 연관이 있으므로 해당 품목은 "
-"계속 사용될 수 있습니다."
+msgstr ""
+"품목 관련 사항: '%s'은 활성화된 자재명세서와 연관이 있으므로 해당 품목은 계"
+"속 사용될 수 있습니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3997,8 +4022,9 @@ msgstr "전송 오류가 발생한 메시지 수입니다."
 msgid ""
 "Number of pieces that can be produced in parallel for this product or for "
 "all, depending on the unit."
-msgstr "해당 제품 또는 전체 제품을 동시에 생산할 수 있는 수량이며, 단위별로 "
-"상이합니다."
+msgstr ""
+"해당 제품 또는 전체 제품을 동시에 생산할 수 있는 수량이며, 단위별로 상이합니"
+"다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4025,8 +4051,8 @@ msgid ""
 "of the reports."
 msgstr ""
 "Odoo는 기본적으로 PDF 미리 보기를 엽니다. 즉시 인쇄하려면 바코드 운영자와\n"
-"                                동일한 로컬 네트워크에 있는 컴퓨터에 IoT "
-"앱을 설치하고\n"
+"                                동일한 로컬 네트워크에 있는 컴퓨터에 IoT 앱"
+"을 설치하고\n"
 "                                보고서의 라우팅을 설정하세요."
 
 #. module: mrp
@@ -5219,8 +5245,9 @@ msgstr ""
 msgid ""
 "Set the order that work orders should be processed in. Activate the feature "
 "within each BoM's Miscellaneous tab"
-msgstr "작업지시서를 처리할 순서를 설정합니다. 각 자재명세서의 기타 탭에서 해당 "
-"기능을 활성화할 수 있습니다."
+msgstr ""
+"작업지시서를 처리할 순서를 설정합니다. 각 자재명세서의 기타 탭에서 해당 기능"
+"을 활성화할 수 있습니다."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5647,7 +5674,8 @@ msgstr "작업 지시 (%s)를 두 번 시작할 수 없습니다!"
 msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
-msgstr "%(attribute)s설정값의 %(product)s 품목이 BoM 품목 %(bom_product)s과 일치하지 "
+msgstr ""
+"%(attribute)s설정값의 %(product)s 품목이 BoM 품목 %(bom_product)s과 일치하지 "
 "않습니다."
 
 #. module: mrp
@@ -5695,16 +5723,17 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"이 부산물 라인의 최종 생산 원가 비율(생산된 수량으로 나눈 값) 입니다. 모든 "
-"부산물의 원가 부담률 합계는 100보다 작거나 같아야합니다."
+"이 부산물 라인의 최종 생산 원가 비율(생산된 수량으로 나눈 값) 입니다. 모든 부"
+"산물의 원가 부담률 합계는 100보다 작거나 같아야합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
 msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
-msgstr "이 부산물이 최종 생산 비용에서 차지하는 비율입니다. 모든 부산물의 원가 "
-"부담률 합계는 100보다 작거나 같아야 합니다."
+msgstr ""
+"이 부산물이 최종 생산 비용에서 차지하는 비율입니다. 모든 부산물의 원가 부담"
+"률 합계는 100보다 작거나 같아야 합니다."
 
 #. module: mrp
 #. odoo-python
@@ -5724,9 +5753,9 @@ msgid ""
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
-"이미 한 번 이상 사용된 품목의 구조를 변경하면 예상치 못한 동작이 발생할 수 "
-"있습니다. 해당 품목을 보관함으로 이동시키고 새로운 자재명세서로 새 품목을 "
-"생성하십시오."
+"이미 한 번 이상 사용된 품목의 구조를 변경하면 예상치 못한 동작이 발생할 수 있"
+"습니다. 해당 품목을 보관함으로 이동시키고 새로운 자재명세서로 새 품목을 생성"
+"하십시오."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -5776,7 +5805,8 @@ msgstr "태그명은 고유해야 합니다."
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
-msgstr "자재명세서 상의 부산물에 대한 총 원가 부담률은 100을 초과할 수 없습니다."
+msgstr ""
+"자재명세서 상의 부산물에 대한 총 원가 부담률은 100을 초과할 수 없습니다."
 
 #. module: mrp
 #. odoo-python
@@ -5784,7 +5814,8 @@ msgstr "자재명세서 상의 부산물에 대한 총 원가 부담률은 100�
 msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
-msgstr "제조주문서 상의 부산물에 대한 총 원가 분담률은 100을 초과할 수 없습니다."
+msgstr ""
+"제조주문서 상의 부산물에 대한 총 원가 분담률은 100을 초과할 수 없습니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
@@ -5843,9 +5874,9 @@ msgid ""
 "minutes."
 msgstr ""
 "이 필드는 작업장에서 작업 주문에 대한 예상 소요 시간을 계산할 때 사용합니다. "
-"예를 들어 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우의 예상 소요 "
-"시간은 1시간입니다. 반면 능률계수가 200%인 경우에는 예상 소요 시간은 30분이 "
-"됩니다."
+"예를 들어 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우의 예상 소요 시간"
+"은 1시간입니다. 반면 능률계수가 200%인 경우에는 예상 소요 시간은 30분이 됩니"
+"다."
 
 #. module: mrp
 #. odoo-javascript
@@ -5859,7 +5890,8 @@ msgstr "이것은 키트 유형의 자재명세서입니다."
 msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
-msgstr "품목의 자재명세서를 기준으로 한 단가입니다. 제품을 제작하는 데 필요한 부품 "
+msgstr ""
+"품목의 자재명세서를 기준으로 한 단가입니다. 제품을 제작하는 데 필요한 부품 "
 "및 운영 비용을 합산하여 계산됩니다."
 
 #. module: mrp
@@ -5871,8 +5903,8 @@ msgid ""
 "for the product."
 msgstr ""
 "특정 품목에 대한 재고 운영의 추적성을 한눈에 확인할 수 있는 메뉴입니다.\n"
-"                필터링 기능을 활용하여 해당 품목에 대한 과거의 모든 이동 "
-"기록을 볼 수 있습니다."
+"                필터링 기능을 활용하여 해당 품목에 대한 과거의 모든 이동 기록"
+"을 볼 수 있습니다."
 
 #. module: mrp
 #. odoo-python
@@ -5892,8 +5924,9 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
-msgstr "이 품목을 생산하는데 요구되는 최소 수량입니다. 자재명세서에 포함된 작업이 "
-"있는 경우 작업장의 생산 능력을 확인해주세요."
+msgstr ""
+"이 품목을 생산하는데 요구되는 최소 수량입니다. 자재명세서에 포함된 작업이 있"
+"는 경우 작업장의 생산 능력을 확인해주세요."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5947,7 +5980,8 @@ msgstr "시간대"
 #: model:digest.tip,name:mrp.digest_tip_mrp_0
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
-msgstr "팁: 태블릿을 사용하여 작업 현장에서의 제조 및 품질을 관리할 수 있습니다."
+msgstr ""
+"팁: 태블릿을 사용하여 작업 현장에서의 제조 및 품질을 관리할 수 있습니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6296,7 +6330,8 @@ msgstr "긴급"
 msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
-msgstr "제조주문서(MO)에 맞게 부품을 소비하여 완제품을 생산합니다. 예: 테이블 1개 = "
+msgstr ""
+"제조주문서(MO)에 맞게 부품을 소비하여 완제품을 생산합니다. 예: 테이블 1개 = "
 "테이블 다리 4개 + 상판 1개"
 
 #. module: mrp
@@ -6333,7 +6368,8 @@ msgid ""
 "Using a MPS report to schedule your reordering and manufacturing operations "
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
-msgstr "MPS 보고서를 사용하여 재주문 및 제조 작업을 계획하는 것은 리드타임이 길거나 "
+msgstr ""
+"MPS 보고서를 사용하여 재주문 및 제조 작업을 계획하는 것은 리드타임이 길거나 "
 "판매 예측을 기반으로 생산하는 경우 유용합니다."
 
 #. module: mrp
@@ -6359,8 +6395,8 @@ msgid ""
 "specified for a tracked product that is having its consumed amount increased:"
 "%(products)s"
 msgstr ""
-"소비량이 증가하는 품목에 대해 Lot/일련번호를 지정해야 하므로 해당 값을 "
-"설정하고 유효성 검사를 진행할 수 없습니다: %(products)s"
+"소비량이 증가하는 품목에 대해 Lot/일련번호를 지정해야 하므로 해당 값을 설정하"
+"고 유효성 검사를 진행할 수 없습니다: %(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6474,11 +6510,11 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"조달이 작업 유형이 설정된 '생산' 경로를 사용할 때, 작업 유형과 일치하는 "
-"BOM을 사용하여 해당 제품에 대한 생산 주문을 생성하려고 시도합니다. 일치하는 "
-"항목이 발견되지 않으면, BOM 검색 과정에서 작업 유형이 무시됩니다. 이를 통해 "
-"서로 다른 BOM을 사용하여 서로 다른 생산 주문을 생성하는 재고 규칙을 만들 수 "
-"있습니다."
+"조달이 작업 유형이 설정된 '생산' 경로를 사용할 때, 작업 유형과 일치하는 BOM"
+"을 사용하여 해당 제품에 대한 생산 주문을 생성하려고 시도합니다. 일치하는 항목"
+"이 발견되지 않으면, BOM 검색 과정에서 작업 유형이 무시됩니다. 이를 통해 서로 "
+"다른 BOM을 사용하여 서로 다른 생산 주문을 생성하는 재고 규칙을 만들 수 있습니"
+"다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -6530,8 +6566,9 @@ msgstr ""
 msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
-msgstr "경고/최소 모드에서 소비시 자재명세서와 비교하여 더 많은 부품이 제조주문에 "
-"들어간 경우 사용되는 마법사"
+msgstr ""
+"경고/최소 모드에서 소비시 자재명세서와 비교하여 더 많은 부품이 제조주문에 들"
+"어간 경우 사용되는 마법사"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6635,9 +6672,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
-"작업 지시 운영을 통해 상품을 생산하기 위해 작업 센터 내에서 준수해야 하는 "
-"제조 작업을 생성하고 관리할 수 있습니다. 이들은 필요한 부품을 정의하는 "
-"자재명세서에 첨부됩니다."
+"작업 지시 운영을 통해 상품을 생산하기 위해 작업 센터 내에서 준수해야 하는 제"
+"조 작업을 생성하고 관리할 수 있습니다. 이들은 필요한 부품을 정의하는 자재명세"
+"서에 첨부됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6688,8 +6725,8 @@ msgid ""
 "in the manufacturing order directly."
 msgstr ""
 "작업 지시는 제조 주문의 일부로 수행되는 작업입니다.\n"
-"                    작업은 자재명세서에 정의되어 있거나 제조주문서에 직접 "
-"추가할 수 있습니다."
+"                    작업은 자재명세서에 정의되어 있거나 제조주문서에 직접 추"
+"가할 수 있습니다."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6789,9 +6826,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
-"\"제조\" 운영 유형의 부품에 대한 LOT 또는 일련번호를 만들거나 편집할 수 "
-"없습니다. 이를 변경하려면 운영 유형으로 이동하여 "
-"\"부품의 새 LOT/일련번호 작성\" 상자를 선택하십시오."
+"\"제조\" 운영 유형의 부품에 대한 LOT 또는 일련번호를 만들거나 편집할 수 없습"
+"니다. 이를 변경하려면 운영 유형으로 이동하여 \"부품의 새 LOT/일련번호 작성\" "
+"상자를 선택하십시오."
 
 #. module: mrp
 #. odoo-python
@@ -6799,8 +6836,9 @@ msgstr ""
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
-msgstr "하나 이상의 재주문 규칙이 있는 제품에는 키트 유형의 자재명세서를 만들 수 "
-"없습니다."
+msgstr ""
+"하나 이상의 재주문 규칙이 있는 제품에는 키트 유형의 자재명세서를 만들 수 없습"
+"니다."
 
 #. module: mrp
 #. odoo-python
@@ -6896,7 +6934,8 @@ msgstr "취소되거나 완료된 제조 주문은 이동할 수 없습니다."
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
-msgstr "제조 유형 작업용으로 대상 위치가 되어 있는 경우에는 스크랩 위치로 설정할 수 "
+msgstr ""
+"제조 유형 작업용으로 대상 위치가 되어 있는 경우에는 스크랩 위치로 설정할 수 "
 "없습니다."
 
 #. module: mrp
@@ -6929,8 +6968,9 @@ msgstr "취소된 제조 주문을 해체 지시할 수 없습니다."
 msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
-msgstr "'세부 선택 사항 적용' 기능 사용 중에는 특정 세부 선택 품목에 대한 "
-"자재명세서를 생성할 수 없습니다."
+msgstr ""
+"'세부 선택 사항 적용' 기능 사용 중에는 특정 세부 선택 품목에 대한 자재명세서"
+"를 생성할 수 없습니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -6954,12 +6994,12 @@ msgstr ""
 "주세요.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            부품의 소비량을 재검토하거나 관리자에게 확인을 "
-"요청할 수 있습니다.\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">제조 주문</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">제조 주문</span>.\n"
+"                            부품의 소비량을 재검토하거나 관리자에게 확인을 요"
+"청할 수 있습니다.\n"
+"                            <span invisible=\"mrp_production_count != 1\">제"
+"조 주문</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">제"
+"조 주문</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -6976,8 +7016,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"'실적' 카테고리에서 적어도 하나 이상의 생산성 손실을 정의해야 합니다. "
-"제조관리 앱 메뉴의 환경 설정 / 생산성 손실에서 생성할 수 있습니다."
+"'실적' 카테고리에서 적어도 하나 이상의 생산성 손실을 정의해야 합니다. 제조관"
+"리 앱 메뉴의 환경 설정 / 생산성 손실에서 생성할 수 있습니다."
 
 #. module: mrp
 #. odoo-python
@@ -6987,8 +7027,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"'생산성' 카테고리에서 적어도 하나 이상의 생산성 손실을 정의해야 합니다. "
-"제조관리 앱 메뉴의 환경 설정 / 생산성 손실에서 생성할 수 있습니다."
+"'생산성' 카테고리에서 적어도 하나 이상의 생산성 손실을 정의해야 합니다. 제조"
+"관리 앱 메뉴의 환경 설정 / 생산성 손실에서 생성할 수 있습니다."
 
 #. module: mrp
 #. odoo-python
@@ -7014,7 +7054,8 @@ msgstr ""
 msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
-msgstr "제품에 대한 로트/일련 번호를 제공하고 '소비'해야 합니다: %(missing_products)s"
+msgstr ""
+"제품에 대한 로트/일련 번호를 제공하고 '소비'해야 합니다: %(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7033,7 +7074,8 @@ msgstr "완제품에는 lot 번호를 제공해야 합니다."
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
-msgstr "키트의 수량을 직접 업데이트하는 대신 부품의 수량을 업데이트해야 합니다."
+msgstr ""
+"키트의 수량을 직접 업데이트하는 대신 부품의 수량을 업데이트해야 합니다."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
