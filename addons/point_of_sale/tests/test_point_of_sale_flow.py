@@ -6,6 +6,7 @@ from odoo.fields import Command
 from odoo.tests import Form
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.exceptions import ValidationError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1827,3 +1828,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
+
+    def test_open_ui_missing_country(self):
+        """ Test that a POS can not be opened if it has no country """
+        self.pos_config_usd.company_id.account_fiscal_country_id = False
+        with self.assertRaises(ValidationError, msg="The company must have a fiscal country set."):
+            self.pos_config_usd.open_ui()

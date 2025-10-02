@@ -562,6 +562,11 @@ class PosConfig(models.Model):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
+    def _check_company_has_fiscal_country(self):
+        self.ensure_one()
+        if not self.company_id.account_fiscal_country_id:
+            raise ValidationError(_("The company must have a fiscal country set."))
+
     @api.model_create_multi
     def create(self, vals_list):
         if not self._default_warehouse_id():
@@ -830,6 +835,7 @@ class PosConfig(models.Model):
                 return res
         self._validate_fields(self._fields)
 
+        self._check_company_has_fiscal_country()
         return self._action_to_open_ui()
 
     def open_existing_session_cb(self):
