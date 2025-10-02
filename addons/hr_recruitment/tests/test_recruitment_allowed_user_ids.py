@@ -66,3 +66,65 @@ class TestRecruitmentAllowedUserIds(TransactionCase):
 
         self.assertIn(self.user_a, matched_users)
         self.assertIn(self.user_b, matched_users)
+
+    def test_applicant_access_rights(self):
+        company = self.env.company
+
+        self.manager_user = self.env['res.users'].create({
+            'name': 'Mannie the Manager',
+            'login': 'mannie',
+            'email': 'mannie@company.com',
+            'company_ids': [company.id],
+            'company_id': company.id,
+            'group_ids': [self.env.ref('hr_recruitment.group_hr_recruitment_manager').id]
+        })
+        self.manager_employee = self.env['hr.employee'].create({
+                    'name': self.manager_user.name,
+                    'user_id': self.manager_user.id,
+                    'company_id': company.id,
+                })
+
+        self.officer_user = self.env['res.users'].create({
+            'name': 'Oliver the Officer',
+            'login': 'oliver',
+            'email': 'oliver@company.com',
+            'company_ids': [company.id],
+            'company_id': company.id,
+            'group_ids': [self.env.ref('hr_recruitment.group_hr_recruitment_user').id]
+        })
+        self.officer_employee = self.env['hr.employee'].create({
+                    'name': self.officer_user.name,
+                    'user_id': self.officer_user.id,
+                    'company_id': company.id,
+                })
+
+        self.interviewer_user = self.env['res.users'].create({
+            'name': 'Ian the Interviewer',
+            'login': 'ian',
+            'email': 'ian@company.com',
+            'company_ids': [company.id],
+            'company_id': company.id,
+            'group_ids': [self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id]
+        })
+
+        self.interviewer_employee = self.env['hr.employee'].create({
+            'name': self.interviewer_user.name,
+            'user_id': self.interviewer_user.id,
+            'company_id': company.id,
+        })
+
+        job = self.env['hr.job'].create({
+            'name': "Job Position Mannie's Company",
+            'company_id': company.id,
+        })
+
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': "Tito Applicantson",
+            'job_id': job.id,
+        })
+
+        allowed_recruiter_ids = self.env['hr.employee'].search(applicant._get_hr_recruiter_domain())
+
+        self.assertIn(self.manager_employee, allowed_recruiter_ids, "Manager should appear in recruiter dropdown")
+        self.assertIn(self.officer_employee, allowed_recruiter_ids, "Officer should appear in recruiter dropdown")
+        self.assertNotIn(self.interviewer_employee, allowed_recruiter_ids, "Interviewer should not appear in recruiter dropdown")

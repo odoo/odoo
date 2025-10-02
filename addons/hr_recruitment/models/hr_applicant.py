@@ -84,8 +84,21 @@ class HrApplicant(models.Model):
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
-    user_id = fields.Many2one(
-        'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+
+    def _get_hr_recruiter_domain(self):
+        recruiter_groups = [
+            self.env.ref('hr_recruitment.group_hr_recruitment_manager').id,
+            self.env.ref('hr_recruitment.group_hr_recruitment_user').id,
+        ]
+        return (
+            Domain('share', '=', False)
+            & Domain('company_id', 'in', self.env.company.id)
+            & Domain('user_id', '!=', False)
+            & Domain('user_id.group_ids', 'in', recruiter_groups)
+        )
+
+    recruiter = fields.Many2one(
+        'hr.employee', "Recruiter", compute='_compute_recruiter', domain=_get_hr_recruiter_domain,
         tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)
@@ -102,7 +115,7 @@ class HrApplicant(models.Model):
     day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
     day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, aggregator="avg", help="Number of days to close", store=True)
-    user_email = fields.Char(related='user_id.email', string="User Email", readonly=True)
+    recruiter_email = fields.Char(related='recruiter.user_id.email', string="Recruiter Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
@@ -605,9 +618,9 @@ class HrApplicant(models.Model):
                 applicant.stage_id = False
 
     @api.depends('job_id')
-    def _compute_user(self):
+    def _compute_recruiter(self):
         for applicant in self:
-            applicant.user_id = applicant.job_id.user_id.id
+            applicant.recruiter = applicant.job_id.recruiter.id
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
@@ -636,7 +649,7 @@ class HrApplicant(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('user_id'):
+            if vals.get('recruiter'):
                 vals['date_open'] = fields.Datetime.now()
             if vals.get('email_from'):
                 vals['email_from'] = vals['email_from'].strip()
@@ -662,8 +675,8 @@ class HrApplicant(models.Model):
         return applicants
 
     def write(self, vals):
-        # user_id change: update date_open
-        if vals.get('user_id'):
+        # user_id change: update date_open (update: user_id is now recruiter)
+        if vals.get('recruiter'):
             vals['date_open'] = fields.Datetime.now()
         old_interviewers = self.interviewer_ids
         # stage_id: track last stage before update
@@ -766,7 +779,7 @@ class HrApplicant(models.Model):
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
             partners |= self.env.user.partner_id
         else:
-            partners |= self.user_id.partner_id
+            partners |= self.recruiter.user_id.partner_id
 
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         # As we are redirected from the hr.applicant, calendar checks rules on "hr.applicant",
