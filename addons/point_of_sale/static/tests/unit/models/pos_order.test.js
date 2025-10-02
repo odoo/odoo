@@ -50,49 +50,6 @@ test("setPreset", async () => {
     expect(order.fiscal_position_id).toBe(inPreset.fiscal_position_id);
 });
 
-test("getTaxTotalsOfLines", async () => {
-    const store = await setupPosEnv();
-    const order = store.addNewOrder();
-    const product = store.models["product.template"].get(5);
-    const product2 = store.models["product.template"].get(6);
-
-    await store.addLineToOrder(
-        {
-            product_tmpl_id: product,
-            qty: 1,
-        },
-        order
-    );
-    await store.addLineToOrder(
-        {
-            product_tmpl_id: product2,
-            qty: 1,
-        },
-        order
-    );
-
-    // With pricelist prices are at 3 each
-    const taxTotalsWPricelist = order.getTaxTotalsOfLines(order.lines);
-    expect(taxTotalsWPricelist.base_amount).toBe(6);
-    expect(taxTotalsWPricelist.total_amount).toBe(7.2);
-    expect(taxTotalsWPricelist.tax_amount_currency).toBe(1.2);
-    expect(taxTotalsWPricelist.subtotals[0].tax_groups[0].involved_tax_ids).toEqual([
-        product.taxes_id[0].id,
-        product2.taxes_id[0].id,
-    ]);
-
-    // Without pricelist prices are at 100 each
-    order.setPricelist(null);
-    const taxTotals = order.getTaxTotalsOfLines(order.lines);
-    expect(taxTotals.base_amount).toBe(200);
-    expect(taxTotals.total_amount).toBe(240); // Tax of 15% and 25% on 100 each
-    expect(taxTotals.tax_amount_currency).toBe(40);
-    expect(taxTotals.subtotals[0].tax_groups[0].involved_tax_ids).toEqual([
-        product.taxes_id[0].id,
-        product2.taxes_id[0].id,
-    ]);
-});
-
 test("updateLastOrderChange", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
@@ -124,8 +81,8 @@ test("addPaymentline", async () => {
     const cashPaymentMethod = store.models["pos.payment.method"].get(1);
     // Test that the payment line is correctly created
     const result = order.addPaymentline(cashPaymentMethod);
-    expect(result.payment_method_id.id).toBe(cashPaymentMethod.id);
-    expect(result.amount).toBe(17.85);
+    expect(result.data.payment_method_id.id).toBe(cashPaymentMethod.id);
+    expect(result.data.amount).toBe(17.85);
 });
 
 test("getTotalDiscount", async () => {
@@ -133,7 +90,7 @@ test("getTotalDiscount", async () => {
     const order = await getFilledOrder(store);
     const discount = order.getTotalDiscount();
     expect(discount).toBe(0);
-    const taxTotals = order.getTaxTotalsOfLines(order.lines);
+    const taxTotals = order.prices.taxDetails;
     expect(taxTotals.base_amount).toBe(15);
     expect(taxTotals.total_amount).toBe(17.85);
     expect(taxTotals.tax_amount_currency).toBe(2.85);
@@ -144,7 +101,7 @@ test("getTotalDiscount", async () => {
     line1.setDiscount(20);
     line2.setDiscount(50);
     expect(order.getTotalDiscount()).toBe(5.82);
-    const taxTotalsWDiscount = order.getTaxTotalsOfLines(order.lines);
+    const taxTotalsWDiscount = order.prices.taxDetails;
     expect(taxTotalsWDiscount.base_amount).toBe(10.2);
     expect(taxTotalsWDiscount.total_amount).toBe(12.03);
     expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
@@ -267,4 +224,49 @@ test("setShippingDate and getShippingDate with Luxon", async () => {
     expect(typeof order.getShippingDate()).toBe("string");
     order.setShippingDate(null);
     expect(order.getShippingDate()).toBeEmpty();
+});
+
+test("[get prices] check prices and taxes", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const data = order.prices;
+
+    // Check taxes on order base_amount is 15 with 15% taxes
+    const orderTaxes = data.taxDetails;
+    expect(orderTaxes.base_amount).toBe(15.0);
+    expect(orderTaxes.total_amount).toBe(17.85);
+    expect(orderTaxes.tax_amount).toBe(2.85);
+
+    // Order prices data also return the prices of all lines
+    // Check first line with a price_unit of 3 and 3 qty
+    const line1Data = data.baseLineByLineUuids[order.lines[0].uuid].tax_details;
+    expect(line1Data.total_excluded).toBe(9.0);
+    expect(line1Data.total_included).toBe(10.35);
+    expect(line1Data.taxes_data[0].tax_amount).toBe(1.35);
+
+    // Check second line with a price_unit of 3 and 2 qty
+    const line2Data = data.baseLineByLineUuids[order.lines[1].uuid].tax_details;
+    expect(line2Data.total_excluded).toBe(6.0);
+    expect(line2Data.total_included).toBe(7.5);
+    expect(line2Data.taxes_data[0].tax_amount).toBe(1.5);
+
+    // Check with a discount on first line of 30%
+    order.lines[0].setDiscount(30);
+    const dataWDiscount = order.prices;
+    const orderTaxesWDiscount = dataWDiscount.taxDetails;
+    expect(orderTaxesWDiscount.base_amount).toBe(12.3);
+    expect(orderTaxesWDiscount.total_amount).toBe(14.75);
+    expect(orderTaxesWDiscount.tax_amount).toBe(2.45);
+
+    // Check first line with a price_unit of 3, 3 qty and 30% discount
+    const line1DataWDiscount = dataWDiscount.baseLineByLineUuids[order.lines[0].uuid].tax_details;
+    expect(line1DataWDiscount.total_excluded).toBe(6.3);
+    expect(line1DataWDiscount.total_included).toBe(7.25);
+    expect(line1DataWDiscount.taxes_data[0].tax_amount).toBe(0.95);
+    expect(line1DataWDiscount.discount_amount).toBe(3.1);
+
+    // No discount values should still represent the line without discount
+    expect(line1DataWDiscount.no_discount_total_excluded).toBe(9.0);
+    expect(line1DataWDiscount.no_discount_total_included).toBe(10.35);
+    expect(line1DataWDiscount.no_discount_taxes_data[0].tax_amount).toBe(1.35);
 });

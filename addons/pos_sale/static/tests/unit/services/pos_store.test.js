@@ -52,22 +52,22 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
         expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].price_subtotal).toBe(9);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
         expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].price_subtotal).toBe(6);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
 
         expect(currentOrder.lines[2].product_id.id).toBe(5);
         expect(currentOrder.lines[2].qty).toBe(5);
         expect(currentOrder.lines[2].price_unit).toBe(100);
-        expect(currentOrder.lines[2].price_subtotal).toBe(500);
+        expect(currentOrder.lines[2].prices.total_excluded).toBe(500);
 
         expect(currentOrder.lines[3].product_id.id).toBe(6);
         expect(currentOrder.lines[3].qty).toBe(3);
         expect(currentOrder.lines[3].price_unit).toBe(50);
-        expect(currentOrder.lines[3].price_subtotal).toBe(150);
+        expect(currentOrder.lines[3].prices.total_excluded).toBe(150);
     });
 
     test("dpPercentage → calls downPaymentSO", async () => {
@@ -93,17 +93,17 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
         expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].price_subtotal).toBe(9);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
         expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].price_subtotal).toBe(6);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
 
-        expect(currentOrder.lines[2].product_id.id).toBe(15);
+        expect(currentOrder.lines[2].product_id.id).toBe(105);
         expect(currentOrder.lines[2].qty).toBe(1);
         expect(currentOrder.lines[2].price_unit).toBe(325);
-        expect(currentOrder.lines[2].price_subtotal).toBe(325);
+        expect(currentOrder.lines[2].prices.total_excluded).toBe(325);
 
         const comp = await mountWithCleanup(Orderline, {
             props: { line: currentOrder.lines[2] },
@@ -147,17 +147,17 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
         expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].price_subtotal).toBe(9);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
         expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].price_subtotal).toBe(6);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
 
-        expect(currentOrder.lines[2].product_id.id).toBe(15);
+        expect(currentOrder.lines[2].product_id.id).toBe(105);
         expect(currentOrder.lines[2].qty).toBe(1);
         expect(currentOrder.lines[2].price_unit).toBe(50);
-        expect(currentOrder.lines[2].price_subtotal).toBe(50);
+        expect(currentOrder.lines[2].prices.total_excluded).toBe(50);
 
         const comp = await mountWithCleanup(Orderline, {
             props: { line: currentOrder.lines[2] },
