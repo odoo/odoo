@@ -593,3 +593,19 @@ test("should be able to remove color of an icon", async () => {
         contentAfter: '<p>[<span class="fa fa-glass"></span>]</p>',
     });
 });
+
+test("should be able to remove color applied by 'text-*' classes (1)", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="text-muted">[a]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: "<p>[a]</p>",
+    });
+});
+
+test("should be able to remove color applied by 'text-*' classes (2)", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><a href="#">[a]</a></p>',
+    });
+});
