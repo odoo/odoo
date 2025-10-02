@@ -922,7 +922,6 @@ patch(PosStore.prototype, {
                 index: order.getNextCourseIndex(),
             });
         }
-        order.recomputeOrderData(); // To ensure that courses are stored locally
         order.selectCourse(selectedCourse);
         return course;
     },
@@ -994,7 +993,6 @@ patch(PosStore.prototype, {
             line.course_id = destCourse.id;
         });
         order.selectCourse(destCourse);
-        order.recomputeOrderData();
     },
     async loadSampleData() {
         if (this.config.module_pos_restaurant) {

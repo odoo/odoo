@@ -10,7 +10,7 @@ patch(ProductTemplate.prototype, {
 ProductTemplate._records = [
     ...ProductTemplate._records,
     {
-        id: 15,
+        id: 105,
         display_name: "Down Payment (POS)",
         standard_price: 0,
         categ_id: false,

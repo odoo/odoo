@@ -5,6 +5,7 @@ import { Deferred } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
+import { expect } from "@odoo/hoot";
 
 const { DateTime } = luxon;
 
@@ -100,4 +101,8 @@ export const patchDialogComponent = (component) => {
             });
         },
     });
+};
+
+export const expectFormattedPrice = (value, expected) => {
+    expect(value).toBe(expected.replaceAll(" ", "\u00a0"));
 };

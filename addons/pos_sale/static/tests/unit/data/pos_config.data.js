@@ -4,7 +4,7 @@ PosConfig._records = PosConfig._records.map((config) => {
     if (config.id === 1) {
         return {
             ...config,
-            down_payment_product_id: 15,
+            down_payment_product_id: 105,
         };
     }
     return config;

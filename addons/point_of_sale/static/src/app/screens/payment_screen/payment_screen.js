@@ -146,8 +146,8 @@ export class PaymentScreen extends Component {
         }
         // original function: click_paymentmethods
         const result = this.currentOrder.addPaymentline(paymentMethod);
-        if (result) {
-            this.numberBuffer.set(result.amount.toString());
+        if (result.status) {
+            this.numberBuffer.set(result.data.amount.toString());
             if (
                 paymentMethod.use_payment_terminal &&
                 !this.isRefundOrder &&
@@ -160,7 +160,7 @@ export class PaymentScreen extends Component {
         } else {
             this.dialog.add(AlertDialog, {
                 title: _t("Error"),
-                body: _t("There is already an electronic payment in progress."),
+                body: result.data,
             });
             return false;
         }
@@ -188,11 +188,11 @@ export class PaymentScreen extends Component {
         );
         if (
             !hasCashPaymentMethod &&
-            amount > this.currentOrder.getDue() + this.selectedPaymentLine.amount
+            amount > this.currentOrder.remainingDue + this.selectedPaymentLine.amount
         ) {
             this.selectedPaymentLine.setAmount(0);
-            this.numberBuffer.set(this.currentOrder.getDue().toString());
-            amount = this.currentOrder.getDue();
+            this.numberBuffer.set(this.currentOrder.remainingDue.toString());
+            amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
         }
         if (
@@ -223,7 +223,7 @@ export class PaymentScreen extends Component {
     }
     async addTip() {
         const tip = this.currentOrder.getTip();
-        const change = this.currentOrder.getChange();
+        const change = Math.abs(this.currentOrder.change);
         const value = tip === 0 && change > 0 ? change : tip;
         const newTip = await makeAwaitable(this.dialog, NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),

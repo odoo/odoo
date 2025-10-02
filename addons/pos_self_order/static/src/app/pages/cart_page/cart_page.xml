@@ -71,8 +71,8 @@
             </div>
             <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
                 <div class="container o_self_container order-price d-flex flex-column gap-0 gap-lg-1 align-items-end px-md-4" >
-                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalWithTax())" /></span></div>
-                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalTax())" /></div>
+                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.priceIncl)" /></span></div>
+                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amountTaxes)" /></div>
                  </div>
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>

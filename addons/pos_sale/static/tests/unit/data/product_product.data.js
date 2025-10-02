@@ -3,8 +3,8 @@ import { ProductProduct } from "@point_of_sale/../tests/unit/data/product_produc
 ProductProduct._records = [
     ...ProductProduct._records,
     {
-        id: 15,
-        product_tmpl_id: 15,
+        id: 105,
+        product_tmpl_id: 105,
         lst_price: 0,
         standard_price: 0,
         display_name: "Down Payment (POS)",

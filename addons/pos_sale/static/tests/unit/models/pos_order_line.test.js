@@ -10,7 +10,7 @@ describe("pos.order.line", () => {
             const store = await setupPosEnv();
             const order = store.addNewOrder();
 
-            const productDownPayment = store.models["product.template"].get(15);
+            const productDownPayment = store.models["product.template"].get(105);
             const line = await store.addLineToOrder(
                 {
                     product_tmpl_id: productDownPayment,
@@ -50,7 +50,7 @@ describe("pos.order.line", () => {
             const store = await setupPosEnv();
             const order = store.addNewOrder();
 
-            const productDownPayment = store.models["product.template"].get(15);
+            const productDownPayment = store.models["product.template"].get(105);
             const line = await store.addLineToOrder(
                 {
                     product_tmpl_id: productDownPayment,
