@@ -14,7 +14,7 @@ describe("product_screen.js", () => {
         const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
         await comp.addProductToOrder(store.models["product.template"].get(5));
 
-        expect(order.amount_total).toBe(3.45);
+        expect(order.displayPrice).toBe(3.45);
         expect(comp.total).toBe("$\u00a03.45");
         expect(comp.items).toBe("1");
 
@@ -32,7 +32,7 @@ describe("product_screen.js", () => {
         });
         await productScreen.addProductToOrder(store.models["product.template"].get(5));
 
-        expect(order.amount_total).toBe(3.45);
+        expect(order.displayPrice).toBe(3.45);
         expect(productScreen.total).toBe("$\u00a03.45");
         expect(productScreen.items).toBe("1");
 
