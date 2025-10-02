@@ -8,7 +8,7 @@ export const reportService = {
     start(env, { ui, orm, pos }) {
         const reportActionsCache = {};
         return {
-            async doAction(reportXmlId, active_ids) {
+            async doAction(reportXmlId, active_ids, extraContext = {}) {
                 ui.block();
                 try {
                     reportActionsCache[reportXmlId] ||= rpc("/web/action/load", {
@@ -16,11 +16,11 @@ export const reportService = {
                     });
                     const reportAction = await reportActionsCache[reportXmlId];
                     // await instead of return because we want the ui to stay blocked
-                    await downloadReport(
+                    return await downloadReport(
                         rpc,
                         { ...reportAction, context: { active_ids } },
                         "pdf",
-                        user.context
+                        { ...user.context, ...extraContext }
                     );
                 } finally {
                     ui.unblock();

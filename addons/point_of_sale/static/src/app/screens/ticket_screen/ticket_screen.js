@@ -322,6 +322,7 @@ export class TicketScreen extends Component {
             const line = this.pos.models["pos.order.line"].create({
                 qty: -refundDetail.qty,
                 price_unit: refundLine.price_unit,
+                price_subtotal_incl: refundLine.price_subtotal_incl,
                 product_id: refundLine.product_id,
                 order_id: destinationOrder,
                 discount: refundLine.discount,

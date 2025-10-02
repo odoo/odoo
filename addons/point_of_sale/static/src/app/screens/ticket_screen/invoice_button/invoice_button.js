@@ -101,6 +101,7 @@ export class InvoiceButton extends Component {
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);
         this.props.onInvoiceOrder(orderId);
+        return true;
     }
     async click() {
         if (this.lock) {

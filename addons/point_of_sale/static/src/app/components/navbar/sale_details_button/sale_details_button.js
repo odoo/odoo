@@ -10,6 +10,8 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
         "get_sale_details",
         [false, false, false, [pos.session.id]]
     );
+    //TODO-manv: should generate pdf not print the report
+    //TODO-manv: should we disable this when using bbox? only allow pdf?
     const report = renderToElement(
         "point_of_sale.SaleDetailsReport",
         Object.assign({}, saleDetails, {

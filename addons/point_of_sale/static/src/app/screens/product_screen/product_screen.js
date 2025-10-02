@@ -28,6 +28,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
+import { capitalize } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -184,7 +185,7 @@ export class ProductScreen extends Component {
         }
         if (this.pos.selectedOrder.isRefund && buttonValue !== "Backspace") {
             return this.dialog.add(AlertDialog, {
-                title: _t("%s update not allowed", this.pos.numpadMode),
+                title: _t("%s update not allowed", capitalize(this.pos.numpadMode)),
                 body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),
             });
         }
