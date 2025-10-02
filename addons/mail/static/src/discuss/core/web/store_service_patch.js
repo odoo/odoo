@@ -10,6 +10,26 @@ const StorePatch = {
         super.setup(...arguments);
         this.initChannelsUnreadCounter = 0;
     },
+    computeGlobalCounter() {
+        if (!this["discuss.channel"]) {
+            return super.computeGlobalCounter();
+        }
+        const channelsContribution =
+            this.channels.status !== "fetched"
+                ? this.initChannelsUnreadCounter
+                : Object.values(this.store["discuss.channel"].records).filter(
+                      (channel) =>
+                          channel.displayToSelf &&
+                          !channel.self_member_id?.mute_until_dt &&
+                          (channel.self_member_id?.message_unread_counter ||
+                              channel.message_needaction_counter)
+                  ).length;
+        // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
+        const channelsNeedactionCounter = Object.values(
+            this.store["discuss.channel"].records
+        ).reduce((acc, channel) => acc + channel.message_needaction_counter, 0);
+        return super.computeGlobalCounter() + channelsContribution + channelsNeedactionCounter;
+    },
     /** @returns {import("models").Thread[]} */
     getSelfImportantChannels() {
         return this.getSelfRecentChannels().filter((channel) => channel.importantCounter > 0);
