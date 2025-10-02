@@ -965,6 +965,33 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
+        # Stock.
+        if self.company_id.anglo_saxon_accounting and self.picking_ids.ids:
+            stock_moves = self.env['stock.move'].sudo().search([
+                ('picking_id', 'in', self.picking_ids.ids),
+                ('product_id.valuation', '=', 'real_time')
+            ])
+            for stock_move in stock_moves:
+                product_accounts = stock_move.product_id._get_product_accounts()
+                expense_account = product_accounts['expense']
+                stock_account = product_accounts['stock_valuation']
+                balance = -sum(stock_move.mapped('value'))
+                aml_vals_list_per_nature['stock'].append({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': expense_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': self.company_id.currency_id.id,
+                    'amount_currency': balance,
+                    'balance': balance,
+                })
+                aml_vals_list_per_nature['stock'].append({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': stock_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': self.company_id.currency_id.id,
+                    'amount_currency': -balance,
+                    'balance': -balance,
+                })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
