@@ -652,6 +652,7 @@ class TestHrVersion(TransactionCase):
             "currency_id",
             "date_end",
             "date_start",
+            "departure_description",
             "display_name",
             "id",
             "is_current",
