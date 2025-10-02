@@ -488,12 +488,16 @@ class Meeting(models.Model):
             return 'organizer'
         return ATTENDEE_CONVERTER_O2M.get(attendee.state, 'None')
 
+    def _get_microsoft_transaction_id(self):
+        return f"{self.id}-{self.create_date.timestamp()}-{self.write_uid.id}"
+
     def _microsoft_values(self, fields_to_sync, initial_values={}):
         values = dict(initial_values)
         if not fields_to_sync:
             return values
 
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
+        # Transaction ID is used to prevent duplicate events in case of retry
+        values["transactionId"] = self._get_microsoft_transaction_id()
 
         if self.microsoft_recurrence_master_id and 'type' not in values:
             values['seriesMasterId'] = self.microsoft_recurrence_master_id
