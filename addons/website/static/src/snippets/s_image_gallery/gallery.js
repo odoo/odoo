@@ -51,11 +51,8 @@ export class Gallery extends Interaction {
         };
 
         const milliseconds = this.el.dataset.interval || false;
-        const lightboxTemplate = this.el.dataset.vcss === "002"
-            ? "website.gallery.s_image_gallery_mirror.lightbox"
-            : "website.gallery.slideshow.lightbox";
 
-        this.modalEl = renderToElement(lightboxTemplate, {
+        this.modalEl = renderToElement("website.gallery.s_image_gallery_mirror.lightbox", {
             images: imageEls,
             index: currentImageIndex,
             dim: dimensions,
