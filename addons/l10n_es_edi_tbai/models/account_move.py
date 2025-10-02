@@ -320,6 +320,7 @@ class AccountMove(models.Model):
             'refund_reason': self.l10n_es_tbai_refund_reason,
             'refunded_doc': self.reversed_entry_id.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False,
+            'refunded_name': self.reversed_entry_id.name if self.reversed_entry_id else False,
         }
 
     def _l10n_es_tbai_get_vendor_bill_values_batuz(self):
