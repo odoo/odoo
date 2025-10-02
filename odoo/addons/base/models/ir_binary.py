@@ -144,7 +144,11 @@ class IrBinary(models.AbstractModel):
             if not stream.download_name:
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
-            stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
+            stream.download_name = stream.download_name \
+                .replace('\n', '_') \
+                .replace('\r', '_') \
+                .replace('/', '_')
+
             if (not get_extension(stream.download_name)
                 and stream.mimetype != 'application/octet-stream'):
                 stream.download_name += guess_extension(stream.mimetype) or ''
