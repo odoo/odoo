@@ -188,7 +188,7 @@
             <field name="name">res.partner.property.form.inherit</field>
             <field name="model">res.partner</field>
             <field name="priority">2</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="product.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="fiscal_country_codes" invisible="1"/>

@@ -14,6 +14,13 @@ class ResPartner(models.Model):
     )
     sale_order_ids = fields.One2many('sale.order', 'partner_id', 'Sales Order')
     sale_warn_msg = fields.Text('Message for Sales Order')
+    incoterm_id = fields.Many2one(
+        comodel_name='account.incoterms',
+        string='Incoterm',
+        help='International Commercial Terms are a series of predefined commercial'
+             ' terms used in international transactions.',
+    )
+    incoterm_location = fields.Char(string='Incoterm Location')
 
     @api.model
     def _get_sale_order_domain_count(self):

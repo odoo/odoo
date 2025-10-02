@@ -619,6 +619,16 @@
                                     />
                                 </td>
                             </tr>
+                            <tr t-if="sale_order.incoterm">
+                                <th class="ps-0 pb-0">Incoterm:</th>
+                                <td class="w-100 pb-0 text-wrap">
+                                    <p t-if="sale_order.incoterm_location">
+                                        <span t-field="sale_order.incoterm.code"/> <br/>
+                                        <span t-field="sale_order.incoterm_location"/>
+                                    </p>
+                                    <p t-else="" t-field="sale_order.incoterm.code" class="m-0"/>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

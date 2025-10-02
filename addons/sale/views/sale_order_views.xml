@@ -931,6 +931,8 @@
                                 <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
                             </group>
                             <group name="sale_shipping" string="Shipping">
+                                <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="incoterm_location"/>
                                 <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
                                 <label for="commitment_date" string="Promised Delivery" invisible="state =='draft'"/>
                                 <div name="commitment_date_div" class="o_row">

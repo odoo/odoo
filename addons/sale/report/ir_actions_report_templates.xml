@@ -61,6 +61,14 @@
                     <strong>Expiration</strong>
                     <div t-field="doc.validity_date">2023-12-31</div>
                 </div>
+                <div t-if="doc.incoterm" class="col">
+                    <strong>Incoterm</strong>
+                    <div t-if="doc.incoterm_location">
+                        <span t-field="doc.incoterm.code"/> <br/>
+                        <span t-field="doc.incoterm_location"/>
+                    </div>
+                    <div t-else="" t-field="doc.incoterm.code"/>
+                </div>
                 <div t-if="doc.commitment_date" class="col" name="delivery_date">
                     <strong>Delivery Date</strong>
                     <div
