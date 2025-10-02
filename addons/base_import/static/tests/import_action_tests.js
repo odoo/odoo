@@ -1336,6 +1336,43 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
+    QUnit.test("Import view: test in batches then reset starting row", async function (assert) {
+        registerFakeHTTPService();
+
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                return true;
+            },
+        });
+
+        await createImportAction({
+            "base_import.import/execute_import": (route, args) => executeImport(args, true),
+        });
+
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+        await editInput(target, "input#o_import_batch_limit", 1);
+
+        // click on the test button
+        await click(target.querySelector(".o_control_panel_main_buttons button:first-child"));
+        await nextTick();
+        assert.strictEqual(target.querySelector("input#o_import_row_start").value, "2");
+        await nextTick();
+        assert.strictEqual(target.querySelector("input#o_import_row_start").value, "3");
+
+        // The import is now done
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_import_data_content .alert-info").textContent,
+            "Everything seems valid."
+        );
+        assert.strictEqual(
+            target.querySelector("input#o_import_row_start").value,
+            "1",
+            "the actual import will start at line 1 after testing"
+        );
+    });
+
     QUnit.test(
         "Import view: relational fields correctly mapped on preview",
         async function (assert) {
