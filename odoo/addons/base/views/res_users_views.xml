@@ -26,7 +26,8 @@
                 <form string="Change Password">
                     <field mode="list" name="user_ids"/>
                     <footer>
-                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Change Login" name="change_login_button" type="object" class="btn-primary" data-hotkey="q" invisible="context.get('password_wizard_mode') != 'login'"/>
+                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q" invisible="context.get('password_wizard_mode') == 'login'"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
                 </form>
@@ -39,10 +40,18 @@
                 <!-- the user list is editable, but one cannot add or delete rows -->
                 <list string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" column_invisible="True"/> <!-- required field, needed when updating the password -->
-                    <field name="user_login" force_save="1"/>
-                    <field name="new_passwd" password="True"/>
+                    <field name="user_login" force_save="1" readonly="context.get('password_wizard_mode') != 'login'"/>
+                    <field name="new_passwd" password="True" column_invisible="context.get('password_wizard_mode') == 'login'"/>
                 </list>
             </field>
+        </record>
+        <record id="change_login_wizard_action" model="ir.actions.act_window">
+            <field name="name">Change Login</field>
+            <field name="res_model">change.password.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+            <field name="context">{'password_wizard_mode': 'login'}</field>
         </record>
         <record id="change_password_wizard_action" model="ir.actions.act_window">
             <field name="name">Change Password</field>
@@ -194,7 +203,19 @@
                                 </group>
                             </page>
                             <page string="Security" name="page_security" invisible="not id">
-                                <div name="auth" class="d-flex">
+                                <div name="login_auth" class="d-flex">
+                                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Login
+                                        </span>
+                                        <span class="text-muted">
+                                            Change credentials if outdated.
+                                        </span>
+                                    </div>
+                                    <button name="action_change_login_wizard" type="object"
+                                        string="Change login" class="btn btn-secondary h-100 my-auto"/>
+                                </div>
+                                <div name="auth" class="d-flex mt-3">
                                     <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
                                         <span class="o_form_label">
                                             Change Password

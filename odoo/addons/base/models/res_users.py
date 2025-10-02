@@ -989,12 +989,23 @@ class ResUsers(models.Model):
             'tag': 'reload_context',
         }
 
+    def action_change_login_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'change.password.wizard',
+            'view_mode': 'form',
+            'name': _('Change Login'),
+            'context': {'password_wizard_mode': 'login'},
+        }
+
     def action_change_password_wizard(self):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_model': 'change.password.wizard',
             'view_mode': 'form',
+            'name': _('Change Password'),
         }
 
     @check_identity
@@ -1004,6 +1015,7 @@ class ResUsers(models.Model):
             'target': 'new',
             'res_model': 'change.password.own',
             'view_mode': 'form',
+            'name': _('Change Password'),
         }
 
     @check_identity
@@ -1452,6 +1464,13 @@ class ChangePasswordWizard(models.TransientModel):
 
     user_ids = fields.One2many('change.password.user', 'wizard_id', string='Users', default=_default_user_ids)
 
+    def change_login_button(self):
+        self.ensure_one()
+        self.user_ids.change_login_button()
+        if self.env.user in self.user_ids.user_id:
+            return {'type': 'ir.actions.client', 'tag': 'reload'}
+        return {'type': 'ir.actions.act_window_close'}
+
     def change_password_button(self):
         self.ensure_one()
         self.user_ids.change_password_button()
@@ -1466,8 +1485,13 @@ class ChangePasswordUser(models.TransientModel):
     _description = 'User, Change Password Wizard'
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
-    user_login = fields.Char(string='User Login', readonly=True)
+    user_login = fields.Char(string='Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')
+
+    def change_login_button(self):
+        for line in self:
+            if line.user_login:
+                line.user_id.login = line.user_login
 
     def change_password_button(self):
         for line in self:
