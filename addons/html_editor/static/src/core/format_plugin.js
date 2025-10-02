@@ -646,6 +646,7 @@ export class FormatPlugin extends Plugin {
         return (
             !isSelfClosingElement(node) &&
             areSimilarElements(node, node.previousSibling) &&
+            isMergeable(node.previousSibling) &&
             isMergeable(node)
         );
     }
