@@ -4,6 +4,7 @@ import {
     getDataURLBinarySize,
     getImageSizeFromCache,
     isGif,
+    isWebGLEnabled,
     loadImage,
     loadImageDataURL,
     loadImageInfo,
@@ -186,7 +187,8 @@ export class ImagePostProcessPlugin extends Plugin {
         }
 
         // GL filter
-        if (glFilter) {
+        const canUseWebGL = glFilter && isWebGLEnabled() && window.WebGLImageFilter;
+        if (canUseWebGL) {
             const glf = new window.WebGLImageFilter();
             const cv = document.createElement("canvas");
             cv.width = canvas.width;
