@@ -598,10 +598,6 @@ export class GraphRenderer extends Component {
         return { x: xAxe, y: yAxe };
     }
 
-    loadAll() {
-        return this.model.forceLoadAll();
-    }
-
     /**
      * This function extracts the information from the data points in
      * tooltipModel.dataPoints (corresponding to datapoints over a given
