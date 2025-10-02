@@ -5,6 +5,13 @@ import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
+const unread_store = (() => {
+    if (!window.idbKeyval) {
+        return undefined;
+    }
+    return new window.idbKeyval.Store("odoo-mail-unread-db", "odoo-mail-unread-store");
+})();
+
 /** @type {import("models").Store} */
 const StorePatch = {
     setup() {
@@ -26,9 +33,21 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
+        this.globalCounter = fields.Attr(0, {
+            compute() {
+                return this.computeGlobalCounter();
+            },
+            onUpdate() {
+                this.updateAppBadge();
+            },
+            eager: true,
+        });
         this.inbox = fields.One("Thread");
         this.starred = fields.One("Thread");
         this.history = fields.One("Thread");
+    },
+    computeGlobalCounter() {
+        return this.inbox?.counter ?? 0;
     },
     async initialize() {
         await Promise.all([
@@ -36,6 +55,10 @@ const StorePatch = {
             this.fetchStoreData("systray_get_activities"),
             super.initialize(...arguments),
         ]);
+    },
+    onPushNotificationDisplayed() {
+        super.onPushNotificationDisplayed(...arguments);
+        this.updateAppBadge();
     },
     onStarted() {
         super.onStarted(...arguments);
@@ -101,6 +124,12 @@ const StorePatch = {
                 }
             )
         );
+    },
+    updateAppBadge() {
+        if (unread_store) {
+            window.idbKeyval.set("unread", this.globalCounter, unread_store);
+            Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
+        }
     },
     /**
      * @param {object} param0
