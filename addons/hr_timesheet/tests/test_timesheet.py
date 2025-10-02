@@ -309,6 +309,16 @@ class TestTimesheet(TestCommonTimesheet):
                 'project_id': False
             })
 
+    def test_favorite_project_id(self):
+        """ Test that user without previous timesheets and without
+        access to the internal project has no favorite project. """
+
+        # make internal project accessible to invited internal users only
+        self.env.company.internal_project_id.privacy_visibility = 'followers'
+
+        favorite_project = self.env['account.analytic.line'].with_user(self.user_employee)._get_favorite_project_id()
+        self.assertFalse(favorite_project, "A user without timesheet and without access to the internal project should have no favorite project.")
+
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
         Timesheet = self.env['account.analytic.line']
