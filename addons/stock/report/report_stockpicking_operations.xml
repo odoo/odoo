@@ -237,9 +237,11 @@
                                             </td>
                                             <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                                 <span t-field="package.location_id"/>
+                                                <span t-field="package.parent_package_id"/>
                                             </td>
                                             <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                                 <span t-field="package.location_dest_id"/>
+                                                <span t-field="package.package_dest_id"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -256,9 +258,11 @@
                                             </td>
                                             <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                                 <span t-field="package_history.location_id"/>
+                                                <span t-field="package_history.parent_orig_id"/>
                                             </td>
                                             <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                                 <span t-field="package_history.location_dest_id"/>
+                                                <span t-field="package_history.parent_dest_id"/>
                                             </td>
                                         </tr>
                                     </t>
