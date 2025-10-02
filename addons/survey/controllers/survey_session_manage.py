@@ -18,18 +18,18 @@ class UserInputSession(http.Controller):
         Unlike the regular survey controller, user trying to access the survey must have full access rights! """
         return request.env['survey.survey'].search([('access_token', '=', survey_token)])
 
-    def _fetch_from_session_code(self, session_code):
+    def _fetch_start_url_from_session_code(self, session_code):
         """ Matches a survey against a passed session_code, and checks if it is valid.
-        If it is valid, returns the start url. Else, the error type."""
+        If it is valid, returns (start url, None). Else, the error type (None, { 'error': ...})."""
         if not session_code:
             return None, {'error': 'survey_wrong'}
-        survey = request.env['survey.survey'].sudo().search([('session_code', '=', session_code)], limit=1)
-        if not survey or survey.certification:
+        survey_sudo = request.env['survey.survey'].sudo().search([('session_code', '=', session_code)], limit=1)
+        if not survey_sudo or survey_sudo.certification:
             return None, {'error': 'survey_wrong'}
-        if survey.session_state in ['ready', 'in_progress']:
-            return survey, None
+        if survey_sudo.session_state in ['ready', 'in_progress']:
+            return survey_sudo.get_start_url(), None
         if request.env.user.has_group("survey.group_survey_user"):
-            return None, {'error': 'survey_session_not_launched', 'survey_id': survey.id}
+            return None, {'error': 'survey_session_not_launched', 'survey_id': survey_sudo.id}
         return None, {'error': 'survey_session_not_launched'}
 
     # ------------------------------------------------------------
@@ -80,10 +80,6 @@ class UserInputSession(http.Controller):
 
         Frontend should take the delay into account by displaying the appropriate animations.
 
-        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
-        e.g: a survey user can create a live session from any survey but they can only write
-        on their own survey.
-
         In addition to return a pre-rendered html template with the next question, we also return the background
         to display. Background image depends on the next question to display and cannot be extracted from the
         html rendered question template. The background needs to be changed at frontend side on a specific selector."""
@@ -102,7 +98,7 @@ class UserInputSession(http.Controller):
         # using datetime.datetime because we want the millis portion
         if next_question:
             now = datetime.datetime.now()
-            survey.sudo().write({
+            survey.write({
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
@@ -175,22 +171,22 @@ class UserInputSession(http.Controller):
         """" Redirects to 'survey_start' route using a shortened link & token.
         Shows an error message if the survey is not valid.
         This route is used in survey sessions where we need short links for people to type. """
-        survey, survey_error = self._fetch_from_session_code(session_code)
+        survey_start_url, survey_error = self._fetch_start_url_from_session_code(session_code)
 
         if survey_error:
             return request.render('survey.survey_session_code',
                                   dict(**survey_error, session_code=session_code))
-        return request.redirect(survey.get_start_url())
+        return request.redirect(survey_start_url)
 
     @http.route('/survey/check_session_code/<string:session_code>', type='jsonrpc', auth='public', website=True)
     def survey_check_session_code(self, session_code):
         """ Checks if the given code is matching a survey session_code.
         If yes, redirect to /s/code route.
         If not, return error. The user is invited to type again the code."""
-        survey, survey_error = self._fetch_from_session_code(session_code)
+        survey_start_url, survey_error = self._fetch_start_url_from_session_code(session_code)
         if survey_error:
             return survey_error
-        return {'survey_url': survey.get_start_url()}
+        return {'survey_url': survey_start_url}
 
     def _prepare_manage_session_values(self, survey):
         is_first_question, is_last_question = False, False
