@@ -16,10 +16,12 @@ patch(LocationSelectorDialog, {
 patch(LocationSelectorDialog.prototype, {
     async _getLocations(zip) {
          if (this.props.isProductPage) {
-             return rpc(this.getLocationUrl, { zip_code: zip, product_id: this.props.productId });
+             return await rpc(
+                 this.getLocationUrl, {zip_code: zip, product_id: this.props.productId}
+             );
          }
         else {
-            return super._getLocations(...arguments);
+            return await super._getLocations(...arguments);
          }
     },
 });
