@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -40,6 +40,35 @@ class FleetVehicleLogServices(models.Model):
             'target': 'current',
             'name': _('Bill'),
             'res_id': self.account_move_line_id.move_id.id,
+        }
+
+    def action_create_account_move(self):
+        self.ensure_one()
+
+        account_move = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": self.vendor_id.id,
+                "line_ids": [
+                    Command.create(
+                        {
+                            "vehicle_id": self.vehicle_id.id,
+                            "name": self.description,
+                            "price_unit": self.amount,
+                            "vehicle_log_service_ids": [self.id],
+                        },
+                    ),
+                ],
+            },
+        )
+
+        return {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "account.move",
+            "target": "current",
+            "name": self.env._("Bill"),
+            "res_id": account_move.id,
         }
 
     @api.ondelete(at_uninstall=False)
