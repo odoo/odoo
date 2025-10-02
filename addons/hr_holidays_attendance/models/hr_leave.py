@@ -93,6 +93,11 @@ class HRLeave(models.Model):
         self._update_leaves_overtime()
         return res
 
+    def _create_resource_leave(self):
+        res = super()._create_resource_leave()
+        self._update_leaves_overtime()
+        return res
+
     def _update_leaves_overtime(self):
         employee_dates = defaultdict(set)
         for leave in self:
