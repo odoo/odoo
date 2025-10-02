@@ -354,9 +354,6 @@ function drawPath(options) {
 function buildPath(templates, options) {
     return templates.map((d) => {
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("stroke-width", "var(--text-highlight-width)");
-        path.setAttribute("stroke", "var(--text-highlight-color)");
-        path.setAttribute("stroke-linecap", "round");
         if (options.mode === "fill") {
             const wScale = options.width / options.SVGWidth;
             let hScale = options.height / options.SVGHeight;
@@ -368,6 +365,10 @@ function buildPath(templates, options) {
             transforms.push(`scale(${wScale}, ${hScale})`);
             path.setAttribute("fill", "var(--text-highlight-color)");
             path.setAttribute("transform", transforms.join(" "));
+        } else {
+            path.setAttribute("stroke-width", "var(--text-highlight-width)");
+            path.setAttribute("stroke", "var(--text-highlight-color)");
+            path.setAttribute("stroke-linecap", "round");
         }
         path.setAttribute("d", d);
         return path;
