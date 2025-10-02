@@ -3210,6 +3210,16 @@ class SnippetsMenu extends Component {
         var self = this;
         var $html = $(html);
 
+        // TODO: Remove in master and add it in template s_website_form
+        const websiteFormEditorOptionsEl = $html.find('[data-js="WebsiteFormEditor"]')[0];
+        if (websiteFormEditorOptionsEl) {
+            websiteFormEditorOptionsEl.dataset.dropExcludeAncestor = "form";
+        }
+        // TODO: Remove in master and add it in the template.
+        const filterSelectEl = $html.find("we-select").has("we-button[data-gl-filter]")[0];
+        if (filterSelectEl) {
+            filterSelectEl.dataset.name = "glfilter_select_opt";
+        }
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
