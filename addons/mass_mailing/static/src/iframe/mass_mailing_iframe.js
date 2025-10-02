@@ -213,6 +213,7 @@ export class MassMailingIframe extends Component {
             this.retargetLinks(
                 this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
             );
+            this.fixInlineDynamicPlaceholders(this.iframeRef.el);
         }
         // Set `ready` symbol for tours
         this.iframeRef.el.setAttribute("is-ready", "true");
@@ -222,6 +223,33 @@ export class MassMailingIframe extends Component {
         this.iframeLoaded.resolve(this.iframeRef.el);
         this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
+    }
+
+    /**
+     * As no plugins are loaded in readonly mode, we manually set inlining attributes to
+     * any t-element that might be present in the document, provided its children are inline
+     * (which should always be the case for mass_mailing).
+     * TODO: move this to a readonly plugin once they are implemented
+     * @param {HTMLElement} iframe
+     */
+    fixInlineDynamicPlaceholders(iframe) {
+        const checkAllInline = function (el) {
+            return [...el.children].every((child) => {
+                if (child.tagName === "T") {
+                    return this.checkAllInline(child);
+                } else {
+                    return (
+                        child.nodeType !== Node.ELEMENT_NODE ||
+                        iframe.contentWindow.getComputedStyle(child).display === "inline"
+                    );
+                }
+            });
+        };
+        for (const el of iframe.contentDocument.body.querySelectorAll("t")) {
+            if (checkAllInline(el)) {
+                el.setAttribute("data-oe-t-inline", "true");
+            }
+        }
     }
 
     async setupBasicEditor() {
