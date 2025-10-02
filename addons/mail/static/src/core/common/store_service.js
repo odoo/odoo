@@ -482,13 +482,16 @@ export class Store extends BaseStore {
                     });
                 }
             }
-            if (
-                type === "notification-displayed" &&
-                ["mail.thread", "discuss.channel"].includes(payload.model)
-            ) {
-                this.env.services["mail.out_of_focus"]._playSound();
+            if (type === "notification-displayed") {
+                this.onPushNotificationDisplayed(payload);
             }
         });
+    }
+
+    onPushNotificationDisplayed(payload) {
+        if (["mail.thread", "discuss.channel"].includes(payload.model)) {
+            this.env.services["mail.out_of_focus"]._playSound();
+        }
     }
 
     /**
