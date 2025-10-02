@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 import stdnum.eu.vat
 from lxml import etree
-from zeep import Client, Transport
-from zeep.wsdl import Document
+from odoo.tools.zeep import Client, Transport
+from odoo.tools.zeep.wsdl import Document
 
 
 class TestStructure(TransactionCase):
