@@ -651,3 +651,27 @@ describe("getScrollContainer", () => {
         });
     });
 });
+
+// This test simulates a case in website builder. The values of y and bottom
+// returned by getBoundingClientRect are negative for the scroll container (the
+// iframe's html element).
+test("Overlay should be visible when scroll container has negative value for bottom", async () => {
+    const bigContent = "<p>line</p>".repeat(100);
+    const { el } = await setupEditor(bigContent, { props: { iframe: true } });
+    const iframe = el.ownerDocument.defaultView.frameElement;
+    iframe.classList.remove("h-100");
+    iframe.style.height = "500px";
+    el.style.height = "1000px";
+
+    const lastP = el.querySelector("p:last-child");
+    lastP.scrollIntoView();
+
+    const scrollContainer = getScrollContainer(el);
+    const { bottom } = scrollContainer.getBoundingClientRect();
+    expect(bottom).toBeLessThan(0);
+    // Even though bottom is negative, its contents are still visible. An
+    // overlay at this point should also be visible.
+    setSelection({ anchorNode: lastP, anchorOffset: 0, focusNode: lastP, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toBeVisible();
+});
