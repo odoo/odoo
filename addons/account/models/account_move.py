@@ -603,7 +603,8 @@ class AccountMove(models.Model):
             ('cancel', "Cancelled"),
         ],
         compute='_compute_status_in_payment',
-        copy=False,
+        compute_sql='_compute_sql_status_in_payment',
+        compute_sudo=False,
     )
     amount_total_words = fields.Char(
         string="Amount total in words",
@@ -664,6 +665,8 @@ class AccountMove(models.Model):
         ],
         string='Sent',
         compute='compute_move_sent_values',
+        compute_sql='compute_sql_move_sent_values',
+        compute_sudo=False,
     )
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -808,6 +811,10 @@ class AccountMove(models.Model):
     def compute_move_sent_values(self):
         for move in self:
             move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
+
+    def compute_sql_move_sent_values(self, alias, query):
+        is_move_sent = self._field_to_sql(alias, 'is_move_sent', query)
+        return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", is_move_sent)
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1304,23 +1311,15 @@ class AccountMove(models.Model):
             else:
                 move.status_in_payment = move.state
 
-    def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
-        if fname == 'status_in_payment':
-            return SQL(
-                "CASE "
-                f"WHEN {alias}.state = 'draft' THEN 'draft' "
-                f"WHEN {alias}.state = 'cancel' THEN 'cancel' "
-                f"ELSE {alias}.payment_state "
-                "END"
-            )
-        elif fname == 'move_sent_values':
-            return SQL(
-                "CASE "
-                f"WHEN {alias}.is_move_sent THEN 'sent' "
-                f"ELSE 'not_sent' "
-                "END"
-            )
-        return super()._field_to_sql(alias, fname, query=query)
+    def _compute_sql_status_in_payment(self, alias, query):
+        # TODO not the same logic as the compute?
+        state = self._field_to_sql(alias, 'state', query)
+        payment_state = self._field_to_sql(alias, 'payment_state', query)
+        return SQL("""CASE
+            WHEN %s = 'draft' THEN 'draft'
+            WHEN %s = 'cancel' THEN 'cancel'
+            ELSE %s
+            END""", state, state, payment_state)
 
     @api.depends('matched_payment_ids')
     def _compute_payment_count(self):
