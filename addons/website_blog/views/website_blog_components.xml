@@ -8,25 +8,26 @@
     <t t-set="wblog_nav_offcanvas" t-value="len(blogs) > 4"/>
     <t t-set="wblog_all_title_string">All Blogs</t>
 
-    <nav t-attf-class="navbar navbar-expand-lg navbar-light pt-4 pb-0 px-0 #{additionnal_classes}">
-        <div t-attf-class="container gap-2 w-100 #{wblog_nav_offcanvas and 'flex-nowrap' or 'flex-wrap flex-sm-nowrap'}">
+    <div t-attf-class="mt-4 #{opt_blog_fullwidth and 'container-fluid' or 'container'}">
+        <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="d-none">Blog Posts</h1>
+        <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
             <!-- Desktop -->
-            <ul t-if="len(blogs) > 1" class="navbar-nav d-none d-lg-flex flex-wrap">
-                <li class="nav-item">
-                    <span class="nav-link disabled ps-0">Blogs:</span>
+            <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0">
+                <li>
+                    <a href="/blog" t-attf-class="btn btn-light #{(not blog) and 'active border-primary bg-primary-subtle'}">All</a>
                 </li>
-                <li class="nav-item">
-                    <a href="/blog" t-attf-class="nav-link fw-bold #{(not blog) and 'active'}">All</a>
-                </li>
-                <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
+                <li t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
-                       t-attf-class="nav-link #{(blog and nav_blog.id == blog.id) and 'active' or ''}">
-                        <b t-field="nav_blog.name"/>
+                       t-attf-class="btn btn-light #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle' or ''}">
+                        <t t-out="nav_blog.name"/>
                     </a>
                 </li>
             </ul>
             <!-- Mobile -->
-            <div t-if="len(blogs) > 1" t-attf-class="order-2 d-lg-none #{not wblog_nav_offcanvas and 'dropdown flex-grow-1 flex-sm-grow-0 min-w-0'}">
+            <a t-if="blog" href="/blog" t-attf-class="btn btn-link d-lg-none flex-shrink-0 me-auto ps-0">
+                <i class="oi oi-chevron-left me-1" role="img"/>All blogs
+            </a>
+            <div t-if="len(blogs) > 1" t-attf-class="order-last d-lg-none flex-shrink-0 #{not wblog_nav_offcanvas and 'dropdown min-w-0'}">
                 <t t-if="wblog_nav_offcanvas">
                     <a class="btn btn-light"
                        role="button"
@@ -34,23 +35,27 @@
                        data-bs-toggle="offcanvas"
                        data-bs-target="#o_wblog_offcanvas"
                        aria-controls="o_wblog_offcanvas">
-                        <i class="fa fa-navicon" role="img"/>
+                        <i class="fa fa-bars" role="img"/>
                     </a>
-                    <div id="o_wblog_offcanvas" class="offcanvas offcanvas-end d-lg-none">
+                    <div id="o_wblog_offcanvas" class="offcanvas offcanvas-bottom h-auto" tabindex="-1" aria-labelledby="o_wblog_offcanvas_label">
                         <div class="offcanvas-header">
-                            <h5 class="offcanvas-title my-0">Blogs</h5>
+                            <h5 id="o_wblog_offcanvas_label" class="offcanvas-title my-0">Blogs</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                         </div>
                         <div class="offcanvas-body">
-                            <ul class="nav navbar-nav">
-                                <li class="nav-item">
-                                    <a href="/blog" t-attf-class="nav-link #{(not blog) and 'active'}" t-att-title="wblog_all_title_string">All</a>
+                            <ul class="list-unstyled">
+                                <li class="p-2">
+                                    <a href="/blog" t-attf-class="{{(not blog) and 'active d-flex justify-content-between'}}" t-att-title="wblog_all_title_string">
+                                        All
+                                        <i class="fa fa-check" role="img"/>
+                                    </a>
                                 </li>
-                                <li t-foreach="blogs" t-as="nav_blog" class="nav-item">
+                                <li t-foreach="blogs" t-as="nav_blog" class="p-2">
                                     <a t-attf-href="/blog/#{slug(nav_blog)}"
-                                       t-attf-class="nav-link #{(blog and nav_blog.id == blog.id) and 'active' or ''}"
+                                       t-attf-class="{{(blog and nav_blog.id == blog.id) and 'active d-flex justify-content-between' or ' text-reset'}}"
                                        t-att-title="nav_blog.name">
                                         <span t-field="nav_blog.name"/>
+                                        <i t-if="(blog and nav_blog.id == blog.id)" class="fa fa-check" role="img"/>
                                     </a>
                                 </li>
                             </ul>
@@ -80,9 +85,32 @@
                     </ul>
                 </t>
             </div>
-            <!-- 'Search Box' -->
+            <!-- 'Search Box Mobile' -->
+            <t t-if="len(blogs) == 1 or not blog">
+                <t t-call="website.website_search_box_input"
+                    _form_classes.f="d-sm-none flex-grow-1 ms-auto"
+                    search_type.f="blogs"
+                    action="blog_url(tag=tag,search=search)"
+                    display_description.f="true"
+                    display_detail.f="false">
+                    <input type="hidden" name="tag" t-att-value="tag"/>
+                    <input type="hidden" name="date_begin" t-att-value="date_begin"/>
+                    <input type="hidden" name="date_end" t-att-value="date_end"/>
+                </t>
+            </t>
+            <!-- Mobile Search button (category page) -->
+            <a t-if="blog"
+                class="btn o_not_editable d-sm-none btn-light"
+                data-bs-target="#o_wblog_search_modal"
+                data-bs-toggle="modal"
+                role="button"
+                title="Search Posts"
+                href="#">
+                <i class="oi oi-search" role="img"/>
+            </a>
+            <!-- 'Search Box Desktop' -->
             <t t-call="website.website_search_box_input"
-                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"
+                _form_classes.f="d-none d-sm-block col-lg-4 col-xl-3 flex-grow-1 flex-lg-grow-0 ms-lg-auto ps-lg-4 ps-xl-5"
                 search_type.f="blogs"
                 action="blog_url(tag=tag,search=search)"
                 display_description.f="true"
@@ -92,14 +120,39 @@
                 <input type="hidden" name="date_end" t-att-value="date_end"/>
             </t>
         </div>
-    </nav>
+        <!-- Search Modal for Mobile (category page) -->
+        <div t-if="blog"
+            id="o_wblog_search_modal"
+            class="modal fade css_editable_mode_hidden"
+            aria-hidden="true"
+            tabindex="-1">
+            <div class="modal-dialog modal-lg pt-5">
+                <div class="modal-content mt-5 bg-transparent border-0">
+                    <div class="o_container_small">
+                        <t t-call="website.website_search_box_input">
+                            <t t-set="default_style" t-valuef="true"/>
+                            <t t-set="search_type" t-valuef="blogs"/>
+                            <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
+                            <t t-set="_input_classes" t-valuef="border-0 p-3"/>
+                            <t t-set="_submit_classes" t-valuef="px-4"/>
+                            <t t-set="placeholder">Search posts</t>
+                            <t t-set="search" t-value="search"/>
+                            <input type="hidden" name="tag" t-att-value="tag"/>
+                            <input type="hidden" name="date_begin" t-att-value="date_begin"/>
+                            <input type="hidden" name="date_end" t-att-value="date_end"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- ======   Template: List Tags in inline list    ============================
 ============================================================================ -->
 <template id="tags_list" name="Tags List">
     <t t-if="tags">
-        <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-out="categ_title"/>
+        <div t-if="not hide_title and categ_title" class="small text-muted fw-bold" t-out="categ_title"/>
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
@@ -107,7 +160,7 @@
                     <t t-out="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
             </t>
         </t>
     </t>
@@ -142,19 +195,17 @@
 <!-- ======   Template: Post Author   ==========================================
 ============================================================================ -->
 <template id="post_author">
-    <div t-attf-class="align-items-center position-relative #{additionnal_classes or ''}">
+    <div t-attf-class="d-flex #{additionnal_classes or ''}">
         <div t-if="blog_post.author_avatar"
              t-field="blog_post.author_avatar"
-             style="line-height:1"
-             class="o_not_editable"
-             t-options='{"widget": "image", "alt": "", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
-        <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
-            <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
-            <span t-else="" class="o_not_editable" t-out="blog_post.author_name"/>
-            <t t-if="not hide_date">
-                <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
-                <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'format': 'long', 'date_only': 'true'}"/>
-            </t>
+             t-options='{"widget": "image", "alt": "", "class": "o_not_editable o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
+             t-att-class="'flex-shrink-0 ' + ((opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-lg-flex' or '')"/>
+        <div t-attf-class="small lh-sm #{extra_classes or ''} #{opt_blog_cards_design and 'flex-grow-1' or ''}">
+            <div class="o_not_editable" t-out="blog_post.author_name"/>
+            <span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-none d-sm-inline d-lg-none">&#183;</span>
+            <span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#183;</span>
+            <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
+            <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
         </div>
     </div>
 </template>
@@ -162,28 +213,20 @@
 <!-- ======   Template: Post Breadcrumbs   =====================================
 ============================================================================ -->
 <template id="post_breadcrumbs">
-    <nav aria-label="breadcrumb" t-attf-class="breadcrumb flex-nowrap py-0 px-0 css_editable_mode_hidden #{additionnal_classes or ''}">
-        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item d-none d-lg-inline"><a href="/blog">All Blogs</a></li>
-        <li class="breadcrumb-item">
+    <ol t-attf-class="breadcrumb my-4 p-0 #{not opt_blog_post_regular_cover and not opt_blog_post_split_cover and 'mt-0' or ''}">
+        <li t-if="len(blogs) &gt; 1" class="o_not_editable breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
+        <li class="o_not_editable breadcrumb-item">
             <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
                 <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="blog.name"/>
             </a>
         </li>
         <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
-    </nav>
+    </ol>
 </template>
 
 <!--  Template: Blog Post Information-->
 <template id="blog_post_info" name="Blog Post Info">
     <div id="o_wblog_post_info" class="text-muted mb-2">
-        <i class="fa fa-clock-o fa-fw"/>
-        <span t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
-        <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
-        <span style="display: inline-flex">by
-            <t t-call="website_blog.post_author"
-                additionnal_classes.f="d-inline-flex me-2 ms-2"
-                hide_date="True"/>
-        </span>
         <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
             <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
             <i class="fa fa-comment ms-1 text-muted"/>
@@ -207,28 +250,34 @@ Options:
 # opt_sidebar_blog_index_tags: Display tags cloud
 ============================================================================ -->
 <template id="sidebar_blog_index" name="Sidebar - Blog page">
-    <div id="o_wblog_sidebar" class="w-100">
+    <div id="o_wblog_sidebar">
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_1"/>
         <a t-if="blog" title="RSS" t-attf-href="/blog/#{slug(blog)}/feed" class="fa fa-rss-square float-end"/>
-        <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">About us</h6>
-            <div>
-                <p>Write a small text here to describe your blog or company.</p>
-            </div>
-        </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_2"/>
     </div>
 </template>
 
-<!-- (Option) Sidebar Blog: Follow Us -->
-<template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="True">
-    <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
+<!-- (Option) Sidebar Blog: About Us -->
+<template id="opt_sidebar_blog_index_about_us" name="About Us" priority="0" inherit_id="website_blog.sidebar_blog_index" active="False">
+    <xpath expr="//div[@id='oe_structure_blog_sidebar_index_2']" position="before">
+        <div class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">About us</h2>
             <div>
-                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
+                <p>Write a small text here to describe your blog or company.</p>
             </div>
-            <t t-snippet-call="website.s_social_media"/>
+        </div>
+    </xpath>
+</template>
 
+<!-- (Option) Sidebar Blog: Follow Us -->
+<template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="False">
+    <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
+        <div class="o_wblog_sidebar_block pb-4" t-ignore="true">
+            <h2 class="h6">Follow Us</h2>
+            <t t-snippet-call="website.s_social_media"
+                _classes.f="'no_icon_color'"
+                _link_classes.f="'rounded-circle o_sm_custom_size'"
+                _style.f="'--fa-icon-size: 40px;'"/>
             <t t-call="website_mail.follow" t-if="blog"
                 email="user_id.email"
                 object="blog"
@@ -239,12 +288,10 @@ Options:
 </template>
 
 <!-- (Option) Sidebar Blog: Archives -->
-<template id="opt_sidebar_blog_index_archives" name="Archives" priority="2" inherit_id="website_blog.sidebar_blog_index" active="True">
+<template id="opt_sidebar_blog_index_archives" name="Archives" priority="3" inherit_id="website_blog.sidebar_blog_index" active="False">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Archives</h6>
-            </div>
+        <div class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Archives</h2>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_4"/>
@@ -252,30 +299,30 @@ Options:
 </template>
 
 <!-- (Option) Sidebar Blog: Show tags -->
-<template id="opt_sidebar_blog_index_tags" name="Tags List" priority="3" inherit_id="website_blog.sidebar_blog_index" active="True">
+<template id="opt_sidebar_blog_index_tags" name="Tags List" priority="2" inherit_id="website_blog.sidebar_blog_index" active="False">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
 
-        <div t-if="other_tags or tag_category" class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Tags</h6>
-            </div>
-            <div class="h5">
-                <t t-foreach="tag_category" t-as="nav_tag_category">
+        <div t-if="other_tags or tag_category" class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Tags</h2>
+            <div t-attf-class="d-flex flex-wrap #{tag_category and 'flex-column gap-2' or 'gap-1'}">
+                <div t-foreach="tag_category" t-as="nav_tag_category">
                     <t t-call="website_blog.tags_list"
                         categ_title="nav_tag_category.name"
                         tags="nav_tag_category.tag_ids"
                         showInactive="True"/>
-                </t>
-                <t t-call="website_blog.tags_list"
-                    hide_title="not len(tag_category)"
-                    categ_title.translate="Others"
-                    tags="other_tags"
-                    showInactive="True"/>
+                </div>
+                <div>
+                    <t t-call="website_blog.tags_list"
+                        hide_title="not len(tag_category)"
+                        categ_title.translate="Others"
+                        tags="other_tags"
+                        showInactive="True"/>
+                </div>
             </div>
         </div>
 
-        <div t-else="" groups="website_blog.group_website_blog_manager" class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Tags</h6>
+        <div t-else="" groups="website_blog.group_website_blog_manager" class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Tags</h2>
             <em t-ignore="True" class="text-muted">No tags defined yet.</em>
         </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_5"/>
@@ -294,24 +341,32 @@ Display a sidebar beside the post content.
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
-<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
+<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="1">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <t t-call="website_blog.post_author" additionnal_classes.f="h5 d-flex align-items-center"/>
+        <div class="o_wblog_sidebar_block pb-4">
+            <t t-call="website_blog.post_author">
+                is_post_page.f="true"
+                additionnal_classes.f="d-flex align-items-center"
+            </t>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>
 </template>
 
 <!-- (Option) Post Sidebar: Share Links Display -->
-<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
+<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-4">
             <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
+                <h2 class="mb-3 h6">Share this post</h2>
             </div>
 
-            <t t-snippet-call="website.s_share"/>
+            <t t-snippet-call="website.s_share">
+                <t t-set="_classes" t-value="'no_icon_color'"/>
+                <t t-set="_icon_classes" t-value="'rounded-circle o_sm_custom_size'"/>
+                <t t-set="_style" t-value="'--fa-icon-size: 40px;'"/>
+                <t t-set="_link_classes" t-value="'o_wblog_share_links'"/>
+            </t>
         </div>
 
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_3"/>
@@ -321,20 +376,16 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Tags</h6>
+        <div class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Tags</h2>
+            <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1">
+                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                    <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                </t>
             </div>
-            <t t-if="blog_post.tag_ids">
-                <div class="h5">
-                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
-                    </t>
-                </div>
-            </t>
             <t t-else="">
                 <div class="mb-4 bg-100 py-2 px-3 border" groups="website_blog.group_website_blog_manager">
-                    <h6 class="text-muted o_not_editable"><em>No tags defined</em></h6>
+                    <h2 class="text-muted o_not_editable h6"><em>No tags defined</em></h2>
                     <a role="menuitem" t-attf-href="/odoo/website/{{main_object._name}}/{{main_object.id}}"
                         title='Edit in backend' id="edit-in-backend" class="css_editable_mode_hidden">Add some</a>
                 </div>
@@ -347,13 +398,11 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display Blogs list -->
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="True" priority="4">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Our blogs</h6>
-            </div>
+        <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Our blogs</h2>
             <ul class="list-unstyled">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
-                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}"><b t-field="nav_blog.name"/></a>
+                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-field="nav_blog.name"/>
                 </li>
             </ul>
         </div>
@@ -364,10 +413,8 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display Archive -->
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="True" priority="5">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Archive</h6>
-            </div>
+        <div class="o_wblog_sidebar_block pb-4">
+            <h2 class="h6">Archive</h2>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_6"/>

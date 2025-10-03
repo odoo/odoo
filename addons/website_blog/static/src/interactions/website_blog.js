@@ -21,7 +21,23 @@ export class WebsiteBlog extends Interaction {
             {
                 "t-on-click.prevent.withTarget": this.onShareArticleClick,
             },
+        ".o_sticky_reactive":
+            {
+                "t-att-style": () => ({
+                    "top": `${this.position || this.defaultPosition}px`,
+                }),
+            }
     };
+
+    setup() {
+        this.defaultPosition = this._isCompactListView() ? 0 : 16;
+        this.position = this.defaultPosition;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+    }
 
     /**
      * @param {MouseEvent} ev
@@ -108,6 +124,36 @@ export class WebsiteBlog extends Interaction {
     async forumScrollAction(el, duration, callback) {
         await this.waitFor(scrollTo(el, { duration }));
         callback();
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptToHeaderChange() {
+        let position = this.defaultPosition;
+
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.offsetHeight;
+        }
+
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+        }
+    }
+
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _isCompactListView() {
+        // Check if the layout is compact list view by looking for specific elements
+        // that are only present in compact list view
+        return this.el.querySelector(".o_wblog_compact_list_month_header") !== null;
     }
 }
 
