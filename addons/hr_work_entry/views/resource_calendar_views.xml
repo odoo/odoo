@@ -17,9 +17,9 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_form"/>
         <field name="arch" type="xml">
-            <field name="day_period" position="after">
+            <xpath expr="//div[@id='hours']" position="after">
                 <field name="work_entry_type_id"/>
-            </field>
+            </xpath>
         </field>
     </record>
 

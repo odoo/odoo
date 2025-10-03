@@ -21,18 +21,10 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
 
         attendance_ids = [
-            (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            (0, 0, {'dayofweek': '1', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            (0, 0, {'dayofweek': '3', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            (0, 0, {'dayofweek': '4', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+            (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+            (0, 0, {'dayofweek': '1', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+            (0, 0, {'dayofweek': '3', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+            (0, 0, {'dayofweek': '4', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
         ]
 
         self.part_time_calendar, self.part_time_calendar2 = self.env['resource.calendar'].create([
@@ -318,28 +310,18 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             is modified for public holidays after today's date.
         """
         attendance_ids_40h = [
-            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
         ]
         attendance_ids_35h = [
-            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
         ]
         calendar_40h, calendar_35h = self.env['resource.calendar'].create([
             {

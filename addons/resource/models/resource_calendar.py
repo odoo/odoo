@@ -25,7 +25,6 @@ class DummyAttendance(NamedTuple):
     hour_from: float
     hour_to: float
     dayofweek: str
-    day_period: str | None
 
 
 class ResourceCalendar(models.Model):
@@ -606,27 +605,16 @@ class ResourceCalendar(models.Model):
                     'dayofweek': attendance.dayofweek,
                     'hour_from': attendance.hour_from,
                     'hour_to': attendance.hour_to,
-                    'day_period': attendance.day_period,
                     'display_type': attendance.display_type,
                 })
                 for attendance in attendances
             ]
         return [
-            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            Command.create({'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            Command.create({'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            Command.create({'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            Command.create({'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            Command.create({'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-            Command.create({'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
         ]
 
     # --------------------------------------------------

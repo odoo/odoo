@@ -29,15 +29,11 @@ class TestAttendances(TestHrCommon):
                 'dayofweek': dayofweek,
                 'hour_from': hour_from,
                 'hour_to': hour_to,
-                'day_period': day_period,
-            }) for dayofweek, hour_from, hour_to, day_period in [
-                ("0", 8.0, 12.0, "morning"),
-                ("0", 12.0, 13.0, "lunch"),
-                ("0", 13.0, 16.6, "afternoon"),
-                ("1", 8.0, 12.0, "morning"),
-                ("1", 12.0, 13.0, "lunch"),
-                ("1", 13.0, 16.6, "afternoon"),
-                ("2", 8.0, 11.8, "morning"),
+                'break_hours': break_hours,
+            }) for dayofweek, hour_from, hour_to, break_hours in [
+                ("0", 8.0, 16.6, 1),
+                ("1", 8.0, 16.6, 1),
+                ("2", 8.0, 11.8, 0),
             ]],
         }])
 

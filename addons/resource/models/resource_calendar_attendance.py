@@ -20,16 +20,12 @@ class ResourceCalendarAttendance(models.Model):
         help="Start and End time of working.\n"
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', default=0, required=True)
+    break_hours = fields.Float(string="Break", default=0)
     # For the hour duration, the compute function is used to compute the value
     # unambiguously, while the duration in days is computed for the default
     # value based on the day_period but can be manually overridden.
     duration_hours = fields.Float(compute='_compute_duration_hours', inverse='_inverse_duration_hours', string='Duration (hours)', store=True, readonly=False)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, index=True, ondelete='cascade')
-    day_period = fields.Selection([
-        ('morning', 'Morning'),
-        ('lunch', 'Break'),
-        ('afternoon', 'Afternoon'),
-        ('full_day', 'Full Day')], required=True, default='morning')
     display_type = fields.Selection([
         ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
 

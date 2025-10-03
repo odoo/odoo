@@ -7,7 +7,6 @@
             <list string="Working Time" editable="bottom" default_order="dayofweek, hour_from">
                 <field name="display_type" column_invisible="True"/>
                 <field name="dayofweek"/>
-                <field name="day_period"/>
                 <field name="duration_hours" force_save="1"/>
                 <field name="hour_from" widget="float_time"/>
                 <field name="hour_to" widget="float_time"/>
@@ -24,11 +23,10 @@
                 <group>
                     <field name="dayofweek"/>
                     <label for="hour_from" string="Hours"/>
-                    <div class="o_row">
+                    <div id="hours" class="o_row">
                         <field name="hour_from" widget="float_time"/> -
                         <field name="hour_to" widget="float_time"/>
                     </div>
-                    <field name="day_period"/>
                 </group>
                 </sheet>
             </form>

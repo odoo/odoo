@@ -134,21 +134,11 @@ class TestCalendar(TestResourceCommon):
             'company_id': self.env.company.id,
             'tz': 'UTC',
             'attendance_ids': [(5, 0, 0),
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 16, 'break_hours': 1}),
             ],
         })
         res = calendar.get_work_hours_count(
@@ -337,13 +327,9 @@ class TestCalendar(TestResourceCommon):
             'tz': "Europe/Brussels",
             'full_time_required_hours': 40,
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
             ],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
@@ -352,10 +338,8 @@ class TestCalendar(TestResourceCommon):
         resource_calendar.write({
             'name': 'Calendar (4 / 5)',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
@@ -363,13 +347,13 @@ class TestCalendar(TestResourceCommon):
         # Define a 9/10
         resource_calendar.write({
             'name': 'Calendar (9 / 10)',
-            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})],
+            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12})],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
 
         # Define a Full-Time
         resource_calendar.write({
             'name': 'Calendar Full-Time',
-            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})],
+            'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})],
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)

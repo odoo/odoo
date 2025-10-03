@@ -51,20 +51,8 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
                 Command.create({
                     'dayofweek': '0',
                     'hour_from': 8,
-                    'hour_to': 12,
-                    'day_period': 'morning',
-                }),
-                Command.create({
-                    'dayofweek': '0',
-                    'hour_from': 12,
-                    'hour_to': 13,
-                    'day_period': 'lunch',
-                }),
-                Command.create({
-                    'dayofweek': '0',
-                    'hour_from': 13,
                     'hour_to': 17,
-                    'day_period': 'afternoon',
+                    'break_hours': 1,
                 }),
             ],
         })

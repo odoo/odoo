@@ -534,7 +534,10 @@ class TestHrAttendanceOvertime(TransactionCase):
             'auto_check_out_tolerance': 1
         })
         self.jpn_employee.resource_calendar_id.tz = 'Asia/Tokyo'  # UTC+9
-        self.jpn_employee.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == "4" and a.day_period in ["lunch", "afternoon"]).unlink()
+        self.jpn_employee.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == "4").unlink()
+        self.jpn_employee.resource_calendar_id.attendance_ids = [
+            (0, 0, {'dayofweek': 4, 'hour_from': 8, 'hour_to': 12})
+        ]
 
         attendances_jpn = self.env['hr.attendance'].create([
             {

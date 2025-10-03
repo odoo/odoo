@@ -64,7 +64,6 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
                 'dayofweek': str(day),
                 'hour_from': 0,
                 'hour_to': 24,
-                'day_period': 'morning',
             }) for day in range(0, 6)],
         })
         self.preset_takeaway.write({

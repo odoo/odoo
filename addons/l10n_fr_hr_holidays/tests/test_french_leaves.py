@@ -58,15 +58,9 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.company.resource_calendar_id = self.base_calendar
@@ -85,15 +79,9 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.company.resource_calendar_id = self.base_calendar
@@ -112,15 +100,9 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.company.resource_calendar_id = self.base_calendar
@@ -146,15 +128,9 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.company.resource_calendar_id = self.base_calendar
@@ -173,12 +149,8 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
         self.company.resource_calendar_id = self.base_calendar
@@ -205,36 +177,20 @@ class TestFrenchLeaves(TransactionCase):
         employee_calendar = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 14, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 14, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 14, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 14, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 14, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 14, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 2}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 2}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 2}),
             ],
         })
 
         company_calendar = self.env['resource.calendar'].create({
             'name': 'Company Calendar',
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 18, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 9, 'hour_to': 18, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 9, 'hour_to': 18, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 9, 'hour_to': 18, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 9, 'hour_to': 18, 'break_hours': 1}),
             ],
         })
 
