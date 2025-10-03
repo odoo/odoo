@@ -135,7 +135,9 @@ class HrEmployee(models.Model):
 
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company', required=True, tracking=True)
-    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
+    company_country_id = fields.Many2one(
+        'res.country', 'Company Country', related='company_id.country_id', readonly=True,
+        groups="base.group_system,hr.group_hr_user", store=True, index='btree')
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user", string='Company Country Code')
     parent_company_id = fields.Many2one(related="company_id.parent_id", groups="hr.group_hr_user", readonly=True)
     work_phone = fields.Char('Work Phone', store=True, readonly=False, tracking=True, compute="_compute_work_contact_details", inverse='_inverse_work_contact_details')
@@ -250,7 +252,6 @@ class HrEmployee(models.Model):
     is_past = fields.Boolean(related='version_id.is_past', inherited=True, groups="hr.group_hr_user")
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_user")
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_user")
-    structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
     employee_type_id = fields.Many2one(readonly=False, related='version_id.employee_type_id', inherited=True, groups="hr.group_hr_manager")
     hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
     nationality_country_code = fields.Char(
