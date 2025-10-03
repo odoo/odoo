@@ -17,7 +17,7 @@ class ExpiryPickingConfirmation(models.TransientModel):
     @api.depends('lot_ids')
     def _compute_descriptive_fields(self):
         # Shows expired lots only if we are more than one expired lot.
-        self.show_lots = len(self.lot_ids) > 1
+        self.show_lots = self.lot_ids and len(self.lot_ids) > 1
         if self.show_lots:
             # For multiple expired lots, they are listed in the wizard view.
             self.description = _(
@@ -27,10 +27,10 @@ class ExpiryPickingConfirmation(models.TransientModel):
         else:
             # For one expired lot, its name is written in the wizard message.
             self.description = _(
-                "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock."
+                "You are going to deliver the product(s) %(product_name)s with lot(s) %(lot_name)s which are expired or should at least be removed from stock."
                 "\nDo you confirm you want to proceed?",
-                product_name=self.lot_ids.product_id.display_name,
-                lot_name=self.lot_ids.name
+                product_name=self.lot_ids.product_id.display_name or self.env.context.get('products'),
+                lot_name=self.lot_ids.name or self.env.context.get('lot_names')
             )
 
     def process(self):
