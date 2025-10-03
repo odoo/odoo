@@ -291,6 +291,16 @@ class TestChannelInternals(MailCommon, HttpCase):
                 message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
+    @mute_logger("odoo.models.unlink")
+    def test_channel_special_mention(self):
+        """ Posting a message on a channel should support special mention """
+        self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
+        with self.mock_mail_gateway():
+            new_msg = self.test_channel.message_post(
+                body="Test", special_mentions=["everyone"],
+                message_type="comment", subtype_xmlid="mail.mt_comment")
+        self.assertEqual(new_msg.partner_ids, self.test_channel.channel_member_ids.partner_id)
+
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
         """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
