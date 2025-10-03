@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
-import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 export class BuilderOptionsPlugin extends Plugin {
@@ -50,6 +50,9 @@ export class BuilderOptionsPlugin extends Plugin {
                 const el = this.editable.querySelector(this.config.initialTarget);
                 this.updateContainers(el);
             }
+        },
+        reveal_target_handlers: (targetEl) => {
+            this.updateContainers(targetEl, { forceUpdate: true });
         },
     };
 
@@ -358,12 +361,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 targetEl = nextTarget;
             }
             if (targetEl) {
-                this.dispatchTo("on_restore_containers_handlers", targetEl);
-                this.updateContainers(targetEl, { forceUpdate: true });
-                // Scroll to the target if not visible.
-                if (!isElementInViewport(targetEl)) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
+                this.dispatchTo("reveal_target_handlers", targetEl);
             } else {
                 this.deactivateContainers();
             }

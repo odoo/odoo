@@ -6,10 +6,12 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent, queryAllTexts } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
+    addPlugin,
     defineWebsiteModels,
     getStructureSnippet,
     invisibleEl,
     setupWebsiteBuilder,
+    TestInvisibleElementPlugin,
 } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { uniqueId } from "@web/core/utils/functions";
@@ -67,6 +69,7 @@ test("hide snippets menu in translate mode", async () => {
 });
 
 test("invisible elements in translate mode", async () => {
+    addPlugin(TestInvisibleElementPlugin);
     await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
     expect(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element')"
@@ -74,13 +77,14 @@ test("invisible elements in translate mode", async () => {
 });
 
 test("show invisible elements in translate mode", async () => {
+    addPlugin(TestInvisibleElementPlugin);
     await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
 
-    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    expect(":iframe .s_invisible_el").toHaveStyle({ display: "none" });
     await contains(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye-slash"
     ).click();
-    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
+    expect(":iframe .s_invisible_el").not.toHaveStyle({ display: "none" });
 });
 
 test("translate text", async () => {
