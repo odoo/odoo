@@ -1,5 +1,5 @@
 import { CalendarModel } from "@web/views/calendar/calendar_model";
-import { serializeDate } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 
 /**
  * Slots are created differently depending on the screen size.
@@ -7,6 +7,39 @@ import { serializeDate } from "@web/core/l10n/dates";
  * Mobile: Using the calendar quick create dialog.
  */
 export class EventSlotCalendarModel extends CalendarModel {
+
+    setup(params, services) {
+        super.setup(...arguments);
+        this.orm = services.orm;
+    }
+
+    /**
+     * @override
+     * Saves the event's time range and timezone to the model data.
+     * The time range is converted to the event's timezone to correctly represent them on the calendar.
+     * Fetches from db instead of using context to always ensure up-to-date values.
+     */
+    async load(params = {}) {
+        const eventId = params.context?.default_event_id;
+        const eventVals = eventId && this.orm.read(
+            "event.event",
+            [eventId],
+            ["date_begin", "date_end", "date_tz"],
+        );
+        const res = await super.load(...arguments);
+        if (eventId) {
+            // Removing the timezone info to prevent any implicit
+            // time conversion when comparing with other datetimes.
+            const [{ date_begin: start, date_end: end, date_tz: tz }] = await eventVals;
+            this.data.event = {
+                id: eventId,
+                start: deserializeDateTime(start, {tz: tz}).setZone(undefined, { keepLocalTime: true }),
+                end: deserializeDateTime(end, {tz: tz}).setZone(undefined, { keepLocalTime: true }),
+                tz,
+            };
+        }
+        return res;
+    }
 
     /**
      * @override

@@ -5,24 +5,23 @@ import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar
 export class EventSlotCalendarCommonRenderer extends CalendarCommonRenderer {
     // Display end time and hide title on the full calendar library event.
     static eventTemplate = "event.EventSlotCalendarCommonRenderer.event";
-    // Prevent square selection over disabled cells on desktop.
-    static cellIsSelectable = (cell) => !cell.classList.contains("o_calendar_disabled");
-
-    setup() {
-        super.setup(...arguments);
-        this.rangeStartDate = this.props.model.meta.context.event_calendar_range_start_date;
-        this.rangeEndDate = this.props.model.meta.context.event_calendar_range_end_date;
-    }
 
     /**
-     * Add overlay to disable days outside of event time range.
+     * Add overlay on days outside of event time range.
      */
     getDayCellClassNames(info) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
+        const serverDatetimeFormat = 'yyyy-MM-dd HH:mm:ss';
+        const rangeStartDate = this.props.model.data.event?.start
+            ?.toFormat(serverDatetimeFormat, { numberingSystem: 'latn' })
+            .split(" ")[0];
+        const rangeEndDate = this.props.model.data.event?.end
+            ?.toFormat(serverDatetimeFormat, { numberingSystem: 'latn' })
+            .split(" ")[0];
         if (
-            this.rangeStartDate &&
-            this.rangeEndDate &&
-            (date < this.rangeStartDate || date > this.rangeEndDate)
+            rangeStartDate &&
+            rangeEndDate &&
+            (date < rangeStartDate || date > rangeEndDate)
         ) {
             return ["o_calendar_disabled"];
         }
@@ -36,17 +35,6 @@ export class EventSlotCalendarCommonRenderer extends CalendarCommonRenderer {
      */
     isSelectionAllowed(event) {
         return false;
-    }
-
-    /**
-     * @override
-     * Prevent click on disabled dates in mobile.
-    */
-    onDateClick(info) {
-        if (info.dayEl.classList.contains("o_calendar_disabled")) {
-            return;
-        }
-        return super.onDateClick(info);
     }
 }
 
