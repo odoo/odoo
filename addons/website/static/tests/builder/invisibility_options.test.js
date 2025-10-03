@@ -139,12 +139,14 @@ test("hide on mobile and toggle mobile view", async () => {
 
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(":iframe .col-lg-3").not.toHaveClass("o_snippet_override_invisible");
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
         "fa-eye-slash"
     );
 
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(".o_we_invisible_el_panel").not.toHaveCount();
 });
 

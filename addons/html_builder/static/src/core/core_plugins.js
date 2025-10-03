@@ -29,6 +29,7 @@ import { RemovePlugin } from "./remove_plugin";
 import { SavePlugin } from "./save_plugin";
 import { SaveSnippetPlugin } from "./save_snippet_plugin";
 import { SetupEditorPlugin } from "./setup_editor_plugin";
+import { MobilePreviewPlugin } from "./mobile_preview_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
 import { FieldChangeReplicationPlugin } from "./field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin";
@@ -74,6 +75,7 @@ export const MAIN_PLUGINS = [
     FieldChangeReplicationPlugin,
     ImageFieldPlugin,
     Many2OneOptionPlugin,
+    MobilePreviewPlugin,
     MonetaryFieldPlugin,
     OperationPlugin,
     OverlayButtonsPlugin,
