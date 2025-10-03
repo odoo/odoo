@@ -6,6 +6,7 @@ from . import account_move_line
 from . import chart_template
 from . import crm_team
 from . import ir_actions_report
+# ir_actions_report_simple removed - using main ir_actions_report.py
 from . import ir_config_parameter
 from . import payment_provider
 from . import payment_transaction
