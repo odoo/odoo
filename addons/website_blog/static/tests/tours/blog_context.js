@@ -10,12 +10,12 @@ registry.category("web_tour.tours").add("blog_context_and_social_media", {
         },
         {
             content: "Click on 'aaa Blog Test' Blog",
-            trigger: ":iframe .website_blog nav .nav-item a:contains('aaa Blog Test')",
+            trigger: ":iframe .website_blog .o_wblog_category li a:contains('aaa Blog Test')",
             run: "click",
         },
         {
             content: "Check that 'aaa Blog Test' Blog is open",
-            trigger: ":iframe .website_blog nav .nav-item a.active:contains('aaa Blog Test')",
+            trigger: ":iframe .website_blog .o_wblog_category li a.active:contains('aaa Blog Test')",
         },
         {
             content: "Click on New Post",

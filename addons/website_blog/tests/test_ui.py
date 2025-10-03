@@ -56,23 +56,26 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
     def test_autocomplete_with_date(self):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        self.env.ref('website_blog.opt_sidebar_blog_index_archives').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
 
     def test_blog_context_and_social_media(self):
+        # Create a second blog to make the blog navigation appear (only shows when len(blogs) > 1)
+        self.env['blog.blog'].create({'name': 'Second Blog'})
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_context_and_social_media", login="admin")
 
     def test_blog_social_image(self):
         with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
-            self.blog_post.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.webp')
+            self.blog_post.cover_properties = """{"background-image": "url(\\"/2.webp\\")"}"""
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.jpg')
-            self.blog_post.cover_properties = """{"background-image": "url(/3.jpg)"}"""
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.webp')
+            self.blog_post.cover_properties = """{"background-image": "url(/3.webp)"}"""
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.webp')
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
@@ -116,6 +119,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
 
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
+        self.env.ref("website_blog.opt_sidebar_blog_index_archives").active = True
         self.env.ref("website_blog.opt_blog_post_sidebar").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_sidebar_with_date_and_tag", login="admin")
 
@@ -125,6 +129,8 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_1.write({'tag_ids': [(4, blog_tag.id)]})
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
+        # Activate tags in sidebar for blog_tags_with_date tour
+        self.env.ref("website_blog.opt_sidebar_blog_index_tags").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_tags_with_date", login="admin")
 
     def test_blog_access_rights(self):
