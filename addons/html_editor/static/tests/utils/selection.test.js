@@ -1,14 +1,14 @@
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
-import {
-    ensureFocus,
-    getAdjacentCharacter,
-    getCursorDirection,
-} from "@html_editor/utils/selection";
+import { getAdjacentCharacter, getCursorDirection } from "@html_editor/utils/selection";
 import { describe, expect, test } from "@odoo/hoot";
-import { dispatch } from "@odoo/hoot-dom";
-import { insertText, setupEditor, testEditor } from "../_helpers/editor";
+import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { setSelection } from "../_helpers/selection";
+
+// TODO @phoenix: imports do not exist
+const insertText = () => {};
+const ensureFocus = () => {};
 
 describe("ensureFocus", () => {
     // TODO @phoenix: unskipped when ensureFocus is add in the code base
@@ -24,12 +24,16 @@ describe("ensureFocus", () => {
                 stepFunction: async (editor) => {
                     const sel = document.getSelection();
                     const element = sel.anchorNode;
-                    await dispatch(editor.editable, "keydown", { key: "/" });
+                    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+                        key: "/",
+                    });
                     await insertText(editor, "/");
-                    await dispatch(editor.editable, "keyup", { key: "/" });
+                    await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: "/" });
                     await insertText(editor, "h2");
-                    await dispatch(element, "keyup", { key: "2" });
-                    await dispatch(editor.editable, "keydown", { key: "Enter" });
+                    await manuallyDispatchProgrammaticEvent(element, "keyup", { key: "2" });
+                    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+                        key: "Enter",
+                    });
                     const activeElement = document.activeElement;
                     editor.shared.selection.setCursorStart(activeElement.lastElementChild);
                     // TODO @phoenix still need it ?
