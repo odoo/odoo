@@ -26,11 +26,11 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get hasChangesToPrint() {
-        let hasChange = this.pos.getOrderChanges();
+        let hasChange = this.pos.getOrder().orderChanges;
         hasChange =
             hasChange.generalCustomerNote == ""
                 ? true // for the case when removed all general note
-                : hasChange.count || hasChange.generalCustomerNote || hasChange.modeUpdate;
+                : hasChange.nbrOfChanges || hasChange.generalCustomerNote;
         return hasChange;
     },
     hasQuantity(order) {

@@ -582,7 +582,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
         })
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
@@ -1263,7 +1262,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'payment_method_id': self.cash_payment_method.id
             })],
             'uuid': '12345-123-1234',
-            'last_order_preparation_change': '{}',
             'user_id': self.env.uid
         }
 
@@ -1335,7 +1333,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
             }
         self.env['pos.order'].sync_from_ui([order_data])
         order = current_session.order_ids[0]
@@ -1433,7 +1430,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': False,
-            'last_order_preparation_change': '{}',
             'preset_id': preset_takeaway.id,
             'preset_time': fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=-2)),
         })
@@ -1644,7 +1640,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
             })
         context_make_payment = {"active_ids": [self.order.id], "active_id": self.order.id}
         self.pos_make_payment_0 = self.env['pos.make.payment'].with_context(context_make_payment).create({

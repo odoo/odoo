@@ -188,7 +188,7 @@ describe("pos_store.js", () => {
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
 
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
-        const orderChange = store.changesToOrder(order, new Set([...pos_categories]), false);
+        const orderChange = order.changesToOrder();
 
         const { orderData, changes } = store.generateOrderChange(
             order,
@@ -207,7 +207,6 @@ describe("pos_store.js", () => {
         expect(receiptsData[0].changes.data.length).toBe(2);
         expect(receiptsData[0].changes.data[0]).toEqual({
             uuid: order.lines[0].uuid,
-            name: "TEST",
             basic_name: "TEST",
             customer_note: "Test Orderline Customer Note",
             product_id: 5,
@@ -215,14 +214,13 @@ describe("pos_store.js", () => {
             quantity: 3,
             note: "",
             pos_categ_id: 1,
-            pos_categ_sequence: 1,
+            pos_categ_sequence: 0,
             display_name: "TEST",
             group: undefined,
             isCombo: undefined,
         });
         expect(receiptsData[0].changes.data[1]).toEqual({
             uuid: order.lines[1].uuid,
-            name: "TEST 2",
             basic_name: "TEST 2",
             customer_note: "",
             product_id: 6,
@@ -230,7 +228,7 @@ describe("pos_store.js", () => {
             quantity: 2,
             note: "Wait",
             pos_categ_id: 2,
-            pos_categ_sequence: 2,
+            pos_categ_sequence: 0,
             display_name: "TEST 2",
             group: undefined,
             isCombo: undefined,

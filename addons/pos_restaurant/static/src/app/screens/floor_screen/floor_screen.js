@@ -25,7 +25,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { getButtons, DECIMAL, ZERO, BACKSPACE } from "@point_of_sale/app/components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
-import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -1060,7 +1059,7 @@ export class FloorScreen extends Component {
         );
 
         for (const order of tableOrders) {
-            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
+            const changes = order.orderChanges;
             changeCount += changes.nbrOfChanges;
         }
 

@@ -283,7 +283,7 @@ class PosConfig(models.Model):
             'account.tax.group', 'pos.printer', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template']
+            'res.country', 'res.country.state', 'mail.template', 'pos.prep.order', 'pos.prep.line']
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):
