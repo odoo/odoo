@@ -1,44 +1,88 @@
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
-import { DEVICE_VISIBILITY_OPTION_SELECTOR } from "./options/visibility_option_plugin";
 
 export class WebsiteVisibilityPlugin extends Plugin {
     static id = "websiteVisibilityPlugin";
+    static dependencies = ["visibility", "history", "domObserver"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        system_classes: ["o_conditional_hidden"],
-        on_target_shown_handlers: this.onTargetShow.bind(this),
-        on_target_hidden_handlers: this.onTargetHide.bind(this),
+        system_classes: ["o_snippet_override_invisible", "o_conditional_hidden"],
+        invisible_items: [
+            {
+                selector: ".o_snippet_mobile_invisible",
+                isAvailable: () => this.config.isMobileView(this.editable),
+                toggle: (el, show) => el.classList.toggle("o_snippet_override_invisible", show),
+            },
+            {
+                selector: ".o_snippet_desktop_invisible",
+                isAvailable: () => !this.config.isMobileView(this.editable),
+                toggle: (el, show) => el.classList.toggle("o_snippet_override_invisible", show),
+            },
+            {
+                selector: "[data-visibility=conditional]",
+                toggle: (el, show) => el.classList.toggle("o_conditional_hidden", !show),
+            },
+        ],
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            for (const el of selectElements(snippetEl, "[data-visibility=conditional]")) {
+                el.classList.remove("o_conditional_hidden");
+            }
+        },
+        normalize_processors: (root) => {
+            const allowedDeviceOverride = this.config.isMobileView(this.editable)
+                ? ".o_snippet_mobile_invisible"
+                : ".o_snippet_desktop_invisible";
+            for (const el of selectElements(
+                root,
+                `.o_snippet_override_invisible:not(${allowedDeviceOverride})`
+            )) {
+                this.removeTemporaryClass(el, "o_snippet_override_invisible");
+            }
+            for (const el of selectElements(
+                root,
+                ".o_conditional_hidden:not([data-visibility=conditional])"
+            )) {
+                this.removeTemporaryClass(el, "o_conditional_hidden");
+            }
+            return root;
+        },
+        clean_for_save_processors: (root) => {
+            for (const el of selectElements(root, ".o_snippet_override_invisible")) {
+                el.classList.remove("o_snippet_override_invisible");
+            }
+            for (const el of selectElements(root, "[data-visibility=conditional]")) {
+                // we add `o_conditional_hidden` in the saved version,
+                // and it will be removed on load in `unhideConditionalElements`
+                el.classList.add("o_conditional_hidden");
+            }
+            return root;
+        },
+        on_mobile_view_switched_handlers: () => {
+            const deviceSelector = ".o_snippet_desktop_invisible, .o_snippet_mobile_invisible";
+            if (this.editable.querySelector(deviceSelector)) {
+                for (const el of selectElements(
+                    this.editable,
+                    `:is(${deviceSelector}).o_snippet_override_invisible`
+                )) {
+                    el.classList.remove("o_snippet_override_invisible");
+                }
+                this.dependencies.visibility.invalidateVisibility();
+            }
+        },
     };
 
-    onTargetHide(editingEl) {
-        if (
-            editingEl.matches(DEVICE_VISIBILITY_OPTION_SELECTOR) ||
-            editingEl.matches("section, .s_hr")
-        ) {
-            editingEl.classList.remove("o_snippet_override_invisible");
-
-            const isConditionalHidden = editingEl.matches("[data-visibility='conditional']");
-            if (isConditionalHidden) {
-                editingEl.classList.add("o_conditional_hidden");
+    removeTemporaryClass(el, className) {
+        if (el.classList.contains(className)) {
+            if (this.dependencies.history.getIsPreviewing()) {
+                this.dependencies.domObserver.applyCustomMutation({
+                    apply: () => el.classList.remove(className),
+                    revert: () => el.classList.add(className),
+                });
+            } else {
+                el.classList.remove(className);
             }
-        }
-    }
-
-    onTargetShow(editingEl) {
-        if (
-            editingEl.matches(DEVICE_VISIBILITY_OPTION_SELECTOR) ||
-            editingEl.matches("section, .s_hr")
-        ) {
-            const isMobilePreview = this.config.isMobileView(editingEl);
-            const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
-            const isDesktopHidden = editingEl.classList.contains("o_snippet_desktop_invisible");
-            if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
-                editingEl.classList.add("o_snippet_override_invisible");
-            }
-
-            editingEl.classList.remove("o_conditional_hidden");
         }
     }
 }
