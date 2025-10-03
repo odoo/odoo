@@ -455,13 +455,22 @@
                     </td>
                 </tr>
                 <tr name="o_order_total_taxes">
-                    <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">Taxes</td>
-                    <td class="text-end border-0 p-0 ps-3 pb-2">
-                        <span t-field="website_sale_order.amount_tax"
-                              class="monetary_field"
-                              style="white-space: nowrap;"
-                              t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                    </td>
+                    <t t-foreach="website_sale_order.tax_totals['subtotals']" t-as="line">
+                        <t t-foreach="line['tax_groups']" t-as="tax_line">
+                            <tr>
+                                <td class="border-0 pb-2 ps-0 pt-0 text-start text-muted"
+                                    colspan="2">
+                                    <t t-out="tax_line['group_name']"/>
+                                </td>
+                                <td class="text-end border-0 pb-2 pe-0 pt-0">
+                                    <t t-out="tax_line['tax_amount_currency']"
+                                       class="monetary_field"
+                                       style="white-space: nowrap;"
+                                       t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
                 </tr>
                 <tr name="o_order_total" class="border-top">
                     <td colspan="2" class="border-0 ps-0 pt-2"><strong>Total</strong></td>
