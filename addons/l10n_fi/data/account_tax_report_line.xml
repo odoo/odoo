@@ -20,15 +20,18 @@
                 <field name="name@fi">Vero kotimaan myynneistä verokannoittain</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
                 <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance</field>
+                <field name="code">domestic_sales</field>
                 <field name="children_ids">
                     <record id="tax_report_sales_25_5_and_24" model="account.report.line">
                         <field name="name">25.5% tax + 24% tax</field>
+                        <field name="name@fi">25.5 %:n vero + 24 %:n vero</field>
                         <field name="code">sale_25_5_and_24</field>
                         <field name="foldable">True</field>
                         <field name="aggregation_formula">sale_25_5.balance + sale_24.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_sales_25_5" model="account.report.line">
                                 <field name="name">25.5% tax</field>
+                                <field name="name@fi">25.5 %:n vero</field>
                                 <field name="code">sale_25_5</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_sales_25_5_tag" model="account.report.expression">
@@ -141,6 +144,7 @@
             <record id="vat_report_relief" model="account.report.line">
                 <field name="name">The amount of lower limit relief</field>
                 <field name="name@fi">Alarajahuojennuksen määrä</field>
+                <field name="code">vat_relief</field>
                 <field name="expression_ids">
                     <record id="vat_report_relief_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -152,12 +156,14 @@
             <record id="tax_report_tax_payable" model="account.report.line">
                 <field name="name">Payable tax / Refundable tax (-)</field>
                 <field name="name@fi">Maksettava vero / Palautukseen oikeuttava vero (-)</field>
+                <field name="code">payable_refundable_tax</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
                 <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
             </record>
             <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-Turnover subject to zero tax rate</field>
                 <field name="name@fi">0-verokannan alainen liikevaihto</field>
+                <field name="code">sales_O_vat_rate</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_turnover_0_vat_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -169,6 +175,7 @@
             <record id="tax_report_base_sales_goods_eu" model="account.report.line">
                 <field name="name">Sales of goods to other EU countries</field>
                 <field name="name@fi">Tavaroiden myynnit muihin EU-maihin</field>
+                <field name="code">base_goods_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_goods_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -180,6 +187,7 @@
             <record id="tax_report_base_sales_service_eu" model="account.report.line">
                 <field name="name">Sales of services to other EU countries</field>
                 <field name="name@fi">Palvelujen myynnit muihin EU-maihin</field>
+                <field name="code">base_services_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_service_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -191,6 +199,7 @@
             <record id="tax_report_base_purchase_goods_eu" model="account.report.line">
                 <field name="name">Purchases of goods from other EU countries</field>
                 <field name="name@fi">Tavaraostot muista EU-maista</field>
+                <field name="code">purchases_base_goods_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_goods_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -202,6 +211,7 @@
             <record id="tax_report_base_purchase_service_eu" model="account.report.line">
                 <field name="name">Service purchases from other EU countries</field>
                 <field name="name@fi">Palveluostot muista EU-maista</field>
+                <field name="code">purchases_base_services_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_service_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -213,6 +223,7 @@
             <record id="tax_report_base_import_goods_no_eu" model="account.report.line">
                 <field name="name">Imports of goods from outside the EU</field>
                 <field name="name@fi">Tavaroiden maahantuonnit EU:n ulkopuolelta</field>
+                <field name="code">base_goods_no_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_import_goods_no_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -224,6 +235,7 @@
             <record id="tax_report_base_sales_construct_service" model="account.report.line">
                 <field name="name">Sales of construction services and scrap metal (inverted tax liability)</field>
                 <field name="name@fi">Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)</field>
+                <field name="code">base_construct</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_construct_service_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -235,6 +247,7 @@
             <record id="tax_report_base_purchase_construct_service" model="account.report.line">
                 <field name="name">Purchases of construction services and scrap metal (inverted tax liability)</field>
                 <field name="name@fi">Rakentamispalvelun ja metalliromun ostot (käännetty verovelvollisuus)</field>
+                <field name="code">base_purchase_construct</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_construct_service_tag" model="account.report.expression">
                         <field name="label">balance</field>
