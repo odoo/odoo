@@ -54,8 +54,20 @@ test("extract allowed company ids from cookies", async () => {
     expect(user.activeCompany.id).toBe(3);
 });
 
+test("active companies are sorted", async () => {
+    serverState.companies = [
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
+        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
+        { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
+    ];
+
+    expect(user.activeCompanies.map((c) => c.id)).toEqual([1]);
+    user.activateCompanies([2, 3, 1]);
+    expect(user.activeCompanies.map((c) => c.id)).toEqual([2, 1, 3]);
+});
+
 test("activate company branches after access error", async () => {
-    cookie.set("cids", "1")
+    cookie.set("cids", "1");
     serverState.companies = [
         {
             id: 1,
@@ -85,4 +97,4 @@ test("activate company branches after access error", async () => {
     user.activateCompanies(activeCompanyIds);
     // Activating the first branch should activate all branches
     expect(cookie.get("cids")).toBe("1-2-3");
-})
+});
