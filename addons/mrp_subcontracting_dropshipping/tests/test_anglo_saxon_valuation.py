@@ -225,13 +225,19 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'product_qty': 1.0,
             'type': 'phantom',
         })
-        kit_bom.bom_line_ids = [(0, 0, {
-            'product_id': self.product_b.id,
-            'product_qty': 4,
-        }), (0, 0, {
-            'product_id': product_c.id,
-            'product_qty': 2,
-        })]
+        # bom line of product_c is expressed in unit to check the uom conversion (24 unit should give the same result as 2 dozens)
+        kit_bom.bom_line_ids = [
+            Command.create({
+                'product_id': self.product_b.id,
+                'product_qty': 4,
+
+            }),
+            Command.create({
+                'product_id': product_c.id,
+                'product_qty': 24,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id
+            })
+        ]
 
         self.env['product.supplierinfo'].create({
             'product_id': self.product_b.id,
@@ -243,7 +249,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'partner_id': self.partner_a.id,
             'price': 100,
         })
-
+        self.product_b.standard_price = 10
         (kit_final_prod + self.product_b).categ_id.write({
             'property_cost_method': 'fifo',
             'property_valuation': 'real_time',
@@ -251,7 +257,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_b.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'price_unit': 900,
                 'product_id': kit_final_prod.id,
                 'route_id': self.dropship_route.id,
@@ -262,7 +268,6 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         purchase_order = sale_order._get_purchase_orders()[0]
         purchase_order.button_confirm()
         dropship_transfer = purchase_order.picking_ids[0]
-        dropship_transfer.move_ids[0].quantity = 2.0
         dropship_transfer.button_validate()
 
         account_move = sale_order._create_invoices()
