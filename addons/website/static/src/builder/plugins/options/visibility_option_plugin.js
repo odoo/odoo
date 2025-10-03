@@ -39,7 +39,6 @@ class VisibilityOptionPlugin extends Plugin {
             withSequence(DEVICE_VISIBILITY, DeviceVisibilityOption),
         ],
         builder_actions: {
-            ForceVisibleAction,
             ToggleDeviceVisibilityAction,
         },
         normalize_handlers: this.normalizeCSSSelectors.bind(this),
@@ -177,19 +176,8 @@ class VisibilityOptionPlugin extends Plugin {
     }
 }
 
-export class ForceVisibleAction extends BuilderAction {
-    static id = "forceVisible";
-    static dependencies = ["visibility"];
-    apply({ editingElement }) {
-        this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, true);
-    }
-    isApplied() {
-        return true;
-    }
-}
 export class ToggleDeviceVisibilityAction extends BuilderAction {
     static id = "toggleDeviceVisibility";
-    static dependencies = ["visibility", "history"];
 
     apply({ editingElement, params: { mainParam: visibility } }) {
         // Clean first as the widget is not part of a group
@@ -204,17 +192,6 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
                 "o_snippet_mobile_invisible"
             );
         }
-
-        // Update invisible elements
-        const isMobile = this.services.website.context.isMobile;
-        const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
-        this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, show);
-        this.dependencies.history.applyCustomMutation({
-            apply: () => {},
-            revert: () => {
-                editingElement.classList.remove("o_snippet_override_invisible");
-            },
-        });
         this.dispatchTo("on_visibility_toggled_handlers", editingElement);
     }
     clean({ editingElement }) {
@@ -228,12 +205,6 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const style = getComputedStyle(editingElement);
         const display = style["display"];
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-        this.dependencies.history.applyCustomMutation({
-            apply: () => {
-                editingElement.classList.remove("o_snippet_override_invisible");
-            },
-            revert: () => {},
-        });
         this.dispatchTo("on_visibility_toggled_handlers", editingElement);
     }
     isApplied({ editingElement, params: { mainParam: visibilityParam } }) {

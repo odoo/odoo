@@ -2,24 +2,63 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-/**
- * @typedef { Object } PopupVisibilityShared
- * @property { PopupVisibilityPlugin['onTargetHide'] } onTargetHide
- * @property { PopupVisibilityPlugin['onTargetShow'] } onTargetShow
- */
-
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
     static dependencies = ["visibility", "history"];
-    static shared = ["onTargetShow", "onTargetHide"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        target_show: this.onTargetShow.bind(this),
-        target_hide: this.onTargetHide.bind(this),
+        invisible_items: {
+            selector: ".s_popup",
+            target: ".modal",
+            toggle: (el, show) => {
+                const modal = this.window.Modal.getOrCreateInstance(el.querySelector(".modal"));
+                show ? modal.show() : modal.hide();
+            },
+            noShowAfterClone: true,
+        },
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            // BS Modal won't ever hide when calling `hide` if `show` has not
+            // been called before. So we call `show` (regardless of visibility)
+            const modalEl = snippetEl.querySelector(".s_popup:scope > .modal");
+            if (modalEl) {
+                this.dependencies.history.addCustomMutation({
+                    apply: () => this.hideScrollbarForVisiblePopup(snippetEl),
+                    revert: () => {},
+                });
+                const modal = this.window.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+                this.dependencies.history.applyCustomMutation({
+                    apply: () => this.hidePopupsWithoutTarget(modalEl),
+                    revert: () => this.resetScrollbarForVisiblePopup(snippetEl),
+                });
+            }
+        },
+        on_cloned_handlers: ({ cloneEl }) => {
+            // BS Modal won't ever hide when calling `hide` if `show` has not
+            // been called before. So we force hide the clone, and the original
+            // element stays visible
+            const modalEl = cloneEl.querySelector(".s_popup:scope > .modal");
+            if (modalEl) {
+                const modal = this.window.Modal.getOrCreateInstance(modalEl);
+                this.dependencies.history.ignoreDOMMutations(() =>
+                    modalEl.classList.remove("show")
+                );
+                modal._hideModal();
+            }
+        },
+        on_will_remove_handlers: (el) => {
+            if (el.matches(".s_popup")) {
+                this.dependencies.history.applyCustomMutation({
+                    apply: () => this.resetScrollbarForVisiblePopup(el),
+                    revert: () => this.hideScrollbarForVisiblePopup(el),
+                });
+            }
+        },
+        reveal_target_destination_processors: (targetEl) =>
+            targetEl.querySelector(".s_popup:scope > .modal") ?? targetEl,
+        reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
-        on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
     };
 
     setup() {
@@ -28,10 +67,13 @@ export class PopupVisibilityPlugin extends Plugin {
             // not close the popup as we want to allow edition of those buttons.
             if (ev.target.matches(".s_popup .js_close_popup:not(a, .btn)")) {
                 ev.stopPropagation();
-                const popupEl = ev.target.closest(".s_popup");
-                this.dependencies.visibility.hideElement(popupEl);
+                const modalEl = ev.target.closest(".s_popup").querySelector(".modal");
+                this.window.Modal.getOrCreateInstance(modalEl).hide();
             }
         });
+        const invalidateVisibility = this.dependencies.visibility.invalidateVisibility;
+        this.addDomListener(this.editable, "shown.bs.modal", invalidateVisibility);
+        this.addDomListener(this.editable, "hidden.bs.modal", invalidateVisibility);
         const history = this.dependencies.history;
         this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
             ? patch(this.window.Modal.prototype, {
@@ -53,33 +95,14 @@ export class PopupVisibilityPlugin extends Plugin {
         this.unpatchModal();
     }
 
-    onTargetShow(targetEl) {
-        // Check if the popup is within the editable, because it is cloned on
-        // save (see save plugin) and Bootstrap moves it if it is not within the
-        // document (see Bootstrap Modal's _showElement).
-        if (targetEl.matches(".s_popup") && this.editable.contains(targetEl)) {
-            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).show();
-        }
-    }
-
-    onTargetHide(targetEl, isCleaning) {
-        // Do not use Bootstrap to close the popup, as we are cleaning a
-        // clone of it. Instead, hide it manually (see `cleanForSave`).
-        if (targetEl.matches(".s_popup") && !isCleaning) {
-            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
-        }
-    }
-
     cleanForSave({ root: rootEl }) {
-        // Hide the popups manually, as we cannot rely on the `onTargetHide`
-        // flow since the cleaned popup is a clone and is not in the DOM.
-        for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
-            modalEl.parentElement.dataset.invisible = "1";
+        for (const modalEl of rootEl.querySelectorAll(".s_popup:not(:scope) > .modal.show")) {
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not.
             modalEl.classList.remove("show");
-            this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
-            this.window.Modal.getInstance(modalEl).dispose();
+            const modal = this.window.Modal.getOrCreateInstance(modalEl);
+            modal._hideModal();
+            modal.dispose();
         }
     }
 
@@ -89,17 +112,28 @@ export class PopupVisibilityPlugin extends Plugin {
      * @param {HTMLElement} targetEl the element
      */
     hidePopupsWithoutTarget(targetEl) {
-        const openPopupEls = this.editable.querySelectorAll(".s_popup:not([data-invisible='1']");
-        if (!openPopupEls.length) {
-            return;
-        }
-
+        const openPopupEls = this.editable.querySelectorAll(".s_popup:has(> .modal.show)");
         for (const popupEl of openPopupEls) {
             if (!popupEl.contains(targetEl)) {
-                this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
+                this.window.Modal.getOrCreateInstance(popupEl.querySelector(".modal")).hide();
             }
         }
-        this.config.updateInvisibleElementsPanel();
+    }
+
+    // BS Modal hide the scrollbar when shown and reset it when hidden.
+    // When the modal is removed, we reset the scrollbar here (if it is shown)
+    resetScrollbarForVisiblePopup(popupEl) {
+        if (popupEl.matches(".s_popup:has(.modal.show)")) {
+            new this.window.Scrollbar().reset();
+        }
+    }
+
+    // BS Modal hide the scrollbar when shown and reset it when hidden.
+    // When the modal is added without getting shown, we hide the scrollbar here
+    hideScrollbarForVisiblePopup(popupEl) {
+        if (popupEl.matches(".s_popup:has(.modal.show)")) {
+            new this.window.Scrollbar().hide();
+        }
     }
 }
 

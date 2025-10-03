@@ -1,16 +1,24 @@
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    insertText,
+    pasteHtml,
+    pasteText,
+    redo,
+    undo,
+} from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, delay, describe, expect, globals, press, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
+    addPlugin,
     defineWebsiteModels,
     getStructureSnippet,
     invisibleEl,
     setupSidebarBuilderForTranslation,
     setupWebsiteBuilder,
     websiteServiceInTranslateMode,
+    TestInvisibleElementPlugin,
 } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { uniqueId } from "@web/core/utils/functions";
@@ -47,6 +55,7 @@ test("hide snippets menu in translate mode", async () => {
 });
 
 test("invisible elements in translate mode", async () => {
+    addPlugin(TestInvisibleElementPlugin);
     await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
     expect(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element')"
@@ -54,13 +63,39 @@ test("invisible elements in translate mode", async () => {
 });
 
 test("show invisible elements in translate mode", async () => {
+    addPlugin(TestInvisibleElementPlugin);
     await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
 
-    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    expect(":iframe .s_invisible_el").toHaveStyle({ display: "none" });
     await contains(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye-slash"
     ).click();
-    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
+    expect(":iframe .s_invisible_el").not.toHaveStyle({ display: "none" });
+});
+
+test("undo/redo mutation inside hidden element in translate mode make the element visible", async () => {
+    addPlugin(TestInvisibleElementPlugin);
+    const { getEditor } = await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
+
+    expect(":iframe .s_invisible_el").toHaveStyle({ display: "none" });
+    await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+    expect(":iframe .s_invisible_el").not.toHaveStyle({ display: "none" });
+
+    const el = queryOne(":iframe .s_invisible_el");
+    setSelection({ anchorNode: el, anchorOffset: el.childNodes.length });
+    insertText(getEditor(), "s");
+
+    // undo show it
+    await contains(".o_we_invisible_entry i.fa-eye").click();
+    expect(":iframe .s_invisible_el").toHaveStyle({ display: "none" });
+    undo(getEditor());
+    expect(":iframe .s_invisible_el").not.toHaveStyle({ display: "none" });
+
+    // redo show it
+    await contains(".o_we_invisible_entry i.fa-eye").click();
+    expect(":iframe .s_invisible_el").toHaveStyle({ display: "none" });
+    redo(getEditor());
+    expect(":iframe .s_invisible_el").not.toHaveStyle({ display: "none" });
 });
 
 test("translate text", async () => {

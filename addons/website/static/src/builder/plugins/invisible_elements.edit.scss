@@ -1,0 +1,36 @@
+.o_snippet_mobile_invisible.o_snippet_override_invisible,
+.o_snippet_desktop_invisible.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        width: -webkit-fill-available;
+        width: -moz-available;
+        z-index: 100;
+        pointer-events: none;
+    }
+
+    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+        // e.g. Useful if "Height" option (50% or 100%) is enabled.
+        display: flex !important;
+    }
+
+    &::before {
+        right: 20px;
+        background-color: $o-we-color-accent;
+        font-size: 0px;
+        content: "."; // Content is mandatory.
+    }
+}
+
+.o_snippet_mobile_invisible.o_snippet_override_invisible::before {
+    height: 30px;
+    -webkit-mask: url("/html_builder/static/img/options/mobile_invisible.svg") no-repeat 100% 100%;
+}
+
+.o_snippet_desktop_invisible.o_snippet_override_invisible::before {
+    height: 50px;
+    -webkit-mask: url("/html_builder/static/img/options/desktop_invisible.svg") no-repeat 100% 100%;
+}

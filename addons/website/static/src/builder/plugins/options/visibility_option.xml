@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="website.DeviceVisibility">
-    <BuilderButton className="'o-hb-btn-has-img-icon btn-danger-color-active'" action="'toggleDeviceVisibility'" actionParam="'no_desktop'" preview="false" title.translate="Hide on Desktop" titleActive.translate="Show on Desktop">
+    <BuilderButton className="'o-hb-btn-has-img-icon btn-danger-color-active'" action="'toggleDeviceVisibility'" actionParam="'no_desktop'" title.translate="Hide on Desktop" titleActive.translate="Show on Desktop">
 		<Image src="'/html_builder/static/img/options/desktop_invisible.svg'" style="'width: 12px'"/>
 	</BuilderButton>
-    <BuilderButton className="'o-hb-btn-has-img-icon btn-danger-color-active'" action="'toggleDeviceVisibility'" actionParam="'no_mobile'" preview="false" title.translate="Hide on Mobile" titleActive.translate="Show on Mobile">
+    <BuilderButton className="'o-hb-btn-has-img-icon btn-danger-color-active'" action="'toggleDeviceVisibility'" actionParam="'no_mobile'" title.translate="Hide on Mobile" titleActive.translate="Show on Mobile">
 		<Image src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
 	</BuilderButton>
 </t>
@@ -41,7 +41,7 @@
     <t t-set="geoip_country_code" t-value="this.websiteSession.geoip_country_code"/>
     <BuilderRow label.translate="Visibility" expand="true" observeCollapseContent="true">
         <t t-call="website.DeviceVisibility"></t>
-        <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'" preview="false">
+        <BuilderSelect dataAttributeAction="'visibility'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="null">No condition</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'conditional'" classAction="'o_snippet_invisible'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
         </BuilderSelect>

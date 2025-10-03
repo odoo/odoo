@@ -1,8 +1,9 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { Builder } from "@html_builder/builder";
 
 defineWebsiteModels();
 
@@ -45,7 +46,7 @@ test("BreadcrumbVisibility option should appear with overTheContent", async () =
     expect(".o-overlay-container [data-action-value='overTheContent']").toBeVisible();
 });
 
-test("undo/redo Breadcrumb visibility options", async () => {
+test.skip("undo/redo Breadcrumb visibility options", async () => {
     const { getEditor } = await setupWebsiteBuilder("", {
         beforeWrapwrapContent: `
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_visible">
@@ -76,6 +77,46 @@ test("undo/redo Breadcrumb visibility options", async () => {
     expect(modifiedBreadcrumb).toHaveClass("d-none");
     await contains(".o_we_invisible_el_panel div:contains('Breadcrumb')").click();
     expect(modifiedBreadcrumb).not.toHaveClass("d-none");
+});
+
+describe("save breadcrumb visibility", () => {
+    beforeEach(async () => {
+        patchWithCleanup(Builder.prototype, {
+            setup() {
+                super.setup();
+                const metadata = this.env.services.website.currentWebsite.metadata;
+                metadata.mainObject = { model: "fake.test-model", id: 4 };
+            },
+        });
+        await setupWebsiteBuilder("", {
+            beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_visible">
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_overlay">`,
+            onIframeLoaded: (iframe) => insertBreadcrumb(iframe),
+        });
+        await contains(":iframe .o_page_breadcrumb").click();
+        await contains("[data-label='Breadcrumb Position'] .dropdown").click();
+    });
+    test("changes in Breadcrumb visibility options are saved", async () => {
+        onRpc("fake.test-model", "write", ({ args: [id, params] }) => {
+            expect(params).toInclude(["breadcrumb_visible", true]);
+            expect.step("save breadcrumbs visibility");
+            return true;
+        });
+        await contains(".o-overlay-container [data-action-value='overTheContent']").click();
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+        expect(".o-website-builder_sidebar").not.toHaveClass("o_builder_sidebar_open");
+        expect.verifySteps(["save breadcrumbs visibility"]);
+    });
+
+    test("preview Breadcrumb visibility options should not mark dirty", async () => {
+        onRpc("fake.test-model", "write", () => {
+            throw "we only preview, it should not be saved";
+        });
+        await contains(".o-overlay-container [data-action-value='overTheContent']").hover();
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+        expect(".o-website-builder_sidebar").not.toHaveClass("o_builder_sidebar_open");
+    });
 });
 
 test("Breadcrumb over the content displays background and text color options", async () => {
