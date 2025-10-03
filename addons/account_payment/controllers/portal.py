@@ -35,6 +35,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'amount_residual': discounted_amount,
                 'landing_route': invoice.get_portal_url(),
                 'transaction_route': f'/invoice/transaction/{invoice.id}',
+                'next_amount_to_pay': values.get('next_amount_to_pay'),
+                'installment_state': values.get('installment_state'),
             },
             access_token=access_token,
             **kwargs)
@@ -103,10 +105,23 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'payment_reference': batch_name,
                 'landing_route': '/my/invoices/',
                 'transaction_route': '/invoice/transaction/overdue',
+                'next_amount_to_pay': total_amount,
+                'installment_state': 'overdue'
             },
             **kwargs)
         values |= common_view_values
         return values
+
+    def _get_common_page_view_providers(self, invoices_data, invoice_company, partner_sudo, availability_report,
+                                        from_amount, **kwargs):
+        return request.env['payment.provider'].sudo()._get_compatible_providers(
+            invoice_company.id,
+            partner_sudo.id,
+            from_amount,
+            currency_id=invoices_data['currency'].id,
+            report=availability_report,
+            **kwargs,
+        )  # In sudo mode to read the fields of providers and partner (if logged out).
 
     def _get_common_page_view_values(self, invoices_data, access_token=None, **kwargs):
         logged_in = not request.env.user._is_public()
@@ -117,15 +132,35 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         invoice_company = invoices_data['company'] or request.env.company
 
         availability_report = {}
+        use_next_amount_to_pay = (invoices_data['installment_state'] in ('next', 'overdue') and
+                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay'])
+        total_amount = invoices_data['total_amount']
+        next_amount = invoices_data['next_amount_to_pay'] if use_next_amount_to_pay else None
         # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            invoice_company.id,
-            partner_sudo.id,
-            invoices_data['total_amount'],
-            currency_id=invoices_data['currency'].id,
-            report=availability_report,
-            **kwargs,
-        )  # In sudo mode to read the fields of providers and partner (if logged out).
+        providers_sudo = self._get_common_page_view_providers(
+            invoices_data,
+            invoice_company,
+            partner_sudo,
+            availability_report,
+            from_amount=total_amount,
+            **kwargs
+        )
+        providers_by_amount = {}
+        if use_next_amount_to_pay:
+            next_providers_sudo = self._get_common_page_view_providers(
+                invoices_data,
+                invoice_company,
+                partner_sudo,
+                availability_report,
+                from_amount=next_amount,
+                **kwargs
+            )
+            providers_by_amount = {
+                "total": [p.id for p in providers_sudo],
+                "next_amount": [p.id for p in next_providers_sudo]
+            }
+            providers_sudo |= next_providers_sudo
+
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
@@ -144,6 +179,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
+            'use_next_amount_to_pay': use_next_amount_to_pay,
+            'providers_by_amount': providers_by_amount
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
