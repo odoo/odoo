@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/core/common/record";
-import { prettifyMessageContent } from "@mail/utils/common/format";
+import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
@@ -239,6 +239,26 @@ export class Thread extends Record {
      * @type {number|'bottom'}
      */
     scrollTop = "bottom";
+    storeAsMenuThreads = fields.One("Store", {
+        compute() {
+            /** @type {import("models").Thread[]} */
+            const searchTerm = cleanTerm(this.store.discuss.searchTerm);
+            const visible =
+                this.displayToSelf ||
+                (this.needactionMessages.length > 0 && this.model !== "mail.box");
+            const matchesSearch = cleanTerm(this.displayName).includes(searchTerm);
+            if (!visible || !matchesSearch) {
+                return;
+            }
+            const tab = this.store.discuss.activeTab;
+            if (
+                tab === "notification" ||
+                this.store.tabToThreadType(tab).includes(this.channel_type)
+            ) {
+                return this.store;
+            }
+        },
+    });
     transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */

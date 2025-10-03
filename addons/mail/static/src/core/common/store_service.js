@@ -1,6 +1,6 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
-import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { reactive } from "@odoo/owl";
 
@@ -157,29 +157,13 @@ export class Store extends BaseStore {
 
     messagePostMutex = new Mutex();
 
-    menuThreads = fields.Many("Thread", {
-        /** @this {import("models").Store} */
-        compute() {
-            /** @type {import("models").Thread[]} */
-            const searchTerm = cleanTerm(this.discuss.searchTerm);
-            let threads = Object.values(this.Thread.records).filter(
-                (thread) =>
-                    (thread.displayToSelf ||
-                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
-                    cleanTerm(thread.displayName).includes(searchTerm)
-            );
-            const tab = this.discuss.activeTab;
-            if (tab !== "main") {
-                threads = threads.filter(({ channel_type }) =>
-                    this.tabToThreadType(tab).includes(channel_type)
-                );
-            } else if (tab === "main" && this.env.inDiscussApp) {
-                threads = threads.filter(({ channel_type }) =>
-                    this.tabToThreadType("mailbox").includes(channel_type)
-                );
-            }
-            return threads;
+    _menuThreads = fields.Many("Thread", {
+        inverse: "storeAsMenuThreads",
+        onUpdate() {
+            this.updateMenuThreadDebounced();
         },
+    });
+    menuThreads = fields.Many("Thread", {
         /**
          * @this {import("models").Store}
          * @param {import("models").Thread} thread1
@@ -195,6 +179,9 @@ export class Store extends BaseStore {
             }
             return thread2.localId > thread1.localId ? 1 : -1;
         },
+    });
+    updateMenuThreadDebounced = debounce(function () {
+        this.menuThreads = this._menuThreads;
     });
 
     /**
@@ -358,7 +345,14 @@ export class Store extends BaseStore {
      * @returns Thread types matching the given tab.
      */
     tabToThreadType(tab) {
-        return tab === "chat" ? ["chat", "group"] : [tab];
+        switch (tab) {
+            case "chat":
+                return ["chat", "group"];
+            case "inbox":
+                return ["mailbox"];
+            default:
+                return [tab];
+        }
     }
 
     handleClickOnLink(ev, thread) {
