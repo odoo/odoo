@@ -18,6 +18,21 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
         });
     }
 
+    /**
+     * @override
+     */
+    convertRecordToEvent(record) {
+        const isConfirmed = record.rawRecord?.state === 'confirm';
+        const editable = isConfirmed;
+        const durationEditable = isConfirmed && (record.rawRecord?.request_unit_hours || false);
+
+        return {
+            ...super.convertRecordToEvent(record),
+            editable,
+            durationEditable,
+        };
+    }
+
     getDayCellClassNames(info) {
         return [...super.getDayCellClassNames(info), ...this.mandatoryDays(info)];
     }
