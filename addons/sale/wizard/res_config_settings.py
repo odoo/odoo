@@ -130,4 +130,4 @@ class ResConfigSettings(models.TransientModel):
     # Unique name to avoid colliding with `website_payment`.
     def action_sale_start_payment_onboarding(self):
         menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
-        return self._start_payment_onboarding(menu and menu.id)
+        return self.company_id._start_payment_onboarding(menu and menu.id)
