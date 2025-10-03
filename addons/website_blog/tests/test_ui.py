@@ -56,11 +56,17 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
     def test_autocomplete_with_date(self):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        self.env.ref('website_blog.opt_sidebar_blog_index_archives').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
 
     def test_blog_context_and_social_media(self):
+        # Create a second blog to make the blog navigation appear (only shows when len(blogs) > 1)
+        self.env['blog.blog'].create({'name': 'Second Blog'})
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        # Sidebar markup only renders when at least one sidebar block is enabled (see opt_blog_sidebar_show).
+        # Follow Us provides the s_social_media snippet exercised by the tour.
+        self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_context_and_social_media", login="admin")
 
     def test_blog_social_image(self):
@@ -116,7 +122,10 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
 
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
+        self.env.ref("website_blog.opt_sidebar_blog_index_archives").active = True
         self.env.ref("website_blog.opt_blog_post_sidebar").active = True
+        # Post sidebar "Add some" / #edit-in-backend lives in the Tags block (empty tags, managers).
+        self.env.ref("website_blog.opt_blog_post_tags_display").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_sidebar_with_date_and_tag", login="admin")
 
         blog_tag = self.env.ref('website_blog.blog_tag_5', raise_if_not_found=False)
@@ -125,6 +134,8 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_1.write({'tag_ids': [(4, blog_tag.id)]})
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
+        # Activate tags in sidebar for blog_tags_with_date tour
+        self.env.ref("website_blog.opt_sidebar_blog_index_tags").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_tags_with_date", login="admin")
 
     def test_sidebar_tags_are_filtered_by_blog_scope(self):
@@ -156,6 +167,8 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
 
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        # Activate tags in sidebar
+        self.env.ref("website_blog.opt_sidebar_blog_index_tags").active = True
         response = self.url_open(blog.website_url)
 
         self.assertIn(category.name, response.text)

@@ -1,4 +1,4 @@
-import { scrollTo } from "@html_builder/utils/scrolling";
+import { scrollFixedOffset, scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
@@ -24,7 +24,25 @@ export class WebsiteBlog extends Interaction {
             {
                 "t-on-click.prevent": this.onShareArticleClick,
             },
+        ".o_sticky_reactive": {
+            "t-att-style": () => ({
+                top: `${this.position || this.defaultPosition}px`,
+                transition: "top 0.2s",
+            }),
+        },
     };
+
+    setup() {
+        this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;
+        this.position = this.defaultPosition;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(
+            this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this))
+        );
+    }
 
     onBlogSheetTriggerClick() {
         const navEl = this.el.querySelector(".o_wblog_category");
@@ -119,6 +137,37 @@ export class WebsiteBlog extends Interaction {
     async forumScrollAction(el, duration, callback) {
         await this.waitFor(scrollTo(el, { duration }));
         callback();
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptToHeaderChange() {
+        const position = this.defaultPosition + scrollFixedOffset(this.el.ownerDocument);
+        if (this.position !== position) {
+            this.position = position;
+            this.el.style.setProperty("--wblog-sticky-top", `${position}px`);
+            this.updateContent();
+        }
+    }
+
+    /**
+     * Checks if the layout is "Compact" list view or "Split" grid view (which
+     * require zero top default position).
+     * (by looking for specific elements that are only present in these views)
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isCompactListOrSplitGridView() {
+        return (
+            this.el.querySelector(".o_wblog_compact_list_month_header") !== null ||
+            this.el.querySelector(".o_wblog_split_grid_view_container") !== null
+        );
     }
 }
 

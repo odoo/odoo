@@ -6,31 +6,31 @@ For the moment we hack the contenteditable system so that the social media
 title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
 -->
 <template id="s_social_media" name="Social Media">
-    <div t-attf-class="s_social_media text-start o_not_editable #{_classes}" contenteditable="false">
+    <div t-attf-class="s_social_media text-start o_not_editable #{_classes}" contenteditable="false" t-attf-style="#{_style}" t-ignore="#{_ignore}">
         <h4 class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
         <a href="#" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_facebook"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_facebook"/>
         </a>
         <a href="#" class="s_social_media_twitter" target="_blank" aria-label="X">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_twitter"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_twitter"/>
         </a>
         <a href="#" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_linkedin"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_linkedin"/>
         </a>
         <a href="#" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_youtube-play"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_youtube-play"/>
         </a>
         <a href="#" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_instagram"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_instagram"/>
         </a>
         <a href="#" class="s_social_media_github" target="_blank" aria-label="GitHub">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_github"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_github"/>
         </a>
         <a href="#" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_tiktok"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_tiktok"/>
         </a>
         <a href="#" class="s_social_media_discord" target="_blank" aria-label="Discord">
-            <i class="oi rounded shadow-sm o_editable_media small_social_icon" data-icon="oi_discord"/>
+            <i t-attf-class="oi #{_icon_classes or 'rounded shadow-sm'} o_editable_media small_social_icon" data-icon="oi_discord"/>
         </a>
     </div>
 </template>
