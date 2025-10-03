@@ -10,16 +10,16 @@
                 <div class="pos-receipt-header">
                     <t t-if="!show_simplified_title">
                         <t t-if="order.config_id.l10n_gcc_dual_language_receipt">
-                            <span id="title_en" t-translation="off">Tax Invoice</span>
+                            <span id="title_en" t-translation="off">Tax Invoice</span> / 
                             <span id="title_ar" t-translation="off">الفاتورة الضريبية</span>
                         </t>
                         <t t-else="">
-                            <span name="title_simplified">Simplified Tax Invoice</span>
+                            <span name="title">Tax Invoice</span>
                         </t>
                     </t>
                     <t t-else="">
                         <t t-if="order.config_id.l10n_gcc_dual_language_receipt">
-                            <span name="title_simplified_en" t-translation="off">Simplified Tax Invoice</span>
+                            <span name="title_simplified_en" t-translation="off">Simplified Tax Invoice</span> / 
                             <span name="title_simplified_ar" t-translation="off">فاتورة ضريبية مبسطة</span>
                         </t>
                         <t t-else="">
