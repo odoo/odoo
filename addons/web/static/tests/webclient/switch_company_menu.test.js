@@ -248,7 +248,7 @@ test("multi company mode: log into a non selected company", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(cookie.get("cids")).toEqual("2-3-1");
+    expect(cookie.get("cids")).toEqual("2-1-3"); // 1-3 in that order, they are sorted
 });
 
 test("multi company mode: log into an already selected company", async () => {
