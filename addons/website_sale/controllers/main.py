@@ -1459,7 +1459,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         address.update(country_id=country.id, state_id=state_id)
 
     @route('/shop/update_address', type='jsonrpc', auth='public', website=True)
-    def shop_update_address(self, partner_id, address_type='billing', **kw):
+    def shop_update_address(self, partner_id, address_type='billing', use_delivery_as_billing=False, **kw):
         partner_id = int(partner_id)
 
         if not (order_sudo := request.cart):
@@ -1480,11 +1480,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         partner_fnames = set()
         if (
-            address_type == 'billing'
+            (use_delivery_as_billing or address_type == 'billing')
             and partner_sudo != order_sudo.partner_invoice_id
         ):
             partner_fnames.add('partner_invoice_id')
-        elif (
+        if (
             address_type == 'delivery'
             and partner_sudo != order_sudo.partner_shipping_id
         ):

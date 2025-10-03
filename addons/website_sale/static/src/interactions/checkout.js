@@ -74,14 +74,9 @@ export class Checkout extends Interaction {
         const selectedPartnerId = newAddress.dataset.partnerId;
         await this.waitFor(this.updateAddress(addressType, selectedPartnerId));
         // A delivery address is changed.
-        if (addressType === 'delivery' || this.billingContainer.dataset.deliveryAddressDisabled) {
-            if (this.billingContainer.dataset.deliveryAddressDisabled) {
-                // If a delivery address is disabled in the settings, use a billing address as
-                // a delivery one.
-                await this.waitFor(this.updateAddress('delivery', selectedPartnerId));
-            }
+        if (addressType === 'delivery') {
             if (this.useDeliveryAsBillingToggle?.checked) {
-                await this.waitFor(this._selectMatchingBillingAddress(selectedPartnerId));
+                this._selectMatchingBillingAddressCard(selectedPartnerId);
             }
             const deliveryFormHtml = await this.waitFor(rpc('/shop/delivery_methods'));
             // The delivery methods are regenerated below, so we need to stop and start interactions
@@ -122,8 +117,9 @@ export class Checkout extends Interaction {
         if (useDeliveryAsBilling) {
             this.billingContainer.classList.add('d-none');  // Hide the billing address row.
             const selectedDeliveryAddress = this._getSelectedAddress('delivery');
+            this._selectMatchingBillingAddressCard(selectedDeliveryAddress.dataset.partnerId)
             await this.waitFor(
-                this._selectMatchingBillingAddress(selectedDeliveryAddress.dataset.partnerId)
+                this.updateAddress('billing', selectedDeliveryAddress.dataset.partnerId)
             );
         } else {
             this._disableMainButton();
@@ -432,10 +428,9 @@ export class Checkout extends Interaction {
      * @param selectedPartnerId - The partner id of the selected delivery address.
      * @return {void}
      */
-    async _selectMatchingBillingAddress(selectedPartnerId) {
+    _selectMatchingBillingAddressCard(selectedPartnerId) {
         const previousAddress = this._getSelectedAddress('billing');
         this._tuneDownAddressCard(previousAddress);
-        await this.waitFor(this.updateAddress('billing', selectedPartnerId));
         const billingAddress = this.el.querySelector(
             `.card[data-partner-id="${selectedPartnerId}"][data-address-type="billing"]`
         );
@@ -450,7 +445,11 @@ export class Checkout extends Interaction {
      * @return {void}
      */
     async updateAddress(addressType, partnerId) {
-        await rpc('/shop/update_address', {address_type: addressType, partner_id: partnerId});
+        await rpc('/shop/update_address', {
+            address_type: addressType,
+            partner_id: partnerId,
+            use_delivery_as_billing: this.useDeliveryAsBillingToggle?.checked
+        });
     }
 
     // #=== DELIVERY FLOW ===#

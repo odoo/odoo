@@ -660,6 +660,37 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             "Tax should no longer change after order confirmation",
         )
 
+    def test_shop_update_address_with_use_delivery_as_billing(self):
+        user = self.user_portal
+        user_partner = user.partner_id
+
+        so = self._create_so(partner_id=user_partner.id)
+
+        user_address = self.env['res.partner'].create([
+            {
+                'name': 'Test Address',
+                'street': '215 Vine St',
+                'city': 'Scranton',
+                'zip': '18503',
+                'country_id': self.country_us.id,
+                'state_id': self.country_us_state_id,
+                'phone': '+1 555-555-5555',
+                'email': 'admin@yourcompany.example.com',
+                'parent_id': user_partner.id,
+                'type': 'other',
+            }
+        ])
+
+        website = self.website.with_user(user)
+        with MockRequest(website.env, website=website, sale_order_id=so.id):
+            self.WebsiteSaleController.shop_update_address(
+                partner_id=user_address.id,
+                address_type='delivery',
+                use_delivery_as_billing=True
+            )
+            self.assertEqual(so.partner_shipping_id, user_address)
+            self.assertEqual(so.partner_invoice_id, user_address)
+
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
         imported_user = self.env['res.users'].create({
