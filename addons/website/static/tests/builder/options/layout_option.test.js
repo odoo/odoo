@@ -4,6 +4,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
+    toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
@@ -37,7 +38,7 @@ test("switch to mobile mode should update number of columns", async () => {
     expect("[data-label='Layout'] .dropdown-toggle").toBeVisible();
     expect("[data-label='Layout'] .dropdown-toggle").toHaveText("3");
 
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect("[data-label='Layout'] .dropdown-toggle").toHaveText("1");
 });
 

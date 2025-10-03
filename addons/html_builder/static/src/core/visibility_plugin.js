@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
-import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef { Object } VisibilityShared
@@ -30,10 +29,7 @@ export class VisibilityPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_mobile_preview_clicked_handlers: withSequence(
-            10,
-            this.onMobilePreviewClicked.bind(this)
-        ),
+        on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
         clean_for_save_processors: this.cleanForSaveVisibility.bind(this),
@@ -128,7 +124,7 @@ export class VisibilityPlugin extends Plugin {
         }
     }
 
-    onMobilePreviewClicked() {
+    onMobileViewSwitched() {
         const deviceInvisibleEls = this.editable.querySelectorAll(deviceInvisibleSelector);
         const currentContainerTargetEl = this.dependencies["builderOptions"].getTarget();
         for (const deviceInvisibleEl of [...deviceInvisibleEls]) {

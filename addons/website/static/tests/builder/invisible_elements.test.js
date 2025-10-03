@@ -14,6 +14,7 @@ import {
     defineWebsiteModels,
     invisibleEl,
     setupWebsiteBuilder,
+    toggleMobilePreview,
     waitForSnippetDialog,
 } from "./website_helpers";
 
@@ -104,7 +105,7 @@ test("mobile and desktop invisible elements panel", async () => {
         "Popup1",
         "Popup3",
     ]);
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
         "Popup1",
         "Popup2",
@@ -117,9 +118,9 @@ test("mobile and desktop option container", async () => {
     `);
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(".options-container").toBeVisible();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".options-container").toBeVisible();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".options-container").not.toHaveCount();
 });
 
@@ -147,7 +148,7 @@ test("keep the option container of a visible snippet even if there are hidden sn
     `);
     await contains(":iframe #my_el").click();
     expect(".options-container").toBeVisible();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".options-container").toBeVisible();
 });
 
@@ -166,6 +167,6 @@ test("invisible elements efficiency", async () => {
         <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
     `);
     expect.verifySteps(["update invisible panel"]);
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect.verifySteps(["update invisible panel"]);
 });

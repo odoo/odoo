@@ -8,6 +8,7 @@ import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
 
@@ -185,7 +186,7 @@ test("Background position overlay layout", async () => {
     };
 
     await testLayout(false);
-    await contains("button[data-action=mobile]").click();
+    await toggleMobilePreview();
     await testLayout(true);
 });
 

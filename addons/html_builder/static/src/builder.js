@@ -7,7 +7,6 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    onWillUpdateProps,
     status,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -34,7 +33,8 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 ]);
 
 /**
- * @typedef {(() => void)[]} on_mobile_preview_clicked_handlers
+ * @typedef {((args: {isMobileView: boolean}) => ())[]} on_mobile_view_switched_handlers
+ * called when the screen size switches between mobile and desktop view
  * @typedef {(() => void)[]} on_dom_updated_handlers
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
  */
@@ -82,7 +82,7 @@ export class Builder extends Component {
         });
         this.invisibleElementsPanelState = useState({
             invisibleEls: [],
-            invisibleSelector: this.getInvisibleSelector(),
+            invisibleSelector: "",
         });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
@@ -140,8 +140,9 @@ export class Builder extends Component {
                     on_dom_updated_handlers: () => {
                         this.triggerDomUpdated();
                     },
-                    on_mobile_preview_clicked_handlers: withSequence(20, () => {
+                    on_mobile_view_switched_handlers: withSequence(20, () => {
                         this.triggerDomUpdated();
+                        this.updateInvisibleEls();
                     }),
                     on_will_save_handlers: () => {
                         const snippetMenuEl = this.builder_sidebarRef.el;
@@ -245,6 +246,19 @@ export class Builder extends Component {
                     ev.stopPropagation();
                 }
             };
+
+            // Use a resize observer to trigger `on_mobile_view_switched_handlers`
+            // when the view size switches between desktop and mobile view
+            let isMobileView = this.editor.config.isMobileView(this.editableEl);
+            this.resizeObserver = new ResizeObserver(() => {
+                const wasMobileView = isMobileView;
+                isMobileView = this.editor.config.isMobileView(this.editableEl);
+                if (wasMobileView !== isMobileView) {
+                    this.editor.trigger("on_mobile_view_switched_handlers", { isMobileView });
+                }
+            });
+            this.resizeObserver.observe(this.editableEl);
+
             this.editor.attachTo(this.editableEl);
         });
 
@@ -256,6 +270,7 @@ export class Builder extends Component {
             editShadow: this.editShadow.bind(this),
         });
         onWillDestroy(() => {
+            this.resizeObserver.disconnect();
             this.editor.destroy();
         });
 
@@ -269,14 +284,6 @@ export class Builder extends Component {
         onWillUnmount(() => {
             this.editableEl.removeEventListener("dragstart", this.onDragStart);
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.isMobile !== this.props.isMobile) {
-                this.updateInvisibleEls(nextProps.isMobile);
-                this.invisibleElementsPanelState.invisibleSelector = this.getInvisibleSelector(
-                    nextProps.isMobile
-                );
-            }
-        });
     }
     async triggerDomUpdated() {
         this.lastTrigerUpdateId++;
@@ -287,12 +294,6 @@ export class Builder extends Component {
         await Promise.allSettled(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
-    }
-
-    getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
     }
 
     /**
@@ -337,12 +338,16 @@ export class Builder extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        this.editor.resources["on_mobile_preview_clicked_handlers"].forEach((handler) => handler());
     }
 
-    updateInvisibleEls(isMobile = this.props.isMobile) {
+    updateInvisibleEls() {
+        const isMobile = this.editor.config.isMobileView(this.editor.editable);
+        const invisibleSelector = `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
+        this.invisibleElementsPanelState.invisibleSelector = invisibleSelector;
         this.invisibleElementsPanelState.invisibleEls = [
-            ...this.editor.editable?.querySelectorAll(this.getInvisibleSelector(isMobile)) || [],
+            ...this.editor.editable.querySelectorAll(invisibleSelector),
         ];
     }
 

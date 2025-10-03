@@ -538,3 +538,11 @@ export async function insertStructureSnippet(editor, snippetName) {
     parentEl.append(snippetEl);
     editor.shared.history.addStep();
 }
+
+export async function toggleMobilePreview() {
+    await contains("button[data-action='mobile']").click();
+    // The click above will cause a resize of the iframe containing the builder.
+    // Resize observers that react to that change and update the ui accordingly
+    // will need one more animation frame to have their changes reflected
+    await animationFrame();
+}

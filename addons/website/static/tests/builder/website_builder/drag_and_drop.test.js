@@ -4,6 +4,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
+    toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import {
     dummyBase64Img,
@@ -131,7 +132,7 @@ test("Drag and drop an image should drag the closest draggable element but not i
 
 test("A column in mobile view should not be draggable", async () => {
     await setupWebsiteBuilderWithSnippet("s_text_image");
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
 
     await contains(":iframe section.s_text_image").click();
     expect(".overlay .o_overlay_options .o_move_handle").toHaveClass("o_draggable");
@@ -219,8 +220,7 @@ test("Dragging an inner content from the sidebar in mobile view should not make 
     await waitForEndOfOperation();
     expect(":iframe .s_alert").toHaveCount(0);
 
-    // Toggle the mobile preview.
-    await contains(".o-snippets-top-actions [data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".o_website_preview").toHaveClass("o_is_mobile");
     dragUtils = await contains("#snippet_content [name='Alert'] .o_snippet_thumbnail").drag();
     expect(":iframe .oe_grid_zone").toHaveCount(0);
@@ -246,7 +246,7 @@ test("Dragging an inner content from the page should not make grid dropzones app
     await waitForEndOfOperation();
 
     // Check in mobile view.
-    await contains(".o-snippets-top-actions [data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".o_website_preview").toHaveClass("o_is_mobile");
     const { cancel } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_grid_zone").toHaveCount(0);

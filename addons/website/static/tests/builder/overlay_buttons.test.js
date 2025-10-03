@@ -12,6 +12,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
+    toggleMobilePreview,
 } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -204,12 +205,12 @@ test("Refresh the overlay buttons when toggling the mobile preview", async () =>
     );
 
     await contains(":iframe .g-col-lg-4").click();
-    await contains("[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".overlay .o_send_back, .overlay .o_bring_front").toHaveCount(0);
     expect(".overlay .fa-angle-up").toHaveCount(1);
     expect(".overlay .fa-angle-down").toHaveCount(1);
 
-    await contains("[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".overlay .o_send_back").toHaveCount(1);
     expect(".overlay .o_bring_front").toHaveCount(1);
     expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);

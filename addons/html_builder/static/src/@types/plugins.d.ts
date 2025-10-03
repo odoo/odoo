@@ -19,7 +19,7 @@ declare module "plugins" {
     import { default_shape_providers, image_shape_groups_providers, on_shape_computed_handlers } from "@html_builder/plugins/image/image_shape_option_plugin";
     import { background_filter_target_providers, target_element_providers, on_bg_image_hidden_handlers } from "@html_builder/plugins/background_option/background_image_option_plugin";
     import { is_draggable_predicates, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
-    import { lower_panel_entries, on_mobile_preview_clicked_handlers, on_dom_updated_handlers } from "@html_builder/builder";
+    import { lower_panel_entries, on_dom_updated_handlers, on_mobile_view_switched_handlers } from "@html_builder/builder";
     import { on_target_revealed_handlers } from "@html_builder/sidebar/invisible_elements_panel";
     import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_processors } from "@html_builder/snippets/add_snippet_dialog";
@@ -68,6 +68,7 @@ declare module "plugins" {
         on_bg_image_hidden_handlers: on_bg_image_hidden_handlers;
         on_cloned_handlers: on_cloned_handlers;
         on_current_options_containers_changed_handlers: on_current_options_containers_changed_handlers;
+        on_mobile_view_switched_handlers: on_mobile_view_switched_handlers;
         on_dom_updated_handlers: on_dom_updated_handlers;
         on_element_arrow_moved_handlers: on_element_arrow_moved_handlers;
         on_element_dragged_handlers: on_element_dragged_handlers;
@@ -77,7 +78,6 @@ declare module "plugins" {
         on_element_move_handlers: on_element_move_handlers;
         on_element_out_dropzone_handlers: on_element_out_dropzone_handlers;
         on_element_over_dropzone_handlers: on_element_over_dropzone_handlers;
-        on_mobile_preview_clicked_handlers: on_mobile_preview_clicked_handlers;
         on_prepare_drag_handlers: on_prepare_drag_handlers;
         on_removed_handlers: on_removed_handlers;
         on_replicated_handlers: on_replicated_handlers;
