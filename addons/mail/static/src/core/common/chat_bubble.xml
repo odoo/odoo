@@ -28,6 +28,7 @@
                 <t t-call="mail.message_preview_prefix">
                     <t t-set="message" t-value="message"/>
                 </t>
+                <MessageSeenIndicator t-if="message.showSeenIndicator(thread)" message="message" thread="thread" />
                 <t t-if="message.hasOnlyAttachments">
                     <i class="fa me-1" t-att-class="message.previewIcon"/>
                     <t t-out="message.previewText" />

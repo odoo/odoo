@@ -1016,6 +1016,47 @@ test("Attachment-only message preview shows file names (3 files)", async () => {
     });
 });
 
+test("render message preview with message seen indicator in messaging menu", async () => {
+    const pyEnv = await startServer();
+    const [thomas, arthur] = pyEnv["res.partner"].create([
+        { name: "Thomas Shelby" },
+        { name: "Arthur Shelby" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Small Heath",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: thomas }),
+            Command.create({ partner_id: arthur }),
+        ],
+        channel_type: "group",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Peaky Blinders!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
+        fetched_message_id: messageId,
+        seen_message_id: false,
+    });
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", thomas],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: messageId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem-text", {
+        text: "You: Peaky Blinders!",
+    });
+    await contains(".o-mail-MessageSeenIndicator[title='Seen by Thomas Shelby']");
+});
+
 test("single preview for channel if it has unread and needaction messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });

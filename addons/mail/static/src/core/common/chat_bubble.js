@@ -1,4 +1,5 @@
 import { ImStatus } from "@mail/core/common/im_status";
+import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
 import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 
@@ -9,6 +10,7 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 class ChatBubblePreview extends Component {
+    static components = { MessageSeenIndicator };
     static props = ["chatWindow", "close"];
     static template = "mail.ChatBubblePreview";
 

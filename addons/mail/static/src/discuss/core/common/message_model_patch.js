@@ -67,5 +67,12 @@ const messagePatch = {
             mentionedRoles,
         });
     },
+    /**
+     * @param {Thread} thread the thread being viewed
+     * @returns {boolean}
+     */
+    showSeenIndicator(thread) {
+        return this.isSelfAuthored && thread?.hasSeenFeature;
+    },
 };
 patch(Message.prototype, messagePatch);
