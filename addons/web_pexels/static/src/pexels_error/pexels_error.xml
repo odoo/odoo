@@ -1,0 +1,9 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="web_pexels.PexelsError">
+        <div class="alert alert-info w-100">
+            <h4><t t-esc="props.title"/></h4>
+            <p><t t-esc="props.subtitle"/></p>
+            <PexelsCredentials t-if="props.showCredentials" submitCredentials="props.submitCredentials" hasCredentialsError="props.hasCredentialsError"/>
+        </div>
+    </t>
+</templates>

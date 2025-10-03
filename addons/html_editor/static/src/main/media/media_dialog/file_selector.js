@@ -117,6 +117,7 @@ export class FileSelectorControlPanel extends Component {
         urlWarningTitle: { type: String, optional: true },
         useMediaLibrary: { type: Boolean, optional: true },
         useUnsplash: { type: Boolean, optional: true },
+        usePexels: { type: Boolean, optional: true },
     };
     setup() {
         this.state = useState({
