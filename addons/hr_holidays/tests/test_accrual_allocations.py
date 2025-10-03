@@ -29,6 +29,42 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'officer',
             'request_unit': 'hour',
         })
+        cls.leave_type_day = cls.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'request_unit': 'day',
+        })
+        cls.accrual_plan_monthly_end = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'allocation',
+            'level_ids': [Command.create({
+                'start_count': 0,
+                'added_value_type': 'day',
+                'added_value': 2,
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'cap_accrued_time': False,
+            })],
+        })
+        cls.accrual_plan_monthly_end_max_leaves = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'allocation',
+            'level_ids': [Command.create({
+                'start_count': 0,
+                'added_value_type': 'day',
+                'added_value': 2,
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'cap_accrued_time': True,
+                'maximum_leave': 10,
+            })],
+        })
 
     def setAllocationCreateDate(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date
@@ -2851,3 +2887,192 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
 
             self.assertAlmostEqual(allocation.number_of_days_display, 4, places=2, msg="Accrued days should be 4 (4 days for Nov).")
+
+    def test_modify_cap_accrued_days(self):
+        """
+        Context: allocation with a 1 level accrual plan which
+            - Carry all days over
+            - Accrues monthly at the end of the period
+        Assert the virtual remaining leaves of the employee drop to `maximum_leave` when setting `cap_accrued_time` of the accrual plan
+        to `True` and the virtual remaining leaves was bigger than `maximum_leave`
+        """
+        with freeze_time('2020-01-01'):
+            accrued_days = 2
+            accrual_plan = self.accrual_plan_monthly_end
+            leave_type_day = self.leave_type_day
+            allocation = self._create_test_allocation(leave_type_day, '2020-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        with freeze_time('2022-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(leave_type_day, 24 * accrued_days, self.employee_emp)
+            self.assert_virtual_leaves_equal(leave_type_day, 25 * accrued_days, self.employee_emp, date='2022-02-01')
+
+            accrual_plan.level_ids.update({'cap_accrued_time': True, 'maximum_leave': 21})
+            self.assert_virtual_leaves_equal(leave_type_day, 21, self.employee_emp, date='2022-02-01')
+
+        with freeze_time('2022-02-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(leave_type_day, 21, self.employee_emp)
+
+    def test_modify_cap_accrued_days_with_leaves(self):
+        """
+        Context: allocation with a 1 level accrual plan which
+            - Carry all days over
+            - Accrues monthly at the end of the period
+        Assert the virtual remaining leaves of the employee drop to `maximum_leave` when setting `cap_accrued_time` of the accrual plan
+        to `True` and the virtual remaining leaves was bigger than `maximum_leave`
+        Adds leaves in the computation (only difference with `test_modify_cap_accrued_days`)
+        """
+        with freeze_time('2020-01-01'):
+            accrued_days = 2
+            accrual_plan = self.accrual_plan_monthly_end
+            leave_type_day = self.leave_type_day
+            allocation = self._create_test_allocation(leave_type_day, '2020-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        with freeze_time('2022-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(leave_type_day, before_leave_days := 24 * accrued_days, self.employee_emp)
+            # 35 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2022-01-03', '2022-02-18')
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2022-03-07', '2022-03-18')
+
+        with freeze_time('2022-03-01'):
+            allocation._update_accrual()
+            # before_leave_days - 35 days (first leave) + 2 months accrual
+            self.assert_virtual_leaves_equal(leave_type_day, after_leave := before_leave_days - 35 + 2 * accrued_days, self.employee_emp)
+            accrual_plan.level_ids.update({'cap_accrued_time': True, 'maximum_leave': 21})
+            self.assert_virtual_leaves_equal(leave_type_day, min(after_leave, 21), self.employee_emp)
+
+        with freeze_time('2022-04-01'):
+            allocation._update_accrual()
+            after_leave2 = min(after_leave, 21) - 10
+            self.assert_virtual_leaves_equal(leave_type_day, min(after_leave2 + accrued_days, 21), self.employee_emp)
+            self.assert_virtual_leaves_equal(leave_type_day, min(after_leave2 + 12 * accrued_days, 21), self.employee_emp, date='2023-03-01')
+
+    def _test_get_allocation_actual_future_leaves(self, add_future_leave):
+        """
+        Context: allocation with a 1 level accrual plan which
+            - Carry all days over
+            - Accrues monthly at the end of the period
+            - Has maximum 10 leaves
+        Assert the virtual remaining leaves of the employee allocation are not frozen while taking multiple leaves
+        and using `get_allocation_data`.
+        :param add_future_leave: adds another leave in the future (which shouldn't be taken into account) or not
+        """
+        with freeze_time('2019-01-01'):
+            accrual_plan = self.accrual_plan_monthly_end_max_leaves
+            leave_type_day = self.leave_type_day
+            allocation = self._create_test_allocation(leave_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        with freeze_time('2022-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(leave_type_day, 10, self.employee_emp)
+
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2022-01-03', '2022-01-14')
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2023-01-02', '2023-01-13')
+            if add_future_leave:
+                # 10 days leaves that shouldn't be taken into account in this test
+                self._take_leave_and_validate(self.employee_emp, leave_type_day, '2025-10-06', '2025-10-17')
+
+        with freeze_time('2023-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(leave_type_day, 10, self.employee_emp)
+
+        with freeze_time('2023-02-01'):
+            allocation._update_accrual()
+            # 10 days - 10 days (leave) + 2 days (1 month accrual)
+            self.assert_virtual_leaves_equal(leave_type_day, 2, self.employee_emp)
+
+    def test_get_allocation_actual_future_leaves1(self):
+        self._test_get_allocation_actual_future_leaves(add_future_leave=False)
+
+    def test_get_allocation_actual_future_leaves2(self):
+        self._test_get_allocation_actual_future_leaves(add_future_leave=True)
+
+    def test_get_allocation_future_leaves(self):
+        """
+        Context: allocation with a 1 level accrual plan which
+            - Carry all days over
+            - Accrues monthly at the end of the period
+            - Has maximum 10 leaves
+        Assert the virtual remaining leaves of the employee allocation are not frozen while taking multiple leaves
+        and using `get_allocation_data` with the `target_date` parameter set in the future.
+        """
+        with freeze_time('2019-01-01'):
+            accrual_plan = self.accrual_plan_monthly_end_max_leaves
+            leave_type_day = self.leave_type_day
+            allocation = self._create_test_allocation(leave_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        with freeze_time('2022-01-01'):
+            allocation._update_accrual()
+            # Max number of leaves for the only level of the accrual plan is 10
+            self.assert_virtual_leaves_equal(leave_type_day, 10, self.employee_emp)
+            self.assert_virtual_leaves_equal(leave_type_day, 10, self.employee_emp, date='2022-02-01')
+
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2022-01-03', '2022-01-14')
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2023-01-02', '2023-01-13')
+
+            # 10 days leaves that shouldn't be taken into account in this test
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2025-10-06', '2025-10-17')
+            # Right after spending all the 10 leaves ('2023-01-02' -> '2023-01-13')
+            # 10 days - 10 days (leave) + 2 days (1 month accrual)
+            self.assert_virtual_leaves_equal(leave_type_day, 2, self.employee_emp, date='2023-02-01')
+
+    def _test_get_allocation_future_leaves_regular(self, regular_before):
+        """
+        Context:
+            1) Allocation with a 1 level accrual plan which
+                - Carry all days over
+                - Accrues monthly at the end of the period
+                - Has maximum 10 leaves
+            2) Regular allocation
+        Assert the virtual remaining leaves of the employee allocation are not frozen while taking multiple leaves
+        and using `get_allocation_data` with the `target_date` parameter set in the future.
+        :param regular_before: set the `date_from` of the regular allocation before the `date_from` of the accrual allocation
+        """
+        leave_type_day = self.leave_type_day
+        if regular_before:
+            with freeze_time('2018-01-01'):
+                self._create_test_allocation(leave_type_day, '2018-01-01', self.employee_emp, number_of_days=10)
+
+        with freeze_time('2019-01-01'):
+            accrual_plan = self.accrual_plan_monthly_end_max_leaves
+            accrual_allocation = self._create_test_allocation(leave_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            accrual_allocation.action_validate()
+
+        if not regular_before:
+            with freeze_time('2020-01-01'):
+                self._create_test_allocation(leave_type_day, '2020-01-01', self.employee_emp, number_of_days=10)
+
+        with freeze_time('2022-01-01'):
+            accrual_allocation._update_accrual()
+            # Max number of leaves for the only level of the accrual plan is 10 + 10 for the regular allocation
+            self.assert_virtual_leaves_equal(leave_type_day, 20, self.employee_emp)
+            self.assert_virtual_leaves_equal(leave_type_day, 20, self.employee_emp, date='2022-02-01')
+
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2022-01-03', '2022-01-14')
+            # 10 days leave
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2023-01-02', '2023-01-13')
+            self.assert_virtual_leaves_equal(leave_type_day, 12, self.employee_emp, date='2023-02-01')
+
+            # 10 days leaves that shouldn't be taken into account in this test
+            self._take_leave_and_validate(self.employee_emp, leave_type_day, '2023-10-06', '2023-10-17')
+            # Right after spending all the 10 leaves ('2023-01-02' -> '2023-01-13')
+            # 10 days - 10 days (leave) + 2 days (1 month accrual)
+            self.assert_virtual_leaves_equal(leave_type_day, 12, self.employee_emp, date='2023-02-01')
+
+    def test_get_allocation_future_leaves_regular1(self):
+        self._test_get_allocation_future_leaves_regular(regular_before=False)
+
+    def test_get_allocation_future_leaves_regular2(self):
+        self._test_get_allocation_future_leaves_regular(regular_before=False)
