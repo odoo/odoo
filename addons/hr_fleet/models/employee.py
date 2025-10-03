@@ -86,4 +86,11 @@ class HrEmployee(models.Model):
 class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
+    employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_user")
     mobility_card = fields.Char(readonly=True)
+
+    def action_open_employee_cars(self):
+        return self.env['hr.employee'].browse(self.ids).action_open_employee_cars()
+
+    def _compute_employee_cars_count(self):
+        self._compute_from_employee('employee_cars_count')
