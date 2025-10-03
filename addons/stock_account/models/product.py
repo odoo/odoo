@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
             ('periodic', 'Periodic (at closing)'),
             ('real_time', 'Perpetual (at invoicing)'),
         ],
-        compute='_compute_valuation',
+        compute='_compute_valuation', search='_search_valuation',
     )
     lot_valuated = fields.Boolean(
         string="Valuation by Lot/Serial",
@@ -39,6 +39,13 @@ class ProductTemplate(models.Model):
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
+
+    def _search_valuation(self, operator, value):
+        if operator != '=' or value not in ['periodic', 'real_time']:
+            raise UserError(_("Invalid search on valuation"))
+        domain_categ = Domain([('categ_id.property_valuation', operator, value)])
+        domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
+        return domain_company | domain_categ
 
     @api.depends('tracking')
     def _compute_lot_valuated(self):
