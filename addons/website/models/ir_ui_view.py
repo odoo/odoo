@@ -3,6 +3,8 @@
 import logging
 import uuid
 import werkzeug
+from lxml import etree, html
+
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, MissingError
@@ -519,11 +521,123 @@ class IrUiView(models.Model):
 
     @api.model
     def _snippet_save_view_values_hook(self):
-        res = super()._snippet_save_view_values_hook()
+        res = {}
         website_id = self.env.context.get('website_id')
         if website_id:
             res['website_id'] = website_id
         return res
+
+    @api.model
+    def _get_snippet_addition_view_key(self, template_key, key):
+        return '%s.%s' % (template_key, key)
+
+    def _find_available_name(self, name, used_names):
+        attempt = 1
+        candidate_name = name
+        while candidate_name in used_names:
+            attempt += 1
+            candidate_name = f"{name} ({attempt})"
+        return candidate_name
+
+    @api.model
+    def save_snippet(self, name, arch, template_key, snippet_key, thumbnail_url):
+        """
+        Saves a new snippet arch so that it appears with the given name when
+        using the given snippets template.
+
+        :param name: the name of the snippet to save
+        :param arch: the html structure of the snippet to save
+        :param template_key: the key of the view regrouping all snippets in
+            which the snippet to save is meant to appear
+        :param snippet_key: the key (without module part) to identify
+            the snippet from which the snippet to save originates
+        :param thumbnail_url: the url of the thumbnail to use when displaying
+            the snippet to save
+        """
+        app_name = template_key.split('.')[0]
+        snippet_key = '%s_%s' % (snippet_key, uuid.uuid4().hex)
+        full_snippet_key = '%s.%s' % (app_name, snippet_key)
+
+        # find available name
+        current_website = self.env['website'].browse(self.env.context.get('website_id'))
+        website_domain = Domain(current_website.website_domain())
+        used_names = self.search(Domain('name', '=like', '%s%%' % name) & website_domain).mapped('name')
+        name = self._find_available_name(name, used_names)
+
+        # html to xml to add '/' at the end of self closing tags like br, ...
+        arch_tree = html.fromstring(arch)
+        attributes = self._get_cleaned_non_editing_attributes(arch_tree.attrib.items())
+        for attr in arch_tree.attrib:
+            if attr in attributes:
+                arch_tree.attrib[attr] = attributes[attr]
+            else:
+                del arch_tree.attrib[attr]
+        xml_arch = etree.tostring(arch_tree, encoding='utf-8')
+        new_snippet_view_values = {
+            'name': name,
+            'key': full_snippet_key,
+            'type': 'qweb',
+            'arch': xml_arch,
+        }
+        new_snippet_view_values.update(self._snippet_save_view_values_hook())
+        custom_snippet_view = self.create(new_snippet_view_values)
+        model = self.env.context.get('model')
+        field = self.env.context.get('field')
+        if field == 'arch':
+            # Special case for `arch` which is a kind of related (through a
+            # compute) to `arch_db` but which is hosting XML/HTML content while
+            # being a char field.. Which is then messing around with the
+            # `get_translation_dictionary` call, returning XML instead of
+            # strings
+            field = 'arch_db'
+        res_id = self.env.context.get('resId')
+        if model and field and res_id:
+            self._copy_field_terms_translations(
+                self.env[model].browse(int(res_id)),
+                field,
+                custom_snippet_view,
+                'arch_db',
+            )
+
+        custom_section = self.search([('key', '=', template_key)])
+        snippet_addition_view_values = {
+            'name': name + ' Block',
+            'key': self._get_snippet_addition_view_key(template_key, snippet_key),
+            'inherit_id': custom_section.id,
+            'type': 'qweb',
+            'arch': """
+                <data inherit_id="%s">
+                    <xpath expr="//snippets[@id='snippet_custom']" position="inside">
+                        <t t-snippet="%s" t-thumbnail="%s"/>
+                    </xpath>
+                </data>
+            """ % (template_key, full_snippet_key, thumbnail_url),
+        }
+        snippet_addition_view_values.update(self._snippet_save_view_values_hook())
+        self.create(snippet_addition_view_values)
+        return name
+
+    @api.model
+    def rename_snippet(self, name, view_id, template_key):
+        snippet_view = self.browse(view_id)
+        key = snippet_view.key.split('.')[1]
+        custom_key = self._get_snippet_addition_view_key(template_key, key)
+        snippet_addition_view = self.search([('key', '=', custom_key)])
+        if snippet_addition_view:
+            snippet_addition_view.name = name + ' Block'
+        snippet_view.name = name
+
+    @api.model
+    def delete_snippet(self, view_id, template_key):
+        snippet_view = self.browse(view_id)
+        key = snippet_view.key.split('.')[1]
+        custom_key = self._get_snippet_addition_view_key(template_key, key)
+        snippet_addition_view = self.search([('key', '=', custom_key)])
+        (snippet_addition_view | snippet_view).unlink()
+
+    # --------------------------------------------------------------------------
+    # Languages
+    # --------------------------------------------------------------------------
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
         return super(IrUiView, self.with_context(no_cow=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
