@@ -8,7 +8,7 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
     var testUtils = require('web.test_utils');
 
     const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
-    const isMobileChrome = barcodeService.isMobileChrome;
+    const isWorkaround = barcodeService.isMobileChrome || isBrowserFirefox;
     var triggerEvent = testUtils.dom.triggerEvent;
 
     function triggerKeyDown(char, target = document.body) {
@@ -37,7 +37,7 @@ odoo.define('barcodes.barcode_mobile_tests', function (require) {
         },
         after() {
             barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
-            barcodeService.isMobileChrome = isMobileChrome;
+            barcodeService.isMobileChrome = isWorkaround;
         },
     }, function () {
 

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserChrome, isBrowserFirefox, isMobileOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
@@ -107,7 +107,7 @@ export const barcodeService = {
             }
         }
 
-        function mobileChromeHandler(ev) {
+        function workaroundHandler(ev) {
             if (ev.key === "Unidentified") {
                 return;
             }
@@ -119,12 +119,12 @@ export const barcodeService = {
         }
 
         whenReady(() => {
-            const isMobileChrome = barcodeService.isMobileChrome;
-            if (isMobileChrome) {
+            const isWorkaround = barcodeService.isMobileChrome || isBrowserFirefox;
+            if (isWorkaround) {
                 barcodeInput = makeBarcodeInput();
                 document.body.appendChild(barcodeInput);
             }
-            const handler = isMobileChrome ? mobileChromeHandler : keydownHandler;
+            const handler = isWorkaround ? workaroundHandler : keydownHandler;
             document.body.addEventListener('keydown', handler);
         });
 
