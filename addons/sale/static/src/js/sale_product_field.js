@@ -237,6 +237,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _onProductUpdate() {} // event_booth_sale, event_sale, sale_renting
 
     onEditConfiguration() {
+        if (!this.props.record.data.product_template_id) {
+            this.notification.add(_t("Please select a product before editing its configuration."), { type: "warning" });
+            return;
+        }
         if (this.isConfigurableLine) {
             this._editLineConfiguration();
         } else if (this.isCombo) {
