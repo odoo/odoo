@@ -6,6 +6,7 @@ import {
 import { patch } from '@web/core/utils/patch';
 import { rpc } from '@web/core/network/rpc';
 import { SelectMenu } from '@web/core/select_menu/select_menu';
+import { _t } from '@web/core/l10n/translation';
 
 import {
     LocationSelectorDialog
@@ -20,6 +21,9 @@ patch(LocationSelectorDialog, {
         ...LocationSelectorDialog.props,
         productId: { type: Number, optional: true },
         isProductPage: { type: Boolean, optional: true },
+        countryCode: { type: String, optional: true},
+        carrierId: Number,
+        carrierType: String,
     },
 });
 
@@ -82,13 +86,15 @@ patch(LocationSelectorDialog.prototype, {
      *
      * @return {Boolean} Whether we need to show tax recomputation warning.
      */
-    get showTaxRecomputationWarning() {
-        return (
+    get taxRecomputationWarning() {
+        if (
             !this.props.isProductPage &&
             this.isClickAndCollect &&
             this.props.countryCode !== '' &&
             this.props.countryCode !== this.state.selectedCountry.code
-        );
+        )
+            return _t("This address may require to recompute taxes.");
+        return ""
     },
 
     /**

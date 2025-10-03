@@ -156,13 +156,16 @@ export class Checkout extends Interaction {
             countryCode,
             carrierId,
             carrierType,
+            pickupLocationData,
         } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
+        const selectedLocationData = JSON.parse(pickupLocationData)
+
         this.services.dialog.add(LocationSelectorDialog, {
             zipCode: zipCode,
             selectedLocationId: locationId,
             isFrontend: true,
-            countryCode: countryCode,
+            countryCode: selectedLocationData.country_code ?? countryCode,
             carrierId: parseInt(carrierId),
             carrierType: carrierType,
             save: async location => {

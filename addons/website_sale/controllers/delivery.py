@@ -141,7 +141,8 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         order_sudo = request.cart
-        if order_sudo.carrier_id.delivery_type != 'in_store':
+        # If no country specified on the location selector set in `website_sale_collect`
+        if not kwargs.get('country'):
             kwargs['country'] = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(zip_code, **kwargs)
 

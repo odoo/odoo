@@ -39,11 +39,6 @@
                     />
                     <t t-else="">
                         <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
-                        <p
-                            t-elif="!this.state.zipcode"
-                            class="p-3 fw-bold"
-                            t-out="missingZipcodeMessage"
-                        />
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden" t-out="loadingMessage"/>
@@ -77,11 +72,6 @@
                     />
                     <t t-else="">
                         <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
-                        <p
-                            t-elif="!this.state.zipcode"
-                            class="p-3 fw-bold"
-                            t-out="missingZipcodeMessage"
-                        />
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden" t-out="loadingMessage"/>
@@ -97,8 +87,6 @@
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
-                        taxRecomputationWarning="taxRecomputationWarning"
-                        showTaxRecomputationWarning="showTaxRecomputationWarning"
                     />
                 </section>
             </div>
@@ -114,12 +102,6 @@
                         t-on-click="validateSelection"
                         t-out="validationButtonLabel"
                     />
-                    <div
-                        class="alert alert-warning mt-3"
-                        t-if="showShouldTaxRecomputationWarning"
-                    >
-                        <span t-out="taxRecomputationWarning"/>
-                    </div>
                 </div>
             </t>
         </Dialog>
@@ -129,7 +111,7 @@
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
             <input
                 id="o_location_selector_search"
-                class="search-query form-control oe_search_box border-0 px-2 text-bg-light"
+                class="search-query form-control oe_search_box border-0 text-bg-light"
                 t-model.lazy="this.state.zipCode"
                 t-att-placeholder="postalCodePlaceholder"
             />
@@ -137,7 +119,7 @@
                 t-on-click="debouncedSearchButton"
                 aria-label="Search"
                 title="Search"
-                class="btn btn-light ps-2"
+                class="btn btn-light"
             >
                 <i class="oi oi-search"/>
             </button>

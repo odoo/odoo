@@ -64,6 +64,29 @@ class SaleOrder(models.Model):
         else:
             self._compute_warehouse_id()
 
+    def _get_pickup_partner_address(self, zip_code=None, country=None, **kwargs):
+        """ Override of `website_sale` to include the selected country from the location selector.
+
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: res.partner
+        """
+        if self.carrier_id.delivery_type == 'in_store':
+            if country and zip_code:
+                return self.env['res.partner'].new({
+                    'active': False,
+                    'country_id': country.id,
+                    'zip': zip_code,
+                })
+            if country:
+                return self.env['res.partner'].new({
+                    'active': False,
+                    'country_id': country.id,
+                })
+
+        return super()._get_pickup_partner_address(zip_code, country, **kwargs)
+
     def _get_shop_warehouse_id(self):
         """Override of `website_sale_stock` to consider the chosen warehouse."""
         self.ensure_one()

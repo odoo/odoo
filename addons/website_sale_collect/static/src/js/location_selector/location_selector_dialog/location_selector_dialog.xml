@@ -9,6 +9,17 @@
                 separator=" || "
             />
         </button>
+        <button id="submit_location_small" position="after">
+            <div
+                class="alert alert-warning mt-3"
+                t-if="taxRecomputationWarning"
+            >
+                <span t-out="taxRecomputationWarning"/>
+            </div>
+        </button>
+        <MapContainer position="attributes">
+            <attribute name="taxRecomputationWarning">taxRecomputationWarning</attribute>
+        </MapContainer>
     </t>
 
     <t t-inherit="delivery.locationSelector.searchbar" t-inherit-mode="extension">

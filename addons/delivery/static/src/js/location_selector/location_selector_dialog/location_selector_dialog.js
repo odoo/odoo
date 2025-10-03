@@ -68,9 +68,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     async _getLocations() {
-        if (this.state.zipCode)
-            return await rpc(this.getLocationUrl, this._getLocationsParams());
-        return { pickup_locations: [] }
+        return await rpc(this.getLocationUrl, this._getLocationsParams());
     }
 
     /**
@@ -119,15 +117,6 @@ export class LocationSelectorDialog extends Component {
      */
     get showListView() {
         return this.state.locations.length !== 1;
-    }
-
-    /**
-     * To be overriden
-     *
-     * @return {Boolean} Whether we need to show tax recomputation warning.
-     */
-    get showTaxRecomputationWarning() {
-        return false;
     }
 
     /**
@@ -207,16 +196,8 @@ export class LocationSelectorDialog extends Component {
         return _t("No result");
     }
 
-    get missingZipcodeMessage() {
-        return _t("Please enter your postal code to search for locations in your area");
-    }
-
     get loadingMessage() {
         return _t("Loading...");
-    }
-
-    get taxRecomputationWarning() {
-        return _t("This address may require to recompute taxes.");
     }
 
     /**
