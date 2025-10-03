@@ -49,6 +49,7 @@ export class StockValuationReportController {
             this.data.initial_balance.lines.push({
                 label: account.display_name,
                 value: data.value,
+                account_id: accountId,
             });
             this.data.initial_balance.accounts.push(...data.accounts);
         }
@@ -60,6 +61,7 @@ export class StockValuationReportController {
             this.data.ending_stock.lines.push({
                 label: account?.display_name,
                 value: data.value,
+                account_id: accountId,
             });
             this.data.ending_stock.accounts.push(...data.accounts);
         }

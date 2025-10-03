@@ -232,6 +232,8 @@ class ResCompany(models.Model):
             if not account_variation and account.account_stock_expense_id:
                 account_variation = account.account_stock_expense_id
             if not account_variation:
+                account_variation = self.env.company.expense_account_id
+            if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
             balance -= extra_balance.get(account.id, 0)
