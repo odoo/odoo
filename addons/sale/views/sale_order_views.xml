@@ -190,6 +190,27 @@
         </field>
     </record>
 
+    <record id="view_orders_to_invoice_tree" model="ir.ui.view">
+        <field name="name">sale.order.list (To Invoice)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="before">
+                <field name="amount_to_invoice"
+                       sum="Amount to invoice"
+                       widget="monetary"
+                       decoration-bf="1"
+                       decoration-info="invoice_status == 'to invoice'"
+                       optional="show"/>
+            </field>
+            <field name="amount_total" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="sale_order_list_upload" model="ir.ui.view">
         <field name="name">sale.order.tree.upload (orders)</field>
         <field name="model">sale.order</field>
@@ -960,6 +981,7 @@
                     <filter name="customer" string="Customer" context="{'group_by': 'partner_id'}"/>
                     <filter name="order_month" string="Order Date" context="{'group_by': 'date_order'}"/>
                     <filter name="preferred_payment_method_line_groupby" string="Payment Method" context="{'group_by': 'preferred_payment_method_line_id'}"/>
+                    <filter name="currency" string="Currency" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                 </group>
             </search>
         </field>
@@ -1181,6 +1203,13 @@
             or check every order and invoice them one by one.
             </p>
         </field>
+    </record>
+
+    <record id="action_orders_to_invoice_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="sale.view_orders_to_invoice_tree"/>
+        <field name="act_window_id" ref="action_orders_to_invoice"/>
     </record>
 
     <record id="action_orders_upselling" model="ir.actions.act_window">
