@@ -645,8 +645,8 @@ class HolidaysType(models.Model):
     def _get_carried_over_days_expiration_data(self, allocations, target_date):
         fake_allocations = self.env['hr.leave.allocation']
         for allocation in allocations:
-            fake_allocations |= self.env['hr.leave.allocation'].with_context(default_date_from=target_date).new(origin=allocation)
-        fake_allocations.sudo().with_context(default_date_from=target_date)._process_accrual_plans(target_date, log=False)
+            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
         carried_over_days_expiration_data = {
             fake_allocation._origin:
             {

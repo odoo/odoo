@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
@@ -61,3 +62,14 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
+
+    def assert_virtual_leaves_equal(self, leave_type, value, employee, date=None, digits=False):
+        allocation_data = leave_type.get_allocation_data(employee, date)
+        if not date:
+            date = fields.Date.today()
+        if digits:
+            self.assertAlmostEqual(allocation_data[employee][0][1]['remaining_leaves'], value,
+                digits, f"Virtual leaves for date '{date}' are incorrect.")
+        else:
+            self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
+                value, f"Virtual leaves for date '{date}' are incorrect.")
