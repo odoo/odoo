@@ -266,7 +266,7 @@ export class PaymentScreen extends Component {
             return;
         }
         const linesToRemove = this.currentOrder.lines.filter((line) => {
-            const rounding = line.product_id.uom_id.rounding;
+            const rounding = line.get_unit().rounding;
             const decimals = Math.max(0, Math.ceil(-Math.log10(rounding)));
             return floatIsZero(line.qty, decimals);
         });

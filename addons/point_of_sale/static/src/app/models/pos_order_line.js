@@ -64,7 +64,7 @@ export class PosOrderline extends Base {
 
     get quantityStr() {
         let qtyStr = "";
-        const unit = this.product_id.uom_id;
+        const unit = this.get_unit();
 
         if (unit) {
             if (unit.rounding) {
@@ -235,7 +235,7 @@ export class PosOrderline extends Base {
                 };
             }
         }
-        const unit = this.product_id.uom_id;
+        const unit = this.get_unit();
         if (unit) {
             if (unit.rounding) {
                 const decimals = this.models["decimal.precision"].find(
@@ -266,7 +266,7 @@ export class PosOrderline extends Base {
     }
 
     get_quantity_str_with_unit() {
-        const unit = this.product_id.uom_id;
+        const unit = this.get_unit();
         if (this.is_pos_groupable()) {
             return this.quantityStr + " " + unit.name;
         } else {
@@ -346,9 +346,8 @@ export class PosOrderline extends Base {
     }
 
     is_pos_groupable() {
-        const unit_groupable = this.product_id.uom_id
-            ? this.product_id.uom_id.is_pos_groupable
-            : false;
+        const unit = this.get_unit();
+        const unit_groupable = unit ? unit.is_pos_groupable : false;
         return unit_groupable && !this.isPartOfCombo();
     }
 
@@ -647,11 +646,12 @@ export class PosOrderline extends Base {
     }
 
     getDisplayData() {
+        const unit = this.get_unit();
         return {
             productName: this.get_full_product_name(),
             price: this.getPriceString(),
             qty: this.get_quantity_str(),
-            unit: this.product_id.uom_id ? this.product_id.uom_id.name : "",
+            unit: unit ? unit.name : "",
             unitPrice: formatCurrency(this.get_unit_display_price(), this.currency),
             oldUnitPrice: this.get_old_unit_display_price()
                 ? formatCurrency(this.get_old_unit_display_price(), this.currency)
@@ -724,7 +724,7 @@ export class PosOrderline extends Base {
         return this.quantityStr;
     }
     get_unit() {
-        return this.product_id.uom_id;
+        return this.product_id.get_unit();
     }
     // return the product of this orderline
     get_product() {

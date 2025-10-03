@@ -20,8 +20,12 @@ export class ProductProduct extends Base {
         this.cachedPricelistRules = {};
     }
 
+    get_unit() {
+        return this.uom_id;
+    }
+
     isAllowOnlyOneLot() {
-        const productUnit = this.uom_id;
+        const productUnit = this.get_unit();
         return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
     }
 
