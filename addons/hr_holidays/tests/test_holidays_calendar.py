@@ -102,3 +102,82 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(leave_half.meeting_id.allday, False)
         self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
         self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
+
+    @users('bastien')
+    def test_timeoff_calendar_resize_leave_duration(self):
+        """Test resizing a leave to adjust its duration in the calendar view."""
+        self.employee_hrmanager.tz = 'UTC'
+        self.env.user.tz = 'UTC'
+        hours_leave_type = self.env['hr.work.entry.type'].create(
+            {'name': 'Hours Leave', 'requires_allocation': False, 'request_unit': 'hour', 'code': 'HOUR100'},
+        )
+        today = date.today()
+        sunday = today - timedelta(days=(today.weekday() + 1) % 7)
+        hourly_leave = self.env['hr.leave'].create(
+            {
+                'name': 'Hourly Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'work_entry_type_id': hours_leave_type.id,
+                'request_date_from': sunday,
+                'request_date_to': sunday,
+                'request_hour_from': 8,
+                'request_hour_to': 12,
+            },
+        )
+
+        # Resize the leave to end at 14:00
+        self.start_tour('/odoo', 'timeoff_calendar_resize_leave_duration_tour', login='bastien')
+
+        assert hourly_leave.request_date_from == sunday
+        assert hourly_leave.request_date_to == sunday
+        assert hourly_leave.request_hour_from == 8
+        assert hourly_leave.request_hour_to == 14
+
+    @users('bastien')
+    def test_timeoff_calendar_move_leave_to_next_day(self):
+        """Test dragging and dropping leaves to reschedule them in the calendar view."""
+        self.employee_hrmanager.tz = 'UTC'
+        self.env.user.tz = 'UTC'
+        leave_type = self.env['hr.work.entry.type'].create(
+            {'name': 'Full Day Leave', 'requires_allocation': False, 'request_unit': 'day', 'code': 'DAY100'},
+        )
+        today = date.today()
+        sunday = today - timedelta(days=(today.weekday() + 1) % 7)
+        tuesday = sunday + timedelta(days=2)
+        thursday = sunday + timedelta(days=4)
+
+        confirmed_leave, approved_leave, refused_leave = self.env['hr.leave'].create([
+            {
+                'name': 'Sunday Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'work_entry_type_id': leave_type.id,
+                'request_date_from': sunday,
+                'request_date_to': sunday,
+            },
+            {
+                'name': 'Tuesday Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'work_entry_type_id': leave_type.id,
+                'request_date_from': tuesday,
+                'request_date_to': tuesday,
+            },
+            {
+                'name': 'Thursday Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'work_entry_type_id': leave_type.id,
+                'request_date_from': thursday,
+                'request_date_to': thursday,
+            },
+        ])
+        approved_leave.action_approve()
+        refused_leave.action_refuse()
+
+        # Moving all leaves to the next day
+        self.start_tour('/odoo', 'timeoff_calendar_move_leave_to_next_day_tour', login='bastien')
+
+        assert confirmed_leave.request_date_from == sunday + timedelta(days=1)
+        assert confirmed_leave.request_date_to == sunday + timedelta(days=1)
+        assert approved_leave.request_date_from == tuesday
+        assert approved_leave.request_date_to == tuesday
+        assert refused_leave.request_date_from == thursday
+        assert refused_leave.request_date_to == thursday
