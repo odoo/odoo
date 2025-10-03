@@ -1192,6 +1192,21 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_qty': 16, 'qty_producing': 16, 'state': 'cancel'},
         ])
 
+    def test_subcontracting_unbuild_warning(self):
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 3
+                move.quantity = 3
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        subcontract = picking_receipt._get_subcontract_production()
+        error_message = "You can't unbuild a subcontracted Manufacturing Order."
+        with self.assertRaisesRegex(UserError, error_message):
+            subcontract.button_unbuild()
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
