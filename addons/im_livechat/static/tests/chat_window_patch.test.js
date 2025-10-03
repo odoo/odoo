@@ -155,8 +155,11 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     const [livechatId, channelId] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,

@@ -6,6 +6,15 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
+            inverse: "threadAsAgentHistory",
+        });
+        this.livechat_channel_member_history_ids = fields.Many(
+            "im_livechat.channel.member.history"
+        );
+        this.livechat_customer_history_ids = fields.Many("im_livechat.channel.member.history", {
+            inverse: "threadAsCustomerHistory",
+        });
         this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("res.partner");
         this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
@@ -77,5 +86,37 @@ patch(Thread.prototype, {
             return persona.user_livechat_username;
         }
         return super.getPersonaName(persona);
+    },
+    get displayName() {
+        if (this.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
+            return super.displayName;
+        }
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            const agents = this.correspondents.filter((c) => c.livechat_member_type === "agent");
+            if (agents.length) {
+                return agents.map((a) => this.getPersonaName(a.partner_id)).join(", ");
+            }
+            if (this.livechat_agent_history_ids.length) {
+                return this.livechat_agent_history_ids
+                    .map((h) => this.getPersonaName(h.partner_id))
+                    .join(", ");
+            }
+        }
+        if (this.self_member_id?.livechat_member_type === "agent") {
+            const visitors = this.correspondents.filter(
+                (c) => c.livechat_member_type === "visitor"
+            );
+            if (visitors.length) {
+                return visitors
+                    .map((v) => (v.partner_id ? v.partner_id.name : v.guest_id.name))
+                    .join(", ");
+            }
+            if (this.livechat_customer_history_ids.length) {
+                return this.livechat_customer_history_ids
+                    .map((h) => (h.partner_id ? h.partner_id.name : h.guest_id.name))
+                    .join(", ");
+            }
+        }
+        return super.displayName;
     },
 });

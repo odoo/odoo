@@ -15,6 +15,7 @@ declare module "models" {
     export interface ChatbotScriptStepAnswer extends ChatbotScriptStepAnswerClass {}
     export interface ChatbotStep extends ChatbotStepClass {}
     export interface LivechatChannel extends LivechatChannelClass {}
+    export interface LivechatChannelMemberHistory extends LivechatChannelMemberHistoryClass {}
     export interface LivechatChannelRule extends LivechatChannelRuleClass {}
     export interface LivechatConversationTag extends LivechatConversationTagClass {}
     export interface LivechatExpertise extends LivechatExpertiseClass {}
@@ -39,6 +40,7 @@ declare module "models" {
         "chatbot.script.step": StaticMailRecord<ChatbotScriptStep, typeof ChatbotScriptStepClass>;
         ChatbotStep: StaticMailRecord<ChatbotStep, typeof ChatbotStepClass>;
         "im_livechat.channel": StaticMailRecord<LivechatChannel, typeof LivechatChannelClass>;
+        "im_livechat.channel.member.history": StaticMailRecord<LivechatChannelMemberHistory, typeof LivechatChannelMemberHistoryClass>;
         "im_livechat.channel.rule": StaticMailRecord<LivechatChannelRule, typeof LivechatChannelRuleClass>;
         "im_livechat.conversation.tag": StaticMailRecord<LivechatConversationTag, typeof LivechatConversationTagClass>;
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
@@ -59,6 +61,7 @@ declare module "models" {
         "chatbot.script.step": ChatbotScriptStep;
         ChatbotStep: ChatbotStep;
         "im_livechat.channel": LivechatChannel;
+        "im_livechat.channel.member.history": LivechatChannelMemberHistory;
         "im_livechat.channel.rule": LivechatChannelRule;
         "im_livechat.conversation.tag": LivechatConversationTag;
         "im_livechat.expertise": LivechatExpertise;

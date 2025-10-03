@@ -244,10 +244,14 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
             channel_data = Store().add(discuss_channel).get_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
+            agent_history_id = discuss_channel.livechat_channel_member_history_ids.filtered(
+                lambda h: h.livechat_member_type == "agent"
+            ).id
             channels, message_items = (
                 [
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
+                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
@@ -322,6 +326,36 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     ),
                                 }
                             ),
+                        },
+                    },
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel": [
+                                {
+                                    "id": discuss_channel.id,
+                                    "livechat_channel_member_history_ids": [
+                                        ["ADD", [agent_history_id]]
+                                    ],
+                                },
+                            ],
+                            "im_livechat.channel.member.history": [
+                                {
+                                    "channel_id": {"id": discuss_channel.id,
+                                                   "model": "discuss.channel"},
+                                    "guest_id": False,
+                                    "id": agent_history_id,
+                                    "livechat_member_type": "agent",
+                                    "partner_id": self.partner_employee.id,
+                                }
+                            ],
+                            "res.partner": [
+                                {
+                                    "id": self.partner_employee.id,
+                                    "name": "Ernest Employee",
+                                    "user_livechat_username": False,
+                                }
+                            ],
                         },
                     },
                     {

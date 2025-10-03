@@ -24,24 +24,30 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
             const operator = this.env.user;
             const country = visitor.country_id ? ResCountry.browse(visitor.country_id) : undefined;
             const visitor_name = `Visitor #${visitor.id}${country ? ` (${country.name})` : ""}`;
-            const membersToAdd = [Command.create({ partner_id: serverState.partnerId })];
-            if (visitor.partner_id) {
-                membersToAdd.push(Command.create({ partner_id: visitor.partner_id }));
-            }
             const livechatId = DiscussChannel.create({
-                channel_member_ids: membersToAdd,
+                channel_member_ids: [
+                    Command.create({
+                        partner_id: serverState.partnerId,
+                        livechat_member_type: "agent",
+                    }),
+                ],
                 channel_type: "livechat",
                 livechat_operator_id: serverState.partnerId,
                 name: `${visitor_name}, ${
                     operator.livechat_username ? operator.livechat_username : operator.name
                 }`,
             });
-            if (!visitor.partner_id) {
+            const visitorMemberData = { livechat_member_type: "visitor" };
+            if (visitor.partner_id) {
+                visitorMemberData.partner_id = visitor.partner_id;
+            } else {
                 const guestId = MailGuest.create({ name: `Visitor #${visitor.id}` });
-                DiscussChannel.write([livechatId], {
-                    channel_member_ids: [Command.create({ guest_id: guestId })],
-                });
+                visitorMemberData.guest_id = guestId;
             }
+
+            DiscussChannel.write([livechatId], {
+                channel_member_ids: [Command.create(visitorMemberData)],
+            });
             const [partner] = ResPartner.read(serverState.partnerId);
             const channel = DiscussChannel.browse(livechatId);
             // notify operator
