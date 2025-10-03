@@ -2643,3 +2643,38 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_max_usage_partner_with_point",
             login="pos_user",
         )
+
+    def test_min_qty_points_awarded(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 10,
+                'reward_point_mode': 'money',
+                'minimum_qty': 5,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 1,
+                'required_points': 5,
+            })],
+        })
+
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': program.id,
+            'partner_id': test_partner.id,
+            'points': 100,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_min_qty_points_awarded",
+            login="pos_user",
+        )
+        self.assertEqual(loyalty_card.points, 90)
