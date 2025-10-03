@@ -4014,3 +4014,63 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 28, "The carryover did not expire yet so the remaining leaves should be 28")
         allocation_data = leave_type.get_allocation_data(self.employee_emp, '2031-09-01')
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "The carryover expired after 6 month so the remaining leaves should be 23")
+
+    def test_frozen_available_days_accrual_plan(self):
+        def take_leave(start, end):
+            leave = self.env['hr.leave'].create({
+                'name': 'Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_day.id,
+                'request_date_from': start,
+                'request_date_to': end,
+            })
+            leave.action_validate()
+
+        test_date = '2022-01-01'
+        with freeze_time(test_date):
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'end',
+                'carryover_date': 'allocation',
+                'level_ids': [Command.create({
+                    'start_count': 0,
+                    'added_value_type': 'day',
+                    'added_value': 2,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'all',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 10,
+                })],
+            })
+            leave_type_day = self.env['hr.leave.type'].create({
+                'name': 'Test Leave Type',
+                'time_type': 'leave',
+                'requires_allocation': 'yes',
+                'allocation_validation_type': 'no_validation',
+                'request_unit': 'day',
+            })
+            with Form(self.env['hr.leave.allocation'], 'hr_holidays.hr_leave_allocation_view_form_manager') as allocation_form:
+                allocation_form.name = 'Accrual allocation for employee'
+                allocation_form.allocation_type = 'accrual'
+                allocation_form.accrual_plan_id = accrual_plan
+                allocation_form.employee_id = self.employee_emp
+                allocation_form.holiday_status_id = leave_type_day
+                allocation_form.date_from = '2019-01-01'
+            allocation = allocation_form.record
+            allocation.action_approve()
+
+            self.assertEqual(leave_type_day.get_allocation_data(self.employee_emp)[self.employee_emp][0][1]['remaining_leaves'], 10)
+            take_leave('2021-11-01', '2021-11-11')
+
+        test_date = '2023-01-01'
+        with freeze_time(test_date):
+            allocation._update_accrual()
+            self.assertEqual(leave_type_day.get_allocation_data(self.employee_emp)[self.employee_emp][0][1]['remaining_leaves'], 10)
+            take_leave('2022-11-01', '2022-11-11')
+
+        test_date = '2024-01-01'
+        with freeze_time(test_date):
+            allocation._update_accrual()
+            self.assertEqual(leave_type_day.get_allocation_data(self.employee_emp, '2024-02-01')[self.employee_emp][0][1]['remaining_leaves'], 10)
+            take_leave('2024-02-01', '2024-02-11')
