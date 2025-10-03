@@ -724,3 +724,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_editing_awaits_navigation(self):
         self.start_tour("/", "website_editing_awaits_navigation", login="admin")
+
+    def test_hiding_sidebar_header(self):
+        self.start_tour("/", "hide_sidebar_header", login="admin")
