@@ -18,6 +18,23 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
         });
     }
 
+    /**
+     * @override
+     */
+    get options() {
+        return {
+            ...super.options,
+            eventDataTransform: (eventData) => {
+                const record = (eventData.id && this.props.model.records[eventData.id])
+                if (record && !record.rawRecord?.request_unit_hours) {
+                    // disable resizing if full-day leave or half-day leave
+                    eventData.durationEditable = false;
+                }
+                return eventData;
+            },
+        }
+    }
+
     getDayCellClassNames(info) {
         return [...super.getDayCellClassNames(info), ...this.mandatoryDays(info)];
     }
