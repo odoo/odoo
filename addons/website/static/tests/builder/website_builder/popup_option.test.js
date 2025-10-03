@@ -2,7 +2,6 @@ import { beforeEach, delay, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
-    addPlugin,
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
@@ -13,7 +12,6 @@ import {
     waitForEndOfOperation,
     getSnippetStructure,
 } from "@html_builder/../tests/helpers";
-import { Plugin } from "@html_editor/plugin";
 import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { unformat } from "@html_editor/../tests/_helpers/format";
@@ -198,34 +196,6 @@ describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.
     beforeEach(async () => {
-        addPlugin(
-            class extends Plugin {
-                static id = "ignore_d-none_on_s_popup";
-                resources = {
-                    // NOTE: this plugin is here as a workaround to make the
-                    // test pass, because (at the time of this commit):
-                    // - the website_edit service is removed for the tests, thus
-                    //   the patch that wraps interaction's functions in
-                    //   `ignoreDOMMutation` is not applied
-                    // - the interaction SharedPopup adds and removes `d-none`
-                    //   on `.s_popup` element to track the visibility of the
-                    //   modal
-                    // - one of the tests here plays with the visibility of the
-                    //   modal, and verifies that it did not add mutations
-                    // TODO: once the service website_edit runs during the
-                    // tests, this plugin should be removed
-                    /**
-                     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} record
-                     * @returns { boolean | undefined}
-                     */
-                    is_classlist_mutation_savable_predicates: (record) => {
-                        if (record.target.matches?.(".s_popup") && record.className === "d-none") {
-                            return false;
-                        }
-                    },
-                };
-            }
-        );
         builder = await setupWebsiteBuilder(hiddenPopup, {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
@@ -235,7 +205,6 @@ describe("Popup options: popup in page before edit", () => {
     test("editing a page with a popup snippet doesn't automatically display it", async () => {
         await advanceTime(5000);
         expect(":iframe .s_popup .modal").not.toBeVisible();
-        expect(":iframe .s_popup").toHaveClass("d-none");
     });
 
     test("closing s_popup with the X button updates the invisible elements panel", async () => {
@@ -245,12 +214,10 @@ describe("Popup options: popup in page before edit", () => {
         await waitFor(":iframe .s_popup .modal", { visible: true });
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
-        expect(":iframe .s_popup").not.toHaveClass("d-none");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             contains(":iframe .s_popup button.js_close_popup").click()
         );
         expect(":iframe .s_popup .modal").not.toBeVisible();
-        expect(":iframe .s_popup").toHaveClass("d-none");
         await animationFrame();
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
         // Ensure that no mutations were registered in the `domObserver` plugin.
@@ -547,7 +514,6 @@ describe("Popup visibility", () => {
         await animationFrame();
         expect(":iframe body").not.toHaveClass("modal-open");
         expect(".o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility_off");
-        expect(":iframe .s_popup").toHaveClass("d-none");
         expect(":iframe .s_popup > .modal").toHaveStyle("display: none");
         expect(":iframe .s_popup > .modal").not.toHaveClass("show");
 
@@ -563,7 +529,6 @@ describe("Popup visibility", () => {
         await delay(100);
         expect(":iframe body").toHaveClass("modal-open");
         expect(".o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility");
-        expect(":iframe .s_popup").not.toHaveClass("d-none");
         expect(":iframe .s_popup > .modal").toHaveStyle("display: block");
         expect(":iframe .s_popup > .modal").toHaveClass("show");
     });
