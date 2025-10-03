@@ -390,9 +390,8 @@ class PosConfig(models.Model):
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
         self.ensure_one()
-        if self.self_ordering_mode == 'mobile':
-            return False
-        return any(pm.use_payment_terminal in self._supported_kiosk_payment_terminal() for pm in self.payment_method_ids)
+        domain = self.payment_method_ids._load_pos_self_data_domain({}, self)
+        return bool(self.payment_method_ids.filtered_domain(domain))
 
     @api.model
     def load_onboarding_kiosk_scenario(self):

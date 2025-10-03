@@ -285,23 +285,13 @@ export class SelfOrder extends Reactive {
         this.printKioskChanges(access_token);
     }
     hasPaymentMethod() {
-        return this.filterPaymentMethods(this.models["pos.payment.method"].getAll()).length > 0;
-    }
-
-    filterPaymentMethods(pms) {
-        //based on _load_pos_self_data_domain from pos_payment_method.py
-        return this.config.self_ordering_mode === "kiosk"
-            ? pms.filter((rec) => ["adyen", "stripe"].includes(rec.use_payment_terminal))
-            : [];
+        return this.models["pos.payment.method"].getAll().length > 0;
     }
 
     async confirmOrder() {
         const payAfter = this.config.self_ordering_pay_after; // each, meal
         const device = this.config.self_ordering_mode; // kiosk, mobile
         const service = this.selfService; // table, counter, delivery
-        const paymentMethods = this.filterPaymentMethods(
-            this.models["pos.payment.method"].getAll()
-        ); // Stripe, Adyen, Online
 
         let order = this.currentOrder;
         const orderHasChanges = Object.keys(order.changes).length > 0;
@@ -325,7 +315,7 @@ export class SelfOrder extends Reactive {
 
         // When no payment methods redirect to confirmation page
         // the client will be able to pay at counter
-        if (paymentMethods.length === 0) {
+        if (!this.hasPaymentMethod()) {
             let screenMode = "pay";
 
             if (orderHasChanges) {

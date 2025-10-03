@@ -1,6 +1,5 @@
 import uuid
-from odoo import models, api
-from odoo.fields import Domain
+from odoo import models
 
 
 class PosPaymentMethod(models.Model):
@@ -15,10 +14,3 @@ class PosPaymentMethod(models.Model):
             'referenceId': f'{reference_prefix}/Order/{order.id}/{uuid.uuid4().hex}',
         }
         return self.razorpay_make_payment_request(data)
-
-    @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        domain = super()._load_pos_self_data_domain(data, config)
-        if config.self_ordering_mode == 'kiosk':
-            domain = Domain.OR([[('use_payment_terminal', '=', 'razorpay')], domain])
-        return domain
