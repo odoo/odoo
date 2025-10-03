@@ -358,3 +358,149 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(len(half2_entries), 15)  # work entries cover the entire duration
         self.assertTrue(all(entry.duration == 24 for entry in half2_entries))
         self.assertTrue(all(entry.version_id.name == 'FullyFlex Contract' for entry in half2_entries))
+
+    def test_work_entry_version_changed_after_generation(self):
+        """
+        When you generate work entries for a version, and you add a new version to the employee starting during the period of already generated work entries,
+        The previous version work entries date generation to should be updated to the new version date and new work entries should be generated.
+        Previous ones should be deleted
+        """
+        calendar_40h = self.env['resource.calendar'].create({
+            'name': '40h Calendar',
+            'tz': 'Europe/Brussels',
+            'hours_per_day': 8,
+            'attendance_ids': [(5, 0, 0),
+               (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
+        })
+        calendar_35h = self.env['resource.calendar'].create({
+            'name': '35h Calendar',
+            'tz': 'Europe/Brussels',
+            'hours_per_day': 7,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+            ]
+        })
+
+        # first version with a 40h calendar
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar_40h.id,
+            'date_version': datetime(2025, 1, 1),
+            'contract_date_start': datetime(2025, 1, 1),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 184, "23 * 8h")
+
+        # new version with a different calendar (35h) set in the tier of the month
+        employee.create_version({
+            'resource_calendar_id': calendar_35h.id,
+            'date_version': datetime(2025, 1, 10),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 168, "7 * 8h + 16 * 7h")
+
+        # new version with a different calendar (40h) set in the second tier of the month
+        employee.create_version({
+            'resource_calendar_id': calendar_40h.id,
+            'date_version': datetime(2025, 1, 20),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    def test_work_entry_version_changed_after_generation2(self):
+        """
+        When you generate work entries for a version, and you add a new version to the employee starting during the period of already generated work entries,
+        The previous version work entries date generation to should be updated to the new version date and new work entries should be generated.
+        Previous ones should be deleted
+        """
+        calendar_40h = self.env['resource.calendar'].create({
+            'name': '40h Calendar',
+            'tz': 'Europe/Brussels',
+            'hours_per_day': 8,
+            'attendance_ids': [(5, 0, 0),
+               (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+               (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+               (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
+        })
+        calendar_35h = self.env['resource.calendar'].create({
+            'name': '35h Calendar',
+            'tz': 'Europe/Brussels',
+            'hours_per_day': 7,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+            ]
+        })
+
+        # first version with a 40h calendar
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar_40h.id,
+            'date_version': datetime(2025, 1, 1),
+            'contract_date_start': datetime(2025, 1, 1),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 184, "23 * 8h")
+
+        # new version with a different calendar (40h) set in the tier of the month
+        employee.create_version({
+            'resource_calendar_id': calendar_40h.id,
+            'date_version': datetime(2025, 1, 20),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 184, "13 * 8h + 10 * 8h")
+
+        # new version with a different calendar (35h) set in the second tier of the month
+        employee.create_version({
+            'resource_calendar_id': calendar_35h.id,
+            'date_version': datetime(2025, 1, 10),
+        })
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
