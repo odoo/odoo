@@ -31,6 +31,7 @@ import { localization } from "@web/core/l10n/localization";
  */
 export class MovePlugin extends Plugin {
     static id = "move";
+    static dependencies = ["visibility"];
     static shared = ["getNeighbors"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -309,7 +310,7 @@ export class MovePlugin extends Plugin {
             (el) =>
                 el === target ||
                 (!el.matches(this.ignoredSiblingSelectors) &&
-                    window.getComputedStyle(el).display !== "none" &&
+                    !this.dependencies.visibility.isElementHidden(el) &&
                     !el.closest(systemNodeSelectors))
         );
     }
