@@ -46,6 +46,7 @@ class SaleReport(models.Model):
         comodel_name='res.partner.industry', string="Customer Industry", readonly=True)
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
     state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
+    partner_tag_ids = fields.Many2many(string="Customer Tags", related='partner_id.category_id', readonly=True)
 
     # sale.order.line fields
     order_reference = fields.Reference(
