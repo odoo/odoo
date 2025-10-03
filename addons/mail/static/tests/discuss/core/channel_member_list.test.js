@@ -230,3 +230,20 @@ test("Members are partitioned by online/offline", async () => {
         after: ["h6", { text: "Offline - 1" }],
     });
 });
+
+test("Do not open avatar card for chatbot", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bot" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMember", { count: 2 });
+    await contains(".o-discuss-ChannelMember.cursor-pointer");
+});
