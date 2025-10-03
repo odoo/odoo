@@ -2,12 +2,10 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
-    addPlugin,
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { Plugin } from "@html_editor/plugin";
 import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { getSnippetStructure } from "@html_builder/../tests/helpers";
@@ -87,27 +85,6 @@ describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.
     beforeEach(async () => {
-        addPlugin(
-            class extends Plugin {
-                static id = "ignore_d-none_on_s_popup";
-                resources = {
-                    // NOTE: this plugin is here as a workaround to make the
-                    // test pass, because (at the time of this commit):
-                    // - the website_edit service is removed for the tests, thus
-                    //   the patch that wraps interaction's functions in
-                    //   `ignoreDOMMutation` is not applied
-                    // - the interaction SharedPopup adds and removes `d-none`
-                    //   on `.s_popup` element to track the visibility of the
-                    //   modal
-                    // - one of the tests here plays with the visibility of the
-                    //   modal, and verifies that it did not add mutations
-                    // TODO: once the service website_edit runs during the
-                    // tests, this plugin should be removed
-                    savable_mutation_record_predicates: (record) =>
-                        !(record.target.matches?.(".s_popup") && record.className === "d-none"),
-                };
-            }
-        );
         builder = await setupWebsiteBuilder(
             `<div class="s_popup o_draggable" data-snippet="s_popup" data-name="Popup" id="sPopup">
                 <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50)  !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
