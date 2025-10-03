@@ -110,6 +110,7 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
         move_node_whitelist_selectors: "table",
+        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
     };
 
     setup() {
@@ -162,6 +163,27 @@ export class TablePlugin extends Plugin {
             this.shiftCursorToTableCell(-1);
             return true;
         }
+    }
+
+    /**
+     * Inherits table-level colors to all child tds to make it
+     * easier to add/remove style on tables.
+     *
+     * @param {Element} root
+     */
+    distributeTableColorsToAllCells(root) {
+        [...root.querySelectorAll("table")]
+            .filter((table) => table.style["color"] || table.style["backgroundColor"])
+            .forEach((table) => {
+                const tds = table.querySelectorAll("td");
+                for (const td of tds) {
+                    td.style["color"] = td.style["color"] || table.style["color"];
+                    td.style["backgroundColor"] =
+                        td.style["backgroundColor"] || table.style["backgroundColor"];
+                }
+                table.style["color"] = "";
+                table.style["backgroundColor"] = "";
+            });
     }
 
     createTable({ rows = 2, cols = 2 } = {}) {
@@ -1008,7 +1030,7 @@ export class TablePlugin extends Plugin {
         const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
             (node) => node.isContentEditable
         );
-        if (selectedTds.length && mode === "backgroundColor") {
+        if (selectedTds.length && (mode === "backgroundColor" || (mode === "color" && !color))) {
             // Disable the `box-shadow` while previewing the background color.
             selectedTds.forEach((td) =>
                 td.classList.toggle("o_selected_td_bg_color_preview", previewMode)

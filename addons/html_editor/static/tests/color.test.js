@@ -593,3 +593,23 @@ test("should be able to remove color of an icon", async () => {
         contentAfter: '<p>[<span class="fa fa-glass"></span>]</p>',
     });
 });
+
+test("should remove remove color from `td`", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+                <table style="color: red;" class="o_selected_table"><tbody>
+                    <tr><td class="o_selected_td">[ab]</td></tr>
+                    <tr><td>ab</td></tr>
+                </tbody></table>
+            `),
+        stepFunction: setColor("", "color"),
+        contentAfter: unformat(`
+            <table>
+                <tbody>
+                    <tr><td>[ab]</td></tr>
+                    <tr><td style="color: red;">ab</td></tr>
+                </tbody>
+            </table>
+        `),
+    });
+});
