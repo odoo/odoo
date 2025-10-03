@@ -46,6 +46,17 @@ describe("Popup options: empty page before edit", () => {
         expect(":iframe .s_popup .modal").toHaveClass("show");
         expect(":iframe .s_popup .modal").toHaveStyle({ display: "block" });
     });
+    test("hidden popup are not taken into account when moving other snippets", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye").click()
+        );
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await contains(":iframe .s_cover:last").click();
+        expect(".o_overlay_options button.fa-angle-up").toHaveCount(1);
+        expect(".o_overlay_options button.fa-angle-down").toHaveCount(0);
+    });
     test("undo drop of the popup snippet remove 'overflow: hidden' (shows the scrollbar)", async () => {
         await insertCategorySnippet({ group: "content", snippet: "s_popup" });
         expect(".o_add_snippet_dialog").toHaveCount(0);
