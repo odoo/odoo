@@ -25,6 +25,7 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                 "active",
                 "avatar_128",
                 "country_id",
+                "im_status",
                 "is_public",
                 "user_livechat_username",
             ];
