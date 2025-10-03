@@ -958,7 +958,7 @@
                             <span class="o_form_label">
                                 <field
                                     name="move_type"
-                                    invisible="move_type == 'entry'"
+                                    invisible="move_type == 'entry' or is_self_billing"
                                     widget="receipt_selector"
                                     options="{'horizontal': true}"
                                     nolabel="1"
