@@ -5,11 +5,13 @@
         <tr name="o_order_total_untaxed" position="attributes">
             <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
         </tr>
-        <tr name="o_order_total_taxes" position="attributes">
-            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
-        </tr>
         <tr name="o_order_total" position="attributes">
             <attribute name="t-attf-class" add="#{'border-top' if website.company_id.country_code != 'BR' else ''}" separator=" "/>
+        </tr>
+    </template>
+    <template id="order_tax_lines" inherit_id="website_sale.order_tax_lines">
+        <tr name="o_order_total_taxes" position="attributes">
+            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
         </tr>
     </template>
 

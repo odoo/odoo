@@ -357,7 +357,7 @@ export class Checkout extends Interaction {
         const amountUntaxed = targetEl.querySelector(
             'tr[name="o_order_total_untaxed"] .monetary_field'
         );
-        const amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
+        const amountTax = targetEl.querySelector('#order_tax_lines_container');
         const amountTotal = targetEl.parentElement.querySelectorAll(
             'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
         );
@@ -370,7 +370,8 @@ export class Checkout extends Interaction {
 
         amountDelivery.innerHTML = result.amount_delivery;
         amountUntaxed.innerHTML = result.amount_untaxed;
-        amountTax.innerHTML = result.amount_tax;
+
+        amountTax.outerHTML = result.amount_tax_lines;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
     }
 

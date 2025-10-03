@@ -293,8 +293,16 @@
                             </table>
                             <table width="100%" style="max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;" role="presentation">
                                 <tr>
-                                    <td style="width: 20%; padding-bottom: 8px;" align="left">Taxes:</td>
-                                    <td style="width: 80%; padding-bottom: 8px;" align="right" t-out="format_amount(object.amount_tax, object.currency_id) or ''">$ 0.00</td>
+                                    <t t-if="object.tax_totals and object.tax_totals['subtotals']">
+                                        <t t-foreach="object.tax_totals['subtotals']" t-as="line">
+                                            <t t-foreach="line['tax_groups']" t-as="tax_line">
+                                                <tr>
+                                                    <td style="width: 20%; padding-bottom: 8px;" align="left"><span t-out="tax_line['group_name']"/></td>
+                                                    <td style="width: 80%;" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
                                 </tr>
                                 <tr>
                                     <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
