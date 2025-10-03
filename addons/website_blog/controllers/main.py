@@ -264,12 +264,16 @@ class WebsiteBlog(http.Controller):
         if blog_post not in all_post:
             return request.redirect("/blog/%s" % (request.env['ir.http']._slug(blog_post.blog_id)))
 
-        # should always return at least the current post
-        all_post_ids = all_post.ids
-        current_blog_post_index = all_post_ids.index(blog_post.id)
-        nb_posts = len(all_post_ids)
-        next_post_id = all_post_ids[(current_blog_post_index + 1) % nb_posts] if nb_posts > 1 else None
-        next_post = next_post_id and BlogPost.browse(next_post_id) or False
+        next_post = blog_post.recommended_post_id
+        if not next_post:
+            all_post_ids = all_post.ids
+            nb_posts = len(all_post_ids)
+            if nb_posts > 1:
+                current_index = all_post_ids.index(blog_post.id)
+                next_post_id = all_post_ids[(current_index + 1) % nb_posts]
+                next_post = BlogPost.browse(next_post_id)
+            else:
+                next_post = blog_post
 
         values = {
             'tags': tags,

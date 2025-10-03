@@ -5,7 +5,7 @@
 ============================================================================ -->
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
-        <div id="wrap" class="js_blog website_blog">
+        <div id="wrap" class="js_blog website_blog" t-att-data-res-id="blog_post.id if blog_post else ''">
             <t t-out="0"/>
 
             <!-- Droppable-area shared across all blog's pages -->
@@ -330,79 +330,93 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
-        <div t-if="next_post" class="mt-5">
-            <t t-if="opt_blog_post_regular_cover">
-                <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
-                <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
+        <t t-call="website_blog.blog_post_read_next_partial"/>
+    </xpath>
+</template>
 
-                <div class="container">
-                    <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
-                        <hr/>
-                        <div class="d-flex text-end py-4">
-                            <div class="flex-grow-1 pe-3">
-                                <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">Read Next</span>
-                                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
-                                    <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2 o_wblog_post_name"/>
-                                    <div t-field="next_post.subtitle" placeholder="Subtitle" class="lead o_wblog_post_subtitle"/>
-                                </a>
-                            </div>
-                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25 flex-shrink-0">
-                                <t t-call="website.record_cover">
-                                    <t t-set="_record" t-value="next_post"/>
-                                    <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
-                                </t>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </t>
-            <t t-else="">
-                <div id="o_wblog_next_container" class="d-flex flex-column">
-                    <button aria-labelledby="o_wblog_next_title" class="o_wblog_next_button o_button_area btn z-1"/>
-                    <t t-call="website.record_cover">
-                        <t t-set="_record" t-value="next_post"/>
-                        <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
-                        <t t-set="use_filters" t-value="True"/>
-                        <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
-
-                        <a id="o_wblog_next_post_info" class="d-none"
-                           t-att-data-size="_cp.get('resize_class')"
-                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post) + '?anim'"/>
-
-                        <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
-                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
-
-                        <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
-                            <div id="o_wblog_next_title" class="o_wblog_post_title">
-                                <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h1 o_wblog_post_name"/>
-                                <div t-field="next_post.subtitle" class="o_wblog_post_subtitle"  placeholder="Subtitle"/>
-                            </div>
-
-                            <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
-                                <span class="h4 d-inline-block py-1 px-2 rounded-1 text-white">
-                                    <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
-                                </span>
-                            </div>
-
-                            <!-- Emulate the next post's cover's height. For non-auto covers,
-                            the room that will be occupied by the 'scroll-down' link is temporary
-                            occupied  by the loader circle. For auto covers, an empty <div>
-                            creates enought separation.
-                            -->
-                            <div t-if="not next_cover_is_auto" class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
-                                <div class="rounded-circle bg-black-50"/>
-                            </div>
-                            <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
-                        </div>
-                    </t>
-                </div>
-            </t>
-        </div>
+<!-- (Option) Post : Custom Next Article
+    Show 'custom next article' banner at the bottom of the page
+-->
+<template id="opt_blog_post_read_next_recommended" name="Recommended Next Article" inherit_id="website_blog.blog_post_complete" active="False">
+    <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
+        <t t-set="next_post" t-value="blog_post.recommended_post_id"/>
+        <t t-call="website_blog.blog_post_read_next_partial"/>
     </xpath>
 </template>
 
 <!-- ======   Technical Templates   ============================================
 ============================================================================ -->
+
+<!-- Bottom Article -->
+<template id="blog_post_read_next_partial">
+    <div t-if="next_post" class="mt-5 next-article" t-att-data-recommended-blog-post-id="next_post.id">
+        <t t-if="opt_blog_post_regular_cover">
+            <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
+            <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
+
+            <div class="container">
+                <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
+                    <hr/>
+                    <div class="d-flex text-end py-4">
+                        <div class="flex-grow-1 pe-3">
+                            <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">Read Next</span>
+                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
+                                <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2 o_wblog_post_name"/>
+                                <div t-field="next_post.subtitle" placeholder="Subtitle" class="lead o_wblog_post_subtitle"/>
+                            </a>
+                        </div>
+                        <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25 flex-shrink-0">
+                            <t t-call="website.record_cover">
+                                <t t-set="_record" t-value="next_post"/>
+                                <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
+                            </t>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div id="o_wblog_next_container" class="d-flex flex-column">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="next_post"/>
+                    <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
+
+                    <a id="o_wblog_next_post_info" class="d-none"
+                        t-att-data-size="_cp.get('resize_class')"
+                        t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post) + '?anim'"/>
+
+                    <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
+                    <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
+
+                    <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                        <div t-attf-class="o_wblog_post_title">
+                            <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h1 o_wblog_post_name"/>
+                            <div t-field="next_post.subtitle" class="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                        </div>
+
+                        <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                            <span class="h4 d-inline-block py-1 px-2 rounded-1 text-white">
+                                <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
+                            </span>
+                        </div>
+
+                        <!-- Emulate the next post's cover's height. For non-auto covers,
+                        the room that will be occupied by the 'scroll-down' link is temporary
+                        occupied  by the loader circle. For auto covers, an empty <div>
+                        creates enought separation.
+                        -->
+                        <div t-if="not next_cover_is_auto" class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
+                            <div class="rounded-circle bg-black-50"/>
+                        </div>
+                        <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </div>
+</template>
 
 <!-- Atom Feed -->
 <template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;
