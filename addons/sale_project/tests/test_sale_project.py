@@ -1329,3 +1329,19 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         so.action_confirm()
         self.assertFalse(self.product_order_service2.project_id.task_ids)
         self.assertFalse(sol.task_id)
+
+    def test_so_project_unlink_changes_analytic_distribution(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service3.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.order_line.analytic_distribution)
+        sale_order.project_id.unlink()
+        self.assertFalse(sale_order.order_line.analytic_distribution)
